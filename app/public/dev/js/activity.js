@@ -42,6 +42,7 @@ var Activity = (function () {
                         count: 0
                     };
                 });
+
                 for (var i = 0; i < resp.data.heatmap.length; i++) {
                     var row = resp.data.heatmap[i];
                     for(var key in chartData){

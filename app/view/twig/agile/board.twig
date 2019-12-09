@@ -389,8 +389,8 @@
                             <h3 class="modal-header-title">看板设置</h3>
                         </div>
 
-                        <div class="modal-body" style="min-height: 400px">
-                            <div  id="board_table">
+                        <div id="board_table" class="modal-body" style="min-height: 400px">
+
                                 <div class="panel">
                                     <table class="table table-hover">
                                         <thead>
@@ -407,15 +407,15 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                        </div>
+                        <div class="modal-footer form-actions" id="action-board_list">
+                            <button type="button" class="btn btn-info" id="btn-show_add_board">
+                                <i  class="fa fa-plus"></i> 创建看板
+                            </button>
+                            <a class="btn btn-cancel" data-dismiss="modal" href="#">关 闭</a>
+                        </div>
 
-                            <div class="modal-footer form-actions" id="action-board_list">
-                                <button type="button" class="btn btn-info" id="btn-show_add_board">
-                                    <i  class="fa fa-plus"></i> 创建看板
-                                </button>
-                                <a class="btn btn-cancel" data-dismiss="modal" href="#">关 闭</a>
-                            </div>
-                            <div  class="hide" id="board_add_form"  >
+                        <div id="board_add_form" class="modal-body hide" style="min-height: 400px">
                                 <div class="form-group">
                                     <div class="col-sm-2"> 看板名称：</div>
                                     <div class="col-sm-3">
@@ -475,15 +475,16 @@
                                     <div class="col-sm-3 col-md-2" >
                                         <div class="thumbnail">
                                             <div class="caption row">
-                                                <div class="col-sm-8">
-                                                    <input type="text"  class="form-control hide" name="column_1"  id="column_1" value="准备中"/>
-                                                    <h5 class="">准备中</h5>
+                                                <div class="col-sm-12 hide" id="text_column_1" >
+                                                    <input type="text"  class="form-control " name="text_column_1"  value="准备中" style="height: 24px;margin-bottom: 5px;" >
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <a class="btn btn-transparent " title="编辑" href="#">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </a>
+                                                <div class="col-sm-12 "  id="title_column_1">
+                                                    <h5 >准备中  <a class="btn btn-transparent " title="编辑" href="#" onclick="$('#title_column_1').addClass('hide');$('#text_column_1').removeClass('hide');">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                    </h5>
                                                 </div>
+
                                             </div>
                                             <img data-src="holder.js/100%x150" alt="100%x150"
                                                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNhNjYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2E2NiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
@@ -500,7 +501,7 @@
                                                 </div>
                                                 <div class="col-sm-10">
                                                     <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
-                                                            dropdownAlignRight="true" title="打开, 重新打开, 延迟处理">
+                                                            dropdownAlignRight="true" title="状态筛选">
                                                         <option value="1">打开</option>
                                                         <option value="2">重新打开</option>
                                                         <option value="3">延迟处理</option>
@@ -518,7 +519,43 @@
                                                 </div>
                                                 <div class="col-sm-10">
                                                     <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
-                                                            dropdownAlignRight="true" title="打开, 重新打开, 延迟处理">
+                                                            dropdownAlignRight="true" title="解决结果筛选">
+                                                        <option value="1">打开</option>
+                                                        <option value="2">重新打开</option>
+                                                        <option value="3">延迟处理</option>
+                                                        <option value="4">迭代4</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-1">
+                                                    <div class="checkbox" title="标签">
+                                                        <label>
+                                                            <input type="checkbox">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                                            dropdownAlignRight="true" title="标签筛选">
+                                                        <option value="1">打开</option>
+                                                        <option value="2">重新打开</option>
+                                                        <option value="3">延迟处理</option>
+                                                        <option value="4">迭代4</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-1">
+                                                    <div class="checkbox" title="经办人">
+                                                        <label>
+                                                            <input type="checkbox">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                                            dropdownAlignRight="true" title="经办人筛选">
                                                         <option value="1">打开</option>
                                                         <option value="2">重新打开</option>
                                                         <option value="3">延迟处理</option>
@@ -624,20 +661,17 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer form-actions hide" id="action-board_form">
-                                <button type="button" class="btn btn-default " id="btn-add_swim">
-                                    <i  class="fa fa-plus"></i> 添加泳道
-                                </button>
-                                <button name="btn-setting_columns" type="button" class="btn btn-default "  id="btn-back_board_list">
-                                    <i class="fa fa-arrow-left"></i> 返回看板列表
-                                </button>
-                                <button name="btn-setting_columns" type="button" class="btn btn-success "   id="btn-board_save">
-                                    <i class="fa fa-save"></i> 保存看板
-                                </button>
-                            </div>
-
-
+                        </div>
+                        <div class="modal-footer form-actions hide" id="action-board_form">
+                            <button type="button" class="btn btn-default " id="btn-add_swim">
+                                <i  class="fa fa-plus"></i> 添加泳道
+                            </button>
+                            <button name="btn-setting_columns" type="button" class="btn btn-default "  id="btn-back_board_list">
+                                <i class="fa fa-arrow-left"></i> 返回看板列表
+                            </button>
+                            <button name="btn-setting_columns" type="button" class="btn btn-success "   id="btn-board_save">
+                                <i class="fa fa-save"></i> 保存看板
+                            </button>
                         </div>
 
                     </div>
@@ -896,17 +930,16 @@
         // 返回看板列表时
         $('#btn-back_board_list').bind('click', function () {
             $('#board_add_form').hide();
-            $('#action-board_form').hide();
-            $('#action-board_list').show();
             $('#board_table').show();
+            $('#action-board_list').show();
             window.$board.fetchBoards();
         });
         // 点击创建按钮时
         $('#btn-show_add_board').bind('click', function () {
             $('#board_add_form').show();
             $('#action-board_form').show();
-            $('#action-board_list').hide();
             $('#board_table').hide();
+            $('#action-board_list').hide();
         });
 
 

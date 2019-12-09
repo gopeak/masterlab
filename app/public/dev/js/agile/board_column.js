@@ -244,8 +244,10 @@ var BoardColumn = (function () {
             success: function (resp) {
                 auth_check(resp);
                 $('#board_table').hide();
-                $('#board_add_form').removeClass('hide');
+                $('#action-board_list').hide();
                 $('#board_add_form').show();
+                $('#action-board_form').show();
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
