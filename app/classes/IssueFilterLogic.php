@@ -1439,9 +1439,49 @@ class IssueFilterLogic
         return $rows;
     }
 
+    public static function getMyFollow($curUserId = 0, $page = 1, $pageSize = 10)
+    {
+        $start = $pageSize * ($page - 1);
+        $appendSql = " Order by id desc  limit $start, " . $pageSize;
+
+        $issueFollowModel = new IssueFollowModel();
+        $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
+        $followIssueIdArr = [];
+        if (!empty($issueFollows)) {
+            foreach ($issueFollows as $issueFollow) {
+                $followIssueIdArr[] = $issueFollow['issue_id'];
+            }
+            $followIssueIdArr = array_unique($followIssueIdArr);
+            if (!empty($followIssueIdArr)) {
+                $issueIdStr = implode(',', $followIssueIdArr);
+                $inWhere = " id IN ({$issueIdStr})";
+
+                $model = new IssueModel();
+                $table = $model->getTable();
+
+                $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
+            status,created,updated,sprint,master_id,start_date,due_date';
+
+                $sql = "SELECT {$fields} FROM {$table} WHERE {$inWhere} {$appendSql}";
+                //echo $sql;
+                $rows = $model->db->getRows($sql);
+                $count = $model->db->getOne("SELECT count(*) as cc FROM {$table} WHERE {$inWhere}");
+                foreach ($rows as &$row) {
+                    self::formatIssue($row);
+                }
+
+                return [$rows, $count];
+            }
+            return [[], 0];
+        } else {
+            return [[], 0];
+        }
+    }
+
     /**
      * 格式化事项
      * @param $issue
+     * @throws \Exception
      */
     public static function formatIssue(&$issue)
     {

@@ -275,12 +275,12 @@ class Agile extends BaseUserCtrl
         $newArr = [];
         // 过滤已经归档的迭代
         foreach ($sprints as $sprint) {
-            if (isset($_GET['no_packed']) && $sprint['status']=='3') {
-            }else{
+            if (isset($_GET['no_packed']) && $sprint['status'] == '3') {
+            } else {
                 $newArr[] = $sprint;
             }
         }
-        $data['sprints']  = $newArr;
+        $data['sprints'] = $newArr;
         $this->ajaxSuccess('success', $data);
     }
 
@@ -355,9 +355,9 @@ class Agile extends BaseUserCtrl
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_CREATE, $projectId, $msg);
 
-            $this->ajaxSuccess('提示','操作成功');
+            $this->ajaxSuccess('提示', '操作成功');
         } else {
-            $this->ajaxFailed('提示','服务器错误:'. $msg);
+            $this->ajaxFailed('提示', '服务器错误:' . $msg);
         }
     }
 
@@ -405,7 +405,7 @@ class Agile extends BaseUserCtrl
             }
         }
         if (!$changed) {
-            $this->ajaxSuccess('提示','操作成功');
+            $this->ajaxSuccess('提示', '操作成功');
             return;
         }
         list($ret, $msg) = $sprintModel->updateItem($sprintId, $info);
@@ -417,9 +417,9 @@ class Agile extends BaseUserCtrl
             $activityInfo['obj_id'] = $sprintId;
             $activityInfo['title'] = $info['name'];
             $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
-            $this->ajaxSuccess('提示','操作成功');
+            $this->ajaxSuccess('提示', '操作成功');
         } else {
-            $this->ajaxFailed('提示','服务器错误:'.$msg);
+            $this->ajaxFailed('提示', '服务器错误:' . $msg);
         }
     }
 
@@ -464,7 +464,7 @@ class Agile extends BaseUserCtrl
             $activityInfo['title'] = $sprint['name'];
             $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
 
-            $this->ajaxSuccess('提示','操作成功');
+            $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', '数据库删除迭代失败');
         }
@@ -506,7 +506,7 @@ class Agile extends BaseUserCtrl
         $model = new IssueModel();
         list($ret, $msg) = $model->updateById($issueId, ['sprint' => $sprintId, 'sprint_weight' => 0]);
         if ($ret) {
-            $this->ajaxSuccess('提示','操作成功');
+            $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
         }
@@ -678,9 +678,9 @@ class Agile extends BaseUserCtrl
         CacheKeyModel::getInstance()->clearCache('dict/' . $sprintModel->table);
         list($upRet, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
         if ($upRet) {
-            $this->ajaxSuccess('提示','操作成功');
+            $this->ajaxSuccess('提示', '操作成功');
         } else {
-            $this->ajaxFailed('提示','server_error:' . $msg);
+            $this->ajaxFailed('提示', 'server_error:' . $msg);
         }
     }
 
@@ -853,6 +853,71 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('服务器错误', $msg);
         }
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchBoardByProject()
+    {
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目数据错误');
+        }
+        $agileBoardModel = new AgileBoardModel();
+        $boards = $agileBoardModel->getsByDefault();
+        $boards = $boards + $agileBoardModel->getsByProject($projectId);
+        $i = 0;
+        foreach ($boards as &$board) {
+            $i++;
+            $board['i'] = $i;
+        }
+        $data['boards'] = $boards;
+        $this->ajaxSuccess('success', $data);
+
+    }
+
+    public function fetchBoardInfoById()
+    {
+        $projectId = null;
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id'];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        $model = new AgileBoardModel();
+        $board = $model->getById($id);
+        if (empty($board)) {
+            $this->ajaxFailed('参数错误', '看板数据不存在');
+        }
+        $data['board'] = $board;
+        if (empty($projectId) && !empty($board['project_id'])) {
+            $projectId = (int)$board['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目不存在');
+        }
+
+        $model = new AgileBoardColumnModel();
+        $columns = $model->getsByBoard($id);
+
+        foreach ($columns as &$column) {
+            // $column['issues'] = [];
+        }
+
+
+        $data['columns'] = $columns;
+        $this->ajaxSuccess('success', $columns);
+
+    }
+
 
     /**
      * 通过 board_id 获取 Kanban 信息

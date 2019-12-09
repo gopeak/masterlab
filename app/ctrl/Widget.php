@@ -17,6 +17,7 @@ use main\app\classes\ChartLogic;
 use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\agile\SprintModel;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\user\UserSettingModel;
 use main\app\model\user\UserWidgetModel;
@@ -766,6 +767,23 @@ class Widget extends BaseUserCtrl
             $lineConfig['sprint_name'] = $sprint['name'];
         }
         $this->ajaxSuccess('ok', $lineConfig);
+    }
+
+    /**
+     * 获取我关注的事项
+     * @throws \Exception
+     */
+    public function fetchFollowIssues()
+    {
+        $pageSize = 20;
+        $page = 1;
+        $curUserId = UserAuth::getId();
+        list($data['issues'], $total) = IssueFilterLogic::getMyFollow($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**

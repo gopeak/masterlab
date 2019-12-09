@@ -75,6 +75,13 @@ class AgileBoardModel extends BaseDictionaryModel
         return $rows;
     }
 
+    public function getsByDefault()
+    {
+        $params = ['project_id' => 0];
+        $rows = $this->getRows("*", $params);
+        return $rows;
+    }
+
     public function deleteByProjectId($projectId)
     {
         $conditions = [];

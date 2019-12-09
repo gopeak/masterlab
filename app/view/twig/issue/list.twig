@@ -1368,7 +1368,7 @@
                                     <div class="col-sm-2">
                                         <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >
                                             {% for field in advFields %}
-                                            <option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>
+                                            <option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}} </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -1423,25 +1423,52 @@
                                     </div>
 
                                 </div>
-                                <div class="form-group">
-                                    <table class="table table-hover table-adv-query" id="adv-query-box">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>关系</th>
-                                            <th>括号</th>
-                                            <th>字段名</th>
-                                            <th>运算符</th>
-                                            <th>内容</th>
-                                            <th>括号</th>
-                                            <th>操作</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="adv-tbody" class="adv-tbody">
 
-                                        </tbody>
-                                    </table>
-                                </div>
+
+                                    <div class="form-group">
+                                        <div class="panel panel-info" style="border: 1px solid transparent;border-radius: 4px;">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">查询条件</h3>
+                                            </div>
+                                                <table class="table table-hover table-adv-query" id="adv-query-box">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>关系</th>
+                                                        <th>括号</th>
+                                                        <th>字段名</th>
+                                                        <th>运算符</th>
+                                                        <th>内容</th>
+                                                        <th>括号</th>
+                                                        <th>操作</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="adv-tbody" class="adv-tbody">
+
+                                                    </tbody>
+                                                </table>
+                                        </div>
+                                        <style>
+                                            .panel-info {
+                                                border-color: #bce8f1;
+                                            }
+                                            .panel {
+                                                margin-bottom: 20px;
+                                                background-color: #fff;
+                                                border: 1px solid transparent;
+                                                border-radius: 4px;
+                                                -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+                                                box-shadow: 0 1px 1px rgba(0,0,0,.05);
+                                            }
+                                            .panel-info>.panel-heading {
+                                                color: #31708f;
+                                                background-color: #d9edf7;
+                                                border-color: #bce8f1;
+                                            }
+
+                                        </style>
+                                    </div>
+
 
                                 <div class="form-group">
                                     <div class="col-sm-3">
