@@ -382,7 +382,7 @@
             <div class="form-horizontal" id="form-board_setting">
                 <input type="hidden" name="project_id" value="{{ project_id }}">
 
-                <div class="modal-dialog">
+                <div class="modal-dialog" style="width: 60%;">
                     <div class="modal-content modal-middle">
                         <div class="modal-header">
                             <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
@@ -454,8 +454,8 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <div class="form-group" style="width: 1500px">
-                                    <div class="col-sm-2 col-md-2" >
+                                <div class="board-setting-line">
+                                    <div class="board-setting-line-item sequence" >
                                         <div class="thumbnail">
                                             <div class="caption">
                                                <h5>待办事项</h5>
@@ -471,109 +471,167 @@
                                                 </label>
                                             </div>
                                         </div>
+                                        <div class="board-create-line-btn">
+                                            <i class="fa fa-plus"></i>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-3 col-md-2" >
-                                        <div class="thumbnail">
-                                            <div class="caption row">
-                                                <div class="col-sm-12 hide" id="text_column_1" >
-                                                    <input type="text"  class="form-control " name="text_column_1"  value="准备中" style="height: 24px;margin-bottom: 5px;" >
-                                                </div>
-                                                <div class="col-sm-12 "  id="title_column_1">
-                                                    <span >准备中  <a class="btn btn-transparent " title="编辑" href="#" onclick="$('#title_column_1').addClass('hide');$('#text_column_1').removeClass('hide');">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                    </span>
-                                                </div>
+                                    <!-- 活动泳道 -->
+                                    <div class="board-setting-line-active">
+                                        <div class="board-setting-line-item" >
+                                            <div class="thumbnail">
+                                                <div class="caption row">
+                                                    <div class="col-sm-12 hide" id="text_column_1" >
+                                                        <input type="text"  class="form-control " name="text_column_1"  value="准备中" style="height: 24px;margin-bottom: 5px;" >
+                                                    </div>
+                                                    <div class="col-sm-12 "  id="title_column_1">
+                                                        <span >准备中  <a class="btn btn-transparent " title="编辑" href="#" onclick="$('#title_column_1').addClass('hide');$('#text_column_1').removeClass('hide');">
+                                                                <i class="fa fa-pencil"></i>
+                                                            </a>
+                                                        </span>
+                                                    </div>
 
-                                            </div>
-                                            <img data-src="holder.js/100%x150" alt="100%x150"
-                                                 src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNhNjYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2E2NiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
-                                                 data-holder-rendered="true"
-                                                 style="height: 200px; width: 100%; display: block;">
-                                            <p style="margin-top: 5px">数据源：</p>
-                                            <div class="row">
-                                                <div class="col-sm-1">
-                                                    <div class="checkbox" title="状态">
-                                                        <label>
-                                                            <input type="checkbox">
-                                                        </label>
+                                                </div>
+                                                <img data-src="holder.js/100%x150" alt="100%x150"
+                                                    src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNhNjYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2E2NiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                                                    data-holder-rendered="true"
+                                                    style="height: 200px; width: 100%; display: block;">
+                                                <p style="margin-top: 5px">数据源：</p>
+                                                <div class="row">
+                                                    <div class="col-sm-1">
+                                                        <div class="checkbox" title="状态">
+                                                            <label>
+                                                                <input type="checkbox">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-10">
+                                                        <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                                                dropdownAlignRight="true" title="状态筛选">
+                                                            <option value="1">打开</option>
+                                                            <option value="2">重新打开</option>
+                                                            <option value="3">延迟处理</option>
+                                                            <option value="4">迭代4</option>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-10">
-                                                    <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
-                                                            dropdownAlignRight="true" title="状态筛选">
-                                                        <option value="1">打开</option>
-                                                        <option value="2">重新打开</option>
-                                                        <option value="3">延迟处理</option>
-                                                        <option value="4">迭代4</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-1">
-                                                    <div class="checkbox" title="解决结果">
-                                                        <label>
-                                                            <input type="checkbox">
-                                                        </label>
+                                                <div class="row">
+                                                    <div class="col-sm-1">
+                                                        <div class="checkbox" title="解决结果">
+                                                            <label>
+                                                                <input type="checkbox">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-10">
+                                                        <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                                                dropdownAlignRight="true" title="解决结果筛选">
+                                                            <option value="1">打开</option>
+                                                            <option value="2">重新打开</option>
+                                                            <option value="3">延迟处理</option>
+                                                            <option value="4">迭代4</option>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-10">
-                                                    <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
-                                                            dropdownAlignRight="true" title="解决结果筛选">
-                                                        <option value="1">打开</option>
-                                                        <option value="2">重新打开</option>
-                                                        <option value="3">延迟处理</option>
-                                                        <option value="4">迭代4</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-1">
-                                                    <div class="checkbox" title="标签">
-                                                        <label>
-                                                            <input type="checkbox">
-                                                        </label>
+                                                <div class="row">
+                                                    <div class="col-sm-1">
+                                                        <div class="checkbox" title="标签">
+                                                            <label>
+                                                                <input type="checkbox">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-10">
+                                                        <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                                                dropdownAlignRight="true" title="标签筛选">
+                                                            <option value="1">打开</option>
+                                                            <option value="2">重新打开</option>
+                                                            <option value="3">延迟处理</option>
+                                                            <option value="4">迭代4</option>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-10">
-                                                    <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
-                                                            dropdownAlignRight="true" title="标签筛选">
-                                                        <option value="1">打开</option>
-                                                        <option value="2">重新打开</option>
-                                                        <option value="3">延迟处理</option>
-                                                        <option value="4">迭代4</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-1">
-                                                    <div class="checkbox" title="经办人">
-                                                        <label>
-                                                            <input type="checkbox">
-                                                        </label>
+                                                <div class="row">
+                                                    <div class="col-sm-1">
+                                                        <div class="checkbox" title="经办人">
+                                                            <label>
+                                                                <input type="checkbox">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-10">
+                                                        <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                                                dropdownAlignRight="true" title="经办人筛选">
+                                                            <option value="1">打开</option>
+                                                            <option value="2">重新打开</option>
+                                                            <option value="3">延迟处理</option>
+                                                            <option value="4">迭代4</option>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-10">
-                                                    <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
-                                                            dropdownAlignRight="true" title="经办人筛选">
-                                                        <option value="1">打开</option>
-                                                        <option value="2">重新打开</option>
-                                                        <option value="3">延迟处理</option>
-                                                        <option value="4">迭代4</option>
-                                                    </select>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <a href="#"   style="color:red">
+                                                            <i  class="fa fa-close"></i> 删除
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <a href="#"   style="color:red">
-                                                        <i  class="fa fa-close"></i> 删除
-                                                    </a>
+                                        </div>
+                                        <div class="board-setting-line-item" >
+                                            <div class="thumbnail">
+                                                <div class="caption">
+                                                    <h5>进行中</h5>
+                                                </div>
+                                                <img data-src="holder.js/100%x150" alt="100%x200"
+                                                    src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNiNjMgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2I2MyI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                                                    data-holder-rendered="true"
+                                                    style="height: 200px; width: 100%; display: block;">
+                                                <p style="font-size: 10px">状态为“已解决”并且解决结果为“完成”的事项</p>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">显 示
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="board-setting-line-item" >
+                                            <div class="thumbnail">
+                                                <div class="caption">
+                                                    <h5>进行中</h5>
+                                                </div>
+                                                <img data-src="holder.js/100%x150" alt="100%x200"
+                                                    src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNiNjMgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2I2MyI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                                                    data-holder-rendered="true"
+                                                    style="height: 200px; width: 100%; display: block;">
+                                                <p style="font-size: 10px">状态为“已解决”并且解决结果为“完成”的事项</p>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">显 示
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="board-setting-line-item" >
+                                            <div class="thumbnail">
+                                                <div class="caption">
+                                                    <h5>进行中</h5>
+                                                </div>
+                                                <img data-src="holder.js/100%x150" alt="100%x200"
+                                                    src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNiNjMgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2I2MyI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                                                    data-holder-rendered="true"
+                                                    style="height: 200px; width: 100%; display: block;">
+                                                <p style="font-size: 10px">状态为“已解决”并且解决结果为“完成”的事项</p>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">显 示
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-sm-2 col-md-2" >
+                                    <!-- 活动泳道 end -->
+                                    
+                                    <div class="board-setting-line-item" >
                                         <div class="thumbnail">
                                             <div class="caption">
                                                 <h5>已关闭</h5>
