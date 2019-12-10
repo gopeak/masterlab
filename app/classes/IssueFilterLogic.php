@@ -28,7 +28,7 @@ use main\app\model\issue\IssueModel;
 class IssueFilterLogic
 {
 
-    static $unDoneStatusIdArr = [];
+    public static $unDoneStatusIdArr = [];
 
 
     public static $avlSortFields = [
@@ -1221,25 +1221,33 @@ class IssueFilterLogic
     }
 
     /**
-     * 获取按事项类型的未解决问题的数量
+     *
+     * 获取按事项类型的事项的数量
      * @param $projectId
-     * @param $unDone bool 是否只包含未解决问题的数量
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
      * @throws \Exception
      */
-    public static function getAssigneeStat($projectId, $unDone = false)
+    public static function getAssigneeStat($projectId, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
         if (empty($projectId)) {
             return [];
         }
-        $noDoneStatusSql = '';
-        if ($unDone) {
-            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+        $statusSql = '';
+        switch ($statusType) {
+            case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
+                $statusSql = " AND " . self::getUnDoneSql();
+                break;
+            case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
+                $statusSql = " AND " . self::getDoneSql();
+                break;
+            default:
         }
+
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} {$noDoneStatusSql}  GROUP BY assignee ";
+                          WHERE project_id ={$projectId} {$statusSql}  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         foreach ($rows as $k => $row) {
