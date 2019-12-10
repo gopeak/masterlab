@@ -127,7 +127,7 @@
                                     </tr>
                                     </thead>
                                     {% verbatim %}<script id="assignee_stat_tpl" type="text/html" >
-                                        {{#assignee_stat}}
+                                        {{#assignee_stat_undone}}
                                         <tr>
                                             <td>
                                                 {{user_html user_id }}
@@ -155,7 +155,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        {{/assignee_stat}}
+                                        {{/assignee_stat_undone}}
                                     </script>{% endverbatim %}
 
                                     <tbody id="assignee_stat">
