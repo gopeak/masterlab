@@ -150,7 +150,6 @@ function calendarHeatmap() {
         }
 
         var legendGroup = svg.append('g');
-        console.log(SQUARE_PADDING);
         legendGroup.selectAll('.calendar-heatmap-legend')
             .data(colorRange)
             .enter()
