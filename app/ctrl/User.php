@@ -123,6 +123,31 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/have_join_projects.php', $data);
     }
 
+    public function pageFollowedIssues()
+    {
+        $data = [];
+        $data['title'] = '关注的事项';
+        $data['nav'] = 'followed_issues';
+        $userId = '';
+        if (isset($_GET['_target'][2])) {
+            $userId = $_GET['_target'][2];
+        }
+        $data['other_user'] = [];
+        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
+            $user = UserModel::getInstance($userId)->getUser();
+            if (isset($user['create_time'])) {
+                $user['create_time_text'] = format_unix_time($user['create_time']);
+            }
+            if (isset($user['password'])) {
+                unset($user['password']);
+            }
+            $user = UserLogic::format($user);
+            $data['other_user'] = $user;
+        }
+        $data['user_id'] = $userId;
+        $this->render('gitlab/user/follow_issues.php', $data);
+    }
+
     public function pagePreferences()
     {
         $data = [];
@@ -287,6 +312,23 @@ class User extends BaseUserCtrl
         $widgetLogic = new WidgetLogic();
         $data['projects'] = $widgetLogic->getUserHaveJoinProjects($limit);
 
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 获取我关注的事项
+     * @throws \Exception
+     */
+    public function fetchMyFollowedIssues()
+    {
+        $pageSize = 20;
+        $page = 1;
+        $curUserId = UserAuth::getInstance()->getId();
+        list($data['issues'], $total) = IssueFilterLogic::getMyFollow($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
         $this->ajaxSuccess('ok', $data);
     }
 

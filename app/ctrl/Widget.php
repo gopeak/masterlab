@@ -8,6 +8,7 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\GlobalConstant;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
@@ -383,7 +384,7 @@ class Widget extends BaseUserCtrl
     {
         $data = [];
         $projectId = $this->getParamProjectId();
-        $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId, true);
+        $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
         $data['count'] = IssueFilterLogic::getCount($projectId);
         $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['assignee_stat'], $data['no_done_count']);

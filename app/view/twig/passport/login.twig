@@ -174,6 +174,7 @@
 
                             <div class="tab-pane login-box" id="register-pane" role="tabpanel">
                                 <div class="login-body">
+                                    {% if is_allow_user_reg %}
                                     <form class="new_new_user gl-show-field-errors" aria-live="assertive"
                                           id="new_new_user" action="/passport/register" accept-charset="UTF-8" method="post">
 
@@ -240,6 +241,9 @@
                                                    value="确 定" class="btn-register btn"/>
                                         </div>
                                     </form>
+                                    {% else %}
+                                        <b>注册功能已关闭！</b>
+                                    {% endif %}
                                 </div>
                                 <div class="clearfix submit-container hide">
                                     <p>
