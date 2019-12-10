@@ -6,7 +6,7 @@ function calendarHeatmap() {
   var legendWidth = 150;
   //var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   //var days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  var months= ['一月', '二月', '三月', '四月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+  var months= ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
   var days= ['日', '一', '二', '三', '四', '五', '六'];
 
   var selector = 'body';
@@ -150,7 +150,7 @@ function calendarHeatmap() {
         }
 
         var legendGroup = svg.append('g');
-        console.log(height);
+        console.log(SQUARE_PADDING);
         legendGroup.selectAll('.calendar-heatmap-legend')
             .data(colorRange)
             .enter()
