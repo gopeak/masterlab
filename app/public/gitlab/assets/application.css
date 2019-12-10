@@ -677,7 +677,11 @@ header.navbar-gitlab {
 	overflow-x: scroll;
 	padding: 0 0 10px;
 }
-.board-setting-line > .board-setting-line-item {
+.board-setting-line > .board-setting-line-active {
+	display: flex;
+	flex-direction: row;
+}
+.board-setting-line .board-setting-line-item {
 	flex: 1;
 	margin: 0 20px 0 0;
 	max-width: 242px;
@@ -687,17 +691,17 @@ header.navbar-gitlab {
 	border-radius: 8px;
 	position: relative;
 }
-.board-setting-line > .board-setting-line-item .board-create-line-btn {
+.board-setting-line .board-setting-line-item .board-create-line-btn {
 	position: absolute;
 	right: -18px;
 	top: 45%;
 	cursor: pointer;
 }
-.board-setting-line > .board-setting-line-item:hover {
+.board-setting-line .board-setting-line-item:hover {
 	border-color: #ccc;
 	background-color: #fefeee;
 }
-.board-setting-line > .board-setting-line-item.sequence {
+.board-setting-line .board-setting-line-item.sequence {
 	width: 150px;
 	min-width: 150px;
 }
