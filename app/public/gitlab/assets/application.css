@@ -662,3 +662,12 @@ header.navbar-gitlab {
 	font-size: 12px;
     line-height: 20px;
 }
+.issue-types-icon > i {
+	display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0);
+}
