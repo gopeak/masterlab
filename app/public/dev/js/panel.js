@@ -235,7 +235,7 @@ var Panel = (function () {
                     result = template(resp.data);
                     $('#type_stat').html(result);
 
-                    var currentKey = $("#stat-assignee").data("current-key")
+                    var currentKey = $("#stat-assignee").data("current-key");
                     var assigneeData = {
                         list: resp.data[currentKey]
                     }
@@ -249,7 +249,7 @@ var Panel = (function () {
                     result = template(resp.data);
                     $('#weight_stat').html(result);
 
-                    resolve(resp.data)
+                    resolve(resp.data);
 
                 },
                 error: function (res) {
@@ -271,58 +271,84 @@ var Panel = (function () {
         loading.show('#type_stat');
         loading.show('#status_stat');
         loading.show('#assignee_stat');
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            async: true,
-            url: root_url + 'project/stat_sprint/fetchIssue',
-            data: { sprint_id: sprint_id },
-            success: function (resp) {
-                auth_check(resp);
-                console.log(resp)
-                loading.hide('#priority_stat');
-                loading.hide('#type_stat');
-                loading.hide('#status_stat');
-                loading.hide('#assignee_stat');
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async: true,
+                url: root_url + 'project/stat_sprint/fetchIssue',
+                data: { sprint_id: sprint_id },
+                success: function (resp) {
+                    auth_check(resp);
+                    console.log(resp)
+                    loading.hide('#priority_stat');
+                    loading.hide('#type_stat');
+                    loading.hide('#status_stat');
+                    loading.hide('#assignee_stat');
 
-                $('#issues_count').html(resp.data.count);
-                $('#no_done_count').html(resp.data.no_done_count);
-                $('#closed_count').html(resp.data.closed_count);
-                $('#sprint_count').html(resp.data.sprint_count);
+                    $('#issues_count').html(resp.data.count);
+                    $('#no_done_count').html(resp.data.no_done_count);
+                    $('#closed_count').html(resp.data.closed_count);
+                    $('#sprint_count').html(resp.data.sprint_count);
 
-                var source = $('#priority_stat_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#priority_stat').html(result);
+                    var source = $('#priority_stat_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#priority_stat').html(result);
 
-                source = $('#status_stat_tpl').html();
-                template = Handlebars.compile(source);
-                result = template(resp.data);
-                $('#status_stat').html(result);
+                    source = $('#status_stat_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(resp.data);
+                    $('#status_stat').html(result);
 
-                source = $('#type_stat_tpl').html();
-                template = Handlebars.compile(source);
-                result = template(resp.data);
-                $('#type_stat').html(result);
+                    source = $('#type_stat_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(resp.data);
+                    $('#type_stat').html(result);
 
-                source = $('#assignee_stat_tpl').html();
-                template = Handlebars.compile(source);
-                result = template(resp.data);
-                $('#assignee_stat').html(result);
 
-                source = $('#weight_stat_tpl').html();
-                template = Handlebars.compile(source);
-                result = template(resp.data);
-                $('#weight_stat').html(result);
-            },
-            error: function (res) {
-                loading.hide('#priority_stat');
-                loading.hide('#type_stat');
-                loading.hide('#status_stat');
-                loading.hide('#assignee_stat');
-                notify_error("请求数据错误" + res);
-            }
-        });
+
+
+                    //source = $('#assignee_stat_tpl').html();
+                    //template = Handlebars.compile(source);
+                    //result = template(resp.data);
+                    //$('#assignee_stat').html(result);
+
+
+                    var currentKey = $("#stat-assignee").data("current-key");
+                    var assigneeData = {
+                        list: resp.data[currentKey]
+                    }
+                    source = $('#assignee_stat_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(assigneeData);
+                    $('#assignee_stat').html(result);
+
+
+
+
+
+
+
+
+
+                    source = $('#weight_stat_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(resp.data);
+                    $('#weight_stat').html(result);
+
+                    resolve(resp.data);
+                },
+                error: function (res) {
+                    loading.hide('#priority_stat');
+                    loading.hide('#type_stat');
+                    loading.hide('#status_stat');
+                    loading.hide('#assignee_stat');
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        })
+
     }
     return Panel;
 })();
