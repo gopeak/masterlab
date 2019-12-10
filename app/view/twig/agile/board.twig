@@ -423,7 +423,7 @@
                                                value="">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group hide">
                                     <div class="col-sm-2"> 排序权重：</div>
                                     <div class="col-sm-3">
                                         <input type="number" class="form-control" name="board_weight" id="board_weight" value="0">
@@ -432,22 +432,36 @@
                                 <div class="form-group">
                                     <div class="col-sm-2">数据范围：</div>
                                     <div class="col-sm-3">
-                                        <select id="adv_field" name="board_source" class="selectpicker form-control"
-                                                dropdownAlignRight="true" title="请选择">
-                                            <option value="sprint" data-content="迭 代"> 迭代</option>
+                                        <select id="board_range" name="board_range" class="selectpicker form-control"
+                                                dropdownAlignRight="true" title="当前迭代">
+                                            <option value="sprint" data-content="迭 代"> 当前迭代</option>
                                             <option value="all" data-content="当前项目"> 当前项目</option>
                                             <option value="module" data-content="模 块"> 模块</option>
                                             <option value="assignee" data-content="经办人"> 经办人</option>
                                         </select>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <select id="adv_opt" name="params[opt]" class="selectpicker form-control"
-                                                dropdownAlignRight="true" title="迭代列表">
-                                            <option value="1">迭代1</option>
-                                            <option value="2">迭代2</option>
-                                            <option value="3">迭代3</option>
-                                            <option value="4">迭代4</option>
-                                        </select>
+                                    <div class="col-sm-6" id="range_container">
+                                        <div id="range-sprint">
+                                            <select id="range_sprints" name="params[opt]" class="selectpicker form-control"  multiple data-selected-text-format="count > 5"
+                                                    dropdownAlignRight="true" title="迭代列表">
+
+                                            </select>
+                                        </div>
+                                        <div id="range-all" class="hide">
+                                           当前项目所有事项
+                                        </div>
+                                        <div id="range-module" class="hide">
+                                            <select id="range_modules" name="params[opt]" class="selectpicker form-control"  multiple data-selected-text-format="count > 5"
+                                                    dropdownAlignRight="true" title="模块列表">
+
+                                            </select>
+                                        </div>
+                                        <div id="range-assignee" class="hide">
+                                            <select id="range_assignees" name="params[opt]" class="selectpicker form-control"  multiple data-selected-text-format="count > 5"
+                                                    dropdownAlignRight="true" title="经办人列表">
+
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <div class="col-sm-2">
@@ -991,6 +1005,7 @@
         "issue_labels":{{ project_labels|json_encode()|raw }},
         "users":{{ users|json_encode()|raw }},
         "project_users":{{ project_users|json_encode()|raw }},
+        "project_sprints":{{ sprints|json_encode()|raw }},
         "projects":{{ projects|json_encode()|raw }}
     };
     var _issue_id = null;
@@ -1033,6 +1048,19 @@
             $('#action-board_list').hide();
         });
 
+        window.$board.initBoardFormSprint(window._issueConfig.project_sprints,[]);
+        window.$board.initBoardFormModule(window._issueConfig.issue_module,[]);
+        $("#board_range").bind("change", function () {
+            console.log($(this).val())
+            let range_value = $(this).val();
+            $('#range_container div').addClass('hide');
+            $('#range-'+range_value).removeClass(('hide'));
+            /*
+            $('#range_container div').each(function (el) {
+
+            });
+            */
+        });
 
         if (gl.FilteredSearchManager) {
             window.filteredSearchManager = new gl.FilteredSearchManager();

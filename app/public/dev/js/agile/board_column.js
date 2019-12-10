@@ -231,10 +231,56 @@ var BoardColumn = (function () {
         });
     }
 
+    BoardColumn.prototype.rangeOnChange = function (board_id) {
+
+        $("#board_range").bind("change", function () {
+            console.log($(this).val())
+            let range_value = $(this).val();
+            $('#range_container div').addClass('hide');
+            $('#range-'+range_value).removeClass(('hide'));
+            /*
+            $('#range_container div').each(function (el) {
+
+            });
+            */
+        });
+    }
+
+    BoardColumn.prototype.initBoardFormSprint = function (sprints, id_arr) {
+        //console.log(sprints, id_arr)
+        var range_sprints = $('#range_sprints');
+        range_sprints.empty();
+        for (var _key in  sprints) {
+            var row = sprints[_key];
+            var id = row.id;
+            var title = row.name;
+            var opt = "<option  value='"+id+"'>"+title+"</option>";
+            console.log(opt)
+            range_sprints.append(opt);
+        }
+        $('.selectpicker').selectpicker('refresh');
+    }
+
+    BoardColumn.prototype.initBoardFormModule= function (modules, id_arr) {
+        console.log(modules, id_arr)
+        let range_modules = $('#range_modules');
+        range_modules.empty();
+        for (var _key in  modules) {
+            var row = modules[_key];
+            var id = row.k;
+            var title = row.name;
+            var opt = "<option  value='"+id+"'>"+title+"</option>";
+            console.log(opt)
+            range_modules.append(opt);
+        }
+        $('.selectpicker').selectpicker('refresh');
+    }
+
     BoardColumn.prototype.showEditBoardById = function (board_id) {
 
         var params = {format: 'json'};
         var project_id = window._cur_project_id;
+        // BoardColumn.prototype.rangeOnChange(board_id);
         $.ajax({
             type: "GET",
             dataType: "json",

@@ -176,6 +176,7 @@ class Agile extends BaseUserCtrl
                 $data['active_sprint_id'] = $sprints[0]['id'];
             }
         }
+        $data['sprints'] = $agileLogic->getSprints($data['project_id']);
 
         $issueLogic = new IssueLogic();
         $data['description_templates'] = $issueLogic->getDescriptionTemplates();
