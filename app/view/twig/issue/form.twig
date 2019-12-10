@@ -457,7 +457,7 @@
                 data-project-id="{{project_id}}"
         >
             {{#project_users}}
-                <option value="{{uid}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{uid}}.png' data-original-title='master Master'> {{display_name}}"  {{#if_in_array uid ../edit_data}}selected{{/if_in_array}} >{{display_name}}</option>
+                <option value="{{uid}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{uid}}.png' > {{display_name}}"  {{#if_in_array uid ../edit_data}}selected{{/if_in_array}} >{{display_name}}</option>
             {{/project_users}}
 
         </select>

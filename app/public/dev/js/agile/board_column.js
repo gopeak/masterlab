@@ -254,8 +254,9 @@ var BoardColumn = (function () {
             var row = sprints[_key];
             var id = row.id;
             var title = row.name;
+            let selected = '';
             var opt = "<option  value='"+id+"'>"+title+"</option>";
-            console.log(opt)
+            //console.log(opt)
             range_sprints.append(opt);
         }
         $('.selectpicker').selectpicker('refresh');
@@ -266,12 +267,46 @@ var BoardColumn = (function () {
         let range_modules = $('#range_modules');
         range_modules.empty();
         for (var _key in  modules) {
-            var row = modules[_key];
-            var id = row.k;
-            var title = row.name;
-            var opt = "<option  value='"+id+"'>"+title+"</option>";
-            console.log(opt)
+            let row = modules[_key];
+            let id = row.k;
+            let title = row.name;
+            let selected = '';
+            let opt = "<option  value='"+id+"'>"+title+"</option>";
+            //console.log(opt)
             range_modules.append(opt);
+        }
+        $('.selectpicker').selectpicker('refresh');
+    }
+
+    BoardColumn.prototype.initBoardFormIssueType= function (issue_types, id_arr) {
+        console.log(issue_types, id_arr)
+        let range_issue_type = $('#range_issue_type');
+        range_issue_type.empty();
+        for (var _key in  issue_types) {
+            let row = issue_types[_key];
+            let id = row._key;
+            let title = row.name;
+            let selected = '';
+            let opt = "<option  value='"+id+"'>"+title+"</option>";
+            //console.log(opt)
+            range_issue_type.append(opt);
+        }
+        $('.selectpicker').selectpicker('refresh');
+    }
+
+    BoardColumn.prototype.initBoardFormAssignee= function (users, id_arr) {
+        console.log(users, id_arr)
+        let range_assignees = $('#range_assignees');
+        range_assignees.empty();
+        for (var _key in  users) {
+            let row = users[_key];
+            let uid = row.k;
+            let title = row.display_name;
+            let selected = '';
+            let content = "<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/"+uid+".png' > "+title;
+            let opt  ='<option value="'+uid+'"  data-content="'+content+'"  '+selected+'>'+title+'</option>';
+            console.log(opt)
+            range_assignees.append(opt);
         }
         $('.selectpicker').selectpicker('refresh');
     }
