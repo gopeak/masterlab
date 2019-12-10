@@ -101,7 +101,7 @@ class BaseCtrl
             $twigLoader = new \Twig\Loader\FilesystemLoader(VIEW_PATH . '');
         }
         $this->loader  = $twigLoader;
-        if(empty($twigTpl)){
+        if (empty($twigTpl)) {
             $twigTpl = new \Twig\Environment($this->loader, [
                 'debug' => true
             ]);
@@ -123,7 +123,6 @@ class BaseCtrl
             $this->addGVar('_title', $title);
             $this->getSystemInfo();
         }
-
     }
 
     /**

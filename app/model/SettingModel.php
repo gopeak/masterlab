@@ -69,7 +69,7 @@ class SettingModel extends BaseDictionaryModel
         $info['format'] = $format;
         list($ret) = $execRet = parent::insert($info);
         if ($ret) {
-            CacheKeyModel::getInstance()->clearCache( $this->table);
+            CacheKeyModel::getInstance()->clearCache($this->table);
         }
         return $execRet;
     }

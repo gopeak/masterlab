@@ -67,7 +67,7 @@
                                 <i class="fa fa-angle-right"></i>
                             </div>
 
-                            {% set profile_nav='have_join_projects' %}
+                            {% set profile_nav='followed_issues' %}
                             {% include  'twig/user/common-profile-nav.twig' %}
                         </div>
                     </div>
@@ -82,6 +82,7 @@
                             <div class="tab-pane" id="groups"></div>
                             <div class="tab-pane active" id="projects">
                                 <div class="js-projects-list-holder">
+
                                     <ul id="projects_list" class="projects-list">
 
                                     </ul>
@@ -107,49 +108,34 @@
 </section>
 
 {% verbatim %}<script id="projects_tpl" type="text/html" >
-{{#projects}}
+{{#issues}}
     <li class="project-row">
-        <div class="avatar-container s40">
-
-            {{#if avatar_exist}}
-            <a href="#" class="avatar-image-container">
-                <img src="{{avatar}}"  class="avatar has-tooltip s40">
-            </a>
-            {{^}}
-            <div class="avatar-container s40" style="display: block">
-                <a class="project" href="/{{path}}/{{key}}">
-                    <div class="avatar project-avatar s40 identicon"
-                         style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
-                </a>
-            </div>
-            {{/if}}
-        </div>
         <div class="project-details">
             <h3 class="prepend-top-0 append-bottom-0">
-                <a class="text-plain" href="/{{path}}/{{key}}">
+                <a class="text-plain" href="">
                     <span class="project-full-name">
-                        <span class="project-name">{{name}}</span> /{{path}}/{{key}}
+                        <span class="project-name">{{pkey}}{{issue_num}}</span>
                     </span>
                 </a>
             </h3>
             <div class="description prepend-top-5">
-                <p dir="auto">{{description}}.</p></div>
+                <p dir="auto">{{issue_num}}.</p></div>
         </div>
         <div class="controls">
             <div class="prepend-top-0">
                 <span class="prepend-left-10"></span>
                 </span>
             </div>
-            <div class="prepend-top-0">更新于
+            <div class="prepend-top-0">updated
                 <time class="js-timeago js-timeago-render-my" title=""
-                      datetime="{{create_time_origin}}"
+                      datetime="{{updated}}"
                       data-toggle="tooltip"
                       data-placement="top"
                       data-container="body"
-                      data-original-title="{{create_time_origin}}" data-tid="51">{{create_time_text}}</time></div>
+                      data-original-title="{{updated}}" data-tid="51">{{updated_text}}</time></div>
         </div>
     </li>
-    {{/projects}}
+    {{/issues}}
 
 </script>{% endverbatim %}
 
@@ -164,11 +150,11 @@
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/user/fetchUserHaveJoinProjects',
-            data: {limit:200,user_id:_user_id},
+            url: '/user/fetchMyFollowedIssues',
+            data: {user_id:_user_id},
             success: function (resp) {
                 auth_check(resp);
-                if(resp.data.projects.length){
+                if(resp.data.issues.length){
                     var source = $('#projects_tpl').html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
