@@ -114,7 +114,17 @@
                         <div class="panel panel-info">
                             <!-- Default panel contents -->
                             <div class="panel-heading tile__name " data-force="25" draggable="false">
-                                <h3 class="panel-heading-title">按开发人员(未解决事项)</h3>
+                                <h3 class="panel-heading-title">按开发人员</h3>
+                                <div class="panel-heading-extra">
+                                    <div class="panel-action">
+                                        <i class="fa fa-angle-down"></i>
+                                        <ul id="stat-assignee" data-current-key="assignee_stat_undone" style="width:120px;">
+                                            <li data-key="assignee_stat_undone">未解决事项</li>
+                                            <li data-key="assignee_stat_done">已解决事项</li>
+                                            <li data-key="assignee_stat_all">全部事项</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                             <div class="panel-body">
                                 <!-- Table -->
@@ -127,7 +137,7 @@
                                     </tr>
                                     </thead>
                                     {% verbatim %}<script id="assignee_stat_tpl" type="text/html" >
-                                        {{#assignee_stat_undone}}
+                                        {{#list}}
                                         <tr>
                                             <td>
                                                 {{user_html user_id }}
@@ -155,7 +165,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        {{/assignee_stat_undone}}
+                                        {{/list}}
                                     </script>{% endverbatim %}
 
                                     <tbody id="assignee_stat">
@@ -180,7 +190,8 @@
                                         <th>百分比</th>
                                     </tr>
                                     </thead>
-                                    {% verbatim %}<script id="status_stat_tpl" type="text/html" >
+                                    {% verbatim %}
+                                    <script id="status_stat_tpl" type="text/html" >
                                         {{#status_stat}}
                                         <tr>
                                             <td>
@@ -210,7 +221,8 @@
                                             </td>
                                         </tr>
                                         {{/status_stat}}
-                                    </script>{% endverbatim %}
+                                    </script>
+                                    {% endverbatim %}
 
                                     <tbody id="status_stat">
 
@@ -368,7 +380,33 @@
         var options = {
         }
         window.$panel = new Panel( options );
-        window.$panel.fetchProjectStat(_cur_project_id);
+        window.$panel.fetchProjectStat(_cur_project_id).then(res => {
+            $("#stat-assignee").on("click", "li", function(e){
+                var key = $(this).data("key")
+                var data = {
+                    list: res[key]
+                }
+                $("#stat-assignee").attr("data-current-key", key)
+                var source = $('#assignee_stat_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(data);
+                $('#assignee_stat').html(result);
+                console.log(data)
+            })
+        })
+
+        $(document).on("click", ".panel-action i", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).siblings("ul").slideDown(100);
+        });
+
+        $(document).on("click", function () {
+            $(".panel-action ul").slideUp(100);
+        });
+
+        
+
     });
 
 </script>

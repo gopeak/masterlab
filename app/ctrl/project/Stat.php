@@ -88,6 +88,9 @@ class Stat extends BaseUserCtrl
         $data['assignee_stat_done'] = IssueFilterLogic::getAssigneeStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_DONE);
         $this->percent($data['assignee_stat_done'], $data['count']);
 
+        $data['assignee_stat_all'] = IssueFilterLogic::getAssigneeStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_ALL);
+        $this->percent($data['assignee_stat_all'], $data['count']);
+
         $data['weight_stat'] = IssueFilterLogic::getWeightStat($projectId);
         $sumWeight = 0;
         foreach ($data['weight_stat'] as $row) {
