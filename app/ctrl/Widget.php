@@ -580,7 +580,7 @@ class Widget extends BaseUserCtrl
     {
         $data = [];
         $sprintId = $this->getParamSprintId();
-        $data['assignee_stat'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, true);
+        $data['assignee_stat'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
         $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
         $this->percent($data['assignee_stat'], $data['no_done_count']);
         // 获取迭代名称
