@@ -111,8 +111,11 @@
     justify-content: center;
 }
 .main-logo .logo {
-    height: 32px;
     width: 32px;
+}
+.main-logo .logo img {
+    width: 100%;
+    display: block;
 }
 
 .min-sidebar .main-logo {
