@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 class TestPermissionGlobal extends TestCase
 {
     public static $uid = 1;
-    public static $permId = 10000;
+    public static $permId = 1;
 
     public static $logs = [];
 

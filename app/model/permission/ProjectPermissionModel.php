@@ -7,11 +7,11 @@ use main\app\model\BaseDictionaryModel;
 /**
  * 默认角色模型
  */
-class PermissionModel extends BaseDictionaryModel
+class ProjectPermissionModel extends BaseDictionaryModel
 {
     public $prefix = '';
 
-    public $table = 'permission';
+    public $table = 'project_permission';
 
     /**
      * PermissionModel constructor.
@@ -22,7 +22,12 @@ class PermissionModel extends BaseDictionaryModel
         parent::__construct($persistent);
     }
 
-
+    /**
+     * 新增
+     * @param $info
+     * @return array
+     * @throws \Exception
+     */
     public function add($info)
     {
         if ( empty($info) )
@@ -33,11 +38,19 @@ class PermissionModel extends BaseDictionaryModel
     }
 
 
+    /**
+     * 获取父权限
+     * @return array
+     */
     public function getParent()
     {
         return $this->getRows('*', ['parent_id' => 0]);
     }
 
+    /**
+     * 获取子权限
+     * @return array
+     */
     public function getChildren()
     {
         $params = [];
@@ -50,6 +63,11 @@ class PermissionModel extends BaseDictionaryModel
         return $rows;
     }
 
+    /**
+     * 通过id数组获取权限key
+     * @param $permIds
+     * @return array
+     */
     public function getKeysById($permIds)
     {
 
