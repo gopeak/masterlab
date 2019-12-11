@@ -648,7 +648,7 @@ header.navbar-gitlab {
 	margin-left: -15px;
 }
 
-.gdfWrapper .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+.gdfWrapper .table>tbody>tr>td, .gdfWrapper .table>thead>tr>th {
 	padding: 8px 0px !important;
 }
 .selectable-close {
@@ -692,6 +692,9 @@ header.navbar-gitlab {
 	border-radius: 8px;
 	padding: 10px;
 	height: 100%;
+}
+.board-setting-line-item-out-line > .thumbnail {
+	border-color: #bbb !important;
 }
 .board-setting-line .board-setting-line-item .board-create-line-btn {
 	position: absolute;
@@ -737,6 +740,19 @@ header.navbar-gitlab {
 .board-setting-line-item-row {
 	padding: 0 0 10px;
 }
-.board-setting-line-item-out-line > .thumbnail {
-	border-color: #ec4400;
+.board-setting-line .thumbnail {
+	display: flex;
+	flex-direction: column;
+}
+.board-setting-line .thumbnail .board-item-body{
+	flex: 1;
+}
+.board-setting-line .thumbnail .board-item-foot {
+	border-top: 2px dotted #eee;
+	text-align: center;
+	padding: 5px 0 0;
+	cursor: pointer;
+}
+.board-setting-line .thumbnail .board-item-foot:hover {
+	color: #ec0044;
 }

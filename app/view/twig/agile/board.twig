@@ -444,26 +444,18 @@
                                     <div class="col-sm-6" id="range_container">
                                         <div id="range-sprint">
                                             <select id="range_sprints" name="params[opt]" class="selectpicker form-control"  multiple data-selected-text-format="count > 5"
-                                                    dropdownAlignRight="true" title="迭代列表">
-
-                                            </select>
+                                                    dropdownAlignRight="true" title="迭代列表"></select>
                                         </div>
                                         <div id="range-all" class="hide">
                                            当前项目所有事项
                                         </div>
                                         <div id="range-module" class="hide">
                                             <select id="range_modules" name="range_modules" class="selectpicker form-control"  multiple data-selected-text-format="count > 5"
-                                                    dropdownAlignRight="true" title="模块列表">
-
-                                            </select>
+                                                    dropdownAlignRight="true" title="模块列表"></select>
                                         </div>
                                         <div id="range-issue_type" class="hide">
 
-                                            <select id="range_issue_type" name="range_issue_type" class="selectpicker"
-                                                    multiple data-none-selected-text="请选择"
-                                            >
-
-                                            </select>
+                                            <select id="range_issue_type" name="range_issue_type" class="selectpicker" multiple data-none-selected-text="请选择"></select>
                                         </div>
                                     </div>
 
@@ -471,140 +463,168 @@
                                     </div>
                                 </div>
                                 <hr>
+
+
+
+
+
                                 <div class="board-setting-line">
                                     <div class="board-setting-line-item sequence" >
+                                        <div class="board-tools-line-btn">
+                                            <i class="fa fa-pencil js-board-item-title-edit-btn" title="编辑"></i>
+                                        </div>
                                         <div class="thumbnail">
-                                            <div class="caption">
-                                               <h5>待办事项</h5>
+                                            <div class="board-item-caption">
+                                                <div class="js-board-item-title-input" style="display: none;">
+                                                    <input type="text" class="form-control board-item-title-input" name="text_column_1" value="待办事项" >
+                                                </div>
+                                                <div class="js-board-item-title board-item-title">
+                                                    <span>待办事项</span>
+                                                </div>
                                             </div>
                                             <div class="board-create-line-btn hide">
-                                            <i class="fa fa-plus"></i>
-                                        </div>
-                                            <img data-src="holder.js/100%x150" alt="100%x150"
-                                                 src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzM1YmYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzMzViZiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
-                                                 data-holder-rendered="true"
-                                                 style="height: 200px; width: 100%; display: block;">
-                                            <p style="margin-top: 5px;">未列入迭代的事项</p>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox">显 示
-                                                </label>
+                                                <i class="fa fa-plus"></i>
+                                            </div>
+                                            <div class="board-item-body">
+                                                <img data-src="holder.js/100%x150" alt="100%x150"
+                                                        src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzM1YmYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzMzViZiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                                                        data-holder-rendered="true"
+                                                        style="height: 200px; width: 100%; display: block;">
+                                                <p style="margin-top: 5px;">未列入迭代的事项</p>
+                                            </div>
+                                            <div class="board-item-foot js-board-item-title-close-btn">
+                                                <i class="fa fa-close" title="删除"></i> 删除泳道
                                             </div>
                                         </div>
                                     </div>
+
                                     <!-- 活动泳道 -->
-                                <div class="board-setting-line-active">
-                                    <div class="board-setting-line-item" draggable="true">
-                                        <div class="board-tools-line-btn">
-                                            <i class="fa fa-pencil js-board-item-title-edit-btn" title="编辑"></i>
-                                            <i class="fa fa-close js-board-item-title-close-btn" title="删除"></i>
-                                        </div>
-                                        <div class="board-create-line-btn hide">
-                                            <i class="fa fa-plus"></i>
-                                        </div>
-                                        <div class="thumbnail">
-                                            <div class="board-item-caption">
-                                                <div class="js-board-item-title-input" style="display: none;">
-                                                    <input type="text" class="form-control board-item-title-input" name="text_column_1" value="准备中" >
-                                                </div>
-                                                <div class="js-board-item-title board-item-title">
-                                                    <span>准备中111</span>
-                                                </div>
+                                    <div class="board-setting-line-active">
+                                        <div class="board-setting-line-item" draggable="true">
+                                            <div class="board-tools-line-btn">
+                                                <i class="fa fa-pencil js-board-item-title-edit-btn" title="编辑"></i>
                                             </div>
-                                            <img data-src="holder.js/100%x150" alt="100%x150"
-                                                src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNhNjYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2E2NiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
-                                                data-holder-rendered="true"
-                                                style="height: 200px; width: 100%; display: block;">
-                                            <p style="margin-top: 5px">数据源：</p>
-                                            <div class="row board-setting-line-item-row">
-                                                <div class="col-sm-1">
-                                                    <div class="checkbox" title="标签">
-                                                        <label>
-                                                            <input type="checkbox">
-                                                        </label>
+                                            <div class="board-create-line-btn hide">
+                                                <i class="fa fa-plus"></i>
+                                            </div>
+                                            <div class="thumbnail">
+                                                <div class="board-item-caption">
+                                                    <div class="js-board-item-title-input" style="display: none;">
+                                                        <input type="text" class="form-control board-item-title-input" name="text_column_1" value="准备中" >
+                                                    </div>
+                                                    <div class="js-board-item-title board-item-title">
+                                                        <span>准备中111</span>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-10">
-                                                    <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
-                                                            dropdownAlignRight="true" title="标签筛选">
-                                                        <option value="1">打开</option>
-                                                        <option value="2">重新打开</option>
-                                                        <option value="3">延迟处理</option>
-                                                        <option value="4">迭代4</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row board-setting-line-item-row">
-                                                <div class="col-sm-1">
-                                                    <div class="checkbox" title="经办人">
-                                                        <label>
-                                                            <input type="checkbox">
-                                                        </label>
+                                                <div class="board-item-body">
+                                                    <img data-src="holder.js/100%x150" alt="100%x150"
+                                                        src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNhNjYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2E2NiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                                                        data-holder-rendered="true"
+                                                        style="height: 200px; width: 100%; display: block;">
+                                                    <p style="margin-top: 5px">数据源：</p>
+                                                    <div class="row board-setting-line-item-row">
+                                                        <div class="col-sm-1">
+                                                            <div class="checkbox" title="标签">
+                                                                <label>
+                                                                    <input type="checkbox">
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-10">
+                                                            <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                                                    dropdownAlignRight="true" title="标签筛选">
+                                                                <option value="1">打开</option>
+                                                                <option value="2">重新打开</option>
+                                                                <option value="3">延迟处理</option>
+                                                                <option value="4">迭代4</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row board-setting-line-item-row">
+                                                        <div class="col-sm-1">
+                                                            <div class="checkbox" title="经办人">
+                                                                <label>
+                                                                    <input type="checkbox">
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-10">
+                                                            <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                                                    dropdownAlignRight="true" title="经办人筛选">
+                                                                <option value="1">打开</option>
+                                                                <option value="2">重新打开</option>
+                                                                <option value="3">延迟处理</option>
+                                                                <option value="4">迭代4</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-10">
-                                                    <select id="col_1_data" name="col_1_data" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
-                                                            dropdownAlignRight="true" title="经办人筛选">
-                                                        <option value="1">打开</option>
-                                                        <option value="2">重新打开</option>
-                                                        <option value="3">延迟处理</option>
-                                                        <option value="4">迭代4</option>
-                                                    </select>
+                                                <div class="board-item-foot js-board-item-title-close-btn">
+                                                    <i class="fa fa-close" title="删除"></i> 删除泳道
                                                 </div>
                                             </div>
-                                            
                                         </div>
-                                    </div>
-                                    <div class="board-setting-line-item" draggable="true">
-                                        <div class="board-tools-line-btn">
-                                            <i class="fa fa-pencil js-board-item-title-edit-btn" title="编辑"></i>
-                                            <i class="fa fa-close js-board-item-title-close-btn" title="删除"></i>
-                                        </div>
-                                        <div class="board-create-line-btn hide">
-                                            <i class="fa fa-plus"></i>
-                                        </div>
-                                        <div class="thumbnail">
-                                            <div class="board-item-caption">
-                                                <div class="js-board-item-title-input" style="display: none;">
-                                                    <input type="text" class="form-control board-item-title-input" name="text_column_1" value="准备中" >
-                                                </div>
-                                                <div class="js-board-item-title board-item-title">
-                                                    <span>准备中222</span>
-                                                </div>
+                                        <div class="board-setting-line-item" draggable="true">
+                                            <div class="board-tools-line-btn">
+                                                <i class="fa fa-pencil js-board-item-title-edit-btn" title="编辑"></i>
                                             </div>
-                                            <img data-src="holder.js/100%x150" alt="100%x200"
-                                                src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNiNjMgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2I2MyI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
-                                                data-holder-rendered="true"
-                                                style="height: 200px; width: 100%; display: block;">
-                                            <p style="margin-top: 5px">状态为“已解决”并且解决结果为“完成”的事项</p>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox">显 示
-                                                </label>
+                                            <div class="board-create-line-btn hide">
+                                                <i class="fa fa-plus"></i>
+                                            </div>
+                                            <div class="thumbnail">
+                                                <div class="board-item-caption">
+                                                    <div class="js-board-item-title-input" style="display: none;">
+                                                        <input type="text" class="form-control board-item-title-input" name="text_column_1" value="准备中" >
+                                                    </div>
+                                                    <div class="js-board-item-title board-item-title">
+                                                        <span>准备中222</span>
+                                                    </div>
+                                                </div>
+                                                <div class="board-item-body">
+                                                    <img data-src="holder.js/100%x150" alt="100%x150"
+                                                            src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzM1YmYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzMzViZiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                                                            data-holder-rendered="true"
+                                                            style="height: 200px; width: 100%; display: block;">
+                                                    <p style="margin-top: 5px;">未列入迭代的事项</p>
+                                                </div>
+                                                <div class="board-item-foot js-board-item-title-close-btn">
+                                                    <i class="fa fa-close" title="删除"></i> 删除泳道
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- 活动泳道 end -->
+                                    <!-- 活动泳道 end -->
                                     
-                                <div class="board-setting-line-item" >
-                                    <div class="thumbnail">
-                                        <div class="caption">
-                                            <h5>已关闭</h5>
-                                        </div>
-                                        <img data-src="holder.js/100%x150" alt="100%x200"
-                                                src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNiNjMgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2I2MyI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
-                                                data-holder-rendered="true"
-                                                style="height: 200px; width: 100%; display: block;">
-                                        <p style="margin-top: 5px;">状态为“已解决”并且解决结果为“完成”的事项</p>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox">显 示
-                                            </label>
+                                    <!-- 关闭泳道 -->
+                                    <div class="board-setting-line-item" >
+                                        <div class="thumbnail">
+                                            <div class="board-item-caption">
+                                                <div class="js-board-item-title-input" style="display: none;">
+                                                    <input type="text" class="form-control board-item-title-input" name="text_column_1" value="准备中" >
+                                                </div>
+                                                <div class="js-board-item-title board-item-title">
+                                                    <span>已关闭</span>
+                                                </div>
+                                            </div>
+                                            <div class="board-item-body">
+                                                <img data-src="holder.js/100%x150" alt="100%x150"
+                                                        src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzM1YmYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzMzViZiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                                                        data-holder-rendered="true"
+                                                        style="height: 200px; width: 100%; display: block;">
+                                                <p style="margin-top: 5px;">未列入迭代的事项</p>
+                                            </div>
+                                            <div class="board-item-foot js-board-item-title-close-btn">
+                                                <i class="fa fa-close" title="删除"></i> 删除泳道
+                                            </div>
                                         </div>
                                     </div>
+                                    <!-- end -->
                                 </div>
-                            </div>
+
+
+
+
+
                         </div>
                         <div class="modal-footer form-actions hide" id="action-board_form">
                             <button type="button" class="btn btn-default " id="btn-add_swim">
