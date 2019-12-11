@@ -9,6 +9,7 @@
     <script src="/dev/lib/url_param.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
     <!-- <script src="/dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script> -->
     <script src="/dev/js/agile/board_column.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/agile/board_setting.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <!-- <script src="/dev/js/admin/issue_ui.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script> -->
@@ -734,6 +735,7 @@
 
 {% verbatim %}<script type="text/html" id="board_column_tpl">
  {{#columns}}
+
 <div class="col-sm-3 col-md-2" >
     <div class="thumbnail">
         <div class="caption row">
@@ -1019,9 +1021,20 @@
     var _perm_kanban = {{ perm_kanban ? 1:0 }};
 
     var $board = null;
+    var $board_setting = null;
     $(function () {
+
+        if (gl.FilteredSearchManager) {
+            window.filteredSearchManager = new gl.FilteredSearchManager();
+        }
+        Issuable.init();
+        new gl.IssuableBulkActions({
+            prefixId: 'issue_'
+        });
+
         var options = {}
         window.$board = new BoardColumn(options);
+        window.$board_setting = new BoardSetting(options);
 
         // 聚焦模式切换
         $('#toggle_focus_mode').bind('click', function () {
@@ -1032,7 +1045,7 @@
 
         $('#btn-setting_board').bind('click', function () {
             $('#modal-board_setting').modal('show');
-            window.$board.fetchBoards();
+            window.$board_setting.fetchBoards();
         });
         // 返回看板列表时
         $('#btn-back_board_list').bind('click', function () {
@@ -1040,7 +1053,7 @@
             $('#board_table').show();
             $('#action-board_form').hide();
             $('#action-board_list').show();
-            window.$board.fetchBoards();
+            window.$board_setting.fetchBoards();
         });
         // 点击创建按钮时
         $('#btn-show_add_board').bind('click', function () {
@@ -1050,9 +1063,9 @@
             $('#action-board_list').hide();
         });
 
-        window.$board.initBoardFormSprint(window._issueConfig.project_sprints,[]);
-        window.$board.initBoardFormModule(window._issueConfig.issue_module,[]);
-        window.$board.initBoardFormIssueType(window._issueConfig.issue_types,[]);
+        window.$board_setting.initBoardFormSprint(window._issueConfig.project_sprints,[]);
+        window.$board_setting.initBoardFormModule(window._issueConfig.issue_module,[]);
+        window.$board_setting.initBoardFormIssueType(window._issueConfig.issue_types,[]);
 
         $("#board_range").bind("change", function () {
             console.log($(this).val())
@@ -1064,14 +1077,6 @@
 
             });
             */
-        });
-
-        if (gl.FilteredSearchManager) {
-            window.filteredSearchManager = new gl.FilteredSearchManager();
-        }
-        Issuable.init();
-        new gl.IssuableBulkActions({
-            prefixId: 'issue_'
         });
 
 
