@@ -682,10 +682,9 @@ header.navbar-gitlab {
 	flex-direction: row;
 }
 .board-setting-line .board-setting-line-item {
-	flex: 1;
 	margin: 0 20px 0 0;
-	max-width: 242px;
-	min-width: 242px;
+	width: 230px;
+	min-width: 230px;
 	border: 2px dotted #eee;
     padding: 10px;
 	border-radius: 8px;
@@ -697,11 +696,37 @@ header.navbar-gitlab {
 	top: 45%;
 	cursor: pointer;
 }
+.board-setting-line .board-setting-line-item .board-tools-line-btn {
+	position: absolute;
+	right: 20px;
+	top: 17px;
+	cursor: pointer;
+	z-index: 1;
+}
+.board-setting-line .board-setting-line-item .board-tools-line-btn > i {
+	color: #999;
+	margin-left: 10px;
+}
+.board-setting-line .board-setting-line-item .board-tools-line-btn > i:hover {
+	color: #000;
+}
 .board-setting-line .board-setting-line-item:hover {
 	border-color: #ccc;
 	background-color: #fefeee;
 }
+.board-setting-line .board-setting-line-item.board-setting-line-item-closed,
 .board-setting-line .board-setting-line-item.sequence {
-	width: 150px;
-	min-width: 150px;
+	width: 180px;
+	min-width: 180px;
+}
+
+.board-setting-line .board-setting-line-item .board-item-title {
+	padding: 7px 60px 7px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 34px;
+    word-break: keep-all;
+}
+.board-item-title-input {
+	padding-right: 60px;
 }

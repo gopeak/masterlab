@@ -383,6 +383,7 @@
         window.$panel.fetchProjectStat(_cur_project_id).then(res => {
             $("#stat-assignee").on("click", "li", function(e){
                 var key = $(this).data("key")
+                if(!res[key]) return
                 var data = {
                     list: res[key]
                 }
