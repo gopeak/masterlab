@@ -37,10 +37,8 @@ var FollowIssues = (function () {
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#projects_list').append(result);
-
-
+                    
                     window._cur_page = parseInt(page);
-                    console.log(window._cur_page);
                     var pages = parseInt(resp.data.pages);
                     if (window._cur_page < pages) {
                         $('#more_follow').removeClass('hide');
