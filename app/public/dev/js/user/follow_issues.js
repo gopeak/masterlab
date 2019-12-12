@@ -33,11 +33,11 @@ var FollowIssues = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.data.issues.length) {
-                    var source = $('#projects_tpl').html();
+                    var source = $('#follow_issue_tpl').html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
-                    $('#projects_list').append(result);
-                    
+                    $('#follow_issue_list').append(result);
+
                     window._cur_page = parseInt(page);
                     var pages = parseInt(resp.data.pages);
                     if (window._cur_page < pages) {
