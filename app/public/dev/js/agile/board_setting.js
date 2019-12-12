@@ -193,12 +193,8 @@ var BoardSetting = (function () {
                 var result = template(resp.data);
                 $('#board_list_render_id').html(result);
 
-                $(".list_for_set_active").click(function(){
-
-                });
-
-                $(".list_for_delete").click(function(){
-                    // BoardSetting.prototype.delete( $(this).data("id"));
+                $(".list_for_delete").bind("click", function () {
+                    BoardSetting.prototype.delete($(this).data('id'));
                 });
 
                 $(".list_for_edit").bind("click", function () {
@@ -463,7 +459,7 @@ var BoardSetting = (function () {
             is_filter_closed:is_filter_closed,
             columns:columns_data_str
         };
-        console.log($(board_data)) ;
+        // console.log($(board_data)) ;
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -471,7 +467,37 @@ var BoardSetting = (function () {
             url: root_url + 'agile/saveBoardSetting',
             data: board_data,
             success: function (resp) {
-                console.log('save:', resp);
+                auth_check(resp);
+                notify_success(resp.msg);
+                $('#btn-back_board_list').click();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    BoardSetting.prototype.delete = function( id ) {
+
+        if(!window.confirm("您是否确认删除该看板？")){
+            return false;
+        }
+
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: false,
+            url:  '/agile/deleteBoard/'+id,
+            success: function (resp) {
+
+                auth_check(resp);
+                if(resp.ret==='200'){
+                    notify_success(resp.msg, resp.data);
+                    BoardSetting.prototype.fetchBoards();
+                }else{
+                    notify_error(resp.msg);
+                }
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

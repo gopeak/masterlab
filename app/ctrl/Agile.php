@@ -382,7 +382,7 @@ class Agile extends BaseUserCtrl
         $activityInfo['title'] = $info['name'];
         $activityModel->insertItem(UserAuth::getId(), $projectId, $activityInfo);
 
-        $this->ajaxSuccess($boardId, $_POST);
+        $this->ajaxSuccess('操作成功', $_POST);
     }
 
     /**
@@ -1071,6 +1071,44 @@ class Agile extends BaseUserCtrl
             $this->ajaxSuccess('success', $columns);
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
+        }
+    }
+
+    public function deleteBoard()
+    {
+        $boardId = null;
+        if (isset($_GET['_target'][2])) {
+            $boardId = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['board_id'])) {
+            $boardId = (int)$_REQUEST['board_id'];
+        }
+        if (empty($boardId)) {
+            $this->ajaxFailed('参数错误', '看板id不能为空');
+        }
+
+        $boardModel = new AgileBoardModel();
+        $board = $boardModel->getItemById($boardId);
+        if (empty($board)) {
+            $this->ajaxFailed('参数错误', '看板数据错误');
+        }
+
+        // email
+        // $notifyLogic = new NotifyLogic();
+        // $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_REMOVE, $board['project_id'], $board);
+
+        $ret = $boardModel->deleteItem($boardId);
+        if ($ret) {
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '删除了看板';
+            $activityInfo['type'] = ActivityModel::TYPE_AGILE;
+            $activityInfo['obj_id'] = $boardId;
+            $activityInfo['title'] = $board['name'];
+            $activityModel->insertItem(UserAuth::getId(), $board['project_id'], $activityInfo);
+            $this->ajaxSuccess('提示', '操作成功');
+        } else {
+            $this->ajaxFailed('提示', '数据库删除看板失败');
         }
     }
 }
