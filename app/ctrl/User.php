@@ -145,6 +145,8 @@ class User extends BaseUserCtrl
             $data['other_user'] = $user;
         }
         $data['user_id'] = $userId;
+
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/user/follow_issues.php', $data);
     }
 
