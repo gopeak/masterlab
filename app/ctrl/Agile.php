@@ -306,6 +306,85 @@ class Agile extends BaseUserCtrl
         $this->ajaxSuccess('ok', $sprint);
     }
 
+    public function saveBoardSetting()
+    {
+        $projectId = null;
+        if (isset($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $boardId = null;
+        if (isset($_POST['board_id'])) {
+            $boardId = (int)$_POST['board_id'];
+        }
+
+        $info = [];
+        if (!isset($_POST['name']) || empty($_POST['name'])) {
+            $err['name'] = '看板名称不能为空';
+            $this->ajaxFailed('参数错误', $err, parent::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+        $info['name'] = $_POST['name'];
+        if (isset($_POST['range_type'])) {
+            $info['range_type'] = $_POST['range_type'];
+            if (isset($_POST['range_data'])) {
+                $info['range_data'] = $_POST['range_data'];
+            }
+        }
+        if (isset($_POST['weight'])) {
+            $info['weight'] = (int)$_POST['weight'];
+        }
+        if (isset($_POST['is_filter_backlog'])) {
+            $info['is_filter_backlog'] = $_POST['is_filter_backlog'];
+        }
+        if (isset($_POST['is_filter_closed'])) {
+            $info['is_filter_closed'] = (int)$_POST['is_filter_closed'];
+        }
+        $columnsArr = json_decode($_POST['columns'], true);
+        $boardModel = new AgileBoardModel();
+        $columnModel = new AgileBoardColumnModel();
+        if (empty($boardId)) {
+            $info['project_id'] = $_POST['project_id'];
+            // 新增
+            list($ret, $insertId) = $boardModel->insertItem($info);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', "新增看板错误:" . $insertId);
+            }
+            $boardId = $insertId;
+            $actionType = '新增';
+        } else {
+            // 更新
+            list($ret, $msg) = $boardModel->updateItem($boardId, $info);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', "更新看板错误:" . $msg);
+            }
+            $actionType = '更新';
+        }
+        // 更新泳道数据
+        $columnModel->deleteByBoardId($boardId);
+        $count = count($columnsArr);
+        foreach ($columnsArr as $index => $item) {
+            $arr = [];
+            $arr['board_id'] = $insertId;
+            $arr['name'] = $item['name'];
+            $arr['weight'] = abs($index - $count);
+            $arr['data'] = json_encode($item['data']);
+            $columnModel->insertItem($arr);
+        }
+        // 更新活动记录
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = $actionType.'了看板:'.$info['name'];
+        $activityInfo['type'] = ActivityModel::TYPE_AGILE;
+        $activityInfo['obj_id'] = $boardId;
+        $activityInfo['title'] = $info['name'];
+        $activityModel->insertItem(UserAuth::getId(), $projectId, $activityInfo);
+
+        $this->ajaxSuccess($boardId, $_POST);
+    }
+
     /**
      * 添加一个迭代
      * @throws \Exception
@@ -868,8 +947,13 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '项目数据错误');
         }
         $agileBoardModel = new AgileBoardModel();
-        $boards = $agileBoardModel->getsByDefault();
-        $boards = $boards + $agileBoardModel->getsByProject($projectId);
+        $defaultBoards = $agileBoardModel->getsByDefault();
+        $projectBoards = $agileBoardModel->getsByProject($projectId);
+
+        $boards = $defaultBoards;
+        foreach ($projectBoards as $projectBoard) {
+            $boards[] = $projectBoard;
+        }
         $i = 0;
         foreach ($boards as &$board) {
             $i++;
@@ -908,14 +992,15 @@ class Agile extends BaseUserCtrl
 
         $model = new AgileBoardColumnModel();
         $columns = $model->getsByBoard($id);
-
+        $i = 0;
         foreach ($columns as &$column) {
-            // $column['issues'] = [];
+            $column['i'] = $i;
+            $column['data'] = json_decode($column['data'], true);
+            $i++;
         }
 
-
-        $data['columns'] = $columns;
-        $this->ajaxSuccess('success', $columns);
+        $data['board']['columns'] = $columns;
+        $this->ajaxSuccess('success', $data);
 
     }
 

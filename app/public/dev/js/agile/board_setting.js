@@ -10,7 +10,8 @@ Board.prototype.init = function () {
         this.list.hide()
     }
     this.trigger()
-}
+};
+
 Board.prototype.trigger = function () {
     const self = this
 
@@ -24,18 +25,16 @@ Board.prototype.trigger = function () {
             self.list.hide()
         }
     })
-}
+};
 
 var BoardSetting = (function () {
 
     var _options = {};
 
-    var _sprint_id = null;
-
     // constructor
     function BoardSetting(options) {
         _options = options;
-        this.editHandler()
+        this.editHandler();
     };
 
     BoardSetting.prototype.getOptions = function () {
@@ -51,13 +50,14 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.editHandler = function(){
-        $(".boards-list").on('mouseover', '.board-item', function(){
+        let boards = $(".boards-list");
+        boards.on('mouseover', '.board-item', function(){
             $(this).find('.board-item-edit').show()
         })
-        $(".boards-list").on('mouseout', '.board-item', function(){
+        boards.on('mouseout', '.board-item', function(){
             $(this).find('.board-item-edit').hide()
         })
-    }
+    };
 
 
     BoardSetting.prototype.fetchBoards = function () {
@@ -93,7 +93,7 @@ var BoardSetting = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    };
 
     BoardSetting.prototype.rangeOnChange = function (board_id) {
 
@@ -108,7 +108,7 @@ var BoardSetting = (function () {
             });
             */
         });
-    }
+    };
 
     BoardSetting.prototype.initBoardFormSprint = function (sprints, id_arr) {
         //console.log(sprints, id_arr)
@@ -140,7 +140,7 @@ var BoardSetting = (function () {
             range_modules.append(opt);
         }
         $('.selectpicker').selectpicker('refresh');
-    }
+    };
 
     BoardSetting.prototype.initBoardFormIssueType= function (issue_types, id_arr) {
         console.log(issue_types, id_arr)
@@ -156,7 +156,7 @@ var BoardSetting = (function () {
             range_issue_type.append(opt);
         }
         $('.selectpicker').selectpicker('refresh');
-    }
+    };
 
     BoardSetting.prototype.initBoardFormAssignee= function (users, id_arr) {
         console.log(users, id_arr)
@@ -173,7 +173,7 @@ var BoardSetting = (function () {
             range_assignees.append(opt);
         }
         $('.selectpicker').selectpicker('refresh');
-    }
+    };
 
 
     BoardSetting.prototype.fetchBoards = function () {
@@ -209,10 +209,11 @@ var BoardSetting = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    };
 
     BoardSetting.prototype.showEditBoardById = function (board_id) {
 
+        $('#board_name').focus();
         var params = {format: 'json'};
         var project_id = window._cur_project_id;
         $.ajax({
@@ -227,39 +228,37 @@ var BoardSetting = (function () {
                 $('#action-board_list').hide();
                 $('#board_add_form').show();
                 $('#action-board_form').show();
-
                 var source = $('#board_column_tpl').html();
                 var template = Handlebars.compile(source);
-                let board_data = {
-                    columns:[
-                        {i:1, name:"xxxxxx1", source_status:[], source_resolve:[],source_label:[],source_assignee:[]},
-                        {i:2, name:"xxxxxx2", source_status:[], source_resolve:[],source_label:[],source_assignee:[]},
-                        {i:3, name:"xxxxxx3", source_status:[], source_resolve:[],source_label:[],source_assignee:[]}
-                    ]
-                }
+                let board_data =  resp.data.board;
+                $("#range_type").val(board_data.range_type);
+                $('#range_container div').addClass('hide');
+                $('#range-'+board_data.range_type).removeClass(('hide'));
                 let result = template( board_data);
-                //$('#board_swim_render').html(result);
+                $('#board_swim_render').html(result);
+                BoardSetting.prototype.renderSwims(board_data);
 
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    };
 
     BoardSetting.prototype.showCreateBoardById = function (board_id) {
-
+        $('#board_name').focus();
         $('#form_board_id').val(board_id);
         $('#board_table').hide();
         $('#action-board_list').hide();
         $('#board_add_form').show();
         $('#action-board_form').show();
-
+        let range_type = 'all';
+        $("#range_type").val(range_type);
         let source = $('#board_column_tpl').html();
         let template = Handlebars.compile(source);
         let board_data = {
             name:"",
-            board_range:"all",
+            range_type:range_type,
             range_data:"",
             is_filter_backlog:"0",
             is_filter_closed:"0",
@@ -268,15 +267,48 @@ var BoardSetting = (function () {
                 {i:1, name:"进行中", data:{status:['in_progress'], resolve:[],label:[],assignee:[]}},
                 {i:2, name:"已解决", data:{status:['closed','done'], resolve:[],label:[],assignee:[]}}
             ]
-        }
+        };
+
         let result = template( board_data);
         $('#board_swim_render').html(result);
-        BoardSetting.prototype.renderSwim(board_data);
+        BoardSetting.prototype.renderSwims(board_data);
 
-    }
+    };
 
-    BoardSetting.prototype.renderSwim = function (board_data) {
-        console.log(board_data)
+    BoardSetting.prototype.addSwim = function (el) {
+
+        let source = $('#board_column_tpl').html();
+        let template = Handlebars.compile(source);
+        var timestamp = Date.parse( new Date());
+        let board_data = {
+            columns:[
+                {i:timestamp, name:"", data:{status:[], resolve:[],label:[],assignee:[]}}
+            ]
+        }
+        let swim_html = template( board_data);
+        console.log(swim_html);
+        var target = el.parents(".board-setting-line-item")
+        var parent = el.parents(".board-setting-line")
+        var nextNode = target.next()
+
+        if(target.attr("class") === "board-setting-line-item"){
+            if(nextNode.length) {
+                target.after(swim_html)
+            }else{
+                if(target.parents(".board-setting-line-active").length){
+                    target.after(swim_html)
+                }
+            }
+        }else{
+            parent.find(".board-setting-line-active").prepend(swim_html)
+        }
+        BoardSetting.prototype.renderSwimSelect(board_data.columns[0].data,timestamp);
+        $('.selectpicker').selectpicker('refresh');
+    };
+
+
+    BoardSetting.prototype.renderSwims = function (board_data) {
+        // console.log(board_data)
         let board_name = board_data.name;
         $('#board_name').val(board_name);
         let columns = board_data.columns;
@@ -303,10 +335,18 @@ var BoardSetting = (function () {
             BoardSetting.prototype.renderSwimSelect(swim_data, i);
         }
         $('.selectpicker').selectpicker('refresh');
-    }
+    };
+
+    BoardSetting.prototype.renderSingleSwim = function (name, swim_data, i) {
+        //console.log(name, swim_data, i)
+        $('#name_column_'+i).val(name);
+        $('#title_column_'+i).html(name);
+        BoardSetting.prototype.renderSwimSelect(swim_data, i);
+        $('.selectpicker').selectpicker('refresh');
+    };
 
     BoardSetting.prototype.renderSwimSelect = function (swim_data, i ) {
-        console.log(swim_data)
+        //console.log(swim_data)
         if(swim_data){
             let selects = {};
             for (let source in  swim_data) {
@@ -324,7 +364,7 @@ var BoardSetting = (function () {
                             selected = 'selected';
                         }
                         let opt = "<option  value='" + value + "' "+selected+" >" + title + "</option>";
-                        console.log(opt)
+                        //console.log(opt)
                         selects[source].append(opt);
                     }
                 }
@@ -342,7 +382,7 @@ var BoardSetting = (function () {
                             selected = 'selected';
                         }
                         let opt = "<option  value='" + value + "' "+selected+" >" + title + "</option>";
-                        console.log(opt)
+                        //console.log(opt)
                         selects[source].append(opt);
                     }
                 }
@@ -360,7 +400,7 @@ var BoardSetting = (function () {
                             selected = 'selected';
                         }
                         let opt = "<option  value='" + value + "' "+selected+" >" + title + "</option>";
-                        console.log(opt)
+                        //console.log(opt)
                         selects[source].append(opt);
                     }
                 }
@@ -375,21 +415,69 @@ var BoardSetting = (function () {
                         let title = row.display_name;
                         let avatar = row.avatar;
                         let selected = '';
-                        if (("undefined" !== typeof swim_data[source]) && isInArray(source_data, value)) {
+                        if (!source_data && ("undefined" !== typeof swim_data[source]) && isInArray(source_data, value)) {
                             selected = 'selected';
                         }
                         let content = "<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='"+avatar+"' > "+title;
                         let opt  ='<option value="'+value+'"  data-content="'+content+'"  '+selected+'>'+title+'</option>';
-                        console.log(opt)
+                        //console.log(opt)
                         selects[source].append(opt);
                     }
                 }
             }
         }
+    };
 
-
-    }
-
+    /**
+     * 保存看板数据
+     */
+    BoardSetting.prototype.saveSetting = function ( ) {
+        let board_id = $('#board_id').val();
+        let board_name = $('#board_name').val();
+        let range_type = $('#range_type').val();
+        let is_filter_backlog = $('#checkbox_is_filter_backlog').is(':checked') ? '1':'0';
+        let is_filter_closed = $('#checkbox_is_filter_closed').is(':checked') ? '1':'0';
+        let columns_data = [];
+        let i = 0;
+        $('.board_swim_item').each(function(el){
+            let filter_data = {};
+            let seq = $(this).data('seq');
+            filter_data.status = $('#select_status_column_'+seq).val();
+            filter_data.resolve = $('#select_resolve_column_'+seq).val();
+            filter_data.label = $('#select_label_column_'+seq).val();
+            filter_data.assignee = $('#select_assignee_column_'+seq).val();
+            let column_name = $('#name_column_'+seq).val();
+            let column_data = {i:i, name:column_name, data: filter_data };
+            columns_data.push(column_data);
+            i++;
+        });
+        let columns_data_str = JSON.stringify(columns_data);
+        let board_data = {
+            project_id:window._cur_project_id,
+            id:board_id,
+            name:board_name,
+            weight:$('#board_weight').val(),
+            range_type:range_type,
+            range_data:$('range-'+range_type).val(),
+            is_filter_backlog:is_filter_backlog,
+            is_filter_closed:is_filter_closed,
+            columns:columns_data_str
+        };
+        console.log($(board_data)) ;
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'agile/saveBoardSetting',
+            data: board_data,
+            success: function (resp) {
+                console.log('save:', resp);
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
 
     return BoardSetting;
 })();

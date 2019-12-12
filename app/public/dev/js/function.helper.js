@@ -203,6 +203,11 @@ function notify_error(title, message, setting) {
  * @param {Object} value 元素值
  */
 function isInArray(arr, value) {
+
+    if(is_empty(arr)){
+        return false;
+    }
+
     for (var i = 0; i < arr.length; i++) {
         if (value === arr[i]) {
             return true;

@@ -378,9 +378,11 @@
     {{/boards}}
 </script>{% endverbatim %}
 
-
+        <form id="form-board_setting2" action="#" name="form-board_setting2" method="post">
         <div class="modal board_setting-modal" id="modal-board_setting">
+
             <div class="form-horizontal" id="form-board_setting">
+
                 <input type="hidden" name="project_id" value="{{ project_id }}">
                 <input type="hidden" name="form_board_id" id ="form_board_id" value="">
 
@@ -422,6 +424,7 @@
                                     <div class="col-sm-2"> 看板名称：</div>
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" name="board_name" id="board_name"  value="">
+                                        <p id="tip-board_name" class="gl-field-error hide"></p>
                                     </div>
                                 </div>
                                 <div class="form-group hide">
@@ -433,23 +436,23 @@
                                 <div class="form-group">
                                     <div class="col-sm-2">数据范围：</div>
                                     <div class="col-sm-3">
-                                        <select id="board_range" name="board_range" class="selectpicker form-control"
-                                                dropdownAlignRight="true" title="当前迭代">
-                                            <option value="sprint" > 当前迭代</option>
+                                        <select id="range_type" name="range_type" class="selectpicker form-control"
+                                                dropdownAlignRight="true" title="当前项目">
                                             <option value="all"  >当前项目</option>
-                                            <option value="module"  > 模 块</option>
+                                            <option value="sprints" > 当前迭代</option>
+                                            <option value="range_modules"  > 模 块</option>
                                             <option value="issue_type" > 事项类型</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-6" id="range_container">
-                                        <div id="range-sprint">
-                                            <select id="range_sprints" name="params[opt]" class="selectpicker form-control"  multiple data-selected-text-format="count > 5"
-                                                    dropdownAlignRight="true" title="迭代列表"></select>
-                                        </div>
-                                        <div id="range-all" class="hide">
+                                        <div id="range-all" >
                                            当前项目所有事项
                                         </div>
-                                        <div id="range-module" class="hide">
+                                        <div id="range-sprints" class="hide">
+                                            <select id="range_sprints" name="range_sprints" class="selectpicker form-control"  multiple data-selected-text-format="count > 5"
+                                                    dropdownAlignRight="true" title="迭代列表"></select>
+                                        </div>
+                                        <div id="range-range_modules" class="hide">
                                             <select id="range_modules" name="range_modules" class="selectpicker form-control"  multiple data-selected-text-format="count > 5"
                                                     dropdownAlignRight="true" title="模块列表"></select>
                                         </div>
@@ -471,7 +474,7 @@
                                         <div class="thumbnail">
                                             <div class="board-item-caption">
                                                 <div class="js-board-item-title-input" style="display: none;">
-                                                    <input type="text" class="form-control board-item-title-input" name="text_column_1" value="待办事项" >
+                                                    <input type="hidden" class="form-control board-item-title-input" name="text_column_backlog" value="待办事项" >
                                                 </div>
                                                 <div class="js-board-item-title board-item-title">
                                                     <span>待办事项</span>
@@ -555,9 +558,11 @@
 
                     </div>
                 </div>
-            </div>
-        </div>
 
+            </div>
+
+        </div>
+        </form>
         <div class="modal" id="modal-issue_move">
             <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_issue_move"
                   action="/agile/board_issue_move"
@@ -609,7 +614,7 @@
 
 {% verbatim %}<script type="text/html" id="board_column_tpl">
  {{#columns}}
-    <div class="board-setting-line-item" draggable="true">
+    <div data-seq="{{i}}" class="board-setting-line-item  board_swim_item" draggable="true">
         <div class="board-tools-line-btn">
             <i class="fa fa-pencil js-board-item-title-edit-btn" title="编辑"></i>
         </div>
@@ -633,11 +638,7 @@
                 <p style="margin-top: 5px">数据源：</p>
                 <div class="row board-setting-line-item-row">
                     <div class="col-sm-1">
-                        <div class="checkbox" title="状态">
-                            <label>
-                                <input type="checkbox" name="checkbox_status_column_{{i}}">
-                            </label>
-                        </div>
+
                     </div>
                     <div class="col-sm-10">
                         <select id="select_status_column_{{i}}" name="select_status_column_{{i}}"  class="selectpicker form-control" multiple data-selected-text-format="count > 3"
@@ -648,11 +649,7 @@
                 </div>
                 <div class="row board-setting-line-item-row">
                     <div class="col-sm-1">
-                        <div class="checkbox" title="标签">
-                            <label>
-                                <input type="checkbox" name="checkbox_label_column_{{i}}">
-                            </label>
-                        </div>
+                          <label>OR</label>
                     </div>
                     <div class="col-sm-10">
                         <select id="select_label_column_{{i}}" name="select_label_column_{{i}}"  class="selectpicker form-control" multiple data-selected-text-format="count > 3"
@@ -663,11 +660,7 @@
                 </div>
                 <div class="row board-setting-line-item-row">
                     <div class="col-sm-1">
-                        <div class="checkbox" title="解决结果">
-                            <label>
-                                <input type="checkbox" name="checkbox_resolve_column_{{i}}">
-                            </label>
-                        </div>
+                        <label>OR</label>
                     </div>
                     <div class="col-sm-10">
                         <select id="select_resolve_column_{{i}}" name="select_resolve_column_{{i}}"  class="selectpicker form-control" multiple data-selected-text-format="count > 3"
@@ -678,11 +671,7 @@
                 </div>
                 <div class="row board-setting-line-item-row">
                     <div class="col-sm-1">
-                        <div class="checkbox" title="经办人">
-                            <label>
-                                <input type="checkbox" name="checkbox_assignee_column_{{i}}">
-                            </label>
-                        </div>
+                         <label>OR</label>
                     </div>
                     <div class="col-sm-10">
                         <select id="select_assignee_column_{{i}}" name="select_assignee_column_{{i}}" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
@@ -886,6 +875,7 @@
 
     var $board = null;
     var $board_setting = null;
+    var _current_columns = [];
     $(function () {
 
         if (gl.FilteredSearchManager) {
@@ -932,16 +922,11 @@
         window.$board_setting.initBoardFormModule(window._issueConfig.issue_module,[]);
         window.$board_setting.initBoardFormIssueType(window._issueConfig.issue_types,[]);
 
-        $("#board_range").bind("change", function () {
+        $("#range_type").bind("change", function () {
             console.log($(this).val())
             let range_value = $(this).val();
             $('#range_container div').addClass('hide');
             $('#range-'+range_value).removeClass(('hide'));
-            /*
-            $('#range_container div').each(function (el) {
-
-            });
-            */
         });
 
         if (_active_sprint_id != '') {
@@ -993,30 +978,20 @@
             $(this).find(".board-create-line-btn").show()
         }).on("mouseout", ".board-setting-line-item", function(){
             $(this).find(".board-create-line-btn").hide()
-        })
+        });
 
         $(".board-setting-line").on("click", ".js-board-item-title-close-btn", function(){
             $(this).closest(".board-setting-line-item").remove()
-        })
+        });
 
         $(".board-setting-line").on("click",".board-create-line-btn", function() {
-            var template = "<div class='board-setting-line-item'  draggable='true'><div class='board-create-line-btn hide'><i class='fa fa-plus'></i></div><div class='thumbnail'>123456</div></div>"
-            var target = $(this).parents(".board-setting-line-item")
-            var parent = $(this).parents(".board-setting-line")
-            var nextNode = target.next()
-            
-            if(target.attr("class") == "board-setting-line-item"){
-                if(nextNode.length) {
-                    target.after(template)
-                }else{
-                    if(target.parents(".board-setting-line-active").length){
-                        target.after(template)
-                    }
-                }
-            }else{
-                parent.find(".board-setting-line-active").prepend(template)
-            }
-        })
+            window.$board_setting.addSwim($(this));
+        });
+
+
+        $('#btn-board_save').bind('click', function () {
+            window.$board_setting.saveSetting();
+        });
 
         $(".board-setting-line-active").on("drop", function(e){
             console.log(e)
@@ -1054,12 +1029,9 @@
                 animation: 150,
                 ghostClass: 'board-setting-line-item-out-line',
                 onEnd: function(evt){
-                    console.log('end', evt.item)
-                    if(id){
-                        // ajax
-                        // ret == '200'
-                        // $(evt.item).remove()
-                    }
+                    //console.log('end', evt.item);
+                    //console.log("form data:",$('#form-board_setting2').serialize());
+
                 }
             })
         })
