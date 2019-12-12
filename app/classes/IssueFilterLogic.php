@@ -1457,7 +1457,7 @@ class IssueFilterLogic
     public static function getMyFollow($curUserId = 0, $page = 1, $pageSize = 10)
     {
         $start = $pageSize * ($page - 1);
-        $appendSql = " Order by id desc  limit $start, " . $pageSize;
+        $appendSql = " Order by id desc  limit {$start}, " . $pageSize;
 
         $issueFollowModel = new IssueFollowModel();
         $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);

@@ -82,10 +82,16 @@
                             <div class="tab-pane" id="groups"></div>
                             <div class="tab-pane active" id="projects">
                                 <div class="js-projects-list-holder">
-
                                     <ul id="projects_list" class="projects-list">
 
                                     </ul>
+                                </div>
+
+                                <div id="more_follow" class="loading hide">
+                                    <a class="text-plain" href="#" style="font-size: 14px">更多</a>
+                                </div>
+                                <div class="loading hide">
+                                    <i class="fa fa-spinner fa-spin"></i>
                                 </div>
                             </div>
                             <div class="tab-pane" id="snippets"></div>
@@ -156,6 +162,7 @@
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
+<script src="/dev/js/user/follow_issues.js"></script>
 <script type="text/javascript">
     var _issueConfig = {
         "priority":{{priority|json_encode()|raw}},
@@ -171,34 +178,19 @@
         "sprint":{{sprints|json_encode()|raw}}
     };
 
-    var $activity = null;
+    var $follow_issues = null;
+    var _cur_page = 1;
     var _user_id = '{{user_id}}';
     $(function() {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            async: true,
-            url: '/user/fetchMyFollowedIssues',
-            data: {user_id:_user_id},
-            success: function (resp) {
-                auth_check(resp);
-                if(resp.data.issues.length){
-                    var source = $('#projects_tpl').html();
-                    var template = Handlebars.compile(source);
-                    var result = template(resp.data);
-                    $('#projects_list').html(result);
-                }else{
-                    var emptyHtml = defineStatusHtml({
-                        wrap: '#projects_list',
-                        message : '暂无数据',
-                        handleHtml: ''
-                    })
-                }
-            },
-            error: function (res) {
-                alert("请求数据错误" + res);
-            }
-        });
+        var options = {
+            user_id:_user_id
+        }
+        window.$follow_issues = new FollowIssues( options );
+        window.$follow_issues.fetchByUser( window._cur_page );
+
+        $('#more_follow').bind('click', function(){
+            window.$follow_issues.fetchByUser( window._cur_page +1 );
+        })
     });
 </script>
 
