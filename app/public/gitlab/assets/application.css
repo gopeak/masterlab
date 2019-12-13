@@ -193,25 +193,6 @@
 /*}*/
 
 
-.logo{
-	fill: currentColor;
-	vertical-align: -0.15em;
-	overflow: hidden;
-	width: 1em;
-	height: 1em;
-}
-
-span.logo {
-	width: 32px;
-	height: 26px;
-	display: inline-block;
-	vertical-align: middle;
-}
-
-span.logo img {
-	display: block;
-	width: 100%;
-}
 
 span.logo + h1 {
 	margin-left: 8px;
@@ -648,7 +629,7 @@ header.navbar-gitlab {
 	margin-left: -15px;
 }
 
-.gdfWrapper .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+.gdfWrapper .table>tbody>tr>td, .gdfWrapper .table>thead>tr>th {
 	padding: 8px 0px !important;
 }
 .selectable-close {
@@ -670,4 +651,89 @@ header.navbar-gitlab {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transform: translate(0, 0);
+}
+.board-setting-line {
+	display: flex;
+	flex-direction: row;
+	overflow-x: scroll;
+	padding: 0 0 10px;
+}
+.board-setting-line > .board-setting-line-active {
+	display: flex;
+	flex-direction: row;
+}
+.board-setting-line .board-setting-line-item {
+	position: relative;
+	width: 230px;
+	min-width: 230px;
+	padding: 0 20px 0 0;
+}
+.board-setting-line .board-setting-line-item > .thumbnail {
+	border: 2px dotted #eee;
+	border-radius: 8px;
+	padding: 10px;
+	height: 100%;
+}
+.board-setting-line-item-out-line > .thumbnail {
+	border-color: #bbb !important;
+}
+.board-setting-line .board-setting-line-item .board-create-line-btn {
+	position: absolute;
+	right: 4px;
+	top: 45%;
+	cursor: pointer;
+}
+.board-setting-line .board-setting-line-item .board-tools-line-btn {
+	position: absolute;
+	right: 45px;
+	top: 17px;
+	cursor: pointer;
+	z-index: 1;
+}
+.board-setting-line .board-setting-line-item .board-tools-line-btn > i {
+	color: #999;
+	margin-left: 10px;
+}
+.board-setting-line .board-setting-line-item .board-tools-line-btn > i:hover {
+	color: #000;
+}
+.board-setting-line .board-setting-line-item:hover {
+	border-color: #ccc;
+}
+.board-setting-line .board-setting-line-item.board-setting-line-item-closed,
+.board-setting-line .board-setting-line-item.sequence {
+	width: 180px;
+	min-width: 180px;
+}
+
+.board-setting-line .board-setting-line-item .board-item-title {
+	padding: 7px 60px 7px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 34px;
+	word-break: keep-all;
+	cursor: move;
+}
+.board-item-title-input {
+	padding-right: 60px;
+}
+
+.board-setting-line-item-row {
+	padding: 0 0 10px;
+}
+.board-setting-line .thumbnail {
+	display: flex;
+	flex-direction: column;
+}
+.board-setting-line .thumbnail .board-item-body{
+	flex: 1;
+}
+.board-setting-line .thumbnail .board-item-foot {
+	border-top: 2px dotted #eee;
+	text-align: center;
+	padding: 5px 0 0;
+	cursor: pointer;
+}
+.board-setting-line .thumbnail .board-item-foot:hover {
+	color: #ec0044;
 }

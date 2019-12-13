@@ -176,6 +176,7 @@ class Agile extends BaseUserCtrl
                 $data['active_sprint_id'] = $sprints[0]['id'];
             }
         }
+        $data['sprints'] = $agileLogic->getSprints($data['project_id']);
 
         $issueLogic = new IssueLogic();
         $data['description_templates'] = $issueLogic->getDescriptionTemplates();
@@ -303,6 +304,85 @@ class Agile extends BaseUserCtrl
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getRowById($sprintId);
         $this->ajaxSuccess('ok', $sprint);
+    }
+
+    public function saveBoardSetting()
+    {
+        $projectId = null;
+        if (isset($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $boardId = null;
+        if (isset($_POST['board_id'])) {
+            $boardId = (int)$_POST['board_id'];
+        }
+
+        $info = [];
+        if (!isset($_POST['name']) || empty($_POST['name'])) {
+            $err['name'] = '看板名称不能为空';
+            $this->ajaxFailed('参数错误', $err, parent::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+        $info['name'] = $_POST['name'];
+        if (isset($_POST['range_type'])) {
+            $info['range_type'] = $_POST['range_type'];
+            if (isset($_POST['range_data'])) {
+                $info['range_data'] = $_POST['range_data'];
+            }
+        }
+        if (isset($_POST['weight'])) {
+            $info['weight'] = (int)$_POST['weight'];
+        }
+        if (isset($_POST['is_filter_backlog'])) {
+            $info['is_filter_backlog'] = $_POST['is_filter_backlog'];
+        }
+        if (isset($_POST['is_filter_closed'])) {
+            $info['is_filter_closed'] = (int)$_POST['is_filter_closed'];
+        }
+        $columnsArr = json_decode($_POST['columns'], true);
+        $boardModel = new AgileBoardModel();
+        $columnModel = new AgileBoardColumnModel();
+        if (empty($boardId)) {
+            $info['project_id'] = $_POST['project_id'];
+            // 新增
+            list($ret, $insertId) = $boardModel->insertItem($info);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', "新增看板错误:" . $insertId);
+            }
+            $boardId = $insertId;
+            $actionType = '新增';
+        } else {
+            // 更新
+            list($ret, $msg) = $boardModel->updateItem($boardId, $info);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', "更新看板错误:" . $msg);
+            }
+            $actionType = '更新';
+        }
+        // 更新泳道数据
+        $columnModel->deleteByBoardId($boardId);
+        $count = count($columnsArr);
+        foreach ($columnsArr as $index => $item) {
+            $arr = [];
+            $arr['board_id'] = $insertId;
+            $arr['name'] = $item['name'];
+            $arr['weight'] = abs($index - $count);
+            $arr['data'] = json_encode($item['data']);
+            $columnModel->insertItem($arr);
+        }
+        // 更新活动记录
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = $actionType.'了看板:'.$info['name'];
+        $activityInfo['type'] = ActivityModel::TYPE_AGILE;
+        $activityInfo['obj_id'] = $boardId;
+        $activityInfo['title'] = $info['name'];
+        $activityModel->insertItem(UserAuth::getId(), $projectId, $activityInfo);
+
+        $this->ajaxSuccess('操作成功', $_POST);
     }
 
     /**
@@ -867,8 +947,13 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '项目数据错误');
         }
         $agileBoardModel = new AgileBoardModel();
-        $boards = $agileBoardModel->getsByDefault();
-        $boards = $boards + $agileBoardModel->getsByProject($projectId);
+        $defaultBoards = $agileBoardModel->getsByDefault();
+        $projectBoards = $agileBoardModel->getsByProject($projectId);
+
+        $boards = $defaultBoards;
+        foreach ($projectBoards as $projectBoard) {
+            $boards[] = $projectBoard;
+        }
         $i = 0;
         foreach ($boards as &$board) {
             $i++;
@@ -907,14 +992,15 @@ class Agile extends BaseUserCtrl
 
         $model = new AgileBoardColumnModel();
         $columns = $model->getsByBoard($id);
-
+        $i = 0;
         foreach ($columns as &$column) {
-            // $column['issues'] = [];
+            $column['i'] = $i;
+            $column['data'] = json_decode($column['data'], true);
+            $i++;
         }
 
-
-        $data['columns'] = $columns;
-        $this->ajaxSuccess('success', $columns);
+        $data['board']['columns'] = $columns;
+        $this->ajaxSuccess('success', $data);
 
     }
 
@@ -985,6 +1071,44 @@ class Agile extends BaseUserCtrl
             $this->ajaxSuccess('success', $columns);
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
+        }
+    }
+
+    public function deleteBoard()
+    {
+        $boardId = null;
+        if (isset($_GET['_target'][2])) {
+            $boardId = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['board_id'])) {
+            $boardId = (int)$_REQUEST['board_id'];
+        }
+        if (empty($boardId)) {
+            $this->ajaxFailed('参数错误', '看板id不能为空');
+        }
+
+        $boardModel = new AgileBoardModel();
+        $board = $boardModel->getItemById($boardId);
+        if (empty($board)) {
+            $this->ajaxFailed('参数错误', '看板数据错误');
+        }
+
+        // email
+        // $notifyLogic = new NotifyLogic();
+        // $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_REMOVE, $board['project_id'], $board);
+
+        $ret = $boardModel->deleteItem($boardId);
+        if ($ret) {
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '删除了看板';
+            $activityInfo['type'] = ActivityModel::TYPE_AGILE;
+            $activityInfo['obj_id'] = $boardId;
+            $activityInfo['title'] = $board['name'];
+            $activityModel->insertItem(UserAuth::getId(), $board['project_id'], $activityInfo);
+            $this->ajaxSuccess('提示', '操作成功');
+        } else {
+            $this->ajaxFailed('提示', '数据库删除看板失败');
         }
     }
 }

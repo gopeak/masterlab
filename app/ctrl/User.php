@@ -145,6 +145,8 @@ class User extends BaseUserCtrl
             $data['other_user'] = $user;
         }
         $data['user_id'] = $userId;
+
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/user/follow_issues.php', $data);
     }
 
@@ -321,9 +323,17 @@ class User extends BaseUserCtrl
      */
     public function fetchMyFollowedIssues()
     {
-        $pageSize = 20;
-        $page = 1;
         $curUserId = UserAuth::getInstance()->getId();
+        if (isset($_REQUEST['user_id'])) {
+            $curUserId = $_REQUEST['user_id'];
+        }
+        $page = 1;
+        $pageSize = 20;
+        if (isset($_GET['page'])) {
+            $page = max(1, (int)$_GET['page']);
+        }
+
+
         list($data['issues'], $total) = IssueFilterLogic::getMyFollow($curUserId, $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);

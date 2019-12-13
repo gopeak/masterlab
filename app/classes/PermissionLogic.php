@@ -8,7 +8,7 @@
 
 namespace main\app\classes;
 
-use main\app\model\permission\PermissionModel;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;
@@ -189,7 +189,7 @@ class PermissionLogic
         $relationModelObj = new  ProjectRoleRelationModel();
         $permIds = $relationModelObj->getPermIdsByRoleIds($roleIds);
 
-        $permissionModelObj = new PermissionModel();
+        $permissionModelObj = new ProjectPermissionModel();
         $data = $permissionModelObj->getKeysById($permIds);
         unset($permissionModelObj);
 
@@ -220,7 +220,7 @@ class PermissionLogic
      */
     public static function getUserHaveProjectPermissions($userId, $projectId, $haveAdminPerm)
     {
-        $permModel = new PermissionModel();
+        $permModel = new ProjectPermissionModel();
         $permissionArr = $permModel->getAll();
         //print_r($permissionArr);
         $ret = [];

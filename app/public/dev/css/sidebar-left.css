@@ -84,7 +84,6 @@
     border-bottom: 1px solid #f5f5f5;
     position: relative;
     line-height: 38px;
-    padding-left: 10px;
     transition: all .3s;
     overflow: hidden;
 }
@@ -112,8 +111,11 @@
     justify-content: center;
 }
 .main-logo .logo {
-    height: 32px;
     width: 32px;
+}
+.main-logo .logo img {
+    width: 100%;
+    display: block;
 }
 
 .min-sidebar .main-logo {

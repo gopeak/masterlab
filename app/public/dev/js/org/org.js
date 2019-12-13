@@ -228,9 +228,7 @@ var Org = (function() {
                 notify_error("请求数据错误" + res);
             }
         });
-
-
-    }
+    };
 
     Org.prototype.fetchAll = function(  ) {
 

@@ -1,11 +1,13 @@
 <div class="modal modal-middle" id="modal-join_sprint">
     <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
-          action="/issue/main/add"
+          action="/issue/main/join_sprint"
           accept-charset="UTF-8"
-          method="post">
+          method="post"
+          id="form_add"
+
+    >
         <div class="modal-dialog issue-modal-dialog">
-            <form class="" id="form_add" action="/issue/main/join_sprint" accept-charset="UTF-8"
-                  method="post">
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <a class="close" data-dismiss="modal" href="#">×</a>
@@ -46,7 +48,6 @@
                         <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     </div>
                 </div>
-            </form>
         </div>
     </form>
 </div>
@@ -457,7 +458,7 @@
                 data-project-id="{{project_id}}"
         >
             {{#project_users}}
-                <option value="{{uid}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{uid}}.png' data-original-title='master Master'> {{display_name}}"  {{#if_in_array uid ../edit_data}}selected{{/if_in_array}} >{{display_name}}</option>
+                <option value="{{uid}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{uid}}.png' > {{display_name}}"  {{#if_in_array uid ../edit_data}}selected{{/if_in_array}} >{{display_name}}</option>
             {{/project_users}}
 
         </select>

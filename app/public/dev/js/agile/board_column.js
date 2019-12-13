@@ -1,30 +1,3 @@
-function Board(opts) {
-    this.el = $(opts.el)
-    this.handle = opts.handle
-    this.list = this.el.find('.board-list-component')
-    this.init()
-}
-
-Board.prototype.init = function () {
-    if (this.el.hasClass("close")) {
-        this.list.hide()
-    }
-    this.trigger()
-}
-Board.prototype.trigger = function () {
-    const self = this
-
-    this.handle.on("click", function (event) {
-        var p = $(this).closest('.board')
-        if (p.hasClass("close")) {
-            p.removeClass("close")
-            self.list.show()
-        } else {
-            p.addClass("close")
-            self.list.hide()
-        }
-    })
-}
 
 var BoardColumn = (function () {
 
@@ -196,76 +169,6 @@ var BoardColumn = (function () {
 
     }
 
-    BoardColumn.prototype.fetchBoards = function () {
-
-        var params = {format: 'json'};
-        var project_id = window._cur_project_id;
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            async: true,
-            url: root_url + 'agile/fetchBoardByProject',
-            data: {project_id:project_id},
-            success: function (resp) {
-                auth_check(resp);
-                var source = $('#board_list_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#board_list_render_id').html(result);
-
-                $(".list_for_set_active").click(function(){
-
-                });
-
-                $(".list_for_delete").click(function(){
-                    BoardColumn.prototype.delete( $(this).data("id"));
-                });
-
-                $(".list_for_edit").bind("click", function () {
-                    BoardColumn.prototype.showEditBoardById($(this).data('id'));
-                });
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    }
-
-    BoardColumn.prototype.showEditBoardById = function (board_id) {
-
-        var params = {format: 'json'};
-        var project_id = window._cur_project_id;
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            async: true,
-            url: root_url + 'agile/fetchBoardInfoById',
-            data: {id: board_id, project_id: project_id},
-            success: function (resp) {
-                auth_check(resp);
-                $('#board_table').hide();
-                $('#action-board_list').hide();
-                $('#board_add_form').show();
-                $('#action-board_form').show();
-
-                var source = $('#board_column_tpl').html();
-                var template = Handlebars.compile(source);
-                let columns_data = {
-                    columns:[
-                        {i:1, name:"xxxxxx1", source_status:[], source_resolve:[],source_label:[],source_assignee:[]},
-                        {i:2, name:"xxxxxx2", source_status:[], source_resolve:[],source_label:[],source_assignee:[]},
-                        {i:3, name:"xxxxxx3", source_status:[], source_resolve:[],source_label:[],source_assignee:[]}
-                    ]
-                }
-                //var result = template( columns_data);
-                //$('#xxxxxxxxx').html(result);
-
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    }
 
     BoardColumn.prototype.fetchBoardBySprint = function (sprint_id) {
 

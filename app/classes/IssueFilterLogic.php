@@ -1262,23 +1262,30 @@ class IssueFilterLogic
     /**
      * 获取迭代按事项类型的未解决问题的数量
      * @param $sprintId
-     * @param $unDone bool 是否只包含未解决问题的数量
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
      * @throws \Exception
      */
-    public static function getSprintAssigneeStat($sprintId, $unDone = false)
+    public static function getSprintAssigneeStat($sprintId, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
         if (empty($sprintId)) {
             return [];
         }
-        $noDoneStatusSql = '';
-        if ($unDone) {
-            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+        $statusSql = '';
+        switch ($statusType) {
+            case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
+                $statusSql = " AND " . self::getUnDoneSql();
+                break;
+            case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
+                $statusSql = " AND " . self::getDoneSql();
+                break;
+            default:
         }
+
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
-                          WHERE sprint ={$sprintId} {$noDoneStatusSql}  GROUP BY assignee ";
+                          WHERE sprint ={$sprintId} {$statusSql}  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         foreach ($rows as $k => $row) {
@@ -1450,7 +1457,7 @@ class IssueFilterLogic
     public static function getMyFollow($curUserId = 0, $page = 1, $pageSize = 10)
     {
         $start = $pageSize * ($page - 1);
-        $appendSql = " Order by id desc  limit $start, " . $pageSize;
+        $appendSql = " Order by id desc  limit {$start}, " . $pageSize;
 
         $issueFollowModel = new IssueFollowModel();
         $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
