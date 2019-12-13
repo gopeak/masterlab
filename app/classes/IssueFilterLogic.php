@@ -1053,22 +1053,31 @@ class IssueFilterLogic
      * 获取通过字段的数据
      * @param $projectId
      * @param $field
-     * @param bool $unDone 是否只包含未解决问题的数量
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
+     * @throws \Exception
      */
-    public static function getFieldStat($projectId, $field, $unDone = false)
+    public static function getFieldStat($projectId, $field, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
         if (empty($projectId)) {
             return [];
         }
         $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $noDoneStatusSql = '';
-        if ($unDone) {
-            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+
+        $statusSql = '';
+        switch ($statusType) {
+            case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
+                $statusSql = " AND " . self::getUnDoneSql();
+                break;
+            case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
+                $statusSql = " AND " . self::getDoneSql();
+                break;
+            default:
         }
+
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} {$noDoneStatusSql} GROUP BY {$field} ";
+                          WHERE project_id ={$projectId} {$statusSql} GROUP BY {$field} ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         return $rows;
@@ -1078,47 +1087,57 @@ class IssueFilterLogic
      * 获取迭代的状态
      * @param $sprintId
      * @param $field
-     * @param bool $unDone
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
+     * @throws \Exception
      */
-    public static function getSprintFieldStat($sprintId, $field, $unDone = false)
+    public static function getSprintFieldStat($sprintId, $field, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
         if (empty($sprintId)) {
             return [];
         }
         $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $noDoneStatusSql = '';
-        if ($unDone) {
-            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+
+        $statusSql = '';
+        switch ($statusType) {
+            case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
+                $statusSql = " AND " . self::getUnDoneSql();
+                break;
+            case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
+                $statusSql = " AND " . self::getDoneSql();
+                break;
+            default:
         }
+
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
-                          WHERE sprint ={$sprintId} {$noDoneStatusSql} GROUP BY {$field} ";
+                          WHERE sprint ={$sprintId} {$statusSql} GROUP BY {$field} ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         return $rows;
     }
 
     /**
-     * 获取按优先级的数据
-     * @param int $projectId
-     * @param bool $unDone 是否只包含未解决问题的数量
+     * @param $projectId
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
+     * @throws \Exception
      */
-    public static function getPriorityStat($projectId, $unDone = false)
+    public static function getPriorityStat($projectId, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
-        return self::getFieldStat($projectId, 'priority', $unDone);
+        return self::getFieldStat($projectId, 'priority', $statusType);
     }
 
     /**
      * 获取迭代的按优先级的数据
      * @param $sprintId
-     * @param bool $unDone
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
+     * @throws \Exception
      */
-    public static function getSprintPriorityStat($sprintId, $unDone = false)
+    public static function getSprintPriorityStat($sprintId, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
-        return self::getSprintFieldStat($sprintId, 'priority', $unDone);
+        return self::getSprintFieldStat($sprintId, 'priority', $statusType);
     }
 
     /**
@@ -1129,7 +1148,10 @@ class IssueFilterLogic
      */
     public static function getStatusStat($projectId, $unDone = false)
     {
-        return self::getFieldStat($projectId, 'status', $unDone);
+        if ($unDone) {
+            return self::getFieldStat($projectId, 'status', GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        }
+        return self::getFieldStat($projectId, 'status', GlobalConstant::ISSUE_STATUS_TYPE_ALL);
     }
 
     /**
@@ -1140,7 +1162,11 @@ class IssueFilterLogic
      */
     public static function getSprintStatusStat($sprintId, $unDone = false)
     {
-        return self::getSprintFieldStat($sprintId, 'status', $unDone);
+        if ($unDone) {
+            return self::getSprintFieldStat($sprintId, 'status', GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        }
+        return self::getSprintFieldStat($sprintId, 'status', GlobalConstant::ISSUE_STATUS_TYPE_ALL);
+
     }
 
     /**
@@ -1151,7 +1177,10 @@ class IssueFilterLogic
      */
     public static function getTypeStat($projectId, $unDone = false)
     {
-        return self::getFieldStat($projectId, 'issue_type', $unDone);
+        if ($unDone) {
+            return self::getFieldStat($projectId, 'issue_type', GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        }
+        return self::getFieldStat($projectId, 'issue_type', GlobalConstant::ISSUE_STATUS_TYPE_ALL);
     }
 
     /**
@@ -1162,7 +1191,10 @@ class IssueFilterLogic
      */
     public static function getSprintTypeStat($sprintId, $unDone = false)
     {
-        return self::getSprintFieldStat($sprintId, 'issue_type', $unDone);
+        if ($unDone) {
+            return self::getSprintFieldStat($sprintId, 'issue_type', GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        }
+        return self::getSprintFieldStat($sprintId, 'issue_type', GlobalConstant::ISSUE_STATUS_TYPE_ALL);
     }
 
 

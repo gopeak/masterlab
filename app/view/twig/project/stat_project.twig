@@ -62,7 +62,17 @@
                         <div class="panel panel-info">
                             <!-- Default panel contents -->
                             <div class="panel-heading tile__name " data-force="25" draggable="false">
-                                <h3 class="panel-heading-title">按优先级(未解决事项)</h3>
+                                <h3 class="panel-heading-title">按优先级</h3>
+                                <div class="panel-heading-extra">
+                                    <div class="panel-action">
+                                        <i class="fa fa-angle-down"></i>
+                                        <ul id="stat-priority" data-current-key="priority_stat_undone" style="width:120px;">
+                                            <li data-key="priority_stat_undone">未解决事项</li>
+                                            <li data-key="priority_stat_done">已解决事项</li>
+                                            <li data-key="priority_stat_all">全部事项</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Table -->
@@ -76,7 +86,7 @@
                                     </tr>
                                     </thead>
                                     {% verbatim %}<script id="priority_stat_tpl" type="text/html" >
-                                        {{#priority_stat}}
+                                        {{#list}}
                                         <tr>
                                             <td>{{priority_html id }}</td>
                                             <td>{{count}}</td>
@@ -102,7 +112,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        {{/priority_stat}}
+                                        {{/list}}
                                     </script>{% endverbatim %}
                                     <tbody id="priority_stat">
 
@@ -393,6 +403,19 @@
                 var result = template(data);
                 $('#assignee_stat').html(result);
                 console.log(data)
+            })
+
+            $("#stat-priority").on("click", "li", function(e){
+                var key = $(this).data("key")
+                if(!res[key]) return
+                var data = {
+                    list: res[key]
+                }
+                $("#stat-priority").attr("data-current-key", key)
+                var source = $('#priority_stat_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(data);
+                $('#priority_stat').html(result);
             })
         })
 

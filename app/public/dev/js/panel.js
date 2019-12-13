@@ -220,9 +220,13 @@ var Panel = (function () {
                     $('#closed_count').html(resp.data.closed_count);
                     $('#sprint_count').html(resp.data.sprint_count);
 
+                    var priorityCurrentKey = $("#stat-priority").data("current-key");
+                    var priorityData = {
+                        list: resp.data[priorityCurrentKey]
+                    }
                     var source = $('#priority_stat_tpl').html();
                     var template = Handlebars.compile(source);
-                    var result = template(resp.data);
+                    var result = template(priorityData);
                     $('#priority_stat').html(result);
 
                     source = $('#status_stat_tpl').html();
@@ -235,9 +239,9 @@ var Panel = (function () {
                     result = template(resp.data);
                     $('#type_stat').html(result);
 
-                    var currentKey = $("#stat-assignee").data("current-key");
+                    var assigneeCurrentKey = $("#stat-assignee").data("current-key");
                     var assigneeData = {
-                        list: resp.data[currentKey]
+                        list: resp.data[assigneeCurrentKey]
                     }
                     source = $('#assignee_stat_tpl').html();
                     template = Handlebars.compile(source);
@@ -291,9 +295,14 @@ var Panel = (function () {
                     $('#closed_count').html(resp.data.closed_count);
                     $('#sprint_count').html(resp.data.sprint_count);
 
+
+                    var priorityCurrentKey = $("#stat-priority").data("current-key");
+                    var priorityData = {
+                        list: resp.data[priorityCurrentKey]
+                    }
                     var source = $('#priority_stat_tpl').html();
                     var template = Handlebars.compile(source);
-                    var result = template(resp.data);
+                    var result = template(priorityData);
                     $('#priority_stat').html(result);
 
                     source = $('#status_stat_tpl').html();
@@ -315,9 +324,9 @@ var Panel = (function () {
                     //$('#assignee_stat').html(result);
 
 
-                    var currentKey = $("#stat-assignee").data("current-key");
+                    var assigneeCurrentKey = $("#stat-assignee").data("current-key");
                     var assigneeData = {
-                        list: resp.data[currentKey]
+                        list: resp.data[assigneeCurrentKey]
                     }
                     source = $('#assignee_stat_tpl').html();
                     template = Handlebars.compile(source);

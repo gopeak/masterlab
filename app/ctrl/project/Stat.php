@@ -73,8 +73,14 @@ class Stat extends BaseUserCtrl
         $sprintModel = new SprintModel();
         $data['sprint_count'] = $sprintModel->getCountByProject($projectId);
 
-        $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId, true);
-        $this->percent($data['priority_stat'], $data['no_done_count']);
+        $data['priority_stat_undone'] = IssueFilterLogic::getPriorityStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        $this->percent($data['priority_stat_undone'], $data['no_done_count']);
+
+        $data['priority_stat_done'] = IssueFilterLogic::getPriorityStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_DONE);
+        $this->percent($data['priority_stat_done'], $data['count']);
+
+        $data['priority_stat_all'] = IssueFilterLogic::getPriorityStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_ALL);
+        $this->percent($data['priority_stat_all'], $data['count']);
 
         $data['status_stat'] = IssueFilterLogic::getStatusStat($projectId);
         $this->percent($data['status_stat'], $data['count']);

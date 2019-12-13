@@ -367,7 +367,7 @@ class Widget extends BaseUserCtrl
     {
         $data = [];
         $projectId = $this->getParamProjectId();
-        $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId, true);
+        $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
         $data['count'] = IssueFilterLogic::getCount($projectId);
         $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['priority_stat'], $data['no_done_count']);
@@ -560,7 +560,7 @@ class Widget extends BaseUserCtrl
     {
         $data = [];
         $sprintId = $this->getParamSprintId();
-        $data['priority_stat'] = IssueFilterLogic::getSprintPriorityStat($sprintId, true);
+        $data['priority_stat'] = IssueFilterLogic::getSprintPriorityStat($sprintId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
         $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
         $this->percent($data['priority_stat'], $data['no_done_count']);
 
