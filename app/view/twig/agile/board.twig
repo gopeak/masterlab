@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head prefix="og: http://ogp.me/ns#">
-
     {% include 'twig/common/header/include.twig' %}
     <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
@@ -15,6 +14,7 @@
     <!-- <script src="/dev/js/admin/issue_ui.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script> -->
     <script src="/dev/js/issue/main.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/issue/form.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+
 
     <link rel="stylesheet" href="/dev/lib/editor.md/css/editormd.css"/>
 
@@ -362,17 +362,22 @@
      <tr id="tr_data_id_{{id}}">
             <th scope="row"> {{i}}</th>
             <td>{{name}}</td>
-            <td>{{data_range_name}}</td>
+            <td>{{range_type}}</td>
             <!--<td>{{#if_eq is_filter_backlog 1}} 是 {{^}} 否 {{/if_eq}}</td>
             <td>{{#if_eq is_filter_closed 1}} 是 {{^}} 否 {{/if_eq}}</td>-->
             <td>{{weight}}</td>
             <td>
+                {{#if_eq is_system '1'}}
+                系统默认
+                {{^}}
                 <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  data-id="{{id}}">
                     <i class="fa fa-pencil-square-o"></i>
                 </a>
                 <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"  class="list_for_delete" data-id="{{id}}"  href="javascript:void(0)">
                     <i class="fa fa-trash-o"></i>
                 </a>
+                {{/if_eq}}
+
             </td>
       </tr>
     {{/boards}}
@@ -390,7 +395,7 @@
                     <div class="modal-content modal-middle">
                         <div class="modal-header">
                             <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
-                            <h3 class="modal-header-title">看板设置</h3>
+                            <h3 id="board-header-title" class="modal-header-title">看板管理</h3>
                         </div>
 
                         <div id="board_table" class="modal-body" style="min-height: 400px">
@@ -511,7 +516,7 @@
                                     <!-- 活动泳道 end -->
                                     
                                     <!-- 关闭泳道 -->
-                                    <div class="board-setting-line-item" >
+                                    <div class="board-setting-line-item sequence" >
                                         <div class="thumbnail">
                                             <div class="board-item-caption">
                                                 <div class="js-board-item-title-input" style="display: none;">
@@ -649,7 +654,7 @@
                 </div>
                 <div class="row board-setting-line-item-row">
                     <div class="col-sm-1">
-                          <label>OR</label>
+                          或
                     </div>
                     <div class="col-sm-10">
                         <select id="select_label_column_{{i}}" name="select_label_column_{{i}}"  class="selectpicker form-control" multiple data-selected-text-format="count > 3"
@@ -660,7 +665,7 @@
                 </div>
                 <div class="row board-setting-line-item-row">
                     <div class="col-sm-1">
-                        <label>OR</label>
+                        或
                     </div>
                     <div class="col-sm-10">
                         <select id="select_resolve_column_{{i}}" name="select_resolve_column_{{i}}"  class="selectpicker form-control" multiple data-selected-text-format="count > 3"
@@ -671,7 +676,7 @@
                 </div>
                 <div class="row board-setting-line-item-row">
                     <div class="col-sm-1">
-                         <label>OR</label>
+                         或
                     </div>
                     <div class="col-sm-10">
                         <select id="select_assignee_column_{{i}}" name="select_assignee_column_{{i}}" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
@@ -898,11 +903,17 @@
         });
 
         $('#btn-setting_board').bind('click', function () {
+            $('#board-header-title').html('看板管理');
             $('#modal-board_setting').modal('show');
+            $('#board_add_form').hide();
+            $('#board_table').show();
+            $('#action-board_form').hide();
+            $('#action-board_list').show();
             window.$board_setting.fetchBoards();
         });
         // 返回看板列表时
         $('#btn-back_board_list').bind('click', function () {
+            $('#board-header-title').html('看板管理');
             $('#board_add_form').hide();
             $('#board_table').show();
             $('#action-board_form').hide();

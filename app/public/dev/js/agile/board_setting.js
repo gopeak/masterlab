@@ -60,41 +60,6 @@ var BoardSetting = (function () {
     };
 
 
-    BoardSetting.prototype.fetchBoards = function () {
-
-        var params = {format: 'json'};
-        var project_id = window._cur_project_id;
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            async: true,
-            url: root_url + 'agile/fetchBoardByProject',
-            data: {project_id:project_id},
-            success: function (resp) {
-                auth_check(resp);
-                var source = $('#board_list_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#board_list_render_id').html(result);
-
-                $(".list_for_set_active").click(function(){
-
-                });
-
-                $(".list_for_delete").click(function(){
-                    BoardSetting.prototype.delete( $(this).data("id"));
-                });
-
-                $(".list_for_edit").bind("click", function () {
-                    BoardSetting.prototype.showEditBoardById($(this).data('id'));
-                });
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    };
-
     BoardSetting.prototype.rangeOnChange = function (board_id) {
 
         $("#board_range").bind("change", function () {
@@ -177,7 +142,7 @@ var BoardSetting = (function () {
 
 
     BoardSetting.prototype.fetchBoards = function () {
-
+        loading.show('#board_table', '正在加载看板列表');
         var params = {format: 'json'};
         var project_id = window._cur_project_id;
         $.ajax({
@@ -188,6 +153,7 @@ var BoardSetting = (function () {
             data: {project_id:project_id},
             success: function (resp) {
                 auth_check(resp);
+                loading.closeAll();
                 var source = $('#board_list_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
@@ -208,10 +174,11 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.showEditBoardById = function (board_id) {
-
+        $('#board-header-title').html('看板编辑');
         $('#board_name').focus();
         var params = {format: 'json'};
         var project_id = window._cur_project_id;
+        loading.show('#board_add_form', '正在加载看板数据');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -220,6 +187,7 @@ var BoardSetting = (function () {
             data: {id: board_id, project_id: project_id},
             success: function (resp) {
                 auth_check(resp);
+                loading.closeAll();
                 $('#board_table').hide();
                 $('#action-board_list').hide();
                 $('#board_add_form').show();
@@ -233,7 +201,6 @@ var BoardSetting = (function () {
                 let result = template( board_data);
                 $('#board_swim_render').html(result);
                 BoardSetting.prototype.renderSwims(board_data);
-
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -242,6 +209,8 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.showCreateBoardById = function (board_id) {
+
+        $('#board-header-title').html('看板新增');
         $('#board_name').focus();
         $('#form_board_id').val(board_id);
         $('#board_table').hide();
@@ -478,31 +447,45 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.delete = function( id ) {
-
-        if(!window.confirm("您是否确认删除该看板？")){
-            return false;
-        }
-
-        $.ajax({
-            type: 'get',
-            dataType: "json",
-            async: false,
-            url:  '/agile/deleteBoard/'+id,
-            success: function (resp) {
-
-                auth_check(resp);
-                if(resp.ret==='200'){
-                    notify_success(resp.msg, resp.data);
-                    BoardSetting.prototype.fetchBoards();
-                }else{
-                    notify_error(resp.msg);
-                }
-
+        swal({
+                title: "您是否确认删除该看板？",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
             },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
+            function (isConfirm) {
+                if (isConfirm) {
+                    swal.close();
+                    loading.show('#board_table');
+                    $.ajax({
+                        type: 'get',
+                        dataType: "json",
+                        async: false,
+                        url:  '/agile/deleteBoard/'+id,
+                        success: function (resp) {
+                            loading.closeAll();
+                            auth_check(resp);
+                            if(resp.ret==='200'){
+                                notify_success(resp.msg, resp.data);
+                                BoardSetting.prototype.fetchBoards();
+                            }else{
+                                notify_error(resp.msg);
+                            }
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
+                } else {
+                    swal.close();
+                }
+            });
+
+
     };
 
     return BoardSetting;
