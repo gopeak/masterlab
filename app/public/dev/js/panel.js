@@ -315,15 +315,6 @@ var Panel = (function () {
                     result = template(resp.data);
                     $('#type_stat').html(result);
 
-
-
-
-                    //source = $('#assignee_stat_tpl').html();
-                    //template = Handlebars.compile(source);
-                    //result = template(resp.data);
-                    //$('#assignee_stat').html(result);
-
-
                     var assigneeCurrentKey = $("#stat-assignee").data("current-key");
                     var assigneeData = {
                         list: resp.data[assigneeCurrentKey]
@@ -332,14 +323,6 @@ var Panel = (function () {
                     template = Handlebars.compile(source);
                     result = template(assigneeData);
                     $('#assignee_stat').html(result);
-
-
-
-
-
-
-
-
 
                     source = $('#weight_stat_tpl').html();
                     template = Handlebars.compile(source);
