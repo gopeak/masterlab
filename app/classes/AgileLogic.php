@@ -648,17 +648,17 @@ class AgileLogic
             foreach ($issueResolveModel->getAll(false) as $item) {
                 $resolveKeyArr[$item['_key']] = $item['id'];
             }
-            foreach ($columns as $column) {
+            foreach ($columns as &$column) {
                 $column['count'] = 0;
                 $column['issues'] = [];
                 $filterDataArr = json_decode($column['data'], true);
                 $params = [];
-                $sql = " WHERE  ( 1 ";
+                $sql = " WHERE  (  ";
                 $filtered = false;
                 foreach ($filterDataArr as $type => $itemArr) {
                     if ($type == 'status' && !empty($itemArr)) {
                         $filtered = true;
-                        $sql .= " OR   status in ( :status ) ";
+                        $sql .= "     status in ( :status ) ";
                         $idArr = self::getIdArrByKeys($statusKeyArr, $itemArr);
                         $params['status'] = implode(',', $idArr);
                     }
@@ -716,9 +716,10 @@ class AgileLogic
                 $table = $issueModel->getTable();
                 // 获取总数
                 $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
-                // echo $sqlCount;
-                // print_r($params);
+                //echo $sqlCount;
+                //print_r($params);
                 $count = $issueModel->db->getOne($sqlCount, $params);
+                // var_dump($count);
                 $column['count'] = $count;
 
                 $fields = '*';

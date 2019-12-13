@@ -98,8 +98,8 @@ var BoardSetting = (function () {
         //console.log(modules, id_arr)
         let range_modules = $('#range_modules');
         range_modules.empty();
-        for (let i=0;i<modules.length;i++) {
-            let row = modules[_key];
+        for (let key in modules) {
+            let row = modules[key];
             let id = row.k;
             let title = row.name;
             let selected = '';
@@ -111,11 +111,11 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.initBoardFormIssueType= function (issue_types, id_arr) {
-        //console.log(issue_types, id_arr)
-        let range_issue_type = $('#range_issue_type');
+        console.log(issue_types, id_arr)
+        let range_issue_type = $('#range_issue_types');
         range_issue_type.empty();
-        for (let i=0;i<issue_types.length;i++) {
-            let row = issue_types[_key];
+        for (let key in  issue_types ) {
+            let row = issue_types[key];
             let id = row._key;
             let title = row.name;
             let selected = '';
@@ -179,7 +179,7 @@ var BoardSetting = (function () {
     BoardSetting.prototype.showEditBoardById = function (board_id) {
         $('#board-header-title').html('看板编辑');
         $('#board_name').focus();
-        $('#board_id').val(board_id);
+        $('#form_board_id').val(board_id);
         var params = {format: 'json'};
         var project_id = window._cur_project_id;
         loading.show('#board_add_form', '正在加载看板数据');
@@ -201,7 +201,7 @@ var BoardSetting = (function () {
                 let board_data =  resp.data.board;
                 $("#range_type").val(board_data.range_type);
                 if(board_data.range_type!=='all'){
-                    $("#range_"+board_data.range_type).val([board_data.range_data]);
+                    $("#range_"+board_data.range_type).val(board_data.range_data);
                 }
                 $('#range_container div').addClass('hide');
                 $('#range-'+board_data.range_type).removeClass(('hide'));
@@ -436,7 +436,7 @@ var BoardSetting = (function () {
             name:board_name,
             weight:$('#board_weight').val(),
             range_type:range_type,
-            range_data:$('range-'+range_type).val(),
+            range_data:$('#range_'+range_type).val(),
             is_filter_backlog:is_filter_backlog,
             is_filter_closed:is_filter_closed,
             columns:columns_data_str

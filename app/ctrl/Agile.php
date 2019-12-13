@@ -317,8 +317,8 @@ class Agile extends BaseUserCtrl
         }
 
         $boardId = null;
-        if (isset($_POST['board_id'])) {
-            $boardId = (int)$_POST['board_id'];
+        if (isset($_POST['id'])) {
+            $boardId = (int)$_POST['id'];
         }
 
         $info = [];
@@ -370,7 +370,7 @@ class Agile extends BaseUserCtrl
         $count = count($columnsArr);
         foreach ($columnsArr as $index => $item) {
             $arr = [];
-            $arr['board_id'] = $insertId;
+            $arr['board_id'] = $boardId;
             $arr['name'] = $item['name'];
             $arr['weight'] = abs($index - $count);
             $arr['data'] = json_encode($item['data']);
