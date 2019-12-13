@@ -44,4 +44,24 @@ class IssueLabelDataModel extends BaseIssueItemsModel
         }
         return self::$instance[$index];
     }
+
+    /**
+     * 通过多个标签id获取事项id数组
+     * @param $idArr
+     * @return array
+     */
+    public function getIssueIdArrByIds($idArr)
+    {
+        if (empty($idArr)) {
+            return [];
+        }
+        $idStr = implode(',', $idArr);
+        $sql = "select issue_id from " . $this->getTable() . " where label_id in({$idStr})";
+        $rows = $this->db->getRows($sql);
+        $issueIdArr = [];
+        foreach ( $rows as $item) {
+            $issueIdArr[] = $item['issue_id'];
+        }
+        return $issueIdArr;
+    }
 }

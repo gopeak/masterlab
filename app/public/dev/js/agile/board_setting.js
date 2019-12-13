@@ -79,12 +79,15 @@ var BoardSetting = (function () {
         //console.log(sprints, id_arr)
         var range_sprints = $('#range_sprints');
         range_sprints.empty();
-        for (var _key in  sprints) {
-            var row = sprints[_key];
+        for (let i=0;i<sprints.length;i++) {
+            var row = sprints[i];
             var id = row.id;
             var title = row.name;
             let selected = '';
-            var opt = "<option  value='"+id+"'>"+title+"</option>";
+            if(isInArray(id_arr, id) ){
+                selected = 'selected';
+            }
+            var opt = "<option  value='"+id+"' "+selected+">"+title+"</option>";
             //console.log(opt)
             range_sprints.append(opt);
         }
@@ -92,10 +95,10 @@ var BoardSetting = (function () {
     }
 
     BoardSetting.prototype.initBoardFormModule= function (modules, id_arr) {
-        console.log(modules, id_arr)
+        //console.log(modules, id_arr)
         let range_modules = $('#range_modules');
         range_modules.empty();
-        for (var _key in  modules) {
+        for (let i=0;i<modules.length;i++) {
             let row = modules[_key];
             let id = row.k;
             let title = row.name;
@@ -108,10 +111,10 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.initBoardFormIssueType= function (issue_types, id_arr) {
-        console.log(issue_types, id_arr)
+        //console.log(issue_types, id_arr)
         let range_issue_type = $('#range_issue_type');
         range_issue_type.empty();
-        for (var _key in  issue_types) {
+        for (let i=0;i<issue_types.length;i++) {
             let row = issue_types[_key];
             let id = row._key;
             let title = row.name;
@@ -149,7 +152,7 @@ var BoardSetting = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url + 'agile/fetchBoardByProject',
+            url: root_url + 'agile/fetchBoardsByProject',
             data: {project_id:project_id},
             success: function (resp) {
                 auth_check(resp);
@@ -176,6 +179,7 @@ var BoardSetting = (function () {
     BoardSetting.prototype.showEditBoardById = function (board_id) {
         $('#board-header-title').html('看板编辑');
         $('#board_name').focus();
+        $('#board_id').val(board_id);
         var params = {format: 'json'};
         var project_id = window._cur_project_id;
         loading.show('#board_add_form', '正在加载看板数据');
@@ -196,6 +200,9 @@ var BoardSetting = (function () {
                 var template = Handlebars.compile(source);
                 let board_data =  resp.data.board;
                 $("#range_type").val(board_data.range_type);
+                if(board_data.range_type!=='all'){
+                    $("#range_"+board_data.range_type).val([board_data.range_data]);
+                }
                 $('#range_container div').addClass('hide');
                 $('#range-'+board_data.range_type).removeClass(('hide'));
                 let result = template( board_data);
@@ -208,17 +215,23 @@ var BoardSetting = (function () {
         });
     };
 
-    BoardSetting.prototype.showCreateBoardById = function (board_id) {
+    BoardSetting.prototype.showCreateBoardById = function () {
 
         $('#board-header-title').html('看板新增');
         $('#board_name').focus();
-        $('#form_board_id').val(board_id);
+        $('#form_board_id').val('');
         $('#board_table').hide();
         $('#action-board_list').hide();
         $('#board_add_form').show();
         $('#action-board_form').show();
         let range_type = 'all';
         $("#range_type").val(range_type);
+        BoardSetting.prototype.initBoardFormSprint(window._issueConfig.project_sprints,[]);
+        BoardSetting.prototype.initBoardFormModule(window._issueConfig.issue_module,[]);
+        BoardSetting.prototype.initBoardFormIssueType(window._issueConfig.issue_types,[]);
+        $('#range_container div').addClass('hide');
+        $('#range-'+range_type).removeClass(('hide'));
+
         let source = $('#board_column_tpl').html();
         let template = Handlebars.compile(source);
         let board_data = {
@@ -397,11 +410,11 @@ var BoardSetting = (function () {
      * 保存看板数据
      */
     BoardSetting.prototype.saveSetting = function ( ) {
-        let board_id = $('#board_id').val();
+        let board_id = $('#form_board_id').val();
         let board_name = $('#board_name').val();
         let range_type = $('#range_type').val();
-        let is_filter_backlog = $('#checkbox_is_filter_backlog').is(':checked') ? '1':'0';
-        let is_filter_closed = $('#checkbox_is_filter_closed').is(':checked') ? '1':'0';
+        let is_filter_backlog = $('#checkbox_is_filter_backlog').is(':checked') ? '0':'1';
+        let is_filter_closed = $('#checkbox_is_filter_closed').is(':checked') ? '0':'1';
         let columns_data = [];
         let i = 0;
         $('.board_swim_item').each(function(el){

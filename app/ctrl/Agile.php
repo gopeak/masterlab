@@ -163,7 +163,7 @@ class Agile extends BaseUserCtrl
         }
 
         $agileLogic = new AgileLogic();
-        $data['boards'] = $agileLogic->getBoardsByProject($data['project_id']);
+        $data['boards'] = $agileLogic->getBoardsByProjectV2($data['project_id']);
 
         $data['active_sprint_id'] = '';
         $model = new SprintModel();
@@ -330,7 +330,10 @@ class Agile extends BaseUserCtrl
         if (isset($_POST['range_type'])) {
             $info['range_type'] = $_POST['range_type'];
             if (isset($_POST['range_data'])) {
-                $info['range_data'] = $_POST['range_data'];
+                if (empty($_POST['range_data'])) {
+                    $_POST['range_data'] = [];
+                }
+                $info['range_data'] = json_encode($_POST['range_data']);
             }
         }
         if (isset($_POST['weight'])) {
@@ -376,7 +379,7 @@ class Agile extends BaseUserCtrl
         // 更新活动记录
         $activityModel = new ActivityModel();
         $activityInfo = [];
-        $activityInfo['action'] = $actionType.'了看板:'.$info['name'];
+        $activityInfo['action'] = $actionType . '了看板:' . $info['name'];
         $activityInfo['type'] = ActivityModel::TYPE_AGILE;
         $activityInfo['obj_id'] = $boardId;
         $activityInfo['title'] = $info['name'];
@@ -937,7 +940,7 @@ class Agile extends BaseUserCtrl
     /**
      * @throws \Exception
      */
-    public function fetchBoardByProject()
+    public function fetchBoardsByProject()
     {
         $projectId = null;
         if (isset($_GET['project_id'])) {
@@ -961,7 +964,6 @@ class Agile extends BaseUserCtrl
         }
         $data['boards'] = $boards;
         $this->ajaxSuccess('success', $data);
-
     }
 
     public function fetchBoardInfoById()
@@ -981,6 +983,11 @@ class Agile extends BaseUserCtrl
         $board = $model->getById($id);
         if (empty($board)) {
             $this->ajaxFailed('参数错误', '看板数据不存在');
+        }
+        if (empty($board['range_data'])) {
+            $board['range_data'] = [];
+        } else {
+            $board['range_data'] = json_decode($board['range_data'], true);
         }
         $data['board'] = $board;
         if (empty($projectId) && !empty($board['project_id'])) {
@@ -1048,27 +1055,28 @@ class Agile extends BaseUserCtrl
         $data['users'] = $userLogic->getAllNormalUser();
         unset($userLogic);
 
-        list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
-        if ($fetchRet) {
-            $data['backlogs'] = $issues;
-        } else {
-            $this->ajaxFailed('服务器错误:', $issues);
+        $data['backlogs'] = [];
+        if($board['is_filter_backlog']=='0'){
+            list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
+            if ($fetchRet) {
+                $data['backlogs'] = $issues;
+            } else {
+                $this->ajaxFailed('服务器错误:', $issues);
+            }
         }
 
-        if ($board['type'] == 'label') {
-            list($fetchRet, $msg) = $agileLogic->getBoardColumnByLabel($projectId, $columns);
-        } else {
-            list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $columns, $board['type']);
+        list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $board, $columns );
+        if($board['is_filter_closed']=='0') {
+            $closedColumn = $column;
+            $closedColumn['name'] = 'Closed';
+            $closedColumn['data'] = '';
+            $closedColumn['issues'] = $agileLogic->getClosedIssues($projectId);
+            $closedColumn['count'] = count($closedColumn['issues']);
+            $columns[] = $closedColumn;
         }
-        $closedColumn = $column;
-        $closedColumn['name'] = 'Closed';
-        $closedColumn['data'] = '';
-        $closedColumn['issues'] = $agileLogic->getClosedIssues($projectId);
-        $closedColumn['count'] = count($closedColumn['issues']);
-        $columns[] = $closedColumn;
         if ($fetchRet) {
             $data['columns'] = $columns;
-            $this->ajaxSuccess('success', $columns);
+            $this->ajaxSuccess('success', $data);
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
         }

@@ -93,7 +93,7 @@
                                                     <select id="boards_select" name="boards_select"
                                                             class="selectpicker">
                                                         {% for board in boards %}
-                                                            <option value="{{ board['type'] }}@@{{ board['id'] }}@@{{ board['sprint_id'] }}">{{ board['name'] }}</option>
+                                                            <option value="{{ board['id'] }}">{{ board['name'] }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -444,7 +444,7 @@
                                         <select id="range_type" name="range_type" class="selectpicker form-control"
                                                 dropdownAlignRight="true" title="当前项目">
                                             <option value="all"  >当前项目</option>
-                                            <option value="sprints" > 当前迭代</option>
+                                            <option value="sprints" > 迭 代</option>
                                             <option value="range_modules"  > 模 块</option>
                                             <option value="issue_type" > 事项类型</option>
                                         </select>
@@ -854,7 +854,6 @@
 <script src="/dev/js/handlebars.helper.js?v={{ _version }}"></script>
 <script type="text/javascript">
 
-
     var _simplemde = {};
 
     var _issueConfig = {
@@ -941,17 +940,14 @@
         });
 
         if (_active_sprint_id != '') {
-            window.$board.fetchBoardBySprint(_active_sprint_id);
+            window.$board.fetchBoardById(1);
+        }else{
+            window.$board.fetchBoardById(2);
         }
         //$('.selectpicker').selectpicker();
         $("#boards_select").change(function () {
             console.log($(this).val());
-            var valueArr = $(this).val().split('@@');
-            if (valueArr[0] == 'sprint') {
-                window.$board.fetchBoardBySprint(valueArr[2]);
-            } else {
-                window.$board.fetchBoardById(valueArr[1]);
-            }
+            window.$board.fetchBoardById($(this).val());
         });
 
         $("#btn-create-issue").bind("click", function () {
@@ -969,13 +965,14 @@
             $(this).parents(".js-visual-token").remove()
         })
 
-        $(".board-setting-line").on("click",".js-board-item-title-edit-btn", function(){
+        let dom_board_setting_line = $(".board-setting-line");
+        dom_board_setting_line.on("click",".js-board-item-title-edit-btn", function(){
             var caption = $(this).closest(".board-setting-line-item").find(".board-item-caption")
             caption.find(".js-board-item-title-input").show()
             caption.find(".js-board-item-title").hide()
         })
 
-        $(".board-setting-line").on("keyup",".js-board-item-title-input", function(){
+        dom_board_setting_line.on("keyup",".js-board-item-title-input", function(){
             if(event.keyCode==13){
                 var caption = $(this).closest(".board-setting-line-item").find(".board-item-caption")
                 var input = caption.find(".js-board-item-title-input")
@@ -985,17 +982,17 @@
             }
         })
 
-        $(".board-setting-line").on("mouseover", ".board-setting-line-item", function(){
+        dom_board_setting_line.on("mouseover", ".board-setting-line-item", function(){
             $(this).find(".board-create-line-btn").show()
         }).on("mouseout", ".board-setting-line-item", function(){
             $(this).find(".board-create-line-btn").hide()
         });
 
-        $(".board-setting-line").on("click", ".js-board-item-title-close-btn", function(){
+        dom_board_setting_line.on("click", ".js-board-item-title-close-btn", function(){
             $(this).closest(".board-setting-line-item").remove()
         });
 
-        $(".board-setting-line").on("click",".board-create-line-btn", function() {
+        dom_board_setting_line.on("click",".board-create-line-btn", function() {
             window.$board_setting.addSwim($(this));
         });
 
