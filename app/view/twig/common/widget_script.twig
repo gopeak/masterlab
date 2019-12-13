@@ -72,6 +72,7 @@
     $(function () {
         var options = {}
         window.$widgetsAjax = new Widgets(options);
+        $(`#layout-${_layout}`).parent().addClass("active").siblings("li").removeClass("active");
     });
 
     $(function () {
@@ -171,6 +172,7 @@
         }
 
         $layout.addClass(`layout-${layoutType}`);
+        $(`#layout-${layoutType}`).parent().addClass("active").siblings("li").removeClass("active");
 
         var length1 = $item_first.length;
         var length2 = $item_second.length;
@@ -180,10 +182,14 @@
         {
             case 1:
                 $panel_first.append($panel_second.html() + $panel_third.html());
-                $panel_second.hide();
-                $panel_third.hide();
+//                $panel_second.hide();
+//                $panel_third.hide();
                 $panel_second.html("");
                 $panel_third.html("");
+                _user_widgets.first = first_widgets.concat(second_widgets).concat(third_widgets);
+                _user_widgets.second = [];
+                _user_widgets.third = [];
+                saveUserWidget(_user_widgets);
                 break;
             case 2:
                 if (length1 > 1 && length2 === 0 && length3 === 0) {
@@ -191,26 +197,38 @@
                         if (i >= length1/2) {
                             $panel_second.append($(this).prop('outerHTML'));
                             $(this).remove();
+                            _user_widgets.second = second_widgets.push(first_widgets[i]);
+                            _user_widgets.first = first_widgets.splice(i, 1);
                         }
                     });
                 } else if (length3 > 0) {
                     $panel_second.append($panel_third.html());
+                    _user_widgets.second = second_widgets.concat(third_widgets);
                 }
 
                 $panel_third.html("");
-                $panel_second.show();
-                $panel_third.hide();
+                saveUserWidget(_user_widgets);
+//                $panel_second.show();
+//                $panel_third.hide();
                 break;
             case 3:
                 if (length1 > 1 && length2 === 0 && length3 === 0) {
                     $item_first.each(function (i) {
                         if (i >= length1/3 && i < length1 * 2/3 ) {
                             $panel_second.append($(this).prop('outerHTML'));
+                            second_widgets.push(first_widgets[i]);
+                            first_widgets.splice(i, 1);
+                            _user_widgets.second = second_widgets;
+                            _user_widgets.first = first_widgets;
                             $(this).remove();
                         }
 
                         if (i >= i < length1 * 2/3) {
                             $panel_third.append($(this));
+                            third_widgets.push(first_widgets[i]);
+                            first_widgets.splice(i, 1);
+                            _user_widgets.third = third_widgets;
+                            _user_widgets.first = first_widgets;
                             $(this).remove();
                         }
                     });
@@ -218,6 +236,10 @@
                     $item_second.each(function (i) {
                         if (i >= length2/2) {
                             $panel_third.append($(this).prop('outerHTML'));
+                            third_widgets.push(second_widgets[i]);
+                            second_widgets.splice(i, 1);
+                            _user_widgets.third = third_widgets;
+                            _user_widgets.first = second_widgets;
                             $(this).remove();
                         }
                     });
@@ -225,13 +247,18 @@
                     $item_first.each(function (i) {
                         if (i === length1-1) {
                             $panel_third.append($(this).prop('outerHTML'));
+                            third_widgets.push(first_widgets[i]);
+                            first_widgets.splice(i, 1);
+                            _user_widgets.third = third_widgets;
+                            _user_widgets.first = first_widgets;
                             $(this).remove();
                         }
                     });
                 }
 
-                $panel_second.show();
-                $panel_third.show();
+//                $panel_second.show();
+//                $panel_third.show();
+                saveUserWidget(_user_widgets);
                 break;
         }
 
