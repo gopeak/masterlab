@@ -1,0 +1,335 @@
+<!doctype html>
+<html>
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+
+
+    <script src="/dev/lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
+
+    <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+    <script src="/dev/lib/my-mind/my-mind.js"></script>
+
+    <link rel="stylesheet" href="/dev/lib/my-mind/css/font.css" />
+    <link rel="stylesheet" href="/dev/lib/my-mind/css/style.css" />
+    <link rel="stylesheet" href="/dev/lib/my-mind/css/print.css" media="print" />
+    <base target="_blank" />
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<div class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body">
+{% include 'twig/common/body/header-content.twig' %}
+
+<script>
+    var findFileURL = "";
+</script>
+<div class="page-with-sidebar">
+    {% include 'twig/project/common-page-nav-project.twig' %}
+    <div class="scrolling-tabs-container sub-nav-scroll">
+        <div class="fade-left">
+            <i class="fa fa-angle-left"></i>
+        </div>
+        <div class="fade-right">
+            <i class="fa fa-angle-right"></i>
+        </div>
+
+        <div class="nav-links sub-nav scrolling-tabs is-initialized">
+            <ul class="container-fluid">
+                <li class=" {% if (sub_nav_active == 'project') %} {{ 'active' }}{% endif %}">
+                    <a href="{{project_root_url}}/stat"><span>项目统计</span></a>
+                </li>
+                <li class=" {% if (sub_nav_active == 'sprint') %} {{ 'active' }}{% endif %}">
+                    <a href="{{project_root_url}}/stat_sprint">迭代统计</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+        <div class="alert-wrapper">
+            <div class="flash-container flash-container-page">
+            </div>
+        </div>
+        <div class="content" id="content-body">
+            <div class="container-fluid padding-0"  >
+                <div class="content-block padding-lg margin-b-lg content-block-header">
+                    <h3 class="header-title">事项的思维导图展示</h3>
+                    <ul id="port">
+                        <div id="tip">Press ‘Tab’ to Insert Child, ‘Enter’ to Insert Sibling Node. For more tips/news, follow <a href="https://twitter.com/my_mind_app">@my_mind_app</a>.</div>
+                    </ul>
+
+                    <div class="ui" style="top:162px">
+                        <h3>属性面板</h3>
+                        <p clss="hide">
+                            <button data-command="New" title="New"><img src="/dev/lib/my-mind/icons/new.png" alt="New" /></button>
+                            <button data-command="Load" title="Open"><img src="/dev/lib/my-mind/icons/open.png" alt="Open" /></button>
+                            <button data-command="Save" title="Save"><img src="/dev/lib/my-mind/icons/save.png" alt="Save" /></button>
+                            <button data-command="SaveAs" title="Save as"><img src="/dev/lib/my-mind/icons/save-as.png" alt="Save as" /></button>
+                        </p>
+
+                        <p>
+                            <span>Layout</span>
+                            <select id="layout">
+                                <option value="">(Inherit)</option>
+                            </select>
+                        </p>
+                        <p>
+                            <span>Shape</span>
+                            <select id="shape">
+                                <option value="">(Automatic)</option>
+                            </select>
+                        </p>
+                        <p>
+                            <span>Value</span>
+                            <select id="value">
+                                <option value="">(None)</option>
+                                <option value="num">Number</option>
+                                <optgroup label="Formula">
+                                    <option value="sum">Sum</option>
+                                    <option value="avg">Average</option>
+                                    <option value="min">Minimum</option>
+                                    <option value="max">Maximum</option>
+                                </optgroup>
+                            </select>
+                        </p>
+                        <p>
+                            <span>Status</span>
+                            <select id="status">
+                                <option value="">None</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                                <option value="computed">Autocompute</option>
+                            </select>
+                        </p>
+                        <p>
+                            <span>Color</span>
+                            <span id="color">
+                                <a data-color="" title="Inherit" href="#"></a>
+                                <a data-color="#000" title="Black" href="#"></a>
+                                <a data-color="#e33" title="Red" href="#"></a>
+                                <a data-color="#3e3" title="Green" href="#"></a>
+                                <a data-color="#33e" title="Blue" href="#"></a>
+                                <a data-color="#dd3" title="Yellow" href="#"></a>
+                                <a data-color="#3dd" title="Cyan" href="#"></a>
+                                <a data-color="#d3d" title="Magenta" href="#"></a>
+                                <a data-color="#fa3" title="Orange" href="#"></a>
+                            </span>
+                        </p>
+
+                        <p>
+                            <span>Icons</span>
+                            <select id="icons" class="fa-select">
+                                <option value=''>None</option>
+                                <option value='fa-500px'>&#xf26e; 500px</option>
+                                <option value='fa-address-book'>&#xf2b9; address-book</option>
+                                <option value='fa-address-book-o'>&#xf2ba; address-book-o</option>
+                                <option value='fa-address-card'>&#xf2bb; address-card</option>
+                                <option value='fa-address-card-o'>&#xf2bc; address-card-o</option>
+                                <option value='fa-adjust'>&#xf042; adjust</option>
+                                <option value='fa-adn'>&#xf170; adn</option>
+                                <option value='fa-align-center'>&#xf037; align-center</option>
+                                <option value='fa-align-justify'>&#xf039; align-justify</option>
+                                <option value='fa-align-left'>&#xf036; align-left</option>
+                                <option value='fa-align-right'>&#xf038; align-right</option>
+                                <option value='fa-amazon'>&#xf270; amazon</option>
+                                <option value='fa-ambulance'>&#xf0f9; ambulance</option>
+                                <option value='fa-american-sign-language-interpreting'>&#xf2a3; american-sign-language-interpreting</option>
+                                <option value='fa-anchor'>&#xf13d; anchor</option>
+                                <option value='fa-android'>&#xf17b; android</option>
+                                <option value='fa-angellist'>&#xf209; angellist</option>
+                                <option value='fa-angle-double-down'>&#xf103; angle-double-down</option>
+                                <option value='fa-angle-double-left'>&#xf100; angle-double-left</option>
+                                <option value='fa-angle-double-right'>&#xf101; angle-double-right</option>
+                                <option value='fa-angle-double-up'>&#xf102; angle-double-up</option>
+                                <option value='fa-angle-down'>&#xf107; angle-down</option>
+                                <option value='fa-angle-left'>&#xf104; angle-left</option>
+                                <option value='fa-angle-right'>&#xf105; angle-right</option>
+                                <option value='fa-angle-up'>&#xf106; angle-up</option>
+                                <option value='fa-apple'>&#xf179; apple</option>
+                            </select>
+                        </p>
+
+                        <a id="github" href="https://github.com/ondras/my-mind" title="GitHub project page"><img src="github.png" alt="GitHub project page" /></a>
+                        <button id="toggle" title="Toggle UI"></button>
+                        <button data-command="Help" title="Help"><img src="/dev/lib/my-mind/icons/help.png" alt="Help" /></button>
+
+                        <div id="throbber"></div>
+                    </div>
+
+
+                    <div id="io" class="ui">
+                        <h3></h3>
+                        <p>
+                            <span>Storage</span>
+                            <select id="backend"></select>
+                        </p>
+
+                        <div id="file">
+                            <p class="desc">Local files are suitable for loading/saving files from other mindmapping applications.</p>
+                            <p data-for="save">
+                                <span>Format</span>
+                                <select class="format"></select>
+                            </p>
+                            <p data-for="save load">
+                                <button class="go"></button><button class="cancel">Cancel</button>
+                            </p>
+                        </div>
+
+                        <div id="image">
+                            <p class="desc">Export your design as a PNG image.</p>
+                            <p data-for="save">
+                                <button class="go"></button><button class="cancel">Cancel</button>
+                            </p>
+                        </div>
+
+                        <div id="local">
+                            <p class="desc">Your browser's localStorage can handle many mind maps and creates a permalink, but this URL cannot be shared.</p>
+                            <p data-for="load">
+                                <span>Saved maps</span>
+                                <select class="list"></select>
+                            </p>
+                            <p data-for="save load">
+                                <button class="go"></button><button class="cancel">Cancel</button>
+                            </p>
+                            <p data-for="load">
+                                <button class="remove">Delete</button>
+                            </p>
+                        </div>
+
+                        <div id="firebase">
+                            <p class="desc">Firebase offers real-time synchronization for true multi-user collaboration.</p>
+                            <p data-for="save load">
+                                <span>Server</span>
+                                <input type="text" class="server" />
+                            </p>
+                            <p data-for="save load">
+                                <span>Auth</span>
+                                <select class="auth">
+                                    <option value="">(None)</option>
+                                    <option value="facebook">Facebook</option>
+                                    <option value="twitter">Twitter</option>
+                                    <option value="github">GitHub</option>
+                                    <option value="google">Google</option>
+                                </select>
+                            </p>
+                            <p data-for="load">
+                                <span>Saved maps</span>
+                                <select class="list"></select>
+                            </p>
+                            <p data-for="save load">
+                                <button class="go"></button><button class="cancel">Cancel</button>
+                            </p>
+                            <p data-for="load">
+                                <button class="remove">Delete</button>
+                            </p>
+                        </div>
+
+                        <div id="webdav">
+                            <p class="desc">Use this to access a generic DAV-like REST API.</p>
+                            <p data-for="save load">
+                                <span>URL</span>
+                                <input type="text" class="url" />
+                            </p>
+                            <p data-for="save load">
+                                <button class="go"></button><button class="cancel">Cancel</button>
+                            </p>
+                        </div>
+
+                        <div id="gdrive">
+                            <p class="desc">Maps stored in Google Drive have a permalink URL and can be shared with other users, if you allow this by setting proper permissions (inside Google Drive itself).</p>
+                            <p data-for="save">
+                                <span>Format</span>
+                                <select class="format"></select>
+                            </p>
+                            <p data-for="save load">
+                                <button class="go"></button><button class="cancel">Cancel</button>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="help" class="ui">
+                        <h3>Help</h3>
+
+                        <p><span>Navigation</span></p>
+                        <table class="navigation"></table>
+
+                        <p><span>Manipulation</span></p>
+                        <table class="manipulation"></table>
+
+                        <p><span>Editing</span></p>
+                        <table class="editing"></table>
+
+                        <p><span>Other</span></p>
+                        <table class="other"></table>
+                    </div>
+
+                    <div id="menu">
+                        <button data-command="InsertChild"></button>
+                        <button data-command="InsertSibling"></button>
+                        <button data-command="Delete"></button>
+                        <span></span>
+                        <button data-command="Edit"></button>
+                        <button data-command="Value"></button>
+                        <span></span>
+                        <button data-command="Undo"></button>
+                        <button data-command="Redo"></button>
+                        <button data-command="Center"></button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+</div>
+</section>
+
+<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+    window.onload = function() {
+        MM.App.init();
+        MM.App.io.restore();
+    }
+</script>
+<script type="text/javascript">
+
+    var _cur_project_id = '{{project_id}}';
+
+    var _issueConfig = {
+        "priority":{{priority|json_encode()|raw}},
+        "issue_types":{{issue_types|json_encode()|raw}},
+        "issue_status":{{issue_status|json_encode()|raw}},
+        "issue_resolve":{{issue_resolve|json_encode()|raw}},
+        "issue_module":{{project_modules|json_encode()|raw}},
+        "issue_version":{{project_versions|json_encode()|raw}},
+        "issue_labels":{{project_labels|json_encode()|raw}},
+        "users":{{users|json_encode()|raw}},
+        "project_users":{{project_users|json_encode()|raw}},
+        "projects":{{projects|json_encode()|raw}}
+    };
+
+    var $panel = null;
+    var _cur_page = 1;
+
+    $(function() {
+        var options = {
+        }
+        window.$panel = new Panel( options );
+       //  window.$panel.fetchProjectStat(_cur_project_id).then(res => {
+    });
+
+</script>
+</body>
+</html>
+

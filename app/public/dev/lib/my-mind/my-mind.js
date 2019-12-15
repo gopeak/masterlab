@@ -4140,15 +4140,19 @@ MM.UI.IO.prototype.restore = function() {
 	/* just URL means webdav backend */
 	if ("url" in parts && !("b" in parts)) { parts.b = "webdav"; }
 
+	console.log(parts.url);
+
 	var backend = MM.UI.Backend.getById(parts.b);
 	if (backend) { /* saved backend info */
-		backend.setState(parts); 
+		backend.setState(parts);
 		return;
 	}
 
 	if (parts.state) { /* opened from gdrive */
 		try {
+
 			var state = JSON.parse(parts.state);
+            console.log(state);
 			if (state.action == "open") {
 				state = {
 					b: "gdrive",

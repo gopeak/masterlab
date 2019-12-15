@@ -11,6 +11,7 @@ use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\ctrl\Agile;
+use main\app\ctrl\project\Mind;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\OrgModel;
@@ -194,6 +195,16 @@ class Main extends Base
     {
         $issueMainCtrl = new IssueMain();
         $issueMainCtrl->pageIndex();
+    }
+
+    /**
+     * backlog页面
+     * @throws \Exception
+     */
+    public function pageMind()
+    {
+        $ctrl = new Mind();
+        $ctrl->pageIndex();
     }
 
     /**

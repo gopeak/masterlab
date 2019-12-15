@@ -22,12 +22,12 @@
                     <li class=" {% if (nav_links_active == 'gantt') %} {{ 'active' }}{% endif %}">
                         <a title="Gantt" class="shortcuts-tree" href="{{project_root_url}}/gantt"><img style="width:14px;height: 14px" src="/dev/img/svg/gantt.svg" /><span> 甘特图</span> </a>
                     </li>
+                    <li class=" {% if (nav_links_active == 'mind') %} {{ 'active' }}{% endif %}">
+                        <a title="Mind" class="shortcuts-tree" href="{{project_root_url}}/mind"><img style="width:14px;height: 14px" src="/dev/img/svg/mind.svg" /><span> 思维导图</span> </a>
+                    </li>
                     <li class=" {% if (nav_links_active == 'backlog') %} {{ 'active' }}{% endif %}">
                         <a title="Backlog" class="shortcuts-project" href="{{project_root_url}}/backlog"><i class="fa fa-list-ol"></i><span> 待办事项 </span> </a>
                     </li>
-                    <!--<li class=" {% if (nav_links_active == 'mind') %} {{ 'active' }}{% endif %}">
-                    <a title="Mind" class="shortcuts-tree" href="{{project_root_url}}/mind"><img style="width:14px;height: 14px" src="/dev/img/svg/mind.svg" /><span> 结构图</span> </a>
-                </li>-->
                     <li class=" {% if (nav_links_active == 'sprints') %} {{ 'active' }}{% endif %}">
                         <a title="Sprints" class="shortcuts-tree" href="{{project_root_url}}/sprints"><i class="fa fa-rocket"></i><span> 迭 代 </span> </a>
                     </li>
