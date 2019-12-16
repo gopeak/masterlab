@@ -97,7 +97,7 @@
                                                 <div class="dropdown inline prepend-right-10">
                                                     <select id="boards_select" name="boards_select"
                                                             class="selectpicker">
-                                                        <option value="0">整个项目</option>
+                                                        <option value="all">整个项目</option>
                                                         {% for board in sprints %}
                                                             <option value="{{ board['id'] }}">{{ board['name'] }}</option>
                                                         {% endfor %}
@@ -107,6 +107,7 @@
                                                     <select   id="group_by" name="group_by"  class="selectpicker">
                                                         <option value="sprint">迭代</option>
                                                         <option value="module">模块</option>
+                                                        <option value="priority">优先级</option>
                                                         <option value="issue_type">事项类型</option>
                                                         <option value="status">状态</option>
                                                         <option value="resolve">解决结果</option>
@@ -118,6 +119,7 @@
                                                     <select id="sprint-group_by" name="sprint-group_by"  class="selectpicker">
                                                         <option value="issue">事项</option>
                                                         <option value="module">模块</option>
+                                                        <option value="priority">优先级</option>
                                                         <option value="issue_type">事项类型</option>
                                                         <option value="status">状态</option>
                                                         <option value="resolve">解决结果</option>
@@ -127,199 +129,30 @@
                                                 </div>
                                             </div>
 
-                                            <div  id="filtered-container"  class="filtered-search-box" style="left:5px">
-                                                {% verbatim %}
-                                            <div  class="filtered-search-box-input-container">
-                                                <div class="scroll-container">
-                                                    <ul class="tokens-container list-unstyled">
-                                                        <li class="input-token">
-                                                            <input class="form-control filtered-search"
-                                                                   data-base-endpoint="/ismond/xphp"
-                                                                   data-project-id="31"
-                                                                   data-username-params="[]"
-                                                                   id="filtered-search-issues"
-                                                                   placeholder="搜索或过滤结果..."
-                                                                   autocomplete="off">
-                                                        </li>
-                                                    </ul>
-                                                    <i class="fa fa-filter"></i>
-                                                    <button class="clear-search hidden" type="button">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu hint-dropdown"
-                                                     id="js-dropdown-hint">
-                                                    <ul data-dropdown>
-                                                        <li class="filter-dropdown-item" data-action="submit">
-                                                            <button class="btn btn-link">
-                                                                <i class="fa fa-search"></i>
-                                                                <span>提示:按"回车键"进行查询</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <i class="fa {{icon}}"></i>
-                                                                <span class="js-filter-hint">{{hint}}</span>
-                                                                <span class="js-filter-tag dropdown-light-content">{{tag}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="报告人" data-icon="pencil" data-tag="@author"
-                                                     id="js-dropdown-author">
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link dropdown-user">
-                                                                <img alt="{{name}}&#39;s avatar" class="avatar"
-                                                                     data-src="{{avatar_url}}" width="30">
-                                                                <div class="dropdown-user-details">
-                                                                    <span>{{name}}</span>
-                                                                    <span class="dropdown-light-content">@{{username}}</span>
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="经办人" data-icon="user" data-tag="@assignee"
-                                                     id="js-dropdown-assignee">
-                                                    <ul data-dropdown>
-                                                        <li class="filter-dropdown-item" data-value="none">
-                                                            <button class="btn btn-link">
-                                                                --
-                                                            </button>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                    </ul>
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link dropdown-user">
-                                                                <img alt="{{name}}&#39;s avatar" class="avatar"
-                                                                     data-src="{{avatar_url}}" width="30">
-                                                                <div class="dropdown-user-details">
-                                                                    <span>{{name}}</span>
-                                                                    <span class="dropdown-light-content">@{{username}}</span>
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="迭代" data-icon="rocket" data-tag="sprint"
-                                                     data-type="input" id="js-dropdown-sprint">
-                                                    <ul data-dropdown>
-                                                        <li class="filter-dropdown-item" data-value="none">
-                                                            <button class="btn btn-link">
-                                                                --
-                                                            </button>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                    </ul>
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span class="label-title js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="模块" data-icon="square" data-tag="module"
-                                                     data-type="input" id="js-dropdown-module">
-                                                    <ul data-dropdown>
-                                                        <li class="filter-dropdown-item" data-value="none">
-                                                            <button class="btn btn-link">
-                                                                --
-                                                            </button>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                    </ul>
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span class="label-title js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="状态" data-icon="info" data-tag="status"
-                                                     data-type="input"
-                                                     id="js-dropdown-status">
-
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span class="label label-{{color}} js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="解决结果" data-icon="info" data-tag="resolve"
-                                                     data-type="input" id="js-dropdown-resolve">
-
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span style="color:{{color}}"
-                                                                      class="label-title js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="优先级" data-icon="info" data-tag="priority"
-                                                     data-type="input" id="js-dropdown-priority">
-
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span style="color:{{status_color}}"
-                                                                      class="label-title js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            {% endverbatim %}
-                                            </div>
                                             <div class="filter-dropdown-container">
                                                 <div class="board-extra-actions">
-                                                    <button class="btn btn-default" type="submit" id="btn-submit"
-                                                            style="margin-left: 0px"><i class="fa fa-search"></i>
+                                                    <button class="btn btn-default" type="button" id="btn-filter" title="数据筛选"  style="margin-left: 5px">
+                                                        <i class="fa fa-filter"></i>
                                                     </button>
-                                                    <a id="toggle_focus_mode" href="#" role="button" aria-label=""
+                                                    <a id="toggle_focus_mode"  href="#" role="button" aria-label=""
                                                        title="切换聚焦模式"
-                                                       class="btn btn-default has-tooltip prepend-left-10 js-focus-mode-btn"
+                                                       class="btn btn-default js-focus-mode-btn"
                                                        data-original-title="切换聚焦模式"
                                                     >
-                                                    <span style="display: none;">
-                                                        <svg width="17" height="17" viewBox="0 0 17 17"
-                                                             xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M.147 15.496l2.146-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.146-1.428-1.428zM14.996.646l1.428 1.43-2.146 2.145 1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125l1.286 1.286L14.996.647zm-13.42 0L3.72 2.794l1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286L.147 2.075 1.575.647zm14.848 14.85l-1.428 1.428-2.146-2.146-1.286 1.286c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616l-1.286 1.286 2.146 2.146z"
-                                                                  fill-rule="evenodd"></path>
-                                                        </svg>
-                                                    </span>
                                                         <span>
-                                                        <svg width="15" height="15" viewBox="0 0 15 15"
-                                                             xmlns="http://www.w3.org/2000/svg"><path
-                                                                    d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z"
-                                                                    fill-rule="evenodd"></path>
-                                                        </svg>
-                                                    </span>
+                                                            <svg width="15" height="15" viewBox="0 0 15 15"
+                                                                 xmlns="http://www.w3.org/2000/svg">
+                                                                <path  d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z"
+                                                                        fill-rule="evenodd"></path>
+                                                            </svg>
+                                                        </span>
                                                     </a>
-                                                    <button class="btn btn-default" type="button" title="看板设置"
-                                                            id="btn-setting_board" style="margin-left: 0px"><i
-                                                                class="fa fa-cog"></i>
+                                                    <button class="btn btn-default " type="button" title="设置"  id="btn-setting" style="margin-left: 0px">
+                                                        <i class="fa fa-cog"></i>
                                                     </button>
-
                                                 </div>
                                             </div>
+
                                         </div>
                                     </form>
 
@@ -327,22 +160,6 @@
                             </div>
                             {% include 'twig/issue/form.twig' %}
 
-                            <script>
-                                new UsersSelect();
-                                new LabelsSelect();
-                                new MilestoneSelect();
-                                new IssueStatusSelect();
-                                var filteredSearchManager = null;
-                                $(document).off('page:restore').on('page:restore', function (event) {
-                                    if (gl.FilteredSearchManager) {
-                                        window.filteredSearchManager = new gl.FilteredSearchManager();
-                                    }
-                                    Issuable.init();
-                                    new gl.IssuableBulkActions({
-                                        prefixId: 'issue_'
-                                    });
-                                });
-                            </script>
                         </div>
 
                         <div class="container-fluid">
@@ -397,16 +214,16 @@
                                     <p>
                                         <span>Color</span>
                                         <span id="color">
-                                <a data-color="" title="Inherit" href="#"></a>
-                                <a data-color="#000" title="Black" href="#"></a>
-                                <a data-color="#e33" title="Red" href="#"></a>
-                                <a data-color="#3e3" title="Green" href="#"></a>
-                                <a data-color="#33e" title="Blue" href="#"></a>
-                                <a data-color="#dd3" title="Yellow" href="#"></a>
-                                <a data-color="#3dd" title="Cyan" href="#"></a>
-                                <a data-color="#d3d" title="Magenta" href="#"></a>
-                                <a data-color="#fa3" title="Orange" href="#"></a>
-                            </span>
+                                            <a data-color="" title="Inherit" href="#"></a>
+                                            <a data-color="#000" title="Black" href="#"></a>
+                                            <a data-color="#e33" title="Red" href="#"></a>
+                                            <a data-color="#3e3" title="Green" href="#"></a>
+                                            <a data-color="#33e" title="Blue" href="#"></a>
+                                            <a data-color="#dd3" title="Yellow" href="#"></a>
+                                            <a data-color="#3dd" title="Cyan" href="#"></a>
+                                            <a data-color="#d3d" title="Magenta" href="#"></a>
+                                            <a data-color="#fa3" title="Orange" href="#"></a>
+                                        </span>
                                     </p>
 
                                     <p>
@@ -614,16 +431,11 @@
     }
     $(function () {
 
-        if (gl.FilteredSearchManager) {
-            window.filteredSearchManager = new gl.FilteredSearchManager();
-        }
-        Issuable.init();
-        new gl.IssuableBulkActions({
-            prefixId: 'issue_'
-        });
-
         var options = {}
         window.$mindAjax = new MindAjax(options);
+        //let params = {source_type:'all', group_by:'sprint'}
+        //window.$mindAjax.fetchAll(window._cur_project_id,  params );
+
 
         // 聚焦模式切换
         $('#toggle_focus_mode').bind('click', function () {
@@ -632,18 +444,11 @@
             $('.layout-nav').toggleClass('hidden');
         });
 
-
-
-        if (_active_sprint_id != '') {
-            window.$board.fetchBoardById(1);
-        }else{
-            //window.$board.fetchBoardById(2);
-        }
         //$('.selectpicker').selectpicker();
         $("#boards_select").change(function () {
             console.log($(this).val());
             let range_type = $(this).val();
-            if(range_type==='0'){
+            if(range_type==='all'){
                 $('#all-group_by-container').show();
                 $('#filtered-container').show();
                 $('#sprint-group_by-container').hide();
@@ -655,9 +460,9 @@
             //window.$board.fetchBoardById($(this).val());
         });
 
-         $(".tokens-container").on("click", ".selectable-close", function () {
+        $(".tokens-container").on("click", ".selectable-close", function () {
             $(this).parents(".js-visual-token").remove()
-        })
+        });
 
 
 

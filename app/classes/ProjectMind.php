@@ -9,14 +9,18 @@
 
 namespace main\app\classes;
 
+use main\app\ctrl\admin\IssueType;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
+use main\app\model\issue\IssueTypeModel;
 use main\app\model\project\ProjectGanttSettingModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\project\ProjectVersionModel;
 
 
 /**
@@ -102,88 +106,7 @@ class ProjectMind
         return $item;
     }
 
-    /**
-     * @param $sprint
-     * @return array
-     */
-    public static function formatRowBySprint($sprint)
-    {
-        $item = [];
-        $item['id'] = intval('-' . $sprint['id']);
-        $item['level'] = 0;
-        $item['gant_proj_sprint_weight'] = 0;
-        $item['code'] = '#sprint' . $sprint['id'];
-        if (empty($sprint['id'])) {
-            $item['code'] = '#' . 'backlog';
-        }
-        $item['name'] = $sprint['name'];
-        $item['progress'] = 0;
-        $item['progressByWorklog'] = false;
-        $item['relevance'] = (int)$sprint['order_weight'];
-        $item['type'] = 'sprint';
-        $item['typeId'] = '1';
-        $item['description'] = $sprint['description'];
-        $item['status'] = 'STATUS_ACTIVE';
-        $item['depends'] = '';
-        $item['canWrite'] = true;
-        $item['start'] = strtotime($sprint['start_date']) * 1000;
-        $item['end'] = strtotime($sprint['end_date']) * 1000;
-        $item['startIsMilestone'] = false;
-        $item['endIsMilestone'] = false;
-        $item['collapsed'] = false;
-        $item['assigs'] = '';
-        $item['hasChild'] = true;
-        $item['master_id'] = '';
-        $item['have_children'] = 1;
 
-        $startTime = strtotime($sprint['start_date']);
-        if (!$startTime) {
-            $startTime = time();
-        }
-        $item['start'] = $startTime * 1000;
-        $item['duration'] = '';
-        $dueTime = strtotime($sprint['end_date']);
-        if (!$dueTime) {
-            $dueTime = time();
-        }
-        $item['end'] = $dueTime * 1000;
-        $item['duration'] = floor((($dueTime + 86400) - $startTime) / 86400);
-        return $item;
-    }
-
-    /**
-     * @param $module
-     * @return array
-     */
-    public static function formatRowByModule($module)
-    {
-        $item = [];
-        $item['id'] = intval('-' . $module['id']);
-        $item['level'] = 0;
-        $item['gant_proj_sprint_weight'] = 0;
-        $item['code'] = '#module' . $module['id'];
-        $item['name'] = $module['name'];
-        $item['progress'] = 0;
-        $item['progressByWorklog'] = false;
-        $item['relevance'] = (int)$module['order_weight'];
-        $item['type'] = 'module';
-        $item['typeId'] = '2';
-        $item['description'] = $module['description'];
-        $item['status'] = 'STATUS_ACTIVE';
-        $item['depends'] = '';
-        $item['canWrite'] = true;
-        $item['start'] = '';
-        $item['duration'] = 1;//'';
-        $item['end'] = '';
-        $item['startIsMilestone'] = false;
-        $item['endIsMilestone'] = false;
-        $item['collapsed'] = false;
-        $item['assigs'] = '';
-        $item['hasChild'] = true;
-        $item['master_id'] = '';
-        $item['have_children'] = 1;
-        return $item;
-    }
 
     /**
      * @param $children
@@ -220,60 +143,170 @@ class ProjectMind
     }
 
     /**
-     * 递归构建JqueryGantt的数据结构
-     * @param $rows
-     * @param $levelRow
+     * 递归构建MyMind的数据结构
+     * @param $issues
+     * @param $current
      * @param $level
      */
-    public function recurIssue(&$rows, &$levelRow, $level, $sprint)
+    public function recurIssue(&$issues, &$levelRow, $level)
     {
         $level++;
         $levelRow['children'] = [];
-        foreach ($rows as $k => $row) {
-            if ($row['master_id'] == $levelRow['id']) {
-                $row['level'] = $level;
-                $levelRow['children'][] = self::formatRowByIssue($row, $sprint);
-                unset($rows[$k]);
+        foreach ($issues as $k => $issue) {
+            if ($issue['master_id'] == $levelRow['id']) {
+                $tmp = [];
+                $tmp['level'] = $level;
+                $tmp['id'] = 'issue_' . $issue['id'];
+                $tmp['text'] = $issue['summary'];
+                $tmp['children'] = [];
+                $levelRow['children'][] = $tmp;
+                unset($issues[$k]);
             }
         }
         // 注意递归调用必须加个判断，否则会无限循环
         if (count($levelRow['children']) > 0) {
-            $levelRow['children'] = $this->sortChildrenByWeight($levelRow['children']);
+            // $children = $this->sortChildrenByWeight($children);
             foreach ($levelRow['children'] as &$item) {
-                $this->recurIssue($rows, $item, $level, $sprint);
+                $this->recurIssue($issues, $item, $level);
             }
         } else {
             return;
         }
     }
 
-    /**
-     * 递归构建JqueryGantt的树形数据结构
-     * @param $rows
-     * @param $levelRow
-     * @param $level
-     */
-    public function recurTreeIssue(&$finalArr, &$children)
+    public function getSecondArr($projectId, $groupByField)
     {
-        foreach ($children as $k => $row) {
-            $item = $row;
-            unset($row['children']);
-            $finalArr [] = $row;
-            if (count($item['children']) > 0) {
-                $this->recurTreeIssue($finalArr, $item['children']);
+        $secondArr = [];
+        if ($groupByField == 'sprint') {
+            $sprintModel = new SprintModel();
+            $sprints = $sprintModel->getItemsByProject($projectId);
+            $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
+            foreach ($sprints as $sprint) {
+                if ($sprint['status'] != '1') {
+                    continue;
+                }
+                $item = [];
+                $item['origin_id'] =  $sprint['id'];
+                $item['id'] = 'sprint_' . $sprint['id'];
+                $item['type'] = $groupByField;
+                $item['text'] = $sprint['name'];
+                $item['side'] = 'right';
+                $item['color'] = '#e33';
+                $item['children'] = [];
+                $secondArr[] = $item;
             }
         }
+        if ($groupByField == 'module') {
+            $model = new ProjectModuleModel();
+            $modules = $model->getByProject($projectId);
+            foreach ($modules as $module) {
+                $item = [];
+                $item['origin_id'] =  $module['id'];
+                $item['id'] = 'module_' . $module['id'];
+                $item['type'] = $groupByField;
+                $item['text'] = $module['name'];
+                $item['side'] = 'right';
+                $item['color'] = '#e33';
+                $item['children'] = [];
+                $secondArr[] = $item;
+            }
+        }
+        if ($groupByField == 'issue_type') {
+            $model = new IssueTypeModel();
+            $issueTypes = $model->getAllItem(false);
+            foreach ($issueTypes as $issueType) {
+                $item = [];
+                $item['origin_id'] =  $issueType['_key'];
+                $item['id'] = 'issue_type_' . $issueType['_key'];
+                $item['type'] = $groupByField;
+                $item['text'] = $issueType['name'];
+                $item['side'] = 'right';
+                $item['color'] = '#e33';
+                $item['children'] = [];
+                $secondArr[] = $item;
+            }
+        }
+        if ($groupByField == 'priority') {
+            $model = new IssuePriorityModel();
+            $issuePriorityArr = $model->getAllItem(false);
+            foreach ($issuePriorityArr as $priority) {
+                $item = [];
+                $item['origin_id'] =  $priority['_key'];
+                $item['id'] = 'issue_status_' . $priority['_key'];
+                $item['type'] = $groupByField;
+                $item['text'] = $priority['name'];
+                $item['side'] = 'right';
+                $item['color'] = '#e33';
+                $item['children'] = [];
+                $secondArr[] = $item;
+            }
+        }
+        if ($groupByField == 'status') {
+            $model = new IssueStatusModel();
+            $issueStatusArr = $model->getAllItem(false);
+            foreach ($issueStatusArr as $issueStatus) {
+                $item = [];
+                $item['origin_id'] =  $issueStatus['_key'];
+                $item['id'] = 'issue_status_' . $issueStatus['_key'];
+                $item['type'] = $groupByField;
+                $item['text'] = $issueStatus['name'];
+                $item['side'] = 'right';
+                $item['color'] = '#e33';
+                $item['children'] = [];
+                $secondArr[] = $item;
+            }
+        }
+        if ($groupByField == 'resolve') {
+            $model = new IssueResolveModel();
+            $issueResolveArr = $model->getAllItem(false);
+            foreach ($issueResolveArr as $issueResolve) {
+                $item = [];
+                $item['origin_id'] =   $issueResolve['_key'];
+                $item['id'] = 'issue_resolve_' . $issueResolve['_key'];
+                $item['type'] = $groupByField;
+                $item['text'] = $issueResolve['name'];
+                $item['side'] = 'right';
+                $item['color'] = '#e33';
+                $item['children'] = [];
+                $secondArr[] = $item;
+            }
+        }
+        if ($groupByField == 'label') {
+            $model = new ProjectLabelModel();
+            $labelArr = $model->getByProject($projectId);
+            foreach ($labelArr as $label) {
+                $item = [];
+                $item['origin_id'] =  $label['id'];
+                $item['id'] = 'issue_label_' . $label['id'];
+                $item['type'] = $groupByField;
+                $item['text'] = $label['title'];
+                $item['side'] = 'right';
+                $item['color'] = '#e33';
+                $item['children'] = [];
+                $secondArr[] = $item;
+            }
+        }
+        if ($groupByField == 'version') {
+            $model = new ProjectVersionModel();
+            $versionArr = $model->getByProject($projectId);
+            foreach ($versionArr as $version) {
+                $item = [];
+                $item['origin_id'] =  $version['id'];
+                $item['id'] = 'issue_version_' . $version['id'];
+                $item['type'] = $groupByField;
+                $item['text'] = $version['title'];
+                $item['side'] = 'right';
+                $item['color'] = '#e33';
+                $item['children'] = [];
+                $secondArr[] = $item;
+            }
+        }
+
+        return $secondArr;
     }
 
 
-    /**
-     * 按迭代分解的甘特图
-     * @param $projectId
-     * @param string $type
-     * @return array
-     * @throws \Exception
-     */
-    public function getIssuesGroupBySprint($projectId, $isActiveSprint = false)
+    public function getMindIssuesByProject($projectId, $groupByField, $addFilterSql, $filterClosed = false)
     {
         $projectId = (int)$projectId;
         $issueModel = IssueModel::getInstance();
@@ -282,171 +315,37 @@ class ProjectMind
         $closedId = $statusModel->getIdByKey('closed');
         $resolveId = $issueResolveModel->getIdByKey('done');
 
-        $condition = "project_id={$projectId} AND gant_hide!=1 AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc";
-        $sql = "select * from {$issueModel->getTable()} where {$condition}";
+        $condition = "project_id={$projectId} {$addFilterSql} ";
+        if ($filterClosed) {
+            $condition .= "  AND ( status !=$closedId AND  resolve!=$resolveId ) Order by id desc";
+        }
+        $condition .= "  Order by id desc";
+        $field = '`id`,`pkey`,`issue_num`,`project_id`,`issue_type`,`assignee`,`summary`,`priority`,`resolve`,`status`,`created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,`progress` ';
+        $sql = "select {$field} from {$issueModel->getTable()} where {$condition}";
         //echo $sql;
-        $rows = $issueModel->db->getRows($sql);
+        $issues = $issueModel->db->getRows($sql);
+        //print_r($issues);
+        $finalArr = $this->getSecondArr($projectId, $groupByField);
+        //print_r($finalArr);
+        foreach ($finalArr as &$arr) {
+            if(@$arr['type']=='label'){
 
-        $sprintModel = new SprintModel();
-        if (!$isActiveSprint) {
-            $sprints = $sprintModel->getItemsByProject($projectId);
-        } else {
-            $sprint = $sprintModel->getActive($projectId);
-            $sprints = [$sprint];
-        }
-
-        $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
-        $finalArr = [];
-        $sprintRows = [];
-        foreach ($sprints as $sprint) {
-            // 正常的迭代才会计算
-            if ($sprint['status'] != '1') {
-                continue;
-            }
-            $finalArr[] = self::formatRowBySprint($sprint);
-            foreach ($rows as $k => &$row) {
-                if ($row['sprint'] == $sprint['id']) {
-                    $sprintRows[$sprint['id']][] = $row;
-                }
-            }
-            $otherArr = [];
-            if (!empty($sprintRows[$sprint['id']])) {
-                foreach ($sprintRows[$sprint['id']] as $k => &$row) {
-                    if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
-                        $row['level'] = 1;
-                        $otherArr[$row['id']] = self::formatRowByIssue($row, $sprint);
-                    }
-                }
-            }
-
-            $treeArr = [];
-            if (!empty($sprintRows[$sprint['id']])) {
-                foreach ($sprintRows[$sprint['id']] as $k => &$row) {
-                    if ($row['master_id'] == '0' && intval($row['have_children']) > 0) {
-                        $row['level__'] = 1;
-                        $row['level'] = 1;
-                        $row['child'] = [];
-                        $item = self::formatRowByIssue($row, $sprint);
-                        unset($sprintRows[$sprint['id']][$k]);
+            }else{
+                foreach ($issues as $k=> $issue) {
+                    if ($issue[$arr['type']] == $arr['origin_id']) {
+                        $tmp = [];
+                        $tmp['id'] = 'issue_' . $issue['id'];
+                        $tmp['text'] = $issue['summary'];
+                        $tmp['children'] = [];
                         $level = 1;
-                        //print_r($item);
-                        $this->recurIssue($sprintRows[$sprint['id']], $item, $level, $sprint);
-                        $treeArr[] = $item;
+                        $this->recurIssue($issues, $tmp, $level);
+                        $arr['children'][] = $tmp;
+                        //unset($issues[$k]);
                     }
                 }
             }
-            foreach ($otherArr as $item) {
-                $treeArr[] = $item;
-            }
-
-            $first = current($otherArr);
-            $w = 100000 * count($otherArr);
-            if (isset($first['gant_proj_sprint_weight']) && intval($first['gant_proj_sprint_weight']) == 0) {
-                foreach ($otherArr as $item) {
-                    $issueModel->updateItemById($item['id'], ['gant_proj_sprint_weight' => $w]);
-                    $w = $w - 100000;
-                }
-            }
-
-            foreach ($treeArr as $item) {
-                if (isset($item['children']) && count($item['children']) > 0) {
-                    $tmp = $item;
-                    unset($tmp['children']);
-                    $finalArr[] = $tmp;
-                    $this->recurTreeIssue($finalArr, $item['children']);
-                } else {
-                    $finalArr[] = $item;
-                }
-            }
         }
+
         return $finalArr;
     }
-
-    /**
-     * 按模块分解的甘特图
-     * @param $projectId
-     * @return array
-     * @throws \Exception
-     */
-    public function getIssuesGroupByModule($projectId)
-    {
-        $projectId = (int)$projectId;
-        $issueModel = new IssueModel();
-        $statusModel = new IssueStatusModel();
-        $issueResolveModel = new IssueResolveModel();
-        $closedId = $statusModel->getIdByKey('closed');
-        $resolveId = $issueResolveModel->getIdByKey('done');
-        $condition = "project_id={$projectId} AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc";
-        $sql = "select * from {$issueModel->getTable()} where {$condition}";
-        //echo $sql;
-        $rows = $issueModel->db->getRows($sql);
-
-        $moduleModel = new ProjectModuleModel();
-        $modules = $moduleModel->getByProject($projectId);
-        $modules[] = ['id' => -1, 'name' => '默认', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
-        $finalArr = [];
-        $moduleRows = [];
-        $moduleIdArr = [];
-        foreach ($modules as $module) {
-            $moduleIdArr[] = $module['id'];
-        }
-        foreach ($modules as $module) {
-
-            $finalArr[] = self::formatRowByModule($module);
-            foreach ($rows as $k => &$row) {
-                $row['description'] = '';
-                if (!in_array($row['module'], $moduleIdArr)) {
-                    $row['module'] = -1;
-                }
-                if ($row['module'] == $module['id']) {
-                    $moduleRows[$module['id']][] = $row;
-                }
-            }
-            // print_r($moduleRows[$module['id']]);
-            $otherArr = [];
-            if (!empty($moduleRows[$module['id']])) {
-                foreach ($moduleRows[$module['id']] as $k => &$row) {
-                    if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
-                        $row['level'] = 1;
-                        $otherArr[$row['id']] = self::formatRowByIssue($row, []);
-                    }
-                }
-            }
-
-            $treeArr = [];
-            if (!empty($moduleRows[$module['id']])) {
-                foreach ($moduleRows[$module['id']] as $k => &$row) {
-                    if ($row['master_id'] == '0' && intval($row['have_children']) > 0) {
-                        $row['level__'] = 1;
-                        $row['level'] = 1;
-                        $row['child'] = [];
-                        $item = self::formatRowByIssue($row, []);
-                        unset($moduleRows[$module['id']][$k]);
-                        $level = 1;
-                        //print_r($item);
-                        $this->recurIssue($moduleRows[$module['id']], $item, $level, []);
-                        $treeArr[] = $item;
-                    }
-                }
-            }
-
-            foreach ($otherArr as $item) {
-                $treeArr[] = $item;
-            }
-
-            foreach ($treeArr as $item) {
-                if (isset($item['children']) && count($item['children']) > 0) {
-                    $tmp = $item;
-                    unset($tmp['children']);
-                    $finalArr[] = $tmp;
-                    $this->recurTreeIssue($finalArr, $item['children']);
-                } else {
-                    $finalArr[] = $item;
-                }
-            }
-        }
-        // print_r($moduleRows);
-        return $finalArr;
-    }
-
 }

@@ -14,8 +14,9 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\classes\RewriteUrl;
 use main\app\classes\ProjectGantt;
+use main\app\classes\ProjectMind;
 use main\app\model\issue\IssueModel;
-use main\app\model\issue\IssueStatusModel;
+use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectRoleModel;
 
@@ -90,6 +91,82 @@ class Mind extends BaseUserCtrl
 
         ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/project/mindmap.php', $data);
+    }
+
+    public function fetchMindIssues()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+        $data['current_uid'] = UserAuth::getId();
+
+        $model = new ProjectRoleModel();
+        $data['project_roles'] = $model->getsByProject($projectId);
+        $roles = [];
+        foreach ($data['project_roles'] as $project_role) {
+            $roles[] = ['id' => $project_role['id'], 'name' => $project_role['name']];
+        }
+
+        $userLogic = new UserLogic();
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
+        $resources = [];
+        foreach ($projectUsers as &$user) {
+            $user = UserLogic::format($user);
+            $resources[] = ['id' => $user['uid'], 'name' => $user['display_name']];
+        }
+        $data['project_users'] = $projectUsers;
+
+        $projectGanttModel = new ProjectGanttSettingModel();
+        $class = new ProjectMind();
+
+        $filterArr = [];
+        $addFilterSql = '';
+        if (isset($_GET['filter_json'])) {
+            $filterArr = json_decode($_GET['filter_json'], true);
+            $addFilterSql = '';
+        }
+
+        $sourceType = 'all';
+        if (isset($_GET['source_type'])) {
+            $sourceType = $_GET['source_type'];
+        }
+
+        $groupByField = 'module';
+        if (isset($_GET['group_by'])) {
+            $groupByField = $_GET['group_by'];
+        }
+
+        $data = [];
+
+        $projectModel = new ProjectModel();
+        $project = $projectModel->getById($projectId);
+        if(empty($project)){
+            $this->ajaxFailed('提示','获取项目数据失败');
+        }
+        $root = [];
+        $root['id'] = 'project_'.$projectId;
+        $root['text'] = $project['name'];
+        $root['layout'] = $project['mind_layout'];
+        $root['children'] = [];
+
+        if ($sourceType == 'all') {
+            $issueChildren = $class->getMindIssuesByProject($projectId, $groupByField, $addFilterSql);
+        }else{
+            $sprintId = $sourceType;
+            $issueChildren = $class->getIssuesGroupBySprint($sprintId, $groupByField);
+
+        }
+        $root['children'] = $issueChildren;
+        $data['root'] = $root;
+        echo json_encode($data);
+        //$this->ajaxSuccess('ok', $root);
     }
 
     public function fetchSetting()

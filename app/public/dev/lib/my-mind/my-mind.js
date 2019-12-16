@@ -4478,10 +4478,35 @@ MM.UI.Backend.WebDAV._load = function(url) {
 	this._url.value = url.substring(0, lastIndex);
 	localStorage.setItem(this._prefix + "url", this._url.value);
 
-	this._backend.load(url).then(
-		this._loadDone.bind(this),
-		this._error.bind(this)
-	);
+
+    let params = {source_type:'all', group_by:'sprint'}
+    let project_id = window._cur_project_id;
+    $.ajax({
+        type: "GET",
+        dataType: "text",
+        async: true,
+        url: '/project/mind/fetchMindIssues/'+project_id,
+        data: params,
+        success: function (data) {
+            try {
+                var json = MM.Format.JSON.from(data);
+            } catch (e) {
+                this._error(e);
+            }
+
+            MM.UI.Backend._loadDone.call(this, json);
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+
+    return;
+    this._backend.load(url).then(
+        this._loadDone.bind(this),
+        this._error.bind(this)
+    );
+
 }
 
 MM.UI.Backend.WebDAV._loadDone = function(data) {
