@@ -1,21 +1,21 @@
-let Member = (function() {
+let MindAjax = (function() {
 
     let _options = {};
 
     // constructor
-    function Member(  options  ) {
+    function MindAjax(  options  ) {
         _options = options;
     };
 
-    Member.prototype.getOptions = function() {
+    MindAjax.prototype.getOptions = function() {
         return _options;
     };
 
-    Member.prototype.fetch = function(id ) {
+    MindAjax.prototype.fetch = function(id ) {
 
     };
 
-    Member.prototype.add = function(  ) {
+    MindAjax.prototype.add = function(  ) {
 
         let user_id = $('#issue_assignee_id').val();
         let role_id = $('#role_select').val();
@@ -43,7 +43,7 @@ let Member = (function() {
     };
 
 
-    Member.prototype.fetchAll = function() {
+    MindAjax.prototype.fetchAll = function() {
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -60,9 +60,9 @@ let Member = (function() {
                 } else {
                     defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
-                        message : '团队成员为空',
+                        message : '标签为空',
                         name: 'label',
-                        handleHtml: `<a class="btn btn-new js-create-label" href="${project_root_url}/settings_project_member">团队成员为空</a>`
+                        handleHtml: `<a class="btn btn-new js-create-label" href="${project_root_url}/settings_label_new">添加标签</a>`
                     })
                 }
             },
@@ -72,7 +72,7 @@ let Member = (function() {
         });
     };
 
-    Member.prototype.saveMemberRole = function (user_id, project_id) {
+    MindAjax.prototype.saveMindAjaxRole = function (user_id, project_id) {
         let role_id = $("#selectpicker_uid_" + user_id).val();
         let method = 'POST';
         let url = '/project/role/modify_project_user_has_roles';
@@ -96,7 +96,7 @@ let Member = (function() {
         });
     }
 
-    Member.prototype.delMember = function(user_id, project_id, displayname,projectname) {
+    MindAjax.prototype.delMindAjax = function(user_id, project_id, displayname,projectname) {
 
         swal({
                 title: '您确认移除 ' + projectname + ' 的成员 '+ displayname +' 吗?',
@@ -139,6 +139,6 @@ let Member = (function() {
     }
 
 
-    return Member;
+    return MindAjax;
 })();
 

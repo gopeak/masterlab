@@ -89,7 +89,7 @@ class Mind extends BaseUserCtrl
         }
 
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/mind.php', $data);
+        $this->render('gitlab/project/mindmap.php', $data);
     }
 
     public function fetchSetting()
