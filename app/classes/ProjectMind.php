@@ -107,7 +107,6 @@ class ProjectMind
     }
 
 
-
     /**
      * @param $children
      * @return array
@@ -174,6 +173,13 @@ class ProjectMind
         }
     }
 
+    /**
+     * get mind second data
+     * @param $projectId
+     * @param $groupByField
+     * @return array
+     * @throws \Exception
+     */
     public function getSecondArr($projectId, $groupByField)
     {
         $secondArr = [];
@@ -186,11 +192,12 @@ class ProjectMind
                     continue;
                 }
                 $item = [];
-                $item['origin_id'] =  $sprint['id'];
+                $item['origin_id'] = $sprint['id'];
                 $item['id'] = 'sprint_' . $sprint['id'];
                 $item['type'] = $groupByField;
                 $item['text'] = $sprint['name'];
-                $item['side'] = 'right';
+                $item['side'] = 'left';
+                $item['layout'] = 'tree-left';
                 $item['color'] = '#e33';
                 $item['children'] = [];
                 $secondArr[] = $item;
@@ -201,7 +208,7 @@ class ProjectMind
             $modules = $model->getByProject($projectId);
             foreach ($modules as $module) {
                 $item = [];
-                $item['origin_id'] =  $module['id'];
+                $item['origin_id'] = $module['id'];
                 $item['id'] = 'module_' . $module['id'];
                 $item['type'] = $groupByField;
                 $item['text'] = $module['name'];
@@ -216,7 +223,7 @@ class ProjectMind
             $issueTypes = $model->getAllItem(false);
             foreach ($issueTypes as $issueType) {
                 $item = [];
-                $item['origin_id'] =  $issueType['_key'];
+                $item['origin_id'] = $issueType['_key'];
                 $item['id'] = 'issue_type_' . $issueType['_key'];
                 $item['type'] = $groupByField;
                 $item['text'] = $issueType['name'];
@@ -231,7 +238,7 @@ class ProjectMind
             $issuePriorityArr = $model->getAllItem(false);
             foreach ($issuePriorityArr as $priority) {
                 $item = [];
-                $item['origin_id'] =  $priority['_key'];
+                $item['origin_id'] = $priority['_key'];
                 $item['id'] = 'issue_status_' . $priority['_key'];
                 $item['type'] = $groupByField;
                 $item['text'] = $priority['name'];
@@ -246,7 +253,7 @@ class ProjectMind
             $issueStatusArr = $model->getAllItem(false);
             foreach ($issueStatusArr as $issueStatus) {
                 $item = [];
-                $item['origin_id'] =  $issueStatus['_key'];
+                $item['origin_id'] = $issueStatus['_key'];
                 $item['id'] = 'issue_status_' . $issueStatus['_key'];
                 $item['type'] = $groupByField;
                 $item['text'] = $issueStatus['name'];
@@ -261,7 +268,7 @@ class ProjectMind
             $issueResolveArr = $model->getAllItem(false);
             foreach ($issueResolveArr as $issueResolve) {
                 $item = [];
-                $item['origin_id'] =   $issueResolve['_key'];
+                $item['origin_id'] = $issueResolve['_key'];
                 $item['id'] = 'issue_resolve_' . $issueResolve['_key'];
                 $item['type'] = $groupByField;
                 $item['text'] = $issueResolve['name'];
@@ -276,7 +283,7 @@ class ProjectMind
             $labelArr = $model->getByProject($projectId);
             foreach ($labelArr as $label) {
                 $item = [];
-                $item['origin_id'] =  $label['id'];
+                $item['origin_id'] = $label['id'];
                 $item['id'] = 'issue_label_' . $label['id'];
                 $item['type'] = $groupByField;
                 $item['text'] = $label['title'];
@@ -291,7 +298,7 @@ class ProjectMind
             $versionArr = $model->getByProject($projectId);
             foreach ($versionArr as $version) {
                 $item = [];
-                $item['origin_id'] =  $version['id'];
+                $item['origin_id'] = $version['id'];
                 $item['id'] = 'issue_version_' . $version['id'];
                 $item['type'] = $groupByField;
                 $item['text'] = $version['title'];
@@ -320,7 +327,8 @@ class ProjectMind
             $condition .= "  AND ( status !=$closedId AND  resolve!=$resolveId ) Order by id desc";
         }
         $condition .= "  Order by id desc";
-        $field = '`id`,`pkey`,`issue_num`,`project_id`,`issue_type`,`assignee`,`summary`,`priority`,`resolve`,`status`,`created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,`progress` ';
+        $field = '`id`,`pkey`,`issue_num`,`project_id`,`issue_type`,`assignee`,`summary`,`priority`,`resolve`,`status`,
+        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress` ';
         $sql = "select {$field} from {$issueModel->getTable()} where {$condition}";
         //echo $sql;
         $issues = $issueModel->db->getRows($sql);
@@ -328,11 +336,13 @@ class ProjectMind
         $finalArr = $this->getSecondArr($projectId, $groupByField);
         //print_r($finalArr);
         foreach ($finalArr as &$arr) {
-            if(@$arr['type']=='label'){
+            if (@$arr['type'] == 'label') {
 
-            }else{
-                foreach ($issues as $k=> $issue) {
-                    if ($issue[$arr['type']] == $arr['origin_id']) {
+            } else {
+                foreach ($issues as $k => $issue) {
+                    // $haveChildren = (int)$issue['have_children'];
+                    $masterId = (int)$issue['master_id'];
+                    if ($issue[$arr['type']] == $arr['origin_id'] && $masterId <= 0) {
                         $tmp = [];
                         $tmp['id'] = 'issue_' . $issue['id'];
                         $tmp['text'] = $issue['summary'];
@@ -340,12 +350,17 @@ class ProjectMind
                         $level = 1;
                         $this->recurIssue($issues, $tmp, $level);
                         $arr['children'][] = $tmp;
-                        //unset($issues[$k]);
+                        unset($issues[$k]);
                     }
                 }
             }
         }
-
+        foreach ($finalArr as &$arr) {
+            $arr['collapsed'] = 0;
+            if (count($arr['children']) > 5) {
+                $arr['collapsed'] = 1;
+            }
+        }
         return $finalArr;
     }
 }

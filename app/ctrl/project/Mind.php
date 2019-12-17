@@ -144,7 +144,6 @@ class Mind extends BaseUserCtrl
         }
 
         $data = [];
-
         $projectModel = new ProjectModel();
         $project = $projectModel->getById($projectId);
         if(empty($project)){
