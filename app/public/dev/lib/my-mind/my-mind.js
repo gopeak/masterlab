@@ -4151,6 +4151,11 @@ MM.UI.IO.prototype.fetchIssues = function() {
 		url: '/project/mind/fetchMindIssues/'+project_id,
 		data: params,
 		success: function (data) {
+
+            MM.App.setThrobber(true);
+
+            var map = MM.App.map;
+
 			try {
 				var json = MM.Format.JSON.from(data);
 			} catch (e) {
