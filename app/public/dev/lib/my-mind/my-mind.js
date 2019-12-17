@@ -4127,6 +4127,48 @@ MM.UI.IO = function() {
 	MM.subscribe("load-done", this);
 }
 
+MM.UI.IO.prototype.fetchIssues = function() {
+	var parts = {};
+	location.search.substring(1).split("&").forEach(function(item) {
+		var keyvalue = item.split("=");
+		parts[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);
+	});
+
+	/* backwards compatibility */
+	if ("map" in parts) { parts.url = parts.map; }
+
+	/* just URL means webdav backend */
+	if ("url" in parts && !("b" in parts)) { parts.b = "webdav"; }
+
+	console.log(parts.url);
+
+	let params = {source_type:'all', group_by:'sprint'}
+	let project_id = window._cur_project_id;
+	$.ajax({
+		type: "GET",
+		dataType: "text",
+		async: true,
+		url: '/project/mind/fetchMindIssues/'+project_id,
+		data: params,
+		success: function (data) {
+			try {
+				var json = MM.Format.JSON.from(data);
+			} catch (e) {
+				this._error(e);
+			}
+
+			MM.UI.Backend._loadDone.call(this, json);
+		},
+		error: function (res) {
+			notify_error("请求数据错误" + res);
+		}
+	});
+
+
+
+}
+
+
 MM.UI.IO.prototype.restore = function() {
 	var parts = {};
 	location.search.substring(1).split("&").forEach(function(item) {
@@ -4477,31 +4519,6 @@ MM.UI.Backend.WebDAV._load = function(url) {
 	var lastIndex = url.lastIndexOf("/");
 	this._url.value = url.substring(0, lastIndex);
 	localStorage.setItem(this._prefix + "url", this._url.value);
-
-
-    let params = {source_type:'all', group_by:'sprint'}
-    let project_id = window._cur_project_id;
-    $.ajax({
-        type: "GET",
-        dataType: "text",
-        async: true,
-        url: '/project/mind/fetchMindIssues/'+project_id,
-        data: params,
-        success: function (data) {
-            try {
-                var json = MM.Format.JSON.from(data);
-            } catch (e) {
-                this._error(e);
-            }
-
-            MM.UI.Backend._loadDone.call(this, json);
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
-
-    return;
     this._backend.load(url).then(
         this._loadDone.bind(this),
         this._error.bind(this)
