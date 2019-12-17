@@ -3,6 +3,7 @@
 namespace main\app\model\permission;
 
 use main\app\model\BaseDictionaryModel;
+
 /**
  * 全局权限角色定义
  */
@@ -13,9 +14,10 @@ class PermissionGlobalRoleModel extends BaseDictionaryModel
     public $table = 'global_role';
 
     /**
-     * DefaultRoleModel constructor.
+     * PermissionGlobalRoleModel constructor.
      * @param string $uid
      * @param bool $persistent
+     * @throws \Exception
      */
     public function __construct($uid = '', $persistent = false)
     {
