@@ -277,7 +277,7 @@ $(function () {
         if (status_row == null) {
             return '';
         }
-        html += '<span class="label label-' + status_row.color + ' prepend-left-5">' + status_row.name + '</span>';
+        html += '<span class="label label-' + status_row.color + ' prepend-left-5" style="cursor:pointer;">' + status_row.name + '</span>';
         return new Handlebars.SafeString(html);
     });
 

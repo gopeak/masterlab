@@ -1571,7 +1571,7 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 
 									{{#if_in_array 'plan_date'  ../display_fields}}
 										<td class="width_8">
-											<small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;">{{show_date_range}}
+											<small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;cursor:pointer;">{{show_date_range}}
 											</small>
 										</td>
 									{{/if_in_array}}
