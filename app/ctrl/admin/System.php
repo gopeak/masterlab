@@ -8,6 +8,7 @@ use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\issue\IssueModel;
+use main\app\model\permission\PermissionGlobalRoleModel;
 use main\app\model\system\MailQueueModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectModel;
@@ -141,6 +142,19 @@ class System extends BaseAdminCtrl
     /**
      * @throws \Exception
      */
+    public function globalPermissionBak()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'security';
+        $data['left_nav_active'] = 'global_permission_bak';
+        $this->render('gitlab/admin/system_global_permission_bak.php', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function globalPermission()
     {
         $data = [];
@@ -149,6 +163,13 @@ class System extends BaseAdminCtrl
         $data['sub_nav_active'] = 'security';
         $data['left_nav_active'] = 'global_permission';
         $this->render('gitlab/admin/system_global_permission.php', $data);
+    }
+
+
+    public function fetchGlobalPermissionRole()
+    {
+        $model = new PermissionGlobalRoleModel();
+        $model->getsAll();
     }
 
     /**
