@@ -82,95 +82,92 @@
                     </div>
                 </div>
                 <div class="">
-                    <div class="content" id="content-body">
-                        <div class="scrolling-tabs-container sub-nav-scroll">
+                    <div class="content" id="content-body" style="width:100%">
 
-                            <div class="issues-filters">
-                                <div class="filtered-search-block issues-details-filters row-content-block second-block"
-                                     v-pre="false">
-                                    <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
-                                          method="get">
-                                        <input name="utf8" type="hidden" value="&#x2713;"/>
-                                        <div class="issues-other-filters filtered-search-wrapper">
+                        {% include 'twig/issue/form.twig' %}
+                        <div class="filtered-search-block issues-details-filters row-content-block second-block" style="padding: 10px 0 10px 5px;"
+                             v-pre="false">
+                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
+                                  method="get">
+                                <input name="utf8" type="hidden" value="&#x2713;"/>
+                                <div class="issues-other-filters filtered-search-wrapper">
 
-                                            <div class="filter-dropdown-container">
-                                                <div class="dropdown inline prepend-right-10">
-                                                    <select id="boards_select" name="boards_select"
-                                                            class="selectpicker">
-                                                        <option value="all">整个项目</option>
-                                                        {% for board in sprints %}
-                                                            <option value="{{ board['id'] }}">{{ board['name'] }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <div id="all-group_by-container" class="dropdown inline prepend-right-10" >
-                                                    <select   id="group_by" name="group_by"  class="selectpicker">
-                                                        <option value="sprint">迭代</option>
-                                                        <option value="module">模块</option>
-                                                        <option value="priority">优先级</option>
-                                                        <option value="issue_type">事项类型</option>
-                                                        <option value="status">状态</option>
-                                                        <option value="resolve">解决结果</option>
-                                                        <option value="label">标签</option>
-                                                        <option value="version">版本</option>
-                                                    </select>
-                                                </div>
-                                                <div id="sprint-group_by-container" class="dropdown inline prepend-right-10 " style="display: none" >
-                                                    <select id="sprint-group_by" name="sprint-group_by"  class="selectpicker">
-                                                        <option value="issue">事项</option>
-                                                        <option value="module">模块</option>
-                                                        <option value="priority">优先级</option>
-                                                        <option value="issue_type">事项类型</option>
-                                                        <option value="status">状态</option>
-                                                        <option value="resolve">解决结果</option>
-                                                        <option value="label">标签</option>
-                                                        <option value="version">版本</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                    <div class="filter-dropdown-container">
+                                        <div class="dropdown inline ">
+                                            <select id="boards_select" name="boards_select"
+                                                    class="selectpicker">
+                                                <option value="all">整个项目</option>
+                                                {% for board in sprints %}
+                                                    <option value="{{ board['id'] }}">{{ board['name'] }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div id="all-group_by-container" class="dropdown inline  " style="margin-left: 5px" >
+                                            <select   id="group_by" name="group_by"  class="selectpicker">
+                                                <option value="sprint">迭代</option>
+                                                <option value="module">模块</option>
+                                                <option value="priority">优先级</option>
+                                                <option value="issue_type">事项类型</option>
+                                                <option value="status">状态</option>
+                                                <option value="resolve">解决结果</option>
+                                                <option value="label">标签</option>
+                                                <option value="version">版本</option>
+                                            </select>
+                                        </div>
+                                        <div id="sprint-group_by-container" class="dropdown inline prepend-right-10 " style="margin-left: 5px;display: none" >
+                                            <select id="sprint-group_by" name="sprint-group_by"  class="selectpicker">
+                                                <option value="issue">事项</option>
+                                                <option value="module">模块</option>
+                                                <option value="priority">优先级</option>
+                                                <option value="issue_type">事项类型</option>
+                                                <option value="status">状态</option>
+                                                <option value="resolve">解决结果</option>
+                                                <option value="label">标签</option>
+                                                <option value="version">版本</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                                            <div class="filter-dropdown-container">
-                                                <div class="board-extra-actions">
-                                                    <button class="btn btn-default" type="button" id="btn-filter" title="数据筛选"  style="margin-left: 5px">
-                                                        <i class="fa fa-filter"></i>
-                                                    </button>
-                                                    <a id="toggle_focus_mode"  href="#" role="button" aria-label=""
-                                                       title="切换聚焦模式"
-                                                       class="btn btn-default js-focus-mode-btn"
-                                                       data-original-title="切换聚焦模式"
-                                                    >
+                                    <div class="filter-dropdown-container">
+                                        <div class="board-extra-actions">
+                                            <button class="btn btn-default" type="button" id="btn-filter" title="数据筛选"  style="margin-left: 5px">
+                                                <i class="fa fa-filter"></i>
+                                            </button>
+                                            <a id="toggle_focus_mode"  href="#" role="button" aria-label=""
+                                               title="切换聚焦模式"
+                                               class="btn btn-default"
+                                            >
                                                         <span>
                                                             <svg width="15" height="15" viewBox="0 0 15 15"
                                                                  xmlns="http://www.w3.org/2000/svg">
                                                                 <path  d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z"
-                                                                        fill-rule="evenodd"></path>
+                                                                       fill-rule="evenodd"></path>
                                                             </svg>
                                                         </span>
-                                                    </a>
-                                                    <button class="btn btn-default " type="button" title="设置"  id="btn-setting" style="margin-left: 0px">
-                                                        <i class="fa fa-cog"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
+                                            </a>
+                                            <button class="btn btn-default" type="button" id="btn-filter" title="导出"  >
+                                                <i class="fa fa-cloud-download"></i>
+                                            </button>
+                                            <button class="btn btn-default " type="button" title="设置"  id="btn-setting" >
+                                                <i class="fa fa-cog"></i>
+                                            </button>
                                         </div>
-                                    </form>
+                                    </div>
 
                                 </div>
-                            </div>
-                            {% include 'twig/issue/form.twig' %}
+                            </form>
 
                         </div>
 
                         <div class="container-fluid">
                             <div class="issues-holder">
                                 <ul id="port">
-                                    <div id="tip">Press ‘Tab’ to Insert Child, ‘Enter’ to Insert Sibling Node. For more tips/news, follow <a href="https://twitter.com/my_mind_app">@my_mind_app</a>.</div>
+                                    <div id="tip" style="display: none">Press ‘Tab’ to Insert Child, ‘Enter’ to Insert Sibling Node. For more tips/news, follow <a href="https://twitter.com/my_mind_app">@my_mind_app</a>.</div>
                                 </ul>
 
-                                <div class="ui" style="top:162px">
+                                <div class="ui" style="top:168px">
                                     <h3>属性面板</h3>
-                                    <p clss="hide">
+                                    <p class="hide">
                                         <button data-command="New" title="New"><img src="/dev/lib/my-mind/icons/new.png" alt="New" /></button>
                                         <button data-command="Load" title="Open"><img src="/dev/lib/my-mind/icons/open.png" alt="Open" /></button>
                                         <button data-command="Save" title="Save"><img src="/dev/lib/my-mind/icons/save.png" alt="Save" /></button>
@@ -399,8 +396,6 @@
 <script src="/dev/js/handlebars.helper.js?v={{ _version }}"></script>
 
 <script type="text/javascript">
-
-
 
     var _simplemde = {};
 
