@@ -264,21 +264,18 @@ var BoardSetting = (function () {
             ]
         }
         let swim_html = template(board_data);
-        console.log(swim_html);
+
+        var activeLine = $(".board-setting-line-active")
         var target = el.parents(".board-setting-line-item")
         var parent = el.parents(".board-setting-line")
         var nextNode = target.next()
-        if (target.hasClass("board-setting-line-item")) {
-            if (nextNode.length) {
-                target.after(swim_html)
-            } else {
-                if (target.parents(".board-setting-line-active").length) {
-                    target.after(swim_html)
-                }
-            }
+
+        if (nextNode.hasClass("board-setting-line-active")) {
+            activeLine.prepend(swim_html)
         } else {
-            parent.find(".board-setting-line-active").prepend(swim_html)
+            target.after(swim_html)
         }
+
         BoardSetting.prototype.renderSwimSelect(board_data.columns[0].data, timestamp);
         $('.selectpicker').selectpicker('refresh');
     };
