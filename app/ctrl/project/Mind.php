@@ -90,6 +90,23 @@ class Mind extends BaseUserCtrl
         }
 
         ConfigLogic::getAllConfigs($data);
+
+        $fontsList = [
+            ['value' => '宋体, SimSun;', 'name' => '宋体'],
+            ['value' => '微软雅黑, Microsoft YaHei', 'name' => '微软雅黑, Microsoft YaHei'],
+            ['value' => '楷体, 楷体_GB2312, SimKai', 'name' => '楷体, 楷体_GB2312, SimKai'],
+            ['value' => '黑体, SimHei', 'name' => '黑体, SimHei'],
+            ['value' => '隶书, SimLi', 'name' => '隶书, SimLi'],
+            ['value' => 'andale mono', 'name' => 'andale mono'],
+            ['value' => 'arial, helvetica, sans-serif', 'name' => 'arial, helvetica, sans-serif'],
+            ['value' => 'arial black, avant garde', 'name' => 'arial black, avant garde'],
+            ['value' => 'comic sans ms', 'name' => 'comic sans ms'],
+            ['value' => 'impact, chicago', 'name' => 'impact, chicago'],
+            ['value' => 'times new roman', 'name' => 'times new roman'],
+            ['value' => 'sans-serif', 'name' => 'sans-serif'],
+        ];
+        $data['fonts'] = $fontsList;
+        $data['fontSizes'] = [10, 12, 16, 18, 24, 32, 48];
         $this->render('gitlab/project/mindmap.php', $data);
     }
 
@@ -146,18 +163,18 @@ class Mind extends BaseUserCtrl
         $data = [];
         $projectModel = new ProjectModel();
         $project = $projectModel->getById($projectId);
-        if(empty($project)){
-            $this->ajaxFailed('提示','获取项目数据失败');
+        if (empty($project)) {
+            $this->ajaxFailed('提示', '获取项目数据失败');
         }
         $root = [];
-        $root['id'] = 'project_'.$projectId;
+        $root['id'] = 'project_' . $projectId;
         $root['text'] = $project['name'];
         $root['layout'] = $project['mind_layout'];
         $root['children'] = [];
 
         if ($sourceType == 'all') {
             $issueChildren = $class->getMindIssuesByProject($projectId, $groupByField, $addFilterSql);
-        }else{
+        } else {
             $sprintId = $sourceType;
             $issueChildren = $class->getIssuesGroupBySprint($sprintId, $groupByField);
 
