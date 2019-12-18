@@ -712,6 +712,8 @@ header.navbar-gitlab {
     text-overflow: ellipsis;
     height: 34px;
 	word-break: keep-all;
+}
+.board-setting-line-active .board-setting-line-item .board-item-title {
 	cursor: move;
 }
 .board-item-title-input {
