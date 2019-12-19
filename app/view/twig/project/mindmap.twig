@@ -76,13 +76,13 @@
         <div class="page-with-sidebar">
             {% include 'twig/project/common-page-nav-project.twig' %}
 
-            <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+            <div class="page-with-layout-nav page-with-sub-nav">
                 <div class="alert-wrapper">
                     <div class="flash-container flash-container-page">
                     </div>
                 </div>
                 <div class="">
-                    <div class="content" id="content-body" style="width:100%">
+                    <div id="content-body" style="width:100%">
 
                         {% include 'twig/issue/form.twig' %}
                         <div class="filtered-search-block issues-details-filters row-content-block second-block js-mind-tools" style="padding: 10px"
@@ -90,9 +90,9 @@
                             <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
                                   method="get">
                                 <input name="utf8" type="hidden" value="&#x2713;"/>
-                                <div class="issues-other-filters filtered-search-wrapper">
+                                <div class="mind-filters">
 
-                                    <div class="filter-dropdown-container">
+                                    <div>
                                         <div class="dropdown inline ">
                                             <select id="boards_select" name="boards_select"  class="selectpicker">
                                                 <option value="all">整个项目</option>
@@ -125,42 +125,40 @@
                                                 <option value="assignee">经办人</option>
                                             </select>
                                         </div>
+                                        <button class="btn btn-default" type="button" id="btn-mind_filter" title="数据筛选"  style="margin-left: 5px">
+                                            <i class="fa fa-filter"></i>
+                                        </button>
                                     </div>
 
-                                    <div class="filter-dropdown-container">
+                                    <div>
                                         <div class="board-extra-actions">
-                                            <button class="btn btn-default" type="button" id="btn-mind_filter" title="数据筛选"  style="margin-left: 5px">
-                                                <i class="fa fa-filter"></i>
-                                            </button>
-
                                             <a id="create_same"  href="#"   title="添加迭代" class="" >
                                                 <img  src="/dev/img/mind/same.png" />
                                             </a>
                                             <a id="create_same"  href="#"   title="添加子事项" class="" >
                                                 <img  src="/dev/img/mind/child.png" />
                                             </a>
-                                            <button class="btn btn-default" type="button" id="btn-remove" title="删除"  >
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                            <a id="toggle_focus_mode"  href="#" role="button" aria-label=""
-                                               title="切换聚焦模式"
-                                               class="btn btn-default"
-                                            >
-                                                <span>
-                                                    <svg width="15" height="15" viewBox="0 0 15 15"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path  d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z"
-                                                               fill-rule="evenodd"></path>
-                                                    </svg>
-                                                </span>
-                                            </a>
-                                            <button class="btn btn-default" type="button" id="btn-filter" title="导出"  >
-                                                <i class="fa fa-cloud-download"></i>
-                                            </button>
-                                            <button class="btn btn-default " type="button" title="设置"  id="btn-setting" data-dismiss="modal" onclick="$('#modal-setting').modal('show');" >
-                                                <i class="fa fa-cog"></i>
-                                            </button>
                                         </div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-default" type="button" id="btn-remove" title="删除"  >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                        <button id="toggle_focus_mode"  href="#" role="button" aria-label="" title="切换聚焦模式" class="btn btn-default">
+                                            <span>
+                                                <svg width="15" height="15" viewBox="0 0 15 15"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                    <path  d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z"
+                                                            fill-rule="evenodd"></path>
+                                                </svg>
+                                            </span>
+                                        </button>
+                                        <button class="btn btn-default" type="button" id="btn-filter" title="导出"  >
+                                            <i class="fa fa-cloud-download"></i>
+                                        </button>
+                                        <button class="btn btn-default " type="button" title="设置"  id="btn-setting" data-dismiss="modal" onclick="$('#modal-setting').modal('show');" >
+                                            <i class="fa fa-cog"></i>
+                                        </button>
                                     </div>
 
                                 </div>
@@ -168,168 +166,172 @@
 
                         </div>
 
-                        <div class="container-fluid">
+                        <div style="background-color: #fff;">
                             <div class="issues-holder">
                                 <ul id="port">
                                     <div id="tip" >------------------------------------->Example <a target="_blank" href="http://my-mind.github.io/?url=examples%2Ffeatures.mymind">@my_mind_app</a>.</div>
                                 </ul>
 
-                                <div class="ui">
-                                    <h3>属性面板</h3>
-                                    <p class="hide">
-                                        <button data-command="New" title="New"><img src="/dev/lib/my-mind/icons/new.png" alt="New" /></button>
-                                        <button data-command="Load" title="Open"><img src="/dev/lib/my-mind/icons/open.png" alt="Open" /></button>
-                                        <button data-command="Save" title="Save"><img src="/dev/lib/my-mind/icons/save.png" alt="Save" /></button>
-                                        <button data-command="SaveAs" title="Save as"><img src="/dev/lib/my-mind/icons/save-as.png" alt="Save as" /></button>
-                                    </p>
-
-                                    <p>
-                                        <span>布局：</span>
-                                        <select id="layout">
-                                            <option value="">(Inherit)</option>
-                                        </select>
-                                    </p>
-                                    <p  >
-                                        <span>形状：</span>
-                                        <select id="shape">
-                                            <option value="">(Automatic)</option>
-                                        </select>
-                                    </p>
-                                    <p  >
-                                        <span>权重：</span>
-                                        <select id="value">
-                                            <option value="">(None)</option>
-                                            <option value="num">Number</option>
-                                            <optgroup label="Formula">
-                                                <option value="sum">Sum</option>
-                                                <option value="avg">Average</option>
-                                                <option value="min">Minimum</option>
-                                                <option value="max">Maximum</option>
-                                            </optgroup>
-                                        </select>
-                                    </p>
-                                    <p>
-                                        <span>Status：</span>
-                                        <select id="status">
-                                            <option value="">None</option>
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                            <option value="computed">Autocompute</option>
-                                        </select>
-                                    </p>
-                                    <p>
-                                        <span>边框颜色：</span>
-                                        <span id="color">
-                                            <a data-color="" title="Inherit" href="#"></a>
-                                            <a data-color="#000" title="Black" href="#"></a>
-                                            <a data-color="#e33" title="Red" href="#"></a>
-                                            <a data-color="#3e3" title="Green" href="#"></a>
-                                            <a data-color="#33e" title="Blue" href="#"></a>
-                                            <a data-color="#dd3" title="Yellow" href="#"></a>
-                                            <a data-color="#3dd" title="Cyan" href="#"></a>
-                                            <a data-color="#d3d" title="Magenta" href="#"></a>
-                                            <a data-color="#fa3" title="Orange" href="#"></a>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>字体格式：</span>
-                                        <span    style="display: block">
-                                            <select id="format_font_family" title="字体" class="selectpicker">
-                                                {% for row in fonts %}
-                                                    {% set  name = row['name'] %}
-                                                    {% set  value = row['value'] %}
-                                                    <option   data-content="<span style='font-family:{{ value }};'>{{ name }}</span>" value="{{ value }}">{{name}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </span>
-                                        <span   style="display: block">
-                                             <select id="format_fontsize" title="字号" class="selectpicker">
-                                                {% for size in fontSizes %}
-                                                    <option   data-content="<span style='font-size: {{ size }}px;'>{{ size }}</span>" value="{{ size }}">{{ size }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </span>
-                                        <span   style="display: block">
-                                            <a class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
-                                            <a class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
-                                            <input class="btn btn-xs"  style="max-width:40px" type="color" id="btn-font_color" title="字体颜色" >
-                                        </span>
-                                    </p>
-
-                                    <p class="hide">
-                                        <span>事项类型1：</span>
-                                        <span id="issue_type" style="display: block">
-                                            {% for type in issue_types %}
-                                                {% set  font_awesome = type['font_awesome'] %}
-                                                {% set  type_name = type['name'] %}
-                                                <a  class="btn btn-xs" title="{{type_name}}" href="#"  ><i class='fa {{font_awesome}}'></i> {{ type_name }}</a>
-                                            {% endfor %}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>事项类型:</span>
-                                        <select id="icons" title="事项类型" class="selectpicker">
-                                            {% for type in issue_types %}
-                                                {% set  font_awesome = type['font_awesome'] %}
-                                                {% set  type_name = type['name'] %}
-                                                <option origin-id="{{ type['_key'] }}" data-content="<i class='fa {{font_awesome}}'></i> {{type_name}}" value="{{font_awesome}}">{{type_name}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </p>
-                                    <p>
-                                        <span>优先级：</span>
-                                        <span id="format_priority"  style="display: block">
-                                             {% for row in priority %}
-                                                 {% set  status_color = row['status_color'] %}
-                                                 {% set  row_name = row['name'] %}
-                                                 <a  class="btn btn-xs" title="{{row_name}}" href="#" style="color: {{ status_color }}">{{ row_name }}</a>
-                                             {% endfor %}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>状态：</span>
-                                        <span id="format_status"  style="display: block">
-                                            {% for row in issue_status %}
-                                                {% set  text_color = row['text_color'] %}
-                                                {% set  row_name = row['name'] %}
-                                                <a  class="btn btn-xs" title="{{row_name}}" href="#" style="color: {{ text_color }}">{{ row_name }}</a>
-                                            {% endfor %}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>解决结果：</span>
-                                        <span id="format_resolve"  style="display: block">
-                                            {% for row in issue_resolve %}
-                                                {% set  text_color = row['color'] %}
-                                                {% set  row_name = row['name'] %}
-                                                <a  class="btn btn-xs" title="{{row_name}}" href="#" style="color: {{ text_color }}">{{ row_name }}</a>
-                                            {% endfor %}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>经办人：</span>
-                                        <select id="format_assignee" title="经办人" class="selectpicker">
-                                            {% for row in project_users %}
-                                                {% set  display_name = row['display_name'] %}
-                                                <option value="{{loop.index}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{loop.index}}.png' > {{display_name}}"  >{{display_name}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </p>
-
-                                    <p>
-                                        <span>进度：</span>
-                                        <span id="format_progress"  style="display: block">
-                                            <a title="0%" href="#"><img src="/dev/img/mind/progress0.png"></a>
-                                            <a title="10%" href="#"><img src="/dev/img/mind/progress10.png"></a>
-                                            <a title="60%" href="#"><img src="/dev/img/mind/progress60.png"></a>
-                                            <a title="100%" href="#"><img src="/dev/img/mind/progress100.png"></a>
-                                        </span>
-                                    </p>
-
-                                    <a id="github" href="https://github.com/ondras/my-mind" title="GitHub project page"><img src="github.png" alt="GitHub project page" /></a>
-                                    <button id="toggle" title="Toggle UI"></button>
-                                    <button data-command="Help" title="Help"><img src="/dev/lib/my-mind/icons/help.png" alt="Help" /></button>
-
+                                <div class="mind-side js-mind-side">
+                                    <div class="mind-side-head">
+                                        <h3>属性面板</h3>
+                                    </div>
+                                    <div class="mind-side-body">
+                                        <ul class="mind-side-attrs">
+                                            <li>
+                                                <p>布局</p>
+                                                <div>
+                                                    <select class="selectpicker" id="layout">
+                                                        <option value="">(Inherit)</option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>形状</p>
+                                                <div>
+                                                    <select class="selectpicker" id="shape">
+                                                        <option value="">(Automatic)</option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>权重</p>
+                                                <div>
+                                                    <select class="selectpicker" id="value">
+                                                        <option value="">(None)</option>
+                                                        <option value="num">Number</option>
+                                                        <optgroup label="Formula">
+                                                            <option value="sum">Sum</option>
+                                                            <option value="avg">Average</option>
+                                                            <option value="min">Minimum</option>
+                                                            <option value="max">Maximum</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>边框颜色</p>
+                                                <div id="color">
+                                                    <a data-color="#999" title="Inherit" href="#"></a>
+                                                    <a data-color="#000" title="Black" href="#"></a>
+                                                    <a data-color="#e33" title="Red" href="#"></a>
+                                                    <a data-color="#3e3" title="Green" href="#"></a>
+                                                    <a data-color="#33e" title="Blue" href="#"></a>
+                                                    <a data-color="#dd3" title="Yellow" href="#"></a>
+                                                    <a data-color="#3dd" title="Cyan" href="#"></a>
+                                                    <a data-color="#d3d" title="Magenta" href="#"></a>
+                                                    <a data-color="#fa3" title="Orange" href="#"></a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>status</p>
+                                                <div>
+                                                    <select class="selectpicker" id="status">
+                                                        <option value="">None</option>
+                                                        <option value="yes">Yes</option>
+                                                        <option value="no">No</option>
+                                                        <option value="computed">Autocompute</option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>字体格式</p>
+                                                <div>
+                                                    <select id="format_font_family" title="字体" class="selectpicker">
+                                                        {% for row in fonts %}
+                                                            {% set  name = row['name'] %}
+                                                            {% set  value = row['value'] %}
+                                                            <option   data-content="<span style='font-family:{{ value }};'>{{ name }}</span>" value="{{ value }}">{{name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <select id="format_fontsize" title="字号" class="selectpicker">
+                                                        {% for size in fontSizes %}
+                                                            <option data-content="<span style='font-size: {{ size }}px;'>{{ size }}</span>" value="{{ size }}">{{ size }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <a class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
+                                                    <a class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
+                                                    <input class="btn btn-xs"  style="max-width:40px" type="color" id="btn-font_color" title="字体颜色" >
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>事项类型</p>
+                                                <div>
+                                                    <select id="icons" title="事项类型" class="selectpicker">
+                                                        {% for type in issue_types %}
+                                                            {% set  font_awesome = type['font_awesome'] %}
+                                                            {% set  type_name = type['name'] %}
+                                                            <option origin-id="{{ type['_key'] }}" data-content="<i class='fa {{font_awesome}}'></i> {{type_name}}" value="{{font_awesome}}">{{type_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>优先级</p>
+                                                <div id="issue_type" class="btn-group button_radio" data-toggle="buttons">
+                                                    {% for row in priority %}
+                                                        {% set  status_color = row['status_color'] %}
+                                                        {% set  row_name = row['name'] %}
+                                                        <label class="btn btn-sm btn-default"
+                                                            data-color="{{status_color}}"
+                                                            style=" color: {{status_color}}">
+                                                            {{row_name}}
+                                                        </label>
+                                                    {% endfor %}
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>状态</p>
+                                                <div>
+                                                    <select title="事项类型" class="selectpicker">
+                                                        {% for row in issue_status %}
+                                                            {% set  text_color = row['text_color'] %}
+                                                            {% set  row_name = row['name'] %}
+                                                            <option style="color:{{text_color}}" data-color="{{text_color}}" data-content="<span > {{text_color}}" value="{{font_awesome}}">{{row_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>解决结果</p>
+                                                <div>
+                                                    <select title="解决结果" class="selectpicker">
+                                                        {% for row in issue_resolve %}
+                                                            {% set  text_color = row['color'] %}
+                                                            {% set  row_name = row['name'] %}
+                                                            <option style="color:{{text_color}}" data-color="{{text_color}}" data-content="<span > {{text_color}}" value="{{font_awesome}}">{{row_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>经办人</p>
+                                                <div>
+                                                    <select id="format_assignee" title="经办人" class="selectpicker">
+                                                        {% for row in project_users %}
+                                                            {% set  display_name = row['display_name'] %}
+                                                            <option value="{{loop.index}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{loop.index}}.png' > {{display_name}}"  >{{display_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>进度</p>
+                                                <div>
+                                                    <div id="format_progress"  style="display: block">
+                                                        <a title="0%" href="#"><img src="/dev/img/mind/progress0.png"></a>
+                                                        <a title="10%" href="#"><img src="/dev/img/mind/progress10.png"></a>
+                                                        <a title="60%" href="#"><img src="/dev/img/mind/progress60.png"></a>
+                                                        <a title="100%" href="#"><img src="/dev/img/mind/progress100.png"></a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div id="throbber"></div>
                                 </div>
 
