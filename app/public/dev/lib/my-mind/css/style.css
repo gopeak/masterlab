@@ -3,31 +3,14 @@
 @import url(shape.css);
 @import url(menu.css);
 
-* {
-	font-family: source sans pro, sans-serif;
-}
-
-html, body {
-	margin: 0;
-	overflow: hidden;
-	height: 100%;
-	background-color: #eed;
-	-webkit-user-select: none; /* no magnifier on hold */
-}
-
 [contenteditable] { /* allow for editable items */
 	-webkit-user-select: auto;
-}
-
-ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
 }
 
 #port {
 	overflow: hidden;
 	font-size: 15px;
+	position: relative;
 }
 
 #throbber {

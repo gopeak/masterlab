@@ -527,3 +527,13 @@ table tbody tr td.width_7_9 {
     color: #333;
     margin-right: 2px;
 }
+
+.issues-other-filters .dropdown-toggle:hover {
+    border-color: #e1e1e1;
+    background-color: #f5f5f5;
+}
+
+.btn-adv-search {
+    margin-left: -1px;
+    outline: none;
+}
