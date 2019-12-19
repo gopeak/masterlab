@@ -149,17 +149,14 @@ class Mind extends BaseUserCtrl
             $filterArr = json_decode($_GET['filter_json'], true);
             $addFilterSql = '';
         }
-
         $sourceType = 'all';
         if (isset($_GET['source_type'])) {
             $sourceType = $_GET['source_type'];
         }
-
         $groupByField = 'module';
         if (isset($_GET['group_by'])) {
             $groupByField = $_GET['group_by'];
         }
-
         $data = [];
         $projectModel = new ProjectModel();
         $project = $projectModel->getById($projectId);
@@ -173,12 +170,11 @@ class Mind extends BaseUserCtrl
         $root['children'] = [];
 
         if ($sourceType == 'all') {
-            $issueChildren = $class->getMindIssuesByProject($projectId, $groupByField, $addFilterSql);
+            $sprintId = null;
         } else {
             $sprintId = $sourceType;
-            $issueChildren = $class->getIssuesGroupBySprint($sprintId, $groupByField);
-
         }
+        $issueChildren = $class->getMindIssues($projectId, $sprintId, $groupByField, $addFilterSql);
         $root['children'] = $issueChildren;
         $data['root'] = $root;
         echo json_encode($data);
@@ -199,18 +195,23 @@ class Mind extends BaseUserCtrl
         }
 
         $projectGanttModel = new ProjectMindSettingModel();
-        $ganttSetting = $projectGanttModel->getByProject($projectId);
-        $class = new ProjectGantt();
-        if (empty($ganttSetting)) {
-            $class->initGanttSetting($projectId);
-            $ganttSetting = $projectGanttModel->getByProject($projectId);
+        $settingsArr = $projectGanttModel->getByProject($projectId);
+        if (empty($settingArr)) {
+            $settingsArr = $projectGanttModel->getByProject($projectId);
         }
-        $sourceType = 'project';
-        $sourceArr = ['project', 'active_sprint', 'module'];
-        if (in_array($ganttSetting['source_type'], $sourceArr)) {
-            $sourceType = $sourceType = $ganttSetting['source_type'];
+        $arr = [];
+        if (!empty($settingsArr)) {
+            foreach ($settingsArr as $item) {
+                $arr[$item['setting_key']] = $item['setting_value'];
+            }
         }
-        $this->ajaxSuccess('操作成功', $sourceType);
+        foreach (ProjectMind::$initSettingArr as $key => $item) {
+            if (!isset($arr[$key])) {
+                $arr[$key] = $item;
+            }
+        }
+
+        $this->ajaxSuccess('操作成功', $arr);
     }
 
     /**
@@ -231,17 +232,17 @@ class Mind extends BaseUserCtrl
         }
 
         $projectGanttModel = new ProjectMindSettingModel();
-        if (isset($_POST['fold_count'])) {
-            $updateInfo['fold_count'] = (int)$_POST['fold_count'];
-        }
-        if (isset($_POST['default_source'])) {
-            $updateInfo['default_source'] = $_POST['default_source'];
-        }
-        if (isset($_POST['is_display_label'])) {
-            $updateInfo['is_display_label'] = (int)$_POST['is_display_label'];
+        $updateInfo = [];
+        foreach (ProjectMind::$initSettingArr as $key => $item) {
+            if (isset($_POST[$key])) {
+                $updateInfo[$key] = $item;
+            }
         }
         if (!empty($updateInfo)) {
             try {
+                if(isset($updateInfo['default_source']) && $updateInfo['default_source']=='all'){
+                    $updateInfo['default_source_id'] = '';
+                }
                 foreach ($updateInfo as $key => $item) {
                     $arr = [];
                     $arr['project_id'] = $projectId;
@@ -249,16 +250,64 @@ class Mind extends BaseUserCtrl
                     $arr['setting_value'] = $item;
                     list($ret, $msg) = $projectGanttModel->replaceByProjectId($arr, $projectId);
                     if (!$ret) {
-                        $this->ajaxFailed('提示', '服务器执行错误:'.$msg);
+                        $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
                     }
                 }
                 $this->ajaxSuccess('提示', '操作成功');
             } catch (\PDOException $e) {
-                $this->ajaxFailed('提示', '服务器执行错误:' . $e->getMessage());
+                $this->ajaxFailed('提示', '数据库执行错误:' . $e->getMessage());
             }
         }
         $this->ajaxSuccess('提示', '操作成功');
 
     }
 
+
+    /**
+     * 保存思维导图设置
+     * @throws \Exception
+     */
+    public function saveProjectFormat()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $projectGanttModel = new ProjectMindSettingModel();
+        $updateInfo = [];
+        foreach (ProjectMind::$initSettingArr as $key => $item) {
+            if (isset($_POST[$key])) {
+                $updateInfo[$key] = $item;
+            }
+        }
+        if (!empty($updateInfo)) {
+            try {
+                if(isset($updateInfo['default_source']) && $updateInfo['default_source']=='all'){
+                    $updateInfo['default_source_id'] = '';
+                }
+                foreach ($updateInfo as $key => $item) {
+                    $arr = [];
+                    $arr['project_id'] = $projectId;
+                    $arr['setting_key'] = $key;
+                    $arr['setting_value'] = $item;
+                    list($ret, $msg) = $projectGanttModel->replaceByProjectId($arr, $projectId);
+                    if (!$ret) {
+                        $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
+                    }
+                }
+                $this->ajaxSuccess('提示', '操作成功');
+            } catch (\PDOException $e) {
+                $this->ajaxFailed('提示', '数据库执行错误:' . $e->getMessage());
+            }
+        }
+        $this->ajaxSuccess('提示', '操作成功');
+
+    }
 }

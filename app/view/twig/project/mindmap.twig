@@ -94,7 +94,7 @@
 
                                     <div class="filter-dropdown-container">
                                         <div class="dropdown inline ">
-                                            <select id="boards_select" name="boards_select"  class="selectpicker">
+                                            <select id="source_range" name="source_range"  class="selectpicker">
                                                 <option value="all">整个项目</option>
                                                 {% for board in sprints %}
                                                     <option value="{{ board['id'] }}">{{ board['name'] }}</option>
@@ -472,22 +472,29 @@
 
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
-                <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
+                <div id="setting-modal-body" class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="setting_project_id" value="{{project_id}}">
 
                     <div class="form-group">
                         <label class="control-label"  >默认数据源：</label>
                         <div class="col-sm-10">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="radio-inline">
-                                    <input type="radio" name="default_source" id="default_source_sprint" value="active_sprint"> 迭代
+                                    <input type="radio" name="default_source" id="default_source_sprint" value="sprint"> 迭代
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="default_source" id="default_source_all" value="project"> 整个项目
+                                    <input type="radio" name="default_source" id="default_source_all" value="all"> 整个项目
                                 </label>
                             </div>
                             <div class="col-md-4">
+                                <div id="default_source_id_container" class="dropdown inline hide">
+                                    <select id="default_source_id" name="default_source_id"  class="selectpicker">
+                                        {% for board in sprints %}
+                                            <option value="{{ board['id'] }}">{{ board['name'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -513,6 +520,18 @@
                             </div>
                             <div class="col-md-4">
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  ></label>
+                        <div class="col-sm-10">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  ></label>
+                        <div class="col-sm-10">
+
                         </div>
                     </div>
                 </div>
@@ -574,7 +593,7 @@
         });
 
         //$('.selectpicker').selectpicker();
-        $("#boards_select").change(function () {
+        $("#source_range").change(function () {
             console.log($(this).val());
             let range_type = $(this).val();
             if(range_type==='all'){
@@ -589,16 +608,26 @@
             //window.$board.fetchBoardById($(this).val());
         });
 
+        $("input[name='default_source']").change(function(){
+            console.log($(this).val());
+            if($(this).val()==='all'){
+                $('#default_source_id_container').hide();
+            }else{
+                $('#default_source_id_container').show();
+            }
+        });
+        
         $(".tokens-container").on("click", ".selectable-close", function () {
             $(this).parents(".js-visual-token").remove()
         });
 
 
-
         $('#btn-board_save').bind('click', function () {
             //window.$board_setting.saveSetting();
         });
-
+        $('#btn-setting').bind('click', function () {
+            window.$mindAjax.fetchSettings();
+        });
 
         $("#modal-create-issue").on('show.bs.modal', function (e) {
             keyMaster.addKeys([
