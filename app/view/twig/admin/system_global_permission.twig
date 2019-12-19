@@ -43,7 +43,7 @@
                         <div class="top-area">
                             <ul class="nav-links">
                                 <li class="active">
-                                    <a href="#">全局权限</a>
+                                    <a href="#">全局权限角色</a>
                                 </li>
                             </ul>
                             <div class="nav-controls">
@@ -58,14 +58,11 @@
                             <div class="row" style="margin-top: 10px">
                                 <form id="form_add" class="js-requires-input" action="/admin/system/global_permission_role_add"
                                       accept-charset="UTF-8" method="post">
-
                                     <div class="form-group col-md-1">
                                         <a class="btn btn-transparent" style="cursor:default">
                                         <strong class="append-right-5" >添加角色:</strong>
                                         </a>
                                     </div>
-
-
                                     <div class="form-group col-md-3">
                                         <input style="margin-left: -15px;" type="text" name="params[name]" maxlength="20" id="role_name" placeholder="角色名称" required="required" class="form-control">
 
@@ -77,32 +74,10 @@
                                     <div class="form-group col-md-3">
                                         <input id="btn-role_add" type="button" value="添 加" class="btn btn-create" >
                                     </div>
-
-
-
-
-
-
-
-
-
-                                    <!--div class="form-group  col-md-3">
-                                        <select name="params[perm_id]" id="select_perm" class="form-control project-access-select">
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-3">
-                                        <select name="params[group_id]" id="select_group" class="form-control ">
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <input type="button" name="commit" id="commit" value="添加" class="btn">
-                                    </div-->
                                 </form>
                             </div>
                             <div class="content">
                             </div>
-                            <hr />
                             <ul id="render" class="projects-list brd-bottom">
                             </ul>
                         </div>
@@ -332,9 +307,9 @@
     <li class="member project_member" id="{{id}}">
         <span class="list-item-name">
             <strong>
-                <a href="#">{{name}}</a>
+                {{name}}
             </strong>
-          <div class="hidden-xs cgray">{{description}} </div>
+          <div class="hidden-xs cgray">{{description}}</div>
         </span>
         <div class="controls member-controls ">
 
