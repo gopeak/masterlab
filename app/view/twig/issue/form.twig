@@ -15,7 +15,7 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="issue_id" id="join_sprint_issue_id" value="">
-                        <input type="hidden" name="format" id="format" value="json">
+                        <input type="hidden" name="format" id="format_sprint" value="json">
 
                         <div class="project-visibility-level-holder">
 
@@ -53,7 +53,7 @@
 </div>
 
 <div class="modal" id="modal-children_list">
-    <form class="form-horizontal issue-form" id="form_add"
+    <form class="form-horizontal issue-form" id="form_modal_delete"
           action="/issue/main/delete"
           accept-charset="UTF-8"
           method="post">
@@ -66,7 +66,7 @@
 
                 <div class="modal-body issue-modal-body">
                     <input type="hidden" name="issue_id" id="children_list_issue_id" value="">
-                    <input type="hidden" name="format" id="format" value="json">
+                    <input type="hidden" name="format" id="format_delete" value="json">
 
                     <div class="form-group project-visibility-level-holder padding-20">
                         {% verbatim %}<script type="text/html" id="children_list_tpl">
@@ -118,7 +118,7 @@
 
             <div class="modal-body issue-modal-body">
                 <input type="hidden" name="issue_id" id="current_issue_id" value="">
-                <input type="hidden" name="format" id="format" value="json">
+                <input type="hidden" name="format" id="format_parent" value="json">
                 <div class="padding-20">
                     <div class="form-group project-visibility-level-holder margin-b-m">
                         <div class="filter-item inline">

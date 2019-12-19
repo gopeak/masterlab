@@ -108,11 +108,10 @@ class PermissionGlobalUserRoleModel extends BaseDictionaryModel
     /**
      * @param $id
      * @param $userId
-     * @param $projectId
      * @param $roleId
      * @return int
      */
-    public function deleteUniqueItem($id, $userId,  $roleId)
+    public function deleteUniqueItem($id, $userId, $roleId)
     {
         $conditions = [];
         $conditions['id'] = $id;
@@ -177,16 +176,14 @@ class PermissionGlobalUserRoleModel extends BaseDictionaryModel
 
     /**
      * @param $userId
-     * @param $projectId
      * @param $roleId
      * @return array
      * @throws \Exception
      */
-    public function insertRole($userId, $projectId, $roleId)
+    public function insertRole($userId, $roleId)
     {
         $info = [];
         $info['user_id'] = $userId;
-        $info['project_id'] = $projectId;
         $info['role_id'] = $roleId;
         return $this->insert($info);
     }
@@ -251,12 +248,12 @@ class PermissionGlobalUserRoleModel extends BaseDictionaryModel
      * @param $roleId
      * @return bool
      */
-    public function checkUniqueItemExist($userId,  $roleId)
+    public function checkUniqueItemExist($userId, $roleId)
     {
         $table = $this->getTable();
         $conditions['user_id'] = $userId;
         $conditions['role_id'] = $roleId;
-        $sql = "SELECT count(*) as cc  FROM {$table} Where user_id=:user_id AND project_id=:project_id AND role_id=:role_id  ";
+        $sql = "SELECT count(*) as cc  FROM {$table} Where user_id=:user_id AND role_id=:role_id  ";
         $count = $this->db->getOne($sql, $conditions);
         return $count > 0;
     }

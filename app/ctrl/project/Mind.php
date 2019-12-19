@@ -17,7 +17,7 @@ use main\app\classes\ProjectGantt;
 use main\app\classes\ProjectMind;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
-use main\app\model\project\ProjectGanttSettingModel;
+use main\app\model\project\ProjectMindSettingModel;
 use main\app\model\project\ProjectRoleModel;
 
 /**
@@ -73,7 +73,7 @@ class Mind extends BaseUserCtrl
         $projectRolemodel = new ProjectRoleModel();
         $data['roles'] = $projectRolemodel->getsByProject($projectId);
 
-        $projectGanttModel = new ProjectGanttSettingModel();
+        $projectGanttModel = new ProjectMindSettingModel();
         $setting = $projectGanttModel->getByProject($projectId);
         $class = new ProjectGantt();
         if (empty($setting)) {
@@ -90,6 +90,23 @@ class Mind extends BaseUserCtrl
         }
 
         ConfigLogic::getAllConfigs($data);
+
+        $fontsList = [
+            ['value' => '宋体, SimSun;', 'name' => '宋体'],
+            ['value' => '微软雅黑, Microsoft YaHei', 'name' => '微软雅黑, Microsoft YaHei'],
+            ['value' => '楷体, 楷体_GB2312, SimKai', 'name' => '楷体, 楷体_GB2312, SimKai'],
+            ['value' => '黑体, SimHei', 'name' => '黑体, SimHei'],
+            ['value' => '隶书, SimLi', 'name' => '隶书, SimLi'],
+            ['value' => 'andale mono', 'name' => 'andale mono'],
+            ['value' => 'arial, helvetica, sans-serif', 'name' => 'arial, helvetica, sans-serif'],
+            ['value' => 'arial black, avant garde', 'name' => 'arial black, avant garde'],
+            ['value' => 'comic sans ms', 'name' => 'comic sans ms'],
+            ['value' => 'impact, chicago', 'name' => 'impact, chicago'],
+            ['value' => 'times new roman', 'name' => 'times new roman'],
+            ['value' => 'sans-serif', 'name' => 'sans-serif'],
+        ];
+        $data['fonts'] = $fontsList;
+        $data['fontSizes'] = [10, 12, 16, 18, 24, 32, 48];
         $this->render('gitlab/project/mindmap.php', $data);
     }
 
@@ -123,7 +140,7 @@ class Mind extends BaseUserCtrl
         }
         $data['project_users'] = $projectUsers;
 
-        $projectGanttModel = new ProjectGanttSettingModel();
+        $projectGanttModel = new ProjectMindSettingModel();
         $class = new ProjectMind();
 
         $filterArr = [];
@@ -146,18 +163,18 @@ class Mind extends BaseUserCtrl
         $data = [];
         $projectModel = new ProjectModel();
         $project = $projectModel->getById($projectId);
-        if(empty($project)){
-            $this->ajaxFailed('提示','获取项目数据失败');
+        if (empty($project)) {
+            $this->ajaxFailed('提示', '获取项目数据失败');
         }
         $root = [];
-        $root['id'] = 'project_'.$projectId;
+        $root['id'] = 'project_' . $projectId;
         $root['text'] = $project['name'];
         $root['layout'] = $project['mind_layout'];
         $root['children'] = [];
 
         if ($sourceType == 'all') {
             $issueChildren = $class->getMindIssuesByProject($projectId, $groupByField, $addFilterSql);
-        }else{
+        } else {
             $sprintId = $sourceType;
             $issueChildren = $class->getIssuesGroupBySprint($sprintId, $groupByField);
 
@@ -181,7 +198,7 @@ class Mind extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
-        $projectGanttModel = new ProjectGanttSettingModel();
+        $projectGanttModel = new ProjectMindSettingModel();
         $ganttSetting = $projectGanttModel->getByProject($projectId);
         $class = new ProjectGantt();
         if (empty($ganttSetting)) {
@@ -197,7 +214,7 @@ class Mind extends BaseUserCtrl
     }
 
     /**
-     * 保存甘特图有设置
+     * 保存思维导图设置
      * @throws \Exception
      */
     public function saveSetting()
@@ -213,21 +230,34 @@ class Mind extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
-        $projectGanttModel = new ProjectGanttSettingModel();
-        $sourceType = 'project';
-        $sourceArr = ['project', 'active_sprint', 'module'];
-        if (isset($_POST['source_type'])) {
-            if (in_array($_POST['source_type'], $sourceArr)) {
-                $sourceType = $_POST['source_type'];
+        $projectGanttModel = new ProjectMindSettingModel();
+        if (isset($_POST['fold_count'])) {
+            $updateInfo['fold_count'] = (int)$_POST['fold_count'];
+        }
+        if (isset($_POST['default_source'])) {
+            $updateInfo['default_source'] = $_POST['default_source'];
+        }
+        if (isset($_POST['is_display_label'])) {
+            $updateInfo['is_display_label'] = (int)$_POST['is_display_label'];
+        }
+        if (!empty($updateInfo)) {
+            try {
+                foreach ($updateInfo as $key => $item) {
+                    $arr = [];
+                    $arr['project_id'] = $projectId;
+                    $arr['setting_key'] = $key;
+                    $arr['setting_value'] = $item;
+                    list($ret, $msg) = $projectGanttModel->replaceByProjectId($arr, $projectId);
+                    if (!$ret) {
+                        $this->ajaxFailed('提示', '服务器执行错误:'.$msg);
+                    }
+                }
+                $this->ajaxSuccess('提示', '操作成功');
+            } catch (\PDOException $e) {
+                $this->ajaxFailed('提示', '服务器执行错误:' . $e->getMessage());
             }
         }
-        $updateInfo['source_type'] = $sourceType;
-        list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
-        if ($ret) {
-            $this->ajaxSuccess('操作成功', $sourceType);
-        } else {
-            $this->ajaxFailed('服务器执行错误', $msg);
-        }
+        $this->ajaxSuccess('提示', '操作成功');
 
     }
 

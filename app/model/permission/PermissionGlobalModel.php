@@ -16,6 +16,7 @@ class PermissionGlobalModel extends BaseDictionaryModel
     /**
      * PermissionGlobalModel constructor.
      * @param bool $persistent
+     * @throws \Exception
      */
     public function __construct($persistent = false)
     {
@@ -30,8 +31,7 @@ class PermissionGlobalModel extends BaseDictionaryModel
      */
     public function add($info)
     {
-        if ( empty($info) )
-        {
+        if (empty($info)) {
             return [false, 'params_is_empty'];
         }
         return $this->insert($info);
@@ -71,8 +71,7 @@ class PermissionGlobalModel extends BaseDictionaryModel
     public function getKeysById($permIds)
     {
 
-        if ( empty($permIds) || !is_array($permIds) )
-        {
+        if (empty($permIds) || !is_array($permIds)) {
             return [];
         }
         $params = [];
@@ -84,8 +83,7 @@ class PermissionGlobalModel extends BaseDictionaryModel
 
         $rows = $this->db->getRows($sql, $params, true);
 
-        if ( empty($rows) )
-        {
+        if (empty($rows)) {
             return [];
         }
 

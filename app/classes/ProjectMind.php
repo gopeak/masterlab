@@ -278,21 +278,6 @@ class ProjectMind
                 $secondArr[] = $item;
             }
         }
-        if ($groupByField == 'label') {
-            $model = new ProjectLabelModel();
-            $labelArr = $model->getByProject($projectId);
-            foreach ($labelArr as $label) {
-                $item = [];
-                $item['origin_id'] = $label['id'];
-                $item['id'] = 'issue_label_' . $label['id'];
-                $item['type'] = $groupByField;
-                $item['text'] = $label['title'];
-                $item['side'] = 'right';
-                $item['color'] = '#e33';
-                $item['children'] = [];
-                $secondArr[] = $item;
-            }
-        }
         if ($groupByField == 'version') {
             $model = new ProjectVersionModel();
             $versionArr = $model->getByProject($projectId);
@@ -336,22 +321,18 @@ class ProjectMind
         $finalArr = $this->getSecondArr($projectId, $groupByField);
         //print_r($finalArr);
         foreach ($finalArr as &$arr) {
-            if (@$arr['type'] == 'label') {
-
-            } else {
-                foreach ($issues as $k => $issue) {
-                    // $haveChildren = (int)$issue['have_children'];
-                    $masterId = (int)$issue['master_id'];
-                    if ($issue[$arr['type']] == $arr['origin_id'] && $masterId <= 0) {
-                        $tmp = [];
-                        $tmp['id'] = 'issue_' . $issue['id'];
-                        $tmp['text'] = $issue['summary'];
-                        $tmp['children'] = [];
-                        $level = 1;
-                        $this->recurIssue($issues, $tmp, $level);
-                        $arr['children'][] = $tmp;
-                        unset($issues[$k]);
-                    }
+            foreach ($issues as $k => $issue) {
+                // $haveChildren = (int)$issue['have_children'];
+                $masterId = (int)$issue['master_id'];
+                if ($issue[$arr['type']] == $arr['origin_id'] && $masterId <= 0) {
+                    $tmp = [];
+                    $tmp['id'] = 'issue_' . $issue['id'];
+                    $tmp['text'] = $issue['summary'];
+                    $tmp['children'] = [];
+                    $level = 1;
+                    $this->recurIssue($issues, $tmp, $level);
+                    $arr['children'][] = $tmp;
+                    unset($issues[$k]);
                 }
             }
         }

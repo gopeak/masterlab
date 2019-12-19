@@ -16,6 +16,7 @@ class PermissionGlobalRoleRelationModel extends BaseDictionaryModel
     /**
      * PermissionGlobalRoleRelationModel constructor.
      * @param bool $persistent
+     * @throws \Exception
      */
     public function __construct($persistent = false)
     {
@@ -28,14 +29,14 @@ class PermissionGlobalRoleRelationModel extends BaseDictionaryModel
      */
     public function getPermIdsByRoleId($roleId)
     {
-        $list = $this->getRows('perm_id', ['role_id' => $roleId]);
+        $list = $this->getRows('perm_global_id', ['role_id' => $roleId]);
 
         if (empty($list)) {
             return [];
         }
         $data = [];
         foreach ($list as $item) {
-            $data[] = $item['perm_id'];
+            $data[] = $item['perm_global_id'];
         }
         return array_unique($data);
     }
@@ -51,7 +52,8 @@ class PermissionGlobalRoleRelationModel extends BaseDictionaryModel
     {
         $info = [];
         $info['role_id'] = $roleId;
-        $info['perm_id'] = $permId;
+        $info['perm_global_id'] = $permId;
+        $info['is_system'] = 1;
         return $this->insert($info);
     }
 
@@ -67,10 +69,10 @@ class PermissionGlobalRoleRelationModel extends BaseDictionaryModel
         }
         $params = [];
         $table = $this->getTable();
-        $sql = "select perm_id from {$table}   where  1 ";
+        $sql = "select perm_global_id from {$table}   where  1 ";
 
         $roleIds_str = implode(',', $roleIds);
-        $sql .= " AND  role_id IN ({$roleIds_str}) GROUP BY perm_id";
+        $sql .= " AND  role_id IN ({$roleIds_str}) GROUP BY perm_global_id";
 
         $rows = $this->db->getRows($sql, $params, true);
 
@@ -93,9 +95,8 @@ class PermissionGlobalRoleRelationModel extends BaseDictionaryModel
     }
 
     /**
-     * 获取某个用户组拥有的权限记录
-     * @param $permGlobalId
-     * @param $groupId
+     * 根据角色ID数组获取所拥有的权限记录
+     * @param $idArr
      * @return array
      */
     public function getPermIdsByUserRoles($idArr)
