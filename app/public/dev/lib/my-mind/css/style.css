@@ -76,6 +76,7 @@
 	padding: 10px;
 }
 
+.mind-filters-product .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) ,
 .mind-side-body .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
 	width: 100% !important;
 }

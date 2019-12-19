@@ -92,8 +92,8 @@
                                 <input name="utf8" type="hidden" value="&#x2713;"/>
                                 <div class="mind-filters">
 
-                                    <div>
-                                        <div class="dropdown inline ">
+                                    <div class="mind-filters-product">
+                                        <div class="dropdown inline">
                                             <select id="boards_select" name="boards_select"  class="selectpicker">
                                                 <option value="all">整个项目</option>
                                                 {% for board in sprints %}
@@ -132,12 +132,12 @@
 
                                     <div>
                                         <div class="board-extra-actions">
-                                            <a id="create_same"  href="#"   title="添加迭代" class="" >
+                                            <button class="btn btn-default" type="button" id="create_same" title="添加迭代">
                                                 <img  src="/dev/img/mind/same.png" />
-                                            </a>
-                                            <a id="create_same"  href="#"   title="添加子事项" class="" >
+                                            </button>
+                                            <button class="btn btn-default" type="button" id="create_same" title="添加子事项">
                                                 <img  src="/dev/img/mind/child.png" />
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                     <div>
@@ -190,7 +190,13 @@
                                                 <p>形状</p>
                                                 <div>
                                                     <select class="selectpicker" id="shape">
-                                                        <option value="">(Automatic)</option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_graph_bottom.png' style='width: 16px; height: 16px;' /> bottom" value=""></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_graph_left.png' style='width: 16px; height: 16px;' /> left" value=""></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_graph_right.png' style='width: 16px; height: 16px;' /> right" value=""></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_graph_top.png' style='width: 16px; height: 16px;' /> top" value=""></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_map.png' style='width: 16px; height: 16px;' /> map" value=""></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_tree_left.png' style='width: 16px; height: 16px;' /> tree left" value=""></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_tree_right.png' style='width: 16px; height: 16px;' /> tree right" value=""></option>
                                                     </select>
                                                 </div>
                                             </li>
@@ -291,7 +297,7 @@
                                                         {% for row in issue_status %}
                                                             {% set  text_color = row['text_color'] %}
                                                             {% set  row_name = row['name'] %}
-                                                            <option style="color:{{text_color}}" data-color="{{text_color}}" data-content="<span > {{text_color}}" value="{{font_awesome}}">{{row_name}}</option>
+                                                            <option style="color:{{text_color}}" data-color="{{text_color}}" data-content="<span > {{row_name}}" value="{{font_awesome}}">{{row_name}}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -303,7 +309,7 @@
                                                         {% for row in issue_resolve %}
                                                             {% set  text_color = row['color'] %}
                                                             {% set  row_name = row['name'] %}
-                                                            <option style="color:{{text_color}}" data-color="{{text_color}}" data-content="<span > {{text_color}}" value="{{font_awesome}}">{{row_name}}</option>
+                                                            <option style="color:{{text_color}}" data-color="{{text_color}}" data-content="<span > {{row_name}}" value="{{font_awesome}}">{{row_name}}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
