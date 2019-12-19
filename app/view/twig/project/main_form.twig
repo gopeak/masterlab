@@ -83,7 +83,7 @@
                         </label>
                         <div class="col-sm-4">
                         <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon3">https://example.com/users/</span>
+                        <span class="input-group-addon" id="basic-addon3">https://example.com/<span class="js-org-key"></span></span>
                         <input placeholder="必须英文字符,最大长度{{project_key_max_length}},创建后不可修改" class="form-control"
                                        type="text" name="params[key]" id="project_key" maxlength="{{project_key_max_length}}">
                         </div>
@@ -99,7 +99,7 @@
                         </label>
                         <div class="col-sm-4">
                             <div class="select2-container">
-                                <select class="selectpicker" data-live-search="true" name="params[org_id]">
+                                <select class="selectpicker js-org" data-live-search="true" name="params[org_id]">
                                     {% for org in org_list %}
                                         <option data-tokens="{{org['name']}}" value="{{org['id']}}">{{org['name']}}</option>
                                     {% endfor %}
@@ -406,6 +406,12 @@
                 $("input[name='commit']").addClass("disabled");
             }
         });
+        var defaultToken = $($(".js-org").find("option")[0]).attr("data-tokens")
+        $('.js-org-key').text(defaultToken);
+        $(".js-org").on("changed.bs.select", function(ev, v){
+            var token = $(".js-org").find("option:selected").attr("data-tokens");
+            $(".js-org-key").text(token + '/')
+        })
     });
 
 
