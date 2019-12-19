@@ -32,6 +32,12 @@
         .radio-with .radio:focus-within{
             background-color: #eee;
         }
+        .qq-gallery.qq-uploader {
+            min-height: 90px;
+        }
+        .qq-gallery.qq-uploader:before {
+            top: 25%;
+        }
     </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:new" data-project="xphp">
@@ -63,7 +69,7 @@
                     <input type="hidden" name="authenticity_token" value="">
                     <div class="form-group">
                         <label class="control-label" for="">项目名称 <i class="required">*</i></label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                             <input placeholder="请输入名称,最多{{project_name_max_length}}字符" class="form-control"
                                     type="text" name="params[name]" id="project_name" maxlength="{{project_name_max_length}}">
                             <p id="tip-project_name" class="gl-field-error hide"></p>
@@ -75,9 +81,13 @@
                         <label class="control-label" for="">
                             <span>项目KEY <i class="required">*</i></span>
                         </label>
-                        <div class="col-sm-10">
-                            <input placeholder="必须英文字符,最大长度{{project_key_max_length}},创建后不可修改" class="form-control"
+                        <div class="col-sm-4">
+                        <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon3">https://example.com/users/</span>
+                        <input placeholder="必须英文字符,最大长度{{project_key_max_length}},创建后不可修改" class="form-control"
                                        type="text" name="params[key]" id="project_key" maxlength="{{project_key_max_length}}">
+                        </div>
+                            
                             <p id="tip-project_key" class="gl-field-error hide"></p>
                         </div>
                     </div>
@@ -87,7 +97,7 @@
                         <label class="control-label" for="">
                             <span>组织 <i class="required">*</i></span>
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                             <div class="select2-container">
                                 <select class="selectpicker" data-live-search="true" name="params[org_id]">
                                     {% for org in org_list %}
