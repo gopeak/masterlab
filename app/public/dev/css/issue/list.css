@@ -535,4 +535,5 @@ table tbody tr td.width_7_9 {
 
 .btn-adv-search {
     margin-left: -1px;
+    outline: none;
 }

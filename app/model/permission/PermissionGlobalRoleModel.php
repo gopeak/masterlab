@@ -43,4 +43,32 @@ class PermissionGlobalRoleModel extends BaseDictionaryModel
     {
         return $this->getRows('*', []);
     }
+
+    /**
+     * 通过角色名来获取数据
+     * @param $name
+     * @return array
+     */
+    public function getByName($name)
+    {
+        $conditions = [];
+        $conditions['name'] = $name;
+        return $this->getRow("*", $conditions);
+    }
+
+    /**
+     * 新增
+     * @param $name
+     * @param string $description
+     * @return array
+     * @throws \Exception
+     */
+    public function add($name, $description = "")
+    {
+        $row = [];
+        $row['name'] = $name;
+        $row['description'] = $description;
+        $row['is_system'] = '0';
+        return $this->insert($row);
+    }
 }
