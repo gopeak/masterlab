@@ -66,6 +66,8 @@ class Main extends Base
         $data['project_name_max_length'] = (new SettingsLogic)->maxLengthProjectName();
         $data['project_key_max_length'] = (new SettingsLogic)->maxLengthProjectKey();
 
+        $data['root_domain'] = ROOT_URL;
+
         $this->render('gitlab/project/main_form.php', $data);
     }
 
