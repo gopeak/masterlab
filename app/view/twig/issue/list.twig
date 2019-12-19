@@ -18,7 +18,7 @@
 
 		<script>
 			window.description_templates = {{ description_templates|json_encode()|raw }};
-window.project_uploads_path = "/issue/main/upload?project_id=  {{ project_id }}";
+window.project_uploads_path = "/issue/main/upload?project_id=      {{ project_id }}";
 window.preview_markdown_path = "/issue/main/preview_markdown";
 		</script>
 
@@ -95,9 +95,9 @@ window.preview_markdown_path = "/issue/main/preview_markdown";
 												<input
 												name="page" id="filter_page" type="hidden" value="1">
 												<!--<div class="check-all-holder">
-																								                                            <input type="checkbox" name="check_all_issues" id="check_all_issues"
-																								                                                   class="check_all_issues left"/>
-																								                                        </div>-->
+																																																																								                                            <input type="checkbox" name="check_all_issues" id="check_all_issues"
+																																																																								                                                   class="check_all_issues left"/>
+																																																																								                                        </div>-->
 												<div class="issues-other-filters filtered-search-wrapper">
 													<div class="filtered-search-box">
 														<div class="dropdown filtered-search-history-dropdown-wrapper">
@@ -268,7 +268,7 @@ window.preview_markdown_path = "/issue/main/preview_markdown";
 														<div class="dropdown inline   issue-sort-dropdown">
 															<div class="btn-group" role="group">
 																<div class="btn-group" role="group">
-																	<button id="btn-sort_field" style="height: 38.5px" data-sort_field="{{sort_field}}" class="btn btn-default dropdown-menu-toggle" data-display="static" data-toggle="dropdown" type="button">
+																	<button id="btn-sort_field" style="height: 38.5px; width: 130px;" data-sort_field="{{sort_field}}" class="btn btn-default dropdown-menu-toggle" data-display="static" data-toggle="dropdown" type="button">
 																		<span>排序:</span>
 																		{{avl_sort_fields[sort_field]}}
 																		<i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
@@ -435,7 +435,7 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 															<th class="js-pipeline-stages pipeline-info">
 																<a class="sort_link" data-field="issue_type" data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}" href="#">
 																	类
-																																		                                                        型
+																																																																																																						                                                        型
 																	{{ sort_field == 'issue_type' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}</a>
 															</th>
 														{% endif %}
@@ -471,7 +471,7 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 															<th class="js-pipeline-info pipeline-info">
 																<a class="sort_link" data-field="sprint" data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}" href="#">
 																	迭
-																																		                                                    代
+																																																																																																						                                                    代
 																	{% if sort_field == 'sprint'  %}
 																		<i class="fa fa-sort-{{ sort_by }}"></i>
 																	{% endif %}
@@ -487,7 +487,7 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 															<th class="js-pipeline-info pipeline-info">
 																<a class="sort_link" data-field="weight" data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}" href="#">
 																	权
-																																		                                                    重
+																																																																																																						                                                    重
 																	{% if sort_field == 'weight'  %}
 																		<i class="fa fa-sort-{{ sort_by }}"></i>
 																	{% endif %}
@@ -522,7 +522,7 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 															<th class="js-pipeline-stages pipeline-info">
 																<a class="sort_link" data-field="status" data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}" href="#">
 																	状
-																																		                                                    态
+																																																																																																						                                                    态
 																	{% if sort_field == 'status'  %}
 																		<i class="fa fa-sort-{{ sort_by }}"></i>
 																	{% endif %}
@@ -551,7 +551,7 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 															<th class="js-pipeline-date pipeline-date">
 																<a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date" data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} " href="#">
 																	限
-																																		                                                    期
+																																																																																																						                                                    期
 																	{% if sort_field == 'due_date'  %}
 																		<i class="fa fa-sort-{{ sort_by }}"></i>
 																	{% endif %}
@@ -686,7 +686,7 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 									<!--                                </h5>-->
 									<!--                                <div class="camper-helper__buttons">-->
 									<!--                                    <a id="showMoreTips" class="btn btn--reversed btn--full-width push_half--bottom">Yes, let’s star!</a>
-																		                            <!--                                    <a id="closeTips" class="btn btn--full-width btn--semi-transparent" data-behavior="dismiss_camper_helper">No thanks</a>-->
+																																																						                            <!--                                    <a id="closeTips" class="btn btn--full-width btn--semi-transparent" data-behavior="dismiss_camper_helper">No thanks</a>-->
 									<!--                                </div>-->
 									<!--                            </div>-->
 									<!--                        </div>-->
@@ -1174,9 +1174,9 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 					<div
 						class="modal" id="modal-import_excel">
 						<!--<form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-import_excel"
-												                      action="/issue/main/import_excel"
-												                      accept-charset="UTF-8"
-												                      method="POST">-->
+																																				                      action="/issue/main/import_excel"
+																																				                      accept-charset="UTF-8"
+																																				                      method="POST">-->
 						<input type="hidden" name="project_id" value="{{project_id}}">
 						<div class="modal-dialog">
 							<div class="modal-content modal-middle">
@@ -1571,7 +1571,7 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 
 									{{#if_in_array 'plan_date'  ../display_fields}}
 										<td class="width_8">
-											<small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;">{{show_date_range}}
+											<small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;cursor:pointer;">{{show_date_range}}
 											</small>
 										</td>
 									{{/if_in_array}}
@@ -1870,17 +1870,17 @@ new gl.IssuableBulkActions({prefixId: 'issue_'});
 
 								<!--新增一个tr当他们点击子【更多子任务】的时候-->
 								<!--{{#if_eq have_children '0'}}
-																
-																                {{else}}
-																                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">
-																                        <h5>子任务:</h5>
-																                        <div class="event-body">
-																                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">
-																
-																                            </ul>
-																                        </div>
-																                    </div>
-																                {{/if_eq}}-->
+																																																
+																																																                {{else}}
+																																																                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">
+																																																                        <h5>子任务:</h5>
+																																																                        <div class="event-body">
+																																																                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">
+																																																
+																																																                            </ul>
+																																																                        </div>
+																																																                    </div>
+																																																                {{/if_eq}}-->
 
 							{{/issues}}
 
@@ -2099,7 +2099,7 @@ query_param_obj: urls.searchObject,
 list_render_id: list_render_id, // list_render_id detail_render_id
 list_tpl_id: list_tpl_id, // list_tpl list_tpl_detail
 filter_form_id: "filter_form",
-filter_url: "/issue/main/filter?project=  {{ project_id }}",
+filter_url: "/issue/main/filter?project=      {{ project_id }}",
 get_url: "/issue/main/get",
 update_url: "/issue/main/update",
 add_url: "/issue/main/add",
