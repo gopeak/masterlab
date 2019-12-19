@@ -1,9 +1,9 @@
 #menu {
 	position: absolute;
 	z-index: 1;
-	border: 1px solid #666;
+	border: 1px solid #eee;
 	background-color: #fff;	
-	box-shadow: 0 0 2px 1px #666;
+	padding: 4px 0;
 }
 
 #menu button {
@@ -11,8 +11,8 @@
 	background-color: transparent;
 	border: none;
 	margin: 0;
-	padding: 3px 6px;
-	font-size: 15px;
+	padding: 6px 10px;
+	font-size: 12px;
 	width: 130px;
 	text-align: left;
 }
@@ -23,7 +23,7 @@
 
 #menu span {
 	display: block;
-	border-top: 1px solid #666;
+	border-top: 1px solid #eee;
 	margin-top: 4px;
 	padding-top: 4px;
 }
