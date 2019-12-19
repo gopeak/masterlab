@@ -95,9 +95,8 @@ class PermissionGlobalRoleRelationModel extends BaseDictionaryModel
     }
 
     /**
-     * 获取某个用户组拥有的权限记录
-     * @param $permGlobalId
-     * @param $groupId
+     * 根据角色ID数组获取所拥有的权限记录
+     * @param $idArr
      * @return array
      */
     public function getPermIdsByUserRoles($idArr)

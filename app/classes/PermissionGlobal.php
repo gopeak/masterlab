@@ -35,9 +35,9 @@ class PermissionGlobal
         if (empty($userId)) {
             return false;
         }
-        $userGroupModel = new PermissionGlobalUserRoleModel();
-        $userRoleIdArr = $userGroupModel->getsByUid($userId);
-        unset($userGroupModel);
+        $globalUserRoleModel = new PermissionGlobalUserRoleModel();
+        $userRoleIdArr = $globalUserRoleModel->getsByUid($userId);
+        unset($globalUserRoleModel);
         if (empty($userRoleIdArr)) {
             return false;
         }
@@ -54,6 +54,7 @@ class PermissionGlobal
     /**
      * @param $userRoleIdArr
      * @return array
+     * @throws \Exception
      */
     private static function getPermissionListByUserRoles($userRoleIdArr)
     {
