@@ -79,32 +79,32 @@
 
                     <div class="form-group">
                         <label class="control-label" for="">
-                            <span>项目KEY <i class="required">*</i></span>
-                        </label>
-                        <div class="col-sm-4">
-                        <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon3">https://example.com/<span class="js-org-key"></span></span>
-                        <input placeholder="必须英文字符,最大长度{{project_key_max_length}},创建后不可修改" class="form-control"
-                                       type="text" name="params[key]" id="project_key" maxlength="{{project_key_max_length}}">
-                        </div>
-                            
-                            <p id="tip-project_key" class="gl-field-error hide"></p>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group">
-                        <label class="control-label" for="">
                             <span>组织 <i class="required">*</i></span>
                         </label>
                         <div class="col-sm-4">
                             <div class="select2-container">
                                 <select class="selectpicker js-org" data-live-search="true" name="params[org_id]">
                                     {% for org in org_list %}
-                                        <option data-tokens="{{org['name']}}" value="{{org['id']}}">{{org['name']}}</option>
+                                        <option data-tokens="{{org['name']}}" data-org_path="{{org['path']}}" value="{{org['id']}}">{{org['name']}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label" for="">
+                            <span>项目KEY <i class="required">*</i></span>
+                        </label>
+                        <div class="col-sm-4">
+                        <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon3">{{root_domain}}<span class="js-org-key"></span></span>
+                        <input placeholder="必须英文字符,最大长度{{project_key_max_length}},创建后不可修改" class="form-control"
+                                       type="text" name="params[key]" id="project_key" maxlength="{{project_key_max_length}}">
+                        </div>
+                            
+                            <p id="tip-project_key" class="gl-field-error hide"></p>
                         </div>
                     </div>
 
@@ -406,11 +406,11 @@
                 $("input[name='commit']").addClass("disabled");
             }
         });
-        var defaultToken = $($(".js-org").find("option")[0]).attr("data-tokens")
-        $('.js-org-key').text(defaultToken);
+        var defaultPath = $($(".js-org").find("option")[0]).attr("data-org_path");
+        $('.js-org-key').text(defaultPath);
         $(".js-org").on("changed.bs.select", function(ev, v){
-            var token = $(".js-org").find("option:selected").attr("data-tokens");
-            $(".js-org-key").text(token + '/')
+            var path = $(".js-org").find("option:selected").attr("data-org_path");
+            $(".js-org-key").text(path + '/')
         })
     });
 
