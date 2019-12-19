@@ -83,7 +83,7 @@
                                                     <div class="select2-container">
                                                         <select class="selectpicker" data-live-search="true" name="params[org_id]">
                                                             {% for org in org_list %}
-                                                                <option data-tokens="{{org['name']}}" value="{{org['id']}}">{{org['name']}}</option>
+                                                                <option data-tokens="{{org['name']}}" data-org_path="{{org['path']}}" value="{{org['id']}}">{{org['name']}}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>

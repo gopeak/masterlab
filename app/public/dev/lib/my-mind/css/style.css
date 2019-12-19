@@ -48,3 +48,54 @@
 #tip.hidden {
 	opacity: 0;
 }
+
+#io{
+	display: none;
+}
+
+.mind-side {
+	position: absolute;
+	top: 145px;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+	overflow-y: scroll;
+	width: 260px;
+	border-left: 1px solid #eee;
+	background: #fafafa;
+}
+.mind-side-head {
+	border-bottom: 1px solid #eee;
+	padding: 10px;
+}
+.mind-side-head h3 {
+	margin: 0;
+	font-size: 14px;
+}
+.mind-side-body {
+	padding: 10px;
+}
+
+.mind-filters-product .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) ,
+.mind-side-body .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+	width: 100% !important;
+}
+
+#helper-btn {
+	display: none;
+}
+
+#color a {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+}
+
+.mind-side-attrs > li > div {
+	padding: 0 0 10px;
+}
+
+.mind-filters {
+	display: flex;
+	justify-content: space-between;
+}

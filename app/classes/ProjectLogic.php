@@ -486,7 +486,7 @@ class ProjectLogic
             $defaultRoleRelation = $defaultRoleRelationModel->getAll(false);
             $defaultRoleRelationArr = [];
             foreach ($defaultRoleRelation as $item) {
-                $defaultRoleRelationArr[$item['default_role_id']][] = $item;
+                $defaultRoleRelationArr[$item['role_id']][] = $item;
             }
             //print_r($defaultRoleRelationArr);
             unset($defaultRoleRelation);

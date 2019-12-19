@@ -74,8 +74,8 @@ canvas {
 
 .toggle {
 	position: absolute;
-	width: 12px;
-	height: 12px;
+	width: 16px;
+	height: 16px;
 	line-height: 12px;
 	cursor: pointer;
 	border-radius: 50%;
