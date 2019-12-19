@@ -15,7 +15,9 @@ use main\app\model\agile\SprintModel;
 use main\app\classes\RewriteUrl;
 use main\app\classes\ProjectGantt;
 use main\app\classes\ProjectMind;
-use main\app\model\issue\IssueModel;
+use main\app\model\project\MindIssueAttributeModel;
+use main\app\model\project\MindProjectAttributeModel;
+use main\app\model\project\MindSecondtAttributeModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectMindSettingModel;
 use main\app\model\project\ProjectRoleModel;
@@ -264,7 +266,7 @@ class Mind extends BaseUserCtrl
 
 
     /**
-     * 保存思维导图设置
+     * 修改根主题（项目）的格式
      * @throws \Exception
      */
     public function saveProjectFormat()
@@ -280,34 +282,105 @@ class Mind extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
-        $projectGanttModel = new ProjectMindSettingModel();
+        $mindProjectAttributeModel = new MindProjectAttributeModel();
         $updateInfo = [];
-        foreach (ProjectMind::$initSettingArr as $key => $item) {
-            if (isset($_POST[$key])) {
-                $updateInfo[$key] = $item;
+        $fields = ['layout','shape','color','icon','font_family','font_size','font_bold','font_italics','bg_color'];
+        foreach ($fields as $field ) {
+            if (isset($_POST[$field])) {
+                $updateInfo[$field] = $_POST[$field];
             }
         }
-        if (!empty($updateInfo)) {
-            try {
-                if(isset($updateInfo['default_source']) && $updateInfo['default_source']=='all'){
-                    $updateInfo['default_source_id'] = '';
-                }
-                foreach ($updateInfo as $key => $item) {
-                    $arr = [];
-                    $arr['project_id'] = $projectId;
-                    $arr['setting_key'] = $key;
-                    $arr['setting_value'] = $item;
-                    list($ret, $msg) = $projectGanttModel->replaceByProjectId($arr, $projectId);
-                    if (!$ret) {
-                        $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
-                    }
-                }
-                $this->ajaxSuccess('提示', '操作成功');
-            } catch (\PDOException $e) {
-                $this->ajaxFailed('提示', '数据库执行错误:' . $e->getMessage());
-            }
+        $updateInfo['project_id'] = $projectId;
+        list($ret, $msg) = $mindProjectAttributeModel->replaceByProjectId($updateInfo);
+        if (!$ret) {
+            $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
         }
         $this->ajaxSuccess('提示', '操作成功');
+    }
 
+    public function saveSecondFormat()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        if (!isset($_GET['source']) || empty($_GET['source'])) {
+            $this->ajaxFailed('参数错误', 'source不能为空');
+        }
+        if (!isset($_GET['group_by']) || empty($_GET['group_by'])) {
+            $this->ajaxFailed('参数错误', 'group_by不能为空');
+        }
+        if (!isset($_GET['group_by_id']) || empty($_GET['group_by_id'])) {
+            $this->ajaxFailed('参数错误', 'group_by_id不能为空');
+        }
+
+
+        $mindProjectAttributeModel = new MindSecondtAttributeModel();
+        $updateInfo = [];
+        $fields = ['layout','shape','color','icon','font_family','font_size','font_bold','font_italics','bg_color'];
+        foreach ($fields as $field ) {
+            if (isset($_POST[$field])) {
+                $updateInfo[$field] = $_POST[$field];
+            }
+        }
+        $updateInfo['project_id'] = $projectId;
+        $updateInfo['source'] = $_GET['source'];
+        $updateInfo['group_by'] = $_GET['group_by'];
+        $updateInfo['group_by_id'] = $_GET['group_by_id'];
+        list($ret, $msg) = $mindProjectAttributeModel->replaceByProjectId($updateInfo);
+        if (!$ret) {
+            $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
+        }
+        $this->ajaxSuccess('提示', '操作成功');
+    }
+
+    public function saveIssueFormat()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        if (!isset($_GET['source']) || empty($_GET['source'])) {
+            $this->ajaxFailed('参数错误', 'source不能为空');
+        }
+        if (!isset($_GET['group_by']) || empty($_GET['group_by'])) {
+            $this->ajaxFailed('参数错误', 'group_by不能为空');
+        }
+        if (!isset($_GET['issue_id']) || empty($_GET['issue_id'])) {
+            $this->ajaxFailed('参数错误', 'issue_id不能为空');
+        }
+
+
+        $mindProjectAttributeModel = new MindIssueAttributeModel();
+        $updateInfo = [];
+        $fields = ['layout','shape','color','icon','font_family','font_size','font_bold','font_italics','bg_color'];
+        foreach ($fields as $field ) {
+            if (isset($_POST[$field])) {
+                $updateInfo[$field] = $_POST[$field];
+            }
+        }
+        $updateInfo['project_id'] = $projectId;
+        $updateInfo['source'] = $_GET['source'];
+        $updateInfo['group_by'] = $_GET['group_by'];
+        $updateInfo['issue_id'] = $_GET['issue_id'];
+        list($ret, $msg) = $mindProjectAttributeModel->replaceByProjectId($updateInfo);
+        if (!$ret) {
+            $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
+        }
+        $this->ajaxSuccess('提示', '操作成功');
     }
 }

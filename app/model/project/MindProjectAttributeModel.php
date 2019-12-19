@@ -66,6 +66,19 @@ class MindProjectAttributeModel extends CacheModel
     }
 
     /**
+     * 替换思维导图
+     * @param $updateInfo
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function replaceByProjectId($updateInfo)
+    {
+        $flag = $this->replace($updateInfo);
+        return $flag;
+    }
+
+    /**
      * 获取某个项目的思维导图格式
      * @return array
      */

@@ -66,6 +66,18 @@ class MindIssueAttributeModel extends CacheModel
     }
 
     /**
+     * 替换
+     * @param $updateInfo
+     * @return array
+     * @throws \Exception
+     */
+    public function replaceByProjectId($updateInfo)
+    {
+        $flag = $this->replace($updateInfo);
+        return $flag;
+    }
+
+    /**
      * 获取某个事项主题的思维导图格式
      * @return array
      */
