@@ -304,6 +304,8 @@ class Main extends Base
         $data['info'] = $info;
         $data['full_type'] = ProjectLogic::faceMap();
 
+        $data['root_domain'] = ROOT_URL;
+
         $data = RewriteUrl::setProjectData($data);
 
         $this->render('gitlab/project/setting_basic_info.php', $data);
