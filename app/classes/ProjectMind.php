@@ -388,7 +388,7 @@ class ProjectMind
         }
         $condition .= "  Order by id desc";
         $field = '`id`,`pkey`,`issue_num`,`project_id`,`issue_type`,`assignee`,`summary`,`priority`,`resolve`,`status`,
-        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress` ';
+        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress`,weight,start_date, due_date,description';
         $sql = "select {$field} from {$issueModel->getTable()} where {$condition}";
         //echo $sql;
         $issues = $issueModel->db->getRows($sql);
@@ -404,6 +404,16 @@ class ProjectMind
                     $tmp['id'] = 'issue_' . $issue['id'];
                     $tmp['text'] = $issue['summary'];
                     $tmp['value'] = $issue['weight'];
+                    $tmp['issue_type'] = $issue['issue_type'];
+                    $tmp['issue_priority'] = $issue['priority'];
+                    $tmp['issue_status'] = $issue['status'];
+                    $tmp['issue_progress'] = $issue['progress'];
+                    $tmp['issue_resolve'] = $issue['resolve'];
+                    $tmp['issue_assignee'] = $issue['assignee'];
+                    $tmp['issue_start_date'] = $issue['start_date'];
+                    $tmp['issue_due_date'] = $issue['due_date'];
+                    $tmp['issue_description'] = $issue['description'];
+                    $tmp['issue_assistants'] = $issue['assistants'];
                     $tmp['children'] = [];
                     $level = 1;
                     $this->recurIssue($issues, $tmp, $level);
