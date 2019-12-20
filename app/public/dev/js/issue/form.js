@@ -60,7 +60,7 @@ var IssueForm = (function () {
 
             html += IssueForm.prototype.createField(config, field, 'create');
         }
-        //console.log(html);
+        console.log(html);
         return html;
     }
 

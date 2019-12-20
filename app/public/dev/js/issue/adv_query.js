@@ -1,7 +1,109 @@
 var IssueAdvQuery = (function () {
     // constructor
-    function IssueAdvQuery() {
+    var adv_options = {
+        modules: [],
+        resolves: [],
+        status: [],
+        issueTypes: [],
+        priority: [],
+        sprints: [],
+        users: [],
+        logics: [
+            {
+                name: "并且",
+                value: "and"
+            },
+            {
+                name: "或者",
+                value: "or"
+            }
+        ],
+        opts: [
+                { value: "LIKE" },
+                { value: "LIKE %...%" },
+                { value: "NOT LIKE" },
+                { value: "=" },
+                { value: "!=" },
+                { value: "REGEXP" },
+                { value: "REGEXP ^...$" },
+                { value: "NOT REGEXP" },
+                { value: "= ''" },
+                { value: "!= ''" },
+                { value: "IN (...)" },
+                { value: "NOT IN (...)" },
+                { value: "BETWEEN" },
+                { value: "NOT BETWEEN" },
+                { value: "IS NULL" },
+                { value: "IS NOT NULL" }
+            ],
+        braces: [
+            { value: ""},
+            { value: "("},
+            { value: ")"},
+            { value: "{"},
+            { value: "}"}
+        ],
+        fields: []
+    };
 
+    function IssueAdvQuery(options) {
+        var tempOptions = JSON.parse(JSON.stringify(options));
+        console.log(options);
+        for (var value of Object.values(advFields)) {
+            adv_options.fields.push({
+                value: value.title,
+                title: value.title,
+                source: value.source,
+                type: value.type
+            });
+        }
+
+        for (var [key, value] of Object.entries(tempOptions.issue_module)) {
+            adv_options.modules.push({
+                name: value.name,
+                value: key
+            });
+        }
+
+        for (var [key, value] of Object.entries(tempOptions.issue_resolve)) {
+            adv_options.resolves.push({
+                name: value.name,
+                value: key
+            });
+        }
+
+        for (var [key, value] of Object.entries(tempOptions.issue_status)) {
+            adv_options.status.push({
+                name: value.name,
+                value: key
+            });
+        }
+
+        for (var [key, value] of Object.entries(tempOptions.issue_types)) {
+            adv_options.issueTypes.push({
+                name: value.name,
+                value: key
+            });
+        }
+
+        for (var [key, value] of Object.entries(tempOptions.priority)) {
+            adv_options.priority.push({
+                name: value.name,
+                value: key
+            });
+        }
+
+        adv_options.sprint = tempOptions.sprint;
+
+        for (var [key, value] of Object.entries(tempOptions.users)) {
+            adv_options.users.push({
+                name: value.username,
+                value: key,
+                avatar: value.avatar
+            });
+        }
+
+        console.log(adv_options);
     };
 
     IssueAdvQuery.prototype.renderAdvQuery = function (details) {
@@ -12,33 +114,21 @@ var IssueAdvQuery = (function () {
         $("#adv-tbody").html(result);
     }
 
-    IssueAdvQuery.prototype.renderTableAdvQuery = function (field_name, dataType, data, index) {
+    IssueAdvQuery.prototype.renderTableAdvQuery = function (field_name, dataType, data, index, title, source) {
         var html = '';
 
         switch (dataType) {
-            case "andor":
-                html = IssueAdvQuery.prototype.makeFieldAndor(data, index, field_name);
-                break;
-            case "field":
-                html = IssueAdvQuery.prototype.makeFieldField(data, index, field_name);
-                break;
-            case "opt":
-                html = IssueAdvQuery.prototype.makeFieldOpt(data, index, field_name);
-                break;
             case "text":
                 html = IssueAdvQuery.prototype.makeFieldText(data, index, field_name);
                 break;
             case "select":
-                html = IssueAdvQuery.prototype.makeFieldSelect(data, index, field_name);
+                html = IssueAdvQuery.prototype.makeFieldSelect(data, index, field_name, title, source);
                 break;
             case "date":
                 html = IssueAdvQuery.prototype.makeFieldDate(data, index, field_name);
                 break;
             case "datetime":
                 html = IssueAdvQuery.prototype.makeFieldDatetime(data, index, field_name);
-                break;
-            case "braces":
-                html = IssueAdvQuery.prototype.makeFieldBraces(data, index, field_name);
                 break;
         }
 
@@ -47,91 +137,65 @@ var IssueAdvQuery = (function () {
 
     IssueAdvQuery.prototype.makeFieldText = function (data, index, field_name) {
         var html = '';
-        html += '<input type="text" class="form-control" name="' + field_name + ' - ' + index + '" data-index="' + index + '" data-name="' + field_name + '"  value="' + data + '" />';
+        var inputName = field_name + '-' + index;
+        if (index === "") {
+            inputName = field_name;
+        }
+        html += '<input type="text" class="form-control" name="' + inputName + '" data-index="' + index + '" data-name="' + field_name + '"  value="' + data + '" />';
 
         return html;
     }
 
-    IssueAdvQuery.prototype.makeFieldAndor = function (data, index, field_name) {
-        var html = '<select name="' + field_name + '-' + index + '" data-index="' + index + '" data-name="' + field_name + '" class="selectpicker" dropdownAlignRight="true" title="关系">';
-            if (data == "and") {
-                html += '<option value="and" selected="selected"> 并且</option><option value="or"> 或者</option>';
-            } else {
-                html += '<option value="and"> 并且</option><option value="or" selected="selected"> 或者</option>'
-            }
-
-        html += "</select>";
-        return html;
-    }
-
-    IssueAdvQuery.prototype.makeFieldField = function (data, index, field_name) {
-        var html = '<select name="' + field_name + '-' + index + '" data-index="' + index + '" data-name="' + field_name + '" class="selectpicker" dropdownAlignRight="true" title="字段">';
-        if (data == "and") {
-            html += '<option value="and" selected="selected"> 并且</option><option value="or"> 或者</option>';
-        } else {
-            html += '<option value="and"> 并且</option><option value="or" selected="selected"> 或者</option>'
+    IssueAdvQuery.prototype.makeFieldSelect = function (data, index, field_name, title, source) {
+        var temp = {
+            value: data,
+            index: index,
+            field_name: field_name,
+            title: title,
+            data: []
         }
 
-        html += "</select>";
-        return html;
-    }
+        if (source && source !== "status" && source !== "priority") {
+            temp.data = adv_options[source + "s"];
+        } else if (source === "status" || source === "priority") {
+            temp.data = adv_options[source];
+        } else {
+            temp.data = []
+        }
 
-    IssueAdvQuery.prototype.makeFieldOpt = function (data, index, field_name) {
-        var options = ["LIKE", "LIKE %...%", "NOT LIKE", "=", "!=", "REGEXP", "REGEXP ^...$", "NOT REGEXP", "= ''", "!= ''", "IN (...)", "NOT IN (...)", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
-        var html = '<select name="' + field_name + '-' + index + '" data-index="' + index + '" data-name="' + field_name + '" class="selectpicker" dropdownAlignRight="true" title="操作符">';
-
-        options.forEach(function (n, i) {
-            if (n == data) {
-                html += '<option value="' + n + '" selected="selected">' + n + '</option>';
-            } else {
-                html += '<option value="' + n + '">' + n + '</option>';
+        temp.data.forEach(function (n) {
+            if (n.value === temp.value) {
+                n.selected = true;
             }
         });
 
-        html += "</select>";
+        var source = $('#adv_query_form_tpl').html();
+        var template = Handlebars.compile(source);
+        var html = template(temp);
 
-        return html;
-    }
-
-    IssueAdvQuery.prototype.makeFieldBraces = function (data, index, field_name) {
-        var options = ["", "(", ")", "{", "}"];
-        var html = '<select name="' + field_name + '-' + index + '" data-index="' + index + '" data-name="' + field_name + '" class="selectpicker" dropdownAlignRight="true" title="请选择">';
-
-        options.forEach(function (n, i) {
-            if (n == data) {
-                html += '<option value="' + n + '" selected="selected">' + n + '</option>';
-            } else {
-                html += '<option value="' + n + '">' + n + '</option>';
-            }
-        });
-
-        html += "</select>";
-
-        return html;
-    }
-
-    IssueAdvQuery.prototype.makeFieldSelect = function (data, index, field_name) {
-        var html = '<select name="' + field_name + '-' + index + '" class="selectpicker" data-index="' + index + '" data-name="' + field_name + '" dropdownAlignRight="true" title="关系">';
-        if (data == "and") {
-            html += '<option value="and" selected="selected"> 并且</option><option value="or"> 或者</option>';
-        } else {
-            html += '<option value="and"> 并且</option><option value="or" selected="selected"> 或者</option>'
-        }
-
-        html += "</select>";
         return html;
     }
 
     IssueAdvQuery.prototype.makeFieldDate = function (data, index, field_name) {
         var html = '';
-        html += '<input type="text" class="laydate_input_date" name="' + field_name + ' - ' + index + '" placeholder="yyyy-MM-dd" value="' + data + '">';
+        var className = "form-control";
+        var inputName = field_name + '-' + index;
+        if (index === "") {
+            inputName = field_name;
+        }
+        html += '<input type="text" class="laydate_input laydate_input_date ' + className + '" data-index="' + index + '" data-name="' + field_name + '" name="' + inputName + '" placeholder="yyyy-MM-dd" value="' + data + '">';
 
         return html;
     }
 
     IssueAdvQuery.prototype.makeFieldDatetime = function (data, index, field_name) {
         var html = '';
-        html += '<input type="text" class="laydate_input_datetime" name="' + field_name + ' - ' + index + '" placeholder="yyyy-MM-dd HH:mm:ss" value="' + data + '">';
+        var className = "form-control";
+        var inputName = field_name + '-' + index;
+        if (index === "") {
+            inputName = field_name;
+        }
+        html += '<input type="text" class="laydate_input laydate_input_datetime ' + className + '" data-index="' + index + '" data-name="' + field_name + '" name="' + inputName + '" placeholder="yyyy-MM-dd HH:mm:ss" value="' + data + '">';
 
         return html;
     }
