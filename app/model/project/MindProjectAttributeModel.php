@@ -5,15 +5,15 @@ namespace main\app\model\project;
 use main\app\model\CacheModel;
 
 /**
- * 项目思维导图设置模型
+ * 项目思维导图的格式
  */
-class ProjectMindSettingModel extends CacheModel
+class MindProjectAttributeModel extends CacheModel
 {
-    public $prefix = 'project_';
+    public $prefix = 'mind_';
 
-    public $table = 'mind_setting';
+    public $table = 'project_attribute';
 
-    const   DATA_KEY = 'project_mind_setting/';
+    const   DATA_KEY = 'mind_project_attribute/';
 
     /**
      * ProjectRoleModel constructor.
@@ -38,7 +38,7 @@ class ProjectMindSettingModel extends CacheModel
     }
 
     /**
-     * 新增项目的思维导图设置
+     * 新增项目的思维导图格式
      * @param $info
      * @param $projectId
      * @return array
@@ -52,7 +52,7 @@ class ProjectMindSettingModel extends CacheModel
     }
 
     /**
-     * 更新项目思维导图设置
+     * 更新项目思维导图格式
      * @param $updateInfo
      * @param $projectId
      * @return array
@@ -66,29 +66,29 @@ class ProjectMindSettingModel extends CacheModel
     }
 
     /**
-     * 替换项目思维导图设置
+     * 替换思维导图
      * @param $updateInfo
      * @param $projectId
      * @return array
      * @throws \Exception
      */
-    public function replaceByProjectId($updateInfo, $projectId)
+    public function replaceByProjectId($updateInfo)
     {
-        $where = ['project_id' => $projectId];
-        $flag = $this->update($updateInfo, $where);
+        $flag = $this->replace($updateInfo);
         return $flag;
     }
+
     /**
-     * 获取某个项目的思维导图设置
+     * 获取某个项目的思维导图格式
      * @return array
      */
     public function getByProject($projectId)
     {
-        return $this->getRows('*', ['project_id' => $projectId]);
+        return $this->getRow('*', ['project_id' => $projectId]);
     }
 
     /**
-     * 删除项目的思维导图设置
+     * 删除项目的思维导图格式
      * @param $projectId
      * @return int
      */

@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\PermissionGlobal;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
@@ -15,11 +16,29 @@ use main\app\classes\UserAuth;
 use main\app\classes\PermissionLogic;
 
 /**
- * 系统管理的项目模块
+ * 后台的项目管理模块
  */
 class Project extends BaseAdminCtrl
 {
     public static $page_sizes = [10, 20, 50, 100];
+
+    /**
+     * 后台的项目管理的构造函数
+     * Project constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $userId = UserAuth::getId();
+        $this->addGVar('top_menu_active', 'system');
+        $check = PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID);
+
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
+        }
+    }
 
     public function pageIndex()
     {

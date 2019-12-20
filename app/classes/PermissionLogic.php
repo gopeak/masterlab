@@ -52,10 +52,11 @@ class PermissionLogic
      */
     public static function check($projectId, $userId, $permission)
     {
+        /** 是否具有具体的全局权限需要在该方法外部进行判断
         $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
         if ($haveAdminPerm) {
             return true;
-        }
+        }*/
         $userRoleModelObj = new ProjectUserRoleModel();
         $roleIds = $userRoleModelObj->getUserRolesByProject($userId, $projectId);
         unset($userRoleModelObj);

@@ -53,7 +53,7 @@ class BaseUserCtrl extends BaseCtrl
     {
         static $asserted, $setDateTimed;
         parent::__construct();
-        if(!$setDateTimed){
+        if (!$setDateTimed) {
             $setDateTimed = true;
             // 设置用户时区
             date_default_timezone_set((new SettingsLogic())->dateTimezone());
@@ -94,7 +94,8 @@ class BaseUserCtrl extends BaseCtrl
         if (!$asserted) {
             $asserted = true;
             // 是否也有系统管理员权限
-            $this->isAdmin = $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+            //$this->isAdmin = $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+            $this->isAdmin = $haveAdminPerm = PermissionGlobal::isGlobalUser(UserAuth::getId());
             $this->addGVar('is_admin', $haveAdminPerm);
 
             $projectId = null;
@@ -150,7 +151,6 @@ class BaseUserCtrl extends BaseCtrl
             $this->addGVar('G_uid', UserAuth::getId());
             $this->addGVar('G_show_announcement', $this->getAnnouncement());
         }
-
     }
 
 

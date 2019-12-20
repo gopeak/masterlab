@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use function foo\func;
 use main\app\ctrl\admin\IssueType;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueModel;
@@ -16,11 +17,14 @@ use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
-use main\app\model\project\ProjectGanttSettingModel;
+use main\app\model\project\MindProjectAttributeModel;
+use main\app\model\project\ProjectMindSettingModel;
+use main\app\model\project\MindIssueAttributeModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectVersionModel;
+use main\app\model\user\UserModel;
 
 
 /**
@@ -31,24 +35,33 @@ use main\app\model\project\ProjectVersionModel;
 class ProjectMind
 {
 
+    public static $initSettingArr = [
+        'fold_count' => 5,
+        'default_source' => 'sprint',
+        'default_source_id' => '0',
+        'is_display_label' => 1,
+
+    ];
+
     /**
-     * 初始化甘特图设置
+     * 初始化思维导图设置
      * @param $projectId
      * @throws \Exception
      */
     public function initMindSetting($projectId)
     {
-        $projectGanttModel = new ProjectGanttSettingModel();
-        $setting = $projectGanttModel->getByProject($projectId);
-        if (empty($setting)) {
-            $sprintModel = new SprintModel();
-            $activeSprint = $sprintModel->getActive($projectId);
-            $addArr = [];
-            $addArr['source_type'] = 'project';
-            if (!empty($activeSprint)) {
-                $addArr['source_type'] = 'active_sprint';
+        $projectGanttModel = new ProjectMindSettingModel();
+        try {
+            foreach (self::$initSettingArr as $key => $item) {
+                $arr = [];
+                $arr['project_id'] = $projectId;
+                $arr['setting_key'] = $key;
+                $arr['setting_value'] = $item;
+                $projectGanttModel->replaceByProjectId($arr, $projectId);
+                return [true, ''];
             }
-            $projectGanttModel->insertByProjectId($addArr, $projectId);
+        } catch (\PDOException $e) {
+            return [false, $e->getMessage()];
         }
     }
 
@@ -174,6 +187,61 @@ class ProjectMind
     }
 
     /**
+     * @param $projectId
+     * @param $groupByField
+     * @return array
+     * @throws \Exception
+     */
+    public function getSecondFormats($projectId, $groupByField)
+    {
+        static $secondFormatArr;
+        $model = new MindProjectAttributeModel();
+        if (!isset($secondFormatArr[$projectId])) {
+            $secondFormatArr[$projectId] = $model->getByProject($projectId);
+        }
+        $arr = [];
+        foreach ($secondFormatArr[$projectId] as $format) {
+            if ($format['group_by'] == $groupByField) {
+                $arr[] = $format;
+            }
+        }
+        return $arr;
+    }
+
+    /**
+     * @param $formats
+     * @param $groupById
+     * @return array|mixed
+     */
+    public function getFormatByGroupId($formats, $groupById)
+    {
+        foreach ($formats as $format) {
+            if ($format['group_by_id'] == $groupById) {
+                return $format;
+            }
+        }
+        return [];
+    }
+
+    /**
+     * @param $projectId
+     * @param $source
+     * @param $groupByField
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getIssueFormats($projectId, $source, $groupByField)
+    {
+        static $issueFormatArr;
+        $model = new MindIssueAttributeModel();
+        $key = $source . '-' . $groupByField;
+        if (!isset($issueFormatArr[$key])) {
+            $issueFormatArr[$key] = $model->getByProjectSourceGroupBy($projectId, $source, $groupByField);
+        }
+        return $issueFormatArr[$key];
+    }
+
+    /**
      * get mind second data
      * @param $projectId
      * @param $groupByField
@@ -182,6 +250,37 @@ class ProjectMind
      */
     public function getSecondArr($projectId, $groupByField)
     {
+        $formats = $this->getSecondFormats($projectId, $groupByField);
+        $itemFormatDnc = function ($groupByField, $groupById, $text, $format) {
+            if (empty($format)) {
+                $format['side'] = 'left';
+                $format['layout'] = 'tree-left';
+                $format['color'] = '#e33';
+                $format['side'] = 'left';
+                $format['icon'] = '';
+                $format['font_family'] = '宋体, SimSun;';
+                $format['font_size'] = 12;
+                $format['font_bold'] = 0;
+                $format['font_italics'] = 0;
+                $format['bg_color'] = '';
+            }
+            $item = [];
+            $item['origin_id'] = $groupById;
+            $item['id'] = $groupByField . '_' . $groupById;
+            $item['type'] = $groupByField;
+            $item['text'] = $text;
+            $item['side'] = $format['side'];
+            $item['layout'] = $format['layout'];
+            $item['color'] = $format['color'];
+            $item['font_family'] = $format['font_family'];
+            $item['font_size'] = $format['font_size'];
+            $item['font_bold'] = $format['font_bold'];
+            $item['font_italics'] = $format['font_italics'];
+            $item['bg_color'] = $format['bg_color'];
+            $item['children'] = [];
+
+            return $item;
+        };
         $secondArr = [];
         if ($groupByField == 'sprint') {
             $sprintModel = new SprintModel();
@@ -191,15 +290,10 @@ class ProjectMind
                 if ($sprint['status'] != '1') {
                     continue;
                 }
-                $item = [];
-                $item['origin_id'] = $sprint['id'];
-                $item['id'] = 'sprint_' . $sprint['id'];
-                $item['type'] = $groupByField;
-                $item['text'] = $sprint['name'];
-                $item['side'] = 'left';
-                $item['layout'] = 'tree-left';
-                $item['color'] = '#e33';
-                $item['children'] = [];
+                $groupById = $sprint['id'];
+                $text = $sprint['name'];
+                $format = $this->getFormatByGroupId($formats, $groupById);
+                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
                 $secondArr[] = $item;
             }
         }
@@ -207,14 +301,10 @@ class ProjectMind
             $model = new ProjectModuleModel();
             $modules = $model->getByProject($projectId);
             foreach ($modules as $module) {
-                $item = [];
-                $item['origin_id'] = $module['id'];
-                $item['id'] = 'module_' . $module['id'];
-                $item['type'] = $groupByField;
-                $item['text'] = $module['name'];
-                $item['side'] = 'right';
-                $item['color'] = '#e33';
-                $item['children'] = [];
+                $groupById = $module['id'];
+                $text = $module['name'];
+                $format = $this->getFormatByGroupId($formats, $groupById);
+                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
                 $secondArr[] = $item;
             }
         }
@@ -222,14 +312,10 @@ class ProjectMind
             $model = new IssueTypeModel();
             $issueTypes = $model->getAllItem(false);
             foreach ($issueTypes as $issueType) {
-                $item = [];
-                $item['origin_id'] = $issueType['_key'];
-                $item['id'] = 'issue_type_' . $issueType['_key'];
-                $item['type'] = $groupByField;
-                $item['text'] = $issueType['name'];
-                $item['side'] = 'right';
-                $item['color'] = '#e33';
-                $item['children'] = [];
+                $groupById = $issueType['_key'];
+                $text = $issueType['name'];
+                $format = $this->getFormatByGroupId($formats, $groupById);
+                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
                 $secondArr[] = $item;
             }
         }
@@ -237,14 +323,10 @@ class ProjectMind
             $model = new IssuePriorityModel();
             $issuePriorityArr = $model->getAllItem(false);
             foreach ($issuePriorityArr as $priority) {
-                $item = [];
-                $item['origin_id'] = $priority['_key'];
-                $item['id'] = 'issue_status_' . $priority['_key'];
-                $item['type'] = $groupByField;
-                $item['text'] = $priority['name'];
-                $item['side'] = 'right';
-                $item['color'] = '#e33';
-                $item['children'] = [];
+                $groupById = $priority['_key'];
+                $text = $priority['name'];
+                $format = $this->getFormatByGroupId($formats, $groupById);
+                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
                 $secondArr[] = $item;
             }
         }
@@ -252,14 +334,10 @@ class ProjectMind
             $model = new IssueStatusModel();
             $issueStatusArr = $model->getAllItem(false);
             foreach ($issueStatusArr as $issueStatus) {
-                $item = [];
-                $item['origin_id'] = $issueStatus['_key'];
-                $item['id'] = 'issue_status_' . $issueStatus['_key'];
-                $item['type'] = $groupByField;
-                $item['text'] = $issueStatus['name'];
-                $item['side'] = 'right';
-                $item['color'] = '#e33';
-                $item['children'] = [];
+                $groupById = $issueStatus['_key'];
+                $text = $issueStatus['name'];
+                $format = $this->getFormatByGroupId($formats, $groupById);
+                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
                 $secondArr[] = $item;
             }
         }
@@ -267,14 +345,10 @@ class ProjectMind
             $model = new IssueResolveModel();
             $issueResolveArr = $model->getAllItem(false);
             foreach ($issueResolveArr as $issueResolve) {
-                $item = [];
-                $item['origin_id'] = $issueResolve['_key'];
-                $item['id'] = 'issue_resolve_' . $issueResolve['_key'];
-                $item['type'] = $groupByField;
-                $item['text'] = $issueResolve['name'];
-                $item['side'] = 'right';
-                $item['color'] = '#e33';
-                $item['children'] = [];
+                $groupById = $issueResolve['_key'];
+                $text = $issueResolve['name'];
+                $format = $this->getFormatByGroupId($formats, $groupById);
+                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
                 $secondArr[] = $item;
             }
         }
@@ -282,23 +356,37 @@ class ProjectMind
             $model = new ProjectVersionModel();
             $versionArr = $model->getByProject($projectId);
             foreach ($versionArr as $version) {
-                $item = [];
-                $item['origin_id'] = $version['id'];
-                $item['id'] = 'issue_version_' . $version['id'];
-                $item['type'] = $groupByField;
-                $item['text'] = $version['title'];
-                $item['side'] = 'right';
-                $item['color'] = '#e33';
-                $item['children'] = [];
+                $groupById = $version['id'];
+                $text = $issueResolve['title'];
+                $format = $this->getFormatByGroupId($formats, $groupById);
+                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
                 $secondArr[] = $item;
             }
         }
-
+        if ($groupByField == 'assignee') {
+            $userLogic = new UserLogic();
+            $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
+            foreach ($projectUsers as $user) {
+                $groupById = $user['uid'];
+                $text = $user['display_name'];
+                $format = $this->getFormatByGroupId($formats, $groupById);
+                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
+                $secondArr[] = $item;
+            }
+        }
         return $secondArr;
     }
 
-
-    public function getMindIssuesByProject($projectId, $groupByField, $addFilterSql, $filterClosed = false)
+    /**
+     * 获取整个项目的思维导图数据结构
+     * @param $projectId
+     * @param $groupByField
+     * @param $addFilterSql
+     * @param bool $filterClosed
+     * @return array
+     * @throws \Exception
+     */
+    public function getMindIssues($projectId, $sprintId, $groupByField, $addFilterSql, $filterClosed = false)
     {
         $projectId = (int)$projectId;
         $issueModel = IssueModel::getInstance();
@@ -307,27 +395,80 @@ class ProjectMind
         $closedId = $statusModel->getIdByKey('closed');
         $resolveId = $issueResolveModel->getIdByKey('done');
 
-        $condition = "project_id={$projectId} {$addFilterSql} ";
+        $condition = "project_id={$projectId} ";
+        $source = 'all';
+        if (!is_null($sprintId)) {
+            $condition .= "  AND sprint={$sprintId} ";
+            $source = 'sprint';
+        }
+        if (!empty($addFilterSql)) {
+            $condition .= "  AND {$addFilterSql} ";
+        }
         if ($filterClosed) {
             $condition .= "  AND ( status !=$closedId AND  resolve!=$resolveId ) Order by id desc";
         }
         $condition .= "  Order by id desc";
         $field = '`id`,`pkey`,`issue_num`,`project_id`,`issue_type`,`assignee`,`summary`,`priority`,`resolve`,`status`,
-        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress` ';
+        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress`,weight,start_date, due_date,description';
         $sql = "select {$field} from {$issueModel->getTable()} where {$condition}";
         //echo $sql;
         $issues = $issueModel->db->getRows($sql);
         //print_r($issues);
         $finalArr = $this->getSecondArr($projectId, $groupByField);
         //print_r($finalArr);
+        $formats = $this->getIssueFormats($projectId, $source, $groupByField);
+        $itemFormatDnc = function ($issueId, $text, $format) {
+            if (empty($format)) {
+                $format['side'] = 'left';
+                $format['layout'] = 'tree-left';
+                $format['color'] = '#e33';
+                $format['side'] = 'left';
+                $format['icon'] = '';
+                $format['font_family'] = '宋体, SimSun;';
+                $format['font_size'] = 12;
+                $format['font_bold'] = 0;
+                $format['font_italics'] = 0;
+                $format['bg_color'] = '';
+            }
+            $item = [];
+            $item['origin_id'] = $issueId;
+            $item['id'] = 'issue_' . $issueId;
+            $item['type'] = 'issue';
+            $item['text'] = $text;
+            $item['side'] = $format['side'];
+            $item['layout'] = $format['layout'];
+            $item['color'] = $format['color'];
+            $item['font_family'] = $format['font_family'];
+            $item['font_size'] = $format['font_size'];
+            $item['font_bold'] = $format['font_bold'];
+            $item['font_italics'] = $format['font_italics'];
+            $item['bg_color'] = $format['bg_color'];
+            $item['children'] = [];
+
+            return $item;
+        };
+
         foreach ($finalArr as &$arr) {
             foreach ($issues as $k => $issue) {
                 // $haveChildren = (int)$issue['have_children'];
                 $masterId = (int)$issue['master_id'];
                 if ($issue[$arr['type']] == $arr['origin_id'] && $masterId <= 0) {
-                    $tmp = [];
-                    $tmp['id'] = 'issue_' . $issue['id'];
-                    $tmp['text'] = $issue['summary'];
+                    $format = [];
+                    if (isset($formats[$issue['id']])) {
+                        $format = $formats[$issue['id']];
+                    }
+                    $tmp = $itemFormatDnc($issue['id'],$issue['summary'],$format);
+                    $tmp['value'] = $issue['weight'];
+                    $tmp['issue_type'] = $issue['issue_type'];
+                    $tmp['issue_priority'] = $issue['priority'];
+                    $tmp['issue_status'] = $issue['status'];
+                    $tmp['issue_progress'] = $issue['progress'];
+                    $tmp['issue_resolve'] = $issue['resolve'];
+                    $tmp['issue_assignee'] = $issue['assignee'];
+                    $tmp['issue_start_date'] = $issue['start_date'];
+                    $tmp['issue_due_date'] = $issue['due_date'];
+                    $tmp['issue_description'] = $issue['description'];
+                    $tmp['issue_assistants'] = $issue['assistants'];
                     $tmp['children'] = [];
                     $level = 1;
                     $this->recurIssue($issues, $tmp, $level);
@@ -344,4 +485,5 @@ class ProjectMind
         }
         return $finalArr;
     }
+
 }

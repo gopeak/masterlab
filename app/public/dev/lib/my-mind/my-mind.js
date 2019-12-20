@@ -317,10 +317,24 @@ MM.Item = function () {
 		value: 0,
 		status: null
 	}
+	this.dict = {
+		issue_type: {
+			"1": "fa-address-book-o",
+			"2": "fa-arrow-circle-o-up",
+			"3": "fa-tasks",
+			"4": "fa-cogs",
+			"5": "fa-plus",
+			"6": "fa-users",
+			"7": "fa-bug",
+			"8": "fa-subscript",
+			"8": "fa-exchange",
+		}
+	}
 
 	this._dom = {
 		node: document.createElement("li"),
 		content: document.createElement("div"),
+		create: document.createElement("span"),
 		status: document.createElement("span"),
 		icon: document.createElement("span"),
 		value: document.createElement("span"),
@@ -330,17 +344,21 @@ MM.Item = function () {
 		canvas: document.createElement("canvas")
 	}
 	this._dom.node.classList.add("item");
-	this._dom.content.classList.add("content");
+	this._dom.content.classList.add("mind-content");
 	this._dom.status.classList.add("status");
 	this._dom.icon.classList.add("icon");
 	this._dom.value.classList.add("value");
 	this._dom.text.classList.add("text");
 	this._dom.toggle.classList.add("toggle");
 	this._dom.children.classList.add("children");
+	this._dom.create.classList.add("mind-create");
+	this._dom.create.classList.add("fa");
+	this._dom.create.classList.add("fa-plus");
 
 	this._dom.content.appendChild(this._dom.text); /* status+value are appended in layout */
 	this._dom.node.appendChild(this._dom.canvas);
 	this._dom.node.appendChild(this._dom.content);
+	this._dom.content.appendChild(this._dom.create);
 	/* toggle+children are appended when children exist */
 
 	this._dom.toggle.addEventListener("click", this);
@@ -387,12 +405,14 @@ MM.Item.prototype.toJSON = function () {
 /**
  * Only when creating a new item. To merge existing items, use .mergeWith().
  */
+// 初始化属性
 MM.Item.prototype.fromJSON = function (data) {
 	this.setText(data.text);
 	if (data.id) { this._id = data.id; }
 	if (data.side) { this._side = data.side; }
 	if (data.color) { this._color = data.color; }
-	if (data.icon) { this._icon = data.icon; }
+	// if (data.icon) { this._icon = data.icon; }
+	if (data.issue_type) { this._icon = this.dict.issue_type[data.issue_type]; }
 	if (data.value) { this._value = data.value; }
 	if (data.status) {
 		this._status = data.status;
@@ -1064,7 +1084,7 @@ MM.Map.prototype.getClosestItem = function (x, y) {
 
 MM.Map.prototype.getItemFor = function (node) {
 	var port = this._root.getDOM().node.parentNode;
-	while (node != port && !node.classList.contains("content")) {
+	while (node != port && !node.classList.contains("mind-content")) {
 		node = node.parentNode;
 	}
 	if (node == port) { return null; }
@@ -2222,7 +2242,7 @@ MM.Layout.pickSibling = function (item, dir) {
  */
 MM.Layout._anchorCanvas = function (item) {
 	var dom = item.getDOM();
-	dom.canvas.width = dom.node.offsetWidth;
+	dom.canvas.width = dom.node.offsetWidth + 12;
 	dom.canvas.height = dom.node.offsetHeight;
 }
 
@@ -4011,6 +4031,7 @@ MM.UI.Icon.prototype.update = function () {
 }
 
 MM.UI.Icon.prototype.handleEvent = function (e) {
+	console.log(MM.App.current)
 	var action = new MM.Action.SetIcon(MM.App.current, this._select.value || null);
 	MM.App.action(action);
 }
@@ -4163,7 +4184,15 @@ MM.UI.IO.prototype.fetchIssues = function () {
 
 	console.log(parts.url);
 
-	let params = { source_type: 'all', group_by: 'sprint' }
+	let source_type = $("#source_range").val();
+	let group_by = '';
+	if(source_type==='all'){
+		group_by = $('#all-group_by').val();
+	}else{
+		group_by = $('#sprint-group_by').val();
+	}
+
+	let params = { source_type: source_type, group_by: group_by }
 	let project_id = window._cur_project_id;
 	$.ajax({
 		type: "GET",
@@ -4403,7 +4432,8 @@ MM.UI.Backend._loadDone = function (json) {
 		MM.App.setMap(MM.Map.fromJSON(json));
 		MM.publish("load-done", this);
 	} catch (e) {
-		this._error(e);
+		console.log(e);
+		//this._error(e);
 	}
 }
 
@@ -5354,17 +5384,23 @@ MM.App = {
 		this.setMap(new MM.Map());
 	},
 
-	_syncPort: function () {
-		// 修改port主体的宽高，原代码微window的宽高。
+	_syncPort: function (zoomMode) {
 		var sideBar = document.querySelector(".main-sidebar");
 		var ui = document.querySelector(".ui");
 		var navbar = document.querySelector(".navbar");
 		var navControl = document.querySelector(".nav-control");
 		var mindTools = document.querySelector(".js-mind-tools");
 		var padding = 32;
-		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
-		this._port.style.width = this.portSize[0] + "px";
-		this._port.style.height = this.portSize[1] + "px";
+		// 是否全屏
+		if(zoomMode) {
+			this.portSize = [window.innerWidth, window.innerHeight - navControl.offsetHeight];
+			this._port.style.width = this.portSize[0] + "px";
+			this._port.style.height = this.portSize[1] + "px";
+		}else{
+			this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
+			this._port.style.width = this.portSize[0] + "px";
+			this._port.style.height = this.portSize[1] + "px";
+		}
 		this._throbber.style.right = (20 + this.ui.getWidth()) + "px";
 		if (this.map) { this.map.ensureItemVisibility(this.current); }
 	}

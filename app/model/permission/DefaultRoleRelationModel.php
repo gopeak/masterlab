@@ -28,7 +28,7 @@ class DefaultRoleRelationModel extends BaseDictionaryModel
      */
     public function getPermIdsByRoleId($roleId)
     {
-        $list = $this->getRows('perm_id', ['default_role_id' => $roleId]);
+        $list = $this->getRows('perm_id', ['role_id' => $roleId]);
 
         if (empty($list)) {
             return [];

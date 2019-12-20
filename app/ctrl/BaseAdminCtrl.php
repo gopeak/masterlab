@@ -56,7 +56,8 @@ class BaseAdminCtrl extends BaseCtrl
             }
         }
 
-        $check = PermissionGlobal::check($uid, PermissionGlobal::ADMINISTRATOR);
+        //$check = PermissionGlobal::check($uid, PermissionGlobal::ADMINISTRATOR);
+        $check = PermissionGlobal::isGlobalUser($uid);
 
         if (!$check || !$uid) {
             if (parent::isAjax()) {
@@ -72,7 +73,8 @@ class BaseAdminCtrl extends BaseCtrl
         }
 
         // 是否也有系统管理员权限
-        $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        //$haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        $haveAdminPerm = PermissionGlobal::isGlobalUser(UserAuth::getId());
         $this->addGVar('is_admin', $haveAdminPerm);
 
         $this->addGVar('assignee_count', $assigneeCount);

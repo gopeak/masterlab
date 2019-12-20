@@ -32,6 +32,12 @@
         .radio-with .radio:focus-within{
             background-color: #eee;
         }
+        .qq-gallery.qq-uploader {
+            min-height: 90px;
+        }
+        .qq-gallery.qq-uploader:before {
+            top:25%;
+        }
     </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:new" data-project="xphp">
@@ -47,7 +53,7 @@
     var findFileURL = "";
 </script>
 <div class="page-with-sidebar">
-    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+    <div class="page-with-layout-nav page-with-sub-nav" style="background-color: #fff;">
         <div class="alert-wrapper">
             <div class="flash-container flash-container-page">
             </div>
@@ -63,7 +69,7 @@
                     <input type="hidden" name="authenticity_token" value="">
                     <div class="form-group">
                         <label class="control-label" for="">项目名称 <i class="required">*</i></label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                             <input placeholder="请输入名称,最多{{project_name_max_length}}字符" class="form-control"
                                     type="text" name="params[name]" id="project_name" maxlength="{{project_name_max_length}}">
                             <p id="tip-project_name" class="gl-field-error hide"></p>
@@ -73,28 +79,32 @@
 
                     <div class="form-group">
                         <label class="control-label" for="">
-                            <span>项目KEY <i class="required">*</i></span>
+                            <span>组织 <i class="required">*</i></span>
                         </label>
-                        <div class="col-sm-10">
-                            <input placeholder="必须英文字符,最大长度{{project_key_max_length}},创建后不可修改" class="form-control"
-                                       type="text" name="params[key]" id="project_key" maxlength="{{project_key_max_length}}">
-                            <p id="tip-project_key" class="gl-field-error hide"></p>
+                        <div class="col-sm-4">
+                            <div class="select2-container">
+                                <select class="selectpicker js-org" data-live-search="true" name="params[org_id]">
+                                    {% for org in org_list %}
+                                        <option data-tokens="{{org['name']}}" data-org_path="{{org['path']}}" value="{{org['id']}}">{{org['name']}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
                     </div>
 
 
                     <div class="form-group">
                         <label class="control-label" for="">
-                            <span>组织 <i class="required">*</i></span>
+                            <span>项目KEY <i class="required">*</i></span>
                         </label>
-                        <div class="col-sm-10">
-                            <div class="select2-container">
-                                <select class="selectpicker" data-live-search="true" name="params[org_id]">
-                                    {% for org in org_list %}
-                                        <option data-tokens="{{org['name']}}" value="{{org['id']}}">{{org['name']}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                        <div class="col-sm-4">
+                        <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon3">{{root_domain}}<span class="js-org-key"></span></span>
+                        <input placeholder="必须英文字符,最大长度{{project_key_max_length}},创建后不可修改" class="form-control"
+                                       type="text" name="params[key]" id="project_key" maxlength="{{project_key_max_length}}">
+                        </div>
+                            
+                            <p id="tip-project_key" class="gl-field-error hide"></p>
                         </div>
                     </div>
 
@@ -210,7 +220,7 @@
                     </div>
 
 
-                    <div class="form-actions text-right">
+                    <div class="form-actions text-right" style="position: relative; z-index: 10;">
                         <input type="submit" name="commit" value="创建项目" class="btn btn-create disabled js-key-enter">
                         <a class="btn btn-cancel" href="javascript:history.go(-1)" style="float: none">取消</a>
                     </div>
@@ -396,6 +406,12 @@
                 $("input[name='commit']").addClass("disabled");
             }
         });
+        var defaultPath = $($(".js-org").find("option")[0]).attr("data-org_path");
+        $('.js-org-key').text(defaultPath);
+        $(".js-org").on("changed.bs.select", function(ev, v){
+            var path = $(".js-org").find("option:selected").attr("data-org_path");
+            $(".js-org-key").text(path + '/')
+        })
     });
 
 

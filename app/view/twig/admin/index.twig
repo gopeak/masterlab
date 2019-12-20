@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/js/admin/setting.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body system-page">
+{% include 'twig/common/body/header-content.twig' %}
+
+        <script>
+            var findFileURL = "";
+        </script>
+        <div class="page-with-sidebar system-page">
+
+            {% include 'twig/admin/common-page-nav-admin.twig' %}
+
+            <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+                <div class="alert-wrapper">
+
+                    <div class="flash-container flash-container-page">
+                    </div>
+
+                </div>
+
+
+                <div class="content" id="content-body">
+                    <div class="container-fluid">
+                        <div class="top-area">
+                            <ul class="nav-links user-state-filters" style="float:left">
+                                <li class="active" data-value="">
+                                    <a id="state-opened"  title="项目列表" ><span> 基本信息 </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="content-list pipelines">
+                            <div class="table-holder">
+                                <table class="table ci-table">
+                                    <tbody id="tbody_id">
+                                    <tr class="commit">
+                                        <td>
+                                            <div class="branch-commit">
+                                                <strong>
+                                                    当前系统的版本:
+                                                </strong>
+                                            </div>
+                                        </td>
+                                        <td> {{ masterlab_version }}</td>
+                                        <td> </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<script type="text/javascript">
+
+    $(function() {
+
+    });
+
+</script>
+
+</body>
+</html>
