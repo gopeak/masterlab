@@ -84,7 +84,7 @@ class ProjectMindSettingModel extends CacheModel
      */
     public function getByProject($projectId)
     {
-        return $this->getRow('*', ['project_id' => $projectId]);
+        return $this->getRows('*', ['project_id' => $projectId]);
     }
 
     /**

@@ -91,6 +91,19 @@ class Mind extends BaseUserCtrl
             $data['active_sprint'] = $sprintModel->getActive($projectId);
         }
 
+        $projectMindModel = new ProjectMindSettingModel();
+        $dbSettingsArr = $projectMindModel->getByProject($projectId);
+        $settingArr = ProjectMind::$initSettingArr;
+        if (!empty($settingsArr)) {
+            foreach ($dbSettingsArr as $item) {
+                $settingArr[$item['setting_key']] = $item['setting_value'];
+            }
+        }
+        if ($settingArr['default_source'] == 'sprint' && $settingArr['default_source_id'] == '0' && $data['active_sprint']) {
+            $settingArr['default_source_id'] = $data['active_sprint']['id'];
+        }
+        $data['mind_setting'] = $settingArr;
+
         ConfigLogic::getAllConfigs($data);
 
         $fontsList = [
@@ -242,7 +255,7 @@ class Mind extends BaseUserCtrl
         }
         if (!empty($updateInfo)) {
             try {
-                if(isset($updateInfo['default_source']) && $updateInfo['default_source']=='all'){
+                if (isset($updateInfo['default_source']) && $updateInfo['default_source'] == 'all') {
                     $updateInfo['default_source_id'] = '';
                 }
                 foreach ($updateInfo as $key => $item) {
@@ -284,8 +297,8 @@ class Mind extends BaseUserCtrl
 
         $mindProjectAttributeModel = new MindProjectAttributeModel();
         $updateInfo = [];
-        $fields = ['layout','shape','color','icon','font_family','font_size','font_bold','font_italics','bg_color'];
-        foreach ($fields as $field ) {
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color'];
+        foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
             }
@@ -324,8 +337,8 @@ class Mind extends BaseUserCtrl
 
         $mindProjectAttributeModel = new MindSecondtAttributeModel();
         $updateInfo = [];
-        $fields = ['layout','shape','color','icon','font_family','font_size','font_bold','font_italics','bg_color'];
-        foreach ($fields as $field ) {
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color'];
+        foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
             }
@@ -367,8 +380,8 @@ class Mind extends BaseUserCtrl
 
         $mindProjectAttributeModel = new MindIssueAttributeModel();
         $updateInfo = [];
-        $fields = ['layout','shape','color','icon','font_family','font_size','font_bold','font_italics','bg_color'];
-        foreach ($fields as $field ) {
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color'];
+        foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
             }

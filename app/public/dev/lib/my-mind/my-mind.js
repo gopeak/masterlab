@@ -4163,7 +4163,15 @@ MM.UI.IO.prototype.fetchIssues = function () {
 
 	console.log(parts.url);
 
-	let params = { source_type: 'all', group_by: 'sprint' }
+	let source_type = $("#source_range").val();
+	let group_by = '';
+	if(source_type==='all'){
+		group_by = $('#all-group_by').val();
+	}else{
+		group_by = $('#sprint-group_by').val();
+	}
+
+	let params = { source_type: source_type, group_by: group_by }
 	let project_id = window._cur_project_id;
 	$.ajax({
 		type: "GET",
@@ -4403,7 +4411,8 @@ MM.UI.Backend._loadDone = function (json) {
 		MM.App.setMap(MM.Map.fromJSON(json));
 		MM.publish("load-done", this);
 	} catch (e) {
-		this._error(e);
+		console.log(e);
+		//this._error(e);
 	}
 }
 
