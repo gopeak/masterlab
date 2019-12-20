@@ -403,6 +403,7 @@ class ProjectMind
                     $tmp = [];
                     $tmp['id'] = 'issue_' . $issue['id'];
                     $tmp['text'] = $issue['summary'];
+                    $tmp['value'] = $issue['weight'];
                     $tmp['children'] = [];
                     $level = 1;
                     $this->recurIssue($issues, $tmp, $level);
