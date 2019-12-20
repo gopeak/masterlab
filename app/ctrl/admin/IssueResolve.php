@@ -2,6 +2,8 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\PermissionGlobal;
+use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\issue\IssueResolveModel;
@@ -11,6 +13,22 @@ use main\app\model\issue\IssueResolveModel;
  */
 class IssueResolve extends BaseAdminCtrl
 {
+    /**
+     * IssueResolve constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $userId = UserAuth::getId();
+        $this->addGVar('top_menu_active', 'system');
+        $check = PermissionGlobal::check($userId, PermissionGlobal::MANAGER_ISSUE_PERM_ID);
+
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
+        }
+    }
 
     public function pageIndex()
     {

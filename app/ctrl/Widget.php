@@ -308,7 +308,7 @@ class Widget extends BaseUserCtrl
         $finalOrgs = $orgs;
         unset($org);
 
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_ORG_PERM_ID)) {
             $isAdmin = true;
         }
 

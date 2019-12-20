@@ -81,7 +81,7 @@ class Org extends BaseUserCtrl
 
         $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_ORG_PERM_ID)) {
             $isAdmin = true;
         }
 
@@ -119,7 +119,7 @@ class Org extends BaseUserCtrl
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
 
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_ORG_PERM_ID)) {
             $isAdmin = true;
         }
         $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);

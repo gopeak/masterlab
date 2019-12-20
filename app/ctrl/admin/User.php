@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\PermissionGlobal;
 use main\app\classes\SystemLogic;
 use main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
@@ -22,8 +23,24 @@ use main\app\model\user\GroupModel;
  */
 class User extends BaseAdminCtrl
 {
+    public static $pageSizes = [10, 20, 50, 100];
 
-    static public $pageSizes = [10, 20, 50, 100];
+    /**
+     * User constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $userId = UserAuth::getId();
+        $this->addGVar('top_menu_active', 'system');
+        $check = PermissionGlobal::check($userId, PermissionGlobal::MANAGER_USER_PERM_ID);
+
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
+        }
+    }
 
     /**
      * @throws \Exception

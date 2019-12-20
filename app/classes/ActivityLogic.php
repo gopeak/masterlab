@@ -64,7 +64,8 @@ class ActivityLogic
     public static function filterByIndex($userId, $page = 1, $pageSize = 50)
     {
         $model = new ActivityModel();
-        $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        //$haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        $haveAdminPerm = PermissionGlobal::isGlobalUser(UserAuth::getId());
         $sqlRows = "SELECT  *  FROM " . $model->getTable();
         $filterProjectSql = ' WHERE project_id IN (null) ';
         if ($haveAdminPerm) {
