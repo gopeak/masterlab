@@ -182,7 +182,7 @@ class Mind extends BaseUserCtrl
         $mindProjectAttributeModel = new MindProjectAttributeModel();
         $format = $mindProjectAttributeModel->getByProject($projectId);
         if (empty($format)) {
-            $format['layout'] = 'map';
+            $format['layout'] = 'graph-bottom';
             $format['color'] = '#e33';
             $format['icon'] = '';
             $format['font_family'] = '宋体, SimSun;';
