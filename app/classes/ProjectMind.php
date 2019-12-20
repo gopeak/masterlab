@@ -19,6 +19,7 @@ use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\project\MindProjectAttributeModel;
 use main\app\model\project\ProjectMindSettingModel;
+use main\app\model\project\MindIssueAttributeModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
@@ -223,6 +224,24 @@ class ProjectMind
     }
 
     /**
+     * @param $projectId
+     * @param $source
+     * @param $groupByField
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getIssueFormats($projectId, $source, $groupByField)
+    {
+        static $issueFormatArr;
+        $model = new MindIssueAttributeModel();
+        $key = $source . '-' . $groupByField;
+        if (!isset($issueFormatArr[$key])) {
+            $issueFormatArr[$key] = $model->getByProjectSourceGroupBy($projectId, $source, $groupByField);
+        }
+        return $issueFormatArr[$key];
+    }
+
+    /**
      * get mind second data
      * @param $projectId
      * @param $groupByField
@@ -377,8 +396,10 @@ class ProjectMind
         $resolveId = $issueResolveModel->getIdByKey('done');
 
         $condition = "project_id={$projectId} ";
+        $source = 'all';
         if (!is_null($sprintId)) {
             $condition .= "  AND sprint={$sprintId} ";
+            $source = 'sprint';
         }
         if (!empty($addFilterSql)) {
             $condition .= "  AND {$addFilterSql} ";
@@ -388,22 +409,66 @@ class ProjectMind
         }
         $condition .= "  Order by id desc";
         $field = '`id`,`pkey`,`issue_num`,`project_id`,`issue_type`,`assignee`,`summary`,`priority`,`resolve`,`status`,
-        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress` ';
+        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress`,weight,start_date, due_date,description';
         $sql = "select {$field} from {$issueModel->getTable()} where {$condition}";
         //echo $sql;
         $issues = $issueModel->db->getRows($sql);
         //print_r($issues);
         $finalArr = $this->getSecondArr($projectId, $groupByField);
         //print_r($finalArr);
+        $formats = $this->getIssueFormats($projectId, $source, $groupByField);
+        $itemFormatDnc = function ($issueId, $text, $format) {
+            if (empty($format)) {
+                $format['side'] = 'left';
+                $format['layout'] = 'tree-left';
+                $format['color'] = '#e33';
+                $format['side'] = 'left';
+                $format['icon'] = '';
+                $format['font_family'] = '宋体, SimSun;';
+                $format['font_size'] = 12;
+                $format['font_bold'] = 0;
+                $format['font_italics'] = 0;
+                $format['bg_color'] = '';
+            }
+            $item = [];
+            $item['origin_id'] = $issueId;
+            $item['id'] = 'issue_' . $issueId;
+            $item['type'] = 'issue';
+            $item['text'] = $text;
+            $item['side'] = $format['side'];
+            $item['layout'] = $format['layout'];
+            $item['color'] = $format['color'];
+            $item['font_family'] = $format['font_family'];
+            $item['font_size'] = $format['font_size'];
+            $item['font_bold'] = $format['font_bold'];
+            $item['font_italics'] = $format['font_italics'];
+            $item['bg_color'] = $format['bg_color'];
+            $item['children'] = [];
+
+            return $item;
+        };
+
         foreach ($finalArr as &$arr) {
             foreach ($issues as $k => $issue) {
                 // $haveChildren = (int)$issue['have_children'];
                 $masterId = (int)$issue['master_id'];
                 if ($issue[$arr['type']] == $arr['origin_id'] && $masterId <= 0) {
-                    $tmp = [];
-                    $tmp['id'] = 'issue_' . $issue['id'];
-                    $tmp['text'] = $issue['summary'];
+                    $format = [];
+                    if (isset($formats[$issue['id']])) {
+                        $format = $formats[$issue['id']];
+                    }
+                    $tmp = $itemFormatDnc($issue['id'],$issue['summary'],$format);
                     $tmp['value'] = $issue['weight'];
+                    $tmp['issue_type'] = $issue['issue_type'];
+                    $tmp['issue_priority'] = $issue['priority'];
+                    $tmp['issue_status'] = $issue['status'];
+                    $tmp['issue_progress'] = $issue['progress'];
+                    $tmp['issue_resolve'] = $issue['resolve'];
+                    $tmp['issue_assignee'] = $issue['assignee'];
+                    $tmp['issue_start_date'] = $issue['start_date'];
+                    $tmp['issue_due_date'] = $issue['due_date'];
+                    $tmp['issue_description'] = $issue['description'];
+                    $tmp['issue_assistants'] = $issue['assistants'];
                     $tmp['children'] = [];
                     $level = 1;
                     $this->recurIssue($issues, $tmp, $level);
