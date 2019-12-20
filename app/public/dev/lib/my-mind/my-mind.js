@@ -310,6 +310,7 @@ MM.Item = function () {
 	this._status = null;
 	this._side = null; /* side preference */
 	this._icon = null;
+    this._issue_status = null;
 	this._id = MM.generateId();
 	this._oldText = "";
 
@@ -327,8 +328,9 @@ MM.Item = function () {
 			"6": "fa-users",
 			"7": "fa-bug",
 			"8": "fa-subscript",
-			"8": "fa-exchange",
-		}
+			"9": "fa-exchange",
+		},
+        issue_status:window._issueConfig.issue_status
 	}
 
 	this._dom = {
@@ -337,6 +339,8 @@ MM.Item = function () {
 		create: document.createElement("span"),
 		status: document.createElement("span"),
 		icon: document.createElement("span"),
+        issue_status_label: document.createElement("span"),
+        issue_assignee_img:document.createElement("img"),
 		value: document.createElement("span"),
 		text: document.createElement("div"),
 		children: document.createElement("ul"),
@@ -347,18 +351,23 @@ MM.Item = function () {
 	this._dom.content.classList.add("mind-content");
 	this._dom.status.classList.add("status");
 	this._dom.icon.classList.add("icon");
+    this._dom.issue_status_label.classList.add("_issue_status");
+    this._dom.issue_assignee_img.classList.add("_issue_assignee");
 	this._dom.value.classList.add("value");
 	this._dom.text.classList.add("text");
 	this._dom.toggle.classList.add("toggle");
 	this._dom.children.classList.add("children");
 	this._dom.create.classList.add("mind-create");
 	this._dom.create.classList.add("fa");
-	this._dom.create.classList.add("fa-plus");
+	this._dom.create.classList.add("fa-pencil");
 
+    this._dom.content.appendChild(this._dom.issue_assignee_img);
+    this._dom.content.appendChild(this._dom.issue_status_label);
 	this._dom.content.appendChild(this._dom.text); /* status+value are appended in layout */
 	this._dom.node.appendChild(this._dom.canvas);
 	this._dom.node.appendChild(this._dom.content);
 	this._dom.content.appendChild(this._dom.create);
+
 	/* toggle+children are appended when children exist */
 
 	this._dom.toggle.addEventListener("click", this);
@@ -392,6 +401,8 @@ MM.Item.prototype.toJSON = function () {
 	if (this._icon) { data.icon = this._icon; }
 	if (this._value) { data.value = this._value; }
 	if (this._status) { data.status = this._status; }
+    if (this._issue_status) { data.issue_status = this._issue_status; }
+    if (this._issue_assignee) { data.issue_assignee = this._issue_assignee; }
 	if (this._layout) { data.layout = this._layout.id; }
 	if (!this._autoShape) { data.shape = this._shape.id; }
 	if (this._collapsed) { data.collapsed = 1; }
@@ -413,6 +424,9 @@ MM.Item.prototype.fromJSON = function (data) {
 	if (data.color) { this._color = data.color; }
 	// if (data.icon) { this._icon = data.icon; }
 	if (data.issue_type) { this._icon = this.dict.issue_type[data.issue_type]; }
+    if (data.issue_status) { this._issue_status =  data.issue_status; }
+    if (data.issue_assignee) { this._issue_assignee =  data.issue_assignee; }
+
 	if (data.value) { this._value = data.value; }
 	if (data.status) {
 		this._status = data.status;
@@ -533,6 +547,8 @@ MM.Item.prototype.update = function (doNotRecurse) {
 
 	this._updateStatus();
 	this._updateIcon();
+    this._updateIssueStatuslabel();
+    this._updateIssueAssigneeImg();
 	this._updateValue();
 
 	this._dom.node.classList[this._collapsed ? "add" : "remove"]("collapsed");
@@ -608,10 +624,34 @@ MM.Item.prototype.setIcon = function (icon) {
 	this._icon = icon;
 	return this.update();
 }
+MM.Item.prototype.setIssueType = function (icon) {
+    this._issue_type = icon;
+    return this.update();
+}
+MM.Item.prototype.setIssueStatus = function (id) {
+    this._issue_status = id;
+    return this.update();
+}
+MM.Item.prototype.setIssueAssignee = function (id) {
+    this._issue_assignee = id;
+    return this.update();
+}
+
 
 MM.Item.prototype.getIcon = function () {
 	return this._icon;
 }
+
+MM.Item.prototype.getIssueType = function () {
+    return this._issue_type;
+}
+MM.Item.prototype.getIssueStatus = function () {
+    return this._issue_status;
+}
+MM.Item.prototype.getIssueAssignee = function () {
+    return this._issue_assignee;
+}
+
 
 MM.Item.prototype.getComputedStatus = function () {
 	return this._computed.status;
@@ -854,6 +894,59 @@ MM.Item.prototype._updateIcon = function () {
 		this._computed.icon = null;
 		this._dom.icon.style.display = "none";
 	}
+}
+// _updateIssueStatusIcon
+MM.Item.prototype._updateIssueStatuslabel = function () {
+    this._dom.issue_status_label.className = "label";
+    this._dom.issue_status_label.style.display = "";
+
+    var issue_status_id = this._issue_status;
+    if (issue_status_id) {
+    	var issue_status_row = window._issueConfig.issue_status[issue_status_id];
+    	// console.log(issue_status_row);
+        this._dom.issue_status_label.innerHTML = issue_status_row.name;
+        //this._dom.issue_status_label.classList.add('label-info');
+        this._dom.issue_status_label.style.color = issue_status_row.text_color;
+        this._dom.issue_status_label.title = '事项的状态';
+        this._dom.issue_status_label.classList.add('prepend-right-5');
+        this._computed.issue_status_label = true;
+    } else {
+        this._computed.issue_status_label = null;
+        this._dom.issue_status_label.style.display = "none";
+    }
+}
+MM.Item.prototype._updateIssueAssigneeImg = function () {
+    this._dom.issue_assignee_img.className = "avatar";
+    this._dom.issue_assignee_img.style.display = "";
+
+    var issue_assignee_id = this._issue_assignee;
+    if (issue_assignee_id) {
+        var user_row = window._issueConfig.users[issue_assignee_id];
+         console.log(user_row);
+        this._dom.issue_assignee_img.src = user_row.avatar;
+        this._dom.issue_assignee_img.classList.add('avatar-small');
+        this._dom.issue_assignee_img.title = '经办人';
+        this._dom.issue_assignee_img.style.width = "24px";
+        this._dom.issue_assignee_img.style.height = "24px";
+    } else {
+        this._computed.issue_assignee_img = null;
+        this._dom.issue_assignee_img.style.display = "none";
+    }
+}
+
+MM.Item.prototype._updateIssueTypeIcon = function () {
+    this._dom.issue_type_icon.className = "icon";
+    this._dom.issue_type_icon.style.display = "";
+
+    var icon = this._issue_type;
+    if (icon) {
+        this._dom.issue_type_icon.classList.add('fa');
+        this._dom.issue_type_icon.classList.add(icon);
+        this._computed.issue_type_icon = true;
+    } else {
+        this._computed.issue_type_icon = null;
+        this._dom.issue_type_icon.style.display = "none";
+    }
 }
 
 MM.Item.prototype._updateValue = function () {
@@ -1418,6 +1511,7 @@ MM.Action.SetColor.prototype.undo = function () {
 	this._item.setColor(this._oldColor);
 }
 
+
 MM.Action.SetText = function (item, text) {
 	this._item = item;
 	this._text = text;
@@ -1473,6 +1567,47 @@ MM.Action.SetIcon.prototype.perform = function () {
 MM.Action.SetIcon.prototype.undo = function () {
 	this._item.setIcon(this._oldIcon);
 }
+
+MM.Action.SetIssueType = function (item, issue_type) {
+    this._item = item;
+    this._issue_type = issue_type;
+    this._oldIssueType = item.getIssueType();
+}
+MM.Action.SetIssueType.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetIssueType.prototype.perform = function () {
+    this._item.setIcon(this._issue_type);
+}
+MM.Action.SetIssueType.prototype.undo = function () {
+    this._item.SetIssueType(this._oldIssueType);
+}
+
+MM.Action.SetIssueStatus = function (item, issue_status_id) {
+    this._item = item;
+    this._issue_status = issue_status_id;
+    this._oldIssueStatus = item.getIssueStatus();
+}
+MM.Action.SetIssueStatus.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetIssueStatus.prototype.perform = function () {
+    this._item.setIssueStatus(this._issue_status);
+}
+MM.Action.SetIssueStatus.prototype.undo = function () {
+    this._item.SetIssueStatus(this._oldIssueStatus);
+}
+
+MM.Action.SetIssueAssignee = function (item, assignee) {
+    this._item = item;
+    this._issue_assignee = assignee;
+    this._oldIssueAssignee = item.getIssueAssignee();
+}
+MM.Action.SetIssueAssignee.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetIssueAssignee.prototype.perform = function () {
+    this._item.setIssueAssignee(this._issue_assignee);
+}
+MM.Action.SetIssueAssignee.prototype.undo = function () {
+    this._item.SetIssueAssignee(this._oldIssueAssignee);
+}
+
+
 
 MM.Action.SetSide = function (item, side) {
 	this._item = item;
@@ -3831,6 +3966,9 @@ MM.UI = function () {
 	this._color = new MM.UI.Color();
 	this._value = new MM.UI.Value();
 	this._status = new MM.UI.Status();
+	this._issue_type = new MM.UI.IssueType();
+    this._issue_status = new MM.UI.IssueStatus();
+    this._issue_assignee = new MM.UI.IssueAssignee();
 
 	MM.subscribe("item-select", this);
 	MM.subscribe("item-change", this);
@@ -4034,6 +4172,50 @@ MM.UI.Icon.prototype.handleEvent = function (e) {
 	console.log(MM.App.current)
 	var action = new MM.Action.SetIcon(MM.App.current, this._select.value || null);
 	MM.App.action(action);
+}
+MM.UI.IssueType = function () {
+    this._select = document.querySelector("#format_issue_type");
+    this._select.addEventListener("change", this);
+}
+
+MM.UI.IssueType.prototype.update = function () {
+    this._select.value = MM.App.current.getIcon() || "";
+}
+
+MM.UI.IssueType.prototype.handleEvent = function (e) {
+    console.log(MM.App.current)
+    var action = new MM.Action.SetIcon(MM.App.current, this._select.value || null);
+    MM.App.action(action);
+}
+
+MM.UI.IssueStatus = function () {
+    this._node = document.querySelector("#format_issue_status");
+    this._node.addEventListener("click", this);
+}
+
+MM.UI.IssueStatus.prototype.handleEvent = function (e) {
+    e.preventDefault();
+    if (!e.target.hasAttribute("data-status_value")) { return; }
+
+    var issue_status_id = e.target.getAttribute("data-status_value") || null;
+    var action = new MM.Action.SetIssueStatus(MM.App.current, issue_status_id);
+    MM.App.action(action);
+}
+
+//IssueAssignee
+MM.UI.IssueAssignee = function () {
+    this._select = document.querySelector("#format_issue_assignee");
+    this._select.addEventListener("change", this);
+}
+
+MM.UI.IssueAssignee.prototype.update = function () {
+    this._select.value = MM.App.current.getIcon() || "";
+}
+
+MM.UI.IssueAssignee.prototype.handleEvent = function (e) {
+    console.log(MM.App.current)
+    var action = new MM.Action.SetIssueAssignee(MM.App.current, this._select.value || null);
+    MM.App.action(action);
 }
 MM.UI.Help = function () {
 	this._node = document.querySelector("#help");

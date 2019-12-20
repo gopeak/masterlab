@@ -93,7 +93,7 @@
 
 
                                     <div class="mind-filters-product">
-                                        <span class="inline">范围：</span>
+                                        <span class="inline">数据范围</span>
                                         <div class="dropdown inline">
                                             <select id="source_range" name="source_range"  class="selectpicker">
                                                 <option value="all"  >整个项目</option>
@@ -102,7 +102,7 @@
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        <span class="inline" style="padding-left: 12px;">二级：</span>
+                                        <span class="inline" style="padding-left: 12px;">二级数据</span>
                                         <div id="all-group_by-container" class="dropdown inline  " style="margin-left: 5px" >
                                             <select  id="all-group_by" name="all-group_by"  class="selectpicker">
                                                 <option value="sprint">迭代</option>
@@ -171,12 +171,12 @@
                         <div style="background-color: #fff;">
                             <div class="issues-holder">
                                 <ul id="port">
-                                    <div id="tip" >------------------------------------->Example <a target="_blank" href="http://my-mind.github.io/?url=examples%2Ffeatures.mymind">@my_mind_app</a>.</div>
+                                    <div id="tip"  class="hide">  <a target="_blank" href="http://my-mind.github.io/?url=examples%2Ffeatures.mymind">@my_mind_app</a>.</div>
                                 </ul>
 
                                 <div class="mind-side js-mind-side">
                                     <div class="mind-side-head">
-                                        <h3>属性面板</h3>
+                                        <h3>主题格式</h3>
                                     </div>
                                     <div class="mind-side-body">
                                         <ul class="mind-side-attrs">
@@ -271,8 +271,19 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li>
-                                                <p>事项类型</p>
+                                            <li  class="flex-row">
+                                                <p></p>
+                                            </li>
+                                            <li  class="flex-row">
+                                                <div class="mind-side-head">
+                                                    <h3>事项属性</h3>
+                                                </div>
+                                            </li>
+                                            <li  class="flex-row">
+                                                <p></p>
+                                            </li>
+                                            <li  class="flex-row" style="display: none">
+                                                <p>图标</p>
                                                 <div>
                                                     <select id="icons" title="事项类型" class="selectpicker">
                                                         {% for type in issue_types %}
@@ -283,7 +294,30 @@
                                                     </select>
                                                 </div>
                                             </li>
-                                            <li>
+                                            <li  class="flex-row">
+                                                <p>事项类型</p>
+                                                <div>
+                                                    <select id="format_issue_type" title="事项类型" class="selectpicker">
+                                                        {% for type in issue_types %}
+                                                            {% set  font_awesome = type['font_awesome'] %}
+                                                            {% set  type_name = type['name'] %}
+                                                            <option origin-id="{{ type['_key'] }}" data-content="<i class='fa {{font_awesome}}'></i> {{type_name}}" value="{{font_awesome}}">{{type_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li class="flex-row">
+                                                <p>经办人</p>
+                                                <div>
+                                                    <select id="format_issue_assignee" title="经办人" class="selectpicker">
+                                                        {% for row in project_users %}
+                                                            {% set  display_name = row['display_name'] %}
+                                                            <option value="{{row.uid}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{row.uid}}.png' > {{display_name}}"  >{{display_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li >
                                                 <p>优先级</p>
                                                 <div id="issue_priority" class="button_radio" data-toggle="buttons">
                                                     {% for row in priority %}
@@ -297,14 +331,14 @@
                                                     {% endfor %}
                                                 </div>
                                             </li>
-                                            <li>
+                                            <li >
                                                 <p>状态</p>
                                                 <div>
-                                                    <div id="issue_status" class="button_radio" data-toggle="buttons">
+                                                    <div id="format_issue_status" class="button_radio" data-toggle="buttons">
                                                         {% for row in issue_status %}
                                                             {% set  text_color = row['text_color'] %}
                                                             {% set  row_name = row['name'] %}
-                                                            <label class="btn btn-sm btn-default" style="color:{{text_color}}; margin-bottom: 5px;" data-color="{{text_color}}" data-content="<span > {{row_name}}" value="{{font_awesome}}">{{row_name}}</label>
+                                                            <label class="btn btn-xs btn-default" style="color:{{text_color}};font-size:8px;  margin-bottom: 5px;" data-status_value="{{row.id}}"  >{{row_name}}</label>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
@@ -316,31 +350,33 @@
                                                         {% for row in issue_resolve %}
                                                             {% set  text_color = row['color'] %}
                                                             {% set  row_name = row['name'] %}
-                                                            <label class="btn btn-sm btn-default" style="color:{{text_color}}; margin-bottom: 5px;" data-color="{{text_color}}" data-content="<span > {{row_name}}" value="{{font_awesome}}">{{row_name}}</label>
+                                                            <label class="btn btn-xs btn-default" style="color:{{text_color}}; font-size:8px; margin-bottom: 5px;" >{{row_name}}</label>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li>
-                                                <p>经办人</p>
-                                                <div>
-                                                    <select id="format_assignee" title="经办人" class="selectpicker">
-                                                        {% for row in project_users %}
-                                                            {% set  display_name = row['display_name'] %}
-                                                            <option value="{{loop.index}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{loop.index}}.png' > {{display_name}}"  >{{display_name}}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </li>
-                                            <li>
+
+                                            <li >
                                                 <p>进度</p>
                                                 <div>
                                                     <div id="format_progress"  style="display: block">
-                                                        <a title="0%" href="#"><img src="/dev/img/mind/progress0.png"></a>
-                                                        <a title="10%" href="#"><img src="/dev/img/mind/progress10.png"></a>
-                                                        <a title="60%" href="#"><img src="/dev/img/mind/progress60.png"></a>
-                                                        <a title="100%" href="#"><img src="/dev/img/mind/progress100.png"></a>
+                                                        <a title="0%" href="#"><img  src="/dev/img/mind/progress_start.png"></a>
+                                                        <a title="10%" href="#"><img src="/dev/img/mind/progress_1o.png"></a>
+                                                        <a title="30%" href="#"><img src="/dev/img/mind/progress_1q.png"></a>
+                                                        <a title="45%" href="#"><img src="/dev/img/mind/progress_3o.png"></a>
+                                                        <a title="45%" href="#"><img src="/dev/img/mind/progress_3q.png"></a>
+                                                        <a title="60%" href="#"><img src="/dev/img/mind/progress_5o.png"></a>
+                                                        <a title="75%" href="#"><img src="/dev/img/mind/progress_3q.png"></a>
+                                                        <a title="90%" href="#"><img src="/dev/img/mind/progress_7o.png"></a>
+                                                        <a title="100%" href="#"><img src="/dev/img/mind/progress_done@16@2x.png"></a>
                                                     </div>
+                                                    <style type="text/css">
+                                                        #format_progress a img{
+                                                            width: 24px;height:24px
+                                                        }
+                                                        /*#format_progress a:hover{border:1px solid #000;background-color:#333;text-decoration: none;}*/
+                                                    </style>
+
                                                 </div>
                                             </li>
                                         </ul>
