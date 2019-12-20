@@ -45,7 +45,7 @@ class System extends BaseAdminCtrl
         parent::__construct();
         $userId = UserAuth::getId();
         $this->addGVar('top_menu_active', 'system');
-        $check = PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR);
+        $check = PermissionGlobal::check($userId, PermissionGlobal::MANAGER_SYSTEM_SETTING_PERM_ID);
 
         if (!$check) {
             $this->error('权限错误', '您还未获取此模块的权限！');

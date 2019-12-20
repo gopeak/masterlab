@@ -188,7 +188,7 @@ class WidgetLogic
         if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
             $userId = (int)$_REQUEST['user_id'];
         }
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $projectModel = new ProjectModel();
             $all = $projectModel->getAll(false);
             $i = 0;
@@ -216,7 +216,7 @@ class WidgetLogic
         if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
             $userId = (int)$_REQUEST['user_id'];
         }
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_ORG_PERM_ID)) {
             $projectModel = new OrgModel();
             $orgArr = $projectModel->getAllItems();
         } else {
@@ -228,6 +228,7 @@ class WidgetLogic
     /**
      * @param $projects
      * @return array
+     * @throws \Exception
      */
     public function getUserHaveSprints($projects)
     {

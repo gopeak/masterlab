@@ -101,7 +101,7 @@ class Projects extends BaseUserCtrl
             $projects = $projectModel->getAll(false);
         }
 
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $isAdmin = true;
         }
         $userLogic = new UserLogic();

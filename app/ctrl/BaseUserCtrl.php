@@ -94,7 +94,8 @@ class BaseUserCtrl extends BaseCtrl
         if (!$asserted) {
             $asserted = true;
             // 是否也有系统管理员权限
-            $this->isAdmin = $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+            //$this->isAdmin = $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+            $this->isAdmin = $haveAdminPerm = PermissionGlobal::isGlobalUser(UserAuth::getId());
             $this->addGVar('is_admin', $haveAdminPerm);
 
             $projectId = null;

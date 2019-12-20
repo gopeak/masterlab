@@ -2,6 +2,8 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\PermissionGlobal;
+use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
@@ -14,10 +16,28 @@ use main\app\model\user\GroupModel;
  */
 class Group extends BaseAdminCtrl
 {
+    public static $pageSizes = [20, 50, 100];
 
-    static public $pageSizes = [20, 50, 100];
+    /**
+     * Group constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $userId = UserAuth::getId();
+        $this->addGVar('top_menu_active', 'system');
+        $check = PermissionGlobal::check($userId, PermissionGlobal::MANAGER_USER_PERM_ID);
 
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
+        }
+    }
 
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];
@@ -27,6 +47,9 @@ class Group extends BaseAdminCtrl
         $this->render('gitlab/admin/groups.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageEditUsers()
     {
         $data = [];
