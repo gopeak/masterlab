@@ -6,6 +6,7 @@
 namespace main\app\ctrl\project;
 
 use main\app\classes\LogOperatingLogic;
+use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
@@ -46,10 +47,17 @@ class Main extends Base
     }
 
     /**
+     * 创建项目页面
      * @throws \Exception
      */
     public function pageNew()
     {
+        $userId = UserAuth::getId();
+        if (!PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
+        }
+
         $orgModel = new OrgModel();
         $orgList = $orgModel->getAllItems();
 
