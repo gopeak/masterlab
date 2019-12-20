@@ -29,7 +29,7 @@ var Project = (function() {
 
     };
 
-    Project.prototype.fetchAll = function(  ) {
+    Project.prototype.fetchAll = function () {
         // url,  list_tpl_id, list_render_id
         var params = {  format:'json' };
         $.ajax({
@@ -40,22 +40,27 @@ var Project = (function() {
             data: params ,
             success: function (resp) {
                 auth_check(resp);
-                if(resp.data.projects.length){
+                if (resp.data.projects.length) {
                     var source = $('#'+_options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
 
-                    $(".list_for_delete").click(function(){
-                        Project.prototype.delete( $(this).data("id"));
+                    $(".list_for_delete").click(function () {
+                        Project.prototype.delete($(this).data("id"));
                     });
-                }else{
+                } else {
+                    var is_admin = resp.data.is_admin;
+                    var handleHtml = '<a class="btn btn-default btn-sm" href="#">返回首页</a>';
+                    if (is_admin) {
+                        handleHtml = handleHtml + ' <a class="btn btn-success btn-sm" href="/project/main/_new">创建项目</a>';
+                    }
                     var emptyHtml = defineStatusHtml({
                         wrap: '#list_render_id',
                         message : '数据为空',
                         type: 'image',
-                        handleHtml: '<a class="btn btn-default btn-sm" href="#">返回首页</a> <a class="btn btn-success btn-sm" href="/project/main/_new">创建项目</a>'
-                    })
+                        handleHtml: handleHtml
+                    });
                 }
                 
             },

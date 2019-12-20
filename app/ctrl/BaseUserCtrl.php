@@ -53,7 +53,7 @@ class BaseUserCtrl extends BaseCtrl
     {
         static $asserted, $setDateTimed;
         parent::__construct();
-        if(!$setDateTimed){
+        if (!$setDateTimed) {
             $setDateTimed = true;
             // 设置用户时区
             date_default_timezone_set((new SettingsLogic())->dateTimezone());
@@ -151,7 +151,6 @@ class BaseUserCtrl extends BaseCtrl
             $this->addGVar('G_uid', UserAuth::getId());
             $this->addGVar('G_show_announcement', $this->getAnnouncement());
         }
-
     }
 
 
