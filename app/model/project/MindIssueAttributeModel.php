@@ -83,7 +83,28 @@ class MindIssueAttributeModel extends CacheModel
      */
     public function getByProject($projectId)
     {
-        return $this->getRow('*', ['project_id' => $projectId]);
+        return $this->getRows('*', ['project_id' => $projectId]);
+    }
+
+    /**
+     * @param $projectId
+     * @param $source
+     * @param $groupBy
+     * @return array
+     */
+    public function getByProjectSourceGroupBy($projectId, $source, $groupBy)
+    {
+        $condition = [];
+        $condition['project_id'] = $projectId;
+        $condition['source'] = $source;
+        $condition['group_by'] = $groupBy;
+        $rows = $this->getRows('*', $condition);
+        $keyArr = [];
+        foreach ($rows as $row) {
+            $keyArr[$row['issue_id']] = $row;
+        }
+        unset($rows);
+        return $keyArr;
     }
 
     /**

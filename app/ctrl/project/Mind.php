@@ -178,10 +178,31 @@ class Mind extends BaseUserCtrl
         if (empty($project)) {
             $this->ajaxFailed('提示', '获取项目数据失败');
         }
+
+        $mindProjectAttributeModel = new MindProjectAttributeModel();
+        $format = $mindProjectAttributeModel->getByProject($projectId);
+        if (empty($format)) {
+            $format['layout'] = 'map';
+            $format['color'] = '#e33';
+            $format['icon'] = '';
+            $format['font_family'] = '宋体, SimSun;';
+            $format['font_size'] = 14;
+            $format['font_bold'] = 1;
+            $format['font_italics'] = 0;
+            $format['bg_color'] = '';
+        }
         $root = [];
+        $root['origin_id'] = $projectId;
         $root['id'] = 'project_' . $projectId;
-        $root['text'] = $project['name'];
-        $root['layout'] = $project['mind_layout'];
+        $root['type'] = 'project';
+        $root['text'] =  $project['name'];
+        $root['layout'] = $format['layout'];
+        $root['color'] = $format['color'];
+        $root['font_family'] = $format['font_family'];
+        $root['font_size'] = $format['font_size'];
+        $root['font_bold'] = $format['font_bold'];
+        $root['font_italics'] = $format['font_italics'];
+        $root['bg_color'] = $format['bg_color'];
         $root['children'] = [];
 
         if ($sourceType == 'all') {
