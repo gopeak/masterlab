@@ -1,11 +1,11 @@
-.shape-box > .content {
+.shape-box > .mind-content {
 	padding: 0.15em 0.4em;
 	background-color: #fff;
 	border: 1px solid #666;
 	border-radius: 3px;
 }
 
-.shape-ellipse > .content {
+.shape-ellipse > .mind-content {
 	background-color: #fff;
 	border: 1px solid #666;
 	border-radius: 50%;
@@ -14,13 +14,24 @@
 
 /* current */
 
-.current > .content {
+.current > .mind-content {
 	background-color: rgba(255, 255, 187, 0.9);
 }
+.mind-create {
+	display: none;
+	cursor: pointer;
+	margin-left: 12px;
+}
+.shape-underline.current > .mind-content > .mind-create{
+	display: inline-block;
+	font-size: 12px;
+	font-weight: normal;
+}
+
 
 /* root */
 
-#port > .item > .content {
+#port > .item > .mind-content {
 	font-weight: bold;
 	border-width: 2px;
 	font-size: 140%;
@@ -32,12 +43,12 @@
 
 /* 1st children */
 
-#port > .item > .children > .item > .content {
+#port > .item > .children > .item > .mind-content {
 	border-width: 2px;
 	font-size: 120%;
 }
 
 .item .icon {
 	margin: 0 0.5em 0 0;
-	font-size: x-large;
+	font-size: 14px;
 }

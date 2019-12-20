@@ -10,14 +10,15 @@
 	display: none;
 }
 
-.content {
+.mind-content {
 	position: relative;
 	display: inline-block;
 	white-space: nowrap;
 	cursor: pointer;
+	padding: 2px 8px 8px;
 }
 
-.content > * {
+.mind-content > * {
 	vertical-align: middle;
 }
 

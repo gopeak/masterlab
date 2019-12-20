@@ -87,24 +87,25 @@
                         {% include 'twig/issue/form.twig' %}
                         <div class="filtered-search-block issues-details-filters row-content-block second-block js-mind-tools" style="padding: 10px"
                              v-pre="false">
-                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
-                                  method="get">
+                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
                                 <input name="utf8" type="hidden" value="&#x2713;"/>
                                 <div class="mind-filters">
 
 
                                     <div class="mind-filters-product">
+                                        <span class="inline">范围：</span>
                                         <div class="dropdown inline">
                                             <select id="source_range" name="source_range"  class="selectpicker">
-                                                <option value="all"  >范围：整个项目</option>
+                                                <option value="all"  >整个项目</option>
                                                 {% for sprint in sprints %}
                                                     <option value="{{ sprint['id'] }}"  >{{ sprint['name'] }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
+                                        <span class="inline" style="padding-left: 12px;">二级：</span>
                                         <div id="all-group_by-container" class="dropdown inline  " style="margin-left: 5px" >
                                             <select  id="all-group_by" name="all-group_by"  class="selectpicker">
-                                                <option value="sprint">二级：迭代</option>
+                                                <option value="sprint">迭代</option>
                                                 <option value="module">模块</option>
                                                 <option value="priority">优先级</option>
                                                 <option value="issue_type">事项类型</option>
@@ -132,22 +133,7 @@
                                         <span style="color: grey;font-size: 10px;display: none">经办人:sven;模块:事项;状态:打开 </span>
                                         <a title="清除筛选" href="javascript:;" style="color: grey;display: none"><i class="fa fa-close"></i></a>
                                     </div>
-
                                     <div>
-                                        <div class="board-extra-actions">
-                                            <button class="btn btn-default" type="button" id="create_same" title="添加迭代">
-                                                <img  src="/dev/img/mind/same.png" />
-                                            </button>
-                                            <button class="btn btn-default" type="button" id="create_same" title="添加子事项">
-                                                <img  src="/dev/img/mind/child.png" />
-                                            </button>
-                                            <button class="btn btn-default disabled" type="button" id="btn-remove" title="删除"  >
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div>
-
                                         <button id="toggle_focus_mode"  href="#" role="button" aria-label="" title="切换聚焦模式" class="btn btn-default">
                                             <span>
                                                 <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
@@ -165,6 +151,19 @@
                                     </div>
 
                                 </div>
+                                <div class="js-center-tool">
+                                    <div class="board-extra-actions">
+                                        <button class="btn btn-default" type="button" id="create_same" title="添加迭代">
+                                            <img  src="/dev/img/mind/same.png" />
+                                        </button>
+                                        <button class="btn btn-default" type="button" id="create_same" title="添加子事项">
+                                            <img  src="/dev/img/mind/child.png" />
+                                        </button>
+                                        <button class="btn btn-default disabled" type="button" id="btn-remove" title="删除"  >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
 
                         </div>
@@ -181,7 +180,7 @@
                                     </div>
                                     <div class="mind-side-body">
                                         <ul class="mind-side-attrs">
-                                            <li>
+                                            <li class="flex-row">
                                                 <p>布局</p>
                                                 <div>
                                                     <select class="selectpicker" id="layout">
@@ -193,11 +192,10 @@
                                                         <option data-content="<img src='/dev/img/mind/layout_map.png' style='width: 24px; height: 24x;' /> map" value=""></option>
                                                         <option data-content="<img src='/dev/img/mind/layout_tree_left.png' style='width: 24px; height: 24px;' /> tree left" value=""></option>
                                                         <option data-content="<img src='/dev/img/mind/layout_tree_right.png' style='width: 24px; height: 24px;' /> tree right" value=""></option>
-
                                                     </select>
                                                 </div>
                                             </li>
-                                            <li>
+                                            <li class="flex-row">
                                                 <p>形状</p>
                                                 <div>
                                                     <select class="selectpicker" id="shape">
@@ -207,7 +205,7 @@
                                                     </select>
                                                 </div>
                                             </li>
-                                            <li>
+                                            <li class="hide">
                                                 <p>权重</p>
                                                 <div>
                                                     <select class="selectpicker" id="value">
@@ -236,7 +234,7 @@
                                                     <a data-color="#fa3" title="Orange" href="#"></a>
                                                 </div>
                                             </li>
-                                            <li>
+                                            <li class="hide">
                                                 <p>status</p>
                                                 <div>
                                                     <select class="selectpicker" id="status">
@@ -249,26 +247,28 @@
                                             </li>
                                             <li>
                                                 <p>字体格式</p>
-                                                <div>
-                                                    <select id="format_font_family" title="字体" class="selectpicker">
-                                                        {% for row in fonts %}
-                                                            {% set  name = row['name'] %}
-                                                            {% set  value = row['value'] %}
-                                                            <option   data-content="<span style='font-family:{{ value }};'>{{ name }}</span>" value="{{ value }}">{{name}}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <select id="format_fontsize" title="字号" class="selectpicker">
-                                                        {% for size in fontSizes %}
-                                                            <option data-content="<span style='font-size: {{ size }}px;'>{{ size }}</span>" value="{{ size }}">{{ size }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <a class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
-                                                    <a class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
-                                                    <input class="btn btn-xs"  style="max-width:40px" type="color" id="btn-font_color" title="字体颜色" >
+                                                <div class="flex-row">
+                                                    <div style="flex: 1; padding-right: 10px;">
+                                                        <select id="format_font_family" title="字体" class="selectpicker">
+                                                            {% for row in fonts %}
+                                                                {% set  name = row['name'] %}
+                                                                {% set  value = row['value'] %}
+                                                                <option   data-content="<span style='font-family:{{ value }};'>{{ name }}</span>" value="{{ value }}">{{name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div style="flex: 1; padding-right: 10px;">
+                                                        <select id="format_fontsize" title="字号" class="selectpicker">
+                                                            {% for size in fontSizes %}
+                                                                <option value="{{ size }}">{{ size }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div style="width: 82px;">
+                                                        <a class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
+                                                        <a class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
+                                                        <input class="btn btn-xs"  style="width:30px" type="color" id="btn-font_color" title="字体颜色" >
+                                                    </div>
                                                 </div>
                                             </li>
                                             <li>
@@ -285,7 +285,7 @@
                                             </li>
                                             <li>
                                                 <p>优先级</p>
-                                                <div id="issue_type" class="btn-group button_radio" data-toggle="buttons">
+                                                <div id="issue_priority" class="button_radio" data-toggle="buttons">
                                                     {% for row in priority %}
                                                         {% set  status_color = row['status_color'] %}
                                                         {% set  row_name = row['name'] %}
@@ -300,25 +300,25 @@
                                             <li>
                                                 <p>状态</p>
                                                 <div>
-                                                    <select title="事项类型" class="selectpicker">
+                                                    <div id="issue_status" class="button_radio" data-toggle="buttons">
                                                         {% for row in issue_status %}
                                                             {% set  text_color = row['text_color'] %}
                                                             {% set  row_name = row['name'] %}
-                                                            <option style="color:{{text_color}}" data-color="{{text_color}}" data-content="<span > {{row_name}}" value="{{font_awesome}}">{{row_name}}</option>
+                                                            <label class="btn btn-sm btn-default" style="color:{{text_color}}; margin-bottom: 5px;" data-color="{{text_color}}" data-content="<span > {{row_name}}" value="{{font_awesome}}">{{row_name}}</label>
                                                         {% endfor %}
-                                                    </select>
+                                                    </div>
                                                 </div>
                                             </li>
                                             <li>
                                                 <p>解决结果</p>
                                                 <div>
-                                                    <select title="解决结果" class="selectpicker">
+                                                    <div id="issue_resolve" class="button_radio" data-toggle="buttons">
                                                         {% for row in issue_resolve %}
                                                             {% set  text_color = row['color'] %}
                                                             {% set  row_name = row['name'] %}
-                                                            <option style="color:{{text_color}}" data-color="{{text_color}}" data-content="<span > {{row_name}}" value="{{font_awesome}}">{{row_name}}</option>
+                                                            <label class="btn btn-sm btn-default" style="color:{{text_color}}; margin-bottom: 5px;" data-color="{{text_color}}" data-content="<span > {{row_name}}" value="{{font_awesome}}">{{row_name}}</label>
                                                         {% endfor %}
-                                                    </select>
+                                                    </div>
                                                 </div>
                                             </li>
                                             <li>
