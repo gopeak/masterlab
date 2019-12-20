@@ -4163,7 +4163,15 @@ MM.UI.IO.prototype.fetchIssues = function () {
 
 	console.log(parts.url);
 
-	let params = { source_type: 'all', group_by: 'sprint' }
+	let source_type = $("#source_range").val();
+	let group_by = '';
+	if(source_type==='all'){
+		group_by = $('#all-group_by').val();
+	}else{
+		group_by = $('#sprint-group_by').val();
+	}
+
+	let params = { source_type: source_type, group_by: group_by }
 	let project_id = window._cur_project_id;
 	$.ajax({
 		type: "GET",
@@ -4403,7 +4411,8 @@ MM.UI.Backend._loadDone = function (json) {
 		MM.App.setMap(MM.Map.fromJSON(json));
 		MM.publish("load-done", this);
 	} catch (e) {
-		this._error(e);
+		console.log(e);
+		//this._error(e);
 	}
 }
 
@@ -5354,17 +5363,23 @@ MM.App = {
 		this.setMap(new MM.Map());
 	},
 
-	_syncPort: function () {
-		// 修改port主体的宽高，原代码微window的宽高。
+	_syncPort: function (zoomMode) {
 		var sideBar = document.querySelector(".main-sidebar");
 		var ui = document.querySelector(".ui");
 		var navbar = document.querySelector(".navbar");
 		var navControl = document.querySelector(".nav-control");
 		var mindTools = document.querySelector(".js-mind-tools");
 		var padding = 32;
-		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
-		this._port.style.width = this.portSize[0] + "px";
-		this._port.style.height = this.portSize[1] + "px";
+		// 是否全屏
+		if(zoomMode) {
+			this.portSize = [window.innerWidth, window.innerHeight - navControl.offsetHeight];
+			this._port.style.width = this.portSize[0] + "px";
+			this._port.style.height = this.portSize[1] + "px";
+		}else{
+			this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
+			this._port.style.width = this.portSize[0] + "px";
+			this._port.style.height = this.portSize[1] + "px";
+		}
 		this._throbber.style.right = (20 + this.ui.getWidth()) + "px";
 		if (this.map) { this.map.ensureItemVisibility(this.current); }
 	}
