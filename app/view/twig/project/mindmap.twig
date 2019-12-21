@@ -248,26 +248,27 @@
                                             <li>
                                                 <p>字体格式</p>
                                                 <div class="flex-row">
-                                                    <div style="flex: 1; padding-right: 10px;">
-                                                        <select id="format_font_family" title="字体" class="selectpicker">
+
+                                                    <div style="width: 82px;">
+                                                        <a class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
+                                                        <a class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
+                                                        <input class="btn btn-xs"  style="width:30px" type="color" id="btn-font_color" title="字体颜色" >
+                                                    </div>
+                                                    <div style="flex: 1; padding-left: 4px;">
+                                                        <select id="format_fontsize"  data-width="64px"  title="字号" class="selectpicker form-control">
+                                                            {% for size in fontSizes %}
+                                                                <option value="{{ size }}">{{ size }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div style="flex: 1; padding-left:2px;">
+                                                        <select id="format_font_family" title="字体" data-width="104px" class="selectpicker form-control">
                                                             {% for row in fonts %}
                                                                 {% set  name = row['name'] %}
                                                                 {% set  value = row['value'] %}
                                                                 <option   data-content="<span style='font-family:{{ value }};'>{{ name }}</span>" value="{{ value }}">{{name}}</option>
                                                             {% endfor %}
                                                         </select>
-                                                    </div>
-                                                    <div style="flex: 1; padding-right: 10px;">
-                                                        <select id="format_fontsize" title="字号" class="selectpicker">
-                                                            {% for size in fontSizes %}
-                                                                <option value="{{ size }}">{{ size }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </div>
-                                                    <div style="width: 82px;">
-                                                        <a class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
-                                                        <a class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
-                                                        <input class="btn btn-xs"  style="width:30px" type="color" id="btn-font_color" title="字体颜色" >
                                                     </div>
                                                 </div>
                                             </li>
@@ -294,19 +295,19 @@
                                                     </select>
                                                 </div>
                                             </li>
-                                            <li  class="flex-row">
+                                            <li  class="">
                                                 <p>事项类型</p>
                                                 <div>
                                                     <select id="format_issue_type" title="事项类型" class="selectpicker">
                                                         {% for type in issue_types %}
                                                             {% set  font_awesome = type['font_awesome'] %}
                                                             {% set  type_name = type['name'] %}
-                                                            <option origin-id="{{ type['_key'] }}" data-content="<i class='fa {{font_awesome}}'></i> {{type_name}}" value="{{font_awesome}}">{{type_name}}</option>
+                                                            <option origin-id="{{ type['_key'] }}"  data-icon="fa {{font_awesome}}" value="{{font_awesome}}">{{type_name}}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
                                             </li>
-                                            <li class="flex-row">
+                                            <li class="">
                                                 <p>经办人</p>
                                                 <div>
                                                     <select id="format_issue_assignee" title="经办人" class="selectpicker">
@@ -319,11 +320,12 @@
                                             </li>
                                             <li >
                                                 <p>优先级</p>
-                                                <div id="issue_priority" class="button_radio" data-toggle="buttons">
+                                                <div id="format_issue_priority" class="button_radio" data-toggle="buttons">
                                                     {% for row in priority %}
                                                         {% set  status_color = row['status_color'] %}
                                                         {% set  row_name = row['name'] %}
                                                         <label class="btn btn-sm btn-default"
+                                                               data-value="{{row.id}}"
                                                             data-color="{{status_color}}"
                                                             style=" color: {{status_color}}">
                                                             {{row_name}}
@@ -343,7 +345,7 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li>
+                                            <li class="hide">
                                                 <p>解决结果</p>
                                                 <div>
                                                     <div id="issue_resolve" class="button_radio" data-toggle="buttons">
@@ -605,6 +607,7 @@
 
     var _issueConfig = {
         "priority":{{ priority|json_encode()|raw }},
+        "issue_priority":{{ priority|json_encode()|raw }},
         "issue_types":{{ issue_types|json_encode()|raw }},
         "issue_status":{{ issue_status|json_encode()|raw }},
         "issue_resolve":{{ issue_resolve|json_encode()|raw }},

@@ -339,6 +339,7 @@ MM.Item = function () {
 		create: document.createElement("span"),
 		status: document.createElement("span"),
 		icon: document.createElement("span"),
+        issue_priority_label: document.createElement("span"),
         issue_status_label: document.createElement("span"),
         issue_assignee_img:document.createElement("img"),
 		value: document.createElement("span"),
@@ -351,6 +352,7 @@ MM.Item = function () {
 	this._dom.content.classList.add("mind-content");
 	this._dom.status.classList.add("status");
 	this._dom.icon.classList.add("icon");
+    this._dom.issue_priority_label.classList.add("_issue_priority");
     this._dom.issue_status_label.classList.add("_issue_status");
     this._dom.issue_assignee_img.classList.add("_issue_assignee");
 	this._dom.value.classList.add("value");
@@ -362,6 +364,7 @@ MM.Item = function () {
 	this._dom.create.classList.add("fa-pencil");
 
     this._dom.content.appendChild(this._dom.issue_assignee_img);
+    this._dom.content.appendChild(this._dom.issue_priority_label);
     this._dom.content.appendChild(this._dom.issue_status_label);
 	this._dom.content.appendChild(this._dom.text); /* status+value are appended in layout */
 	this._dom.node.appendChild(this._dom.canvas);
@@ -401,6 +404,7 @@ MM.Item.prototype.toJSON = function () {
 	if (this._icon) { data.icon = this._icon; }
 	if (this._value) { data.value = this._value; }
 	if (this._status) { data.status = this._status; }
+    if (this._issue_priority) { data.issue_priority = this._issue_priority; }
     if (this._issue_status) { data.issue_status = this._issue_status; }
     if (this._issue_assignee) { data.issue_assignee = this._issue_assignee; }
 	if (this._layout) { data.layout = this._layout.id; }
@@ -424,6 +428,7 @@ MM.Item.prototype.fromJSON = function (data) {
 	if (data.color) { this._color = data.color; }
 	// if (data.icon) { this._icon = data.icon; }
 	if (data.issue_type) { this._icon = this.dict.issue_type[data.issue_type]; }
+    if (data.issue_priority) { this._issue_priority =  data.issue_priority; }
     if (data.issue_status) { this._issue_status =  data.issue_status; }
     if (data.issue_assignee) { this._issue_assignee =  data.issue_assignee; }
 
@@ -547,6 +552,7 @@ MM.Item.prototype.update = function (doNotRecurse) {
 
 	this._updateStatus();
 	this._updateIcon();
+    this._updateIssuePriorityLabel();
     this._updateIssueStatuslabel();
     this._updateIssueAssigneeImg();
 	this._updateValue();
@@ -628,6 +634,10 @@ MM.Item.prototype.setIssueType = function (icon) {
     this._issue_type = icon;
     return this.update();
 }
+MM.Item.prototype.setIssuePriority = function (id) {
+    this._issue_priority = id;
+    return this.update();
+}
 MM.Item.prototype.setIssueStatus = function (id) {
     this._issue_status = id;
     return this.update();
@@ -644,6 +654,9 @@ MM.Item.prototype.getIcon = function () {
 
 MM.Item.prototype.getIssueType = function () {
     return this._issue_type;
+}
+MM.Item.prototype.getIssuePriority = function () {
+    return this._issue_status;
 }
 MM.Item.prototype.getIssueStatus = function () {
     return this._issue_status;
@@ -895,6 +908,29 @@ MM.Item.prototype._updateIcon = function () {
 		this._dom.icon.style.display = "none";
 	}
 }
+// _updateIssuePrioritylabel
+MM.Item.prototype._updateIssuePriorityLabel = function () {
+    this._dom.issue_priority_label.className = "";
+    this._dom.issue_priority_label.style.display = "";
+
+    var issue_priority_id = this._issue_priority;
+    if (issue_priority_id) {
+        var issue_priority_row = window._issueConfig.issue_priority[issue_priority_id];
+        // console.log(issue_status_row);
+        if(issue_priority_row){
+            this._dom.issue_priority_label.innerHTML = issue_priority_row.name.replace(/\s*/g,"");
+            //this._dom.issue_status_label.classList.add('label-info');
+            this._dom.issue_priority_label.style.color = issue_priority_row.status_color;
+            this._dom.issue_priority_label.style.fontSize = '10px';
+            this._dom.issue_priority_label.title = '事项的优先级';
+            this._dom.issue_priority_label.classList.add('prepend-right-5');
+        }
+
+    } else {
+        this._dom.issue_priority_label.style.display = "none";
+    }
+}
+
 // _updateIssueStatusIcon
 MM.Item.prototype._updateIssueStatuslabel = function () {
     this._dom.issue_status_label.className = "label";
@@ -903,13 +939,17 @@ MM.Item.prototype._updateIssueStatuslabel = function () {
     var issue_status_id = this._issue_status;
     if (issue_status_id) {
     	var issue_status_row = window._issueConfig.issue_status[issue_status_id];
-    	// console.log(issue_status_row);
-        this._dom.issue_status_label.innerHTML = issue_status_row.name;
-        //this._dom.issue_status_label.classList.add('label-info');
-        this._dom.issue_status_label.style.color = issue_status_row.text_color;
-        this._dom.issue_status_label.title = '事项的状态';
-        this._dom.issue_status_label.classList.add('prepend-right-5');
-        this._computed.issue_status_label = true;
+        // console.log(issue_status_row);
+    	if(issue_status_row){
+            this._dom.issue_status_label.innerHTML = issue_status_row.name.replace(/\s*/g,"");
+            //this._dom.issue_status_label.classList.add('label-info');
+            this._dom.issue_status_label.style.color = issue_status_row.text_color;
+            this._dom.issue_status_label.style.fontSize = '10px';
+            this._dom.issue_status_label.title = '事项的状态';
+            this._dom.issue_status_label.classList.add('prepend-right-5');
+            this._computed.issue_status_label = true;
+		}
+
     } else {
         this._computed.issue_status_label = null;
         this._dom.issue_status_label.style.display = "none";
@@ -923,7 +963,9 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
     if (issue_assignee_id) {
         var user_row = window._issueConfig.users[issue_assignee_id];
          console.log(user_row);
-        this._dom.issue_assignee_img.src = user_row.avatar;
+        if(user_row) {
+            this._dom.issue_assignee_img.src = user_row.avatar;
+        }
         this._dom.issue_assignee_img.classList.add('avatar-small');
         this._dom.issue_assignee_img.title = '经办人';
         this._dom.issue_assignee_img.style.width = "24px";
@@ -1579,6 +1621,19 @@ MM.Action.SetIssueType.prototype.perform = function () {
 }
 MM.Action.SetIssueType.prototype.undo = function () {
     this._item.SetIssueType(this._oldIssueType);
+}
+// SetIssuePriority
+MM.Action.SetIssuePriority = function (item, issue_priority_id) {
+    this._item = item;
+    this._issue_priority = issue_priority_id;
+    this._oldIssuePriority = item.getIssuePriority();
+}
+MM.Action.SetIssuePriority.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetIssuePriority.prototype.perform = function () {
+    this._item.setIssuePriority(this._issue_priority);
+}
+MM.Action.SetIssuePriority.prototype.undo = function () {
+    this._item.SetIssuePriority(this._oldIssuePriority);
 }
 
 MM.Action.SetIssueStatus = function (item, issue_status_id) {
@@ -3968,6 +4023,7 @@ MM.UI = function () {
 	this._status = new MM.UI.Status();
 	this._issue_type = new MM.UI.IssueType();
     this._issue_status = new MM.UI.IssueStatus();
+    this._issue_priority = new MM.UI.IssuePriority();
     this._issue_assignee = new MM.UI.IssueAssignee();
 
 	MM.subscribe("item-select", this);
@@ -4185,6 +4241,20 @@ MM.UI.IssueType.prototype.update = function () {
 MM.UI.IssueType.prototype.handleEvent = function (e) {
     console.log(MM.App.current)
     var action = new MM.Action.SetIcon(MM.App.current, this._select.value || null);
+    MM.App.action(action);
+}
+// IssuePriority
+MM.UI.IssuePriority = function () {
+    this._node = document.querySelector("#format_issue_priority");
+    this._node.addEventListener("click", this);
+}
+
+MM.UI.IssuePriority.prototype.handleEvent = function (e) {
+    e.preventDefault();
+    if (!e.target.hasAttribute("data-value")) { return; }
+
+    var issue_priority_id = e.target.getAttribute("data-value") || null;
+    var action = new MM.Action.SetIssuePriority(MM.App.current, issue_priority_id);
     MM.App.action(action);
 }
 

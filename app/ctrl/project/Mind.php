@@ -196,6 +196,7 @@ class Mind extends BaseUserCtrl
         $root['id'] = 'project_' . $projectId;
         $root['type'] = 'project';
         $root['text'] =  $project['name'];
+        $root['avatar'] =  '/attachment/'.$project['avatar'];
         $root['layout'] = $format['layout'];
         $root['color'] = $format['color'];
         $root['font_family'] = $format['font_family'];
