@@ -2,12 +2,19 @@
 <html class="" lang="en">
 <head prefix="og: http://ogp.me/ns#">
     {% include 'twig/common/header/include.twig' %}
+
+
+
     <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
     <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
-    <!-- <script src="/dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script> -->
+    <script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/project/mind.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <!-- <script src="/dev/js/admin/issue_ui.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script> -->
@@ -597,7 +604,188 @@
         </div>
     </form>
 </div>
+<div class="modal" id="modal-create-issue" style=" padding-right: 16px;">
+    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="create_issue" action="/issue/main/add" accept-charset="UTF-8" method="post">
+        <div class="modal-dialog issue-modal-dialog" style="width: 900px;">
+            <div class="modal-content issue-modal-content">
+                <div class="modal-header issue-modal-header">
 
+                    <h3 class="modal-header-title">事项维护</h3>
+
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                </div>
+                <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="params[project_id]" id="project_id" value="{{project_id}}">
+                    <input type="hidden" name="action" id="action" value="">
+                    <input type="hidden" name="issue_id" id="issue_id" value="">
+                    <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
+                    <input type="hidden" name="params[gant_type]" id="gant_type" value="project_sprint">
+                    <input type="hidden" name="params[below_id]" id="below_id" value="">
+                    <input type="hidden" name="params[add_gantt_dir]" id="addAction" value="">
+                    <input type="hidden" name="authenticity_token" value="">
+
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">事项类型:</label>
+                        <div class="col-sm-10">
+                            <select id="create_issue_types_select" name="params[issue_type]"
+                                    class="selectpicker"
+                                    dropdownAlignRight="true"
+                                    data-live-search="true"
+                                    title="">
+                                <option value="">请选择类型</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr id="create_header_hr" style="display: block;">
+
+                    <div class="form-group">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">标 题:<span class="required"> *</span></div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
+                            <p id="tip-summary" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">优先级:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <select id="priority" name="params[priority]" class="selectpicker"    title=""   >
+                            </select>
+                            <p id="tip-priority" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-1">状态:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   >
+                            </select>
+                            <p id="tip-status" class="gl-field-error hide"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">经办人:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <div class="issuable-form-select-holder">
+                                <input type="hidden" value="" name="params[assignee]" id="assignee"/>
+                                <div class="dropdown ">
+                                    <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search"
+                                            type="button" data-first-user="sven"
+                                            data-null-user="true"
+                                            data-current-user="true"
+                                            data-project-id="1"
+                                            data-selected="null"
+                                            data-field-name="params[assignee]"
+                                            data-default-label="经办人"
+                                            data-selected=""
+                                            data-toggle="dropdown">
+                                        <span id="user_dropdown-toggle-text" class="dropdown-toggle-text is-default">经办人</span>
+                                        <i class="fa fa-chevron-down"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
+                                        <div class="dropdown-title">
+                                            <span>选择经办人</span>
+                                            <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                                <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                            </button>
+                                        </div>
+                                        <div class="dropdown-input">
+                                            <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee"
+                                                   autocomplete="off"/>
+                                            <i class="fa fa-search dropdown-input-search"></i>
+                                            <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                        </div>
+                                        <div class="dropdown-content "></div>
+                                        <div class="dropdown-loading">
+                                            <i class="fa fa-spinner fa-spin"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="tip-assignee" class="gl-field-error hide"></p>
+
+                        </div>
+                        <div class="col-sm-1"><span id="sprint_title">迭代:</span></div>
+                        <div class="col-sm-4">
+                            <span id="sprint_name"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">开始日期:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="start_date"  value=""  />
+                            <p id="tip-start_date" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-1">日期:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="due_date"  value=""  />
+                            <p id="tip-due_date" class="gl-field-error hide"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">用时(天):<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <input type="number"  style="width: 30%"    class="form-control" name="params[duration]" id="duration"  value="1" >
+                            <p id="tip-duration" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-1">进度:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="progress"  value="1" >
+                            <p id="tip-progress" class="gl-field-error hide"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">起始里程碑</div>
+                        <div class="col-sm-4">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"  name="params[is_start_milestone]" id="is_start_milestone" >
+                                </label>
+                            </div>
+                            <p id="tip-is_start_milestone" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-1">结束里程碑:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"  name="params[is_end_milestone]" id="is_end_milestone" >
+                                </label>
+                            </div>
+                            <p id="tip-is_end_milestone" class="gl-field-error hide"></p>
+                        </div>
+                    </div>
+
+                    <div class=" form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">描 述:</div>
+                        <div class="col-sm-8">
+                            <div id="description_md">
+                                <textarea style="display:none;" name="params[description]" id="gantt_description"></textarea>
+                            </div>
+                            <p id="tip-description" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer issue-modal-footer footer-block row-content-block">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    <span class="append-right-10">
+                    <input id="btn-add" type="button" name="commit" value="保存" class="btn btn-save">
+                </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 <script src="/dev/js/handlebars.helper.js?v={{ _version }}"></script>
 
 <script type="text/javascript">
@@ -694,6 +882,21 @@
         });
         $('#btn-setting').bind('click', function () {
             window.$mindAjax.fetchSettings();
+        });
+
+        $(".laydate_input_date").each(function (i) {
+            var id = $(this).attr('id');
+            laydate.render({
+                elem: '#' + id,
+                position: 'fixed'
+            });
+        });
+        $('#btn-add').bind('click',function(){
+            if($('#action').val()=='update'){
+                window.$mindAjax.updateSyncServerTask();
+            }else{
+                window.$mindAjax.addSyncServerTask();
+            }
         });
 
         $("#modal-create-issue").on('show.bs.modal', function (e) {

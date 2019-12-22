@@ -378,6 +378,7 @@ MM.Item = function () {
 	/* toggle+children are appended when children exist */
 
 	this._dom.toggle.addEventListener("click", this);
+
 }
 
 MM.Item.COLOR = "#999";
@@ -822,6 +823,7 @@ MM.Item.prototype.startEditing = function () {
 	this._dom.text.addEventListener("input", this);
 	this._dom.text.addEventListener("keydown", this);
 	this._dom.text.addEventListener("blur", this);
+
 	return this;
 }
 
@@ -1135,7 +1137,7 @@ MM.Item.prototype._findLinks = function (node) {
 }
 MM.Map = function (options) {
 	var o = {
-		root: "My Mind Map",
+		root: "Masterlab Map",
 		layout: MM.Layout.Map
 	}
 	for (var p in options) { o[p] = options[p]; }
@@ -2259,10 +2261,12 @@ MM.Command.Finish.execute = function () {
 	var text = MM.App.current.stopEditing();
 	if (text) {
 		var action = new MM.Action.SetText(MM.App.current, text);
+        alert('MM.Command.Finish.execute');
 	} else {
 		var action = new MM.Action.RemoveItem(MM.App.current);
 	}
 	MM.App.action(action);
+
 }
 
 MM.Command.Newline = Object.create(MM.Command, {
@@ -4550,6 +4554,9 @@ MM.UI.IO.prototype.fetchIssues = function () {
 			}
 
 			MM.UI.Backend._loadDone.call(this, json);
+            $('.mind-create').bind('click',function(){
+                $('#modal-create-issue').modal('show')
+            });
 		},
 		error: function (res) {
 			notify_error("请求数据错误" + res);

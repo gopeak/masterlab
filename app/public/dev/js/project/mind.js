@@ -12,6 +12,77 @@ let MindAjax = (function () {
     };
 
 
+    MindAjax.prototype.updateSyncServerIssue = function () {
+        //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+        $('#modal-create-issue').modal('hide');
+        let issue = {};
+        let taskId = $("#issue_id").val();
+
+        issue.name = $("#summary").val();
+        issue.description = $("#description").val();
+        issue.progress = parseInt($("#progress").val());
+        //task.duration = parseInt(taskEditor.find("#duration").val()); //bicch rimosso perchè devono essere ricalcolata dalla start end, altrimenti sbaglia
+        issue.startIsMilestone = $("#is_start_milestone").is(":checked");
+        issue.endIsMilestone = $("#is_end_milestone").is(":checked");
+
+        var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+        var url = '/issue/main/update';
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            url: url,
+            data: params,
+            success: function (resp) {
+                auth_check(resp);
+                if(!form_check(resp)){
+                    notify_success("提交参数错误",resp.msg);
+                    return;
+                }
+                if (resp.ret == 200) {
+                    notify_success(resp.msg);
+
+                }else{
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+
+    MindAjax.prototype.addSyncServerIssue = function () {
+        //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+        let self = this;
+
+        let params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+        let url = '/issue/main/add';
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            url: url,
+            data: params,
+            success: function (resp) {
+                auth_check(resp);
+                if(!form_check(resp)){
+                    return;
+                }
+                if (resp.ret === '200') {
+                    notify_success(resp.msg);
+                    $('#modal-create-issue').modal('hide');
+
+                }else{
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
     MindAjax.prototype.fetchAll = function (project_id, params) {
         $.ajax({
             type: "GET",
