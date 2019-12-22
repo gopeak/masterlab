@@ -311,6 +311,7 @@ MM.Item = function () {
 	this._side = null; /* side preference */
 	this._icon = null;
     this._issue_status = null;
+    this._issue_progress = null;
 	this._id = MM.generateId();
 	this._oldText = "";
 
@@ -342,6 +343,7 @@ MM.Item = function () {
         issue_priority_label: document.createElement("span"),
         issue_status_label: document.createElement("span"),
         issue_assignee_img:document.createElement("img"),
+        issue_progress_img:document.createElement("img"),
 		value: document.createElement("span"),
 		text: document.createElement("div"),
 		children: document.createElement("ul"),
@@ -355,6 +357,7 @@ MM.Item = function () {
     this._dom.issue_priority_label.classList.add("_issue_priority");
     this._dom.issue_status_label.classList.add("_issue_status");
     this._dom.issue_assignee_img.classList.add("_issue_assignee");
+    this._dom.issue_progress_img.classList.add("_issue_progress");
 	this._dom.value.classList.add("value");
 	this._dom.text.classList.add("text");
 	this._dom.toggle.classList.add("toggle");
@@ -366,6 +369,7 @@ MM.Item = function () {
     this._dom.content.appendChild(this._dom.issue_assignee_img);
     this._dom.content.appendChild(this._dom.issue_priority_label);
     this._dom.content.appendChild(this._dom.issue_status_label);
+    this._dom.content.appendChild(this._dom.issue_progress_img);
 	this._dom.content.appendChild(this._dom.text); /* status+value are appended in layout */
 	this._dom.node.appendChild(this._dom.canvas);
 	this._dom.node.appendChild(this._dom.content);
@@ -407,6 +411,7 @@ MM.Item.prototype.toJSON = function () {
     if (this._issue_priority) { data.issue_priority = this._issue_priority; }
     if (this._issue_status) { data.issue_status = this._issue_status; }
     if (this._issue_assignee) { data.issue_assignee = this._issue_assignee; }
+    if (this._issue_progress) { data.issue_progress = this._issue_progress; }
 	if (this._layout) { data.layout = this._layout.id; }
 	if (!this._autoShape) { data.shape = this._shape.id; }
 	if (this._collapsed) { data.collapsed = 1; }
@@ -431,6 +436,7 @@ MM.Item.prototype.fromJSON = function (data) {
     if (data.issue_priority) { this._issue_priority =  data.issue_priority; }
     if (data.issue_status) { this._issue_status =  data.issue_status; }
     if (data.issue_assignee) { this._issue_assignee =  data.issue_assignee; }
+    if (data.issue_progress) { this._issue_progress =  data.issue_progress; }
 
 	if (data.value) { this._value = data.value; }
 	if (data.status) {
@@ -555,6 +561,7 @@ MM.Item.prototype.update = function (doNotRecurse) {
     this._updateIssuePriorityLabel();
     this._updateIssueStatuslabel();
     this._updateIssueAssigneeImg();
+    this._updateIssueProgressImg();
 	this._updateValue();
 
 	this._dom.node.classList[this._collapsed ? "add" : "remove"]("collapsed");
@@ -646,6 +653,10 @@ MM.Item.prototype.setIssueAssignee = function (id) {
     this._issue_assignee = id;
     return this.update();
 }
+MM.Item.prototype.setIssueProgress = function (value) {
+    this._issue_progress = value;
+    return this.update();
+}
 
 
 MM.Item.prototype.getIcon = function () {
@@ -663,6 +674,9 @@ MM.Item.prototype.getIssueStatus = function () {
 }
 MM.Item.prototype.getIssueAssignee = function () {
     return this._issue_assignee;
+}
+MM.Item.prototype.getIssueProgress = function () {
+    return this._issue_progress;
 }
 
 
@@ -968,13 +982,57 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
         }
         this._dom.issue_assignee_img.classList.add('avatar-small');
         this._dom.issue_assignee_img.title = '经办人';
-        this._dom.issue_assignee_img.style.width = "24px";
-        this._dom.issue_assignee_img.style.height = "24px";
+        this._dom.issue_assignee_img.style.width = "18px";
+        this._dom.issue_assignee_img.style.height = "18px";
     } else {
         this._computed.issue_assignee_img = null;
         this._dom.issue_assignee_img.style.display = "none";
     }
 }
+
+MM.Item.prototype._updateIssueProgressImg = function () {
+    this._dom.issue_progress_img.className = "img-circle";
+    this._dom.issue_progress_img.style.display = "";
+    let issue_progress = this._issue_progress;
+    if (issue_progress) {
+        let progress_img_name = '';
+    	if(issue_progress<=0){
+            progress_img_name = 'progress_start.png';
+		}
+        if(issue_progress>0 && issue_progress<=10){
+            progress_img_name = 'progress_1.png';
+        }
+        if(issue_progress>10 && issue_progress<=30){
+            progress_img_name = 'progress_2.png';
+        }
+        if(issue_progress>30 && issue_progress<=45){
+            progress_img_name = 'progress_3.png';
+        }
+        if(issue_progress>45 && issue_progress<=60){
+            progress_img_name = 'progress_4.png';
+        }
+        if(issue_progress>60 && issue_progress<=75){
+            progress_img_name = 'progress_5.png';
+        }
+        if(issue_progress>75 && issue_progress<=90){
+            progress_img_name = 'progress_6.png';
+        }
+        if(issue_progress>90 && issue_progress<=99){
+            progress_img_name = 'progress_7.png';
+        }
+        if(issue_progress>=100){
+            progress_img_name = 'progress_done.png';
+        }
+
+    	this._dom.issue_progress_img.src = '/dev/img/mind/'+progress_img_name;
+        this._dom.issue_progress_img.title = '事项的进度';
+        this._dom.issue_progress_img.style.width = "18px";
+        this._dom.issue_progress_img.style.height = "18px";
+    } else {
+        this._dom.issue_progress_img.style.display = "none";
+    }
+}
+
 
 MM.Item.prototype._updateIssueTypeIcon = function () {
     this._dom.issue_type_icon.className = "icon";
@@ -1620,7 +1678,7 @@ MM.Action.SetIssueType.prototype.perform = function () {
     this._item.setIcon(this._issue_type);
 }
 MM.Action.SetIssueType.prototype.undo = function () {
-    this._item.SetIssueType(this._oldIssueType);
+    this._item.setIssueType(this._oldIssueType);
 }
 // SetIssuePriority
 MM.Action.SetIssuePriority = function (item, issue_priority_id) {
@@ -1633,7 +1691,20 @@ MM.Action.SetIssuePriority.prototype.perform = function () {
     this._item.setIssuePriority(this._issue_priority);
 }
 MM.Action.SetIssuePriority.prototype.undo = function () {
-    this._item.SetIssuePriority(this._oldIssuePriority);
+    this._item.setIssuePriority(this._oldIssuePriority);
+}
+//SetIssueProgress
+MM.Action.SetIssueProgress = function (item, issue_progress) {
+    this._item = item;
+    this._issue_progress = issue_progress;
+    this._oldIssueProgress = item.getIssueProgress();
+}
+MM.Action.SetIssueProgress.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetIssueProgress.prototype.perform = function () {
+    this._item.setIssueProgress(this._issue_priority);
+}
+MM.Action.SetIssueProgress.prototype.undo = function () {
+    this._item.setIssueProgress(this._oldIssueProgress);
 }
 
 MM.Action.SetIssueStatus = function (item, issue_status_id) {
@@ -1646,7 +1717,7 @@ MM.Action.SetIssueStatus.prototype.perform = function () {
     this._item.setIssueStatus(this._issue_status);
 }
 MM.Action.SetIssueStatus.prototype.undo = function () {
-    this._item.SetIssueStatus(this._oldIssueStatus);
+    this._item.setIssueStatus(this._oldIssueStatus);
 }
 
 MM.Action.SetIssueAssignee = function (item, assignee) {
@@ -1659,7 +1730,7 @@ MM.Action.SetIssueAssignee.prototype.perform = function () {
     this._item.setIssueAssignee(this._issue_assignee);
 }
 MM.Action.SetIssueAssignee.prototype.undo = function () {
-    this._item.SetIssueAssignee(this._oldIssueAssignee);
+    this._item.setIssueAssignee(this._oldIssueAssignee);
 }
 
 
@@ -4285,6 +4356,20 @@ MM.UI.IssueAssignee.prototype.update = function () {
 MM.UI.IssueAssignee.prototype.handleEvent = function (e) {
     console.log(MM.App.current)
     var action = new MM.Action.SetIssueAssignee(MM.App.current, this._select.value || null);
+    MM.App.action(action);
+}
+//IssueProgress
+MM.UI.IssueProgress = function () {
+    this._node = document.querySelector("#format_issue_progress");
+    this._node.addEventListener("click", this);
+}
+
+MM.UI.IssueProgress.prototype.handleEvent = function (e) {
+    e.preventDefault();
+    if (!e.target.hasAttribute("data-value")) { return; }
+
+    var issue_progress = e.target.getAttribute("data-value") || null;
+    var action = new MM.Action.SetIssueProgress(MM.App.current, issue_progress);
     MM.App.action(action);
 }
 MM.UI.Help = function () {
