@@ -212,6 +212,22 @@
                                                     </select>
                                                 </div>
                                             </li>
+                                            <li class="flex-row">
+                                                <p>边框</p>
+                                                <div>
+                                                    <select class="selectpicker" id="format_border_color">
+                                                        <option  style="background: #999; "  value="#999">Inherit</option>
+                                                        <option  style="background: #000; "  value="#000">Black</option>
+                                                        <option  style="background: #e33; "  value="#e33">Red</option>
+                                                        <option  style="background: #3e3; "  value="#3e3">Green</option>
+                                                        <option  style="background: #33e; "  value="#33e">Blue</option>
+                                                        <option  style="background: #dd3; "  value="#3dd">Yellow</option>
+                                                        <option  style="background: #3dd; "  value="#3dd">Cyan</option>
+                                                        <option  style="background: #d3d; "  value="#d3d">Magenta</option>
+                                                        <option  style="background: #fa3; "  value="#fa3">Orange</option>
+                                                    </select>
+                                                </div>
+                                            </li>
                                             <li class="hide">
                                                 <p>权重</p>
                                                 <div>
@@ -227,10 +243,10 @@
                                                     </select>
                                                 </div>
                                             </li>
-                                            <li>
+                                            <li class="hide">
                                                 <p>边框颜色</p>
                                                 <div id="color">
-                                                    <a data-color="#999" title="Inherit" href="#"></a>
+                                                    <a data-color="#999"  title="Inherit" href="#"></a>
                                                     <a data-color="#000" title="Black" href="#"></a>
                                                     <a data-color="#e33" title="Red" href="#"></a>
                                                     <a data-color="#3e3" title="Green" href="#"></a>
@@ -257,12 +273,12 @@
                                                 <div class="flex-row">
 
                                                     <div style="width: 82px;">
-                                                        <a class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
-                                                        <a class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
-                                                        <input class="btn btn-xs"  style="width:30px" type="color" id="btn-font_color" title="字体颜色" >
+                                                        <a id="format_font_bold" data-value="0" class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
+                                                        <a id="format_font_italic"  data-value="0"   class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
+                                                        <input id="format_text_color" class="btn btn-xs"  style="width:30px" type="color" title="字体颜色" >
                                                     </div>
                                                     <div style="flex: 1; padding-left: 4px;">
-                                                        <select id="format_fontsize"  data-width="64px"  title="字号" class="selectpicker form-control">
+                                                        <select id="format_font_size"  data-width="64px"  title="字号" class="selectpicker form-control">
                                                             {% for size in fontSizes %}
                                                                 <option value="{{ size }}">{{ size }}</option>
                                                             {% endfor %}

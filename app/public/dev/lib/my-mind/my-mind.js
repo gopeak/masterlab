@@ -600,6 +600,23 @@ MM.Item.prototype.update = function (doNotRecurse) {
     this._updateIssueProgressImg();
 	this._updateValue();
 
+	if (this._font_bold ) {
+		this._dom.text.style.fontWeight = 'bold';
+	}else{
+		this._dom.text.style.fontWeight = '';
+	}
+    if (this._font_italic ) {
+        this._dom.text.style.fontStyle = "italic";
+    }else{
+        this._dom.text.style.fontStyle = "";
+    }
+    if (this._font_size ) {
+        this._dom.text.style.fontSize = this._font_size+'px';
+    }
+    if (this._font_family ) {
+        this._dom.text.style.fontFamily = this._font_family;
+    }
+
 	this._dom.node.classList[this._collapsed ? "add" : "remove"]("collapsed");
 
 	this.getLayout().update(this);
@@ -745,6 +762,51 @@ MM.Item.prototype.setColor = function (color) {
 
 MM.Item.prototype.getColor = function () {
 	return this._color || (this.isRoot() ? MM.Item.COLOR : this._parent.getColor());
+}
+
+MM.Item.prototype.setFontFamily = function (value) {
+    this._font_family = value;
+    return this.update();
+}
+
+MM.Item.prototype.getFontFamily = function () {
+    return this._font_family;
+}
+
+MM.Item.prototype.setFontBold = function (value) {
+    this._font_bold = value;
+    return this.update();
+}
+
+MM.Item.prototype.getFontBold = function () {
+    return this._font_bold;
+}
+
+MM.Item.prototype.getFontSize = function () {
+    return this._font_size;
+}
+
+MM.Item.prototype.setFontSize = function (value) {
+    this._font_size = value;
+    return this.update();
+}
+
+MM.Item.prototype.getFontItalic = function () {
+    return this._font_italic;
+}
+
+MM.Item.prototype.setFontItalic= function (value) {
+    this._font_italic = value;
+    return this.update();
+}
+
+MM.Item.prototype.getTextColor = function () {
+    return this._text_color;
+}
+
+MM.Item.prototype.setTextColor= function (value) {
+    this._text_color = value;
+    return this.update();
 }
 
 MM.Item.prototype.getOwnColor = function () {
@@ -1669,6 +1731,73 @@ MM.Action.SetColor.prototype.undo = function () {
 	this._item.setColor(this._oldColor);
 }
 
+//SetFontFamily
+MM.Action.SetFontFamily = function (item, value) {
+    this._item = item;
+    this._font_bold = value;
+    this._oldFontFamily = item.getFontBold();
+}
+MM.Action.SetFontFamily.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetFontFamily.prototype.perform = function () {
+    this._item.setFontFamily(this._font_bold);
+}
+MM.Action.SetFontFamily.prototype.undo = function () {
+    this._item.setFontFamily(this._oldFontFamily);
+}
+
+// SetFontSize
+MM.Action.SetFontSize = function (item, value) {
+    this._item = item;
+    this._font_size = value;
+    this._oldFontSize = item.getFontBold();
+}
+MM.Action.SetFontSize.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetFontSize.prototype.perform = function () {
+    this._item.setFontSize(this._font_size);
+}
+MM.Action.SetFontSize.prototype.undo = function () {
+    this._item.setFontSize(this._oldFontSize);
+}
+
+
+MM.Action.SetFontBold = function (item, is_active) {
+    this._item = item;
+    this._font_bold = is_active;
+    this._oldFontBold = item.getFontBold();
+}
+MM.Action.SetFontBold.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetFontBold.prototype.perform = function () {
+    this._item.setFontBold(this._font_bold);
+}
+MM.Action.SetFontBold.prototype.undo = function () {
+    this._item.setFontBold(this._oldFontBold);
+}
+
+MM.Action.SetFontItalic = function (item, is_active) {
+    this._item = item;
+    this._font_italic= is_active;
+    this._oldFontitalic = item.getFontItalic();
+}
+MM.Action.SetFontItalic.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetFontItalic.prototype.perform = function () {
+    this._item.setFontItalic(this._font_italic);
+}
+MM.Action.SetFontItalic.prototype.undo = function () {
+    this._item.setFontItalic(this._oldFontitalic);
+}
+
+MM.Action.SetTextColor = function (item, assignee) {
+    this._item = item;
+    this._text_color = assignee;
+    this._oldtextColor = item.getTextColor();
+}
+MM.Action.SetTextColor.prototype = Object.create(MM.Action.prototype);
+MM.Action.SetTextColor.prototype.perform = function () {
+    this._item.setTextColor(this._text_color);
+}
+MM.Action.SetTextColor.prototype.undo = function () {
+    this._item.setTextColor(this._oldtextColor);
+}
 
 MM.Action.SetText = function (item, text) {
 	this._item = item;
@@ -4149,13 +4278,18 @@ MM.UI = function () {
 	this._layout = new MM.UI.Layout();
 	this._shape = new MM.UI.Shape();
 	this._icon = new MM.UI.Icon();
-	this._color = new MM.UI.Color();
+	this._color = new MM.UI.BorderColor();
 	this._value = new MM.UI.Value();
 	this._status = new MM.UI.Status();
 	this._issue_type = new MM.UI.IssueType();
     this._issue_status = new MM.UI.IssueStatus();
     this._issue_priority = new MM.UI.IssuePriority();
     this._issue_assignee = new MM.UI.IssueAssignee();
+
+    this._font_family = new MM.UI.FontFamily();
+	this._font_bold = new MM.UI.FontBold();
+    this._font_size = new MM.UI.FontSize();
+    this._font_italic = new MM.UI.FontItalic();
 
 	MM.subscribe("item-select", this);
 	MM.subscribe("item-change", this);
@@ -4346,6 +4480,90 @@ MM.UI.Color.prototype.handleEvent = function (e) {
 	var action = new MM.Action.SetColor(MM.App.current, color);
 	MM.App.action(action);
 }
+
+//BorderColor
+MM.UI.BorderColor = function () {
+    this._select = document.querySelector("#format_border_color");
+    this._select.addEventListener("change", this);
+}
+
+MM.UI.BorderColor.prototype.update = function () {
+    this._select.value = MM.App.current.getColor() || "";
+}
+
+MM.UI.BorderColor.prototype.handleEvent = function (e) {
+    console.log(this._select.value)
+    var action = new MM.Action.SetColor(MM.App.current, this._select.value || null);
+    MM.App.action(action);
+}
+
+//FontFamily
+MM.UI.FontFamily = function () {
+    this._select = document.querySelector("#format_font_family");
+    this._select.addEventListener("change", this);
+}
+
+MM.UI.FontFamily.prototype.update = function () {
+    this._select.value = MM.App.current.getFontFamily() || "";
+}
+
+MM.UI.FontFamily.prototype.handleEvent = function (e) {
+    console.log(MM.App.current)
+    var action = new MM.Action.SetFontFamily(MM.App.current, this._select.value || null);
+    MM.App.action(action);
+}
+//FontSize
+MM.UI.FontSize = function () {
+    this._select = document.querySelector("#format_font_size");
+    this._select.addEventListener("change", this);
+}
+
+MM.UI.FontSize.prototype.update = function () {
+    this._select.value = MM.App.current.getFontSize() || "";
+}
+
+MM.UI.FontSize.prototype.handleEvent = function (e) {
+    console.log(MM.App.current)
+    var action = new MM.Action.SetFontSize(MM.App.current, this._select.value || null);
+    MM.App.action(action);
+}
+
+MM.UI.FontBold = function () {
+    this._node = document.querySelector("#format_font_bold");
+    this._node.addEventListener("click", this);
+}
+
+MM.UI.FontBold.prototype.handleEvent = function (e) {
+    e.preventDefault();
+    let format_font_bold_obj = $('#format_font_bold');
+    let font_value = parseInt(format_font_bold_obj.data("value"));
+    if(font_value===0){
+        format_font_bold_obj.data('value','1');
+	}else{
+        format_font_bold_obj.data('value','0');
+	}
+    var action = new MM.Action.SetFontBold(MM.App.current, font_value===0);
+    MM.App.action(action);
+}
+// FontItalic
+MM.UI.FontItalic = function () {
+    this._node = document.querySelector("#format_font_italic");
+    this._node.addEventListener("click", this);
+}
+
+MM.UI.FontItalic.prototype.handleEvent = function (e) {
+    e.preventDefault();
+    let format_font_italic_obj = $('#format_font_italic');
+    let font_value = parseInt(format_font_italic_obj.data("value"));
+    if(font_value===0){
+        format_font_italic_obj.data('value','1');
+    }else{
+        format_font_italic_obj.data('value','0');
+    }
+    var action = new MM.Action.SetFontItalic(MM.App.current, font_value===0);
+    MM.App.action(action);
+}
+
 MM.UI.Icon = function () {
 	this._select = document.querySelector("#icons");
 	this._select.addEventListener("change", this);
@@ -4618,9 +4836,6 @@ MM.UI.IO.prototype.fetchIssues = function () {
 			notify_error("请求数据错误" + res);
 		}
 	});
-
-
-
 }
 
 

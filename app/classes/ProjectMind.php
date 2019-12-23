@@ -275,7 +275,7 @@ class ProjectMind
             $item['font_family'] = $format['font_family'];
             $item['font_size'] = $format['font_size'];
             $item['font_bold'] = $format['font_bold'];
-            $item['font_italics'] = $format['font_italics'];
+            $item['font_italic'] = $format['font_italic'];
             $item['bg_color'] = $format['bg_color'];
             $item['children'] = [];
 
@@ -440,7 +440,7 @@ class ProjectMind
             $item['font_family'] = $format['font_family'];
             $item['font_size'] = $format['font_size'];
             $item['font_bold'] = $format['font_bold'];
-            $item['font_italics'] = $format['font_italics'];
+            $item['font_italic'] = $format['font_italic'];
             $item['bg_color'] = $format['bg_color'];
             $item['children'] = [];
 
