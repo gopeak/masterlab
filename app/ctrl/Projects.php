@@ -183,7 +183,7 @@ class Projects extends BaseUserCtrl
         }
 
         $uploadLogic = new UploadLogic();
-        $ret = $uploadLogic->move('qqfile', 'avatar', $uuid, $originName, $fileSize);
+        $ret = $uploadLogic->move('qqfile', 'project_image', $uuid, $originName, $fileSize);
         header('Content-type: application/json; charset=UTF-8');
 
         $resp = [];

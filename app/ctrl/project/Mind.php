@@ -7,6 +7,7 @@ namespace main\app\ctrl\project;
 
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserLogic;
@@ -179,6 +180,7 @@ class Mind extends BaseUserCtrl
             $this->ajaxFailed('提示', '获取项目数据失败');
         }
 
+        list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
         $mindProjectAttributeModel = new MindProjectAttributeModel();
         $format = $mindProjectAttributeModel->getByProject($projectId);
         if (empty($format)) {
@@ -196,7 +198,8 @@ class Mind extends BaseUserCtrl
         $root['id'] = 'project_' . $projectId;
         $root['type'] = 'project';
         $root['text'] =  $project['name'];
-        $root['avatar'] =  '/attachment/'.$project['avatar'];
+        $root['avatar_exist'] =  $project['avatar_exist'];
+        $root['avatar'] =  $project['avatar'];
         $root['layout'] = $format['layout'];
         $root['color'] = $format['color'];
         $root['font_family'] = $format['font_family'];

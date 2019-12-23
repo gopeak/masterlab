@@ -306,12 +306,20 @@ MM.Item = function () {
 	this._shape = null;
 	this._autoShape = true;
 	this._color = null;
+	this._font_size= null;
+	this._font_family = null;
+	this._text_color = null;
+	this._font_bold = null;
+	this._font_italic = null;
+	this._bg_color = null;
+
 	this._value = null;
 	this._status = null;
 	this._side = null; /* side preference */
 	this._icon = null;
     this._issue_status = null;
     this._issue_progress = null;
+	this._project_img = null;
 	this._id = MM.generateId();
 	this._oldText = "";
 
@@ -320,17 +328,7 @@ MM.Item = function () {
 		status: null
 	}
 	this.dict = {
-		issue_type: {
-			"1": "fa-address-book-o",
-			"2": "fa-arrow-circle-o-up",
-			"3": "fa-tasks",
-			"4": "fa-cogs",
-			"5": "fa-plus",
-			"6": "fa-users",
-			"7": "fa-bug",
-			"8": "fa-subscript",
-			"9": "fa-exchange",
-		},
+		issue_type: window._issueConfig.issue_type,
         issue_status:window._issueConfig.issue_status
 	}
 
@@ -340,6 +338,7 @@ MM.Item = function () {
 		create: document.createElement("span"),
 		status: document.createElement("span"),
 		icon: document.createElement("span"),
+		project_img:document.createElement("img"),
         issue_priority_label: document.createElement("span"),
         issue_status_label: document.createElement("span"),
         issue_assignee_img:document.createElement("img"),
@@ -354,6 +353,7 @@ MM.Item = function () {
 	this._dom.content.classList.add("mind-content");
 	this._dom.status.classList.add("status");
 	this._dom.icon.classList.add("icon");
+	this._dom.project_img.classList.add("_project_img");
     this._dom.issue_priority_label.classList.add("_issue_priority");
     this._dom.issue_status_label.classList.add("_issue_status");
     this._dom.issue_assignee_img.classList.add("_issue_assignee");
@@ -366,6 +366,7 @@ MM.Item = function () {
 	this._dom.create.classList.add("fa");
 	this._dom.create.classList.add("fa-pencil");
 
+	this._dom.content.appendChild(this._dom.project_img);
     this._dom.content.appendChild(this._dom.issue_assignee_img);
     this._dom.content.appendChild(this._dom.issue_priority_label);
     this._dom.content.appendChild(this._dom.issue_status_label);
@@ -403,10 +404,26 @@ MM.Item.prototype.toJSON = function () {
 		id: this._id,
 		text: this.getText()
 	}
+	this._font_size= null;
+	this._font_family = null;
+	this._text_color = null;
+	this._font_bold = null;
+	this._font_italic = null;
+	this._bg_color = null;
 
+	if (this._project_img) { data.project_img = this._project_img; }
 	if (this._side) { data.side = this._side; }
 	if (this._color) { data.color = this._color; }
 	if (this._icon) { data.icon = this._icon; }
+
+	if (this._font_size) { data.icon = this._font_size; }
+	if (this._font_family) { data.icon = this._font_family; }
+	if (this._text_color) { data.icon = this._text_color; }
+	if (this._font_bold) { data.icon = this._font_bold; }
+	if (this._font_italic) { data.icon = this._font_italic; }
+	if (this._bg_color) { data.bg_color = this._bg_color; }
+
+
 	if (this._value) { data.value = this._value; }
 	if (this._status) { data.status = this._status; }
     if (this._issue_priority) { data.issue_priority = this._issue_priority; }
@@ -428,12 +445,30 @@ MM.Item.prototype.toJSON = function () {
  */
 // 初始化属性
 MM.Item.prototype.fromJSON = function (data) {
+
+	if(data.type && data.type==='project'){
+		this._project_img = data.avatar;
+		if(data.avatar_exist){
+			this._updateProjectImg();
+		}
+	}
 	this.setText(data.text);
+
 	if (data.id) { this._id = data.id; }
 	if (data.side) { this._side = data.side; }
 	if (data.color) { this._color = data.color; }
+
+
+	if (data.font_size) { this._font_size = this.font_size; }
+	if (data.font_family) { this._font_family = this.font_family; }
+	if (data.text_color) { this._text_color = this.text_color; }
+	if (data.font_bold) { this._font_bold = this.font_bold; }
+	if (data.font_italic) { this._font_italic = this.font_italic; }
+	if (data.bg_color) { this._bg_color = this.bg_color; }
+
+
 	// if (data.icon) { this._icon = data.icon; }
-	if (data.issue_type) { this._icon = this.dict.issue_type[data.issue_type]; }
+	if (data.issue_type_fa) { this._icon = data.issue_type_fa; }
     if (data.issue_priority) { this._issue_priority =  data.issue_priority; }
     if (data.issue_status) { this._issue_status =  data.issue_status; }
     if (data.issue_assignee) { this._issue_assignee =  data.issue_assignee; }
@@ -587,6 +622,10 @@ MM.Item.prototype.setText = function (text) {
 	return this.update();
 }
 
+MM.Item.prototype.setProjectImg = function (img) {
+    this._updateProjectImg();
+}
+
 MM.Item.prototype.getId = function () {
 	return this._id;
 }
@@ -638,48 +677,49 @@ MM.Item.prototype.setIcon = function (icon) {
 	this._icon = icon;
 	return this.update();
 }
+MM.Item.prototype.getIcon = function () {
+	return this._icon;
+}
+
+
 MM.Item.prototype.setIssueType = function (icon) {
     this._issue_type = icon;
     return this.update();
 }
+MM.Item.prototype.getIssueType = function () {
+	return this._issue_type;
+}
+
 MM.Item.prototype.setIssuePriority = function (id) {
     this._issue_priority = id;
     return this.update();
+}
+MM.Item.prototype.getIssuePriority = function () {
+	return this._issue_status;
 }
 MM.Item.prototype.setIssueStatus = function (id) {
     this._issue_status = id;
     return this.update();
 }
+MM.Item.prototype.getIssueStatus = function () {
+	return this._issue_status;
+}
+
 MM.Item.prototype.setIssueAssignee = function (id) {
     this._issue_assignee = id;
     return this.update();
+}
+MM.Item.prototype.getIssueAssignee = function () {
+	return this._issue_assignee;
 }
 MM.Item.prototype.setIssueProgress = function (value) {
     this._issue_progress = value;
     return this.update();
 }
 
-
-MM.Item.prototype.getIcon = function () {
-	return this._icon;
-}
-
-MM.Item.prototype.getIssueType = function () {
-    return this._issue_type;
-}
-MM.Item.prototype.getIssuePriority = function () {
-    return this._issue_status;
-}
-MM.Item.prototype.getIssueStatus = function () {
-    return this._issue_status;
-}
-MM.Item.prototype.getIssueAssignee = function () {
-    return this._issue_assignee;
-}
 MM.Item.prototype.getIssueProgress = function () {
     return this._issue_progress;
 }
-
 
 MM.Item.prototype.getComputedStatus = function () {
 	return this._computed.status;
@@ -990,6 +1030,22 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
         this._computed.issue_assignee_img = null;
         this._dom.issue_assignee_img.style.display = "none";
     }
+}
+
+MM.Item.prototype._updateProjectImg = function () {
+	this._dom.project_img.className = "avatar";
+	this._dom.project_img.style.display = "";
+
+	var project_img = this._project_img;
+	if (project_img) {
+	    this._dom.project_img.src = project_img;
+		this._dom.project_img.classList.add('avatar-small');
+		this._dom.project_img.title = '项目icon';
+		this._dom.project_img.style.width = "32px";
+		this._dom.project_img.style.height = "32px";
+	} else {
+		this._dom.project_img.style.display = "none";
+	}
 }
 
 MM.Item.prototype._updateIssueProgressImg = function () {

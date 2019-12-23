@@ -261,7 +261,7 @@ class ProjectMind
                 $format['font_family'] = '宋体, SimSun;';
                 $format['font_size'] = 12;
                 $format['font_bold'] = 0;
-                $format['font_italics'] = 0;
+                $format['font_italic'] = 0;
                 $format['bg_color'] = '';
             }
             $item = [];
@@ -409,9 +409,8 @@ class ProjectMind
         }
         $condition .= "  Order by id desc";
         $field = '`id`,`pkey`,`issue_num`,`project_id`,`issue_type`,`assignee`,`summary`,`priority`,`resolve`,`status`,
-        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress`,weight,start_date, due_date,description';
+        `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress`,weight,start_date, due_date';
         $sql = "select {$field} from {$issueModel->getTable()} where {$condition}";
-        //echo $sql;
         $issues = $issueModel->db->getRows($sql);
         //print_r($issues);
         $finalArr = $this->getSecondArr($projectId, $groupByField);
@@ -427,7 +426,7 @@ class ProjectMind
                 $format['font_family'] = '宋体, SimSun;';
                 $format['font_size'] = 12;
                 $format['font_bold'] = 0;
-                $format['font_italics'] = 0;
+                $format['font_italic'] = 0;
                 $format['bg_color'] = '';
             }
             $item = [];
@@ -447,7 +446,8 @@ class ProjectMind
 
             return $item;
         };
-
+        $issueTypeModel = new IssueTypeModel();
+        $issueTypeArr = $issueTypeModel->getAllItem();
         foreach ($finalArr as &$arr) {
             foreach ($issues as $k => $issue) {
                 // $haveChildren = (int)$issue['have_children'];
@@ -460,6 +460,7 @@ class ProjectMind
                     $tmp = $itemFormatDnc($issue['id'],$issue['summary'],$format);
                     $tmp['value'] = $issue['weight'];
                     $tmp['issue_type'] = $issue['issue_type'];
+                    $tmp['issue_type_fa'] = isset($issueTypeArr[$issue['issue_type']]) ? $issueTypeArr[$issue['issue_type']]['font_awesome']:'';
                     $tmp['issue_priority'] = $issue['priority'];
                     $tmp['issue_status'] = $issue['status'];
                     $tmp['issue_progress'] = $issue['progress'];
@@ -467,7 +468,6 @@ class ProjectMind
                     $tmp['issue_assignee'] = $issue['assignee'];
                     $tmp['issue_start_date'] = $issue['start_date'];
                     $tmp['issue_due_date'] = $issue['due_date'];
-                    $tmp['issue_description'] = $issue['description'];
                     $tmp['issue_assistants'] = $issue['assistants'];
                     $tmp['children'] = [];
                     $level = 1;
