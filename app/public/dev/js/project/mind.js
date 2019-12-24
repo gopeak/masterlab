@@ -138,6 +138,133 @@ let MindAjax = (function () {
         });
     };
 
+    MindAjax.prototype.delete = function (issue_id) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/delete",
+            data: { issue_id: issue_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret !== '200') {
+                    notify_error('删除失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    MindAjax.prototype.add = function (item, text, fnc) {
+
+        let post_data = {summary:text}
+
+        // 初始必填项
+        if(!post_data.project_id){
+            post_data.project_id = window._cur_project_id;
+        }
+        if(!post_data.issue_type){
+            post_data.issue_type = '3';
+        }
+        if(!post_data.assignee){
+            post_data.assignee = window.current_uid ;
+        }
+        if(!post_data.priority){
+            post_data.priority = '3';
+        }
+
+        let source_range_el = $('#source_range');
+        if(source_range_el.val()!=='all'){
+            post_data.sprint = source_range_el.val();
+        }
+        let parentItem = item.getParent();
+        let id_arr = parentItem._id.split('_');
+        if(id_arr[1]){
+            let groupByField = id_arr[0];
+            if(groupByField==='project' || groupByField==='issue'){
+
+            }else{
+                post_data[groupByField] = id_arr[1];
+            }
+        }
+
+        console.log(post_data);
+        if(!post_data.summary){
+            notify_error('事项标题不能为空');
+            return;
+        }
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/issue/main/add?project="+window._cur_project_id,
+            data:  {params:post_data},
+            single: 'single',
+            mine: true, // 当single重复时用自身并放弃之前的ajax请求
+            success: function (resp) {
+                auth_check(resp);
+                if (!form_check(resp)) {
+                    return;
+                }
+                if (resp.ret === '200') {
+                    item.setId('issue_'+resp.data)
+                    notify_success(resp.msg);
+                } else {
+                    var action = new MM.Action.RemoveItem(item);
+                    MM.App.action(action);
+                    notify_error(resp.msg);
+                }
+                if(jQuery.type(fnc) === "function"){
+                    fnc();
+                }
+            },
+            error: function (res) {
+                var action = new MM.Action.RemoveItem(item);
+                MM.App.action(action);
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    MindAjax.prototype.update = function (issue_id, post_data, fnc) {
+        // 初始必填项
+        if(!post_data.project_id){
+            post_data.project_id = window._cur_project_id;
+        }
+
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/issue/main/update?project="+window._cur_project_id,
+            data: {params:post_data,issue_id:issue_id},
+            success: function (resp) {
+                auth_check(resp);
+                if (!form_check(resp)) {
+                    return;
+                }
+                if (resp.ret === '200') {
+                    notify_success('更新成功');
+                } else {
+                    notify_error('更新失败,错误信息:' + resp.msg);
+                    console.error(resp.msg)
+                }
+                if(jQuery.type(fnc) === "function"){
+                    fnc();
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
 
     return MindAjax;
 })();

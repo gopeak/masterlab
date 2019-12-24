@@ -569,12 +569,17 @@ MM.Item.prototype.select = function () {
 	this.getMap().ensureItemVisibility(this);
 	MM.Clipboard.focus(); /* going to mode 2c */
 	MM.publish("item-select", this);
+	if(!this.isRoot()){
+		$('#btn-delete').removeClass('disabled');
+	}
+
 }
 
 MM.Item.prototype.deselect = function () {
 	/* we were in 2b; finish that via 3b */
 	if (MM.App.editing) { MM.Command.Finish.execute(); }
 	this._dom.node.classList.remove("current");
+	$('#btn-delete').addClass('disabled');
 }
 
 MM.Item.prototype.update = function (doNotRecurse) {
@@ -648,6 +653,9 @@ MM.Item.prototype.setProjectImg = function (img) {
 
 MM.Item.prototype.getId = function () {
 	return this._id;
+}
+MM.Item.prototype.setId = function (value) {
+	 this._id = value;
 }
 
 MM.Item.prototype.getText = function () {
@@ -2068,7 +2076,6 @@ MM.Clipboard._endCut = function () {
 MM.Menu = {
 	_dom: {},
 	_port: null,
-
 	open: function (x, y) {
 		this._dom.node.style.display = "";
 		var w = this._dom.node.offsetWidth;
@@ -2135,7 +2142,7 @@ MM.Command.isValid = function () {
 MM.Command.execute = function () { }
 
 MM.Command.Undo = Object.create(MM.Command, {
-	label: { value: "Undo" },
+	label: { value: "撤 销" },
 	keys: { value: [{ keyCode: "Z".charCodeAt(0), ctrlKey: true }] }
 });
 MM.Command.Undo.isValid = function () {
@@ -2147,7 +2154,7 @@ MM.Command.Undo.execute = function () {
 }
 
 MM.Command.Redo = Object.create(MM.Command, {
-	label: { value: "Redo" },
+	label: { value: "重 做" },
 	keys: { value: [{ keyCode: "Y".charCodeAt(0), ctrlKey: true }] },
 });
 MM.Command.Redo.isValid = function () {
@@ -2159,7 +2166,7 @@ MM.Command.Redo.execute = function () {
 }
 
 MM.Command.InsertSibling = Object.create(MM.Command, {
-	label: { value: "Insert a sibling" },
+	label: { value: "新增同级" },
 	keys: { value: [{ keyCode: 13 }] }
 });
 MM.Command.InsertSibling.execute = function () {
@@ -2179,7 +2186,7 @@ MM.Command.InsertSibling.execute = function () {
 }
 
 MM.Command.InsertChild = Object.create(MM.Command, {
-	label: { value: "Insert a child" },
+	label: { value: "新 增" },
 	keys: {
 		value: [
 			{ keyCode: 9, ctrlKey: false },
@@ -2198,7 +2205,7 @@ MM.Command.InsertChild.execute = function () {
 }
 
 MM.Command.Delete = Object.create(MM.Command, {
-	label: { value: "Delete an item" },
+	label: { value: "删 除" },
 	keys: { value: [{ keyCode: 46 }] }
 });
 MM.Command.Delete.isValid = function () {
@@ -2270,7 +2277,7 @@ MM.Command.Load.execute = function () {
 }
 
 MM.Command.Center = Object.create(MM.Command, {
-	label: { value: "Center map" },
+	label: { value: "置 中" },
 	keys: { value: [{ keyCode: 35 }] }
 });
 MM.Command.Center.execute = function () {
@@ -2427,7 +2434,7 @@ MM.Command.Fold.execute = function () {
 	MM.App.map.ensureItemVisibility(item);
 }
 MM.Command.Edit = Object.create(MM.Command, {
-	label: { value: "Edit item" },
+	label: { value: "编 辑" },
 	keys: {
 		value: [
 			{ keyCode: 32 },
@@ -2446,12 +2453,25 @@ MM.Command.Finish = Object.create(MM.Command, {
 });
 MM.Command.Finish.execute = function () {
 	MM.App.editing = false;
-	var text = MM.App.current.stopEditing();
+
+	let item = MM.App.current;
+	let text = item.stopEditing();
+	let action = null;
 	if (text) {
-		var action = new MM.Action.SetText(MM.App.current, text);
-        alert('MM.Command.Finish.execute');
+		action = new MM.Action.SetText(item, text);
+		let issue_id = null;
+		if(item._id.search('issue_')>=0){
+			issue_id = item._id.replace('issue_','');
+		}
+		if(!issue_id){
+			window.$mindAjax.add(item, text);
+		}else{
+            let post_data = {summary:text}
+            window.$mindAjax.update(issue_id, post_data);
+        }
+
 	} else {
-		var action = new MM.Action.RemoveItem(MM.App.current);
+		action = new MM.Action.RemoveItem(MM.App.current);
 	}
 	MM.App.action(action);
 
@@ -2534,7 +2554,7 @@ MM.Command.Strikethrough = Object.create(MM.Command.Style, {
 });
 
 MM.Command.Value = Object.create(MM.Command, {
-	label: { value: "Set value" },
+	label: { value: "设置权重" },
 	keys: { value: [{ charCode: "v".charCodeAt(0), ctrlKey: false, metaKey: false }] }
 });
 MM.Command.Value.execute = function () {
@@ -3733,8 +3753,8 @@ MM.Format.Plaintext._parsePrefix = function (line) {
 MM.Backend = Object.create(MM.Repo);
 
 /**
- * Backends are allowed to have some internal state. 
- * This method notifies them that "their" map is no longer used 
+ * Backends are allowed to have some internal state.
+ * This method notifies them that "their" map is no longer used
  * (was either replaced by a new one or saved using other backend).
  */
 MM.Backend.reset = function () {
@@ -4485,20 +4505,20 @@ MM.UI.Color.prototype.handleEvent = function (e) {
 	MM.App.action(action);
 }
 
-//BorderColor
+
+// BorderColor
 MM.UI.BorderColor = function () {
-    this._select = document.querySelector("#format_border_color");
-    this._select.addEventListener("change", this);
-}
-
-MM.UI.BorderColor.prototype.update = function () {
-    this._select.value = MM.App.current.getColor() || "";
-}
-
-MM.UI.BorderColor.prototype.handleEvent = function (e) {
-    console.log(this._select.value)
-    var action = new MM.Action.SetColor(MM.App.current, this._select.value || null);
-    MM.App.action(action);
+	window.format_border_color.on('init', instance => {
+		console.log('init', instance);
+	}).on('hide', instance => {
+		console.log('hide', instance);
+	}).on('save', (color, instance) => {
+		console.log('save', color.toHEXA().toString());
+		let color_text = color.toHEXA().toString();
+		var action = new MM.Action.SetColor(MM.App.current,  color_text || null);
+		MM.App.action(action);
+		window.format_border_color.hide()
+	})
 }
 
 //FontFamily
@@ -4570,7 +4590,7 @@ MM.UI.FontItalic.prototype.handleEvent = function (e) {
 
 // TextColor
 MM.UI.TextColor = function () {
-    window.color_pickr.on('init', instance => {
+    window.format_text_color.on('init', instance => {
         console.log('init', instance);
     }).on('hide', instance => {
         console.log('hide', instance);
@@ -4579,6 +4599,8 @@ MM.UI.TextColor = function () {
         let color_text = color.toHEXA().toString();
         var action = new MM.Action.SetTextColor(MM.App.current,  color_text || null);
         MM.App.action(action);
+		window.format_text_color.hide()
+
     })
 }
 MM.UI.TextColor.prototype.update = function () {
@@ -5888,17 +5910,17 @@ setInterval(function() {
 /*
  * Notes regarding app state/modes, activeElements, focusing etc.
  * ==============================================================
- * 
- * 1) There is always exactly one item selected. All executed commands 
+ *
+ * 1) There is always exactly one item selected. All executed commands
  *    operate on this item.
- * 
+ *
  * 2) The app distinguishes three modes with respect to focus:
- *   2a) One of the UI panes has focus (inputs, buttons, selects). 
+ *   2a) One of the UI panes has focus (inputs, buttons, selects).
  *       Keyboard shortcuts are disabled.
- *   2b) Current item is being edited. It is contentEditable and focused. 
+ *   2b) Current item is being edited. It is contentEditable and focused.
  *       Blurring ends the edit mode.
  *   2c) ELSE the Clipboard is focused (its invisible textarea)
- * 
+ *
  * In 2a, we try to lose focus as soon as possible
  * (after clicking, after changing select's value), switching to 2c.
  *
@@ -5911,7 +5933,7 @@ setInterval(function() {
  *       this calls MM.Command.Finish (3b).
  *   3b) By blurring the currentElement;
  *       this calls MM.Command.Finish (3b).
- * 
+ *
  */
 MM.App = {
 	keyboard: null,

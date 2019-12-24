@@ -493,8 +493,6 @@ var BoardSetting = (function () {
                     swal.close();
                 }
             });
-
-
     };
 
     return BoardSetting;

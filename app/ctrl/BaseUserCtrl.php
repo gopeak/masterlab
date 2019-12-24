@@ -120,7 +120,8 @@ class BaseUserCtrl extends BaseCtrl
                 $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
             }
             $this->addGVar('G_project', $project);
-
+            //print_r($project);
+            //print_r($this->projectPermArr);
             $userSettings = [];
             $userSettingModel = new UserSettingModel(UserAuth::getId());
             $dbUserSettings = $userSettingModel->getSetting(UserAuth::getId());

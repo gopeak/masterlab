@@ -3,8 +3,6 @@
 <head prefix="og: http://ogp.me/ns#">
     {% include 'twig/common/header/include.twig' %}
 
-
-
     <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
     <script src="/dev/lib/moment.js"></script>
@@ -127,7 +125,6 @@
                                                 <option value="issue_type">事项类型</option>
                                                 <option value="status">状态</option>
                                                 <option value="resolve">解决结果</option>
-                                                <option value="version">版本</option>
                                                 <option value="assignee">经办人</option>
                                             </select>
                                         </div>
@@ -139,7 +136,6 @@
                                                 <option value="issue_type">事项类型</option>
                                                 <option value="status">状态</option>
                                                 <option value="resolve">解决结果</option>
-                                                <option value="version">版本</option>
                                                 <option value="assignee">经办人</option>
                                             </select>
                                         </div>
@@ -169,13 +165,13 @@
                                 </div>
                                 <div class="js-center-tool">
                                     <div class="board-extra-actions">
-                                        <button class="btn btn-default" type="button" id="create_same" title="添加迭代">
+                                        <button class="btn btn-default" type="button" id="btn-create_same" title="新 增">
                                             <img  src="/dev/img/mind/same.png" />
                                         </button>
-                                        <button class="btn btn-default" type="button" id="create_same" title="添加子事项">
+                                        <button class="btn btn-default" type="button" id="btn-create_child" title="新增子项">
                                             <img  src="/dev/img/mind/child.png" />
                                         </button>
-                                        <button class="btn btn-default disabled" type="button" id="btn-remove" title="删除"  >
+                                        <button class="btn btn-default disabled" type="button" id="btn-delete" title="删除"  >
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
@@ -224,17 +220,7 @@
                                             <li class="flex-row">
                                                 <p>边框</p>
                                                 <div>
-                                                    <select class="selectpicker" id="format_border_color">
-                                                        <option  style="background: #999; "  value="#999">Inherit</option>
-                                                        <option  style="background: #000; "  value="#000">Black</option>
-                                                        <option  style="background: #e33; "  value="#e33">Red</option>
-                                                        <option  style="background: #3e3; "  value="#3e3">Green</option>
-                                                        <option  style="background: #33e; "  value="#33e">Blue</option>
-                                                        <option  style="background: #dd3; "  value="#3dd">Yellow</option>
-                                                        <option  style="background: #3dd; "  value="#3dd">Cyan</option>
-                                                        <option  style="background: #d3d; "  value="#d3d">Magenta</option>
-                                                        <option  style="background: #fa3; "  value="#fa3">Orange</option>
-                                                    </select>
+                                                    <a id="format_border_color" class=" btn btn-xs color-picker "  style="width:30px"   title="边框颜色" ></a>
                                                 </div>
                                             </li>
                                             <li class="hide">
@@ -285,7 +271,7 @@
                                                         <a id="format_font_bold" data-value="0" class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
                                                         <a id="format_font_italic"  data-value="0"   class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
                                                         <!--<input id="format_text_color" class="btn btn-xs"  style="width:30px" type="color" title="字体颜色" >-->
-                                                        <a id="format_text_color" class=" btn btn-xs color-picker"  style="width:30px"   title="字体颜色" ></a>
+                                                        <a id="format_text_color" class=" btn btn-xs color-picker "  style="width:30px"   title="字体颜色" ></a>
                                                     </div>
                                                     <div style="flex: 1; padding-left: 4px;">
                                                         <select id="format_font_size"  data-width="64px"  title="字号" class="selectpicker form-control">
@@ -328,7 +314,7 @@
                                                     </select>
                                                 </div>
                                             </li>
-                                            <li  class="">
+                                            <li  class="flex-row">
                                                 <p>事项类型</p>
                                                 <div>
                                                     <select id="format_issue_type" title="事项类型" class="selectpicker">
@@ -340,8 +326,8 @@
                                                     </select>
                                                 </div>
                                             </li>
-                                            <li class="">
-                                                <p>经办人</p>
+                                            <li class="flex-row">
+                                                <p>经 办 人&nbsp;&nbsp;</p>
                                                 <div>
                                                     <select id="format_issue_assignee" title="经办人" class="selectpicker">
                                                         {% for row in project_users %}
@@ -528,10 +514,10 @@
                                 <div id="menu">
                                     <button data-command="InsertChild"></button>
                                     <button data-command="InsertSibling"></button>
-                                    <button data-command="Delete"></button>
                                     <span></span>
                                     <button data-command="Edit"></button>
-                                    <button data-command="Value"></button>
+                                    <button data-command="Delete"></button>
+                                    <!--<button data-command="Value"></button>-->
                                     <span></span>
                                     <button data-command="Undo"></button>
                                     <button data-command="Redo"></button>
@@ -863,8 +849,12 @@
 
         if(mind_setting.default_source==='all'){
             $('#source_range').val('all');
+            $('#all-group_by-container').show();
+            $('#sprint-group_by-container').hide();
         }else{
             $('#source_range').val(mind_setting.default_source_id);
+            $('#all-group_by-container').hide();
+            $('#sprint-group_by-container').show();
         }
         $('.selectpicker').selectpicker();
         $("#source_range").change(function () {
@@ -872,11 +862,9 @@
             let range_type = $(this).val();
             if(range_type==='all'){
                 $('#all-group_by-container').show();
-                $('#filtered-container').show();
                 $('#sprint-group_by-container').hide();
             }else{
                 $('#all-group_by-container').hide();
-                $('#filtered-container').hide();
                 $('#sprint-group_by-container').show();
             }
             MM.App.io.fetchIssues();
@@ -903,10 +891,42 @@
             $(this).parents(".js-visual-token").remove()
         });
 
-
-        $('#btn-board_save').bind('click', function () {
-            //window.$board_setting.saveSetting();
+        $('#btn-create_same').bind('click', function () {
+            let command = 'InsertSibling'
+            let commandObj = MM.Command[command];
+            if (!commandObj.isValid()) { return; }
+            commandObj.execute();
         });
+        $('#btn-create_child').bind('click', function () {
+            let command = 'InsertChild'
+            let commandObj = MM.Command[command];
+            if (!commandObj.isValid()) { return; }
+            commandObj.execute();
+        });
+        $('#btn-delete').bind('click', function () {
+            swal({
+                    title: "您确认要删除吗？",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确 定",
+                    cancelButtonText: "取 消！",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        swal.close();
+                        let command = 'Delete'
+                        let commandObj = MM.Command[command];
+                        if (!commandObj.isValid()) { return; }
+                        commandObj.execute();
+                    } else {
+                        swal.close();
+                    }
+            });
+        });
+
         $('#btn-setting').bind('click', function () {
             window.$mindAjax.fetchSettings();
         });
@@ -941,9 +961,13 @@
             ])
         });
 
-        window.color_pickr = Pickr.create({
-            el: '.color-picker',
-            theme: 'classic', // or 'monolith', or 'nano'
+        window.format_text_color = Pickr.create({
+            el: '#format_text_color',
+            theme: 'classic', // or 'monolith', or 'nano',
+            strings: {
+                save: '使用',  // Default for save button
+                clear: '取消' // Default for cancel button
+            },
             swatches: [
                 'rgba(244, 67, 54, 1)',
                 'rgba(233, 30, 99, 0.95)',
@@ -968,12 +992,47 @@
                 // Input / output Options
                 interaction: {
                     input: true,
-                    clear: true,
                     save: true
                 }
             }
         });
 
+        // format_border_color
+        window.format_border_color = Pickr.create({
+            el: '#format_border_color',
+            theme: 'classic', // or 'monolith', or 'nano',
+            strings: {
+                save: '使用',  // Default for save button
+                clear: '取消' // Default for cancel button
+            },
+            swatches: [
+                'rgba(244, 67, 54, 1)',
+                'rgba(233, 30, 99, 0.95)',
+                'rgba(156, 39, 176, 0.9)',
+                'rgba(103, 58, 183, 0.85)',
+                'rgba(63, 81, 181, 0.8)',
+                'rgba(33, 150, 243, 0.75)',
+                'rgba(3, 169, 244, 0.7)',
+                'rgba(0, 188, 212, 0.7)',
+                'rgba(0, 150, 136, 0.75)',
+                'rgba(76, 175, 80, 0.8)',
+                'rgba(139, 195, 74, 0.85)',
+                'rgba(205, 220, 57, 0.9)',
+                'rgba(255, 235, 59, 0.95)',
+                'rgba(255, 193, 7, 1)'
+            ],
+            components: {
+                // Main components
+                preview: true,
+                opacity: true,
+                hue: true,
+                // Input / output Options
+                interaction: {
+                    input: true,
+                    save: true
+                }
+            }
+        });
 
     });
     var _curFineAttachmentUploader = null;
