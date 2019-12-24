@@ -44,10 +44,8 @@
         window.project_uploads_path = "";
         window.preview_markdown_path = "";
     </script>
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{ _version }}"
-            type="text/javascript"></script>
+
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{ _version }}" type="text/javascript"></script>
     <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
 
     <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
@@ -68,6 +66,9 @@
     <!-- Modern or es5 bundle -->
     <script src="/dev/lib/pickr/dist/pickr.min.js"></script>
     <script src="/dev/lib/pickr/dist/pickr.es5.min.js"></script>
+
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
 
 </head>
@@ -195,7 +196,7 @@
                                             <li class="flex-row">
                                                 <p>布局</p>
                                                 <div>
-                                                    <select class="selectpicker" id="layout">
+                                                    <select class="selectpicker" id="layout" name="layout">
                                                         <option value="">继承</option>
                                                         <option data-content="<img src='/dev/img/mind/layout_graph_bottom.png' style='width: 24px; height: 24px;' /> graph-bottom" value="graph-bottom"></option>
                                                         <option data-content="<img src='/dev/img/mind/layout_graph_left.png' style='width: 24px; height: 24px;' /> graph-left" value="graph-left"></option>
@@ -210,7 +211,7 @@
                                             <li class="flex-row">
                                                 <p>形状</p>
                                                 <div>
-                                                    <select class="selectpicker" id="shape">
+                                                    <select class="selectpicker" id="format_shape" name="format_shape">
                                                         <option data-content="<img src='/dev/img/mind/shape_box.png' style='width: 32px; height: 24px;' /> 矩 形" value="box"></option>
                                                         <option data-content="<img src='/dev/img/mind/shape_ellipse.png' style='width: 32px; height: 24px;' /> 椭 圆" value="ellipse"></option>
                                                         <option data-content="<img src='/dev/img/mind/shape_underline.png' style='width: 32px; height: 24px;' /> 下划线" value="underline"></option>

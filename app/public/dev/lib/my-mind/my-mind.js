@@ -564,15 +564,50 @@ MM.Item.prototype.clone = function () {
 	return this.constructor.fromJSON(data);
 }
 
+MM.Item.prototype.syncRenderRightPanel = function () {
+    // 格式渲染
+    if(this._id.search('project_')===-1){
+
+		if(this._text_color){
+			window.format_text_color.setColor(this._text_color);
+		}else{
+            window.format_text_color.setColor('#000000');
+		}
+		if(this._color){
+			window.format_border_color.setColor(this._color);
+		}else{
+            window.format_border_color.setColor('#EE3333');
+		}
+		// 事项
+        $('#btn-delete').removeClass('disabled');
+        let issue_id = null;
+        if(this._id.search('issue_')>=0){
+            $('#format_issue_type').val(this._icon);
+            $('#format_issue_assignee').val(this._issue_assignee);
+            $('#format_issue_priority label').removeClass('active');
+            $("#format_issue_priority label[data-value='"+this._issue_priority+"']").addClass('active');
+            $('#format_issue_status label').removeClass('active');
+            $("#format_issue_status label[data-status_value='"+this._issue_status+"']").addClass('active');
+			// progress
+            $("#format_issue_progress img").removeClass('img-thumbnail');
+            let active_img = $("#format_issue_progress img[src='/dev/img/mind/"+this.getProgressImgName(this._issue_progress)+"']");
+            active_img.addClass('img-thumbnail');
+        }
+
+    }else{
+
+    }
+    $('#format_shape').val(this._shape.id);
+    $('#layout').val(this._layout.id);
+    $('.selectpicker').selectpicker('refresh');
+}
+
 MM.Item.prototype.select = function () {
 	this._dom.node.classList.add("current");
 	this.getMap().ensureItemVisibility(this);
 	MM.Clipboard.focus(); /* going to mode 2c */
 	MM.publish("item-select", this);
-	if(!this.isRoot()){
-		$('#btn-delete').removeClass('disabled');
-	}
-
+	this.syncRenderRightPanel();
 }
 
 MM.Item.prototype.deselect = function () {
@@ -596,6 +631,11 @@ MM.Item.prototype.update = function (doNotRecurse) {
 			this._shape.set(this);
 		}
 	}
+
+    this.getLayout().update(this);
+    this.getShape().update(this);
+    if(this.isRoot()){
+    }
 
 	this._updateStatus();
 	this._updateIcon();
@@ -627,8 +667,6 @@ MM.Item.prototype.update = function (doNotRecurse) {
 
 	this._dom.node.classList[this._collapsed ? "add" : "remove"]("collapsed");
 
-	this.getLayout().update(this);
-	this.getShape().update(this);
 	if (!this.isRoot() && !doNotRecurse) { this._parent.update(); }
 
 	return this;
@@ -1091,7 +1129,7 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
     var issue_assignee_id = this._issue_assignee;
     if (issue_assignee_id) {
         var user_row = window._issueConfig.users[issue_assignee_id];
-         console.log(user_row);
+        // console.log(user_row);
         if(user_row) {
             this._dom.issue_assignee_img.src = user_row.avatar;
         }
@@ -1121,15 +1159,12 @@ MM.Item.prototype._updateProjectImg = function () {
 	}
 }
 
-MM.Item.prototype._updateIssueProgressImg = function () {
-    this._dom.issue_progress_img.className = "img-circle";
-    this._dom.issue_progress_img.style.display = "";
-    let issue_progress = this._issue_progress;
-    if (issue_progress) {
+MM.Item.prototype.getProgressImgName = function (issue_progress) {
+
         let progress_img_name = '';
-    	if(issue_progress<=0){
+        if(issue_progress<=0){
             progress_img_name = 'progress_start.png';
-		}
+        }
         if(issue_progress>0 && issue_progress<=10){
             progress_img_name = 'progress_1.png';
         }
@@ -1154,8 +1189,15 @@ MM.Item.prototype._updateIssueProgressImg = function () {
         if(issue_progress>=100){
             progress_img_name = 'progress_done.png';
         }
+ 		return progress_img_name;
+}
 
-    	this._dom.issue_progress_img.src = '/dev/img/mind/'+progress_img_name;
+MM.Item.prototype._updateIssueProgressImg = function () {
+    this._dom.issue_progress_img.className = "img-circle";
+    this._dom.issue_progress_img.style.display = "";
+    let issue_progress = this._issue_progress;
+    if (issue_progress) {
+    	this._dom.issue_progress_img.src = '/dev/img/mind/'+this.getProgressImgName(issue_progress);
         this._dom.issue_progress_img.title = '事项的进度';
         this._dom.issue_progress_img.style.width = "18px";
         this._dom.issue_progress_img.style.height = "18px";
@@ -4384,7 +4426,7 @@ MM.UI.Layout = function () {
 	this._select = document.querySelector("#layout");
 
 	this._select.appendChild(MM.Layout.Map.buildOption());
-
+/*
 	var label = this._buildGroup("Graph");
 	label.appendChild(MM.Layout.Graph.Right.buildOption());
 	label.appendChild(MM.Layout.Graph.Left.buildOption());
@@ -4394,7 +4436,7 @@ MM.UI.Layout = function () {
 	var label = this._buildGroup("Tree");
 	label.appendChild(MM.Layout.Tree.Right.buildOption());
 	label.appendChild(MM.Layout.Tree.Left.buildOption());
-
+*/
 	this._select.addEventListener("change", this);
 }
 
@@ -4426,12 +4468,12 @@ MM.UI.Layout.prototype._buildGroup = function (label) {
 	return node;
 }
 MM.UI.Shape = function () {
-	this._select = document.querySelector("#shape");
-
+	this._select = document.querySelector("#format_shape");
+	/*
 	this._select.appendChild(MM.Shape.Box.buildOption());
 	this._select.appendChild(MM.Shape.Ellipse.buildOption());
 	this._select.appendChild(MM.Shape.Underline.buildOption());
-
+	*/
 	this._select.addEventListener("change", this);
 }
 
@@ -4509,11 +4551,11 @@ MM.UI.Color.prototype.handleEvent = function (e) {
 // BorderColor
 MM.UI.BorderColor = function () {
 	window.format_border_color.on('init', instance => {
-		console.log('init', instance);
+		//console.log('init', instance);
 	}).on('hide', instance => {
-		console.log('hide', instance);
+		//console.log('hide', instance);
 	}).on('save', (color, instance) => {
-		console.log('save', color.toHEXA().toString());
+		//console.log('save', color.toHEXA().toString());
 		let color_text = color.toHEXA().toString();
 		var action = new MM.Action.SetColor(MM.App.current,  color_text || null);
 		MM.App.action(action);
@@ -4591,11 +4633,11 @@ MM.UI.FontItalic.prototype.handleEvent = function (e) {
 // TextColor
 MM.UI.TextColor = function () {
     window.format_text_color.on('init', instance => {
-        console.log('init', instance);
+        //console.log('init', instance);
     }).on('hide', instance => {
-        console.log('hide', instance);
+        //console.log('hide', instance);
     }).on('save', (color, instance) => {
-        console.log('save', color.toHEXA().toString());
+        //console.log('save', color.toHEXA().toString());
         let color_text = color.toHEXA().toString();
         var action = new MM.Action.SetTextColor(MM.App.current,  color_text || null);
         MM.App.action(action);
@@ -4875,7 +4917,7 @@ MM.UI.IO.prototype.fetchIssues = function () {
             $('.mind-create').bind('click',function(){
                 $('#modal-create-issue').modal('show')
             });
-		},
+        },
 		error: function (res) {
 			notify_error("请求数据错误" + res);
 		}
