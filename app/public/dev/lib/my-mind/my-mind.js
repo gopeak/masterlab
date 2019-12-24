@@ -616,6 +616,9 @@ MM.Item.prototype.update = function (doNotRecurse) {
     if (this._font_family ) {
         this._dom.text.style.fontFamily = this._font_family;
     }
+    if (this._text_color ) {
+        this._dom.text.style.color = this._text_color;
+    }
 
 	this._dom.node.classList[this._collapsed ? "add" : "remove"]("collapsed");
 
@@ -1786,9 +1789,9 @@ MM.Action.SetFontItalic.prototype.undo = function () {
     this._item.setFontItalic(this._oldFontitalic);
 }
 
-MM.Action.SetTextColor = function (item, assignee) {
+MM.Action.SetTextColor = function (item, value) {
     this._item = item;
-    this._text_color = assignee;
+    this._text_color = value;
     this._oldtextColor = item.getTextColor();
 }
 MM.Action.SetTextColor.prototype = Object.create(MM.Action.prototype);
@@ -4290,6 +4293,7 @@ MM.UI = function () {
 	this._font_bold = new MM.UI.FontBold();
     this._font_size = new MM.UI.FontSize();
     this._font_italic = new MM.UI.FontItalic();
+    this._text_color = new MM.UI.TextColor();
 
 	MM.subscribe("item-select", this);
 	MM.subscribe("item-change", this);
@@ -4563,6 +4567,24 @@ MM.UI.FontItalic.prototype.handleEvent = function (e) {
     var action = new MM.Action.SetFontItalic(MM.App.current, font_value===0);
     MM.App.action(action);
 }
+
+// TextColor
+MM.UI.TextColor = function () {
+    window.color_pickr.on('init', instance => {
+        console.log('init', instance);
+    }).on('hide', instance => {
+        console.log('hide', instance);
+    }).on('save', (color, instance) => {
+        console.log('save', color.toHEXA().toString());
+        let color_text = color.toHEXA().toString();
+        var action = new MM.Action.SetTextColor(MM.App.current,  color_text || null);
+        MM.App.action(action);
+    })
+}
+MM.UI.TextColor.prototype.update = function () {
+    this.value = MM.App.current.getTextColor() || "";
+}
+
 
 MM.UI.Icon = function () {
 	this._select = document.querySelector("#icons");

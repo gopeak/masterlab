@@ -1,0 +1,54 @@
+{
+    "name": "@simonwep/pickr",
+    "version": "1.4.8",
+    "license": "MIT",
+    "author": "Simon Reinisch <trash@reinisch.io>",
+    "description": "Flat, Simple, Hackable Color-Picker.",
+    "keywords": [
+        "ux",
+        "color",
+        "color-picker"
+    ],
+    "main": "./dist/pickr.min.js",
+    "typings": "./types/pickr.d.ts",
+    "scripts": {
+        "build": "node ./scripts/build.js",
+        "dev": "webpack-dev-server --mode development",
+        "lint": "eslint ./src --fix",
+        "test:ts": "tsc --target ES6 --noImplicitAny --noEmit spec/ts/index.ts"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.7.5",
+        "@babel/plugin-proposal-class-properties": "^7.7.4",
+        "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+        "@babel/preset-env": "^7.7.6",
+        "autoprefixer": "^9.7.3",
+        "babel-eslint": "^10.0.3",
+        "babel-loader": "^8.0.6",
+        "css-loader": "^3.3.2",
+        "eslint": "^6.7.2",
+        "eslint-loader": "^3.0.3",
+        "mini-css-extract-plugin": "^0.8.0",
+        "node-sass": "^4.13.0",
+        "optimize-css-assets-webpack-plugin": "^5.0.3",
+        "postcss-loader": "^3.0.0",
+        "sass-loader": "^8.0.0",
+        "typescript": "^3.7.3",
+        "webpack": "^4.41.3",
+        "webpack-cleanup-plugin": "^0.5.1",
+        "webpack-cli": "^3.3.10",
+        "webpack-dev-server": "^3.9.0",
+        "webpack-fix-style-only-entries": "^0.4.0"
+    },
+    "homepage": "https://github.com/Simonwep/pickr#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Simonwep/pickr.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Simonwep/pickr/issues"
+    },
+    "dependencies": {
+        "core-js": "^3.5.0"
+    }
+}
