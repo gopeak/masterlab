@@ -362,7 +362,7 @@ MM.Item = function () {
 	this._dom.text.classList.add("text");
 	this._dom.toggle.classList.add("toggle");
 	this._dom.children.classList.add("children");
-	this._dom.create.classList.add("mind-create");
+	this._dom.create.classList.add("mind-edit");
 	this._dom.create.classList.add("fa");
 	this._dom.create.classList.add("fa-pencil");
 
@@ -597,8 +597,12 @@ MM.Item.prototype.syncRenderRightPanel = function () {
     }else{
 
     }
-    $('#format_shape').val(this._shape.id);
-    $('#layout').val(this._layout.id);
+    if(this._shape.id){
+		$('#format_shape').val(this._shape.id);
+	}
+	if(this._layout.id){
+		$('#layout').val(this._layout.id);
+	}
     $('.selectpicker').selectpicker('refresh');
 }
 
@@ -4914,7 +4918,7 @@ MM.UI.IO.prototype.fetchIssues = function () {
 			}
 
 			MM.UI.Backend._loadDone.call(this, json);
-            $('.mind-create').bind('click',function(){
+            $('.mind-edit').bind('click',function(){
                 $('#modal-create-issue').modal('show')
             });
         },

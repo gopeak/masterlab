@@ -819,6 +819,7 @@
         "project_sprints":{{ sprints|json_encode()|raw }},
         "projects":{{ projects|json_encode()|raw }}
     };
+    var _project_issue_types =  {{project_issue_types|json_encode()|raw}};
     var mind_setting = {{ mind_setting|json_encode()|raw }};
     var _issue_id = null;
     var _cur_project_id = '{{ project_id }}';
@@ -951,6 +952,10 @@
         });
 
         $("#modal-create-issue").on('show.bs.modal', function (e) {
+            window.$mindAjax.initIssueType(window._project_issue_types);
+            window.$mindAjax.initPriority(window._issueConfig.priority);
+            window.$mindAjax.initStatus(window._issueConfig.issue_status);
+
             keyMaster.addKeys([
                 {
                     key: ['command+enter', 'ctrl+enter'],
