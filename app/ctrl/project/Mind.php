@@ -275,7 +275,7 @@ class Mind extends BaseUserCtrl
         $updateInfo = [];
         foreach (ProjectMind::$initSettingArr as $key => $item) {
             if (isset($_POST[$key])) {
-                $updateInfo[$key] = $item;
+                $updateInfo[$key] = $_POST[$key];
             }
         }
         if (!empty($updateInfo)) {

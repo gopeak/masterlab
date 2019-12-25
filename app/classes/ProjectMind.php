@@ -312,7 +312,7 @@ class ProjectMind
             $model = new IssueTypeModel();
             $issueTypes = $model->getAllItem(false);
             foreach ($issueTypes as $issueType) {
-                $groupById = $issueType['_key'];
+                $groupById = $issueType['id'];
                 $text = $issueType['name'];
                 $format = $this->getFormatByGroupId($formats, $groupById);
                 $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
@@ -323,7 +323,7 @@ class ProjectMind
             $model = new IssuePriorityModel();
             $issuePriorityArr = $model->getAllItem(false);
             foreach ($issuePriorityArr as $priority) {
-                $groupById = $priority['_key'];
+                $groupById = $priority['id'];
                 $text = $priority['name'];
                 $format = $this->getFormatByGroupId($formats, $groupById);
                 $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
@@ -334,7 +334,7 @@ class ProjectMind
             $model = new IssueStatusModel();
             $issueStatusArr = $model->getAllItem(false);
             foreach ($issueStatusArr as $issueStatus) {
-                $groupById = $issueStatus['_key'];
+                $groupById = $issueStatus['id'];
                 $text = $issueStatus['name'];
                 $format = $this->getFormatByGroupId($formats, $groupById);
                 $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
@@ -345,19 +345,8 @@ class ProjectMind
             $model = new IssueResolveModel();
             $issueResolveArr = $model->getAllItem(false);
             foreach ($issueResolveArr as $issueResolve) {
-                $groupById = $issueResolve['_key'];
+                $groupById = $issueResolve['id'];
                 $text = $issueResolve['name'];
-                $format = $this->getFormatByGroupId($formats, $groupById);
-                $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
-                $secondArr[] = $item;
-            }
-        }
-        if ($groupByField == 'version') {
-            $model = new ProjectVersionModel();
-            $versionArr = $model->getByProject($projectId);
-            foreach ($versionArr as $version) {
-                $groupById = $version['id'];
-                $text = $issueResolve['title'];
                 $format = $this->getFormatByGroupId($formats, $groupById);
                 $item = $itemFormatDnc($groupByField, $groupById, $text, $format);
                 $secondArr[] = $item;
@@ -414,7 +403,7 @@ class ProjectMind
         $issues = $issueModel->db->getRows($sql);
         //print_r($issues);
         $finalArr = $this->getSecondArr($projectId, $groupByField);
-        //print_r($finalArr);
+        // print_r($finalArr);
         $formats = $this->getIssueFormats($projectId, $source, $groupByField);
         $itemFormatDnc = function ($issueId, $text, $format) {
             if (empty($format)) {

@@ -138,6 +138,32 @@ let MindAjax = (function () {
         });
     };
 
+    MindAjax.prototype.saveSettings = function () {
+        loading.show('#setting-modal-body', '正在执行');
+        var params = {format: 'json'};
+        var project_id = window._cur_project_id;
+        if($('#checkbox-is_display_label').prop("checked")){
+            $('#is_display_label').val('1');
+        }else{
+            $('#is_display_label').val('0');
+        }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: '/project/mind/saveSetting/?project_id=' + project_id,
+            data: $('#form_mind_setting').serialize(),
+            success: function (resp) {
+                auth_check(resp);
+                loading.closeAll();
+                notify_success('操作成功');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
     MindAjax.prototype.delete = function (issue_id) {
         $.ajax({
             type: 'post',

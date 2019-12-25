@@ -131,7 +131,6 @@
                                         </div>
                                         <div id="sprint-group_by-container" class="dropdown inline prepend-right-10 " style="margin-left: 5px;display: none" >
                                             <select id="sprint-group_by" name="sprint-group_by"  class="selectpicker">
-                                                <option value="issue">事项</option>
                                                 <option value="module">模块</option>
                                                 <option value="priority">优先级</option>
                                                 <option value="issue_type">事项类型</option>
@@ -546,7 +545,7 @@
                 </div>
                 <div id="setting-modal-body" class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="params[project_id]" id="setting_project_id" value="{{project_id}}">
+                    <input type="hidden" name="project_id" id="setting_project_id" value="{{project_id}}">
 
                     <div class="form-group">
                         <label class="control-label"  >默认数据源：</label>
@@ -587,7 +586,8 @@
                         <div class="col-sm-10">
                             <div class="form-group col-md-6">
                                 <label class="radio-inline">
-                                <input type="checkbox" name="is_display_label" id="is_display_label" value="1">
+                                    <input type="hidden" name="is_display_label" id="is_display_label" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_label" id="checkbox-is_display_label" value="1">
                                 </label>
                             </div>
                             <div class="col-md-4">
@@ -931,6 +931,9 @@
         $('#btn-setting').bind('click', function () {
             window.$mindAjax.fetchSettings();
         });
+        $('#btn-setting-save').bind('click', function () {
+            window.$mindAjax.saveSettings();
+        });
 
         $(".laydate_input_date").each(function (i) {
             var id = $(this).attr('id');
@@ -940,7 +943,7 @@
             });
         });
         $('#btn-add').bind('click',function(){
-            if($('#action').val()=='update'){
+            if($('#action').val()==='update'){
                 window.$mindAjax.updateSyncServerTask();
             }else{
                 window.$mindAjax.addSyncServerTask();

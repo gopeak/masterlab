@@ -74,8 +74,7 @@ class ProjectMindSettingModel extends CacheModel
      */
     public function replaceByProjectId($updateInfo, $projectId)
     {
-        $where = ['project_id' => $projectId];
-        $flag = $this->update($updateInfo, $where);
+        $flag = $this->replace($updateInfo);
         return $flag;
     }
     /**
