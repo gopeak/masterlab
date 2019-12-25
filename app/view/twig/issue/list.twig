@@ -18,8 +18,8 @@
 
 		<script>
 			window.description_templates = {{ description_templates|json_encode()|raw }};
-window.project_uploads_path = "/issue/main/upload?project_id=  {{ project_id }}";
-window.preview_markdown_path = "/issue/main/preview_markdown";
+            window.project_uploads_path = "/issue/main/upload?project_id=  {{ project_id }}";
+            window.preview_markdown_path = "/issue/main/preview_markdown";
 		</script>
 
 		<script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
@@ -30,8 +30,7 @@ window.preview_markdown_path = "/issue/main/preview_markdown";
 		<link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
 		<script src="/dev/lib/simplemde/dist/simplemde.min.js"></script>
-		<link
-		rel="stylesheet" href="/dev/lib/simplemde/dist/simplemde.min.css">
+		<link rel="stylesheet" href="/dev/lib/simplemde/dist/simplemde.min.css">
 
 		<!-- Fine Uploader jQuery JS file-->
 		<link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
@@ -2018,17 +2017,17 @@ window.preview_markdown_path = "/issue/main/preview_markdown";
 
             <script type="text/tpl" id="custom-filter-tpl">
 
-						{% for f in favFilters %}
+			 {% for f in favFilters %}
                 {% set active = '' %}
                 {% set class = '' %}
                 {% if (f['id'] == active_id) %}
-                {% set active = ' <i class="fa fa-check"></i>' %}
-                {% set class = 'label deploy-project-label' %}
+                    {% set active = ' <i class="fa fa-check"></i>' %}
+                    {% set class = 'label deploy-project-label' %}
                 {% endif %}
-							<a class=" {{ class }} " id="fav_filter-{{ f['id'] }}" href="/issue/main?fav_filter={{ f['id'] }}">
-								{{ f['name'] }}{{ active }}
-							</a><br>
-						{% endfor %}
+                    <a class=" {{ class }} " id="fav_filter-{{ f['id'] }}" href="/issue/main?fav_filter={{ f['id'] }}">
+                        {{ f['name'] }}{{ active }}
+                    </a><br>
+			 {% endfor %}
 
             </script>
 

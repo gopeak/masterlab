@@ -799,11 +799,58 @@
         </div>
     </form>
 </div>
+
+{% include 'twig/issue/form.twig' %}
+{% verbatim %}
+<script type="text/html" id="wrap_field">
+    <div class=" form-group">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
+        <div class="col-sm-8">{field_html}</div>
+        <div class="col-sm-1"></div>
+    </div>
+</script>
+
+<script type="text/html" id="li_tab_tpl">
+    <div role="tabpanel" class="tab-pane" id="{{id}}">
+        <div id="{{type}}_ui_config_{{id}}" style="min-height: 200px">
+
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="nav_tab_li_tpl">
+    <li role="presentation" class="active">
+        <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
+            <span id="span_{{id}}">{{title}}&nbsp;</span>
+        </a>
+    </li>
+</script>
+
+<script type="text/html" id="content_tab_tpl">
+    <div role="tabpanel" class="tab-pane " id="{{id}}">
+        <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
+
+        </div>
+    </div>
+</script>
+{% endverbatim %}
+
+<script>
+    new UsersSelect();
+    new LabelsSelect();
+    new MilestoneSelect();
+    new IssueStatusSelect();
+
+</script>
+
 <script src="/dev/js/handlebars.helper.js?v={{ _version }}"></script>
 
 <script type="text/javascript">
 
     var _simplemde = {};
+    var _fineUploaderFile = {};
+    var _fineUploader = null;
 
     var _issueConfig = {
         "priority":{{ priority|json_encode()|raw }},
@@ -905,6 +952,9 @@
             if (!commandObj.isValid()) { return; }
             commandObj.execute();
         });
+        $('#btn-update').bind('click', function () {
+            window.$mindAjax.updateModalFormIssue();
+        });
         $('#btn-delete').bind('click', function () {
             swal({
                     title: "您确认要删除吗？",
@@ -949,25 +999,6 @@
             }else{
                 window.$mindAjax.addSyncServerTask();
             }
-        });
-
-        $("#modal-create-issue").on('show.bs.modal', function (e) {
-            window.$mindAjax.initIssueType(window._project_issue_types);
-            window.$mindAjax.initPriority(window._issueConfig.priority);
-            window.$mindAjax.initStatus(window._issueConfig.issue_status);
-
-            keyMaster.addKeys([
-                {
-                    key: ['command+enter', 'ctrl+enter'],
-                    'trigger-element': '#modal-create-issue .btn-save',
-                    trigger: 'click'
-                },
-                {
-                    key: 'esc',
-                    'trigger-element': '#modal-create-issue .close',
-                    trigger: 'click'
-                }
-            ])
         });
 
         window.format_text_color = Pickr.create({
@@ -1040,6 +1071,30 @@
                     input: true,
                     save: true
                 }
+            }
+        });
+
+        _fineUploader = new qq.FineUploader({
+            element: document.getElementById('issue_right_attachments_uploder'),
+            template: 'qq-template-gallery',
+            multiple: true,
+            paste: {
+                promptForName: true,
+                namePromptMessage: "Please name this image"
+            },
+            request: {
+                endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
+            },
+            placeholders: {
+                thumbnailNotAvailable: "/all/aa.png"
+            },
+            deleteFile: {
+                enabled: true,
+                forceConfirm: true,
+                endpoint: "/issue/main/upload_delete/"+_cur_project_id
+            },
+            validation: {
+                allowedExtensions: ['mp3','aac','wma','avi','rm','rmvb','flv','mpg','mov','mkv','mp4','jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
             }
         });
 

@@ -362,7 +362,7 @@ MM.Item = function () {
 	this._dom.text.classList.add("text");
 	this._dom.toggle.classList.add("toggle");
 	this._dom.children.classList.add("children");
-	this._dom.create.classList.add("mind-edit");
+	this._dom.create.classList.add("mind-create");
 	this._dom.create.classList.add("fa");
 	this._dom.create.classList.add("fa-pencil");
 
@@ -672,7 +672,8 @@ MM.Item.prototype.update = function (doNotRecurse) {
 	this._dom.node.classList[this._collapsed ? "add" : "remove"]("collapsed");
 
 	if (!this.isRoot() && !doNotRecurse) { this._parent.update(); }
-
+    this._dom.create.setAttribute("data-id", this._id);
+	this._dom.text.setAttribute('id', this._id+'_text');
 	return this;
 }
 
@@ -4887,7 +4888,7 @@ MM.UI.IO.prototype.fetchIssues = function () {
 	/* just URL means webdav backend */
 	if ("url" in parts && !("b" in parts)) { parts.b = "webdav"; }
 
-	console.log(parts.url);
+	//console.log(parts.url);
 
 	let source_type = $("#source_range").val();
 	let group_by = '';
@@ -4906,20 +4907,21 @@ MM.UI.IO.prototype.fetchIssues = function () {
 		url: '/project/mind/fetchMindIssues/' + project_id,
 		data: params,
 		success: function (data) {
-
 			MM.App.setThrobber(true);
-
 			var map = MM.App.map;
-
 			try {
 				var json = MM.Format.JSON.from(data);
 			} catch (e) {
 				this._error(e);
 			}
-
 			MM.UI.Backend._loadDone.call(this, json);
-            $('.mind-edit').bind('click',function(){
-                $('#modal-create-issue').modal('show')
+            $('.mind-create').bind('click',function(){
+            	let item_id = $(this).data('id');
+                let issue_id = null;
+                if(item_id.search('issue_')>=0){
+                    issue_id = item_id.replace('issue_','');
+                    IssueMain.prototype.fetchEditUiConfig(issue_id, 'update');
+                }
             });
         },
 		error: function (res) {

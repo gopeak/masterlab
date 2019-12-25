@@ -1230,7 +1230,6 @@ class Main extends BaseUserCtrl
         if (!empty($err)) {
             $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
-
         $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
         if (!$updatePerm) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');

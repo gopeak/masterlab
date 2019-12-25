@@ -113,6 +113,7 @@ class BaseUserCtrl extends BaseCtrl
                 $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $projectId, $haveAdminPerm);
             }
             $project = [];
+            // print_r($this->projectPermArr);
             if ($projectId) {
                 $projModel = new ProjectModel();
                 $project = $projModel->getById($projectId);

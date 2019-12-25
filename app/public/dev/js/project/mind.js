@@ -149,6 +149,73 @@ let MindAjax = (function () {
         });
     };
 
+    MindAjax.prototype.updateModalFormIssue  = function () {
+        // 置灰提交按钮
+        var submitBtn = $("#btn-update");
+        submitBtn.addClass('disabled');
+
+        for (k in _simplemde) {
+            if (typeof (_simplemde[k]) == 'object') {
+                $('#' + k).val(_simplemde[k].value());
+            }
+        }
+
+        for (k in window._fineUploader) {
+            if (typeof (_fineUploader[k]) == 'object') {
+                var uploads = _fineUploader[k].getUploads({
+                    status: qq.status.UPLOAD_SUCCESSFUL
+                });
+                var id = k.replace('_uploader', '');
+                $('#' + id).val(JSON.stringify(uploads));
+            }
+        }
+        for (k in window._fineUploaderFile) {
+            if (typeof (_fineUploaderFile[k]) == 'object') {
+                var uploads = _fineUploaderFile[k].getUploads({
+                    status: qq.status.UPLOAD_SUCCESSFUL
+                });
+                var id = k.replace('_uploader', '');
+                $('#' + id).val(JSON.stringify(uploads));
+            }
+        }
+
+        var form_value_objs = $('#edit_issue').serializeObject();
+        var method = 'post';
+        var post_data = $('#edit_issue').serialize();
+        loading.show('.issue-modal-content', '正在请求服务器执行更新')
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/update",
+            data: post_data,
+            success: function (resp) {
+                loading.closeAll();
+                auth_check(resp);
+                if (!form_check(resp)) {
+                    submitBtn.removeClass('disabled');
+                    return;
+                }
+                if (resp.ret === '200') {
+                    notify_success('保存成功');
+                    $('#modal-edit-issue').modal('hide');
+                    let issue_id = $('#edit_issue_id').val();
+                    $('#issue_'+issue_id+'_text').html($('#edit_issue_text_summary').val());
+                } else {
+                    notify_error('保存失败,错误信息:' + resp.msg);
+                    submitBtn.removeClass('disabled');
+                }
+
+
+            },
+            error: function (res) {
+                loading.closeAll();
+                notify_error("请求数据错误" + res);
+                submitBtn.removeClass('disabled');
+            }
+        });
+    }
+
     MindAjax.prototype.fetchSettings = function () {
         loading.show('#setting-modal-body', '正在加载数据');
         var params = {format: 'json'};

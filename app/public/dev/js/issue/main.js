@@ -1287,7 +1287,7 @@ var IssueMain = (function () {
 
         for (k in window._fineUploaderFile) {
             //$('#'+k).reset();
-            console.log($('#' + k));
+            // console.log($('#' + k));
             $('#' + k).empty();
             window._fineUploaderFile[k] = null;
         }
@@ -1449,7 +1449,7 @@ var IssueMain = (function () {
                     var field_name = k.replace('edit_issue_upload_file_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
-                    console.log(edit_attachment_data);
+                    // console.log(edit_attachment_data);
                     if (typeof (edit_attachment_data) != 'undefined') {
                         _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
                     }
@@ -1476,6 +1476,8 @@ var IssueMain = (function () {
 
         var method = 'get';
         var type = 'edit';
+        $('#modal-edit-issue').modal();
+        loading.show('.issue-modal-content', '加载中')
         $.ajax({
             type: method,
             dataType: "json",
@@ -1483,6 +1485,7 @@ var IssueMain = (function () {
             url: root_url + "issue/main/fetch_issue_edit" + add_arg,
             data: { issue_id: issue_id },
             success: function (resp) {
+                loading.closeAll();
                 auth_check(resp);
                 _fields = resp.data.fields;
                 _create_configs = resp.data.configs;
@@ -1528,7 +1531,6 @@ var IssueMain = (function () {
                         $('#edit_tabs').hide();
                     }
 
-                    $('#modal-edit-issue').modal();
 
                     IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
                     IssueMain.prototype.initEditFineUploader(_edit_issue);

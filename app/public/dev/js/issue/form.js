@@ -792,7 +792,7 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_" + name
         };
-        console.log(data);
+        // console.log(data);
         var source = $('#priority_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -872,7 +872,7 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_" + name
         };
-        console.log(data);
+        // console.log(data);
         var source = $('#status_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -949,7 +949,7 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_" + name
         };
-        console.log(data);
+        //console.log(data);
         var source = $('#resolve_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
