@@ -742,3 +742,79 @@ header.navbar-gitlab {
 .issue-form .select2-container .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
 	width: 100% !important;
 }
+
+.layout-nav .nav-links li a {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.layout-nav .nav-links li a > i,
+.layout-nav .nav-links li a > img {
+	margin-right: 4px;
+}
+
+.has-sidebar .gantt-content {
+	padding: 8px !important;
+}
+
+.mind-wrap .bootstrap-select:not(.select-default) .dropdown-toggle{
+	line-height: 18px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.mind-wrap .bootstrap-select:not(.select-default) {
+	background: transparent;
+}
+
+.mind-wrap .pickr .pcr-button {
+	width: 18px;
+	height: 18px;
+	padding: 6px;
+}
+
+.mind-wrap .mind-font .pickr {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.mind-wrap .mind-font .pickr .pcr-button {
+	height: 24px;
+}
+
+.mind-wrap .mind-font a.btn.btn-xs {
+	padding: 2px 5px;
+	line-height: 20px;
+}
+
+.mind-wrap .mind-content img {
+	vertical-align: middle;
+}
+
+.mind-wrap .mind-content img.avatar {
+	margin-right: 2px;
+}
+
+.mind-wrap .mind-content span{
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 2px;
+}
+
+.mind-wrap .mind-content span.label {
+	padding: 0;
+	margin-right: 0;
+}
+
+.mind-wrap .mind-content .text {
+	margin-left: 6px;
+}
+
+.mind-wrap #format_issue_progress a img.img-thumbnail {
+	box-sizing: content-box;
+	border: 1px solid #ff0000;
+	padding: 4px;
+	background: #fff;
+}
+

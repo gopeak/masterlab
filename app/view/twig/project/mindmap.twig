@@ -96,7 +96,7 @@
                     <div class="flash-container flash-container-page">
                     </div>
                 </div>
-                <div class="">
+                <div class="mind-wrap">
                     <div id="content-body" style="width:100%">
 
                         {% include 'twig/issue/form.twig' %}
@@ -195,7 +195,7 @@
                                             <li class="flex-row">
                                                 <p>布局</p>
                                                 <div>
-                                                    <select class="selectpicker" id="layout" name="layout">
+                                                    <select class="selectpicker select-default" id="layout" name="layout">
                                                         <option value="">继承</option>
                                                         <option data-content="<img src='/dev/img/mind/layout_graph_bottom.png' style='width: 24px; height: 24px;' /> graph-bottom" value="graph-bottom"></option>
                                                         <option data-content="<img src='/dev/img/mind/layout_graph_left.png' style='width: 24px; height: 24px;' /> graph-left" value="graph-left"></option>
@@ -210,7 +210,7 @@
                                             <li class="flex-row">
                                                 <p>形状</p>
                                                 <div>
-                                                    <select class="selectpicker" id="format_shape" name="format_shape">
+                                                    <select class="selectpicker select-default" id="format_shape" name="format_shape">
                                                         <option data-content="<img src='/dev/img/mind/shape_box.png' style='width: 32px; height: 24px;' /> 矩 形" value="box"></option>
                                                         <option data-content="<img src='/dev/img/mind/shape_ellipse.png' style='width: 32px; height: 24px;' /> 椭 圆" value="ellipse"></option>
                                                         <option data-content="<img src='/dev/img/mind/shape_underline.png' style='width: 32px; height: 24px;' /> 下划线" value="underline"></option>
@@ -220,7 +220,7 @@
                                             <li class="flex-row">
                                                 <p>边框</p>
                                                 <div>
-                                                    <a id="format_border_color" class=" btn btn-xs color-picker "  style="width:30px"   title="边框颜色" ></a>
+                                                    <a id="format_border_color" class="btn btn-xs color-picker "  style="width:30px"   title="边框颜色" ></a>
                                                 </div>
                                             </li>
                                             <li class="hide">
@@ -265,8 +265,7 @@
                                             </li>
                                             <li>
                                                 <p>字体格式</p>
-                                                <div class="flex-row">
-
+                                                <div class="flex-row mind-font">
                                                     <div style="width: 82px;">
                                                         <a id="format_font_bold" data-value="0" class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
                                                         <a id="format_font_italic"  data-value="0"   class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
