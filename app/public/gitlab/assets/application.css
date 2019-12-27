@@ -802,6 +802,10 @@ header.navbar-gitlab {
 	margin-right: 2px;
 }
 
+.mind-wrap .mind-content span.mind-create {
+	display: none;
+}
+
 .mind-wrap .mind-content span.label {
 	padding: 0;
 	margin-right: 0;
@@ -816,5 +820,16 @@ header.navbar-gitlab {
 	border: 1px solid #ff0000;
 	padding: 4px;
 	background: #fff;
+}
+
+.mind-wrap .issues-holder > ul > li > .mind-content {
+
+}
+
+.mind-wrap .issues-holder > ul > li > .mind-content .avatar-small {
+	margin-right: 4px;
+	overflow: hidden;
+	font-size: 12px;
+	display: inline-block;
 }
 
