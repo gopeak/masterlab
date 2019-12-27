@@ -446,7 +446,7 @@ MM.Item.prototype.toJSON = function () {
 // 初始化属性
 MM.Item.prototype.fromJSON = function (data) {
 
-	if(data.type && data.type==='project'){
+	if(data.type && (data.type==='project' || data.type==='root_sprint')){
 		this._project_img = data.avatar;
 		if(data.avatar_exist){
 			this._updateProjectImg();
@@ -564,6 +564,22 @@ MM.Item.prototype.clone = function () {
 	return this.constructor.fromJSON(data);
 }
 
+MM.Item.prototype.setPriorityActive = function (issue_priority) {
+	$('#format_issue_priority label').removeClass('active');
+	$("#format_issue_priority label[data-value='"+issue_priority+"']").addClass('active');
+}
+
+MM.Item.prototype.setStatusActive = function (issue_status) {
+	$('#format_issue_status label').removeClass('active');
+	$("#format_issue_status label[data-status_value='"+issue_status+"']").addClass('active');
+}
+MM.Item.prototype.setProgressActive = function (issue_progress) {
+	$("#format_issue_progress img").removeClass('img-thumbnail');
+	let active_img = $("#format_issue_progress img[src='/dev/img/mind/"+this.getProgressImgName(issue_progress)+"']");
+	active_img.addClass('img-thumbnail');
+}
+
+
 MM.Item.prototype.syncRenderRightPanel = function () {
     // 格式渲染
     if(this._id.search('project_')===-1){
@@ -584,14 +600,9 @@ MM.Item.prototype.syncRenderRightPanel = function () {
         if(this._id.search('issue_')>=0){
             $('#format_issue_type').val(this._icon);
             $('#format_issue_assignee').val(this._issue_assignee);
-            $('#format_issue_priority label').removeClass('active');
-            $("#format_issue_priority label[data-value='"+this._issue_priority+"']").addClass('active');
-            $('#format_issue_status label').removeClass('active');
-            $("#format_issue_status label[data-status_value='"+this._issue_status+"']").addClass('active');
-			// progress
-            $("#format_issue_progress img").removeClass('img-thumbnail');
-            let active_img = $("#format_issue_progress img[src='/dev/img/mind/"+this.getProgressImgName(this._issue_progress)+"']");
-            active_img.addClass('img-thumbnail');
+			this.setStatusActive(this._issue_status);
+			this.setPriorityActive(this._issue_priority);
+			this.setProgressActive(this._issue_progress);
         }
 
     }else{
@@ -1930,6 +1941,7 @@ MM.Action.SetIssuePriority = function (item, issue_priority_id) {
     this._item = item;
     this._issue_priority = issue_priority_id;
     this._oldIssuePriority = item.getIssuePriority();
+	item.setPriorityActive(issue_priority_id);
 }
 MM.Action.SetIssuePriority.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetIssuePriority.prototype.perform = function () {
@@ -1943,10 +1955,11 @@ MM.Action.SetIssueProgress = function (item, issue_progress) {
     this._item = item;
     this._issue_progress = issue_progress;
     this._oldIssueProgress = item.getIssueProgress();
+	item.setProgressActive(issue_progress);
 }
 MM.Action.SetIssueProgress.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetIssueProgress.prototype.perform = function () {
-    this._item.setIssueProgress(this._issue_priority);
+    this._item.setIssueProgress(this._issue_progress);
 }
 MM.Action.SetIssueProgress.prototype.undo = function () {
     this._item.setIssueProgress(this._oldIssueProgress);
@@ -1956,6 +1969,7 @@ MM.Action.SetIssueStatus = function (item, issue_status_id) {
     this._item = item;
     this._issue_status = issue_status_id;
     this._oldIssueStatus = item.getIssueStatus();
+	item.setStatusActive(issue_status_id);
 }
 MM.Action.SetIssueStatus.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetIssueStatus.prototype.perform = function () {
@@ -2502,6 +2516,7 @@ MM.Command.Finish.execute = function () {
 	MM.App.editing = false;
 
 	let item = MM.App.current;
+	let old_text = item._oldText;
 	let text = item.stopEditing();
 	let action = null;
 	if (text) {
@@ -2513,8 +2528,12 @@ MM.Command.Finish.execute = function () {
 		if(!issue_id){
 			window.$mindAjax.add(item, text);
 		}else{
-            let post_data = {summary:text}
-            window.$mindAjax.update(issue_id, post_data);
+			// 如果有改变才会提交服务器
+			if(old_text!=text){
+				let post_data = {summary:text}
+				window.$mindAjax.update(issue_id, post_data);
+			}
+
         }
 
 	} else {
@@ -4355,6 +4374,7 @@ MM.UI = function () {
     this._issue_status = new MM.UI.IssueStatus();
     this._issue_priority = new MM.UI.IssuePriority();
     this._issue_assignee = new MM.UI.IssueAssignee();
+    this._issue_progress = new MM.UI.IssueProgress();
 
     this._font_family = new MM.UI.FontFamily();
 	this._font_bold = new MM.UI.FontBold();
@@ -4679,9 +4699,18 @@ MM.UI.IssueType.prototype.update = function () {
 }
 
 MM.UI.IssueType.prototype.handleEvent = function (e) {
-    console.log(MM.App.current)
+    console.log(this._select.value)
     var action = new MM.Action.SetIcon(MM.App.current, this._select.value || null);
     MM.App.action(action);
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        let issue_type_id = $(this._select).find("option:selected").attr("origin-id");
+        if(issue_id && issue_type_id){
+            let post_data = {issue_type:issue_type_id}
+              window.$mindAjax.update(issue_id, post_data);
+        }
+    }
 }
 // IssuePriority
 MM.UI.IssuePriority = function () {
@@ -4696,6 +4725,14 @@ MM.UI.IssuePriority.prototype.handleEvent = function (e) {
     var issue_priority_id = e.target.getAttribute("data-value") || null;
     var action = new MM.Action.SetIssuePriority(MM.App.current, issue_priority_id);
     MM.App.action(action);
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && issue_priority_id){
+            let post_data = {priority:issue_priority_id}
+            window.$mindAjax.update(issue_id, post_data);
+        }
+    }
 }
 
 MM.UI.IssueStatus = function () {
@@ -4710,6 +4747,14 @@ MM.UI.IssueStatus.prototype.handleEvent = function (e) {
     var issue_status_id = e.target.getAttribute("data-status_value") || null;
     var action = new MM.Action.SetIssueStatus(MM.App.current, issue_status_id);
     MM.App.action(action);
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && issue_status_id){
+            let post_data = {status:issue_status_id}
+            window.$mindAjax.update(issue_id, post_data);
+        }
+    }
 }
 
 //IssueAssignee
@@ -4726,6 +4771,15 @@ MM.UI.IssueAssignee.prototype.handleEvent = function (e) {
     console.log(MM.App.current)
     var action = new MM.Action.SetIssueAssignee(MM.App.current, this._select.value || null);
     MM.App.action(action);
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        let user_id = this._select.value;
+        if(issue_id && user_id){
+            let post_data = {assignee:user_id}
+            window.$mindAjax.update(issue_id, post_data);
+        }
+    }
 }
 //IssueProgress
 MM.UI.IssueProgress = function () {
@@ -4735,11 +4789,20 @@ MM.UI.IssueProgress = function () {
 
 MM.UI.IssueProgress.prototype.handleEvent = function (e) {
     e.preventDefault();
+    console.log($(e.target));
     if (!e.target.hasAttribute("data-value")) { return; }
 
     var issue_progress = e.target.getAttribute("data-value") || null;
     var action = new MM.Action.SetIssueProgress(MM.App.current, issue_progress);
     MM.App.action(action);
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && issue_progress){
+            let post_data = {progress:issue_progress}
+            window.$mindAjax.update(issue_id, post_data);
+        }
+    }
 }
 MM.UI.Help = function () {
 	this._node = document.querySelector("#help");

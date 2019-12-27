@@ -213,6 +213,16 @@ class Mind extends BaseUserCtrl
             $sprintId = null;
         } else {
             $sprintId = $sourceType;
+            $sprintModel = new SprintModel();
+            $sprint = $sprintModel->getById($sprintId);
+            if(!empty($sprint)){
+                $root['origin_id'] = $sprintId;
+                $root['id'] = 'sprint_' . $projectId;
+                $root['type'] = 'root_sprint';
+                $root['text'] = $sprint['name'];
+                $root['avatar_exist'] =  true;
+                $root['avatar'] =  '/dev/img/mind/rocket.png';
+            }
         }
         $issueChildren = $class->getMindIssues($projectId, $sprintId, $groupByField, $addFilterSql);
         $root['children'] = $issueChildren;

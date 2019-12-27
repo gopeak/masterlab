@@ -2787,7 +2787,7 @@
                     });
                     window.qtipApi = $('#custom-filter-more').qtip('api');
 
-// 右边悬浮层按钮事件
+                    // 右边悬浮层按钮事件
                     $('#btn-edit').bind('click', function () {
                         window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
                     });
@@ -2838,10 +2838,10 @@
                         ])
                     });
 
-// 提交导出 excel 表单
+                    // 提交导出 excel 表单
                     $("#btn-export_excel").click(function () {
-// 当前查询参数字符串
-// alert(_issue_cur_page);
+                        // 当前查询参数字符串
+                        // alert(_issue_cur_page);
                         var curUrlParams = window.location.search;
                         curUrlParams = curUrlParams.substr(1);
                         var exportRangeType = $("input[name='radio-export_range']:checked").val();
@@ -2852,7 +2852,7 @@
 
                         var formParams = $("#form-export_excel").serialize();
                         var action = "/project/export/issue?" + curUrlParams + "&" + formParams + "&cur_page=" + _issue_cur_page + '&project_id=' + window.cur_project_id;
-// alert(action);
+                        // alert(action);
                         $("#form-export_excel").attr("action", action);
                         $("#form-export_excel").submit();
                         $('#modal-export_excel').modal('hide');
