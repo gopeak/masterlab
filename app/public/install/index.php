@@ -32,7 +32,7 @@ $html_header = <<<EOF
       <h5></h5>
       <h2>Masterlab安装向导</h2>
     </div>
-    <div class="version">版本: v1.2</div>
+    <div class="version">版本: v2.0</div>
   </div>
 </div>
 EOF;
@@ -40,7 +40,7 @@ EOF;
 $html_footer = <<<EOF
 <div class="footer">
   <h5>Powered by <span class="blue">Masterlab</span><span class="orange"></span></h5>
-  <h6>版权所有 2017-2018 &copy; <a href="http://www.masterlab.vip" target="_blank">Masterlab Team</a></h6>
+  <h6>版权所有 2017-2019 &copy; <a href="http://www.masterlab.vip" target="_blank">Masterlab Team</a></h6>
 </div>
 EOF;
 $step = 0;

@@ -30,7 +30,7 @@ class TestUpload extends BaseAppTestCase
             $model = new IssueFileAttachmentModel();
             foreach (self::$fileAttachmentIdArr as $id) {
                 $fileRow = $model->getRowById($id);
-                unlink(STORAGE_PATH.'attachment/'.$fileRow['file_name']);
+                unlink(PUBLIC_PATH.'attachment/'.$fileRow['file_name']);
                 $model->deleteById($id);
             }
         }
@@ -46,7 +46,7 @@ class TestUpload extends BaseAppTestCase
         $curl = BaseAppTestCase::$userCurl;
 
         $curl->post(ROOT_URL . 'admin/upload/img', array(
-            'imgFile' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
+            'imgFile' => new \CURLFile(PUBLIC_PATH . 'attachment/unittest/sample.png'),
         ));
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
@@ -62,7 +62,7 @@ class TestUpload extends BaseAppTestCase
         $curl = BaseAppTestCase::$userCurl;
 
         $curl->post(ROOT_URL . 'admin/upload/avatar', array(
-            'imgFile' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
+            'imgFile' => new \CURLFile(PUBLIC_PATH . 'attachment/unittest/sample.png'),
         ));
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);

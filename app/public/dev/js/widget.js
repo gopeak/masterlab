@@ -276,6 +276,10 @@ var Widgets = (function () {
                 $('#sprint_count').html(resp.data.sprint_count);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+                // 加上项目名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('项目','');
+                $titleDomObj.html(resp.data.project_name+originTitle);
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -307,6 +311,10 @@ var Widgets = (function () {
                 $('#'+_key+'_wrap').html(result);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+                // 加上项目名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('项目','');
+                $titleDomObj.html(resp.data.project_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key);
@@ -339,6 +347,10 @@ var Widgets = (function () {
                 $('#'+_key+'_wrap').html(result);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+                // 加上项目名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('项目','');
+                $titleDomObj.html(resp.data.project_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key);
@@ -371,6 +383,11 @@ var Widgets = (function () {
                 $('#'+_key+'_wrap').html(result);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+
+                // 加上项目名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('项目','');
+                $titleDomObj.html(resp.data.project_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key);
@@ -403,6 +420,10 @@ var Widgets = (function () {
                 $('#'+_key+'_wrap').html(result);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+                // 加上项目名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('项目','');
+                $titleDomObj.html(resp.data.project_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key);
@@ -435,6 +456,10 @@ var Widgets = (function () {
                 }
                 window.ctx_project_pie = document.getElementById(_key+'_wrap').getContext('2d');
                 window.projectPie = new Chart(window.ctx_project_pie, resp.data);
+                // 加上项目名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('项目','');
+                $titleDomObj.html(resp.data.project_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key+'_wrap');
@@ -487,6 +512,11 @@ var Widgets = (function () {
                 }
                 window.ctx_project_bar = document.getElementById(_key+'_wrap').getContext('2d');
                 window.projectBar = new Chart(window.ctx_project_bar, resp.data);
+
+                // 加上项目名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('项目','');
+                $titleDomObj.html(resp.data.project_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key+'_wrap');
@@ -514,6 +544,10 @@ var Widgets = (function () {
                 $('#no_done_count').html(resp.data.no_done_count);
                 $('#closed_count').html(resp.data.closed_count);
                 $('#sprint_count').html(resp.data.sprint_count);
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -535,10 +569,18 @@ var Widgets = (function () {
             success: function (resp) {
                 auth_check(resp);
                 console.log(resp)
-                var sprint_end_date = resp.data.activeSprint.end_date;
-                $('#'+_key+'_wrap').countdown(sprint_end_date, function (event) {
-                    $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
-                });
+                if(!is_empty( resp.data.activeSprint.end_date)){
+                    var sprint_end_date = resp.data.activeSprint.end_date;
+                    $('#'+_key+'_wrap').countdown(sprint_end_date, function (event) {
+                        $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
+                    });
+                }else{
+                    $('#'+_key+'_wrap').html('<span style="font-size: 12px">暂无迭代数据</span>');
+                }
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -571,6 +613,10 @@ var Widgets = (function () {
                 $('#'+_key+'_wrap').html(result);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key);
@@ -603,6 +649,10 @@ var Widgets = (function () {
                 $('#'+_key+'_wrap').html(result);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key);
@@ -635,6 +685,10 @@ var Widgets = (function () {
                 $('#'+_key+'_wrap').html(result);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key);
@@ -667,6 +721,10 @@ var Widgets = (function () {
                 $('#'+_key+'_wrap').html(result);
                 $(`#toolform_${_key}`).hide();
                 $(`#tool_${_key}`).show();
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key);
@@ -699,6 +757,10 @@ var Widgets = (function () {
                 }
                 window.ctx_sprint_pie = document.getElementById(_key+'_wrap').getContext('2d');
                 window.sprintPie = new Chart(window.ctx_sprint_pie, resp.data);
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key+'_wrap');
@@ -752,6 +814,10 @@ var Widgets = (function () {
                 }
                 window.ctx_sprint_speed_rate = document.getElementById(_key+'_wrap').getContext('2d');
                 window.sprintSpeedRate = new Chart(window.ctx_sprint_speed_rate, resp.data);
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
 
             },
             error: function (res) {
@@ -806,6 +872,10 @@ var Widgets = (function () {
                 }
                 window.ctx_sprint_burndown = document.getElementById(_key+'_wrap').getContext('2d');
                 window.sprintBurndown = new Chart(window.ctx_sprint_burndown, resp.data);
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
 
             },
             error: function (res) {
@@ -859,10 +929,62 @@ var Widgets = (function () {
                 }
                 window.ctx_sprint_bar = document.getElementById(_key+'_wrap').getContext('2d');
                 window.sprintBar = new Chart(window.ctx_sprint_bar, resp.data);
+
+                // 加上迭代名称
+                $titleDomObj = $('#'+_key+"-panel-heading-title");
+                let originTitle =  $titleDomObj.html().replace('迭代','');
+                $titleDomObj.html(resp.data.sprint_name+originTitle);
             },
             error: function (res) {
                 loading.hide('#'+_key+'_wrap');
                 alert("请求数据错误" + res);
+            }
+        });
+    }
+
+
+    Widgets.prototype.fetchFollowIssues = function (_key,page) {
+        var params = {format: 'json'};
+        if(is_empty(page)){
+            page = 1;
+        }
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url+'widget/fetchFollowIssues',
+            data: {page: page},
+            success: function (resp) {
+                auth_check(resp);
+                if(resp.data.issues.length){
+                    var source = $('#'+_key+'_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#'+_key+'_wrap').html(result);
+                    $(`#tool_${_key}`).find("time").each(function(i, el){
+                        var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                        $(el).html(t)
+                    })
+
+                    window._cur_page = parseInt(page);
+                    var pages = parseInt(resp.data.pages);
+                    if (pages > 1) {
+                        $('#my_follow_more').show();
+                    }
+                    $(`#toolform_${_key}`).hide();
+                    $(`#tool_${_key}`).show();
+
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '数据为空',
+                        name: 'computer',
+                        handleHtml: ''
+                    })
+                    $(`#tool_${_key}`).append(emptyHtml.html)
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
             }
         });
     }

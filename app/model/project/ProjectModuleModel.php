@@ -63,7 +63,7 @@ class ProjectModuleModel extends CacheModel
     {
         $fields = "*,{$this->primaryKey} as k";
         $params = ['project_id' => (int)$projectId];
-        $rows = $this->getRows( $fields, $params,$append = null, $orderBy = null, $sort = null, $limit = null, $primaryKey );
+        $rows = $this->getRows($fields, $params,$append = null, 'order_weight', 'DESC', $limit = null, $primaryKey );
         return $rows;
     }
 

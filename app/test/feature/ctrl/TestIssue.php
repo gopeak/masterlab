@@ -752,7 +752,7 @@ class TestIssue extends BaseAppTestCase
         // 上传
         $curl = parent::$userCurl;
         $curl->post(ROOT_URL . 'issue/main/upload/'.parent::$project['id'], array(
-            'qqfile' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
+            'qqfile' => new \CURLFile(PUBLIC_PATH . 'attachment/unittest/sample.png'),
         ));
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
@@ -891,7 +891,7 @@ class TestIssue extends BaseAppTestCase
         // 上传
         $curl = parent::$userCurl;
         $curl->post(ROOT_URL . 'issue/detail/editormdUpload', array(
-            'editormd-image-file' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
+            'editormd-image-file' => new \CURLFile(PUBLIC_PATH . 'attachment/unittest/sample.png'),
         ));
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);

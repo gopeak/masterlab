@@ -31,14 +31,7 @@ $(document).ready(function(){
       <h2>安装数据库</h2>
       <h5>正在执行数据库安装</h5>
     </div>
-    <div class="procedure-nav">
-      <div class="schedule-ico"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span></div>
-      <div class="schedule-point-now"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span></div>
-      <div class="schedule-point-bg"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span></div>
-      <div class="schedule-line-now"><em></em></div>
-      <div class="schedule-line-bg"></div>
-      <div class="schedule-text"><span class="a">检查安装环境</span><span class="b">Redis和异步服务器配置</span><span class="c">创建数据库</span><span class="d">安装</span></div>
-    </div>
+      <?php include 'include/procedure-nav.php'?>
   </div>
   <div class="text-box" id="text-box">
     <div class="license" id="license"></div>

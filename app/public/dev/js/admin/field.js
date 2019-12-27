@@ -173,11 +173,11 @@ var Field = (function() {
             url: _options.get_url,
             data: { id:id} ,
             success: function (resp) {
-
                 auth_check(resp);
                 $("#modal-field_edit").modal();
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
+                $("#edit_title").val(resp.data.title);
                 $("#edit_description").val(resp.data.description);
                 _edit_options = resp.data.options;
                 $('#edit_options').val(JSON.stringify(_edit_options));

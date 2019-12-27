@@ -56,6 +56,7 @@ class UploadLogic
 
         //定义允许上传的文件扩展名
         $extArr = array(
+            'project_image' => array('jpg', 'jpeg', 'png', 'gif'),
             'avatar' => array('jpg', 'jpeg', 'png', 'gif'),
             'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
             'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb', 'mp4', 'aac'),
@@ -79,7 +80,7 @@ class UploadLogic
                     $error = '图片只有部分被上传';
                     break;
                 case '4':
-                    $error = '请选择图片';
+                    $error = '没有文件被上传';
                     break;
                 case '6':
                     $error = '找不到临时目录';
@@ -94,7 +95,7 @@ class UploadLogic
                 default:
                     $error = '未知错误。';
             }
-            return $this->uploadError($error);
+            return $this->uploadError($error, (int)$_FILES[$fieldName]['error']);
         }
 
         //有上传文件时

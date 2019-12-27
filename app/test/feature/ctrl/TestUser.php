@@ -159,7 +159,7 @@ class TestUser extends BaseAppTestCase
         if(strpos($fetchUser['avatar'],'?')!==false){
             list($fetchUser['avatar']) = explode('?',$fetchUser['avatar']);
         }
-        $this->assertTrue(unlink(STORAGE_PATH . 'attachment/' . $fetchUser['avatar']));
+        $this->assertTrue(unlink(PUBLIC_PATH . 'attachment/' . $fetchUser['avatar']));
     }
 
     public function testSelectFilter()

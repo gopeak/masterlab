@@ -8,6 +8,7 @@ namespace main\app\ctrl\project;
 use main\app\async\email;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectModuleFilterLogic;
+use main\app\classes\RewriteUrl;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectModel;
@@ -128,10 +129,11 @@ class Module extends BaseUserCtrl
     /**
      * @param $id
      * @param $name
+     * @param $weight
      * @param $description
      * @throws \Exception
      */
-    public function update($id, $name, $description)
+    public function update($id, $name, $weight, $description)
     {
         $id = intval($id);
         $uid = $this->getCurrentUid();
@@ -147,11 +149,16 @@ class Module extends BaseUserCtrl
         if (isset($name) && !empty($name)) {
             $row['name'] = $name;
         }
+
+        if (isset($weight) && !empty($weight)) {
+            $row['order_weight'] = intval($weight);
+        }
+
         if (isset($description) && !empty($description)) {
             $row['description'] = $description;
         }
 
-        if (count($row) < 2) {
+        if (count($row) < 1) {
             $this->ajaxFailed('param_error:form_data_is_error ' . count($row));
         }
 
@@ -224,11 +231,14 @@ class Module extends BaseUserCtrl
             });
         }
 
+        $projectPath = RewriteUrl::getProjectPathName($project_id);
+
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
         $data['modules'] = $list;
+        $data['project_path'] = $projectPath;
         $this->ajaxSuccess('success', $data);
     }
 

@@ -69,7 +69,7 @@ jQuery：http://jquery.com
 
 Sweetalert：https://sweetalert.js.org/
 
-... 等等
+... 等
 
 
 

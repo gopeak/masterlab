@@ -3,7 +3,7 @@
 namespace main\app\ctrl\admin;
 
 use main\app\ctrl\BaseAdminCtrl;
-use main\app\model\permission\PermissionModel;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\permission\DefaultRoleModel;
 use main\app\model\permission\DefaultRoleRelationModel;
 
@@ -103,7 +103,7 @@ class Permission extends BaseAdminCtrl
      */
     public function tree($roleId)
     {
-        $permissionModel = new PermissionModel();
+        $permissionModel = new ProjectPermissionModel();
         $permissionRoleRelationModel = new DefaultRoleRelationModel();
 
         $parentList = $permissionModel->getParent();

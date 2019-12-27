@@ -1,0 +1,124 @@
+@import url(ui.css);
+@import url(item.css);
+@import url(shape.css);
+@import url(menu.css);
+
+[contenteditable] { /* allow for editable items */
+	-webkit-user-select: auto;
+}
+
+#port {
+	overflow: hidden;
+	font-size: 15px;
+	position: relative;
+}
+
+#throbber {
+	position: absolute;
+	top: 50px;
+	left: -60px;
+	width: 50px;
+	height: 50px;
+	background-image: url(throbber.gif);
+}
+
+#throbber:not(.visible) {
+	opacity: 0;
+}
+
+.ghost {
+	position: absolute !important; /* to prevent collision with .content */
+	opacity: 0.5;
+	z-index: 1;
+}
+
+#tip {
+	position: fixed;
+	z-index: 1;
+	left: 10px;
+	bottom: 5px;
+	transition: all 500ms;
+	font-size: 1rem; /* do not scale with map zoom */
+}
+
+#tip:before {
+	content: "Tip: ";
+}
+
+#tip.hidden {
+	opacity: 0;
+}
+
+#io{
+	display: none;
+}
+
+.mind-side {
+	position: absolute;
+	top: 145px;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+	overflow-y: scroll;
+	width: 300px;
+	border-left: 1px solid #eee;
+	background: #fafafa;
+}
+.mind-side-head {
+	border-bottom: 1px solid #eee;
+	padding: 10px;
+}
+.mind-side-head h3 {
+	margin: 0;
+	font-size: 14px;
+}
+.mind-side-body {
+	padding: 10px;
+}
+
+.mind-filters-product .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) ,
+.mind-side-body .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+	width: 100% !important;
+}
+
+#helper-btn {
+	display: none;
+}
+
+#color a {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+}
+
+.mind-side-attrs > li > div {
+	padding: 0 0 10px;
+	flex: 1;
+}
+.mind-side-attrs > li > p {
+	padding: 0 10px 0 0;
+}
+
+.mind-filters {
+	display: flex;
+	justify-content: space-between;
+}
+.js-filter-form {
+	position: relative;
+}
+.js-center-tool {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.flex-col {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}

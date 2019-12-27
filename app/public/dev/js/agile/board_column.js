@@ -1,30 +1,3 @@
-function Board(opts) {
-    this.el = $(opts.el)
-    this.handle = opts.handle
-    this.list = this.el.find('.board-list-component')
-    this.init()
-}
-
-Board.prototype.init = function () {
-    if (this.el.hasClass("close")) {
-        this.list.hide()
-    }
-    this.trigger()
-}
-Board.prototype.trigger = function () {
-    const self = this
-
-    this.handle.on("click", function (event) {
-        var p = $(this).closest('.board')
-        if (p.hasClass("close")) {
-            p.removeClass("close")
-            self.list.show()
-        } else {
-            p.addClass("close")
-            self.list.hide()
-        }
-    })
-}
 
 var BoardColumn = (function () {
 
@@ -195,6 +168,7 @@ var BoardColumn = (function () {
         }
 
     }
+
 
     BoardColumn.prototype.fetchBoardBySprint = function (sprint_id) {
 

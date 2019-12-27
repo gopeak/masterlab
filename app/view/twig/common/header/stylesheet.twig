@@ -1,0 +1,12 @@
+<link rel="stylesheet" media="all" href="/gitlab/assets/application.css?v={{_version}}"/>
+<link rel="stylesheet" media="print" href="/gitlab/assets/print.css?v={{_version}}"/>
+<link rel="stylesheet" type="text/css" href="/dev/css/loading.css?v={{_version}}"/>
+{% if  G_Preferences['page_layout']  == 'fixed' %}
+<link rel="stylesheet"  type="text/css" href="/dev/css/layout_fixed.css?v={{_version}}" />
+{% else %}
+<link rel="stylesheet"  type="text/css" href="/dev/css/layout_float.css?v={{_version}}" />
+{% endif %}
+
+
+<link rel="stylesheet" media="all" href="/dev/css/main.css?v={{_version}}"/>
+<link rel="stylesheet" type="text/css" href="/dev/css/issue/form.css?v={{_version}}"/>

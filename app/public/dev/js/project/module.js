@@ -4,36 +4,36 @@ let Module = (function() {
     let _options = {};
 
     // constructor
-    function Module(  options  ) {
+    function Module (options) {
         _options = options;
     };
 
-    Module.prototype.getOptions = function() {
+    Module.prototype.getOptions = function () {
         return _options;
     };
 
-    Module.prototype.fetch = function(id ) {
+    Module.prototype.fetch = function (id) {
 
     };
 
-    Module.prototype.add = function(  ) {
+    Module.prototype.add = function () {
 
     };
 
-    Module.prototype.delete = function( project_id, module_id ) {
-        $.post("/project/module/delete",{project_id: project_id, module_id:module_id},function(result){
-            if(result.ret == 200){
+    Module.prototype.delete = function (project_id, module_id) {
+        $.post("/project/module/delete",{project_id: project_id, module_id:module_id}, function (result) {
+            if (result.ret == 200) {
                 //location.reload();
                 notify_success('删除成功');
                 //window.location.reload();
                 $('#li_data_id_'+module_id).remove();
             } else {
-                notify_error('删除失败')
+                notify_error('删除失败');
             }
         });
     };
 
-    Module.prototype.edit = function(module_id){
+    Module.prototype.edit = function (module_id) {
         $.ajax({
             type: 'GET',
             dataType: "json",
@@ -42,9 +42,10 @@ let Module = (function() {
             data: {module_id: module_id},
             success: function (resp) {
                 auth_check(resp);
-                if(resp.ret == 200){
+                if (resp.ret == 200) {
                     $('#mod_form_id').val(resp.data.id);
                     $('#mod_form_name').val(resp.data.name);
+                    $('#mod_form_weight').val(resp.data.order_weight);
                     $('#mod_form_description').val(resp.data.description);
                 } else {
                     notify_error('数据获取失败');
@@ -58,16 +59,16 @@ let Module = (function() {
         });
     };
 
-    Module.prototype.doedit = function(module_id, name, description){
+    Module.prototype.doedit = function (module_id, name, weight, description) {
         $.ajax({
             type: 'POST',
             dataType: "json",
             async: true,
             url: "/project/module/update",
-            data: {id: module_id, name: name, description: description},
+            data: {id: module_id, name: name, weight: weight, description: description},
             success: function (resp) {
                 auth_check(resp);
-                if(resp.ret == 200){
+                if (resp.ret == 200) {
                     $('#modal-edit-module-href').on('hidden.bs.modal', function (e) {
                         notify_success('操作成功');
                         Module.prototype.fetchAll();
@@ -86,8 +87,8 @@ let Module = (function() {
 
 
 
-    Module.prototype.fetchAll = function(module_name_keyword='') {
-        if(module_name_keyword != ''){
+    Module.prototype.fetchAll = function (module_name_keyword='') {
+        if (module_name_keyword != '') {
             _options.query_param_obj["page"] = 1;
         }
         _options.query_param_obj["name"] = module_name_keyword;
@@ -106,20 +107,22 @@ let Module = (function() {
                     //console.log(result);
                     $('#' + _options.list_render_id).html(result);
 
-                    let options = {
-                        currentPage: resp.data.page,
-                        totalPages: resp.data.pages,
-                        onPageClicked: function (e, originalEvent, type, page) {
-                            console.log("Page item clicked, type: " + type + " page: " + page);
-                            $("#filter_page").val(page);
-                            _options.query_param_obj["page"] = page;
-                            Module.prototype.fetchAll();
-                        }
-                    };
-                    $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    if (resp.data.pages > 1) {
+                        let options = {
+                            currentPage: resp.data.page,
+                            totalPages: resp.data.pages,
+                            onPageClicked: function (e, originalEvent, type, page) {
+                                console.log("Page item clicked, type: " + type + " page: " + page);
+                                $("#filter_page").val(page);
+                                _options.query_param_obj["page"] = page;
+                                Module.prototype.fetchAll();
+                            }
+                        };
+                        $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    }
 
-                    $(".list_for_delete").click(function(){
-                        Module.prototype.delete( $(this).data("id"));
+                    $(".list_for_delete").click(function () {
+                        Module.prototype.delete($(this).data("id"));
                     });
 
                     $(".project_module_edit_click").bind("click", function () {

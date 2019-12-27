@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head prefix="og: http://ogp.me/ns#">
+    {% include 'twig/common/header/include.twig' %}
+
+    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
+
+    <script src="/dev/lib/moment.js"></script>
+    <script src="/dev/lib/url_param.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/project/mind.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+
+    <!-- <script src="/dev/js/admin/issue_ui.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script> -->
+    <script src="/dev/js/issue/main.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/issue/form.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+
+
+    <link rel="stylesheet" href="/dev/lib/editor.md/css/editormd.css"/>
+
+    <script src="/dev/lib/editor.md/lib/marked.min.js"></script>
+    <script src="/dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="/dev/lib/editor.md/lib/flowchart.min.js"></script>
+    <script src="/dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
+    <script src="/dev/lib/editor.md/editormd.js"></script>
+
+    <!-- Fine Uploader jQuery JS file-->
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+
+    <link href="/dev/lib/video-js/video-js.min.css" rel="stylesheet">
+    <script src="/dev/lib/video-js/video.min.js"></script>
+
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
+
+    <script>
+        window.project_uploads_path = "";
+        window.preview_markdown_path = "";
+    </script>
+
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{ _version }}" type="text/javascript"></script>
+    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
+
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
+
+    <link href="/gitlab/assets/application.css?v={{ _version }}">
+
+    <script src="/dev/lib/my-mind/my-mind.js"></script>
+
+    <link rel="stylesheet" href="/dev/lib/my-mind/css/font.css" />
+    <link rel="stylesheet" href="/dev/lib/my-mind/css/style.css" />
+
+    <!-- One of the following themes -->
+    <link rel="stylesheet" href="/dev/lib/pickr/dist/themes/classic.min.css"/> <!-- 'classic' theme -->
+    <link rel="stylesheet" href="/dev/lib/pickr/dist/themes/monolith.min.css"/> <!-- 'monolith' theme -->
+    <link rel="stylesheet" href="/dev/lib/pickr/dist/themes/nano.min.css"/> <!-- 'nano' theme -->
+
+    <!-- Modern or es5 bundle -->
+    <script src="/dev/lib/pickr/dist/pickr.min.js"></script>
+    <script src="/dev/lib/pickr/dist/pickr.es5.min.js"></script>
+
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+
+</head>
+
+<body class="" data-group="">
+
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body">
+        {% include 'twig/common/body/header-content.twig' %}
+
+
+        <script>
+            var findFileURL = "";
+        </script>
+
+        <div class="page-with-sidebar">
+            {% include 'twig/project/common-page-nav-project.twig' %}
+
+            <div class="page-with-layout-nav page-with-sub-nav">
+                <div class="alert-wrapper">
+                    <div class="flash-container flash-container-page">
+                    </div>
+                </div>
+                <div class="mind-wrap">
+                    <div id="content-body" style="width:100%">
+
+                        <div class="filtered-search-block issues-details-filters row-content-block second-block js-mind-tools" style="padding: 10px"
+                             v-pre="false">
+                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                                <input name="utf8" type="hidden" value="&#x2713;"/>
+                                <div class="mind-filters">
+
+
+                                    <div class="mind-filters-product">
+                                        <span class="inline">数据范围</span>
+                                        <div class="dropdown inline">
+                                            <select id="source_range" name="source_range"  class="selectpicker">
+                                                <option value="all"  >整个项目</option>
+                                                {% for sprint in sprints %}
+                                                    <option value="{{ sprint['id'] }}"  >{{ sprint['name'] }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <span class="inline" style="padding-left: 12px;">二级数据</span>
+                                        <div id="all-group_by-container" class="dropdown inline  " style="margin-left: 5px" >
+                                            <select  id="all-group_by" name="all-group_by"  class="selectpicker">
+                                                <option value="sprint">迭代</option>
+                                                <option value="module">模块</option>
+                                                <option value="priority">优先级</option>
+                                                <option value="issue_type">事项类型</option>
+                                                <option value="status">状态</option>
+                                                <option value="resolve">解决结果</option>
+                                                <option value="assignee">经办人</option>
+                                            </select>
+                                        </div>
+                                        <div id="sprint-group_by-container" class="dropdown inline prepend-right-10 " style="margin-left: 5px;display: none" >
+                                            <select id="sprint-group_by" name="sprint-group_by"  class="selectpicker">
+                                                <option value="module">模块</option>
+                                                <option value="priority">优先级</option>
+                                                <option value="issue_type">事项类型</option>
+                                                <option value="status">状态</option>
+                                                <option value="resolve">解决结果</option>
+                                                <option value="assignee">经办人</option>
+                                            </select>
+                                        </div>
+                                        <button class="btn btn-default active hide" type="button" id="btn-mind_filter" title="数据筛选"  style="margin-left: 5px">
+                                            <i class="fa fa-filter"></i>
+                                        </button>
+                                        <span style="color: grey;font-size: 10px;display: none">经办人:sven;模块:事项;状态:打开 </span>
+                                        <a title="清除筛选" href="javascript:;" style="color: grey;display: none"><i class="fa fa-close"></i></a>
+                                    </div>
+                                    <div>
+                                        <button id="toggle_focus_mode"  href="#" role="button" aria-label="" title="切换聚焦模式" class="btn btn-default">
+                                            <span>
+                                                <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+                                                    <path  d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z"
+                                                            fill-rule="evenodd"></path>
+                                                </svg>
+                                            </span>
+                                        </button>
+                                        <button class="btn btn-default" type="button" id="btn-filter" title="导出"  >
+                                           <img  src="/dev/img/mind/export.png"  style="width: 16px;height:16px"/>
+                                        </button>
+                                        <button class="btn btn-default " type="button" title="设置"  id="btn-setting" data-dismiss="modal" onclick="$('#modal-setting').modal('show');" >
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                                <div class="js-center-tool">
+                                    <div class="board-extra-actions">
+                                        <button class="btn btn-default" type="button" id="btn-create_same" title="新 增">
+                                            <img  src="/dev/img/mind/same.png" />
+                                        </button>
+                                        <button class="btn btn-default" type="button" id="btn-create_child" title="新增子项">
+                                            <img  src="/dev/img/mind/child.png" />
+                                        </button>
+                                        <button class="btn btn-default disabled" type="button" id="btn-delete" title="删除"  >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div style="background-color: #fff;">
+                            <div class="issues-holder">
+                                <ul id="port">
+                                    <div id="tip"  class="hide">  <a target="_blank" href="http://my-mind.github.io/?url=examples%2Ffeatures.mymind">@my_mind_app</a>.</div>
+                                </ul>
+
+                                <div class="mind-side js-mind-side">
+                                    <div class="mind-side-head">
+                                        <h3>主题格式</h3>
+                                    </div>
+                                    <div class="mind-side-body">
+                                        <ul class="mind-side-attrs">
+                                            <li class="flex-row">
+                                                <p>布局</p>
+                                                <div>
+                                                    <select class="selectpicker select-default" id="layout" name="layout">
+                                                        <option value="">继承</option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_graph_bottom.png' style='width: 24px; height: 24px;' /> graph-bottom" value="graph-bottom"></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_graph_left.png' style='width: 24px; height: 24px;' /> graph-left" value="graph-left"></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_graph_right.png' style='width: 24px; height: 24px;' /> graph-right" value="graph-right"></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_graph_top.png' style='width: 24px; height: 24px;' /> graph-top" value="graph-top"></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_map.png' style='width: 24px; height: 24x;' /> map" value="map"></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_tree_left.png' style='width: 24px; height: 24px;' /> tree left" value="tree-left"></option>
+                                                        <option data-content="<img src='/dev/img/mind/layout_tree_right.png' style='width: 24px; height: 24px;' /> tree right" value="tree-right"></option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li class="flex-row">
+                                                <p>形状</p>
+                                                <div>
+                                                    <select class="selectpicker select-default" id="format_shape" name="format_shape">
+                                                        <option data-content="<img src='/dev/img/mind/shape_box.png' style='width: 32px; height: 24px;' /> 矩 形" value="box"></option>
+                                                        <option data-content="<img src='/dev/img/mind/shape_ellipse.png' style='width: 32px; height: 24px;' /> 椭 圆" value="ellipse"></option>
+                                                        <option data-content="<img src='/dev/img/mind/shape_underline.png' style='width: 32px; height: 24px;' /> 下划线" value="underline"></option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li class="flex-row">
+                                                <p>边框</p>
+                                                <div>
+                                                    <a id="format_border_color" class="btn btn-xs color-picker "  style="width:30px"   title="边框颜色" ></a>
+                                                </div>
+                                            </li>
+                                            <li class="hide">
+                                                <p>权重</p>
+                                                <div>
+                                                    <select class="selectpicker" id="value">
+                                                        <option value="">(None)</option>
+                                                        <option value="num">Number</option>
+                                                        <optgroup label="Formula">
+                                                            <option value="sum">Sum</option>
+                                                            <option value="avg">Average</option>
+                                                            <option value="min">Minimum</option>
+                                                            <option value="max">Maximum</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li class="hide">
+                                                <p>边框颜色</p>
+                                                <div id="color">
+                                                    <a data-color="#999"  title="Inherit" href="#"></a>
+                                                    <a data-color="#000" title="Black" href="#"></a>
+                                                    <a data-color="#e33" title="Red" href="#"></a>
+                                                    <a data-color="#3e3" title="Green" href="#"></a>
+                                                    <a data-color="#33e" title="Blue" href="#"></a>
+                                                    <a data-color="#dd3" title="Yellow" href="#"></a>
+                                                    <a data-color="#3dd" title="Cyan" href="#"></a>
+                                                    <a data-color="#d3d" title="Magenta" href="#"></a>
+                                                    <a data-color="#fa3" title="Orange" href="#"></a>
+                                                </div>
+                                            </li>
+                                            <li class="hide">
+                                                <p>status</p>
+                                                <div>
+                                                    <select class="selectpicker" id="status">
+                                                        <option value="">None</option>
+                                                        <option value="yes">Yes</option>
+                                                        <option value="no">No</option>
+                                                        <option value="computed">Autocompute</option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <p>字体格式</p>
+                                                <div class="flex-row mind-font">
+                                                    <div style="width: 82px;">
+                                                        <a id="format_font_bold" data-value="0" class="btn btn-xs" title="加粗" href="#"><i class="fa fa-bold"></i></a>
+                                                        <a id="format_font_italic"  data-value="0"   class="btn btn-xs" title="斜体" href="#"><i class="fa fa-italic"></i></a>
+                                                        <!--<input id="format_text_color" class="btn btn-xs"  style="width:30px" type="color" title="字体颜色" >-->
+                                                        <a id="format_text_color" class=" btn btn-xs color-picker "  style="width:30px"   title="字体颜色" ></a>
+                                                    </div>
+                                                    <div style="flex: 1; padding-left: 4px;">
+                                                        <select id="format_font_size"  data-width="64px"  title="字号" class="selectpicker form-control">
+                                                            {% for size in fontSizes %}
+                                                                <option value="{{ size }}">{{ size }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div style="flex: 1; padding-left:2px;">
+                                                        <select id="format_font_family" title="字体" data-width="104px" class="selectpicker form-control">
+                                                            {% for row in fonts %}
+                                                                {% set  name = row['name'] %}
+                                                                {% set  value = row['value'] %}
+                                                                <option   data-content="<span style='font-family:{{ value }};'>{{ name }}</span>" value="{{ value }}">{{name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li  class="flex-row">
+                                                <p></p>
+                                            </li>
+                                            <li  class="flex-row">
+                                                <div class="mind-side-head">
+                                                    <h3>事项属性</h3>
+                                                </div>
+                                            </li>
+                                            <li  class="flex-row">
+                                                <p></p>
+                                            </li>
+                                            <li  class="flex-row" style="display: none">
+                                                <p>图标</p>
+                                                <div>
+                                                    <select id="icons" title="事项类型" class="selectpicker">
+                                                        {% for type in issue_types %}
+                                                            {% set  font_awesome = type['font_awesome'] %}
+                                                            {% set  type_name = type['name'] %}
+                                                            <option origin-id="{{ type['id'] }}" data-content="<i class='fa {{font_awesome}}'></i> {{type_name}}" value="{{font_awesome}}">{{type_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li  class="flex-row">
+                                                <p>事项类型</p>
+                                                <div>
+                                                    <select id="format_issue_type" title="事项类型" class="selectpicker">
+                                                        {% for type in issue_types %}
+                                                            {% set  font_awesome = type['font_awesome'] %}
+                                                            {% set  type_name = type['name'] %}
+                                                            <option origin-id="{{ type['id'] }}"  data-icon="fa {{font_awesome}}" value="{{font_awesome}}">{{type_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li class="flex-row">
+                                                <p>经 办 人&nbsp;&nbsp;</p>
+                                                <div>
+                                                    <select id="format_issue_assignee" title="经办人" class="selectpicker">
+                                                        {% for row in project_users %}
+                                                            {% set  display_name = row['display_name'] %}
+                                                            <option value="{{row.uid}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{row.uid}}.png' > {{display_name}}"  >{{display_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </li>
+                                            <li >
+                                                <p>优先级</p>
+                                                <div id="format_issue_priority" class="btn-group" data-toggle="buttons">
+                                                    {% for row in priority %}
+                                                        {% set  status_color = row['status_color'] %}
+                                                        {% set  row_name = row['name'] %}
+                                                        <label class="btn btn-sm btn-default"
+                                                               data-value="{{row.id}}"
+                                                            data-color="{{status_color}}"
+                                                            style=" color: {{status_color}}">
+                                                            {{row_name}}
+                                                        </label>
+                                                    {% endfor %}
+                                                </div>
+                                            </li>
+                                            <li >
+                                                <p>状态</p>
+                                                <div>
+                                                    <div id="format_issue_status" class="button_radio" data-toggle="buttons">
+                                                        {% for row in issue_status %}
+                                                            {% set  text_color = row['text_color'] %}
+                                                            {% set  row_name = row['name'] %}
+                                                            <label class="btn btn-xs btn-default" style="color:{{text_color}};font-size:8px;  margin-bottom: 5px;" data-status_value="{{row.id}}"  >{{row_name}}</label>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="hide">
+                                                <p>解决结果</p>
+                                                <div>
+                                                    <div id="issue_resolve" class="button_radio" data-toggle="buttons">
+                                                        {% for row in issue_resolve %}
+                                                            {% set  text_color = row['color'] %}
+                                                            {% set  row_name = row['name'] %}
+                                                            <label class="btn btn-xs btn-default" style="color:{{text_color}}; font-size:8px; margin-bottom: 5px;" >{{row_name}}</label>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <li >
+                                                <p>进度</p>
+                                                <div>
+                                                    <div id="format_issue_progress"  style="display: block">
+                                                        <a title="0%" href="#"><img   data-value="0"  src="/dev/img/mind/progress_start.png"></a>
+                                                        <a title="10%"  href="#"><img data-value="10" src="/dev/img/mind/progress_1.png"></a>
+                                                        <a title="30%"  href="#"><img data-value="30" src="/dev/img/mind/progress_2.png"></a>
+                                                        <a title="45%"  href="#"><img data-value="45" src="/dev/img/mind/progress_3.png"></a>
+                                                        <a title="60%"  href="#"><img data-value="60"  src="/dev/img/mind/progress_4.png"></a>
+                                                        <a title="75%"  href="#"><img data-value="75" src="/dev/img/mind/progress_5.png"></a>
+                                                        <a title="90%"  href="#"><img data-value="90" src="/dev/img/mind/progress_6.png"></a>
+                                                        <a title="100%" href="#"><img data-value="100" src="/dev/img/mind/progress_done.png"></a>
+                                                    </div>
+                                                    <style type="text/css">
+                                                        #format_issue_progress a img{
+                                                            width: 24px;height:24px
+                                                        }
+                                                        /*#format_progress a:hover{border:1px solid #000;background-color:#333;text-decoration: none;}*/
+                                                    </style>
+
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div id="throbber"></div>
+                                </div>
+
+
+                                <div id="io" class="ui">
+                                    <h3></h3>
+                                    <p>
+                                        <span>Storage</span>
+                                        <select id="backend"></select>
+                                    </p>
+
+                                    <div id="file">
+                                        <p class="desc">Local files are suitable for loading/saving files from other mindmapping applications.</p>
+                                        <p data-for="save">
+                                            <span>Format</span>
+                                            <select class="format"></select>
+                                        </p>
+                                        <p data-for="save load">
+                                            <button class="go"></button><button class="cancel">Cancel</button>
+                                        </p>
+                                    </div>
+
+                                    <div id="image">
+                                        <p class="desc">Export your design as a PNG image.</p>
+                                        <p data-for="save">
+                                            <button class="go"></button><button class="cancel">Cancel</button>
+                                        </p>
+                                    </div>
+
+                                    <div id="local">
+                                        <p class="desc">Your browser's localStorage can handle many mind maps and creates a permalink, but this URL cannot be shared.</p>
+                                        <p data-for="load">
+                                            <span>Saved maps</span>
+                                            <select class="list"></select>
+                                        </p>
+                                        <p data-for="save load">
+                                            <button class="go"></button><button class="cancel">Cancel</button>
+                                        </p>
+                                        <p data-for="load">
+                                            <button class="remove">Delete</button>
+                                        </p>
+                                    </div>
+
+                                    <div id="firebase">
+                                        <p class="desc">Firebase offers real-time synchronization for true multi-user collaboration.</p>
+                                        <p data-for="save load">
+                                            <span>Server</span>
+                                            <input type="text" class="server" />
+                                        </p>
+                                        <p data-for="save load">
+                                            <span>Auth</span>
+                                            <select class="auth">
+                                                <option value="">(None)</option>
+                                                <option value="facebook">Facebook</option>
+                                                <option value="twitter">Twitter</option>
+                                                <option value="github">GitHub</option>
+                                                <option value="google">Google</option>
+                                            </select>
+                                        </p>
+                                        <p data-for="load">
+                                            <span>Saved maps</span>
+                                            <select class="list"></select>
+                                        </p>
+                                        <p data-for="save load">
+                                            <button class="go"></button><button class="cancel">Cancel</button>
+                                        </p>
+                                        <p data-for="load">
+                                            <button class="remove">Delete</button>
+                                        </p>
+                                    </div>
+
+                                    <div id="webdav">
+                                        <p class="desc">Use this to access a generic DAV-like REST API.</p>
+                                        <p data-for="save load">
+                                            <span>URL</span>
+                                            <input type="text" class="url" />
+                                        </p>
+                                        <p data-for="save load">
+                                            <button class="go"></button><button class="cancel">Cancel</button>
+                                        </p>
+                                    </div>
+
+                                    <div id="gdrive">
+                                        <p class="desc">Maps stored in Google Drive have a permalink URL and can be shared with other users, if you allow this by setting proper permissions (inside Google Drive itself).</p>
+                                        <p data-for="save">
+                                            <span>Format</span>
+                                            <select class="format"></select>
+                                        </p>
+                                        <p data-for="save load">
+                                            <button class="go"></button><button class="cancel">Cancel</button>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div id="help" class="ui">
+                                    <h3>Help</h3>
+
+                                    <p><span>Navigation</span></p>
+                                    <table class="navigation"></table>
+
+                                    <p><span>Manipulation</span></p>
+                                    <table class="manipulation"></table>
+
+                                    <p><span>Editing</span></p>
+                                    <table class="editing"></table>
+
+                                    <p><span>Other</span></p>
+                                    <table class="other"></table>
+                                </div>
+
+                                <div id="menu">
+                                    <button data-command="InsertChild"></button>
+                                    <button data-command="InsertSibling"></button>
+                                    <span></span>
+                                    <button data-command="Edit"></button>
+                                    <button data-command="Delete"></button>
+                                    <!--<button data-command="Value"></button>-->
+                                    <span></span>
+                                    <button data-command="Undo"></button>
+                                    <button data-command="Redo"></button>
+                                    <button data-command="Center"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal" id="modal-setting" style=" padding-right: 16px;">
+    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
+          id="form_mind_setting" action="/project/mind/setting" accept-charset="UTF-8" method="post">
+        <div class="modal-dialog issue-modal-dialog" style="width: 700px;">
+            <div class="modal-content issue-modal-content">
+                <div class="modal-header issue-modal-header">
+
+                    <h3 class="modal-header-title">思维导图设置</h3>
+
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                </div>
+                <div id="setting-modal-body" class="modal-body issue-modal-body form-horizontal">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="project_id" id="setting_project_id" value="{{project_id}}">
+
+                    <div class="form-group">
+                        <label class="control-label"  >默认数据源：</label>
+                        <div class="col-sm-10">
+                            <div class="col-md-4">
+                                <label class="radio-inline">
+                                    <input type="radio" name="default_source" id="default_source_sprint" value="sprint"> 迭代
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="default_source" id="default_source_all" value="all"> 整个项目
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="default_source_id_container" class="dropdown inline hide">
+                                    <select id="default_source_id" name="default_source_id"  class="selectpicker">
+                                        {% for board in sprints %}
+                                            <option value="{{ board['id'] }}">{{ board['name'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label"  >自动折叠数：</label>
+                        <div class="col-sm-10">
+                            <div class=" col-md-2">
+                                    <input class="form-control" type="number" name="fold_count" id="fold_count" value="5">
+                            </div>
+                            <div class=" col-md-6">
+                                <span style="font-size: 10px">子事项数大于多少将会自动折叠</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  >是否显示标签：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_label" id="is_display_label" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_label" id="checkbox-is_display_label" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  ></label>
+                        <div class="col-sm-10">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  ></label>
+                        <div class="col-sm-10">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer issue-modal-footer footer-block row-content-block">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-setting').modal('hide');">取消</a>
+                    <span class="append-right-10">
+                         <input  id="btn-setting-save"  type="button" value="保 存" class="btn btn-create" >
+                </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% include 'twig/issue/form.twig' %}
+{% verbatim %}
+<script type="text/html" id="wrap_field">
+    <div class=" form-group">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
+        <div class="col-sm-8">{field_html}</div>
+        <div class="col-sm-1"></div>
+    </div>
+</script>
+
+<script type="text/html" id="li_tab_tpl">
+    <div role="tabpanel" class="tab-pane" id="{{id}}">
+        <div id="{{type}}_ui_config_{{id}}" style="min-height: 200px">
+
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="nav_tab_li_tpl">
+    <li role="presentation" class="active">
+        <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
+            <span id="span_{{id}}">{{title}}&nbsp;</span>
+        </a>
+    </li>
+</script>
+
+<script type="text/html" id="content_tab_tpl">
+    <div role="tabpanel" class="tab-pane " id="{{id}}">
+        <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
+
+        </div>
+    </div>
+</script>
+{% endverbatim %}
+
+<script>
+    new UsersSelect();
+    new LabelsSelect();
+    new MilestoneSelect();
+    new IssueStatusSelect();
+
+</script>
+
+<script src="/dev/js/handlebars.helper.js?v={{ _version }}"></script>
+
+<script type="text/javascript">
+
+    var _simplemde = {};
+    var _fineUploaderFile = {};
+    var _fineUploader = null;
+
+    var _issueConfig = {
+        "priority":{{ priority|json_encode()|raw }},
+        "issue_priority":{{ priority|json_encode()|raw }},
+        "issue_types":{{ issue_types|json_encode()|raw }},
+        "issue_status":{{ issue_status|json_encode()|raw }},
+        "issue_resolve":{{ issue_resolve|json_encode()|raw }},
+        "issue_module":{{ project_modules|json_encode()|raw }},
+        "issue_version":{{ project_versions|json_encode()|raw }},
+        "issue_labels":{{ project_labels|json_encode()|raw }},
+        "users":{{ users|json_encode()|raw }},
+        "project_users":{{ project_users|json_encode()|raw }},
+        "project_sprints":{{ sprints|json_encode()|raw }},
+        "projects":{{ projects|json_encode()|raw }}
+    };
+    var _project_issue_types =  {{project_issue_types|json_encode()|raw}};
+    var mind_setting = {{ mind_setting|json_encode()|raw }};
+    var _issue_id = null;
+    var _cur_project_id = '{{ project_id }}';
+    var _active_sprint_id = '{{ active_sprint_id }}';
+    var $IssueMain = null;
+    var _description_templates = {{ description_templates|json_encode()|raw }};
+    var _perm_kanban = {{ perm_kanban ? 1:0 }};
+    var $mindAjax= null;
+    var color_pickr = null;
+
+    window.onload = function() {
+        MM.App.init();
+        MM.App.io.fetchIssues();
+    }
+    $(function () {
+
+        var options = {}
+        window.$mindAjax = new MindAjax(options);
+        //let params = {source_type:'all', group_by:'sprint'}
+        //window.$mindAjax.fetchAll(window._cur_project_id,  params );
+
+        // 聚焦模式切换
+        $('#toggle_focus_mode').bind('click', function () {
+            $('.main-sidebar').toggleClass('hidden');
+            $('.with-horizontal-nav').toggleClass('hidden');
+            $('.layout-nav').toggleClass('hidden');
+            MM.App._syncPort()
+        });
+
+        if(mind_setting.default_source==='all'){
+            $('#source_range').val('all');
+            $('#all-group_by-container').show();
+            $('#sprint-group_by-container').hide();
+        }else{
+            $('#source_range').val(mind_setting.default_source_id);
+            $('#all-group_by-container').hide();
+            $('#sprint-group_by-container').show();
+        }
+        $('.selectpicker').selectpicker();
+        $("#source_range").change(function () {
+            console.log($(this).val());
+            let range_type = $(this).val();
+            if(range_type==='all'){
+                $('#all-group_by-container').show();
+                $('#sprint-group_by-container').hide();
+            }else{
+                $('#all-group_by-container').hide();
+                $('#sprint-group_by-container').show();
+            }
+            MM.App.io.fetchIssues();
+        });
+        $("#all-group_by").change(function () {
+            console.log($(this).val());
+            MM.App.io.fetchIssues();
+        });
+        $("#sprint-group_by").change(function () {
+            console.log($(this).val());
+            MM.App.io.fetchIssues();
+        });
+
+        $("input[name='default_source']").change(function(){
+            console.log($(this).val());
+            if($(this).val()==='all'){
+                $('#default_source_id_container').hide();
+            }else{
+                $('#default_source_id_container').show();
+            }
+        });
+        
+        $(".tokens-container").on("click", ".selectable-close", function () {
+            $(this).parents(".js-visual-token").remove()
+        });
+
+        $('#btn-create_same').bind('click', function () {
+            let command = 'InsertSibling'
+            let commandObj = MM.Command[command];
+            if (!commandObj.isValid()) { return; }
+            commandObj.execute();
+        });
+        $('#btn-create_child').bind('click', function () {
+            let command = 'InsertChild'
+            let commandObj = MM.Command[command];
+            if (!commandObj.isValid()) { return; }
+            commandObj.execute();
+        });
+        $('#btn-update').bind('click', function () {
+            window.$mindAjax.updateModalFormIssue();
+        });
+        $('#btn-delete').bind('click', function () {
+            swal({
+                    title: "您确认要删除吗？",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确 定",
+                    cancelButtonText: "取 消！",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        swal.close();
+                        let command = 'Delete'
+                        let commandObj = MM.Command[command];
+                        if (!commandObj.isValid()) { return; }
+                        commandObj.execute();
+                    } else {
+                        swal.close();
+                    }
+            });
+        });
+        let modal_edit_issue = $("#modal-edit-issue");
+        modal_edit_issue.on('shown.bs.modal', function (e) {
+            MM.App.editing = true;
+        });
+        modal_edit_issue.on('hide.bs.modal', function (e) {
+            MM.App.editing = false;
+        });
+        modal_edit_issue.on('hidden.bs.modal', function (e) {
+            MM.App.editing = false;
+        });
+
+        $('#btn-setting').bind('click', function () {
+            window.$mindAjax.fetchSettings();
+        });
+        $('#btn-setting-save').bind('click', function () {
+            window.$mindAjax.saveSettings();
+        });
+
+        $(".laydate_input_date").each(function (i) {
+            var id = $(this).attr('id');
+            laydate.render({
+                elem: '#' + id,
+                position: 'fixed'
+            });
+        });
+        $('#btn-add').bind('click',function(){
+            if($('#action').val()==='update'){
+                window.$mindAjax.updateSyncServerTask();
+            }else{
+                window.$mindAjax.addSyncServerTask();
+            }
+        });
+
+        window.format_text_color = Pickr.create({
+            el: '#format_text_color',
+            theme: 'classic', // or 'monolith', or 'nano',
+            strings: {
+                save: '使用',  // Default for save button
+                clear: '取消' // Default for cancel button
+            },
+            swatches: [
+                'rgba(244, 67, 54, 1)',
+                'rgba(233, 30, 99, 0.95)',
+                'rgba(156, 39, 176, 0.9)',
+                'rgba(103, 58, 183, 0.85)',
+                'rgba(63, 81, 181, 0.8)',
+                'rgba(33, 150, 243, 0.75)',
+                'rgba(3, 169, 244, 0.7)',
+                'rgba(0, 188, 212, 0.7)',
+                'rgba(0, 150, 136, 0.75)',
+                'rgba(76, 175, 80, 0.8)',
+                'rgba(139, 195, 74, 0.85)',
+                'rgba(205, 220, 57, 0.9)',
+                'rgba(255, 235, 59, 0.95)',
+                'rgba(255, 193, 7, 1)'
+            ],
+            components: {
+                // Main components
+                preview: true,
+                opacity: true,
+                hue: true,
+                // Input / output Options
+                interaction: {
+                    input: true,
+                    save: true
+                }
+            }
+        });
+
+        // format_border_color
+        window.format_border_color = Pickr.create({
+            el: '#format_border_color',
+            theme: 'classic', // or 'monolith', or 'nano',
+            strings: {
+                save: '使用',  // Default for save button
+                clear: '取消' // Default for cancel button
+            },
+            swatches: [
+                'rgba(244, 67, 54, 1)',
+                'rgba(233, 30, 99, 0.95)',
+                'rgba(156, 39, 176, 0.9)',
+                'rgba(103, 58, 183, 0.85)',
+                'rgba(63, 81, 181, 0.8)',
+                'rgba(33, 150, 243, 0.75)',
+                'rgba(3, 169, 244, 0.7)',
+                'rgba(0, 188, 212, 0.7)',
+                'rgba(0, 150, 136, 0.75)',
+                'rgba(76, 175, 80, 0.8)',
+                'rgba(139, 195, 74, 0.85)',
+                'rgba(205, 220, 57, 0.9)',
+                'rgba(255, 235, 59, 0.95)',
+                'rgba(255, 193, 7, 1)'
+            ],
+            components: {
+                // Main components
+                preview: true,
+                opacity: true,
+                hue: true,
+                // Input / output Options
+                interaction: {
+                    input: true,
+                    save: true
+                }
+            }
+        });
+
+    });
+    var _curFineAttachmentUploader = null;
+    var _curIssueId = null;
+    var _curTmpIssueId = null;
+    var _curQrToken = null;
+    var mobileUploadInterval = null;
+
+</script>
+
+
+</body>
+</html>

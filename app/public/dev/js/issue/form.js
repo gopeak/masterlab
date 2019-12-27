@@ -19,7 +19,7 @@ var IssueForm = (function () {
     };
 
     IssueForm.prototype.setOptions = function (options) {
-        for (i in  options) {
+        for (i in options) {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
             // }
@@ -36,11 +36,13 @@ var IssueForm = (function () {
                 break;
             }
         }
+
         return isExist;
     }
 
     IssueForm.prototype.makeCreateHtml = function (configs, fields, tab_id, allow_add_status, issue) {
         _allow_add_status = allow_add_status;
+
         var html = '';
         for (var i = 0; i < configs.length; i++) {
             var config = configs[i];
@@ -58,7 +60,7 @@ var IssueForm = (function () {
 
             html += IssueForm.prototype.createField(config, field, 'create');
         }
-        //console.log(html);
+        console.log(html);
         return html;
     }
 
@@ -96,7 +98,7 @@ var IssueForm = (function () {
 
         var tpl = $('#nav_tab_li_tpl').html();
         var template = Handlebars.compile(tpl);
-        var li = template({id: id, title: title});
+        var li = template({ id: id, title: title });
         var existing = $("#" + type + "_master_tabs").find("[id='" + id + "']");
 
         if ($("#a_" + type + "_tab-" + tab_last_index).length === 0) {
@@ -106,7 +108,7 @@ var IssueForm = (function () {
         if (existing.length == 0) {
             var source = $('#content_tab_tpl').html();
             var template = Handlebars.compile(source);
-            var result = template({id: id, type: type});
+            var result = template({ id: id, type: type });
             $("#" + type + "_master_tabs").append(result);
         }
         _active_tab = id;
@@ -131,6 +133,7 @@ var IssueForm = (function () {
 
 
     IssueForm.prototype.checkFieldInUi = function (configs, field_id) {
+        console.log("checkFieldInUi")
         for (var j = 0; j < configs.length; j++) {
             if (configs[j].field_id == field_id) {
                 return true;
@@ -138,6 +141,48 @@ var IssueForm = (function () {
         }
         return false;
     };
+
+    IssueForm.prototype.getAssistants = function () {
+        var _this = this
+        $.ajax({
+            url: "/user/select_filter?format=json",
+            data: {
+                search: "",
+                per_page: 20,
+                active: true,
+                project_id: "",
+                group_id: "",
+                skip_ldap: "",
+                todo_filter: "",
+                todo_state_filter: "",
+                field_type: "",
+                issue_id: "",
+                current_user: true,
+                push_code_to_protected_branches: "",
+                author_id: "",
+                skip_users: ""
+            }
+        }).done(function (e) {
+            var options = ""
+            if (e.length) {
+                e.forEach(function (item) {
+                    options = options + "<option data-tokens=" + item.id + ">" + item.name + "</option>"
+                })
+            }
+            $('#multi-select-assistants').html(options)
+            $('#multi-select-assistants').selectpicker('refresh')
+            $('#multi-select-assistants').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                let result = []
+                $(e.target).find("option").each(function (index, item) {
+                    if (item.selected) {
+                        result.push($(item).data("tokens"))
+                    }
+                })
+                console.log(result)
+                $("#issue_assistants_id").val(result)
+            });
+        })
+    }
 
     IssueForm.prototype.makeProjectField = function (data, callback) {
         $.ajax({
@@ -183,6 +228,12 @@ var IssueForm = (function () {
                 break;
             case "TEXT_MULTI_LINE":
                 html += IssueForm.prototype.makeFieldTextMulti(config, field, ui_type);
+                break;
+            case "NUMBER":
+                html += IssueForm.prototype.makeFieldNumber(config, field, ui_type);
+                break;
+            case "PROGRESS":
+                html += IssueForm.prototype.makeFieldProgress(config, field, ui_type);
                 break;
             case "PRIORITY":
                 html += IssueForm.prototype.makeFieldPriority(config, field, ui_type);
@@ -264,10 +315,10 @@ var IssueForm = (function () {
             display_name: display_name,
             order_weight: order_weight,
             required_html: required_html,
-            required:config.required
+            required: config.required
         };
         if (config.required) {
-            field_html += "\n"+'<p id="tip-'+field.name+'" class="gl-field-error hide"></p>';
+            field_html += "\n" + '<p id="tip-' + field.name + '" class="gl-field-error hide"></p>';
         }
         var source = $('#wrap_field').html();
         var template = Handlebars.compile(source);
@@ -301,20 +352,59 @@ var IssueForm = (function () {
 
     IssueForm.prototype.makeFieldText = function (config, field, ui_type) {
 
-        var display_name = field.title;
-        var name = field.name;
-        var required = config.required;
-        var type = config.type;
-        var field_name = 'params[' + name + ']';
-        var default_value = field.default_value
-
+        let display_name = field.title;
+        let name = field.name;
+        let required = config.required;
+        let type = config.type;
+        let field_name = 'params[' + name + ']';
+        let default_value = field.default_value
+        let extra_attr = field.extra_attr;
         if (default_value == null) {
             default_value = '';
         }
         var id = ui_type + '_issue_text_' + name;
         var html = '';
-        html += '<input type="text" class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  />';
+        html += '<input type="text" class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  '+extra_attr+' />';
 
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldNumber = function (config, field, ui_type) {
+        let display_name = field.title;
+        let name = field.name;
+        let required = config.required;
+        let type = config.type;
+        let field_name = 'params[' + name + ']';
+        let default_value = field.default_value
+        let extra_attr = field.extra_attr;
+        if (default_value == null) {
+            default_value = '';
+        }
+        var id = ui_type + '_issue_text_' + name;
+        var html = '';
+        html += '<input type="number"  class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"   '+extra_attr+' />';
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldProgress  = function (config, field, ui_type) {
+        let display_name = field.title;
+        let name = field.name;
+        let required = config.required;
+        let type = config.type;
+        let field_name = 'params[' + name + ']';
+        let default_value = field.default_value
+        let extra_attr = field.extra_attr;
+        if (default_value == null) {
+            default_value = '';
+        }
+        var id = ui_type + '_issue_text_' + name;
+        var html = '';
+        let onchange = "$('#progress-"+id+"').css('width',this.value+'%');$('#progress-"+id+"').html(this.value+'%');";
+        html += '<input type="range" onchange="'+onchange+'" class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '" style="width: 40%;"  '+extra_attr+' />';
+        html += '<div class="progress"  style="width: 40%;">\n' +
+            '    <div class="progress-bar"  id="progress-' + id + '" role="progressbar" aria-valuenow="60" \n' +
+            '        aria-valuemin="0" aria-valuemax="100" style="width: '+default_value+'%;">'+default_value+'%</div>\n' +
+            '</div>';
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
@@ -411,7 +501,6 @@ var IssueForm = (function () {
         var id_qrcoder = ui_type + '_qrcode'
         var html = '';
         var uploadHtml = '';
-
         if (isInArray(window._projectPermArr, 'CREATE_ATTACHMENTS')) {
             uploadHtml = '<a href="#" onclick="IssueForm.prototype.show(' + id_qrcoder + ') ">通过手机上传</a> <div ><img src="" id="' + id_qrcoder + '" style="display: none"></div>';
         }
@@ -479,7 +568,6 @@ var IssueForm = (function () {
         if (edit_data.length > 0) {
             is_default = '';
         }
-        console.log('edit_data:', edit_data);
         var data = {
             project_id: _cur_form_project_id,
             display_name: display_name,
@@ -491,7 +579,6 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_version_" + name
         };
-        console.log(data);
         var source = $('#version_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -542,7 +629,7 @@ var IssueForm = (function () {
 
         return IssueForm.prototype.wrapField(config, field, html);
     }
-
+    // 协助人
     IssueForm.prototype.makeFieldMultiUser = function (config, field, ui_type) {
 
         var display_name = field.title;
@@ -561,8 +648,9 @@ var IssueForm = (function () {
 
         var edit_data = [];
         if (default_value != null) {
+            default_value = default_value.split(',');
             for (var i = 0; i < default_value.length; i++) {
-                edit_data.push({id: default_value[i]});
+                edit_data.push(  default_value[i]  );
             }
         } else {
             default_value = '';
@@ -575,14 +663,17 @@ var IssueForm = (function () {
             default_value: default_value,
             field_name: field_name,
             name: field.name,
-            id: ui_type + "_issue_user_" + name,
-            edit_data: edit_data
+            id: ui_type + name,
+            edit_data: edit_data,
+            project_users:window._issueConfig.project_users
         };
-
+        //console.log(data)
         var source = $('#multi_user_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
 
+        $("#multi-select-"+data.id+"-value").val(edit_data);
+        $('.selectpicker').selectpicker('refresh');
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
@@ -611,12 +702,16 @@ var IssueForm = (function () {
 
 
         var sprint = _issueConfig.sprint;
-        console.log("sprint:");
-        console.log(sprint);
+        //console.log("sprint:");
+        //console.log(sprint);
         //alert(window._is_created_backlog);
-        for (var i in sprint) {
-            var sprint_id = sprint[i].id;
-            var sprint_title = sprint[i].name;
+        for (let i in sprint) {
+            let sprint_id = sprint[i].id;
+            let sprint_title = sprint[i].name;
+            let sprint_status = sprint[i].status;
+            if(sprint_status=='3'){
+                sprint_title = sprint_title+'(已归档)';
+            }
             var selected = '';
             if (window._is_created_backlog === undefined || !window._is_created_backlog) {
                 if (default_value != '0' && (sprint_id == default_value || window._active_sprint_id === sprint_id)) {
@@ -632,7 +727,7 @@ var IssueForm = (function () {
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
-    IssueForm.prototype.makeFieldPriority = function (config, field, ui_type) {
+    IssueForm.prototype.makeFieldPriorityV1 = function (config, field, ui_type) {
 
         var display_name = field.title;
         var name = field.name;
@@ -647,8 +742,8 @@ var IssueForm = (function () {
         var id = ui_type + '_issue_' + name;
 
         var html = '';
-        html = '<select id="' + id + ' " name="' + field_name + '" class="selectpicker"    title=""   >';
-        //html +='   <option value="">请选择类型</option>';
+        html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"    title=""   >';
+        //html +='   <option value="btn-create-issue">请选择类型</option>';
         var priority = _issueConfig.priority;
         for (var i in priority) {
             var priority_id = priority[i].id;
@@ -666,7 +761,46 @@ var IssueForm = (function () {
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
-    IssueForm.prototype.makeFieldStatus = function (config, field, ui_type) {
+    IssueForm.prototype.makeFieldPriority = function (config, field, ui_type) {
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params[' + name + ']';
+        var default_value = field.default_value
+        var required_html = '';
+        if (required) {
+            required_html = '<span class="required"> *</span>';
+        }
+        var html = '';
+        if (default_value == null || default_value == 'null') {
+            default_value = '';
+        }
+        var project_id = '';
+        if (is_empty(_cur_form_project_id)) {
+            _cur_form_project_id = _cur_project_id;
+        }
+        project_id = _cur_form_project_id;
+
+        var data = {
+            project_id: project_id,
+            project_key: _cur_project_key,
+            display_name: display_name,
+            default_value: default_value,
+            field_name: field_name,
+            list_data:_issueConfig.priority,
+            name: field.name,
+            id: ui_type + "_issue_" + name
+        };
+        // console.log(data);
+        var source = $('#priority_tpl').html();
+        var template = Handlebars.compile(source);
+        html = template(data);
+
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldStatusV1 = function (config, field, ui_type) {
         var display_name = field.title;
         var name = field.name;
         var required = config.required;
@@ -707,9 +841,48 @@ var IssueForm = (function () {
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
+    IssueForm.prototype.makeFieldStatus = function (config, field, ui_type) {
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params[' + name + ']';
+        var default_value = field.default_value
+        var required_html = '';
+        if (required) {
+            required_html = '<span class="required"> *</span>';
+        }
+        var html = '';
+        if (default_value == null || default_value == 'null') {
+            default_value = '';
+        }
+        var project_id = '';
+        if (is_empty(_cur_form_project_id)) {
+            _cur_form_project_id = _cur_project_id;
+        }
+        project_id = _cur_form_project_id;
+
+        var data = {
+            project_id: project_id,
+            project_key: _cur_project_key,
+            display_name: display_name,
+            default_value: default_value,
+            field_name: field_name,
+            list_data:_issueConfig.issue_status,
+            name: field.name,
+            id: ui_type + "_issue_" + name
+        };
+        // console.log(data);
+        var source = $('#status_tpl').html();
+        var template = Handlebars.compile(source);
+        html = template(data);
+
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
     // makeFieldSattus
 
-    IssueForm.prototype.makeFieldResolution = function (config, field, ui_type) {
+    IssueForm.prototype.makeFieldResolutionV1 = function (config, field, ui_type) {
 
         var display_name = field.title;
         var name = field.name;
@@ -741,6 +914,45 @@ var IssueForm = (function () {
 
         }
         html += '</select>';
+
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldResolution = function (config, field, ui_type) {
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params[' + name + ']';
+        var default_value = field.default_value
+        var required_html = '';
+        if (required) {
+            required_html = '<span class="required"> *</span>';
+        }
+        var html = '';
+        if (default_value == null || default_value == 'null') {
+            default_value = '';
+        }
+        var project_id = '';
+        if (is_empty(_cur_form_project_id)) {
+            _cur_form_project_id = _cur_project_id;
+        }
+        project_id = _cur_form_project_id;
+
+        var data = {
+            project_id: project_id,
+            project_key: _cur_project_key,
+            display_name: display_name,
+            default_value: default_value,
+            field_name: field_name,
+            list_data:_issueConfig.issue_resolve,
+            name: field.name,
+            id: ui_type + "_issue_" + name
+        };
+        //console.log(data);
+        var source = $('#resolve_tpl').html();
+        var template = Handlebars.compile(source);
+        html = template(data);
 
         return IssueForm.prototype.wrapField(config, field, html);
     }
@@ -797,17 +1009,42 @@ var IssueForm = (function () {
         var required = config.required;
         var type = config.type;
         var field_name = 'params[' + name + ']';
-        var default_value = field.default_value
+        var default_value = field.default_value;
         var required_html = '';
         if (required) {
             required_html = '<span class="required"> *</span>';
         }
         var id = ui_type + '_issue_laydate_' + name;
+        var now = new Date();
+        var month = now.getMonth() + 1;
+        var year = now.getFullYear();
+        var day = now.getDate();
+        var cur_date = year + "-" + month + "-" + day;
+
+        if (typeof (_is_create_sprint_issue) == "undefined") {
+            if (ui_type === "create" && name === "start_date") {
+                default_value = cur_date;
+            }
+        } else {
+            if (_is_create_sprint_issue && ui_type === "create") {
+                var config_sprint = _issueConfig.sprint;
+                var active_sprint = config_sprint.filter(function (n) {
+                    return n.active == 1;
+                })[0];
+                if (name === "start_date") {
+                    default_value = active_sprint.start_date;
+                }
+
+                if (name === "due_date") {
+                    default_value = active_sprint.end_date;
+                }
+            }
+        }
         if (default_value == null || default_value == 'null') {
             default_value = '';
         }
         var html = '';
-        html += '<div class="form-group"><div class="col-xs-6"> <input type="text" class="laydate_input_date form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  /></div></div>';
+        html += '<div class="form-group"><div class="col-xs-6"> <input type="text" class="laydate_input_date form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  autocomplete="off" /></div></div>';
 
         return IssueForm.prototype.wrapField(config, field, html);
     }
@@ -939,7 +1176,6 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.getField = function (fields, field_id) {
-
         var field = {};
         for (var i = 0; i < fields.length; i++) {
             if (fields[i].id == field_id) {
@@ -950,13 +1186,12 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.getModule = function (modules, module_id) {
-
-        var module = {};
-        for (var i = 0; i < modules.length; i++) {
-            if (modules[i].id == module_id) {
-                return modules[i];
-            }
-        }
+        var module = modules[module_id] || {};
+        // for (var i = 0; i < modules.length; i++) {
+        //     if (modules[i].id == module_id) {
+        //         return modules[i];
+        //     }
+        // }
         return module;
     }
 
@@ -1053,10 +1288,10 @@ var IssueForm = (function () {
             dataType: "json",
             async: true,
             url: "/issue/main/fetchMobileAttachment",
-            data: {tmp_issue_id: window._curTmpIssueId, issue_id: window._curIssueId},
+            data: { tmp_issue_id: window._curTmpIssueId, issue_id: window._curIssueId },
             success: function (resp) {
                 //alert(resp.msg);
-                if (typeof(window._curFineAttachmentUploader) == 'object') {
+                if (typeof (window._curFineAttachmentUploader) == 'object') {
 
                     var haveUploads = window._curFineAttachmentUploader.getUploads({
                         status: qq.status.UPLOAD_SUCCESSFUL
@@ -1094,5 +1329,3 @@ var IssueForm = (function () {
 
     return IssueForm;
 })();
-
-

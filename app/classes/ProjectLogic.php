@@ -22,15 +22,15 @@ use main\app\model\project\ProjectUserRoleModel;
  */
 class ProjectLogic
 {
-    const PROJECT_TYPE_GROUP_SOFTWARE = 1;
-    const PROJECT_TYPE_GROUP_BUSINESS = 2;
+    const PROJECT_TYPE_GROUP_SOFTWARE = GlobalConstant::PROJECT_TYPE_GROUP_SOFTWARE;
+    const PROJECT_TYPE_GROUP_BUSINESS = GlobalConstant::PROJECT_TYPE_GROUP_BUSINESS;
 
-    const PROJECT_TYPE_SCRUM = 10;
-    const PROJECT_TYPE_KANBAN = 20;
-    const PROJECT_TYPE_SOFTWARE_DEV = 30;
-    const PROJECT_TYPE_PROJECT_MANAGE = 40;
-    const PROJECT_TYPE_FLOW_MANAGE = 50;
-    const PROJECT_TYPE_TASK_MANAGE = 60;
+    const PROJECT_TYPE_SCRUM = GlobalConstant::PROJECT_TYPE_SCRUM;
+    const PROJECT_TYPE_KANBAN = GlobalConstant::PROJECT_TYPE_KANBAN;
+    const PROJECT_TYPE_SOFTWARE_DEV = GlobalConstant::PROJECT_TYPE_SOFTWARE_DEV;
+    const PROJECT_TYPE_PROJECT_MANAGE = GlobalConstant::PROJECT_TYPE_PROJECT_MANAGE;
+    const PROJECT_TYPE_FLOW_MANAGE = GlobalConstant::PROJECT_TYPE_FLOW_MANAGE;
+    const PROJECT_TYPE_TASK_MANAGE = GlobalConstant::PROJECT_TYPE_TASK_MANAGE;
 
     static public $type_all = [
         self::PROJECT_TYPE_SCRUM,
@@ -322,8 +322,8 @@ class ProjectLogic
         if (strpos($avatar, '?') !== false) {
             list($avatar) = explode('?', $avatar);
         }
-        //var_dump(STORAGE_PATH .'attachment/'. $avatar);
-        $file = STORAGE_PATH . 'attachment/' . $avatar;
+        //var_dump(PUBLIC_PATH .'attachment/'. $avatar);
+        $file = PUBLIC_PATH . 'attachment/' . $avatar;
         if (!is_dir($file) && file_exists($file)) {
             $avatar = ATTACHMENT_URL . $avatar;
         } else {
@@ -486,7 +486,7 @@ class ProjectLogic
             $defaultRoleRelation = $defaultRoleRelationModel->getAll(false);
             $defaultRoleRelationArr = [];
             foreach ($defaultRoleRelation as $item) {
-                $defaultRoleRelationArr[$item['default_role_id']][] = $item;
+                $defaultRoleRelationArr[$item['role_id']][] = $item;
             }
             //print_r($defaultRoleRelationArr);
             unset($defaultRoleRelation);

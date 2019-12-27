@@ -31,7 +31,7 @@ use main\app\model\issue\IssueFollowModel;
 class User extends BaseUserCtrl
 {
 
-    public $allowSettingFields = ['scheme_style' => 'left', 'layout' => 'fixed', 'project_view' => 'issues', 'issue_view' => 'list'];
+    public $allowSettingFields = ['scheme_style' => 'left', 'layout' => 'aa','page_layout' => 'fixed', 'project_view' => 'issues', 'issue_view' => 'list'];
 
     public function __construct()
     {
@@ -121,6 +121,33 @@ class User extends BaseUserCtrl
         }
         $data['user_id'] = $userId;
         $this->render('gitlab/user/have_join_projects.php', $data);
+    }
+
+    public function pageFollowedIssues()
+    {
+        $data = [];
+        $data['title'] = '关注的事项';
+        $data['nav'] = 'followed_issues';
+        $userId = '';
+        if (isset($_GET['_target'][2])) {
+            $userId = $_GET['_target'][2];
+        }
+        $data['other_user'] = [];
+        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
+            $user = UserModel::getInstance($userId)->getUser();
+            if (isset($user['create_time'])) {
+                $user['create_time_text'] = format_unix_time($user['create_time']);
+            }
+            if (isset($user['password'])) {
+                unset($user['password']);
+            }
+            $user = UserLogic::format($user);
+            $data['other_user'] = $user;
+        }
+        $data['user_id'] = $userId;
+
+        ConfigLogic::getAllConfigs($data);
+        $this->render('gitlab/user/follow_issues.php', $data);
     }
 
     public function pagePreferences()
@@ -291,6 +318,31 @@ class User extends BaseUserCtrl
     }
 
     /**
+     * 获取我关注的事项
+     * @throws \Exception
+     */
+    public function fetchMyFollowedIssues()
+    {
+        $curUserId = UserAuth::getInstance()->getId();
+        if (isset($_REQUEST['user_id'])) {
+            $curUserId = $_REQUEST['user_id'];
+        }
+        $page = 1;
+        $pageSize = 20;
+        if (isset($_GET['page'])) {
+            $page = max(1, (int)$_GET['page']);
+        }
+
+
+        list($data['issues'], $total) = IssueFilterLogic::getMyFollow($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
      * 获取单个用户信息
      * @param string $token
      * @param string $openid
@@ -323,7 +375,7 @@ class User extends BaseUserCtrl
     /**
      * 用户查询
      * @param null $search
-     * @param null $perPage
+     * @param null $per_page
      * @param bool $active
      * @param null $project_id
      * @param null $group_id
@@ -369,6 +421,26 @@ class User extends BaseUserCtrl
             }
             sort($users);
         }
+
+        // 筛选项目之外的用户
+        if ($field_type == 'project_except') {
+            $userLogic = new UserLogic();
+            $inProjectUserIds = $userLogic->fetchProjectRoleUserIds($project_id);
+            if (!empty($inProjectUserIds)) {
+                $skip_users = $inProjectUserIds;
+            } else {
+                $skip_users = null;
+            }
+            $users = $userLogic->selectUserFilter($search, $perPage, $active, null, $group_id, $skip_users);
+            foreach ($users as $k => &$row) {
+                $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
+                if ($current_user && $row['id'] == $current_uid) {
+                    unset($users[$k]);
+                }
+            }
+            sort($users);
+        }
+
         if ($field_type == 'project') {
             $logic = new ProjectLogic();
             $users = $logic->selectFilter($search, $perPage);
@@ -417,10 +489,11 @@ class User extends BaseUserCtrl
         }
         if (isset($_POST['image'])) {
             $base64_string = $_POST['image'];
-            $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
+            $saveRet = UploadLogic::base64ImageContent($base64_string, PUBLIC_PATH . 'attachment/avatar/', $userId);
             if ($saveRet !== false) {
                 $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
             }
+            unset($_POST['image'], $base64_string);
         }
         // print_r($userInfo);
         $ret = false;
@@ -452,29 +525,6 @@ class User extends BaseUserCtrl
         }
 
         $this->ajaxSuccess('保存成功', $ret);
-    }
-
-    /**
-     * save avatar
-     * @param $base64ImageContent
-     * @param $path
-     * @param $uid
-     * @return bool|string
-     */
-    private function base64ImageContent($base64ImageContent, $path, $uid)
-    {
-        //匹配出图片的格式
-        if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64ImageContent, $result)) {
-            $type = $result[2];
-            $newFile = $path . $uid . ".{$type}";
-            if (file_put_contents($newFile, base64_decode(str_replace($result[1], '', $base64ImageContent)))) {
-                return $uid . ".{$type}";
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -582,6 +632,8 @@ class User extends BaseUserCtrl
         foreach ($dbUserSettings as $item) {
             $userSettings[$item['_key']] = $item['_value'];
         }
+
+        // print_r($userSettings);
         // print_r($postSettings);
         foreach ($allowSettingFields as $settingField => $default) {
             unset($default);
@@ -599,7 +651,7 @@ class User extends BaseUserCtrl
                 }
             }
         }
-        $this->ajaxSuccess('ok', ['params' => $postSettings]);
+        $this->ajaxSuccess('操作成功', ['params' => $postSettings]);
     }
 
     /**

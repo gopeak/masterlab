@@ -122,7 +122,7 @@ class MyPdo
                 $password = $this->config['password'];
                 $params = $this->config['params'];
                 $this->pdo = new \PDO($dsn, $user, $password, $params);
-                $sqlMode = "SET SQL_MODE='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'";
+                $sqlMode = "SET SQL_MODE='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'";
                 $this->pdo->query($sqlMode);
             } catch (\PDOException $e) {
                 $message = $e->getMessage();

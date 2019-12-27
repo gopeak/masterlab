@@ -12,7 +12,7 @@ use main\app\classes\PermissionLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserLogic;
 use main\app\classes\UserAuth;
-use main\app\model\permission\PermissionModel;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\user\UserModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;
@@ -47,7 +47,6 @@ class Member extends BaseUserCtrl
 
         $userLogic = new UserLogic();
         $projectUsers = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
-
         foreach ($projectUsers as &$user) {
             $user = UserLogic::format($user);
         }
@@ -57,5 +56,36 @@ class Member extends BaseUserCtrl
         $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
 
         $this->render('gitlab/project/setting_member.php', $data);
+    }
+
+    /**
+     * 获取项目的成员列表
+     * @throws \Exception
+     */
+    public function fetchAll()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+        $model = new ProjectRoleModel();
+        $data['roles'] = $model->getsByProject($projectId);
+
+        $userLogic = new UserLogic();
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
+        $resources = [];
+        foreach ($projectUsers as &$user) {
+            $user = UserLogic::format($user);
+            $resources[] = ['id' => $user['uid'], 'name' => $user['display_name']];
+        }
+        $data['resources'] = $resources;
+        $data['project_users'] = $projectUsers;
+        $this->ajaxSuccess('ok', $data);
     }
 }

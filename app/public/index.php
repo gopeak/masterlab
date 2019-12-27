@@ -13,17 +13,21 @@ $config->appStatus = APP_STATUS;
 $config->enableTrace = ENABLE_TRACE;
 $config->enableXhprof = ENABLE_XHPROF;
 $config->xhprofRate = XHPROF_RATE;
-$config->xhprofRoot = PRE_APP_PATH.'lib/xhprof/';
+$config->xhprofRoot = PRE_APP_PATH . 'lib/xhprof/';
 $config->enableWriteReqLog = WRITE_REQUEST_LOG;
 $config->enableSecurityMap = SECURITY_MAP_ENABLE;
 $config->enableReflectMethod = ENABLE_REFLECT_METHOD;
 $config->enableFilterSqlInject = false;
-$config->exceptionPage = VIEW_PATH.'exception.php';
-$config->ajaxProtocolClass  = 'ajax';
+$config->exceptionPage = VIEW_PATH . 'exception.php';
+$config->ajaxProtocolClass = 'ajax';
 $config->ctrlMethodPrefix = 'page';
 $config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
 $config->customRewriteFunction = "orgRoute";
-
+$tplEngine = 'php';
+if (defined('TPL_ENGINE')) {
+    $tplEngine = TPL_ENGINE;
+}
+$config->tplEngine = $tplEngine;
 
 
 // 实例化开发框架对象

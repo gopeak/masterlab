@@ -15,6 +15,7 @@ html, body{
     margin: 0 auto;
 }
 
+
 @media (min-width: 768px){
     .modal > .form-horizontal .modal > .modal-dialog {
         padding: 30px 0;
@@ -145,6 +146,32 @@ html, body{
 .modal .form-actions .btn.btn-cancel {
     float: none;
     margin-left: 10px;
+}
+
+.issue-modal-dialog {
+    min-width: 600px;
+    width:900px;
+    max-width: 1200px;
+}
+
+@media (min-width: 992px) {
+    .issue-modal-dialog {
+        width: 980px;
+    }
+}
+
+.issue-edit-box {
+    display: flex;
+    flex-direction: row;
+    padding: 0 5%;
+}
+
+.issue-edit-box .issue-edit-label {
+    width: 120px;
+}
+
+.issue-edit-box .issue-edit-content {
+    flex: 1 auto;
 }
 
 .padding-20 {

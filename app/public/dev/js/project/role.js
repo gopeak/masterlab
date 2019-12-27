@@ -262,7 +262,7 @@ var Role = (function () {
     Role.prototype.update = function () {
 
         var method = 'post';
-        var params = $('#form_add_role').serialize();
+        //var params = $('#form_add_role').serialize();
         $.ajax({
             type: method,
             dataType: "json",

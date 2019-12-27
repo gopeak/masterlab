@@ -572,4 +572,15 @@ class SettingsLogic
         $setting = SettingModel::getInstance()->getSettingByKey('enable_mail');
         return $setting['_value'];
     }
+
+    /**
+     * 允许用户注册
+     * allow_user_reg
+     * @throws \Exception
+     */
+    public function allowUserReg()
+    {
+        $setting = SettingModel::getInstance()->getSettingByKey('allow_user_reg');
+        return $setting['_value'];
+    }
 }

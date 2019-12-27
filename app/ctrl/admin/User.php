@@ -2,7 +2,9 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\PermissionGlobal;
 use main\app\classes\SystemLogic;
+use main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserLogic;
@@ -21,8 +23,24 @@ use main\app\model\user\GroupModel;
  */
 class User extends BaseAdminCtrl
 {
+    public static $pageSizes = [10, 20, 50, 100];
 
-    static public $pageSizes = [10, 20, 50, 100];
+    /**
+     * User constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $userId = UserAuth::getId();
+        $this->addGVar('top_menu_active', 'system');
+        $check = PermissionGlobal::check($userId, PermissionGlobal::MANAGER_USER_PERM_ID);
+
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
+        }
+    }
 
     /**
      * @throws \Exception
@@ -39,6 +57,8 @@ class User extends BaseAdminCtrl
         if (isset($_GET['group_id'])) {
             $data['group_id'] = (int)$_GET['group_id'];
         }
+        $data['status_normal'] = UserModel::STATUS_NORMAL;
+        $data['status_disabled'] = UserModel::STATUS_DISABLED;
         $data['status_approval'] = UserModel::STATUS_PENDING_APPROVAL;
         $this->render('gitlab/admin/users.php', $data);
     }
@@ -205,7 +225,7 @@ class User extends BaseAdminCtrl
         $userLogic = new UserLogic();
         list($ret, $msg) = $userLogic->updateUserGroup($userId, $groups);
         if ($ret) {
-            $this->ajaxSuccess("操作成功", $msg);
+            $this->ajaxSuccess("提示", '操作成功');
         }
         $this->ajaxFailed($msg);
     }
@@ -266,8 +286,22 @@ class User extends BaseAdminCtrl
         }
         unset($user, $user2);
 
+
+
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
+            $updateInfo = [];
+            if (isset($params['avatar'])) {
+                $base64String = $params['avatar'];
+                $saveRet = UploadLogic::base64ImageContent($base64String, PUBLIC_PATH . 'attachment/avatar/', $user['uid']);
+                if ($saveRet !== false) {
+                    $updateInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
+                    $userModel->uid = $user['uid'];
+                    $ret = $userModel->updateUser($updateInfo);
+                }
+                unset($params['avatar'], $base64String);
+            }
+
             if (isset($params['notify_email']) && $params['notify_email'] == '1') {
                 $sysLogic = new SystemLogic();
                 $content = "管理用户为您创建了Masterlab账号。<br>用户名：{$username}<br>密码：{$password}<br><br>请访问 " . ROOT_URL . " 进行登录<br>";
@@ -313,6 +347,14 @@ class User extends BaseAdminCtrl
             $info['status'] = UserModel::STATUS_NORMAL;
         }
 
+        if (isset($params['avatar'])) {
+            $base64String = $params['avatar'];
+            $saveRet = UploadLogic::base64ImageContent($base64String, PUBLIC_PATH . 'attachment/avatar/', $userId);
+            if ($saveRet !== false) {
+                $info['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
+            }
+            unset($params['avatar'], $base64String);
+        }
         $userModel = UserModel::getInstance($userId);
         $userModel->uid = $userId;
         $userModel->updateUser($info);

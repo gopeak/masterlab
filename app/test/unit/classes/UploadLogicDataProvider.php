@@ -121,7 +121,6 @@ class UploadLogicDataProvider
             }
         }
 
-
         if (!empty(self::$fileName)) {
             @unlink(self::$fileName);
         }

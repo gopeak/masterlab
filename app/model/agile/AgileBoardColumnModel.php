@@ -60,10 +60,15 @@ class AgileBoardColumnModel extends BaseDictionaryModel
         return $rows;
     }
 
-    public function deleteByBoardId($projectId)
+    /**
+     * 删除看板中的列数据
+     * @param $boardId
+     * @return int
+     */
+    public function deleteByBoardId($boardId)
     {
         $conditions = [];
-        $conditions['board_id'] = intval($projectId);
+        $conditions['board_id'] = intval($boardId);
         return $this->delete($conditions);
     }
 }

@@ -72,7 +72,14 @@ class Projects extends BaseUserCtrl
         }
 
         $data['type_list'] = $outProjectTypeList;
+
+        $data['is_admin'] = false;
+        if (PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
+            $data['is_admin'] = true;
+        }
+
         ConfigLogic::getAllConfigs($data);
+
         $this->render('gitlab/project/main.php', $data);
     }
 
@@ -101,7 +108,7 @@ class Projects extends BaseUserCtrl
             $projects = $projectModel->getAll(false);
         }
 
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $isAdmin = true;
         }
         $userLogic = new UserLogic();
@@ -146,6 +153,11 @@ class Projects extends BaseUserCtrl
         $projects = array_values($projects);
         $data['projects'] = $projects;
 
+        $data['is_admin'] = false;
+        if ($isAdmin) {
+            $data['is_admin'] = true;
+        }
+
         $this->ajaxSuccess('success', $data);
     }
 
@@ -171,7 +183,7 @@ class Projects extends BaseUserCtrl
         }
 
         $uploadLogic = new UploadLogic();
-        $ret = $uploadLogic->move('qqfile', 'avatar', $uuid, $originName, $fileSize);
+        $ret = $uploadLogic->move('qqfile', 'project_image', $uuid, $originName, $fileSize);
         header('Content-type: application/json; charset=UTF-8');
 
         $resp = [];

@@ -10,13 +10,13 @@ var Backlog = (function () {
     function Backlog(options) {
         _options = options;
     };
-
+    console.log(123)
     Backlog.prototype.getOptions = function () {
         return _options;
     };
 
     Backlog.prototype.setOptions = function (options) {
-        for (i in  options) {
+        for (i in options) {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
             // }
@@ -31,7 +31,7 @@ var Backlog = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"agile/backlog/fetch/" + id,
+            url: root_url + "agile/backlog/fetch/" + id,
             data: {},
             success: function (resp) {
                 auth_check(resp);
@@ -47,7 +47,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/addSprint",
+            url: root_url + "agile/addSprint",
             data: $('#form_sprint_add').serialize(),
             success: function (resp) {
                 auth_check(resp);
@@ -69,7 +69,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/updateSprint",
+            url: root_url + "agile/updateSprint",
             data: $('#form_sprint_edit').serialize(),
             success: function (resp) {
                 auth_check(resp);
@@ -88,25 +88,25 @@ var Backlog = (function () {
 
     Backlog.prototype.deleteSprint = function (sprint_id) {
         swal({
-                title: "确认要删除该迭代？",
-                text: "注:删除后迭代中的事项将会移动到待办事项中",
-                html: true,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确 定",
-                cancelButtonText: "取 消！",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-            function(isConfirm){
+            title: "确认要删除该迭代？",
+            text: "注:删除后迭代中的事项将会移动到待办事项中",
+            html: true,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确 定",
+            cancelButtonText: "取 消！",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
                 if (isConfirm) {
                     $.ajax({
                         type: 'post',
                         dataType: "json",
                         async: true,
-                        url: root_url+"agile/deleteSprint",
-                        data: {sprint_id:sprint_id},
+                        url: root_url + "agile/deleteSprint",
+                        data: { sprint_id: sprint_id },
                         success: function (resp) {
                             auth_check(resp);
                             if (resp.ret != '200') {
@@ -120,7 +120,7 @@ var Backlog = (function () {
                             notify_error("请求数据错误" + res);
                         }
                     });
-                }else{
+                } else {
                     swal.close();
                 }
             });
@@ -132,8 +132,8 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/joinSprint",
-            data: {issue_id: issue_id, sprint_id: sprint_id},
+            url: root_url + "agile/joinSprint",
+            data: { issue_id: issue_id, sprint_id: sprint_id },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -155,8 +155,8 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/joinBacklog",
-            data: {issue_id: issue_id},
+            url: root_url + "agile/joinBacklog",
+            data: { issue_id: issue_id },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -176,8 +176,8 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/joinClosed",
-            data: {issue_id: issue_id},
+            url: root_url + "agile/joinClosed",
+            data: { issue_id: issue_id },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -198,7 +198,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/updateBacklogSprintWeight",
+            url: root_url + "agile/updateBacklogSprintWeight",
             data: {
                 issue_id: issue_id,
                 prev_issue_id: prev_issue_id,
@@ -226,8 +226,8 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/setSprintActive",
-            data: {sprint_id: sprint_id},
+            url: root_url + "agile/setSprintActive",
+            data: { sprint_id: sprint_id },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -246,19 +246,19 @@ var Backlog = (function () {
     Backlog.prototype.fetchAll = function (project_id) {
 
         // url,  list_tpl_id, list_render_id
-        loading.show('#backlog_render_id','加载中');
-        var params = {format: 'json'};
+        loading.show('#backlog_render_id', '加载中');
+        var params = { format: 'json' };
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+"agile/fetch_backlog_issues/" + project_id,
+            url: root_url + "agile/fetch_backlog_issues/" + project_id,
             data: {},
             success: function (resp) {
                 auth_check(resp);
                 loading.hide('#backlog_render_id');
                 if (resp.ret != '200') {
-                    notify_error( resp.msg, resp.data);
+                    notify_error(resp.msg, resp.data);
                     return;
                 }
 
@@ -271,7 +271,7 @@ var Backlog = (function () {
                 } else {
                     defineStatusHtml({
                         wrap: '#backlog_render_id',
-                        message : '暂无待办事项',
+                        message: '暂无待办事项',
                         name: 'backlog'
                     });
                 }
@@ -295,13 +295,13 @@ var Backlog = (function () {
 
         // url,  list_tpl_id, list_render_id
         loading.show('#closed_render_id');
-        var params = {format: 'json'};
+        var params = { format: 'json' };
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+'agile/fetchClosedIssuesByProject',
-            data: {id: project_id},
+            url: root_url + 'agile/fetchClosedIssuesByProject',
+            data: { id: project_id },
             success: function (resp) {
                 auth_check(resp);
                 loading.hide('#closed_render_id');
@@ -310,7 +310,7 @@ var Backlog = (function () {
                     return;
                 }
 
-                if(resp.data.issues.length) {
+                if (resp.data.issues.length) {
                     $('#closed_count').html(resp.data.issues.length)
                     var source = $('#closed_issue_tpl').html();
                     var template = Handlebars.compile(source);
@@ -319,7 +319,7 @@ var Backlog = (function () {
                 } else {
                     defineStatusHtml({
                         wrap: '#closed_render_id',
-                        message : '没有已关闭的事项',
+                        message: '没有已关闭的事项',
                         name: 'sprint'
                     });
                 }
@@ -340,14 +340,14 @@ var Backlog = (function () {
     Backlog.prototype.fetchSprintIssues = function (sprint_id) {
 
         // url,  list_tpl_id, list_render_id
-        var params = {format: 'json'};
+        var params = { format: 'json' };
         loading.show('#sprint_render_id');
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+'agile/fetchSprintIssues',
-            data: {id: sprint_id,sort_field:window.$sort_field,sort_by:window.$sort_by},
+            url: root_url + 'agile/fetchSprintIssues',
+            data: { id: sprint_id, sort_field: window.$sort_field, sort_by: window.$sort_by },
             success: function (resp) {
                 auth_check(resp);
                 loading.hide('#sprint_render_id');
@@ -358,7 +358,7 @@ var Backlog = (function () {
                 $('.classification-backlog').addClass('hidden');
                 $('#sprint_list').removeClass('hidden');
 
-                if(!objIsEmpty(resp.data.sprint)){
+                if (!objIsEmpty(resp.data.sprint)) {
                     $('#sprint_name').html(resp.data.sprint.name)
                     $('#sprint_count').html(resp.data.issues.length)
 
@@ -366,14 +366,14 @@ var Backlog = (function () {
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#sprint_list').removeClass('hidden');
-                    $('#sprint_list').css('display','block')
+                    $('#sprint_list').css('display', 'block')
                     $('#sprint_render_id').html(result);
 
-                }else{
+                } else {
                     // notify_error('当前项目没有迭代');
                     defineStatusHtml({
                         wrap: '#sprint_render_id',
-                        message : '当前项目没有迭代',
+                        message: '当前项目没有迭代',
                         name: 'sprint',
                         handleHtml: '<a class="btn btn-new" data-toggle="modal" data-target="#modal-sprint_add">创建迭代</a>'
                     });
@@ -390,13 +390,13 @@ var Backlog = (function () {
     Backlog.prototype.fetchSprints = function (project_id) {
 
         // url,  list_tpl_id, list_render_id
-        var params = {format: 'json'};
+        var params = { format: 'json' };
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+'agile/fetchSprints/' + project_id,
-            data: {},
+            url: root_url + 'agile/fetchSprints/' + project_id,
+            data: {no_packed:true},
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -419,12 +419,12 @@ var Backlog = (function () {
     Backlog.prototype.showEditSprint = function (sprint_id) {
 
         $('#edit_sprint_id').val(sprint_id);
-        var params = {format: 'json'};
+        var params = { format: 'json' };
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+'agile/fetchSprint/' + sprint_id,
+            url: root_url + 'agile/fetchSprint/' + sprint_id,
             data: {},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -449,12 +449,12 @@ var Backlog = (function () {
 
         var id = ''
         $(".classification-side").on('click', '.classification-item', function () {
-            if($(this).hasClass('open')) return;
+            if ($(this).hasClass('open')) return;
             var children = $(this).siblings()
             Backlog.prototype.fetchSprintIssues($(this).data('id'));
             $(this).addClass('open')
-            children.each(function(i, el){
-                if($(el).hasClass('open')) $(el).removeClass('open')
+            children.each(function (i, el) {
+                if ($(el).hasClass('open')) $(el).removeClass('open')
             })
         })
 
@@ -490,7 +490,18 @@ var Backlog = (function () {
 
         var items = document.getElementsByClassName('classification-backlog-inner');
 
-        if(window._drag_issue_perm) {
+        var getURLParameters = function (url) {
+            var json = {};
+            var arr = url.substr(url.indexOf('?') + 1).split('&');
+            arr.forEach(item => {
+                var tmp = item.split('=');
+                json[tmp[0]] = tmp[1];
+            });
+            return json
+        }
+        var query = getURLParameters(window.location.href)
+
+        if (window._drag_issue_perm && !query.sort_field) {
             [].forEach.call(items, function (el) {
                 Sortable.create(el, {
                     group: 'item',
@@ -518,10 +529,10 @@ var Backlog = (function () {
                             if (issue_id) {
                                 var prev_issue_id = $(evt.item).prev().data('id');
                                 var next_issue_id = $(evt.item).next().data('id');
-                                if (typeof(prev_issue_id) == "undefined") {
+                                if (typeof (prev_issue_id) == "undefined") {
                                     prev_issue_id = '0';
                                 }
-                                if (typeof(next_issue_id) == "undefined") {
+                                if (typeof (next_issue_id) == "undefined") {
                                     next_issue_id = '0';
                                 }
                                 console.log(prev_issue_id, issue_id, next_issue_id)

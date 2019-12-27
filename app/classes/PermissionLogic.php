@@ -8,7 +8,7 @@
 
 namespace main\app\classes;
 
-use main\app\model\permission\PermissionModel;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;
@@ -27,6 +27,8 @@ class PermissionLogic
     const CREATE_ISSUES = 'CREATE_ISSUES';
     const ADD_COMMENTS = 'ADD_COMMENTS';
     const EDIT_ISSUES = 'EDIT_ISSUES';
+    const EDIT_ISSUES_STATUS = 'EDIT_ISSUES_STATUS';
+    const EDIT_ISSUES_RESOLVE = 'EDIT_ISSUES_RESOLVE';
     const DELETE_ISSUES = 'DELETE_ISSUES';
     const CLOSE_ISSUES = 'CLOSE_ISSUES';
     const DELETE_COMMENTS = 'DELETE_COMMENTS';
@@ -50,10 +52,11 @@ class PermissionLogic
      */
     public static function check($projectId, $userId, $permission)
     {
+        /** 是否具有具体的全局权限需要在该方法外部进行判断
         $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
         if ($haveAdminPerm) {
             return true;
-        }
+        }*/
         $userRoleModelObj = new ProjectUserRoleModel();
         $roleIds = $userRoleModelObj->getUserRolesByProject($userId, $projectId);
         unset($userRoleModelObj);
@@ -64,7 +67,6 @@ class PermissionLogic
 
         //获取权限模块列表
         $permissionList = self::getPermissionListByRoleIds($roleIds);
-
         if (in_array($permission, $permissionList)) {
             return true;
         }
@@ -188,7 +190,7 @@ class PermissionLogic
         $relationModelObj = new  ProjectRoleRelationModel();
         $permIds = $relationModelObj->getPermIdsByRoleIds($roleIds);
 
-        $permissionModelObj = new PermissionModel();
+        $permissionModelObj = new ProjectPermissionModel();
         $data = $permissionModelObj->getKeysById($permIds);
         unset($permissionModelObj);
 
@@ -219,7 +221,7 @@ class PermissionLogic
      */
     public static function getUserHaveProjectPermissions($userId, $projectId, $haveAdminPerm)
     {
-        $permModel = new PermissionModel();
+        $permModel = new ProjectPermissionModel();
         $permissionArr = $permModel->getAll();
         //print_r($permissionArr);
         $ret = [];

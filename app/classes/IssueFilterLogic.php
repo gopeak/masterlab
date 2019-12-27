@@ -14,6 +14,7 @@ use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueFilterModel;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
@@ -27,26 +28,41 @@ use main\app\model\issue\IssueModel;
 class IssueFilterLogic
 {
 
-    static $unDoneStatusIdArr = [];
+    public static $unDoneStatusIdArr = [];
 
 
     public static $avlSortFields = [
-        'id'=>'创建时间',
-        'updated'=>'更新时间',
-        'priority'=>'优先级',
-        'module'=>'模  块',
-        'issue_type'=>'类  型',
-        'sprint'=>'迭代',
-        'weight'=>'权重',
-        'assignee'=>'经办人',
-        'status'=>'状态',
-        'resolve'=>'解决结果',
-        'due_date'=>'截止日期',
+        'id' => '创建时间',
+        'updated' => '更新时间',
+        'priority' => '优先级',
+        'module' => '模  块',
+        'issue_type' => '类  型',
+        'sprint' => '迭代',
+        'weight' => '权重',
+        'assignee' => '经办人',
+        'status' => '状态',
+        'resolve' => '解决结果',
+        'due_date' => '截止日期',
     ];
 
-    public static $defaultSortField =  'id';
+    public static $advFields = [
+        'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
+        'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'datetime', 'source' => ''],
+        'priority' => ['title' => '优先级', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'priority'],
+        'module' => ['title' => '模  块', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'module'],
+        'issue_type' => ['title' => '类  型', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'issueType'],
+        'sprint' => ['title' => '迭 代', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'sprint'],
+        'weight' => ['title' => '权重', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
+        'assignee' => ['title' => '经办人', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'user'],
+        'status' => ['title' => '状态', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'status'],
+        'resolve' => ['title' => '解决结果', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'status'],
+        'due_date' => ['title' => '截止日期', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'date', 'source' => ''],
+    ];
 
-    public static $defaultSortBy =  'desc';
+
+    public static $defaultSortField = 'id';
+
+    public static $defaultSortBy = 'desc';
 
     /**
      * 通过筛选获得事项列表
@@ -260,6 +276,25 @@ class IssueFilterLogic
             unset($statusKeyArr, $statusIdArr);
             $sql .= " AND assignee=:assignee AND status in ({$statusKeyStr})";
         }
+        // 我关注的
+        if ($sysFilter == 'my_followed') {
+            $curUserId = UserAuth::getInstance()->getId();
+            $issueFollowModel = new IssueFollowModel();
+            $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
+            $followIssueIdArr = [];
+            if (!empty($issueFollows)) {
+                foreach ($issueFollows as $issueFollow) {
+                    $followIssueIdArr[] = $issueFollow['issue_id'];
+                }
+                $followIssueIdArr = array_unique($followIssueIdArr);
+                if (!empty($followIssueIdArr)) {
+                    $issueIdStr = implode(',', $followIssueIdArr);
+                    $sql .= "  AND id in ({$issueIdStr})";
+                }
+            }
+            unset($issueFollowModel, $issueFollows, $followIssueIdArr);
+        }
+
         // 未解决的
         if ($sysFilter == 'unsolved') {
             $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
@@ -370,6 +405,172 @@ class IssueFilterLogic
                 $idArr[] = $item['id'];
             }
             $_SESSION['filter_id_arr'] = $idArr;
+            // var_dump( $arr, $count);
+            return [true, $arr, $count];
+        } catch (\PDOException $e) {
+            return [false, $e->getMessage(), 0];
+        }
+    }
+
+    /**
+     * 高级查询
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Exception
+     */
+    public function getAdvQueryList($page = 1, $pageSize = 50)
+    {
+        // sys_filter=1&fav_filter=2&project=2&reporter=2&title=fdsfdsfsd&assignee=2&created_start=232131&update_start=43432&sort_by=&32323&mod=123&reporter=12&priority=2&status=23&resolution=2
+        $params = [];
+        $sql = " WHERE 1";
+
+        // 项目筛选
+        $projectId = null;
+        if (isset($_GET['project']) && !empty($_GET['project'])) {
+            $projectId = (int)$_GET['project'];
+            $sql .= " AND project_id=:project";
+            $params['project'] = $projectId;
+        } else {
+            // 如果没有指定某一项目，则获取用户参与的项目
+            $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr(UserAuth::getId());
+            if (!empty($userJoinProjectIdArr)) {
+                $projectIdStr = implode(',', $userJoinProjectIdArr);
+                $sql .= " AND  project_id IN ({$projectIdStr}) ";
+            }
+        }
+
+        $queryJson = null;
+        $queryArr = [];
+        if (isset($_GET['adv_query_json'])) {
+            $queryJson = $_GET['adv_query_json'];
+            $queryArr = json_decode($queryJson, true);
+        }
+
+        if (!$queryArr) {
+            return [false, '查询条件格式错误', 0];
+        }
+        // 先获取Mysql版本号
+        $versionSql = 'select version() as vv';
+        $issueModel = new IssueModel();
+        $versionStr = $issueModel->db->getOne($versionSql);
+        $versionNum = floatval($versionStr);
+        if (strpos($versionStr, 'MariaDB') !== false) {
+            $versionNum = 0;
+        }
+        $startBracesNum = 0;
+        $endBracesNum = 0;
+        $sql .= 'AND ( ';
+        $i = 0;
+        foreach ($queryArr as $item) {
+            $i++;
+            $logic = strtoupper($item['logic']);
+            if ($i == 1) {
+                $logic = '';
+            }
+            $startBraces = trimStr($item['start_braces']);
+            if ($startBraces == '(') {
+                $startBracesNum++;
+            }
+            $endBraces = trimStr($item['end_braces']);
+            if ($endBraces == ')') {
+                $endBracesNum++;
+            }
+            $field = trimStr($item['field']);
+            $opt = urldecode($item['opt']);
+            $value = $item['value'] ;
+
+            if ($field == 'updated' || $field == 'created') {
+                $value = strtotime($value);
+            }
+
+            $sql .= " {$logic} {$startBraces} ";
+
+            switch ($opt) {
+                case '=':
+                case '!=':
+                case '>':
+                case '>=':
+                case '<=':
+                case '<':
+                    $sql .= " $field {$opt}:$field ";
+                    $params[$field] = $value;
+                    break;
+                case 'in':
+                case 'not in':
+                    $sql .= " $field  {$opt} ( :$field ) ";
+                    $params[$field] = $value;
+                    break;
+                case 'like':
+                    $sql .= " $field  {$opt} ':$field' ";
+                    $params[$field] = $value;
+                    break;
+                case 'like %...%':
+                    if ($versionNum < 5.70) {
+                        $sql .= "   LOCATE(:$field,$field)>0  ";
+                        $params[$field] = $value;
+                    } else {
+                        // 使用全文索引
+                        $sql .= "  MATCH ($field) AGAINST (:$field IN NATURAL LANGUAGE MODE) ";
+                        $params[$field] = $value;
+                    }
+                    break;
+                case 'is null':
+                case 'is not null':
+                    $sql .= "  $field {$opt} ";
+                    $params[$field] = $value;
+                    break;
+                case 'between':
+                case 'not between':
+                    $sql .= "  $field {$opt} :$field";
+                    $params[$field] = $value;
+                    break;
+                case 'regexp':
+                    $value = urldecode($value);
+                    $sql .= "  $field {$opt} '$value' ";
+                    break;
+                case 'regexp ^...$':
+                    $sql .= "  $field {$opt}  '^{$value}$' ";
+                    break;
+                default:
+                    $sql .= " $field  {$opt} :$field ";
+                    $params[$field] = $value;
+            }
+            $sql .= " {$endBraces} ";
+        }
+        $sql .= ' ) ';
+        if ($startBracesNum != $endBracesNum) {
+            return [false, '查询条件的括号 ( ) 条件错误', 0];
+        }
+
+        $orderBy = 'id';
+        if (isset($_GET['sort_field'])) {
+            $orderBy = $_GET['sort_field'];
+        }
+        $sortBy = 'DESC';
+        if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
+            $sortBy = $_GET['sort_by'];
+        }
+
+        $start = $pageSize * ($page - 1);
+        $limit = " limit $start, " . $pageSize;
+        $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
+
+        $model = new IssueModel();
+        $table = $model->getTable();
+
+        try {
+            // 获取总数
+            $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
+            //echo $sqlCount;
+            //print_r($params);
+            $count = $model->db->getOne($sqlCount, $params);
+            $fields = '*';
+            $sql = "SELECT {$fields} FROM  {$table} " . $sql;
+            $sql .= ' ' . $order . $limit;
+            //print_r($params);
+            //echo $sql;die;
+            $arr = $model->db->getRows($sql, $params);
             // var_dump( $arr, $count);
             return [true, $arr, $count];
         } catch (\PDOException $e) {
@@ -595,6 +796,21 @@ class IssueFilterLogic
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
         $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
         $appendSql = "  `status`  IN({$noDoneStatusIdStr}) ";
+        return $appendSql;
+    }
+
+    /**
+     * 获取非关闭事项
+     * @return string
+     */
+    public static function getNoClosedSql()
+    {
+        $statusModel = IssueStatusModel::getInstance();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $appendSql = "  `status` NOT IN({$noDoneStatusIdStr}) ";
         return $appendSql;
     }
 
@@ -837,22 +1053,31 @@ class IssueFilterLogic
      * 获取通过字段的数据
      * @param $projectId
      * @param $field
-     * @param bool $unDone 是否只包含未解决问题的数量
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
+     * @throws \Exception
      */
-    public static function getFieldStat($projectId, $field, $unDone = false)
+    public static function getFieldStat($projectId, $field, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
         if (empty($projectId)) {
             return [];
         }
         $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $noDoneStatusSql = '';
-        if ($unDone) {
-            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+
+        $statusSql = '';
+        switch ($statusType) {
+            case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
+                $statusSql = " AND " . self::getUnDoneSql();
+                break;
+            case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
+                $statusSql = " AND " . self::getDoneSql();
+                break;
+            default:
         }
+
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} {$noDoneStatusSql} GROUP BY {$field} ";
+                          WHERE project_id ={$projectId} {$statusSql} GROUP BY {$field} ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         return $rows;
@@ -862,47 +1087,57 @@ class IssueFilterLogic
      * 获取迭代的状态
      * @param $sprintId
      * @param $field
-     * @param bool $unDone
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
+     * @throws \Exception
      */
-    public static function getSprintFieldStat($sprintId, $field, $unDone = false)
+    public static function getSprintFieldStat($sprintId, $field, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
         if (empty($sprintId)) {
             return [];
         }
         $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $noDoneStatusSql = '';
-        if ($unDone) {
-            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+
+        $statusSql = '';
+        switch ($statusType) {
+            case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
+                $statusSql = " AND " . self::getUnDoneSql();
+                break;
+            case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
+                $statusSql = " AND " . self::getDoneSql();
+                break;
+            default:
         }
+
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
-                          WHERE sprint ={$sprintId} {$noDoneStatusSql} GROUP BY {$field} ";
+                          WHERE sprint ={$sprintId} {$statusSql} GROUP BY {$field} ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         return $rows;
     }
 
     /**
-     * 获取按优先级的数据
-     * @param int $projectId
-     * @param bool $unDone 是否只包含未解决问题的数量
+     * @param $projectId
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
+     * @throws \Exception
      */
-    public static function getPriorityStat($projectId, $unDone = false)
+    public static function getPriorityStat($projectId, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
-        return self::getFieldStat($projectId, 'priority', $unDone);
+        return self::getFieldStat($projectId, 'priority', $statusType);
     }
 
     /**
      * 获取迭代的按优先级的数据
      * @param $sprintId
-     * @param bool $unDone
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
+     * @throws \Exception
      */
-    public static function getSprintPriorityStat($sprintId, $unDone = false)
+    public static function getSprintPriorityStat($sprintId, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
-        return self::getSprintFieldStat($sprintId, 'priority', $unDone);
+        return self::getSprintFieldStat($sprintId, 'priority', $statusType);
     }
 
     /**
@@ -913,7 +1148,10 @@ class IssueFilterLogic
      */
     public static function getStatusStat($projectId, $unDone = false)
     {
-        return self::getFieldStat($projectId, 'status', $unDone);
+        if ($unDone) {
+            return self::getFieldStat($projectId, 'status', GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        }
+        return self::getFieldStat($projectId, 'status', GlobalConstant::ISSUE_STATUS_TYPE_ALL);
     }
 
     /**
@@ -924,7 +1162,11 @@ class IssueFilterLogic
      */
     public static function getSprintStatusStat($sprintId, $unDone = false)
     {
-        return self::getSprintFieldStat($sprintId, 'status', $unDone);
+        if ($unDone) {
+            return self::getSprintFieldStat($sprintId, 'status', GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        }
+        return self::getSprintFieldStat($sprintId, 'status', GlobalConstant::ISSUE_STATUS_TYPE_ALL);
+
     }
 
     /**
@@ -935,7 +1177,10 @@ class IssueFilterLogic
      */
     public static function getTypeStat($projectId, $unDone = false)
     {
-        return self::getFieldStat($projectId, 'issue_type', $unDone);
+        if ($unDone) {
+            return self::getFieldStat($projectId, 'issue_type', GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        }
+        return self::getFieldStat($projectId, 'issue_type', GlobalConstant::ISSUE_STATUS_TYPE_ALL);
     }
 
     /**
@@ -946,7 +1191,10 @@ class IssueFilterLogic
      */
     public static function getSprintTypeStat($sprintId, $unDone = false)
     {
-        return self::getSprintFieldStat($sprintId, 'issue_type', $unDone);
+        if ($unDone) {
+            return self::getSprintFieldStat($sprintId, 'issue_type', GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        }
+        return self::getSprintFieldStat($sprintId, 'issue_type', GlobalConstant::ISSUE_STATUS_TYPE_ALL);
     }
 
 
@@ -1005,25 +1253,33 @@ class IssueFilterLogic
     }
 
     /**
-     * 获取按事项类型的未解决问题的数量
+     *
+     * 获取按事项类型的事项的数量
      * @param $projectId
-     * @param $unDone bool 是否只包含未解决问题的数量
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
      * @throws \Exception
      */
-    public static function getAssigneeStat($projectId, $unDone = false)
+    public static function getAssigneeStat($projectId, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
         if (empty($projectId)) {
             return [];
         }
-        $noDoneStatusSql = '';
-        if ($unDone) {
-            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+        $statusSql = '';
+        switch ($statusType) {
+            case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
+                $statusSql = " AND " . self::getUnDoneSql();
+                break;
+            case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
+                $statusSql = " AND " . self::getDoneSql();
+                break;
+            default:
         }
+
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} {$noDoneStatusSql}  GROUP BY assignee ";
+                          WHERE project_id ={$projectId} {$statusSql}  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         foreach ($rows as $k => $row) {
@@ -1038,23 +1294,30 @@ class IssueFilterLogic
     /**
      * 获取迭代按事项类型的未解决问题的数量
      * @param $sprintId
-     * @param $unDone bool 是否只包含未解决问题的数量
+     * @param int $statusType 包含未解决|已解决|全部事项
      * @return array
      * @throws \Exception
      */
-    public static function getSprintAssigneeStat($sprintId, $unDone = false)
+    public static function getSprintAssigneeStat($sprintId, $statusType = GlobalConstant::ISSUE_STATUS_TYPE_ALL)
     {
         if (empty($sprintId)) {
             return [];
         }
-        $noDoneStatusSql = '';
-        if ($unDone) {
-            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+        $statusSql = '';
+        switch ($statusType) {
+            case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
+                $statusSql = " AND " . self::getUnDoneSql();
+                break;
+            case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
+                $statusSql = " AND " . self::getDoneSql();
+                break;
+            default:
         }
+
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
-                          WHERE sprint ={$sprintId} {$noDoneStatusSql}  GROUP BY assignee ";
+                          WHERE sprint ={$sprintId} {$statusSql}  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         foreach ($rows as $k => $row) {
@@ -1223,9 +1486,48 @@ class IssueFilterLogic
         return $rows;
     }
 
+    public static function getMyFollow($curUserId = 0, $page = 1, $pageSize = 10)
+    {
+        $start = $pageSize * ($page - 1);
+        $appendSql = " Order by id desc  limit {$start}, " . $pageSize;
+
+        $issueFollowModel = new IssueFollowModel();
+        $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
+        $followIssueIdArr = [];
+        if (!empty($issueFollows)) {
+            foreach ($issueFollows as $issueFollow) {
+                $followIssueIdArr[] = $issueFollow['issue_id'];
+            }
+            $followIssueIdArr = array_unique($followIssueIdArr);
+            if (!empty($followIssueIdArr)) {
+                $issueIdStr = implode(',', $followIssueIdArr);
+                $inWhere = " id IN ({$issueIdStr})";
+
+                $model = new IssueModel();
+                $table = $model->getTable();
+
+                $fields = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,status,created,updated,sprint,master_id,start_date,due_date';
+
+                $sql = "SELECT {$fields} FROM {$table} WHERE {$inWhere} {$appendSql}";
+                //echo $sql;
+                $rows = $model->db->getRows($sql);
+                $count = $model->db->getOne("SELECT count(*) as cc FROM {$table} WHERE {$inWhere}");
+                foreach ($rows as &$row) {
+                    self::formatIssue($row);
+                }
+
+                return [$rows, $count];
+            }
+            return [[], 0];
+        } else {
+            return [[], 0];
+        }
+    }
+
     /**
      * 格式化事项
      * @param $issue
+     * @throws \Exception
      */
     public static function formatIssue(&$issue)
     {

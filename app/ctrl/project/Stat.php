@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\classes\GlobalConstant;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserAuth;
@@ -72,8 +73,14 @@ class Stat extends BaseUserCtrl
         $sprintModel = new SprintModel();
         $data['sprint_count'] = $sprintModel->getCountByProject($projectId);
 
-        $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId, true);
-        $this->percent($data['priority_stat'], $data['no_done_count']);
+        $data['priority_stat_undone'] = IssueFilterLogic::getPriorityStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        $this->percent($data['priority_stat_undone'], $data['no_done_count']);
+
+        $data['priority_stat_done'] = IssueFilterLogic::getPriorityStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_DONE);
+        $this->percent($data['priority_stat_done'], $data['count']);
+
+        $data['priority_stat_all'] = IssueFilterLogic::getPriorityStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_ALL);
+        $this->percent($data['priority_stat_all'], $data['count']);
 
         $data['status_stat'] = IssueFilterLogic::getStatusStat($projectId);
         $this->percent($data['status_stat'], $data['count']);
@@ -81,14 +88,20 @@ class Stat extends BaseUserCtrl
         $data['type_stat'] = IssueFilterLogic::getTypeStat($projectId);
         $this->percent($data['type_stat'], $data['count']);
 
-        $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId, true);
-		$this->percent($data['assignee_stat'], $data['no_done_count']);
-		
-		$data['weight_stat'] = IssueFilterLogic::getWeightStat($projectId);
-		$sumWeight = 0;
-		foreach($data['weight_stat'] as $row){
-			$sumWeight += intval($row['count']);
-		}
+        $data['assignee_stat_undone'] = IssueFilterLogic::getAssigneeStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        $this->percent($data['assignee_stat_undone'], $data['no_done_count']);
+
+        $data['assignee_stat_done'] = IssueFilterLogic::getAssigneeStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_DONE);
+        $this->percent($data['assignee_stat_done'], $data['count']);
+
+        $data['assignee_stat_all'] = IssueFilterLogic::getAssigneeStat($projectId, GlobalConstant::ISSUE_STATUS_TYPE_ALL);
+        $this->percent($data['assignee_stat_all'], $data['count']);
+
+        $data['weight_stat'] = IssueFilterLogic::getWeightStat($projectId);
+        $sumWeight = 0;
+        foreach ($data['weight_stat'] as $row) {
+            $sumWeight += intval($row['count']);
+        }
         $this->percent($data['weight_stat'], $sumWeight);
         
         $this->ajaxSuccess('ok', $data);

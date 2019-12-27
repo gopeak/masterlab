@@ -81,7 +81,7 @@ class Org extends BaseUserCtrl
 
         $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_ORG_PERM_ID)) {
             $isAdmin = true;
         }
 
@@ -119,7 +119,7 @@ class Org extends BaseUserCtrl
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
 
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+        if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_ORG_PERM_ID)) {
             $isAdmin = true;
         }
         $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
@@ -149,7 +149,7 @@ class Org extends BaseUserCtrl
                     $org['projects'] = array_slice($org['projects'], 0, 20);
                 }
             }
-            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(STORAGE_PATH . 'attachment/' . $org['avatar_file'])) {
+            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(PUBLIC_PATH . 'attachment/' . $org['avatar_file'])) {
                 $org['avatarExist'] = true;
             } else {
                 $org['avatarExist'] = false;
@@ -234,7 +234,7 @@ class Org extends BaseUserCtrl
         }
 
         if (strpos($org['avatar'], 'http://') === false) {
-            if (file_exists(STORAGE_PATH . 'attachment/' . $org['avatar'])) {
+            if (file_exists(PUBLIC_PATH . 'attachment/' . $org['avatar'])) {
                 $org['avatar'] = ATTACHMENT_URL . $org['avatar'];
                 $org['avatarExist'] = true;
             } else {

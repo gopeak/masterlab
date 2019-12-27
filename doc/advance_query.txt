@@ -1,0 +1,28 @@
+
+高级查询查询条件说明
+
+类型data-type和查询联动关系:
+    text      查询内容为文本输入框
+    select    查询内容为bootstrap-select下拉组件, 待选择的数据从data-source并结合全局变量wincow._issueConfig获得
+    date      查询内容 laydate 日期选择组件
+    datetime  查询内容 laydate 日期时间选择组件
+
+
+
+
+    <option value="LIKE">LIKE</option>
+    <option value="LIKE %...%">LIKE %...%</option>
+    <option value="NOT LIKE">NOT LIKE</option>
+    <option value="=">=</option>
+    <option value="!=">!=</option>
+    <option value="REGEXP">REGEXP</option>
+    <option value="REGEXP ^...$">REGEXP ^...$</option>
+    <option value="NOT REGEXP">NOT REGEXP</option>
+    <option value="= ''">= ''</option>
+    <option value="!= ''">!= ''</option>
+    <option value="IN (...)">IN (...)</option>
+    <option value="NOT IN (...)">NOT IN (...)</option>
+    <option value="BETWEEN">BETWEEN</option>
+    <option value="NOT BETWEEN">NOT BETWEEN</option>
+    <option value="IS NULL">IS NULL</option>
+    <option value="IS NOT NULL">IS NOT NULL</option>

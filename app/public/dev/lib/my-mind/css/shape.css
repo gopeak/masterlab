@@ -1,0 +1,54 @@
+.shape-box > .mind-content {
+	padding: 0.15em 0.4em;
+	background-color: #fff;
+	border: 1px solid #666;
+	border-radius: 3px;
+}
+
+.shape-ellipse > .mind-content {
+	background-color: #fff;
+	border: 1px solid #666;
+	border-radius: 50%;
+	padding: 0.5em 1em;
+}
+
+/* current */
+
+.current > .mind-content {
+	background-color: rgba(255, 255, 187, 0.9);
+}
+.mind-create {
+	display: none;
+	cursor: pointer;
+	margin-left: 12px;
+}
+.shape-underline.current > .mind-content > .mind-create{
+	display: inline-block;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+
+/* root */
+
+#port > .item > .mind-content {
+	font-weight: bold;
+	border-width: 2px;
+	font-size: 140%;
+}
+
+#port > .item > .toggle {
+	display: none;
+}
+
+/* 1st children */
+
+#port > .item > .children > .item > .mind-content {
+	border-width: 2px;
+	font-size: 120%;
+}
+
+.item .icon {
+	margin: 0 0.5em 0 0;
+	font-size: 14px;
+}

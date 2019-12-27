@@ -81,6 +81,7 @@ class RewriteUrl
      * 获取项目信息
      * @param $data
      * @return mixed
+     * @throws \Exception
      */
     public static function setProjectData($data)
     {
@@ -91,6 +92,38 @@ class RewriteUrl
         } else {
             return $data;
         }
+        $data['project_id'] = $projectId;
+        $model = new ProjectModel();
+        $project = $model->getById($projectId);
+        $data['project'] = $project;
+        $data['project_root_url'] = '/'.$project['org_path'] . '/' . $project['key'];
+        $data['project_name'] = $project['name'];
+        $data['data']['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
+        $data['data']['info'] = $project['description'];
+        $data['bg_color'] = mapKeyColor($project['key']);
+
+        $model = new UserModel();
+        $leadDisplayName = $model->getFieldById('display_name', $project['lead']);
+        $data['lead_display_name'] = $leadDisplayName;
+
+        //$data['org_name'] = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
+        //$data['pro_key'] = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
+        $data['avatar'] = $project['avatar'];
+        $data['org_name'] = $project['org_path'];
+        $data['pro_key'] = $project['key'];
+
+        return $data;
+    }
+
+
+    /**
+     * 根据项目ID获取项目名称和各种Path和lead
+     * @param $projectId
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function getProjectPathName($projectId)
+    {
         $data['project_id'] = $projectId;
         $model = new ProjectModel();
         $project = $model->getById($projectId);

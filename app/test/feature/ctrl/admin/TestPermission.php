@@ -2,7 +2,7 @@
 
 namespace main\app\test\featrue\ctrl\admin;
 
-use main\app\model\permission\PermissionModel;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\permission\DefaultRoleModel;
 use main\app\model\permission\DefaultRoleRelationModel;
 use main\app\test\BaseAppTestCase;
@@ -93,7 +93,7 @@ class TestPermission extends BaseAppTestCase
         }
 
         // 2.编辑权限
-        $model = new PermissionModel();
+        $model = new ProjectPermissionModel();
         $all = $model->getAll(true);
         $permissionArr = array_keys($all);
         self::$roleId = $insertId;

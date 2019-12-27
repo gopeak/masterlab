@@ -10,10 +10,7 @@ define('ROOT_URL', 'http://masterlab.ink/');
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 当前版本号
-define('MASTERLAB_VERSION', '1.2');
-
-// 是否将数据存储在缓存中
-define('ENABLE_CACHE', true);
+define('MASTERLAB_VERSION', '2.0');
 
 // 设置缓存的存储引擎
 define('CACHE_HANDLER', 'Redis');

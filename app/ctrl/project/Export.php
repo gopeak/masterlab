@@ -212,7 +212,7 @@ class Export extends BaseUserCtrl
                 } elseif ($_GET['field_format_reporter'] == 'avatar') {
                     if (isset($avatarMap[$row['reporter']]) && !empty($avatarMap[$row['reporter']])) {
                         $showAvatar = $avatarMap[$row['reporter']];
-                        $showAvatar = '#IMG' . STORAGE_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
+                        $showAvatar = '#IMG' . PUBLIC_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
                     } elseif (isset($avatarMap[$row['reporter']]) && empty($avatarMap[$row['reporter']])) {
                         $showAvatar = '#IMG' . PUBLIC_PATH . 'dev/img/default_user_avatar.png';
                     } else {
@@ -234,7 +234,7 @@ class Export extends BaseUserCtrl
                 } elseif ($_GET['field_format_assignee'] == 'avatar') {
                     if (isset($avatarMap[$row['assignee']]) && !empty($avatarMap[$row['assignee']])) {
                         $showAvatar = $avatarMap[$row['assignee']];
-                        $showAvatar = '#IMG' . STORAGE_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
+                        $showAvatar = '#IMG' . PUBLIC_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
                     } else if (isset($avatarMap[$row['assignee']]) && empty($avatarMap[$row['assignee']])) {
                         $showAvatar = '#IMG' . PUBLIC_PATH . 'dev/img/default_user_avatar.png';
                     } else {
@@ -265,7 +265,7 @@ class Export extends BaseUserCtrl
                             $showAvatar = '';
                             if (isset($avatarMap[$v]) && !empty($avatarMap[$v])) {
                                 $showAvatar = $avatarMap[$v];
-                                $showAvatar = '#IMG' . STORAGE_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
+                                $showAvatar = '#IMG' . PUBLIC_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
                             } else if (isset($avatarMap[$v]) && empty($avatarMap[$v])) {
                                 $showAvatar = '#IMG' . PUBLIC_PATH . 'dev/img/default_user_avatar.png';
                             }
@@ -298,7 +298,7 @@ class Export extends BaseUserCtrl
                 } elseif ($_GET['field_format_modifier'] == 'avatar') {
                     if (isset($avatarMap[$row['modifier']]) && !empty($avatarMap[$row['modifier']])) {
                         $showAvatar = $avatarMap[$row['modifier']];
-                        $showAvatar = '#IMG' . STORAGE_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
+                        $showAvatar = '#IMG' . PUBLIC_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
                     } else if (isset($avatarMap[$row['modifier']]) && empty($avatarMap[$row['modifier']])) {
                         $showAvatar = '#IMG' . PUBLIC_PATH . 'dev/img/default_user_avatar.png';
                     } else {
@@ -442,8 +442,8 @@ class Export extends BaseUserCtrl
                     $drawing = new Drawing();
                     $drawing->setName('Avatar');
                     $drawing->setDescription('Avatar');
-                    //$drawing->setPath(STORAGE_PATH . 'attachment/avatar/10000.png');
-                    //$drawing->setPath(STORAGE_PATH . 'attachment/' . str_replace(strrchr($shortUrl, "?"),"", $shortUrl));
+                    //$drawing->setPath(PUBLIC_PATH . 'attachment/avatar/10000.png');
+                    //$drawing->setPath(PUBLIC_PATH . 'attachment/' . str_replace(strrchr($shortUrl, "?"),"", $shortUrl));
                     if (file_exists($avatarPath)) {
                         $drawing->setPath($avatarPath);
                     } else {

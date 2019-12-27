@@ -2,9 +2,9 @@
     <HEAD>
         <title>Masterlab - <?=$code?></title>
         <META http-equiv=Content-Type content="text/html; charset=utf-8">
-        <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/css/not_found.css">
-        <link rel="stylesheet" media="all" href="<?= ROOT_URL ?>gitlab/assets/application.css"/>
-        <script type="text/javascript" src="<?= ROOT_URL ?>dev/js/logo.js"></script>
+        <link rel="stylesheet" type="text/css" href="/dev/css/not_found.css">
+        <link rel="stylesheet" media="all" href="/gitlab/assets/application.css"/>
+        <script type="text/javascript" src="/dev/js/logo.js"></script>
     </HEAD>
 <body>
 
@@ -22,7 +22,7 @@
 <div class="not-found vertical">
     <div class="inner">
         <div class="img" style="padding:100px 0 0;">
-        <img src="<?=ROOT_URL?>gitlab/images/logo.png" />
+        <img src="/gitlab/images/logo.png" />
         </div>
         <div class="text">
             <div class="type"><?=$code?></div>
@@ -80,7 +80,6 @@
             debug_in.style.display = 'none';
         }
     }
-
 
 </script>
 

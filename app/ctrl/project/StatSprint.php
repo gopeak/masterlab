@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\classes\GlobalConstant;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserAuth;
@@ -81,8 +82,14 @@ class StatSprint extends BaseUserCtrl
         $data['closed_count'] = IssueFilterLogic::getSprintClosedCount($sprintId);
         $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
 
-        $data['priority_stat'] = IssueFilterLogic::getSprintPriorityStat($sprintId, true);
-        $this->percent($data['priority_stat'], $data['no_done_count']);
+        $data['priority_stat_undone'] = IssueFilterLogic::getSprintPriorityStat($sprintId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        $this->percent($data['priority_stat_undone'], $data['no_done_count']);
+
+        $data['priority_stat_done'] = IssueFilterLogic::getSprintPriorityStat($sprintId, GlobalConstant::ISSUE_STATUS_TYPE_DONE);
+        $this->percent($data['priority_stat_done'], $data['count']);
+
+        $data['priority_stat_all'] = IssueFilterLogic::getSprintPriorityStat($sprintId, GlobalConstant::ISSUE_STATUS_TYPE_ALL);
+        $this->percent($data['priority_stat_all'], $data['count']);
 
         $data['status_stat'] = IssueFilterLogic::getSprintStatusStat($sprintId);
         $this->percent($data['status_stat'], $data['count']);
@@ -90,8 +97,15 @@ class StatSprint extends BaseUserCtrl
         $data['type_stat'] = IssueFilterLogic::getSprintTypeStat($sprintId);
         $this->percent($data['type_stat'], $data['count']);
 
-        $data['assignee_stat'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, true);
-        $this->percent($data['assignee_stat'], $data['no_done_count']);
+        $data['assignee_stat_undone'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, GlobalConstant::ISSUE_STATUS_TYPE_UNDONE);
+        $this->percent($data['assignee_stat_undone'], $data['no_done_count']);
+
+        $data['assignee_stat_done'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, GlobalConstant::ISSUE_STATUS_TYPE_DONE);
+        $this->percent($data['assignee_stat_done'], $data['count']);
+
+        $data['assignee_stat_all'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, GlobalConstant::ISSUE_STATUS_TYPE_ALL);
+        $this->percent($data['assignee_stat_all'], $data['count']);
+
 
         $data['weight_stat'] = IssueFilterLogic::getSprintWeightStat($sprintId);
         $sumWeight = 0;

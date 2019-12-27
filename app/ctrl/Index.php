@@ -11,8 +11,6 @@ use main\app\classes\UserAuth;
  */
 class Index extends BaseCtrl
 {
-
-
     /**
      * 首页的控制器
      * Index constructor.
@@ -38,59 +36,36 @@ class Index extends BaseCtrl
      */
     public function mailTest($params = [])
     {
-        $title = 'MyTile';
-        $content = '邮件测试';
-        $reply = '79720699@qq.com';
-        $mailer = '121642038@qq.com';
-        unset($params);
-        $systemLogic = new SystemLogic();
-        ob_start();
-        list($ret, $err) = $systemLogic->mail($mailer, $title, $content, $reply);
-        unset($systemLogic);
-        $data['err'] = $err;
-        $data['verbose'] = ob_get_contents();
-        ob_clean();
-        ob_end_clean();
-        if ($ret) {
-            $this->ajaxSuccess('send_ok', $data);
-        } else {
-            $this->ajaxFailed("send_failed", $data);
-        }
     }
 
-    public function mailtest2()
+    public function test()
     {
-        $msg = '369';
-        try {
-            $mail = new \PHPMailer(true);
-            $mail->IsSMTP();
-            $mail->CharSet = 'UTF-8';
-            $mail->SMTPAuth = true;
-            $mail->Port = 80;
-            $mail->SMTPDebug = 0;
-            $mail->Host =  'smtpdm.aliyun.com';
-            $mail->Username = 'sender@smtp.masterlab.vip';
-            $mail->Password = 'MasterLab123Pwd';
-            $mail->Timeout = 20;
-            $mail->From = 'sender@smtp.masterlab.vip';
-            $mail->FromName = 'Notify';
-
-            $mail->AddAddress('23335096@qq.com');
-
-            $mail->Subject = '123tstjuggtitle';
-            $mail->Body = '<b>jugg hello index t</b>';
-            $mail->AltBody = "To view the message, please use an HTML compatible email viewer!";
-            $mail->WordWrap = 80;
-            $mail->IsHTML(true);
-            $ret = $mail->Send();
-            if (!$ret) {
-                $msg = 'Mailer Error: ' . $mail->ErrorInfo;
-            }
-        } catch (\phpmailerException $e) {
-
-            $msg =  "邮件发送失败：" . $e->errorMessage();
-        }
-
-        echo $msg;
+        $companyInfo = [];
+        $companyInfo['company'] = 'company';
+        $companyInfo['company_linkman'] = 'company_linkman';
+        $companyInfo['company_phone'] = 'company_phone';
+        $postInfo = array(
+            'company_info' => $companyInfo,
+            'os' => PHP_OS,
+            'server' => php_uname(),
+            'env' => $_SERVER["SERVER_SOFTWARE"],
+            'php_sapi_name' => php_sapi_name(),
+            'php_version' => PHP_VERSION,
+            'zend_version' => Zend_Version(),
+            'mysql_version' => '5.6',
+            'server_ip' => $_SERVER['SERVER_ADDR'],
+            'client_ip' => $_SERVER['REMOTE_ADDR'],
+            'host' => $_SERVER["HTTP_HOST"],
+            'port' => $_SERVER['SERVER_PORT'],
+            'masterlab_version' => MASTERLAB_VERSION,
+            'upload_max' => ini_get('upload_max_filesize'),
+            'max_execution' => ini_get('max_execution_time'),
+            'server_time' => time(),
+            'server_name' => $_SERVER['SERVER_NAME'] . ' [ ' . gethostbyname($_SERVER['SERVER_NAME']) . ' ]',
+        );
+        $curl = new \Curl\Curl();
+        $curl->setTimeout(10);
+        $curl->post('http://www.masterlab.vip/client_info.php', $postInfo);
+        echo $curl->rawResponse;
     }
 }
