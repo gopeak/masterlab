@@ -595,15 +595,18 @@ MM.Item.prototype.syncRenderRightPanel = function () {
             window.format_border_color.setColor('#EE3333');
 		}
 		// 事项
-        $('#btn-delete').removeClass('disabled');
         let issue_id = null;
         if(this._id.search('issue_')>=0){
+            $('#btn-delete').removeClass('disabled');
+        	$('#right-issue').show();
             $('#format_issue_type').val(this._icon);
             $('#format_issue_assignee').val(this._issue_assignee);
 			this.setStatusActive(this._issue_status);
 			this.setPriorityActive(this._issue_priority);
 			this.setProgressActive(this._issue_progress);
-        }
+        }else{
+            $('#right-issue').hide();
+		}
 
     }else{
 
