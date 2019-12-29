@@ -3459,9 +3459,9 @@ MM.Format.br2nl = function (str) {
 }
 MM.Format.JSON = Object.create(MM.Format, {
 	id: { value: "json" },
-	label: { value: "Native (JSON)" },
-	extension: { value: "mymind" },
-	mime: { value: "application/vnd.mymind+json" }
+	label: { value: "JSON格式" },
+	extension: { value: "json" },
+	mime: { value: "application/json" }
 });
 
 MM.Format.JSON.to = function (data) {
@@ -5259,7 +5259,7 @@ MM.UI.Backend.File._action = function () {
 }
 
 MM.UI.Backend.File.save = function () {
-	var format = MM.Format.getById(this._format.value);
+    var format = MM.Format.getById($('#export_format').val());
 	var json = MM.App.map.toJSON();
 	var data = format.to(json);
 
@@ -5766,7 +5766,17 @@ MM.Mouse.handleEvent = function (e) {
 
 			var item = MM.App.map.getItemFor(e.target);
 			item && MM.App.select(item);
-
+            if(item._id && item._id.search('issue_')===-1){
+				$("button[data-command='InsertSibling']").hide();
+            }else{
+                $("button[data-command='InsertSibling']").show();
+			}
+            let parent_item = item.getParent();
+			if(parent_item._root && parent_item._root._id===item._id){
+				$('#menu').hide();
+            	return;
+            	console.log(item.getParent());
+			}
 			MM.Menu.open(e.clientX, e.clientY);
 			break;
 
