@@ -192,6 +192,7 @@ class Mind extends BaseUserCtrl
             $format['font_bold'] = 1;
             $format['font_italics'] = 0;
             $format['bg_color'] = '';
+            $format['text_color'] = '';
         }
         $root = [];
         $root['origin_id'] = $projectId;
@@ -207,6 +208,7 @@ class Mind extends BaseUserCtrl
         $root['font_bold'] = $format['font_bold'];
         $root['font_italics'] = $format['font_italics'];
         $root['bg_color'] = $format['bg_color'];
+        $root['text_color'] = $format['text_color'];
         $root['children'] = [];
 
         if ($sourceType == 'all') {
@@ -372,7 +374,7 @@ class Mind extends BaseUserCtrl
 
         $mindProjectAttributeModel = new MindSecondtAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color','text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
@@ -415,7 +417,7 @@ class Mind extends BaseUserCtrl
 
         $mindProjectAttributeModel = new MindIssueAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color','text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];

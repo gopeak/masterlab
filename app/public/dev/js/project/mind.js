@@ -406,6 +406,46 @@ let MindAjax = (function () {
         });
     }
 
+    MindAjax.prototype.updateIssueFormat = function (issue_id, format, fnc) {
+        // 初始必填项
+        let project_id = window._cur_project_id;
+        let source = $('#source_range').val();
+        let group_by = '';
+        if(source==='all'){
+            group_by = $('#all-group_by').val();
+        }else{
+            group_by = $('#sprint-group_by').val();
+        }
+        let params = '';
+        params = 'project_id='+project_id+'&source='+source+'&group_by='+group_by+'&issue_id='+issue_id
+
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/project/mind/saveIssueFormat?"+params,
+            data: format,
+            success: function (resp) {
+                auth_check(resp);
+                if (!form_check(resp)) {
+                    return;
+                }
+                if (resp.ret === '200') {
+                    notify_success('更新成功');
+                } else {
+                    notify_error('更新失败,错误信息:' + resp.msg);
+                    console.error(resp.msg)
+                }
+                if(jQuery.type(fnc) === "function"){
+                    fnc();
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
     return MindAjax;
 })();
 

@@ -263,6 +263,7 @@ class ProjectMind
                 $format['font_bold'] = 0;
                 $format['font_italic'] = 0;
                 $format['bg_color'] = '';
+                $format['text_color'] = '';
             }
             $item = [];
             $item['origin_id'] = $groupById;
@@ -277,6 +278,7 @@ class ProjectMind
             $item['font_bold'] = $format['font_bold'];
             $item['font_italic'] = $format['font_italic'];
             $item['bg_color'] = $format['bg_color'];
+            $item['text_color'] = $format['text_color'];
             $item['children'] = [];
 
             return $item;
@@ -388,7 +390,7 @@ class ProjectMind
         $source = 'all';
         if (!is_null($sprintId)) {
             $condition .= "  AND sprint={$sprintId} ";
-            $source = 'sprint';
+            $source = $sprintId;
         }
         if (!empty($addFilterSql)) {
             $condition .= "  AND {$addFilterSql} ";
@@ -405,6 +407,8 @@ class ProjectMind
         $finalArr = $this->getSecondArr($projectId, $groupByField);
         // print_r($finalArr);
         $formats = $this->getIssueFormats($projectId, $source, $groupByField);
+        //var_dump($projectId, $source, $groupByField);
+        //print_r($formats);
         $itemFormatDnc = function ($issueId, $text, $format) {
             if (empty($format)) {
                 $format['side'] = 'left';
@@ -417,6 +421,7 @@ class ProjectMind
                 $format['font_bold'] = 0;
                 $format['font_italic'] = 0;
                 $format['bg_color'] = '';
+                $format['text_color'] = '';
             }
             $item = [];
             $item['origin_id'] = $issueId;
@@ -431,6 +436,7 @@ class ProjectMind
             $item['font_bold'] = $format['font_bold'];
             $item['font_italic'] = $format['font_italic'];
             $item['bg_color'] = $format['bg_color'];
+            $item['text_color'] = $format['text_color'];
             $item['children'] = [];
 
             return $item;

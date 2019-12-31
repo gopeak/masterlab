@@ -452,20 +452,20 @@ MM.Item.prototype.fromJSON = function (data) {
 			this._updateProjectImg();
 		}
 	}
-	this.setText(data.text);
 
 	if (data.id) { this._id = data.id; }
 	if (data.side) { this._side = data.side; }
 	if (data.color) { this._color = data.color; }
 
 
-	if (data.font_size) { this._font_size = this.font_size; }
-	if (data.font_family) { this._font_family = this.font_family; }
-	if (data.text_color) { this._text_color = this.text_color; }
-	if (data.font_bold) { this._font_bold = this.font_bold; }
-	if (data.font_italic) { this._font_italic = this.font_italic; }
-	if (data.bg_color) { this._bg_color = this.bg_color; }
+	if (data.font_size) { this._font_size = data.font_size; }
+	if (data.font_family) { this._font_family = data.font_family; }
+	if (data.text_color) { this._text_color = data.text_color; }
+	if (data.font_bold) { this._font_bold = data.font_bold; }
+	if (data.font_italic) { this._font_italic = data.font_italic; }
+	if (data.bg_color) { this._bg_color = data.bg_color; }
 
+	this.setText(data.text);
 
 	// if (data.icon) { this._icon = data.icon; }
 	if (data.issue_type_fa) { this._icon = data.issue_type_fa; }
@@ -1048,6 +1048,14 @@ MM.Item.prototype._getAutoShape = function () {
 		case 0: return MM.Shape.Ellipse;
 		case 1: return MM.Shape.Box;
 		default: return MM.Shape.Underline;
+	}
+}
+
+MM.Item.prototype._updateTextColor = function () {
+	var _text_color = this._text_color;
+	if (_text_color) {
+		this._dom.text.style.color = _text_color;
+	} else {
 	}
 }
 
@@ -4578,17 +4586,7 @@ MM.UI.Color.prototype.handleEvent = function (e) {
 
 // BorderColor
 MM.UI.BorderColor = function () {
-	window.format_border_color.on('init', instance => {
-		//console.log('init', instance);
-	}).on('hide', instance => {
-		//console.log('hide', instance);
-	}).on('save', (color, instance) => {
-		//console.log('save', color.toHEXA().toString());
-		let color_text = color.toHEXA().toString();
-		var action = new MM.Action.SetColor(MM.App.current,  color_text || null);
-		MM.App.action(action);
-		window.format_border_color.hide()
-	})
+
 }
 
 //FontFamily
@@ -4660,18 +4658,7 @@ MM.UI.FontItalic.prototype.handleEvent = function (e) {
 
 // TextColor
 MM.UI.TextColor = function () {
-    window.format_text_color.on('init', instance => {
-        //console.log('init', instance);
-    }).on('hide', instance => {
-        //console.log('hide', instance);
-    }).on('save', (color, instance) => {
-        //console.log('save', color.toHEXA().toString());
-        let color_text = color.toHEXA().toString();
-        var action = new MM.Action.SetTextColor(MM.App.current,  color_text || null);
-        MM.App.action(action);
-		window.format_text_color.hide()
 
-    })
 }
 MM.UI.TextColor.prototype.update = function () {
     this.value = MM.App.current.getTextColor() || "";
