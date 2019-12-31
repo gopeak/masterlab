@@ -43,8 +43,10 @@ class Main extends BaseAdminCtrl
         $extList = ServerInfo::getPHPLoadedExt();
         $extListFormat = '';
         foreach ($extList as $k => $value) {
-            $extListFormat .= $value . PHP_EOL;
+            $extListFormat .= $value . ' | ';
         }
+
+        $extListFormat = trim($extListFormat, ' | ');
 
         $data['masterlab_version'] = MASTERLAB_VERSION;
         $data['domain'] = ServerInfo::getDomain();
