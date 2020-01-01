@@ -417,7 +417,7 @@ class Mind extends BaseUserCtrl
 
         $mindProjectAttributeModel = new MindIssueAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color','text_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color','text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];

@@ -611,12 +611,33 @@ MM.Item.prototype.syncRenderRightPanel = function () {
     }else{
 
     }
-    if(this._shape.id){
+    if(this._shape && this._shape.id){
 		$('#format_shape').val(this._shape.id);
 	}
-	if(this._layout.id){
+	if(this._layout && this._layout.id){
 		$('#layout').val(this._layout.id);
 	}
+    if(this._font_size){
+        $('#format_font_size').val(this._font_size);
+    }
+    if(this._font_family){
+        $('#format_font_family').val(this._font_family);
+    }
+    if(this._font_bold){
+    	if(this._font_bold=='1'){
+            $('#format_font_bold').addClass('active');
+		}else{
+            $('#format_font_bold').removeClass('active');
+		}
+    }
+    if(this._font_italic){
+        if(this._font_italic=='1'){
+            $('#format_font_italic').addClass('active');
+        }else{
+            $('#format_font_italic').removeClass('active');
+        }
+    }
+
     $('.selectpicker').selectpicker('refresh');
 }
 
@@ -663,12 +684,12 @@ MM.Item.prototype.update = function (doNotRecurse) {
     this._updateIssueProgressImg();
 	this._updateValue();
 
-	if (this._font_bold ) {
+	if (this._font_bold   &&  this._font_bold=='1') {
 		this._dom.text.style.fontWeight = 'bold';
 	}else{
 		this._dom.text.style.fontWeight = '';
 	}
-    if (this._font_italic ) {
+    if (this._font_italic &&  this._font_italic=='1') {
         this._dom.text.style.fontStyle = "italic";
     }else{
         this._dom.text.style.fontStyle = "";
@@ -4488,7 +4509,14 @@ MM.UI.Layout.prototype.update = function () {
 
 MM.UI.Layout.prototype.handleEvent = function (e) {
 	var layout = MM.Layout.getById(this._select.value);
-
+    let item = MM.App.current;
+    if(layout && item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._layout!=layout){
+            let format_data = {layout:layout}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
 	var action = new MM.Action.SetLayout(MM.App.current, layout);
 	MM.App.action(action);
 }
@@ -4523,7 +4551,14 @@ MM.UI.Shape.prototype.update = function () {
 
 MM.UI.Shape.prototype.handleEvent = function (e) {
 	var shape = MM.Shape.getById(this._select.value);
-
+    let item = MM.App.current;
+    if(shape && item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._shape!=shape){
+            let format_data = {shape:shape}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
 	var action = new MM.Action.SetShape(MM.App.current, shape);
 	MM.App.action(action);
 }
@@ -4579,6 +4614,14 @@ MM.UI.Color.prototype.handleEvent = function (e) {
 	if (!e.target.hasAttribute("data-color")) { return; }
 
 	var color = e.target.getAttribute("data-color") || null;
+    let item = MM.App.current;
+    if(font_value && item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._color!=color){
+            let format_data = {color:color}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
 	var action = new MM.Action.SetColor(MM.App.current, color);
 	MM.App.action(action);
 }
@@ -4601,6 +4644,15 @@ MM.UI.FontFamily.prototype.update = function () {
 
 MM.UI.FontFamily.prototype.handleEvent = function (e) {
     console.log(MM.App.current)
+    let font_value = this._select.value;
+    let item = MM.App.current;
+    if(font_value && item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._font_family!=font_value){
+            let format_data = {font_family:font_value}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
     var action = new MM.Action.SetFontFamily(MM.App.current, this._select.value || null);
     MM.App.action(action);
 }
@@ -4616,6 +4668,15 @@ MM.UI.FontSize.prototype.update = function () {
 
 MM.UI.FontSize.prototype.handleEvent = function (e) {
     console.log(MM.App.current)
+    let item = MM.App.current;
+    let font_value = this._select.value;
+    if(font_value && item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._font_size!=font_value){
+            let format_data = {font_size:font_value}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
     var action = new MM.Action.SetFontSize(MM.App.current, this._select.value || null);
     MM.App.action(action);
 }
@@ -4629,11 +4690,21 @@ MM.UI.FontBold.prototype.handleEvent = function (e) {
     e.preventDefault();
     let format_font_bold_obj = $('#format_font_bold');
     let font_value = parseInt(format_font_bold_obj.data("value"));
-    if(font_value===0){
+
+    if(font_value=='0'){
         format_font_bold_obj.data('value','1');
 	}else{
         format_font_bold_obj.data('value','0');
 	}
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        font_value = parseInt(format_font_bold_obj.data("value"));
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._font_bold!=font_value){
+            let format_data = {font_bold:font_value}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
     var action = new MM.Action.SetFontBold(MM.App.current, font_value===0);
     MM.App.action(action);
 }
@@ -4651,6 +4722,14 @@ MM.UI.FontItalic.prototype.handleEvent = function (e) {
         format_font_italic_obj.data('value','1');
     }else{
         format_font_italic_obj.data('value','0');
+    }
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._font_italic!=font_value){
+            let format_data = {font_italic:font_value}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
     }
     var action = new MM.Action.SetFontItalic(MM.App.current, font_value===0);
     MM.App.action(action);

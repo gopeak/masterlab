@@ -705,6 +705,11 @@
         MM.App.io.fetchIssues();
     }
     $(function () {
+
+        if (gl.FilteredSearchManager) {
+            window.filteredSearchManager = new gl.FilteredSearchManager();
+        }
+
         $('.selectpicker').selectpicker('refresh');
         var options = {}
         window.$mindAjax = new MindAjax(options);
@@ -938,8 +943,14 @@
         }).on('save', (color, instance) => {
             //console.log('save', color.toHEXA().toString());
             let color_text = color.toHEXA().toString();
-            
-
+            let item = MM.App.current;
+            if(item._id.search('issue_')>=0){
+                let issue_id = item._id.replace('issue_','');
+                if(issue_id && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    window.$mindAjax.updateIssueFormat(issue_id, format_data);
+                }
+            }
             var action = new MM.Action.SetColor(MM.App.current,  color_text || null);
             MM.App.action(action);
             window.format_border_color.hide()
