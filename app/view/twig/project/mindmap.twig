@@ -689,7 +689,7 @@
         "project_sprints":{{ sprints|json_encode()|raw }},
         "projects":{{ projects|json_encode()|raw }}
     };
-    var _project_issue_types =  {{project_issue_types|json_encode()|raw}};
+    var _project_issue_types = {{project_issue_types|json_encode()|raw}};
     var mind_setting = {{ mind_setting|json_encode()|raw }};
     var _issue_id = null;
     var _cur_project_id = '{{ project_id }}';
@@ -705,6 +705,11 @@
         MM.App.io.fetchIssues();
     }
     $(function () {
+
+        if (gl.FilteredSearchManager) {
+            window.filteredSearchManager = new gl.FilteredSearchManager();
+        }
+
         $('.selectpicker').selectpicker('refresh');
         var options = {}
         window.$mindAjax = new MindAjax(options);
@@ -866,13 +871,15 @@
         });
 
         window.format_text_color.on('init', instance => {
-            //console.log('init', instance);
+            console.log('init', instance);
         }).on('hide', instance => {
-            console.log('hide', instance);
+            //console.log('hide', instance);
         }).on('save', (color, instance) => {
             //console.log('save', color.toHEXA().toString());
             let color_text = color.toHEXA().toString();
             let item = MM.App.current;
+            //console.log('current item:', item);
+            //console.log('color:', item._text_color, color_text);
             if(item._id.search('issue_')>=0){
                 let issue_id = item._id.replace('issue_','');
                 if(issue_id && item._text_color!=color_text){
@@ -884,14 +891,6 @@
             MM.App.action(action);
             window.format_text_color.hide()
 
-        }).on('change', (color, instance) => {
-            console.log('change', color, instance);
-        }).on('changestop', instance => {
-            console.log('changestop', instance);
-        }).on('cancel', instance => {
-            console.log('cancel', instance);
-        }).on('swatchselect', (color, instance) => {
-            console.log('swatchselect', color, instance);
         });
 
         // format_border_color
@@ -938,8 +937,36 @@
         }).on('save', (color, instance) => {
             //console.log('save', color.toHEXA().toString());
             let color_text = color.toHEXA().toString();
-
-
+            let item = MM.App.current;
+            if(item._type==='project'){
+                let project_id = item._id.replace('project_','');
+                if(project_id && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    window.$mindAjax.updateProjectFormat(project_id, format_data);
+                }
+            }
+            if(item._type==='root_sprint'){
+                let sprint_id = item._id.replace('sprint_','');
+                if(sprint_id && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+                }
+            }
+            if(item._type==='second'){
+                let arr = item._id.split('_');
+                if(arr.length>1 && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    let group_by_id = arr[1];
+                    window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+                }
+            }
+            if(item._type==='issue'){
+                let issue_id = item._id.replace('issue_','');
+                if(issue_id && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    window.$mindAjax.updateIssueFormat(issue_id, format_data);
+                }
+            }
             var action = new MM.Action.SetColor(MM.App.current,  color_text || null);
             MM.App.action(action);
             window.format_border_color.hide()

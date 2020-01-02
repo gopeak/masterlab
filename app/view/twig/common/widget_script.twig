@@ -48,7 +48,7 @@
     var $panel = null;
     var _cur_page = 1;
     var _temp_obj = {};
-    var layout = "aa";
+    var layout = "{{ user_layout }}";
 
     var $widgetsAjax = null;
 
@@ -73,6 +73,7 @@
         var options = {}
         window.$widgetsAjax = new Widgets(options);
         $(`#layout-${_layout}`).parent().addClass("active").siblings("li").removeClass("active");
+        doLayout(_layout);
     });
 
     $(function () {
