@@ -938,7 +938,7 @@
         }).on('save', (color, instance) => {
             //console.log('save', color.toHEXA().toString());
             let color_text = color.toHEXA().toString();
-            
+
 
             var action = new MM.Action.SetColor(MM.App.current,  color_text || null);
             MM.App.action(action);
