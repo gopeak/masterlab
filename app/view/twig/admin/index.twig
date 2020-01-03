@@ -46,18 +46,55 @@
                         <div class="content-list pipelines">
                             <div class="table-holder">
                                 <table class="table ci-table">
-                                    <tbody id="tbody_id">
-                                    <tr class="commit">
-                                        <td>
-                                            <div class="branch-commit">
-                                                <strong>
-                                                    当前系统的版本:
-                                                </strong>
-                                            </div>
-                                        </td>
-                                        <td> {{ masterlab_version }}</td>
-                                        <td> </td>
-                                    </tr>
+                                    <tbody>
+                                        <tr class="commit">
+                                            <td width="13%" class="th">
+                                                    当前系统的版本
+                                            </td>
+                                            <td>{{ masterlab_version }}</td>
+                                            <td width="13%" class="th">
+                                                    操作系统
+                                            </td>
+                                            <td>{{ os }}</td>
+                                        </tr>
+                                        <tr class="commit">
+                                            <td width="13%" class="th">
+                                                    域名
+                                            </td>
+                                            <td>{{ domain }}</td>
+                                            <td width="13%" class="th">
+                                                    IP&端口
+                                            </td>
+                                            <td>{{ ip }}:{{ port }}</td>
+                                        </tr>
+
+                                        <tr class="commit">
+                                            <td width="13%" class="th">
+                                                    主机名
+                                            </td>
+                                            <td>{{ hostname }}</td>
+                                            <td width="13%" class="th">
+                                                    PHP用户
+                                            </td>
+                                            <td>{{ php_user }}</td>
+                                        </tr>
+                                        <tr class="commit">
+                                            <td width="13%" class="th">
+                                                    Web引擎
+                                            </td>
+                                            <td>{{ web_engine }}</td>
+                                            <td width="13%" class="th">
+                                                    服务器语言
+                                            </td>
+                                            <td>{{ lang }}</td>
+                                        </tr>
+
+                                        <tr class="commit">
+                                            <td width="13%" class="th">
+                                                    PHP已加载扩展
+                                            </td>
+                                            <td colspan="4">{{ extListFormat }}</td>
+                                        </tr>
 
                                     </tbody>
                                 </table>

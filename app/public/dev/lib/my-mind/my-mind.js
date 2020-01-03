@@ -302,6 +302,7 @@ MM.Item = function () {
 	this._children = [];
 	this._collapsed = false;
 
+	this._type = null;
 	this._layout = null;
 	this._shape = null;
 	this._autoShape = true;
@@ -419,7 +420,7 @@ MM.Item.prototype.toJSON = function () {
 	if (this._font_size) { data.icon = this._font_size; }
 	if (this._font_family) { data.icon = this._font_family; }
 	if (this._text_color) { data.icon = this._text_color; }
-	if (this._font_bold) { data.icon = this._font_bold; }
+	if (this._font_bold) { data.font_bold = this._font_bold; }
 	if (this._font_italic) { data.icon = this._font_italic; }
 	if (this._bg_color) { data.bg_color = this._bg_color; }
 
@@ -452,20 +453,42 @@ MM.Item.prototype.fromJSON = function (data) {
 			this._updateProjectImg();
 		}
 	}
-	this.setText(data.text);
 
 	if (data.id) { this._id = data.id; }
+	if (data.type) { this._type = data.type; }
 	if (data.side) { this._side = data.side; }
-	if (data.color) { this._color = data.color; }
+	if (data.color) {
+		this._color = data.color;
+	}else{
+		this._color ='#EE3333';
+	}
 
+	if (data.font_size) {
+		this._font_size = data.font_size;
+	}
+	if (data.font_family) {
+		this._font_family = data.font_family;
+	}
+	if (data.text_color) {
+		this._text_color = data.text_color;
+	}else{
+		this._text_color ='#000000';
+	}
+	if (data.font_bold) {
+		this._font_bold = data.font_bold;
+	}else{
+		this._font_bold = '0';
+	}
+	if (data.font_italic) {
+		this._font_italic = data.font_italic;
+	}else{
+		this._font_italic = '0';
+	}
+	if (data.bg_color) {
+		this._bg_color = data.bg_color;
+	}
 
-	if (data.font_size) { this._font_size = this.font_size; }
-	if (data.font_family) { this._font_family = this.font_family; }
-	if (data.text_color) { this._text_color = this.text_color; }
-	if (data.font_bold) { this._font_bold = this.font_bold; }
-	if (data.font_italic) { this._font_italic = this.font_italic; }
-	if (data.bg_color) { this._bg_color = this.bg_color; }
-
+	this.setText(data.text);
 
 	// if (data.icon) { this._icon = data.icon; }
 	if (data.issue_type_fa) { this._icon = data.issue_type_fa; }
@@ -583,37 +606,56 @@ MM.Item.prototype.setProgressActive = function (issue_progress) {
 MM.Item.prototype.syncRenderRightPanel = function () {
     // 格式渲染
     if(this._id.search('project_')===-1){
-
-		if(this._text_color){
-			window.format_text_color.setColor(this._text_color);
-		}else{
-            window.format_text_color.setColor('#000000');
-		}
-		if(this._color){
-			window.format_border_color.setColor(this._color);
-		}else{
-            window.format_border_color.setColor('#EE3333');
-		}
 		// 事项
-        $('#btn-delete').removeClass('disabled');
         let issue_id = null;
         if(this._id.search('issue_')>=0){
+            $('#btn-delete').removeClass('disabled');
+        	$('#right-issue').show();
             $('#format_issue_type').val(this._icon);
             $('#format_issue_assignee').val(this._issue_assignee);
 			this.setStatusActive(this._issue_status);
 			this.setPriorityActive(this._issue_priority);
 			this.setProgressActive(this._issue_progress);
-        }
-
-    }else{
-
+        }else{
+            $('#right-issue').hide();
+		}
     }
-    if(this._shape.id){
+
+
+    if(this._shape && this._shape.id){
 		$('#format_shape').val(this._shape.id);
 	}
-	if(this._layout.id){
+	if(this._layout && this._layout.id){
 		$('#layout').val(this._layout.id);
 	}
+    if(this._font_size){
+        $('#format_font_size').val(this._font_size);
+    }
+    if(this._font_family){
+        $('#format_font_family').val(this._font_family);
+    }
+    if(this._font_bold && this._font_bold=='1'){
+    	$('#format_font_bold').addClass('active');
+	}else{
+		$('#format_font_bold').removeClass('active');
+	}
+    if(this._font_italic && this._font_italic=='1'){
+        $('#format_font_italic').addClass('active');
+	}else{
+		$('#format_font_italic').removeClass('active');
+	}
+
+	if(this._text_color){
+		window.format_text_color.setColor(this._text_color);
+	}else{
+		//window.format_text_color.setColor('#000000');
+	}
+	if(this._color){
+		window.format_border_color.setColor(this._color);
+	}else{
+		//window.format_border_color.setColor('#EE3333');
+	}
+
     $('.selectpicker').selectpicker('refresh');
 }
 
@@ -660,18 +702,18 @@ MM.Item.prototype.update = function (doNotRecurse) {
     this._updateIssueProgressImg();
 	this._updateValue();
 
-	if (this._font_bold ) {
+	if (this._font_bold   &&  this._font_bold=='1') {
 		this._dom.text.style.fontWeight = 'bold';
 	}else{
 		this._dom.text.style.fontWeight = '';
 	}
-    if (this._font_italic ) {
+    if (this._font_italic &&  this._font_italic=='1') {
         this._dom.text.style.fontStyle = "italic";
     }else{
         this._dom.text.style.fontStyle = "";
     }
     if (this._font_size ) {
-        this._dom.text.style.fontSize = this._font_size+'px';
+        this._dom.text.style.fontSize = this._font_size + "em";
     }
     if (this._font_family ) {
         this._dom.text.style.fontFamily = this._font_family;
@@ -1048,6 +1090,14 @@ MM.Item.prototype._getAutoShape = function () {
 	}
 }
 
+MM.Item.prototype._updateTextColor = function () {
+	var _text_color = this._text_color;
+	if (_text_color) {
+		this._dom.text.style.color = _text_color;
+	} else {
+	}
+}
+
 MM.Item.prototype._updateStatus = function () {
 	this._dom.status.className = "status";
 	this._dom.status.style.display = "";
@@ -1104,7 +1154,7 @@ MM.Item.prototype._updateIssuePriorityLabel = function () {
             this._dom.issue_priority_label.innerHTML = issue_priority_row.name.replace(/\s*/g,"");
             //this._dom.issue_status_label.classList.add('label-info');
             this._dom.issue_priority_label.style.color = issue_priority_row.status_color;
-            this._dom.issue_priority_label.style.fontSize = '10px';
+            this._dom.issue_priority_label.style.fontSize = '0.8em';
             this._dom.issue_priority_label.title = '事项的优先级';
             this._dom.issue_priority_label.classList.add('prepend-right-5');
         }
@@ -1127,7 +1177,7 @@ MM.Item.prototype._updateIssueStatuslabel = function () {
             this._dom.issue_status_label.innerHTML = issue_status_row.name.replace(/\s*/g,"");
             //this._dom.issue_status_label.classList.add('label-info');
             this._dom.issue_status_label.style.color = issue_status_row.text_color;
-            this._dom.issue_status_label.style.fontSize = '10px';
+            this._dom.issue_status_label.style.fontSize = '0.8em';
             this._dom.issue_status_label.title = '事项的状态';
             this._dom.issue_status_label.classList.add('prepend-right-5');
             this._computed.issue_status_label = true;
@@ -1139,7 +1189,7 @@ MM.Item.prototype._updateIssueStatuslabel = function () {
     }
 }
 MM.Item.prototype._updateIssueAssigneeImg = function () {
-    this._dom.issue_assignee_img.className = "avatar";
+    // this._dom.issue_assignee_img.className = "avatar";
     this._dom.issue_assignee_img.style.display = "";
 
     var issue_assignee_id = this._issue_assignee;
@@ -1149,10 +1199,10 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
         if(user_row) {
             this._dom.issue_assignee_img.src = user_row.avatar;
         }
-        this._dom.issue_assignee_img.classList.add('avatar-small');
+        this._dom.issue_assignee_img.classList.add('mind-avatar');
         this._dom.issue_assignee_img.title = '经办人';
-        this._dom.issue_assignee_img.style.width = "18px";
-        this._dom.issue_assignee_img.style.height = "18px";
+        this._dom.issue_assignee_img.style.width = "1em";
+        this._dom.issue_assignee_img.style.height = "1em";
     } else {
         this._computed.issue_assignee_img = null;
         this._dom.issue_assignee_img.style.display = "none";
@@ -1160,13 +1210,13 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
 }
 
 MM.Item.prototype._updateProjectImg = function () {
-	this._dom.project_img.className = "avatar";
+	// this._dom.project_img.className = "avatar";
 	this._dom.project_img.style.display = "";
 
 	var project_img = this._project_img;
 	if (project_img) {
 	    this._dom.project_img.src = project_img;
-		this._dom.project_img.classList.add('avatar-small');
+		this._dom.project_img.classList.add('mind-avatar');
 		this._dom.project_img.title = '项目icon';
 		this._dom.project_img.style.width = "32px";
 		this._dom.project_img.style.height = "32px";
@@ -1215,8 +1265,8 @@ MM.Item.prototype._updateIssueProgressImg = function () {
     if (issue_progress) {
     	this._dom.issue_progress_img.src = '/dev/img/mind/'+this.getProgressImgName(issue_progress);
         this._dom.issue_progress_img.title = '事项的进度';
-        this._dom.issue_progress_img.style.width = "18px";
-        this._dom.issue_progress_img.style.height = "18px";
+        this._dom.issue_progress_img.style.width = "1em";
+        this._dom.issue_progress_img.style.height = "1em";
     } else {
         this._dom.issue_progress_img.style.display = "none";
     }
@@ -3459,9 +3509,9 @@ MM.Format.br2nl = function (str) {
 }
 MM.Format.JSON = Object.create(MM.Format, {
 	id: { value: "json" },
-	label: { value: "Native (JSON)" },
-	extension: { value: "mymind" },
-	mime: { value: "application/vnd.mymind+json" }
+	label: { value: "JSON格式" },
+	extension: { value: "json" },
+	mime: { value: "application/json" }
 });
 
 MM.Format.JSON.to = function (data) {
@@ -4478,6 +4528,37 @@ MM.UI.Layout.prototype.update = function () {
 MM.UI.Layout.prototype.handleEvent = function (e) {
 	var layout = MM.Layout.getById(this._select.value);
 
+	let item = MM.App.current;
+	if(item._type==='project'){
+		let project_id = item._id.replace('project_','');
+		if(project_id && item._layout!=layout){
+			let format_data = {layout:layout.id}
+			window.$mindAjax.updateProjectFormat(project_id, format_data);
+		}
+	}
+	if(item._type==='root_sprint'){
+		let sprint_id = item._id.replace('sprint_','');
+		if(sprint_id && item._layout!=layout){
+			let format_data = {layout:shape.id}
+			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+		}
+	}
+	if(item._type==='second'){
+		let arr = item._id.split('_');
+		if(arr.length>1 && item._layout!=layout){
+			let format_data = {layout:layout.id}
+			let group_by_id = arr[1];
+			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+		}
+	}
+	if(item._type==='issue'){
+		let issue_id = item._id.replace('issue_','');
+		if(issue_id && item._layout!=layout){
+			let format_data = {layout:layout.id}
+			window.$mindAjax.updateIssueFormat(issue_id, format_data);
+		}
+	}
+
 	var action = new MM.Action.SetLayout(MM.App.current, layout);
 	MM.App.action(action);
 }
@@ -4512,6 +4593,36 @@ MM.UI.Shape.prototype.update = function () {
 
 MM.UI.Shape.prototype.handleEvent = function (e) {
 	var shape = MM.Shape.getById(this._select.value);
+    let item = MM.App.current;
+	if(item._type==='project'){
+		let project_id = item._id.replace('project_','');
+		if(project_id && item._shape!=shape){
+			let format_data = {shape:shape.id}
+			window.$mindAjax.updateProjectFormat(project_id, format_data);
+		}
+	}
+	if(item._type==='root_sprint'){
+		let sprint_id = item._id.replace('sprint_','');
+		if(sprint_id && item._shape!=shape){
+			let format_data = {shape:shape.id}
+			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+		}
+	}
+	if(item._type==='second'){
+		let arr = item._id.split('_');
+		if(arr.length>1 && item._shape!=shape){
+			let format_data = {shape:shape.id}
+			let group_by_id = arr[1];
+			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+		}
+	}
+	if(item._type==='issue'){
+		let issue_id = item._id.replace('issue_','');
+		if(issue_id && item._shape!=shape){
+			let format_data = {shape:shape.id}
+			window.$mindAjax.updateIssueFormat(issue_id, format_data);
+		}
+	}
 
 	var action = new MM.Action.SetShape(MM.App.current, shape);
 	MM.App.action(action);
@@ -4568,6 +4679,14 @@ MM.UI.Color.prototype.handleEvent = function (e) {
 	if (!e.target.hasAttribute("data-color")) { return; }
 
 	var color = e.target.getAttribute("data-color") || null;
+    let item = MM.App.current;
+    if(font_value && item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._color!=color){
+            let format_data = {color:color}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
 	var action = new MM.Action.SetColor(MM.App.current, color);
 	MM.App.action(action);
 }
@@ -4575,17 +4694,7 @@ MM.UI.Color.prototype.handleEvent = function (e) {
 
 // BorderColor
 MM.UI.BorderColor = function () {
-	window.format_border_color.on('init', instance => {
-		//console.log('init', instance);
-	}).on('hide', instance => {
-		//console.log('hide', instance);
-	}).on('save', (color, instance) => {
-		//console.log('save', color.toHEXA().toString());
-		let color_text = color.toHEXA().toString();
-		var action = new MM.Action.SetColor(MM.App.current,  color_text || null);
-		MM.App.action(action);
-		window.format_border_color.hide()
-	})
+
 }
 
 //FontFamily
@@ -4600,6 +4709,15 @@ MM.UI.FontFamily.prototype.update = function () {
 
 MM.UI.FontFamily.prototype.handleEvent = function (e) {
     console.log(MM.App.current)
+    let font_value = this._select.value;
+    let item = MM.App.current;
+    if(font_value && item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._font_family!=font_value){
+            let format_data = {font_family:font_value}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
     var action = new MM.Action.SetFontFamily(MM.App.current, this._select.value || null);
     MM.App.action(action);
 }
@@ -4615,6 +4733,15 @@ MM.UI.FontSize.prototype.update = function () {
 
 MM.UI.FontSize.prototype.handleEvent = function (e) {
     console.log(MM.App.current)
+    let item = MM.App.current;
+    let font_value = this._select.value;
+    if(font_value && item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._font_size!=font_value){
+            let format_data = {font_size:font_value}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
     var action = new MM.Action.SetFontSize(MM.App.current, this._select.value || null);
     MM.App.action(action);
 }
@@ -4628,11 +4755,21 @@ MM.UI.FontBold.prototype.handleEvent = function (e) {
     e.preventDefault();
     let format_font_bold_obj = $('#format_font_bold');
     let font_value = parseInt(format_font_bold_obj.data("value"));
-    if(font_value===0){
+
+    if(font_value==0){
         format_font_bold_obj.data('value','1');
 	}else{
         format_font_bold_obj.data('value','0');
 	}
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        font_value = parseInt(format_font_bold_obj.data("value"));
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._font_bold!=font_value){
+            let format_data = {font_bold:font_value}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
+    }
     var action = new MM.Action.SetFontBold(MM.App.current, font_value===0);
     MM.App.action(action);
 }
@@ -4646,10 +4783,18 @@ MM.UI.FontItalic.prototype.handleEvent = function (e) {
     e.preventDefault();
     let format_font_italic_obj = $('#format_font_italic');
     let font_value = parseInt(format_font_italic_obj.data("value"));
-    if(font_value===0){
+    if(font_value==0){
         format_font_italic_obj.data('value','1');
     }else{
         format_font_italic_obj.data('value','0');
+    }
+    let item = MM.App.current;
+    if(item._id.search('issue_')>=0){
+        let issue_id = item._id.replace('issue_','');
+        if(issue_id && item._font_italic!=font_value){
+            let format_data = {font_italic:font_value}
+            window.$mindAjax.updateIssueFormat(issue_id, format_data);
+        }
     }
     var action = new MM.Action.SetFontItalic(MM.App.current, font_value===0);
     MM.App.action(action);
@@ -4657,18 +4802,7 @@ MM.UI.FontItalic.prototype.handleEvent = function (e) {
 
 // TextColor
 MM.UI.TextColor = function () {
-    window.format_text_color.on('init', instance => {
-        //console.log('init', instance);
-    }).on('hide', instance => {
-        //console.log('hide', instance);
-    }).on('save', (color, instance) => {
-        //console.log('save', color.toHEXA().toString());
-        let color_text = color.toHEXA().toString();
-        var action = new MM.Action.SetTextColor(MM.App.current,  color_text || null);
-        MM.App.action(action);
-		window.format_text_color.hide()
 
-    })
 }
 MM.UI.TextColor.prototype.update = function () {
     this.value = MM.App.current.getTextColor() || "";
@@ -5259,7 +5393,7 @@ MM.UI.Backend.File._action = function () {
 }
 
 MM.UI.Backend.File.save = function () {
-	var format = MM.Format.getById(this._format.value);
+    var format = MM.Format.getById($('#export_format').val());
 	var json = MM.App.map.toJSON();
 	var data = format.to(json);
 
@@ -5766,7 +5900,17 @@ MM.Mouse.handleEvent = function (e) {
 
 			var item = MM.App.map.getItemFor(e.target);
 			item && MM.App.select(item);
-
+            if(item._id && item._id.search('issue_')===-1){
+				$("button[data-command='InsertSibling']").hide();
+            }else{
+                $("button[data-command='InsertSibling']").show();
+			}
+            let parent_item = item.getParent();
+			if(parent_item._root && parent_item._root._id===item._id){
+				$('#menu').hide();
+            	return;
+            	console.log(item.getParent());
+			}
 			MM.Menu.open(e.clientX, e.clientY);
 			break;
 
@@ -6109,7 +6253,7 @@ MM.App = {
 
 			case "item-change":
 				if (publisher.isRoot() && publisher.getMap() == this.map) {
-					document.title = this.map.getName() + " :: My Mind";
+					document.title = this.map.getName() + " :: Masterlab";
 				}
 				break;
 		}
@@ -6160,17 +6304,17 @@ MM.App = {
 		var navbar = document.querySelector(".navbar");
 		var navControl = document.querySelector(".nav-control");
 		var mindTools = document.querySelector(".js-mind-tools");
+		var mindSideBar = document.querySelector(".mind-side")
 		var padding = 32;
-		// 是否全屏
-		if(zoomMode) {
-			this.portSize = [window.innerWidth, window.innerHeight - navControl.offsetHeight];
-			this._port.style.width = this.portSize[0] + "px";
-			this._port.style.height = this.portSize[1] + "px";
+		if(zoomMode == "0"){
+			mindSideBar.style.top = "56px"
 		}else{
-			this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
-			this._port.style.width = this.portSize[0] + "px";
-			this._port.style.height = this.portSize[1] + "px";
+			mindSideBar.style.top = "145px"
 		}
+		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
+		this._port.style.width = this.portSize[0] + "px";
+		this._port.style.height = this.portSize[1] + "px";
+		
 		this._throbber.style.right = (20 + this.ui.getWidth()) + "px";
 		if (this.map) { this.map.ensureItemVisibility(this.current); }
 	}

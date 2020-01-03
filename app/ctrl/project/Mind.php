@@ -18,7 +18,8 @@ use main\app\classes\ProjectGantt;
 use main\app\classes\ProjectMind;
 use main\app\model\project\MindIssueAttributeModel;
 use main\app\model\project\MindProjectAttributeModel;
-use main\app\model\project\MindSecondtAttributeModel;
+use main\app\model\project\MindSecondAttributeModel;
+use main\app\model\project\MindSprintAttributeModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectMindSettingModel;
 use main\app\model\project\ProjectRoleModel;
@@ -40,12 +41,6 @@ class Mind extends BaseUserCtrl
         parent::addGVar('sub_nav_active', 'project');
     }
 
-    public function pageComputeLevel()
-    {
-        $class = new ProjectGantt();
-        $class->batchUpdateGanttLevel();
-        echo 'ok';
-    }
 
     /**
      * @throws \Exception
@@ -53,7 +48,7 @@ class Mind extends BaseUserCtrl
     public function pageIndex()
     {
         $data = [];
-        $data['title'] = '项目事项的思维导图结构';
+        $data['title'] = '事项脑图';
         $data['nav_links_active'] = 'mind';
         $data = RewriteUrl::setProjectData($data);
         // 权限判断
@@ -181,47 +176,68 @@ class Mind extends BaseUserCtrl
         }
 
         list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
-        $mindProjectAttributeModel = new MindProjectAttributeModel();
-        $format = $mindProjectAttributeModel->getByProject($projectId);
+        // 获取格式
+        if ($sourceType == 'all') {
+            $mindProjectAttributeModel = new MindProjectAttributeModel();
+            $format = $mindProjectAttributeModel->getByProject($projectId);
+        } else {
+            $sprintId = $sourceType;
+            $mindSprintAttributeModel = new MindSprintAttributeModel();
+            $format = $mindSprintAttributeModel->getBySprint($sprintId);
+        }
         if (empty($format)) {
+            // 设置默认值
             $format['layout'] = 'graph-bottom';
-            $format['color'] = '#e33';
+            $format['shape'] = 'box';
+            $format['color'] = '#EE3333';
             $format['icon'] = '';
             $format['font_family'] = '宋体, SimSun;';
             $format['font_size'] = 14;
             $format['font_bold'] = 1;
-            $format['font_italics'] = 0;
+            $format['font_italic'] = 0;
             $format['bg_color'] = '';
+            $format['text_color'] = '';
         }
+        if (empty($format['layout'])) {
+            $format['layout'] = 'graph-bottom';
+        }
+        if (empty($format['shape'])) {
+            $format['shape'] = 'box';
+        }
+
         $root = [];
-        $root['origin_id'] = $projectId;
-        $root['id'] = 'project_' . $projectId;
-        $root['type'] = 'project';
-        $root['text'] =  $project['name'];
-        $root['avatar_exist'] =  $project['avatar_exist'];
-        $root['avatar'] =  $project['avatar'];
         $root['layout'] = $format['layout'];
+        $root['shape'] = $format['shape'];
         $root['color'] = $format['color'];
         $root['font_family'] = $format['font_family'];
         $root['font_size'] = $format['font_size'];
         $root['font_bold'] = $format['font_bold'];
-        $root['font_italics'] = $format['font_italics'];
+        $root['font_italic'] = $format['font_italic'];
         $root['bg_color'] = $format['bg_color'];
+        $root['text_color'] = $format['text_color'];
         $root['children'] = [];
 
         if ($sourceType == 'all') {
             $sprintId = null;
+            $root['origin_id'] = $projectId;
+            $root['id'] = 'project_' . $projectId;
+            $root['type'] = 'project';
+            $root['text'] = $project['name'];
+            $root['avatar_exist'] = $project['avatar_exist'];
+            $root['avatar'] = $project['avatar'];
         } else {
             $sprintId = $sourceType;
             $sprintModel = new SprintModel();
             $sprint = $sprintModel->getById($sprintId);
-            if(!empty($sprint)){
+            if (!empty($sprint)) {
                 $root['origin_id'] = $sprintId;
-                $root['id'] = 'sprint_' . $projectId;
+                $root['id'] = 'sprint_' . $sprintId;
                 $root['type'] = 'root_sprint';
                 $root['text'] = $sprint['name'];
-                $root['avatar_exist'] =  true;
-                $root['avatar'] =  '/dev/img/mind/rocket.png';
+                $root['avatar_exist'] = true;
+                $root['avatar'] = '/dev/img/mind/rocket.png';
+            } else {
+                $this->ajaxFailed('参数错误', '迭代数据为空');
             }
         }
         $issueChildren = $class->getMindIssues($projectId, $sprintId, $groupByField, $addFilterSql);
@@ -330,16 +346,48 @@ class Mind extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
-        $mindProjectAttributeModel = new MindProjectAttributeModel();
+        $model = new MindProjectAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
             }
         }
         $updateInfo['project_id'] = $projectId;
-        list($ret, $msg) = $mindProjectAttributeModel->replaceByProjectId($updateInfo);
+        list($ret, $msg) = $model->replaceByProjectId($updateInfo);
+        if (!$ret) {
+            $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
+        }
+        $this->ajaxSuccess('提示', '操作成功');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function saveSprintFormat()
+    {
+        $sprintId = null;
+        if (isset($_GET['_target'][3])) {
+            $sprintId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['sprint_id'])) {
+            $sprintId = (int)$_GET['sprint_id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
+        }
+
+        $model = new MindSprintAttributeModel();
+        $updateInfo = [];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color'];
+        foreach ($fields as $field) {
+            if (isset($_POST[$field])) {
+                $updateInfo[$field] = $_POST[$field];
+            }
+        }
+        $updateInfo['sprint_id'] = $sprintId;
+        list($ret, $msg) = $model->replaceBySprintId($updateInfo);
         if (!$ret) {
             $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
         }
@@ -369,10 +417,9 @@ class Mind extends BaseUserCtrl
             $this->ajaxFailed('参数错误', 'group_by_id不能为空');
         }
 
-
-        $mindProjectAttributeModel = new MindSecondtAttributeModel();
+        $model = new MindSecondAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color', 'text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
@@ -382,7 +429,7 @@ class Mind extends BaseUserCtrl
         $updateInfo['source'] = $_GET['source'];
         $updateInfo['group_by'] = $_GET['group_by'];
         $updateInfo['group_by_id'] = $_GET['group_by_id'];
-        list($ret, $msg) = $mindProjectAttributeModel->replaceByProjectId($updateInfo);
+        list($ret, $msg) = $model->replaceByProjectId($updateInfo);
         if (!$ret) {
             $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
         }
@@ -413,9 +460,9 @@ class Mind extends BaseUserCtrl
         }
 
 
-        $mindProjectAttributeModel = new MindIssueAttributeModel();
+        $model = new MindIssueAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italics', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color', 'text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
@@ -425,7 +472,7 @@ class Mind extends BaseUserCtrl
         $updateInfo['source'] = $_GET['source'];
         $updateInfo['group_by'] = $_GET['group_by'];
         $updateInfo['issue_id'] = $_GET['issue_id'];
-        list($ret, $msg) = $mindProjectAttributeModel->replaceByProjectId($updateInfo);
+        list($ret, $msg) = $model->replaceByProjectId($updateInfo);
         if (!$ret) {
             $this->ajaxFailed('提示', '服务器执行错误:' . $msg);
         }

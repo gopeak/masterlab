@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head prefix="og: http://ogp.me/ns#">
+
     {% include 'twig/common/header/include.twig' %}
-
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
-
     <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
@@ -67,8 +65,13 @@
     <script src="/dev/lib/pickr/dist/pickr.min.js"></script>
     <script src="/dev/lib/pickr/dist/pickr.es5.min.js"></script>
 
+
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+    <script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css"/>
+
 
 
 </head>
@@ -145,7 +148,13 @@
                                         <a title="清除筛选" href="javascript:;" style="color: grey;display: none"><i class="fa fa-close"></i></a>
                                     </div>
                                     <div>
-                                        <button id="toggle_focus_mode"  href="#" role="button" aria-label="" title="切换聚焦模式" class="btn btn-default">
+                                        <button class="btn btn-default" type="button" id="toolbar-export" title="导出"  data-placement="left"  >
+                                            <img  src="/dev/img/mind/export.png"  style="width: 16px;height:16px"/>
+                                        </button>
+                                        <button class="btn btn-default " type="button" title="设置"  id="btn-setting" data-dismiss="modal" onclick="$('#modal-setting').modal('show');" >
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <button id="toggle_focus_mode"  href="#" role="button" aria-label="" title="切换聚焦模式" class="btn btn-default" data-mode="0">
                                             <span>
                                                 <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
                                                     <path  d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z"
@@ -153,12 +162,8 @@
                                                 </svg>
                                             </span>
                                         </button>
-                                        <button class="btn btn-default" type="button" id="btn-filter" title="导出"  >
-                                           <img  src="/dev/img/mind/export.png"  style="width: 16px;height:16px"/>
-                                        </button>
-                                        <button class="btn btn-default " type="button" title="设置"  id="btn-setting" data-dismiss="modal" onclick="$('#modal-setting').modal('show');" >
-                                            <i class="fa fa-cog"></i>
-                                        </button>
+
+
                                     </div>
 
                                 </div>
@@ -190,7 +195,7 @@
                                         <h3>主题格式</h3>
                                     </div>
                                     <div class="mind-side-body">
-                                        <ul class="mind-side-attrs">
+                                        <ul class="mind-side-attrs" id="right-format">
                                             <li class="flex-row">
                                                 <p>布局</p>
                                                 <div>
@@ -283,7 +288,7 @@
                                                             {% for row in fonts %}
                                                                 {% set  name = row['name'] %}
                                                                 {% set  value = row['value'] %}
-                                                                <option   data-content="<span style='font-family:{{ value }};'>{{ name }}</span>" value="{{ value }}">{{name}}</option>
+                                                                <option data-content="<span>{{ name }}</span>" value="{{ value }}">{{name}}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>
@@ -292,6 +297,8 @@
                                             <li  class="flex-row">
                                                 <p></p>
                                             </li>
+                                        </ul>
+                                        <ul class="mind-side-attrs hide" id="right-issue">
                                             <li  class="flex-row">
                                                 <div class="mind-side-head">
                                                     <h3>事项属性</h3>
@@ -682,7 +689,7 @@
         "project_sprints":{{ sprints|json_encode()|raw }},
         "projects":{{ projects|json_encode()|raw }}
     };
-    var _project_issue_types =  {{project_issue_types|json_encode()|raw}};
+    var _project_issue_types = {{project_issue_types|json_encode()|raw}};
     var mind_setting = {{ mind_setting|json_encode()|raw }};
     var _issue_id = null;
     var _cur_project_id = '{{ project_id }}';
@@ -699,17 +706,25 @@
     }
     $(function () {
 
+        if (gl.FilteredSearchManager) {
+            window.filteredSearchManager = new gl.FilteredSearchManager();
+        }
+
+        $('.selectpicker').selectpicker('refresh');
         var options = {}
         window.$mindAjax = new MindAjax(options);
         //let params = {source_type:'all', group_by:'sprint'}
         //window.$mindAjax.fetchAll(window._cur_project_id,  params );
+
 
         // 聚焦模式切换
         $('#toggle_focus_mode').bind('click', function () {
             $('.main-sidebar').toggleClass('hidden');
             $('.with-horizontal-nav').toggleClass('hidden');
             $('.layout-nav').toggleClass('hidden');
-            MM.App._syncPort()
+            var mode = $(this).attr("data-mode")
+            MM.App._syncPort(mode)
+            mode == "0" ? $(this).attr("data-mode", "1") : $(this).attr("data-mode", "0")
         });
 
         if(mind_setting.default_source==='all'){
@@ -819,13 +834,7 @@
                 position: 'fixed'
             });
         });
-        $('#btn-add').bind('click',function(){
-            if($('#action').val()==='update'){
-                window.$mindAjax.updateSyncServerTask();
-            }else{
-                window.$mindAjax.addSyncServerTask();
-            }
-        });
+
 
         window.format_text_color = Pickr.create({
             el: '#format_text_color',
@@ -861,6 +870,29 @@
                     save: true
                 }
             }
+        });
+
+        window.format_text_color.on('init', instance => {
+            console.log('init', instance);
+        }).on('hide', instance => {
+            //console.log('hide', instance);
+        }).on('save', (color, instance) => {
+            //console.log('save', color.toHEXA().toString());
+            let color_text = color.toHEXA().toString();
+            let item = MM.App.current;
+            //console.log('current item:', item);
+            //console.log('color:', item._text_color, color_text);
+            if(item._id.search('issue_')>=0){
+                let issue_id = item._id.replace('issue_','');
+                if(issue_id && item._text_color!=color_text){
+                    let format_data = {text_color:color_text}
+                    window.$mindAjax.updateIssueFormat(issue_id, format_data);
+                }
+            }
+            var action = new MM.Action.SetTextColor(MM.App.current,  color_text || null);
+            MM.App.action(action);
+            window.format_text_color.hide()
+
         });
 
         // format_border_color
@@ -900,6 +932,77 @@
             }
         });
 
+        window.format_border_color.on('init', instance => {
+            //console.log('init', instance);
+        }).on('hide', instance => {
+            //console.log('hide', instance);
+        }).on('save', (color, instance) => {
+            //console.log('save', color.toHEXA().toString());
+            let color_text = color.toHEXA().toString();
+            let item = MM.App.current;
+            if(item._type==='project'){
+                let project_id = item._id.replace('project_','');
+                if(project_id && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    window.$mindAjax.updateProjectFormat(project_id, format_data);
+                }
+            }
+            if(item._type==='root_sprint'){
+                let sprint_id = item._id.replace('sprint_','');
+                if(sprint_id && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+                }
+            }
+            if(item._type==='second'){
+                let arr = item._id.split('_');
+                if(arr.length>1 && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    let group_by_id = arr[1];
+                    window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+                }
+            }
+            if(item._type==='issue'){
+                let issue_id = item._id.replace('issue_','');
+                if(issue_id && item._color!=color_text){
+                    let format_data = {color:color_text}
+                    window.$mindAjax.updateIssueFormat(issue_id, format_data);
+                }
+            }
+            var action = new MM.Action.SetColor(MM.App.current,  color_text || null);
+            MM.App.action(action);
+            window.format_border_color.hide()
+        })
+    });
+
+    $(document).ready(function() {
+
+        $('.selectpicker').selectpicker('refresh');
+
+        $('#toolbar-export').qtip({
+            content: {
+                text: $("#popover-content").html(),
+                title: '导出格式',
+                button: "关闭"
+            },
+            show: 'click',
+            hide: 'click',
+            style: {
+                classes: "qtip-bootstrap",
+                width: "500px"
+            },
+            position: {
+                my: 'top center', // Position my top left...
+                at: 'bottom left', // at the bottom right of...
+            },
+            events: {
+                show: function(event, api) {
+                    $('#btn-export-save').bind('click',function(){
+                        MM.UI.Backend.File.save();
+                    });
+                }
+            }
+        });
     });
     var _curFineAttachmentUploader = null;
     var _curIssueId = null;
@@ -909,6 +1012,23 @@
 
 </script>
 
+<div id="popover-head" class="hide">
+    导出格式
+</div>
+<div id="popover-content" class="hide">
+    <select class="format" id="export_format">
+        <option value="json">JSON</option>
+        <option value="freemind">FreeMind</option>
+        <option value="mma">Mind Map Architect</option>
+        <option value="plaintext">Plain text</option>
+    </select>
+    <div class="row-content-block">
+        <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#toolbar-export').popover('hide')">取消</a>
+        <span >
+       <input id="btn-export-save" type="button" value="导 出" class="btn btn-info">
+       </span>
+    </div>
+</div>
 
 </body>
 </html>

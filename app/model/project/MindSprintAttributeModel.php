@@ -5,15 +5,15 @@ namespace main\app\model\project;
 use main\app\model\CacheModel;
 
 /**
- * 二级主题思维导图的格式
+ * 迭代思维导图的格式
  */
-class MindSecondAttributeModel extends CacheModel
+class MindSprintAttributeModel extends CacheModel
 {
     public $prefix = 'mind_';
 
-    public $table = 'second_attribute';
+    public $table = 'sprint_attribute';
 
-    const   DATA_KEY = 'mind_second_attribute/';
+    const   DATA_KEY = 'mind_sprint_attribute/';
 
     /**
      * ProjectRoleModel constructor.
@@ -38,63 +38,63 @@ class MindSecondAttributeModel extends CacheModel
     }
 
     /**
-     * 新增二级主题的思维导图格式
+     * 新增项目的思维导图格式
      * @param $info
-     * @param $projectId
+     * @param $sprintId
      * @return array
      * @throws \Exception
      */
-    public function insertByProjectId($info, $projectId)
+    public function insertBySprintId($info, $sprintId)
     {
-        $info ['project_id'] = $projectId;
+        $info ['sprint_id'] = $sprintId;
         $flag = $this->insert($info);
         return $flag;
     }
 
     /**
-     * 更新二级主题思维导图格式
+     * 更新项目思维导图格式
      * @param $updateInfo
-     * @param $projectId
+     * @param $sprintId
      * @return array
      * @throws \Exception
      */
-    public function updateByProjectId($updateInfo, $projectId)
+    public function updateBySprintId($updateInfo, $sprintId)
     {
-        $where = ['project_id' => $projectId];
+        $where = ['sprint_id' => $sprintId];
         $flag = $this->update($updateInfo, $where);
         return $flag;
     }
 
     /**
-     * 替换
+     * 替换思维导图
      * @param $updateInfo
+     * @param $sprintId
      * @return array
      * @throws \Exception
      */
-    public function replaceByProjectId($updateInfo)
+    public function replaceBySprintId($updateInfo)
     {
         $flag = $this->replace($updateInfo);
         return $flag;
     }
 
-
     /**
-     * 获取某个二级主题的思维导图格式
+     * 获取某个项目的思维导图格式
      * @return array
      */
-    public function getByProject($projectId)
+    public function getBySprint($sprintId)
     {
-        return $this->getRows('*', ['project_id' => $projectId]);
+        return $this->getRow('*', ['sprint_id' => $sprintId]);
     }
 
     /**
-     * 删除二级主题的思维导图格式
-     * @param $projectId
+     * 删除项目的思维导图格式
+     * @param $sprintId
      * @return int
      */
-    public function deleteByProjectId( $projectId)
+    public function deleteBySprintId( $sprintId)
     {
-        $where = ['project_id' => $projectId];
+        $where = ['sprint_id' => $sprintId];
         $flag = $this->delete($where);
         return $flag;
     }

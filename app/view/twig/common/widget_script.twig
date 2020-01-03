@@ -48,7 +48,7 @@
     var $panel = null;
     var _cur_page = 1;
     var _temp_obj = {};
-    var layout = "aa";
+    var layout = "{{ user_layout }}";
 
     var $widgetsAjax = null;
 
@@ -73,6 +73,7 @@
         var options = {}
         window.$widgetsAjax = new Widgets(options);
         $(`#layout-${_layout}`).parent().addClass("active").siblings("li").removeClass("active");
+        doLayout(_layout);
     });
 
     $(function () {
@@ -163,7 +164,10 @@
             $panel_third = $(".panel-third"),
             $item_first = $panel_first.find(".panel"),
             $item_second = $panel_second.find(".panel"),
-            $item_third = $panel_third.find(".panel");
+            $item_third = $panel_third.find(".panel"),
+            first_widgets = JSON.parse(JSON.stringify(_user_widgets.first)) || [],
+            second_widgets = JSON.parse(JSON.stringify(_user_widgets.second)) || [],
+            third_widgets = JSON.parse(JSON.stringify(_user_widgets.third)) || [];
         var sort = 0,
             html_list = [];
 

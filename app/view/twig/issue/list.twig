@@ -1354,8 +1354,8 @@
                                     <div class="col-sm-2">
                                         <select id="adv_field" name="params[field]" class="selectpicker form-control"
                                                 dropdownalignright="true" title="字段">
-                                            {% for field in advFields %}
-                                                <option value="{{ field.name }}" data-type="{{ field.type }}"
+                                            {% for key ,field in advFields %}
+                                                <option value="{{ key }}" data-type="{{ field.type }}"
                                                         data-source="{{ field.source }}"
                                                         data-content="{{ field.title }}">
                                                     {{ field.title }}
@@ -1363,13 +1363,6 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    {#<div class="col-sm-2" >#}
-                                    {#<select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段">#}
-                                    {#{% for field in advFields %}#}
-                                    {#<option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>#}
-                                    {#{% endfor %}#}
-                                    {#</select>#}
-                                    {#</div>#}
                                     <div class="col-sm-2"><select id="adv_opt" name="params[opt]"
                                                                   class="selectpicker form-control"
                                                                   dropdownalignright="true" title="操作符">
@@ -2047,7 +2040,7 @@
                                 <div class="table-form hidden"></div>
                             </td>
                             <td>
-                                <span class="table-text" data-type="select" data-source="field" data-filed="field" data-title="字段" data-content="{{field}}">{{field}}</span>
+                                <span class="table-text" data-type="select" data-source="field" data-filed="field" data-title="字段" data-content="{{field_title}}">{{field_title}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
                             <td>
@@ -2528,7 +2521,7 @@
 
 // 高级搜索
                     $(document).on("click", "#btn-adv_add_condition", function (e) {
-                        var field = $('#adv_field option:selected').data("content");
+                        var field_title = $('#adv_field option:selected').data("content");
                         var $select = $("select[name='content'] option:selected");
                         var display_html = $(".form-control[name='content']").val();
 
@@ -2536,11 +2529,12 @@
                             display_html = $select.data("display_html");
                             var avatar = $select.data("avatar");
                         }
-
+                        let field_name = $('#adv_field').val();
                         var temp = {
                             logic: $("#adv_andor").val() || "and",
                             start_braces: "",
-                            field: field,
+                            field_title: field_title,
+                            field: field_name,
                             opt: $("#adv_opt").val(),
                             data_type: advQueryType,
                             data_source: advQuerySource,

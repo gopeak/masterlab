@@ -11,9 +11,9 @@ class MindIssueAttributeModel extends CacheModel
 {
     public $prefix = 'mind_';
 
-    public $table = 'second_attribute';
+    public $table = 'issue_attribute';
 
-    const   DATA_KEY = 'mind_second_attribute/';
+    const   DATA_KEY = 'mind_issue_attribute/';
 
     /**
      * ProjectRoleModel constructor.
