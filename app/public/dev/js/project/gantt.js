@@ -105,7 +105,7 @@ var Gantt = (function () {
                 auth_check(resp);
                 if( resp.ret === "200" ){
                     notify_success(resp.msg);
-                    setTimeout("window.location.href = window.root_url + 'passport/login';", 2000)
+                    setTimeout("window.location.reload();", 2000)
                 } else {
                     notify_error(resp.msg);
                 }
