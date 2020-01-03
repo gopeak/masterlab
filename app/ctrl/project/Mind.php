@@ -117,7 +117,7 @@ class Mind extends BaseUserCtrl
             ['value' => 'sans-serif', 'name' => 'sans-serif'],
         ];
         $data['fonts'] = $fontsList;
-        $data['fontSizes'] = [10, 12, 16, 18, 24, 32, 48];
+        $data['fontSizes'] = [1.0, 1.2, 1.6, 1.8, 2.4, 3.2, 4.8];
         $this->render('gitlab/project/mindmap.php', $data);
     }
 
@@ -192,7 +192,7 @@ class Mind extends BaseUserCtrl
             $format['color'] = '#EE3333';
             $format['icon'] = '';
             $format['font_family'] = '宋体, SimSun;';
-            $format['font_size'] = 14;
+            $format['font_size'] = 1.2;
             $format['font_bold'] = 1;
             $format['font_italic'] = 0;
             $format['bg_color'] = '';
