@@ -1154,7 +1154,7 @@ MM.Item.prototype._updateIssuePriorityLabel = function () {
             this._dom.issue_priority_label.innerHTML = issue_priority_row.name.replace(/\s*/g,"");
             //this._dom.issue_status_label.classList.add('label-info');
             this._dom.issue_priority_label.style.color = issue_priority_row.status_color;
-            this._dom.issue_priority_label.style.fontSize = '10px';
+            this._dom.issue_priority_label.style.fontSize = '0.8em';
             this._dom.issue_priority_label.title = '事项的优先级';
             this._dom.issue_priority_label.classList.add('prepend-right-5');
         }
@@ -1177,7 +1177,7 @@ MM.Item.prototype._updateIssueStatuslabel = function () {
             this._dom.issue_status_label.innerHTML = issue_status_row.name.replace(/\s*/g,"");
             //this._dom.issue_status_label.classList.add('label-info');
             this._dom.issue_status_label.style.color = issue_status_row.text_color;
-            this._dom.issue_status_label.style.fontSize = '10px';
+            this._dom.issue_status_label.style.fontSize = '0.8em';
             this._dom.issue_status_label.title = '事项的状态';
             this._dom.issue_status_label.classList.add('prepend-right-5');
             this._computed.issue_status_label = true;
@@ -1189,7 +1189,7 @@ MM.Item.prototype._updateIssueStatuslabel = function () {
     }
 }
 MM.Item.prototype._updateIssueAssigneeImg = function () {
-    this._dom.issue_assignee_img.className = "avatar";
+    // this._dom.issue_assignee_img.className = "avatar";
     this._dom.issue_assignee_img.style.display = "";
 
     var issue_assignee_id = this._issue_assignee;
@@ -1199,10 +1199,10 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
         if(user_row) {
             this._dom.issue_assignee_img.src = user_row.avatar;
         }
-        this._dom.issue_assignee_img.classList.add('avatar-small');
+        this._dom.issue_assignee_img.classList.add('mind-avatar');
         this._dom.issue_assignee_img.title = '经办人';
-        this._dom.issue_assignee_img.style.width = "18px";
-        this._dom.issue_assignee_img.style.height = "18px";
+        this._dom.issue_assignee_img.style.width = "1em";
+        this._dom.issue_assignee_img.style.height = "1em";
     } else {
         this._computed.issue_assignee_img = null;
         this._dom.issue_assignee_img.style.display = "none";
@@ -1210,13 +1210,13 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
 }
 
 MM.Item.prototype._updateProjectImg = function () {
-	this._dom.project_img.className = "avatar";
+	// this._dom.project_img.className = "avatar";
 	this._dom.project_img.style.display = "";
 
 	var project_img = this._project_img;
 	if (project_img) {
 	    this._dom.project_img.src = project_img;
-		this._dom.project_img.classList.add('avatar-small');
+		this._dom.project_img.classList.add('mind-avatar');
 		this._dom.project_img.title = '项目icon';
 		this._dom.project_img.style.width = "32px";
 		this._dom.project_img.style.height = "32px";
@@ -1265,8 +1265,8 @@ MM.Item.prototype._updateIssueProgressImg = function () {
     if (issue_progress) {
     	this._dom.issue_progress_img.src = '/dev/img/mind/'+this.getProgressImgName(issue_progress);
         this._dom.issue_progress_img.title = '事项的进度';
-        this._dom.issue_progress_img.style.width = "18px";
-        this._dom.issue_progress_img.style.height = "18px";
+        this._dom.issue_progress_img.style.width = "1em";
+        this._dom.issue_progress_img.style.height = "1em";
     } else {
         this._dom.issue_progress_img.style.display = "none";
     }
@@ -6304,17 +6304,17 @@ MM.App = {
 		var navbar = document.querySelector(".navbar");
 		var navControl = document.querySelector(".nav-control");
 		var mindTools = document.querySelector(".js-mind-tools");
+		var mindSideBar = document.querySelector(".mind-side")
 		var padding = 32;
-		// 是否全屏
-		if(zoomMode) {
-			this.portSize = [window.innerWidth, window.innerHeight - navControl.offsetHeight];
-			this._port.style.width = this.portSize[0] + "px";
-			this._port.style.height = this.portSize[1] + "px";
+		if(zoomMode == "0"){
+			mindSideBar.style.top = "56px"
 		}else{
-			this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
-			this._port.style.width = this.portSize[0] + "px";
-			this._port.style.height = this.portSize[1] + "px";
+			mindSideBar.style.top = "145px"
 		}
+		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
+		this._port.style.width = this.portSize[0] + "px";
+		this._port.style.height = this.portSize[1] + "px";
+		
 		this._throbber.style.right = (20 + this.ui.getWidth()) + "px";
 		if (this.map) { this.map.ensureItemVisibility(this.current); }
 	}

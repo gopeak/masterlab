@@ -811,9 +811,6 @@ header.navbar-gitlab {
 	margin-right: 0;
 }
 
-.mind-wrap .mind-content .text {
-	margin-left: 6px;
-}
 
 .mind-wrap #format_issue_progress a img.img-thumbnail {
 	box-sizing: content-box;
