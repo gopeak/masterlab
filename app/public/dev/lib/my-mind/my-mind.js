@@ -713,7 +713,7 @@ MM.Item.prototype.update = function (doNotRecurse) {
         this._dom.text.style.fontStyle = "";
     }
     if (this._font_size ) {
-        this._dom.text.style.fontSize = this._font_size+'px';
+        this._dom.text.style.fontSize = this._font_size + "em";
     }
     if (this._font_family ) {
         this._dom.text.style.fontFamily = this._font_family;

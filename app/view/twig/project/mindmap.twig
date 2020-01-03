@@ -288,7 +288,7 @@
                                                             {% for row in fonts %}
                                                                 {% set  name = row['name'] %}
                                                                 {% set  value = row['value'] %}
-                                                                <option   data-content="<span style='font-family:{{ value }};'>{{ name }}</span>" value="{{ value }}">{{name}}</option>
+                                                                <option data-content="<span>{{ name }}</span>" value="{{ value }}">{{name}}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>
