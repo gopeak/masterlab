@@ -3,6 +3,8 @@
 <head prefix="og: http://ogp.me/ns#">
 
     {% include 'twig/common/header/include.twig' %}
+    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
+
     <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
@@ -669,6 +671,7 @@
 
 <script src="/dev/js/handlebars.helper.js?v={{ _version }}"></script>
 
+
 <script type="text/javascript">
 
     var _simplemde = {};
@@ -706,9 +709,7 @@
     }
     $(function () {
 
-        if (gl.FilteredSearchManager) {
-            window.filteredSearchManager = new gl.FilteredSearchManager();
-        }
+
 
         $('.selectpicker').selectpicker('refresh');
         var options = {}

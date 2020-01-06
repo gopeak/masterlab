@@ -261,7 +261,7 @@ class ProjectMind
                 $format['side'] = 'left';
                 $format['icon'] = '';
                 $format['font_family'] = '宋体, SimSun;';
-                $format['font_size'] = 12;
+                $format['font_size'] = 1.2;
                 $format['font_bold'] = 0;
                 $format['font_italic'] = 0;
                 $format['bg_color'] = '';
@@ -421,7 +421,7 @@ class ProjectMind
                 $format['side'] = 'left';
                 $format['icon'] = '';
                 $format['font_family'] = '宋体, SimSun;';
-                $format['font_size'] = 12;
+                $format['font_size'] = 1.2;
                 $format['font_bold'] = 0;
                 $format['font_italic'] = 0;
                 $format['bg_color'] = '';

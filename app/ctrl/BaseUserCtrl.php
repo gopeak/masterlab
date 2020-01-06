@@ -117,8 +117,10 @@ class BaseUserCtrl extends BaseCtrl
             if ($projectId) {
                 $projModel = new ProjectModel();
                 $project = $projModel->getById($projectId);
-                list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
-                $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
+                if($project){
+                    list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
+                    $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
+                }
             }
             $this->addGVar('G_project', $project);
             //print_r($project);
