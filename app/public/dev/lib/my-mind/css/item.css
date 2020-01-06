@@ -19,7 +19,7 @@
 }
 
 .mind-content > * {
-	vertical-align: middle;
+	margin: 0 2px;
 }
 
 .text {
@@ -27,7 +27,7 @@
 	text-align: center;
 	min-width: 0.5em;
 	min-height: 1.3em;
-	line-height: 1.3em;
+	line-height: 0.8em;
 	outline: none;
 }
 

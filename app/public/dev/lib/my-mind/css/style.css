@@ -122,3 +122,7 @@
 	flex-direction: row;
 	align-items: center;
 }
+.mind-avatar {
+	border-radius: 1em;
+    border: 1px solid #f5f5f5;
+}
