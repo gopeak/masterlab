@@ -926,7 +926,6 @@ class Main extends BaseUserCtrl
         }
         $model->updateById($issueId, $issueUpdateInfo);
 
-
         unset($project);
         //写入操作日志
         $logData = [];
@@ -956,6 +955,8 @@ class Main extends BaseUserCtrl
             $model = new IssueLabelDataModel();
             $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
         }
+
+
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值

@@ -327,7 +327,9 @@ let MindAjax = (function () {
         if(id_arr[1]){
             let groupByField = id_arr[0];
             if(groupByField==='project' || groupByField==='issue'){
-
+                if(groupByField==='issue' && id_arr[1]){
+                    post_data['master_issue_id'] = id_arr[1];
+                }
             }else{
                 post_data[groupByField] = id_arr[1];
             }
@@ -343,7 +345,7 @@ let MindAjax = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/add?project="+window._cur_project_id,
+            url: "/issue/main/add?source=mind&project="+window._cur_project_id,
             data:  {params:post_data},
             single: 'single',
             mine: true, // 当single重复时用自身并放弃之前的ajax请求
