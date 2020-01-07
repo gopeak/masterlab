@@ -160,26 +160,28 @@ class ProjectMind
      * @param $current
      * @param $level
      */
-    public function recurIssue(&$issues, &$levelRow, $level)
+    public function recurIssue(&$issues, &$levelRow, $level, $issueTypeArr)
     {
         $level++;
         $levelRow['children'] = [];
         foreach ($issues as $k => $issue) {
-            if ($issue['master_id'] == $levelRow['id']) {
-                $tmp = [];
+            if ($issue['master_id'] == $levelRow['origin_id']) {
+                $tmp =  $this->formatIssueMyMindData($issue, $issueTypeArr);
                 $tmp['level'] = $level;
+                $tmp['origin_id'] = $issue['id'];
                 $tmp['id'] = 'issue_' . $issue['id'];
                 $tmp['text'] = $issue['summary'];
                 $tmp['children'] = [];
                 $levelRow['children'][] = $tmp;
                 unset($issues[$k]);
+                //print_r($tmp);
             }
         }
         // 注意递归调用必须加个判断，否则会无限循环
         if (count($levelRow['children']) > 0) {
             // $children = $this->sortChildrenByWeight($children);
             foreach ($levelRow['children'] as &$item) {
-                $this->recurIssue($issues, $item, $level);
+                $this->recurIssue($issues, $item, $level, $issueTypeArr);
             }
         } else {
             return;
@@ -407,7 +409,7 @@ class ProjectMind
         `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress`,weight,start_date, due_date';
         $sql = "select {$field} from {$issueModel->getTable()} where {$condition}";
         $issues = $issueModel->db->getRows($sql);
-        //print_r($issues);
+        // print_r($issues);
         $finalArr = $this->getSecondArr($projectId, $source, $groupByField);
         // print_r($finalArr);
         $formats = $this->getIssueFormats($projectId, $source, $groupByField);
@@ -457,20 +459,23 @@ class ProjectMind
                         $format = $formats[$issue['id']];
                     }
                     $tmp = $itemFormatDnc($issue['id'],$issue['summary'],$format);
-                    $tmp['value'] = $issue['weight'];
-                    $tmp['issue_type'] = $issue['issue_type'];
-                    $tmp['issue_type_fa'] = isset($issueTypeArr[$issue['issue_type']]) ? $issueTypeArr[$issue['issue_type']]['font_awesome']:'';
-                    $tmp['issue_priority'] = $issue['priority'];
-                    $tmp['issue_status'] = $issue['status'];
-                    $tmp['issue_progress'] = $issue['progress'];
-                    $tmp['issue_resolve'] = $issue['resolve'];
-                    $tmp['issue_assignee'] = $issue['assignee'];
-                    $tmp['issue_start_date'] = $issue['start_date'];
-                    $tmp['issue_due_date'] = $issue['due_date'];
-                    $tmp['issue_assistants'] = $issue['assistants'];
+                    $tmp = $tmp + $this->formatIssueMyMindData($issue, $issueTypeArr);
                     $tmp['children'] = [];
-                    $level = 1;
-                    $this->recurIssue($issues, $tmp, $level);
+                    if ( intval($issue['have_children'])>0) {
+                        $level = 1;
+                        $this->recurIssue($issues, $tmp, $level, $issueTypeArr);
+
+                        if(!empty($tmp['children'])){
+                            foreach ($tmp['children'] as &$child) {
+                                $childFormat = [];
+                                if (isset($formats[$child['origin_id']])) {
+                                    $childFormat = $formats[$child['origin_id']];
+                                }
+                                $child = $child + $itemFormatDnc($child['origin_id'],$child['text'],$childFormat);
+                            }
+                        }
+                        // print_r($tmp);
+                    }
                     $arr['children'][] = $tmp;
                     unset($issues[$k]);
                 }
@@ -484,5 +489,23 @@ class ProjectMind
         }
         return $finalArr;
     }
+
+    private function formatIssueMyMindData($issue, $issueTypeArr)
+    {
+        $tmp = [];
+        $tmp['value'] = $issue['weight'];
+        $tmp['issue_type'] = $issue['issue_type'];
+        $tmp['issue_type_fa'] = isset($issueTypeArr[$issue['issue_type']]) ? $issueTypeArr[$issue['issue_type']]['font_awesome']:'';
+        $tmp['issue_priority'] = $issue['priority'];
+        $tmp['issue_status'] = $issue['status'];
+        $tmp['issue_progress'] = $issue['progress'];
+        $tmp['issue_resolve'] = $issue['resolve'];
+        $tmp['issue_assignee'] = $issue['assignee'];
+        $tmp['issue_start_date'] = $issue['start_date'];
+        $tmp['issue_due_date'] = $issue['due_date'];
+        $tmp['issue_assistants'] = $issue['assistants'];
+        return $tmp;
+    }
+
 
 }

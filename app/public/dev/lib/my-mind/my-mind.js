@@ -4539,7 +4539,7 @@ MM.UI.Layout.prototype.handleEvent = function (e) {
 	if(item._type==='root_sprint'){
 		let sprint_id = item._id.replace('sprint_','');
 		if(sprint_id && item._layout!=layout){
-			let format_data = {layout:shape.id}
+			let format_data = {layout:layout.id}
 			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
 		}
 	}
