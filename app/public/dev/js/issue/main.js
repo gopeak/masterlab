@@ -347,7 +347,7 @@ var IssueMain = (function () {
         });
     };
 
-    IssueMain.prototype.fetchIssuesByAdvQueryIssue = function (jsonData, success) {
+    IssueMain.prototype.fetchIssuesByAdvQueryIssue = function (jsonData, success, adv_data) {
 
         // let query_json = [
         //     {"logic":"and", "start_braces":"(", "field":"assignee",   "opt":"=",    "value":"1",                    "end_braces":""},
@@ -372,6 +372,8 @@ var IssueMain = (function () {
                 btn_adv_sumit.removeClass('disabled');
                 $('#modal-adv_query').modal('hide');
                 IssueMain.prototype.handleRenderIssues(resp, success);
+                IssueAdvQuery.prototype.renderListAdvQuery(adv_data);
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

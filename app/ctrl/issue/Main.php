@@ -95,26 +95,36 @@ class Main extends BaseUserCtrl
                 die;
             }
         }
+
+        $data['is_adv_filter'] =  '0';
+        $data['adv_filter_json'] =  '[]';
+
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
-                $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
-                $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
-                $filter = $fav['filter'] . '&active_id=' . $favFilterId;
-                $issueUrl = 'issue/main';
-                if (!empty($fav['projectid'])) {
-                    $model = new ProjectModel();
-                    $project = $model->getById($fav['projectid']);
-                    if (isset($project['org_path'])) {
-                        $issueUrl = $project['org_path'] . '/' . $project['key'];
+                if($fav['is_adv_query']=='0'){
+                    $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
+                    $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
+                    $filter = $fav['filter'] . '&active_id=' . $favFilterId;
+                    $issueUrl = 'issue/main';
+                    if (!empty($fav['projectid'])) {
+                        $model = new ProjectModel();
+                        $project = $model->getById($fav['projectid']);
+                        if (isset($project['org_path'])) {
+                            $issueUrl = $project['org_path'] . '/' . $project['key'];
+                        }
+                        unset($project);
                     }
-                    unset($project);
+                    // @todo 防止传入 fav_filter 参数进入死循环
+                    header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
+                    die;
+                }else{
+                    $data['adv_filter_json'] =  $fav['filter'];
+                    $data['is_adv_filter'] =  '1';
                 }
-                // @todo 防止传入 fav_filter 参数进入死循环
-                header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
-                die;
+
             }
         }
         // 用户的过滤器
@@ -656,6 +666,39 @@ class Main extends BaseUserCtrl
             $this->ajaxSuccess('success', $msg);
         } else {
             $this->ajaxFailed('failed', [], $msg);
+        }
+    }
+
+    public function saveAdvFilter()
+    {
+        $err = [];
+        if (@empty($_POST['name'])) {
+            $err['name'] = '名称不能为空';
+        }
+        if (@empty($_POST['filter'])) {
+            $err['filter'] = '数据不能为空';
+        }
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
+        $projectId = null;
+        if (isset($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
+        }
+
+        $filterModel = IssueFilterModel::getInstance();
+        $info = [];
+        $info['author'] = UserAuth::getInstance()->getId();
+        $info['name'] = $_POST['name'];
+        $info['projectid'] = $projectId;
+        $info['filter'] = $_POST['filter'];
+        $info['is_adv_query'] = '1';
+        list($ret, $msg) = $filterModel->insert($info);
+        if ($ret) {
+            $this->ajaxSuccess('提示', '操作成功');
+        } else {
+            $this->ajaxFailed('提示',  $msg);
         }
     }
 
