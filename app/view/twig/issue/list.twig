@@ -1806,12 +1806,11 @@
 															</li>
 														{{/if_eq}}
 
-													{% endverbatim %}
+			 {% endverbatim %}
 
             {% if (projectPermArr['DELETE_ISSUES'] is defined) %}
                 <li class="aui-list-item">
-                    <a href="javascript:;" class="issue_delete_href" data-issue_id="{{ id }}"
-                       data-issuekey="{{ issue_num }}">删除</a>
+                    {% verbatim %}<a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"  data-issuekey="{{issue_num}}">删除</a>{% endverbatim %}
                 </li>
             {% endif %}
 
