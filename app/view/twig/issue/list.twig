@@ -430,33 +430,67 @@
                                         </div>
                                     </form>
                                 </div>
-                                        <div id="adv_query_display_container" class="row-content-block second-block hide"  style="padding: 8px;">
+                                        <div id="adv_query_display_container" class="row-content-block second-block adv-query-display hide"  style="padding: 8px;">
 
                                             <div class="selector-set" >
                                                 <strong>高级查询 </strong><i class="fa fa-angle-right"></i>
-                                                <span  id="adv_query_diplay">
+                                                <span  id="adv_query_diplay" class="adv-query-diplay-item">
 
                                                 </span>
-                                                <a onclick="window.location = '{{project_root_url}}'" href="#" style="color: rgba(0,0,0,0.55);margin-left: 10px">清空筛选</a>
+                                                <a class="clear-adv-query" onclick="window.location = '{{project_root_url}}'" href="#">清空筛选</a>
                                             </div>
                                             <style>
                                                 .selector-set .ss-item {
                                                     position: relative;
                                                     display: inline-block;
-                                                    height: 22px;
                                                     line-height: 22px;
-                                                    border: 1px solid #DDD;
+                                                    border: 1px solid #e8e8e8;
+                                                    color: #666;
                                                     font-size: 12px;
-                                                    vertical-align: top;
-                                                    margin: 0 5px 5px 0;
-                                                    padding: 0 26px 0 4px;
+                                                    margin: 0 5px 5px 4px;
+                                                    padding: 2px 6px 2px 6px;
                                                     cursor: pointer;
+                                                }
+
+                                                .adv-query-display .selector-set {
+                                                    display: flex;
+                                                    flex-direction: row;
+                                                    align-items: center;
+                                                }
+
+                                                .adv-query-display .selector-set > i {
+                                                    margin: 0 6px;
+                                                }
+
+                                                .selector-set .ss-item strong,
+                                                .selector-set .ss-item b{
+                                                    margin-right: 2px;
+                                                }
+
+                                                .clear-adv-query {
+                                                    line-height: 26px;
+                                                    padding: 0 8px;
+                                                    border: solid 1px #e8e8e8;
+                                                    background: #f9f9f9;
+                                                    display: block;
+                                                    margin-left: 8px;
+                                                    color: #6b6b6b;
+                                                }
+
+                                                .selector-set .ss-item:hover {
+                                                    text-decoration: none;
+                                                    color: #333;
+                                                }
+
+                                                .adv-query-display {
+                                                    background: #fff;
+                                                    line-height: 28px;
                                                 }
                                                 .ss-item a {
                                                     color: #666;
                                                     text-decoration: none;
                                                 }
-                                                .selector-set .ss-item i {
+                                                /*.selector-set .ss-item i {
                                                     display: block;
                                                     position: absolute;
                                                     width: 25px;
@@ -464,7 +498,7 @@
                                                     right: 0;
                                                     top: 0;
                                                     background: url(/dev/img/search.ele.png) no-repeat 7px -140px;
-                                                }
+                                                }*/
                                                 .selector-set .ss-item em {
                                                     color: #e4393c;
                                                 }
