@@ -4839,15 +4839,39 @@ MM.UI.FontBold.prototype.handleEvent = function (e) {
 	}else{
         format_font_bold_obj.data('value','0');
 	}
+	 
     let item = MM.App.current;
-    if(item._id.search('issue_')>=0){
-        font_value = parseInt(format_font_bold_obj.data("value"));
+    if(item._type==='project'){
+        let id = item._id.replace('project_','');
+        if(id && item._font_bold!=font_value){
+            let format_data = {font_bold:font_value}
+            window.$mindAjax.updateProjectFormat(id, format_data);
+        }
+    }
+    if(item._type==='root_sprint'){
+        let sprint_id = item._id.replace('sprint_','');
+        if(sprint_id && item._font_bold!=font_value){
+            let format_data = {font_bold:font_value}
+            window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+        }
+    }
+    if(item._type==='second'){
+        let arr = item._id.split('_');
+        if(arr.length>1){
+            let group_by_id = arr[1];
+            let format_data = {font_bold:font_value}
+            window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+        }
+    }
+
+    if(item._type==='issue'){
         let issue_id = item._id.replace('issue_','');
         if(issue_id && item._font_bold!=font_value){
             let format_data = {font_bold:font_value}
             window.$mindAjax.updateIssueFormat(issue_id, format_data);
         }
     }
+
     var action = new MM.Action.SetFontBold(MM.App.current, font_value===0);
     MM.App.action(action);
 }
@@ -4867,7 +4891,31 @@ MM.UI.FontItalic.prototype.handleEvent = function (e) {
         format_font_italic_obj.data('value','0');
     }
     let item = MM.App.current;
-    if(item._id.search('issue_')>=0){
+
+    if(item._type==='project'){
+        let id = item._id.replace('project_','');
+        if(id && item._font_italic!=font_value){
+            let format_data = {font_italic:font_value}
+            window.$mindAjax.updateProjectFormat(id, format_data);
+        }
+    }
+    if(item._type==='root_sprint'){
+        let sprint_id = item._id.replace('sprint_','');
+        if(sprint_id && item._font_italic!=font_value){
+            let format_data = {font_italic:font_value}
+            window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+        }
+    }
+    if(item._type==='second'){
+        let arr = item._id.split('_');
+        if(arr.length>1){
+            let group_by_id = arr[1];
+            let format_data = {font_italic:font_value}
+            window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+        }
+    }
+
+    if(item._type==='issue'){
         let issue_id = item._id.replace('issue_','');
         if(issue_id && item._font_italic!=font_value){
             let format_data = {font_italic:font_value}
