@@ -51,6 +51,11 @@ body.unmask{
     margin-bottom: 8px;
 }
 
+.description-view.markdown-body img {
+    border: 1px solid #ddd;
+    padding: 1px;
+}
+
 .issue-detail {
     position: relative;
 }

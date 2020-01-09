@@ -47,6 +47,7 @@ class IssueFilterLogic
 
     public static $advFields = [
         'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
+        'summary' => ['title' => '标题', 'opt' => '=,!=,like', 'type' => 'text', 'source' => ''],
         'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'datetime', 'source' => ''],
         'priority' => ['title' => '优先级', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'priority'],
         'module' => ['title' => '模  块', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'module'],
@@ -477,7 +478,7 @@ class IssueFilterLogic
                 $endBracesNum++;
             }
             $field = trimStr($item['field']);
-            $opt = urldecode($item['opt']);
+            $opt = strtolower(urldecode($item['opt']));
             $value = $item['value'] ;
 
             if ($field == 'updated' || $field == 'created') {
@@ -562,8 +563,8 @@ class IssueFilterLogic
         try {
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
-            //echo $sqlCount;
-            //print_r($params);
+            // echo $sqlCount;
+           //  print_r($params);
             $count = $model->db->getOne($sqlCount, $params);
             $fields = '*';
             $sql = "SELECT {$fields} FROM  {$table} " . $sql;

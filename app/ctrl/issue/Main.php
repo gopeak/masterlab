@@ -22,6 +22,8 @@ use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
+use main\app\model\issue\ExtraWorkerDayModel;
+use main\app\model\issue\HolidayModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -96,15 +98,15 @@ class Main extends BaseUserCtrl
             }
         }
 
-        $data['is_adv_filter'] =  '0';
-        $data['adv_filter_json'] =  '[]';
+        $data['is_adv_filter'] = '0';
+        $data['adv_filter_json'] = '[]';
 
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
-                if($fav['is_adv_query']=='0'){
+                if ($fav['is_adv_query'] == '0') {
                     $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
                     $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
                     $filter = $fav['filter'] . '&active_id=' . $favFilterId;
@@ -120,9 +122,9 @@ class Main extends BaseUserCtrl
                     // @todo 防止传入 fav_filter 参数进入死循环
                     header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
                     die;
-                }else{
-                    $data['adv_filter_json'] =  $fav['filter'];
-                    $data['is_adv_filter'] =  '1';
+                } else {
+                    $data['adv_filter_json'] = $fav['filter'];
+                    $data['is_adv_filter'] = '1';
                 }
 
             }
@@ -698,7 +700,7 @@ class Main extends BaseUserCtrl
         if ($ret) {
             $this->ajaxSuccess('提示', '操作成功');
         } else {
-            $this->ajaxFailed('提示',  $msg);
+            $this->ajaxFailed('提示', $msg);
         }
     }
 
@@ -1040,7 +1042,9 @@ class Main extends BaseUserCtrl
             $info['duration'] = $params['duration'];
         } else {
             if (!empty($info['due_date']) && !empty($info['start_date'])) {
-                $info['duration'] = countDays($info['due_date'], $info['start_date']);
+                $holidays = (new HolidayModel())->getDays();
+                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays();
+                $info['duration'] = getWorkingDays($info['start_date'], $info['due_date'], $holidays, $extraWorkerDays);
             }
         }
         if (isset($params['progress'])) {
@@ -1097,6 +1101,9 @@ class Main extends BaseUserCtrl
 
         if (isset($params['issue_type'])) {
             $info['issue_type'] = (int)$params['issue_type'];
+        }else{
+            $issueTypeId = (new IssueTypeModel())->getIdByKey('task');
+            $info['issue_type'] = $issueTypeId;
         }
 
         // 状态
@@ -1108,6 +1115,9 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('param_error:status_not_found');
             }
             unset($issueStatusArr);
+            $info['status'] = $statusId;
+        }else{
+            $statusId = (new IssueStatusModel())->getIdByKey('open');
             $info['status'] = $statusId;
         }
 
@@ -1121,6 +1131,9 @@ class Main extends BaseUserCtrl
             }
             unset($issuePriority);
             $info['priority'] = $priorityId;
+        }else{
+            $priorityId = (new IssuePriorityModel())->getIdByKey('normal');
+            $info['priority'] = $priorityId;
         }
 
         // 解决结果
@@ -1132,6 +1145,9 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('param_error:resolve_not_found');
             }
             unset($issueResolves);
+            $info['resolve'] = $resolveId;
+        }else{
+            $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
             $info['resolve'] = $resolveId;
         }
 
@@ -1145,6 +1161,8 @@ class Main extends BaseUserCtrl
             }
             unset($user);
             $info['assignee'] = $assigneeUid;
+        }else{
+            $info['assignee'] = UserAuth::getId();
         }
 
         // 报告人
@@ -1157,10 +1175,14 @@ class Main extends BaseUserCtrl
             }
             unset($user);
             $info['reporter'] = $reporterUid;
+        }else{
+            $info['reporter'] = UserAuth::getId();
         }
 
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
+        } else {
+            $info['description'] = '';
         }
 
         if (isset($params['module'])) {
@@ -1298,7 +1320,6 @@ class Main extends BaseUserCtrl
 
         if (!empty($info)) {
             $info['modifier'] = $uid;
-
             // 如果是关闭状态则要检查权限
             if (isset($info['status']) && $issue['status'] != $info['status']) {
                 //检测当前用户角色权限是否有修改事项状态的权限

@@ -1462,7 +1462,10 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type, updatedIssueTypeId) {
-        MM.App.editing = true;
+        if(typeof MM !='undefined'){
+            MM.App.editing = true;
+        }
+
         var self = this;
         $('#modal-edit-issue_title').html('编辑事项');
         if (form_type == 'copy') {

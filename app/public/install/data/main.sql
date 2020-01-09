@@ -23,13 +23,7 @@ CREATE TABLE `agile_board` (
 
 INSERT INTO `agile_board` (`id`, `name`, `project_id`, `type`, `is_filter_backlog`, `is_filter_closed`, `weight`, `range_type`, `range_data`, `is_system`) VALUES
 (1, '进行中的迭代', 0, 'status', 0, 1, 99999, 'current_sprint', '', 1),
-(2, '整个项目', 0, 'status', 0, 1, 99998, 'all', '', 1),
-(12, '自定义看板', 3, NULL, 1, 1, 0, 'all', '[]', 0),
-(13, '自定义看板', 3, NULL, 1, 1, 0, '', '[]', 0),
-(14, '自定义看板', 3, NULL, 0, 0, 0, '', '[]', 0),
-(15, '自定义看板', 3, NULL, 0, 0, 0, 'issue_types', '[]', 0),
-(16, '测试', 1, NULL, 1, 1, 0, 'sprints', '[]', 0),
-(17, '新看板', 1, NULL, 0, 0, 0, 'all', '[]', 0);
+(2, '整个项目', 0, 'status', 0, 1, 99998, 'all', '', 1);
 
 -- --------------------------------------------------------
 
@@ -65,7 +59,6 @@ INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VA
 (43, '准备中', 15, '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":[\"1\",\"2\"],\"assignee\":null}', 3),
 (44, '进行中', 15, '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 2),
 (45, '已解决', 15, '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 1),
-(53, 'wwww', 12, '{\"status\":null,\"resolve\":null,\"label\":null,\"assignee\":null}', 1),
 (54, '准备中', 16, '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":[\"1\",\"2\"],\"assignee\":null}', 3),
 (55, '进行中', 16, '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 2),
 (56, '已解决', 16, '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 1),
