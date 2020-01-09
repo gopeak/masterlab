@@ -348,7 +348,7 @@ class Mind extends BaseUserCtrl
 
         $model = new MindProjectAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color', 'text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
@@ -380,7 +380,7 @@ class Mind extends BaseUserCtrl
 
         $model = new MindSprintAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color', 'text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
