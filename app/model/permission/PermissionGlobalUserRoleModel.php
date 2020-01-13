@@ -204,10 +204,22 @@ class PermissionGlobalUserRoleModel extends BaseDictionaryModel
      * @param $roleId
      * @return int
      */
-    public function deleteByRole($userId,  $roleId)
+    public function deleteByRole($userId, $roleId)
     {
         $conditions = [];
         $conditions['user_id'] = $userId;
+        $conditions['role_id'] = $roleId;
+        return $this->delete($conditions);
+    }
+
+    /**
+     * 按角色ID删除
+     * @param $roleId
+     * @return int
+     */
+    public function deleteByRoleId($roleId)
+    {
+        $conditions = [];
         $conditions['role_id'] = $roleId;
         return $this->delete($conditions);
     }
