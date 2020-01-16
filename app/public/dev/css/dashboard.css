@@ -696,10 +696,14 @@ header .header-content .sidebar-control{
     display: none;
 }
 
+.layout-panel {
+    display: flex;
+    flex-direction: row;
+}
+
 .layout-panel .panel-first,
 .layout-panel .panel-second,
 .layout-panel .panel-third{
-    float: left;
     min-height: 60px;
 }
 
