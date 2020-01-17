@@ -96,8 +96,8 @@ class IssueFilterLogic
 
         // 项目筛选
         $projectId = null;
-        if (isset($_GET['project']) && !empty($_GET['project'])) {
-            $projectId = (int)$_GET['project'];
+        if (!empty(trimStr($_GET['project']))) {
+            $projectId = (int)trimStr($_GET['project']);
             $sql .= " AND project_id=:project";
             $params['project'] = $projectId;
         } else {
@@ -108,7 +108,6 @@ class IssueFilterLogic
                 $sql .= " AND  project_id IN ({$projectIdStr}) ";
             }
         }
-
         $assigneeUid = null;
         if (isset($_GET[urlencode('经办人')])) {
             $userModel = new UserModel();

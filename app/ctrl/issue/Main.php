@@ -158,6 +158,7 @@ class Main extends BaseUserCtrl
         $data['is_all_issues'] = false;
         if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
             $data['is_all_issues'] = true;
+            $data['display_fields'][] = 'project_id';
         }
 
         ConfigLogic::getAllConfigs($data);

@@ -1,8 +1,32 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.0
+-- https://www.phpmyadmin.net/
+--
+-- 主机： 127.0.0.1
+-- 生成日期： 2020-01-17 09:05:37
+-- 服务器版本： 8.0.18
+-- PHP 版本： 7.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- 数据库： `masterlab_dev`
+--
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `agile_board`
+--
 
 CREATE TABLE `agile_board` (
   `id` int(11) UNSIGNED NOT NULL,
@@ -49,22 +73,7 @@ INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VA
 (3, '已完成', 1, '{\"status\":[\"closed\",\"done\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', 1),
 (4, '准备中', 2, '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', 0),
 (5, '进行中', 2, '{\"status\":[\"in_progress\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', 0),
-(6, '已完成', 2, '{\"status\":[\"closed\",\"done\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', 0),
-(37, '准备中', 13, '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":[\"1\",\"2\"],\"assignee\":null}', 3),
-(38, '进行中', 13, '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 2),
-(39, '已解决', 13, '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 1),
-(40, '准备中', 14, '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":[\"1\",\"2\"],\"assignee\":null}', 3),
-(41, '进行中', 14, '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 2),
-(42, '已解决', 14, '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 1),
-(43, '准备中', 15, '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":[\"1\",\"2\"],\"assignee\":null}', 3),
-(44, '进行中', 15, '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 2),
-(45, '已解决', 15, '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 1),
-(54, '准备中', 16, '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":[\"1\",\"2\"],\"assignee\":null}', 3),
-(55, '进行中', 16, '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 2),
-(56, '已解决', 16, '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 1),
-(57, '准备中', 17, '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 3),
-(58, '进行中', 17, '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 2),
-(59, '已解决', 17, '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', 1);
+(6, '已完成', 2, '{\"status\":[\"closed\",\"done\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', 0);
 
 -- --------------------------------------------------------
 
@@ -391,6 +400,25 @@ CREATE TABLE `issue_effect_version` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `issue_extra_worker_day`
+--
+
+CREATE TABLE `issue_extra_worker_day` (
+  `id` int(11) NOT NULL,
+  `day` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 转存表中的数据 `issue_extra_worker_day`
+--
+
+INSERT INTO `issue_extra_worker_day` (`id`, `day`) VALUES
+(1, '2020-01-25'),
+(2, '2020-01-18');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `issue_field_layout_project`
 --
 
@@ -425,6 +453,13 @@ CREATE TABLE `issue_file_attachment` (
   `file_ext` varchar(32) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `issue_file_attachment`
+--
+
+INSERT INTO `issue_file_attachment` (`id`, `uuid`, `issue_id`, `tmp_issue_id`, `mime_type`, `origin_name`, `file_name`, `created`, `file_size`, `author`, `file_ext`) VALUES
+(1, '7436abdc-44a0-40d0-8e52-caa2be27d765', 0, '', 'image/png', 'project_example_icon.png', 'project_image/20200117/20200117154554_20263.png', 1579247154, 1136, 1, 'png');
+
 -- --------------------------------------------------------
 
 --
@@ -439,9 +474,10 @@ CREATE TABLE `issue_filter` (
   `share_obj` varchar(255) DEFAULT NULL,
   `share_scope` varchar(20) DEFAULT NULL COMMENT 'all,group,uid,project,origin',
   `projectid` decimal(18,0) DEFAULT NULL,
-  `filter` longtext,
+  `filter` mediumtext,
   `fav_count` decimal(18,0) DEFAULT NULL,
-  `name_lower` varchar(255) DEFAULT NULL
+  `name_lower` varchar(255) DEFAULT NULL,
+  `is_adv_query` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级查询'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -467,6 +503,17 @@ CREATE TABLE `issue_follow` (
   `issue_id` int(11) UNSIGNED NOT NULL,
   `user_id` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `issue_holiday`
+--
+
+CREATE TABLE `issue_holiday` (
+  `id` int(11) NOT NULL,
+  `day` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1165,6 +1212,13 @@ CREATE TABLE `log_operating` (
   `time` int(11) UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
+--
+-- 转存表中的数据 `log_operating`
+--
+
+INSERT INTO `log_operating` (`id`, `project_id`, `module`, `obj_id`, `uid`, `user_name`, `real_name`, `page`, `pre_status`, `cur_status`, `action`, `remark`, `pre_data`, `cur_data`, `ip`, `time`) VALUES
+(1, 0, '项目', 0, 1, 'master', 'Master', '/project/main/create', NULL, NULL, '新增', '新建项目', '[]', '{\"name\":\"\\u793a\\u4f8b\\u9879\\u76ee\",\"org_id\":\"1\",\"key\":\"example\",\"lead\":\"1\",\"description\":\"Masterlab\\u7684\\u793a\\u4f8b\\u9879\\u76ee\",\"type\":10,\"category\":0,\"url\":\"\",\"create_time\":1579247230,\"create_uid\":\"1\",\"avatar\":\"project_image\\/20200117\\/20200117154554_20263.png\",\"detail\":\"\\u8be5\\u9879\\u76ee\\u5c55\\u793a\\u4e86\\uff0c\\u5982\\u4f55\\u5c06\\u654f\\u6377\\u5f00\\u53d1\\u548cMasterlab\\u7ed3\\u5408\\u5728\\u4e00\\u8d77.\\r\\n\",\"org_path\":\"default\"}', '127.0.0.1', 1579247230);
+
 -- --------------------------------------------------------
 
 --
@@ -1220,6 +1274,13 @@ CREATE TABLE `main_activity` (
   `time` int(11) UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `main_activity`
+--
+
+INSERT INTO `main_activity` (`id`, `user_id`, `project_id`, `action`, `type`, `obj_id`, `title`, `date`, `time`) VALUES
+(1, 1, 1, '创建了项目', 'project', 1, '示例项目', '2020-01-17', 1579247230);
+
 -- --------------------------------------------------------
 
 --
@@ -1259,8 +1320,12 @@ CREATE TABLE `main_cache_key` (
 --
 
 INSERT INTO `main_cache_key` (`key`, `module`, `datetime`, `expire`) VALUES
-('setting/getSettingByKey/max_project_key', 'setting', '2020-01-13 10:21:25', 1578882085),
-('setting/getSettingByKey/max_project_name', 'setting', '2020-01-13 10:21:25', 1578882085);
+('dict/default_role/getAll/0,*', 'dict/default_role', '2020-01-24 15:47:10', 1579852030),
+('dict/default_role_relation/getAll/0,*', 'dict/default_role_relation', '2020-01-24 15:47:10', 1579852030),
+('dict/type_scheme/getAll/1,*', 'dict/type_scheme', '2020-01-24 15:08:11', 1579849691),
+('dict/workflow_scheme/getAll/1,*', 'dict/workflow_scheme', '2020-01-24 15:08:22', 1579849702),
+('setting/getSettingByKey/max_project_key', 'setting', '2020-01-24 15:11:18', 1579849878),
+('setting/getSettingByKey/max_project_name', 'setting', '2020-01-24 15:11:18', 1579849878);
 
 -- --------------------------------------------------------
 
@@ -1417,11 +1482,7 @@ CREATE TABLE `main_org` (
 --
 
 INSERT INTO `main_org` (`id`, `path`, `name`, `description`, `avatar`, `create_uid`, `created`, `updated`, `scope`) VALUES
-(1, 'default', 'Default', 'Default organization', 'org/default.jpg', 0, 0, 1535263464, 3),
-(2, 'agile2', '敏捷组织', '敏捷开发部', 'all/20180826/20180826140446_89680.jpg', 10000, 0, 1561361581, 1),
-(20, 'masterlab', 'master', '无可奈何花落去d', 'all/20190113/20190113170507_14160.png', 11660, 1547370134, 1547370312, 1),
-(75, 'xxxx', 'xxxxxxxx', 'xxxx', '', 1, 1554955905, 0, 1),
-(91, 'index2', '  Index', '', '', 1, 1561365295, 1561911180, 1);
+(1, 'default', 'Default', 'Default organization', 'org/default.jpg', 0, 0, 1535263464, 3);
 
 -- --------------------------------------------------------
 
@@ -1485,964 +1546,4 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (58, 'project_view', '项目首页', 'user_default', 0, 'sprints', 'issues', 'string', 'radio', '{\"issues\":\"事项列表\",\"summary\":\"项目摘要\",\"backlog\":\"待办事项\",\"sprints\":\"迭代列表\",\"board\":\"迭代看板\"}', ''),
 (59, 'company', '公司名称', 'basic', 0, 'name', '', 'string', 'text', NULL, ''),
 (60, 'company_logo', '公司logo', 'basic', 0, 'logo', '', 'string', 'text', NULL, ''),
-(61, 'company_linkman', '联系人', 'basic', 0, '18002516775', '', 'string', 'text', NULL, ''),
-(62, 'company_phone', '联系电话', 'basic', 0, '135255256541', '', 'string', 'text', NULL, ''),
-(63, 'enable_async_mail', '是否使用异步方式发送邮件', 'mail', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
-(64, 'enable_mail', '是否开启邮件推送', 'mail', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
-(70, 'socket_server_host', 'MasterlabSocket服务器地址', 'mail', 0, '127.0.0.1', '127.0.0.1', 'string', 'text', NULL, ''),
-(71, 'socket_server_port', 'MasterlabSocket服务器端口', 'mail', 0, '9002', '9002', 'int', 'text', NULL, ''),
-(72, 'allow_user_reg', '允许用户注册', 'basic', 0, '0', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '如关闭，则用户无法注册系统用户');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `main_timeline`
---
-
-CREATE TABLE `main_timeline` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `uid` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `type` varchar(12) NOT NULL DEFAULT '',
-  `origin_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `issue_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `action` varchar(32) NOT NULL DEFAULT '',
-  `action_icon` varchar(64) NOT NULL DEFAULT '',
-  `content` text NOT NULL,
-  `content_html` text NOT NULL,
-  `time` int(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `main_widget`
---
-
-CREATE TABLE `main_widget` (
-  `id` int(11) NOT NULL COMMENT '主键id',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '工具名称',
-  `_key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `method` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `module` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pic` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` enum('list','chart_line','chart_pie','chart_bar','text') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '工具类型',
-  `status` tinyint(2) DEFAULT '1' COMMENT '状态（1可用，0不可用）',
-  `is_default` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `required_param` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否需要参数才能获取数据',
-  `description` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '描述',
-  `parameter` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '{}' COMMENT '支持的参数说明',
-  `order_weight` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 转存表中的数据 `main_widget`
---
-
-INSERT INTO `main_widget` (`id`, `name`, `_key`, `method`, `module`, `pic`, `type`, `status`, `is_default`, `required_param`, `description`, `parameter`, `order_weight`) VALUES
-(1, '我参与的项目', 'my_projects', 'fetchUserHaveJoinProjects', '通用', 'my_projects.png', 'list', 1, 1, 0, '', '[]', 0),
-(2, '分配给我的事项', 'assignee_my', 'fetchAssigneeIssues', '通用', 'assignee_my.png', 'list', 1, 1, 0, '', '[]', 0),
-(3, '活动日志', 'activity', 'fetchActivity', '通用', 'activity.png', 'list', 1, 1, 0, '', '[]', 0),
-(4, '便捷导航', 'nav', 'fetchNav', '通用', 'nav.png', 'list', 1, 1, 0, '', '[]', 0),
-(5, '组织', 'org', 'fetchOrgs', '通用', 'org.png', 'list', 1, 1, 0, '', '[]', 0),
-(6, '项目-汇总', 'project_stat', 'fetchProjectStat', '项目', 'project_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"项目\",\"field\":\"project_id\",\"type\":\"my_projects_select\",\"value\":[]}]', 0),
-(7, '项目-解决与未解决对比图', 'project_abs', 'fetchProjectAbs', '项目', 'abs.png', 'chart_bar', 1, 0, 1, '', '\r\n[{\"name\":\"项目\",\"field\":\"project_id\",\"type\":\"my_projects_select\",\"value\":[]},{\"name\":\"时间\",\"field\":\"by_time\",\"type\":\"select\",\"value\":[{\"title\":\"天\",\"value\":\"date\"},{\"title\":\"周\",\"value\":\"week\"},{\"title\":\"月\",\"value\":\"month\"}]},{\"name\":\"几日之内\",\"field\":\"within_date\",\"type\":\"text\",\"value\":\"\"}]', 0),
-(8, '项目-优先级统计', 'project_priority_stat', 'fetchProjectPriorityStat', '项目', 'priority_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"项目\",\"field\":\"project_id\",\"type\":\"my_projects_select\",\"value\":[]},{\"name\":\"状态\",\"field\":\"status\",\"type\":\"select\",\"value\":[{\"title\":\"全部\",\"value\":\"all\"},{\"title\":\"未解决\",\"value\":\"unfix\"}]}]\r\n', 0),
-(9, '项目-状态统计', 'project_status_stat', 'fetchProjectStatusStat', '项目', 'status_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"项目\",\"field\":\"project_id\",\"type\":\"my_projects_select\",\"value\":[]}]', 0),
-(10, '项目-开发者统计', 'project_developer_stat', 'fetchProjectDeveloperStat', '项目', 'developer_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"项目\",\"field\":\"project_id\",\"type\":\"my_projects_select\",\"value\":[]},{\"name\":\"状态\",\"field\":\"status\",\"type\":\"select\",\"value\":[{\"title\":\"全部\",\"value\":\"all\"},{\"title\":\"未解决\",\"value\":\"unfix\"}]}]', 0),
-(11, '项目-事项统计', 'project_issue_type_stat', 'fetchProjectIssueTypeStat', '项目', 'issue_type_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"项目\",\"field\":\"project_id\",\"type\":\"my_projects_select\",\"value\":[]}]', 0),
-(12, '项目-饼状图', 'project_pie', 'fetchProjectPie', '项目', 'chart_pie.png', 'chart_pie', 1, 0, 1, '', '[{\"name\":\"项目\",\"field\":\"project_id\",\"type\":\"my_projects_select\",\"value\":[]},{\"name\":\"数据源\",\"field\":\"data_field\",\"type\":\"select\",\"value\":[{\"title\":\"经办人\",\"value\":\"assignee\"},{\"title\":\"优先级\",\"value\":\"priority\"},{\"title\":\"事项类型\",\"value\":\"issue_type\"},{\"title\":\"状态\",\"value\":\"status\"}]},{\"name\":\"开始时间\",\"field\":\"start_date\",\"type\":\"date\",\"value\":\"\"},{\"name\":\"结束时间\",\"field\":\"end_date\",\"type\":\"date\",\"value\":\"\"}]', 0),
-(13, '迭代-汇总', 'sprint_stat', 'fetchSprintStat', '迭代', 'sprint_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', 0),
-(14, '迭代-倒计时', 'sprint_countdown', 'fetchSprintCountdown', '项目', 'countdown.png', 'text', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', 0),
-(15, '迭代-燃尽图', 'sprint_burndown', 'fetchSprintBurndown', '迭代', 'burndown.png', 'text', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', 0),
-(16, '迭代-速率图', 'sprint_speed', 'fetchSprintSpeedRate', '迭代', 'sprint_speed.png', 'text', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', 0),
-(17, '迭代-饼状图', 'sprint_pie', 'fetchSprintPie', '迭代', 'chart_pie.png', 'chart_pie', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]},{\"name\":\"数据源\",\"field\":\"data_field\",\"type\":\"select\",\"value\":[{\"title\":\"经办人\",\"value\":\"assignee\"},{\"title\":\"优先级\",\"value\":\"priority\"},{\"title\":\"事项类型\",\"value\":\"issue_type\"},{\"title\":\"状态\",\"value\":\"status\"}]}]', 0),
-(18, '迭代-解决与未解决对比图', 'sprint_abs', 'fetchSprintAbs', '迭代', 'abs.png', 'chart_bar', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', 0),
-(19, '迭代-优先级统计', 'sprint_priority_stat', 'fetchSprintPriorityStat', '迭代', 'priority_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]},{\"name\":\"状态\",\"field\":\"status\",\"type\":\"select\",\"value\":[{\"title\":\"全部\",\"value\":\"all\"},{\"title\":\"未解决\",\"value\":\"unfix\"}]}]', 0),
-(20, '迭代-状态统计', 'sprint_status_stat', 'fetchSprintStatusStat', '迭代', 'status_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', 0),
-(21, '迭代-开发者统计', 'sprint_developer_stat', 'fetchSprintDeveloperStat', '迭代', 'developer_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]},{\"name\":\"迭代\",\"field\":\"status\",\"type\":\"select\",\"value\":[{\"title\":\"全部\",\"value\":\"all\"},{\"title\":\"未解决\",\"value\":\"unfix\"}]}]', 0),
-(22, '迭代-事项统计', 'sprint_issue_type_stat', 'fetchSprintIssueTypeStat', '迭代', 'issue_type_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', 0),
-(23, '分配给我未解决的事项', 'unresolve_assignee_my', 'fetchUnResolveAssigneeIssues', '通用', 'assignee_my.png', 'list', 1, 1, 0, '', '[]', 0),
-(24, '我关注的事项', 'my_follow', 'fetchFollowIssues', '通用', 'my_follow.png', 'list', 1, 0, 0, '', '[]', 0);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `mind_issue_attribute`
---
-
-CREATE TABLE `mind_issue_attribute` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `issue_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `source` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `group_by` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `layout` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `shape` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `icon` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `font_family` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `font_size` tinyint(2) NOT NULL DEFAULT '12',
-  `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-  `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text_color` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `side` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 转存表中的数据 `mind_issue_attribute`
---
-
-INSERT INTO `mind_issue_attribute` (`id`, `project_id`, `issue_id`, `source`, `group_by`, `layout`, `shape`, `color`, `icon`, `font_family`, `font_size`, `font_bold`, `font_italic`, `bg_color`, `text_color`, `side`) VALUES
-(106, 3, 171, '44', 'module', '', '', '#EE3333', '', '', 1, 0, 0, '', '', ''),
-(107, 3, 747, '44', 'module', '', '', '', '', '', 1, 0, 0, '', '#F44336', ''),
-(110, 3, 234, 'all', 'module', '', '', '#EE3333', '', '', 1, 0, 0, '', '', ''),
-(112, 3, 174, '5', 'module', '', '', '#EE3333', '', '', 1, 0, 0, '', '', ''),
-(113, 3, 170, '5', 'module', '', '', '#EE3333', '', '', 1, 0, 0, '', '', ''),
-(116, 3, 186, '44', 'module', '', '', '', '', '', 1, 0, 0, '', '', ''),
-(117, 3, 218, '44', 'module', '', '', '', '', '', 1, 0, 0, '', '', ''),
-(118, 3, 239, '44', 'module', '', '', '', '', '', 1, 0, 0, '', '', '');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `mind_project_attribute`
---
-
-CREATE TABLE `mind_project_attribute` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `layout` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `shape` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `icon` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `font_family` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `font_size` tinyint(2) NOT NULL DEFAULT '12',
-  `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-  `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text_color` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `side` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `mind_second_attribute`
---
-
-CREATE TABLE `mind_second_attribute` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `source` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `group_by` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `group_by_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `layout` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `shape` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `icon` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `font_family` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `font_size` tinyint(2) NOT NULL DEFAULT '12',
-  `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-  `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text_color` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `side` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 转存表中的数据 `mind_second_attribute`
---
-
-INSERT INTO `mind_second_attribute` (`id`, `project_id`, `source`, `group_by`, `group_by_id`, `layout`, `shape`, `color`, `icon`, `font_family`, `font_size`, `font_bold`, `font_italic`, `bg_color`, `text_color`, `side`) VALUES
-(4, 3, '44', 'module', '11', 'tree-left', '', '', '', '', 1, 0, 0, '', '', '');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `mind_sprint_attribute`
---
-
-CREATE TABLE `mind_sprint_attribute` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `sprint_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `layout` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `shape` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `icon` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `font_family` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `font_size` tinyint(2) NOT NULL DEFAULT '12',
-  `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-  `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text_color` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `side` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 转存表中的数据 `mind_sprint_attribute`
---
-
-INSERT INTO `mind_sprint_attribute` (`id`, `sprint_id`, `layout`, `shape`, `color`, `icon`, `font_family`, `font_size`, `font_bold`, `font_italic`, `bg_color`, `text_color`, `side`) VALUES
-(12, 44, '', 'box', '', '', '', 1, 0, 0, '', '', '');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `permission`
---
-
-CREATE TABLE `permission` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `parent_id` int(11) UNSIGNED DEFAULT '0',
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `_key` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `permission`
---
-
-INSERT INTO `permission` (`id`, `parent_id`, `name`, `description`, `_key`) VALUES
-(10004, 0, '管理项目', '可以对项目进行设置', 'ADMINISTER_PROJECTS'),
-(10005, 0, '访问事项列表(已废弃)', '', 'BROWSE_ISSUES'),
-(10006, 0, '创建事项', '', 'CREATE_ISSUES'),
-(10007, 0, '评论', '', 'ADD_COMMENTS'),
-(10008, 0, '上传和删除附件', '', 'CREATE_ATTACHMENTS'),
-(10013, 0, '编辑事项', '项目的事项都可以编辑', 'EDIT_ISSUES'),
-(10014, 0, '删除事项', '项目的所有事项可以删除', 'DELETE_ISSUES'),
-(10015, 0, '关闭事项', '项目的所有事项可以关闭', 'CLOSE_ISSUES'),
-(10016, 0, '修改事项状态', '修改事项状态', 'EDIT_ISSUES_STATUS'),
-(10017, 0, '修改事项解决结果', '修改事项解决结果', 'EDIT_ISSUES_RESOLVE'),
-(10028, 0, '删除评论', '项目的所有的评论均可以删除', 'DELETE_COMMENTS'),
-(10902, 0, '管理backlog', '', 'MANAGE_BACKLOG'),
-(10903, 0, '管理sprint', '', 'MANAGE_SPRINT'),
-(10904, 0, '管理kanban', NULL, 'MANAGE_KANBAN'),
-(10905, 0, '导入事项', '可以到导入excel数据到项目中', 'IMPORT_EXCEL'),
-(10906, 0, '导出事项', '可以将项目中的数据导出为excel格式', 'EXPORT_EXCEL');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `permission_default_role`
---
-
-CREATE TABLE `permission_default_role` (
-  `id` int(11) NOT NULL,
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(256) DEFAULT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT '0' COMMENT '如果为0表示系统初始化的角色，不为0表示某一项目特有的角色'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目角色表';
-
---
--- 转存表中的数据 `permission_default_role`
---
-
-INSERT INTO `permission_default_role` (`id`, `name`, `description`, `project_id`) VALUES
-(10000, 'Users', '普通用户', 0),
-(10001, 'Developers', '开发者,如程序员，架构师', 0),
-(10002, 'Administrators', '项目管理员，如项目经理，技术经理', 0),
-(10003, 'QA', '测试工程师', 0),
-(10006, 'PO', '产品经理，产品负责人', 0);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `permission_default_role_relation`
---
-
-CREATE TABLE `permission_default_role_relation` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `role_id` int(11) UNSIGNED DEFAULT NULL,
-  `perm_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `permission_default_role_relation`
---
-
-INSERT INTO `permission_default_role_relation` (`id`, `role_id`, `perm_id`) VALUES
-(42, 10000, 10005),
-(43, 10000, 10006),
-(44, 10000, 10007),
-(45, 10000, 10008),
-(46, 10000, 10013),
-(47, 10001, 10005),
-(48, 10001, 10006),
-(49, 10001, 10007),
-(50, 10001, 10008),
-(51, 10001, 10013),
-(52, 10001, 10014),
-(53, 10001, 10015),
-(54, 10001, 10028),
-(55, 10002, 10004),
-(56, 10002, 10005),
-(57, 10002, 10006),
-(58, 10002, 10007),
-(59, 10002, 10008),
-(60, 10002, 10013),
-(61, 10002, 10014),
-(62, 10002, 10015),
-(63, 10002, 10028),
-(64, 10002, 10902),
-(65, 10002, 10903),
-(66, 10002, 10904),
-(67, 10006, 10004),
-(68, 10006, 10005),
-(69, 10006, 10006),
-(70, 10006, 10007),
-(71, 10006, 10008),
-(72, 10006, 10013),
-(73, 10006, 10014),
-(74, 10006, 10015),
-(75, 10006, 10028),
-(76, 10006, 10902),
-(77, 10006, 10903),
-(78, 10006, 10904);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `permission_global`
---
-
-CREATE TABLE `permission_global` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `parent_id` int(11) UNSIGNED DEFAULT '0',
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `_key` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-
---
--- 转存表中的数据 `permission_global`
---
-
-INSERT INTO `permission_global` (`id`, `parent_id`, `name`, `description`, `_key`) VALUES
-(1, 0, '系统设置', '可以对整个系统进行基本，界面，安全，邮件设置，同时还可以查看操作日志', 'MANAGER_SYSTEM_SETTING'),
-(2, 0, '管理用户', '', 'MANAGER_USER'),
-(3, 0, '事项管理', '', 'MANAGER_ISSUE'),
-(4, 0, '项目管理', '可以对全部项目进行管理，包括创建新项目。', 'MANAGER_PROJECT'),
-(5, 0, '组织管理', '', 'MANAGER_ORG');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `permission_global_group`
---
-
-CREATE TABLE `permission_global_group` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
-  `group_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `permission_global_group`
---
-
-INSERT INTO `permission_global_group` (`id`, `perm_global_id`, `group_id`) VALUES
-(1, 10000, 1);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `permission_global_role`
---
-
-CREATE TABLE `permission_global_role` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 转存表中的数据 `permission_global_role`
---
-
-INSERT INTO `permission_global_role` (`id`, `name`, `description`, `is_system`) VALUES
-(1, '超级管理员', NULL, 1),
-(2, '系统设置管理员', NULL, 0),
-(3, '项目管理员', NULL, 1),
-(4, '用户管理员', NULL, 0),
-(5, '事项设置管理员', NULL, 0),
-(6, '组织管理员', NULL, 0);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `permission_global_role_relation`
---
-
-CREATE TABLE `permission_global_role_relation` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
-  `role_id` int(11) UNSIGNED DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否系统自带'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户组拥有的全局权限';
-
---
--- 转存表中的数据 `permission_global_role_relation`
---
-
-INSERT INTO `permission_global_role_relation` (`id`, `perm_global_id`, `role_id`, `is_system`) VALUES
-(2, 1, 1, 1),
-(8, 2, 1, 1),
-(9, 3, 1, 1),
-(10, 4, 1, 1),
-(11, 5, 1, 1);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `permission_global_user_role`
---
-
-CREATE TABLE `permission_global_user_role` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT '0',
-  `role_id` int(11) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-
---
--- 转存表中的数据 `permission_global_user_role`
---
-
-INSERT INTO `permission_global_user_role` (`id`, `user_id`, `role_id`) VALUES
-(5613, 1, 1);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_category`
---
-
-CREATE TABLE `project_category` (
-  `id` int(18) UNSIGNED NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `color` varchar(20) DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_flag`
---
-
-CREATE TABLE `project_flag` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `flag` varchar(64) NOT NULL,
-  `value` text NOT NULL,
-  `update_time` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_gantt_setting`
---
-
-CREATE TABLE `project_gantt_setting` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `source_type` varchar(20) DEFAULT NULL COMMENT 'project,active_sprint,module 可选',
-  `source_from` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-
---
--- 转存表中的数据 `project_gantt_setting`
---
-
-INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_from`) VALUES
-(1, 1, 'active_sprint', NULL),
-(2, 3, 'project', NULL),
-(3, 2, 'project', NULL),
-(4, 11, 'project', NULL);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_issue_report`
---
-
-CREATE TABLE `project_issue_report` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `week` tinyint(2) UNSIGNED DEFAULT NULL,
-  `month` varchar(20) DEFAULT NULL,
-  `done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-  `no_done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-  `done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-  `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-  `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-  `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_issue_type_scheme_data`
---
-
-CREATE TABLE `project_issue_type_scheme_data` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_type_scheme_id` int(11) UNSIGNED DEFAULT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_key`
---
-
-CREATE TABLE `project_key` (
-  `id` decimal(18,0) NOT NULL,
-  `project_id` decimal(18,0) DEFAULT NULL,
-  `project_key` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_label`
---
-
-CREATE TABLE `project_label` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `title` varchar(64) NOT NULL,
-  `color` varchar(20) NOT NULL,
-  `bg_color` varchar(20) NOT NULL DEFAULT '',
-  `description` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_list_count`
---
-
-CREATE TABLE `project_list_count` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `project_type_id` smallint(5) UNSIGNED DEFAULT NULL,
-  `project_total` int(10) UNSIGNED DEFAULT NULL,
-  `remark` varchar(50) DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_main`
---
-
-CREATE TABLE `project_main` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `org_id` int(11) NOT NULL DEFAULT '1',
-  `org_path` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lead` int(11) UNSIGNED DEFAULT '0',
-  `description` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pcounter` decimal(18,0) DEFAULT NULL,
-  `default_assignee` int(11) UNSIGNED DEFAULT '0',
-  `assignee_type` int(11) DEFAULT NULL,
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category` int(11) UNSIGNED DEFAULT NULL,
-  `type` tinyint(2) DEFAULT '1',
-  `type_child` tinyint(2) DEFAULT '0',
-  `permission_scheme_id` int(11) UNSIGNED DEFAULT '0',
-  `workflow_scheme_id` int(11) UNSIGNED NOT NULL,
-  `create_uid` int(11) UNSIGNED DEFAULT '0',
-  `create_time` int(11) UNSIGNED DEFAULT '0',
-  `un_done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '未完成事项数',
-  `done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '已经完成事项数',
-  `closed_count` int(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_main_extra`
---
-
-CREATE TABLE `project_main_extra` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `project_id` int(10) UNSIGNED DEFAULT '0',
-  `detail` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_mind_setting`
---
-
-CREATE TABLE `project_mind_setting` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `setting_key` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `setting_value` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 转存表中的数据 `project_mind_setting`
---
-
-INSERT INTO `project_mind_setting` (`id`, `project_id`, `setting_key`, `setting_value`) VALUES
-(14, 3, 'default_source_id', ''),
-(15, 3, 'fold_count', '16'),
-(16, 3, 'default_source', 'sprint'),
-(17, 3, 'is_display_label', '1');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_module`
---
-
-CREATE TABLE `project_module` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(64) DEFAULT '',
-  `description` varchar(256) DEFAULT NULL,
-  `lead` int(11) UNSIGNED DEFAULT NULL,
-  `default_assignee` int(11) UNSIGNED DEFAULT NULL,
-  `ctime` int(10) UNSIGNED DEFAULT '0',
-  `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_permission`
---
-
-CREATE TABLE `project_permission` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `parent_id` int(11) UNSIGNED DEFAULT '0',
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `_key` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-
---
--- 转存表中的数据 `project_permission`
---
-
-INSERT INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_key`) VALUES
-(10004, 0, '管理项目', '可以对项目进行设置', 'ADMINISTER_PROJECTS'),
-(10005, 0, '访问事项列表(已废弃)', '', 'BROWSE_ISSUES'),
-(10006, 0, '创建事项', '', 'CREATE_ISSUES'),
-(10007, 0, '评论', '', 'ADD_COMMENTS'),
-(10008, 0, '上传和删除附件', '', 'CREATE_ATTACHMENTS'),
-(10013, 0, '编辑事项', '项目的事项都可以编辑', 'EDIT_ISSUES'),
-(10014, 0, '删除事项', '项目的所有事项可以删除', 'DELETE_ISSUES'),
-(10015, 0, '关闭事项', '项目的所有事项可以关闭', 'CLOSE_ISSUES'),
-(10016, 0, '修改事项状态', '修改事项状态', 'EDIT_ISSUES_STATUS'),
-(10017, 0, '修改事项解决结果', '修改事项解决结果', 'EDIT_ISSUES_RESOLVE'),
-(10028, 0, '删除评论', '项目的所有的评论均可以删除', 'DELETE_COMMENTS'),
-(10902, 0, '管理backlog', '', 'MANAGE_BACKLOG'),
-(10903, 0, '管理sprint', '', 'MANAGE_SPRINT'),
-(10904, 0, '管理kanban', NULL, 'MANAGE_KANBAN'),
-(10905, 0, '导入事项', '可以到导入excel数据到项目中', 'IMPORT_EXCEL'),
-(10906, 0, '导出事项', '可以将项目中的数据导出为excel格式', 'EXPORT_EXCEL');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_role`
---
-
-CREATE TABLE `project_role` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(40) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_role_relation`
---
-
-CREATE TABLE `project_role_relation` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `role_id` int(11) UNSIGNED DEFAULT NULL,
-  `perm_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_user_role`
---
-
-CREATE TABLE `project_user_role` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT '0',
-  `project_id` int(11) UNSIGNED DEFAULT '0',
-  `role_id` int(11) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_version`
---
-
-CREATE TABLE `project_version` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `sequence` decimal(18,0) DEFAULT NULL,
-  `released` tinyint(10) UNSIGNED DEFAULT '0' COMMENT '0未发布 1已发布',
-  `archived` varchar(10) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `start_date` int(10) UNSIGNED DEFAULT NULL,
-  `release_date` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_workflows`
---
-
-CREATE TABLE `project_workflows` (
-  `id` decimal(18,0) NOT NULL,
-  `workflowname` varchar(255) DEFAULT NULL,
-  `creatorname` varchar(255) DEFAULT NULL,
-  `descriptor` longtext,
-  `islocked` varchar(60) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `project_workflow_status`
---
-
-CREATE TABLE `project_workflow_status` (
-  `id` decimal(18,0) NOT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `parentname` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `report_project_issue`
---
-
-CREATE TABLE `report_project_issue` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `week` tinyint(2) UNSIGNED DEFAULT NULL,
-  `month` varchar(20) DEFAULT NULL,
-  `count_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-  `count_no_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-  `count_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-  `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-  `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-  `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `report_sprint_issue`
---
-
-CREATE TABLE `report_sprint_issue` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `sprint_id` int(11) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `week` tinyint(2) UNSIGNED DEFAULT NULL,
-  `month` varchar(20) DEFAULT NULL,
-  `count_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-  `count_no_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-  `count_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-  `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-  `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-  `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `service_config`
---
-
-CREATE TABLE `service_config` (
-  `id` decimal(18,0) NOT NULL,
-  `delaytime` decimal(18,0) DEFAULT NULL,
-  `clazz` varchar(255) DEFAULT NULL,
-  `servicename` varchar(255) DEFAULT NULL,
-  `cron_expression` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_application`
---
-
-CREATE TABLE `user_application` (
-  `id` decimal(18,0) NOT NULL,
-  `application_name` varchar(255) DEFAULT NULL,
-  `lower_application_name` varchar(255) DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `updated_date` datetime DEFAULT NULL,
-  `active` decimal(9,0) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `application_type` varchar(255) DEFAULT NULL,
-  `credential` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `user_application`
---
-
-INSERT INTO `user_application` (`id`, `application_name`, `lower_application_name`, `created_date`, `updated_date`, `active`, `description`, `application_type`, `credential`) VALUES
-('1', 'crowd-embedded', 'crowd-embedded', '2013-02-28 11:57:51', '2013-02-28 11:57:51', '1', '', 'CROWD', 'X');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_attributes`
---
-
-CREATE TABLE `user_attributes` (
-  `id` decimal(18,0) NOT NULL,
-  `user_id` decimal(18,0) DEFAULT NULL,
-  `directory_id` decimal(18,0) DEFAULT NULL,
-  `attribute_name` varchar(255) DEFAULT NULL,
-  `attribute_value` varchar(255) DEFAULT NULL,
-  `lower_attribute_value` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_email_active`
---
-
-CREATE TABLE `user_email_active` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `username` varchar(32) DEFAULT '',
-  `email` varchar(64) NOT NULL DEFAULT '',
-  `uid` int(11) UNSIGNED NOT NULL,
-  `verify_code` varchar(32) NOT NULL,
-  `time` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_email_find_password`
---
-
-CREATE TABLE `user_email_find_password` (
-  `email` varchar(50) NOT NULL,
-  `uid` int(11) UNSIGNED NOT NULL,
-  `verify_code` varchar(32) NOT NULL,
-  `time` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_email_token`
---
-
-CREATE TABLE `user_email_token` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `uid` int(10) UNSIGNED NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `expired` int(10) UNSIGNED NOT NULL COMMENT '有效期',
-  `created_at` int(10) UNSIGNED NOT NULL,
-  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT '1-有效，0-无效',
-  `used_model` varchar(255) NOT NULL DEFAULT '' COMMENT '用于哪个模型或功能'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_group`
---
-
-CREATE TABLE `user_group` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `uid` int(11) UNSIGNED DEFAULT NULL,
-  `group_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `user_group`
---
-
-INSERT INTO `user_group` (`id`, `uid`, `group_id`) VALUES
-(1, 0, 1),
-(2, 1, 1);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_ip_login_times`
---
-
-CREATE TABLE `user_ip_login_times` (
-  `id` int(11) NOT NULL,
-  `ip` varchar(20) NOT NULL DEFAULT '',
-  `times` int(11) NOT NULL DEFAULT '0',
-  `up_time` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_issue_display_fields`
---
-
-CREATE TABLE `user_issue_display_fields` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `fields` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 转存表中的数据 `user_issue_display_fields`
---
-
-INSERT INTO `user_issue_display_fields` (`id`, `user_id`, `project_id`, `fields`) VALUES
-(13, 1, 3, 'issue_num,issue_type,priority,module,sprint,summary,assignee,status,plan_date');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_login_log`
---
-
-CREATE TABLE `user_login_log` (
-  `id` int(11) NOT NULL,
-  `session_id` varchar(64) NOT NULL DEFAULT '',
-  `token` varchar(128) DEFAULT '',
-  `uid` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `time` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `ip` varchar(24) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录日志表';
+(61, 'company_linkman', '联系人', 'basic', 0, '18002516775', '', 'string', 'text', NULL, '')
