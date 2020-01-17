@@ -30630,6 +30630,7 @@ THE SOFTWARE.
         },
         wrBJ: function(e, t, i) {
             "use strict"; (function(e) {
+                
                 var t = i("yoQO"),
                     a = i.n(t); (function() {
                     this.Project = function() {
@@ -30661,6 +30662,7 @@ THE SOFTWARE.
                                     }),
                                 this.projectSelectDropdown()
                         }
+                        
                         return t.prototype.projectSelectDropdown = function() {
                             return new ProjectSelect,
                                 e(".project-item-select").on("click",

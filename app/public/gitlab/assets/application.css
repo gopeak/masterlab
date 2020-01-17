@@ -832,3 +832,13 @@ header.navbar-gitlab {
 table.table td.th {
 	background-color: #fafafa;;
 }
+
+.deSelectpicker {
+	line-height: 34px;
+	height: 34px;
+	border: 1px solid #e5e5e5;
+	min-width: 120px;
+	border-radius: 4px;
+	font-size: 12px;
+	padding: 0 8px;
+}
