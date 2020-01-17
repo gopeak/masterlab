@@ -12,12 +12,12 @@
     <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/project/mind.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
-
+    
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <!-- <script src="/dev/js/admin/issue_ui.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script> -->
-    <script src="/dev/js/issue/main.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/issue/form.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+    
 
 
     <link rel="stylesheet" href="/dev/lib/editor.md/css/editormd.css"/>
@@ -677,6 +677,17 @@
     var _simplemde = {};
     var _fineUploaderFile = {};
     var _fineUploader = null;
+    
+    var _project_issue_types = {{project_issue_types|json_encode()|raw}};
+    var mind_setting = {{ mind_setting|json_encode()|raw }};
+    var _issue_id = null;
+    var _cur_project_id = '{{project_id}}';
+    var _active_sprint_id = '{{ active_sprint_id }}';
+    var $IssueMain = null;
+    var _description_templates = {{ description_templates|json_encode()|raw }};
+    var _perm_kanban = {{ perm_kanban ? 1:0 }};
+    var $mindAjax= null;
+    var color_pickr = null;
 
     var _issueConfig = {
         "priority":{{ priority|json_encode()|raw }},
@@ -692,23 +703,12 @@
         "project_sprints":{{ sprints|json_encode()|raw }},
         "projects":{{ projects|json_encode()|raw }}
     };
-    var _project_issue_types = {{project_issue_types|json_encode()|raw}};
-    var mind_setting = {{ mind_setting|json_encode()|raw }};
-    var _issue_id = null;
-    var _cur_project_id = '{{ project_id }}';
-    var _active_sprint_id = '{{ active_sprint_id }}';
-    var $IssueMain = null;
-    var _description_templates = {{ description_templates|json_encode()|raw }};
-    var _perm_kanban = {{ perm_kanban ? 1:0 }};
-    var $mindAjax= null;
-    var color_pickr = null;
-
     window.onload = function() {
         MM.App.init();
         MM.App.io.fetchIssues();
     }
     $(function () {
-
+        window.$projects = new Project({})
 
 
         $('.selectpicker').selectpicker('refresh');
