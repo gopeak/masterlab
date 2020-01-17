@@ -23,7 +23,7 @@ $config->ajaxProtocolClass = 'ajax';
 $config->ctrlMethodPrefix = 'page';
 $config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
 $config->customRewriteFunction = "orgRoute";
-$tplEngine = 'php';
+$tplEngine = 'twig';
 if (defined('TPL_ENGINE')) {
     $tplEngine = TPL_ENGINE;
 }

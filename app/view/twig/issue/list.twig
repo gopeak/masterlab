@@ -1635,12 +1635,18 @@
 									{{/if_in_array}}
 
 
-									{{#if_in_array 'project_id'  ../display_fields}}
 
-										<td class="width_8">
-											{{make_project project_id}}
-										</td>
-									{{/if_in_array}}
+									{% endverbatim %}
+                                        {% if (is_all_issues or 'project_id'in display_fields) %}
+                                            {% verbatim %}
+                                                <td class="width_8">
+                                                    {{make_project project_id}}
+                                                </td>
+                                            {% endverbatim %}
+                                        {% endif %}
+                                    {% verbatim %}
+
+
 
 									{{#if_in_array 'module'  ../display_fields}}
 										<td class="width_6">
@@ -2227,6 +2233,7 @@
                 var urls = parseURL(window.location.href);
                 var $sort_field = '{{ sort_field }}';
                 var $sort_by = '{{ sort_by }}';
+                var is_all_issues = '{{ is_all_issues }}';
 
                 var display_fields = {{ display_fields|json_encode()|raw }};
                 var uiDisplayFields = {{ uiDisplayFields|json_encode()|raw }};
