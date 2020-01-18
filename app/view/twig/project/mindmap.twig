@@ -999,11 +999,12 @@
         })
     });
 
+    var toolbar_export_qtip = null;
     $(document).ready(function() {
 
         $('.selectpicker').selectpicker('refresh');
 
-        $('#toolbar-export').qtip({
+        toolbar_export_qtip = $('#toolbar-export').qtip({
             content: {
                 text: $("#popover-content").html(),
                 title: '导出格式',
@@ -1047,7 +1048,7 @@
         <option value="plaintext">Plain text</option>
     </select>
     <div class="row-content-block">
-        <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#toolbar-export').popover('hide')">取消</a>
+        <a class="btn btn-cancel hide" data-dismiss="modal" href="#" onclick="$('#toolbar-export').qtip('toggle', false); ">取消</a>
         <span >
        <input id="btn-export-save" type="button" value="导 出" class="btn btn-info">
        </span>

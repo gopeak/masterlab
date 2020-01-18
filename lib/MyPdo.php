@@ -438,6 +438,15 @@ class MyPdo
         return intval($ret);
     }
 
+    public function truncate($table)
+    {
+        $sql = " Truncate  $table";
+        $ret = $this->exec($sql);
+        // var_dump($ret);
+        return intval($ret);
+    }
+
+
     /**
      * 执行更新操作
      * @param $table

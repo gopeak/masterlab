@@ -4839,7 +4839,7 @@ MM.UI.FontBold.prototype.handleEvent = function (e) {
 	}else{
         format_font_bold_obj.data('value','0');
 	}
-	 
+
     let item = MM.App.current;
     if(item._type==='project'){
         let id = item._id.replace('project_','');

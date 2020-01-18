@@ -14,6 +14,8 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\classes\RewriteUrl;
 use main\app\classes\ProjectGantt;
+use main\app\model\issue\ExtraWorkerDayModel;
+use main\app\model\issue\HolidayModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectGanttSettingModel;
@@ -117,7 +119,16 @@ class Gantt extends BaseUserCtrl
         if (in_array($ganttSetting['source_type'], $sourceArr)) {
             $sourceType = $sourceType = $ganttSetting['source_type'];
         }
-        $this->ajaxSuccess('操作成功', $sourceType);
+        $data = [];
+        $data['source_type'] = $sourceType;
+
+        $holidays = (new HolidayModel())->getDays($projectId);
+        $data['holidays'] = $holidays;
+
+        $extraHolidays = (new ExtraWorkerDayModel())->getDays($projectId);
+        $data['extra_holidays'] = $extraHolidays;
+
+        $this->ajaxSuccess('获取成功', $data);
     }
 
     /**
@@ -148,6 +159,26 @@ class Gantt extends BaseUserCtrl
         $updateInfo['source_type'] = $sourceType;
         list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
         if ($ret) {
+            $model = new HolidayModel();
+            $model->truncate();
+            $holidaysArr = json_decode($_POST['holiday_dates'], true);
+            foreach ($holidaysArr as $date) {
+                $arr = [];
+                $arr['project_id'] = $projectId;
+                $arr['day'] = $date;
+                $model->insert($arr);
+            }
+
+            $model = new ExtraWorkerDayModel();
+            $model->truncate();
+            $holidaysArr = json_decode($_POST['extra_holiday_dates'], true);
+            foreach ($holidaysArr as $date) {
+                $arr = [];
+                $arr['project_id'] = $projectId;
+                $arr['day'] = $date;
+                $model->insert($arr);
+            }
+
             $this->ajaxSuccess('操作成功', $sourceType);
         } else {
             $this->ajaxFailed('服务器执行错误', $msg);

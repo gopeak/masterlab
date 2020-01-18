@@ -19,9 +19,10 @@ class HolidayModel extends CacheModel
 
     const   DATA_KEY = 'issue_holiday';
 
-    public function getDays()
+    public function getDays($projectId)
     {
-        $rows =  $this->getRows();
+        $conditions = ['project_id'=>$projectId];
+        $rows =  $this->getRows('*',$conditions);
         $days = [];
         foreach ($rows as $row) {
             $days[] = $row['day'];

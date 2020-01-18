@@ -584,13 +584,39 @@
                             </div>
                         </div>
                     </div>
-                    <hr id="create_header_hr" style="display: block;">
+                    <hr style="display: block;">
+                    <div class="form-group">
+                        <label class="control-label" for="label_holiday">节假日：</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input  type="hidden" value=""  name="holiday_dates" id="holiday_dates">
+                                <input class="" type="text" value="" title="添加节假日"  name="holiday_laydate" id="holiday_laydate">
+                            </div>
+                            <div class="help-block">
+                                添加除了周六周日之外的假期,如元旦,春节,5.1,国庆
+                            </div>
+                            <div class="suggest-colors" id="holidays_list">
 
-                    <div class="panel panel-default">
-                        <p dir="auto"> 数据源说明............ </p>
-                        <p dir="auto"> 1 2 3............ </p>
-
+                            </div>
+                        </div>
                     </div>
+                    <hr style="display: block;">
+                    <div class="form-group">
+                        <label class="control-label" for="label_holiday">额外上班日：</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input  type="hidden" value=""  name="extra_holiday_dates" id="extra_holiday_dates">
+                                <input class="" type="text" value="" title="添加上班日"  name="extra_holiday_laydate" id="extra_holiday_laydate">
+                            </div>
+                            <div class="help-block">
+                                添加额外的上班日期
+                            </div>
+                            <div class="suggest-colors" id="extra_holidays_list">
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="display: block;">
 
                 </div>
                 <div class="modal-footer issue-modal-footer footer-block row-content-block">
@@ -695,7 +721,21 @@
 </div>
 
 
-{% verbatim %}<script type="text/html" id="member_list_tpl">
+{% verbatim %}
+<script id="tpl_holiday_a" type="text/tpl">
+{{#holidays}}
+    <a style="width: 80px;" href="#" title="点击可移除" data-date="{{this}}">&nbsp;{{this}}</a>
+{{/holidays}}
+</script>
+
+<script id="tpl_extra_holiday_a" type="text/tpl">
+{{#extra_holidays}}
+    <a style="width: 80px;" href="#" title="点击可移除" data-date="{{this}}">&nbsp;{{this}}</a>
+{{/extra_holidays}}
+</script>
+
+
+<script type="text/html" id="member_list_tpl">
     {{#project_users}}
     <li class="group_member member" id="group_member_{{id}}">
         <span class="list-item-name" style="width: 30%;">
@@ -763,8 +803,9 @@
 
         var project=loadFromLocalStorage();
 
-        if (!project.canWrite)
+        if (!project.canWrite){
             $(".ganttButtonBar button.requireWrite").attr("disabled","true");
+        }
 
         ge.loadProject(project);
         ge.checkpoint(); //empty the undo stack
@@ -1048,7 +1089,65 @@
             $('.layout-nav').toggleClass('hidden');
         });
         new UsersSelect();
-
+        var holiday_laydate = laydate.render({
+            elem: '#holiday_laydate'
+            ,format: 'yyyy-MM-dd'
+            ,mark: {
+                '0-11-08': '生日'
+                ,'0-12-31': '跨年' //每年12月31日
+                ,'0-1-1': '元旦' //每年1月1日
+                ,'0-5-1': '劳动节' //每年5月1日
+                ,'0-10-1': '国庆日' //每年10月1日
+                ,'0-0-10': '工资' //每个月10号
+                ,'2017-8-20': '预发' //如果为空字符，则默认显示数字+徽章
+                ,'2017-8-21': '发布'
+            }
+            ,done: function(value, date){
+                if( date.month === 8 && date.date === 15){ //点击每年年8月15日，弹出提示语
+                    holiday_laydate.hint('中国人民抗日战争胜利72周年');
+                }
+                let dateArr = JSON.parse($('#holiday_dates').val());
+                if(isInArray(dateArr,value)){
+                    return;
+                }
+                dateArr.push(value);
+                let source = $('#tpl_holiday_a').html();
+                let template = Handlebars.compile(source);
+                let data  = {holidays:dateArr}
+                let result = template(data);
+                $('#holidays_list' ).html(result);
+                $('#holiday_dates').val(JSON.stringify(dateArr));
+                Gantt.prototype.bindRemoveHolidayDate();
+            }
+        });
+        var extra_holiday_laydate = laydate.render({
+            elem: '#extra_holiday_laydate'
+            ,format: 'yyyy-MM-dd'
+            ,mark: {
+                '0-11-08': '生日'
+                ,'0-12-31': '跨年' //每年12月31日
+                ,'0-1-1': '元旦' //每年1月1日
+                ,'0-5-1': '劳动节' //每年5月1日
+                ,'0-10-1': '国庆日' //每年10月1日
+                ,'0-0-10': '工资' //每个月10号
+                ,'2017-8-20': '预发' //如果为空字符，则默认显示数字+徽章
+                ,'2017-8-21': '发布'
+            }
+            ,done: function(value, date){
+                let dateArr = JSON.parse($('#extra_holiday_dates').val());
+                if(isInArray(dateArr,value)){
+                    return;
+                }
+                dateArr.push(value);
+                let source = $('#tpl_extra_holiday_a').html();
+                let template = Handlebars.compile(source);
+                let data  = {extra_holidays:dateArr}
+                let result = template(data);
+                $('#extra_holidays_list' ).html(result);
+                $('#extra_holiday_dates').val(JSON.stringify(dateArr));
+                Gantt.prototype.bindRemoveExtraHolidayDate();
+            }
+        });
         $(".laydate_input_date").each(function (i) {
             var id = $(this).attr('id');
             laydate.render({

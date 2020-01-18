@@ -78,7 +78,19 @@ var Gantt = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if(resp.ret==="200"){
-                    $("#source_"+resp.data).attr('checked', 'true');
+                    $("#source_"+resp.data.source_type).attr('checked', 'true');
+                    let source = $('#tpl_holiday_a').html();
+                    let template = Handlebars.compile(source);
+                    let result = template(resp.data);
+                    $('#holidays_list' ).html(result);
+                    $('#holiday_dates').val(JSON.stringify(resp.data.holidays));
+
+                    source = $('#tpl_extra_holiday_a').html();
+                    template = Handlebars.compile(source);
+                    result = template(resp.data);
+                    $('#extra_holidays_list' ).html(result);
+                    $('#extra_holiday_dates').val(JSON.stringify(resp.data.extra_holidays));
+
                     $('#modal-setting').modal('show');
                 }else{
                     notify_error("获取甘特图数据源失败:" + resp.msg);
@@ -92,14 +104,38 @@ var Gantt = (function () {
         $('.selectpicker').selectpicker('refresh');
     }
 
+    Gantt.prototype.bindRemoveHolidayDate = function( ) {
+        $("#holidays_list a").bind("click",function(){
+            let date = $(this).data('date');
+            let dateArr = JSON.parse($('#holiday_dates').val());
+            dateArr.remove(date);
+            $(this).remove();
+            $('#holiday_dates').val(JSON.stringify(dateArr));
+        });
+    };
+
+    Gantt.prototype.bindRemoveExtraHolidayDate = function( ) {
+        $("#extra_holidays_list a").bind("click",function(){
+            let date = $(this).data('date');
+            let dateArr = JSON.parse($('#extra_holiday_dates').val());
+            dateArr.remove(date);
+            $(this).remove();
+            $('#extra_holiday_dates').val(JSON.stringify(dateArr));
+        });
+    };
+
+
     Gantt.prototype.saveGanttSetting = function( ) {
         let setting_value = $("input[name='source']:checked").val();
         let method = 'POST';
         let url = '/project/gantt/saveSetting/'+window._cur_project_id;
+        let holiday_dates_str = $('#holiday_dates').val();
+        let extra_holiday_dates_str = $('#extra_holiday_dates').val();
+
         $.ajax({
             type: method,
             dataType: "json",
-            data: {source_type:setting_value},
+            data: {source_type:setting_value, holiday_dates:holiday_dates_str,extra_holiday_dates:extra_holiday_dates_str},
             url: url,
             success: function (resp) {
                 auth_check(resp);

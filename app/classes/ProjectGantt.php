@@ -300,6 +300,9 @@ class ProjectGantt
         $sprintRows = [];
         foreach ($sprints as $sprint) {
             // 正常的迭代才会计算
+            if(empty($sprint)){
+                continue;
+            }
             if ($sprint['status'] != '1') {
                 continue;
             }
@@ -481,7 +484,7 @@ class ProjectGantt
         foreach ($level1Rows as $level1Row) {
             $idArr[] = $level1Row['id'];
         }
-        print_r($idArr);
+        //print_r($idArr);
         if (!empty($idArr)) {
             $idArrStr = implode(',', $idArr);
             $newLevel = $level + 1;

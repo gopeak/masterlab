@@ -1043,8 +1043,8 @@ class Main extends BaseUserCtrl
             $info['duration'] = $params['duration'];
         } else {
             if (!empty($info['due_date']) && !empty($info['start_date'])) {
-                $holidays = (new HolidayModel())->getDays();
-                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays();
+                $holidays = (new HolidayModel())->getDays($params['project_id']);
+                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
                 $info['duration'] = getWorkingDays($info['start_date'], $info['due_date'], $holidays, $extraWorkerDays);
             }
         }
