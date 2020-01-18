@@ -84,13 +84,14 @@ var Gantt = (function () {
                     let result = template(resp.data);
                     $('#holidays_list' ).html(result);
                     $('#holiday_dates').val(JSON.stringify(resp.data.holidays));
-
+                    Gantt.prototype.bindRemoveHolidayDate();
                     source = $('#tpl_extra_holiday_a').html();
                     template = Handlebars.compile(source);
                     result = template(resp.data);
                     $('#extra_holidays_list' ).html(result);
                     $('#extra_holiday_dates').val(JSON.stringify(resp.data.extra_holidays));
 
+                    Gantt.prototype.bindRemoveExtraHolidayDate();
                     $('#modal-setting').modal('show');
                 }else{
                     notify_error("获取甘特图数据源失败:" + resp.msg);

@@ -1103,9 +1103,6 @@
                 ,'2017-8-21': '发布'
             }
             ,done: function(value, date){
-                if( date.month === 8 && date.date === 15){ //点击每年年8月15日，弹出提示语
-                    holiday_laydate.hint('中国人民抗日战争胜利72周年');
-                }
                 let dateArr = JSON.parse($('#holiday_dates').val());
                 if(isInArray(dateArr,value)){
                     return;
