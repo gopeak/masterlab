@@ -3214,8 +3214,7 @@ ALTER TABLE `issue_main` ADD FULLTEXT KEY `issue_num` (`issue_num`);
 -- 表的索引 `issue_moved_issue_key`
 --
 ALTER TABLE `issue_moved_issue_key`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `idx_old_issue_key` (`old_issue_key`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_priority`

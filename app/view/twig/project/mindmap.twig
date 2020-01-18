@@ -1021,11 +1021,6 @@
                 at: 'bottom left', // at the bottom right of...
             },
             events: {
-                show: function(event, api) {
-                    $('#btn-export-save').bind('click',function(){
-                        MM.UI.Backend.File.save();
-                    });
-                }
             }
         });
     });
@@ -1041,16 +1036,18 @@
     导出格式
 </div>
 <div id="popover-content" class="hide">
-    <select class="format" id="export_format">
-        <option value="json">JSON</option>
-        <option value="freemind">FreeMind</option>
-        <option value="mma">Mind Map Architect</option>
-        <option value="plaintext">Plain text</option>
-    </select>
-    <div class="row-content-block">
-        <a class="btn btn-cancel hide" data-dismiss="modal" href="#" onclick="$('#toolbar-export').qtip('toggle', false); ">取消</a>
+    <div  >
+        <select class="format" id="export_format">
+            <option value="json">JSON</option>
+            <option value="freemind">FreeMind</option>
+            <option value="mma">Mind Map Architect</option>
+            <option value="plaintext">Plain text</option>
+        </select>
+    </div>
+    <div  style="margin-top: 6px">
+        <a class="btn btn-cancel " data-dismiss="modal" href="#" onclick="toolbar_export_qtip.qtip('toggle', false); ">取消</a>
         <span >
-       <input id="btn-export-save" type="button" value="导 出" class="btn btn-info">
+       <input id="btn-export-save" onclick="MM.UI.Backend.File.save();" type="button" value="导 出" class="btn btn-info">
        </span>
     </div>
 </div>
