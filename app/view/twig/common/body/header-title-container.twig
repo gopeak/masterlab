@@ -5,7 +5,13 @@
     {% else %}
         <div class="avatar-container s40" style="display: block;width: 24px;height: 24px;">
             <div class="avatar project-avatar s40 identicon"
-                 style="background-color: #E0F2F1; color: #555;line-height: 22px;">{{G_project.first_word}}</div>
+                 style="background-color: #E0F2F1; color: #555;line-height: 22px;">
+                {% if G_project.first_word  %}
+                    {{G_project.first_word}}
+                {% else %}
+                 All
+                {% endif %}
+            </div>
         </div>
     {% endif %}
     <span class="group-title project-name">{{G_project.name}}</span>
@@ -27,7 +33,7 @@
             {% set header_title_link = site_url~'org' %}
         {% endif %}
         {% if  _GET._target[0] == 'issue' and  _GET._target[1] == 'main'%}
-            {% set header_title = '所有事项' %}
+            {% set header_title = '参与的项目' %}
             {% set header_title_link = site_url~'issue/main' %}
         {% endif %}
         {% if  _GET._target[0] == 'admin'%}

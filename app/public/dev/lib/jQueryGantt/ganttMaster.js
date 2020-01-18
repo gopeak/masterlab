@@ -470,14 +470,15 @@ GanttMaster.prototype.loadProject = function (project) {
   var collTasks=this.loadCollapsedTasks();
 
   //shift dates in order to have client side the same hour (e.g.: 23:59) of the server side
-  for (var i = 0; i < project.tasks.length; i++) {
-    var task = project.tasks[i];
-    task.start += this.serverClientTimeOffset;
-    task.end += this.serverClientTimeOffset;
-    //set initial collapsed status
-    task.collapsed=collTasks.indexOf(task.id)>=0;
-  }
-
+   if(!is_empty(project.tasks)){
+        for (var i = 0; i < project.tasks.length; i++) {
+            var task = project.tasks[i];
+            task.start += this.serverClientTimeOffset;
+            task.end += this.serverClientTimeOffset;
+            //set initial collapsed status
+            task.collapsed=collTasks.indexOf(task.id)>=0;
+        }
+   }
 
   this.loadTasks(project.tasks, project.selectedRow);
   this.deletedTaskIds = [];
@@ -505,19 +506,20 @@ GanttMaster.prototype.loadTasks = function (tasks, selectedRow) {
 
   //reset
   this.reset();
-
-  for (var i = 0; i < tasks.length; i++) {
-    var task = tasks[i];
-    if (!(task instanceof Task)) {
-      var t = factory.build(task.id, task.name, task.code, task.level, task.start, task.duration, task.collapsed);
-      for (var key in task) {
-        if (key != "end" && key != "start")
-          t[key] = task[key]; //copy all properties
+  if(!is_empty(tasks)){
+    for (var i = 0; i < tasks.length; i++) {
+      var task = tasks[i];
+      if (!(task instanceof Task)) {
+        var t = factory.build(task.id, task.name, task.code, task.level, task.start, task.duration, task.collapsed);
+        for (var key in task) {
+          if (key != "end" && key != "start")
+            t[key] = task[key]; //copy all properties
+        }
+        task = t;
       }
-      task = t;
+      task.master = this; // in order to access controller from task
+      this.tasks.push(task);  //append task at the end
     }
-    task.master = this; // in order to access controller from task
-    this.tasks.push(task);  //append task at the end
   }
 
   for (var i = 0; i < this.tasks.length; i++) {
@@ -556,7 +558,9 @@ GanttMaster.prototype.loadTasks = function (tasks, selectedRow) {
   // re-select old row if tasks is not empty
   if (this.tasks && this.tasks.length > 0) {
     selectedRow = selectedRow ? selectedRow : 0;
-    this.tasks[selectedRow].rowElement.click();
+    if(selectedRow<(this.tasks.length)){
+        this.tasks[selectedRow].rowElement.click();
+    }
   }
 };
 

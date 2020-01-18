@@ -451,6 +451,11 @@ class DbModel extends BaseModel
         return $this->db->delete($this->getTable(), $conditions);
     }
 
+    public function truncate()
+    {
+        return $this->db->truncate($this->getTable());
+    }
+
     /**
      * @param $row
      * @param $conditions

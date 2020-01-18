@@ -434,9 +434,10 @@ let MindAjax = (function () {
                     return;
                 }
                 if (resp.ret === '200') {
-                    notify_success('更新成功');
+                    //notify_success('更新成功');
+                    console.log(resp.msg)
                 } else {
-                    notify_error('更新失败,错误信息:' + resp.msg);
+                    //notify_error('更新失败,错误信息:' + resp.msg);
                     console.error(resp.msg)
                 }
                 if(jQuery.type(fnc) === "function"){
@@ -475,9 +476,9 @@ let MindAjax = (function () {
                     return;
                 }
                 if (resp.ret === '200') {
-                    notify_success('更新成功');
+                    //notify_success('更新成功');
                 } else {
-                    notify_error('更新失败,错误信息:' + resp.msg);
+                    //notify_error('更新失败,错误信息:' + resp.msg);
                     console.error(resp.msg)
                 }
                 if(jQuery.type(fnc) === "function"){
@@ -506,9 +507,10 @@ let MindAjax = (function () {
                     return;
                 }
                 if (resp.ret === '200') {
-                    notify_success('更新成功');
+                    //notify_success('更新成功');
+                    console.log(resp.msg)
                 } else {
-                    notify_error('更新失败,错误信息:' + resp.msg);
+                    //notify_error('更新失败,错误信息:' + resp.msg);
                     console.error(resp.msg)
                 }
                 if(jQuery.type(fnc) === "function"){
@@ -539,8 +541,9 @@ let MindAjax = (function () {
                 }
                 if (resp.ret === '200') {
                     notify_success('更新成功');
+                    console.log(resp.msg)
                 } else {
-                    notify_error('更新失败,错误信息:' + resp.msg);
+                    //notify_error('更新失败,错误信息:' + resp.msg);
                     console.error(resp.msg)
                 }
                 if(jQuery.type(fnc) === "function"){

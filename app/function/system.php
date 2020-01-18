@@ -108,7 +108,7 @@ function mbstrlen($str)
 
     for ($i = 0; $i < $len; $i++) {
         $count++;
-        if (ord($str{$i}) >= 0x80) {
+        if (ord($str[$i]) >= 0x80) {
             $i += 2;
         }
     }

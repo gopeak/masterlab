@@ -158,6 +158,7 @@ class Main extends BaseUserCtrl
         $data['is_all_issues'] = false;
         if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
             $data['is_all_issues'] = true;
+            $data['display_fields'][] = 'project_id';
         }
 
         ConfigLogic::getAllConfigs($data);
@@ -1042,8 +1043,8 @@ class Main extends BaseUserCtrl
             $info['duration'] = $params['duration'];
         } else {
             if (!empty($info['due_date']) && !empty($info['start_date'])) {
-                $holidays = (new HolidayModel())->getDays();
-                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays();
+                $holidays = (new HolidayModel())->getDays($params['project_id']);
+                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
                 $info['duration'] = getWorkingDays($info['start_date'], $info['due_date'], $holidays, $extraWorkerDays);
             }
         }

@@ -1,3 +1,4 @@
+
 TRUNCATE `agile_sprint`;
 TRUNCATE `agile_sprint_issue_report`;
 TRUNCATE `hornet_cache_key`;
@@ -50,11 +51,15 @@ TRUNCATE `user_password`;
 TRUNCATE `user_posted_flag`;
 TRUNCATE `user_refresh_token`;
 TRUNCATE `user_token`;
+TRUNCATE `issue_holiday`;
+DELETE FROM `agile_board` WHERE id>2;
+DELETE FROM `agile_board_column` WHERE board_id >2;
+DELETE FROM `main_org` WHERE `id` >1;
 INSERT INTO `user_group` VALUES ('1', '0', '1');
 INSERT INTO `user_group` VALUES ('2', '1', '1');
 DELETE FROM `user_main` WHERE uid!=1;
 DELETE FROM `user_setting` WHERE `user_id`!=1;
-DELETE FROM `user_widget` WHERE `user_id` !=1;
+DELETE FROM `user_widget` WHERE `user_id` >1;
 UPDATE main_setting SET `_value`='send_mailer@xxx.com' WHERE `_key`='send_mailer';
 UPDATE main_setting SET `_value`='send_mailer@xxx.com' WHERE `_key`='mail_account';
 UPDATE main_setting SET `_value`='xxxx' WHERE `_key`='mail_password';

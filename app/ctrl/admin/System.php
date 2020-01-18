@@ -521,17 +521,20 @@ class System extends BaseAdminCtrl
         if ($role['is_system'] == 1) {
             $this->ajaxFailed('提示', '预定义的全局角色不能删除', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
-        $ret = $model->deleteById($globalRoleId);
 
-        if (!$ret) {
-            $this->ajaxFailed('服务器错误', '删除角色失败');
+        $model->db->beginTransaction();
+
+        $globalPermRoleRelationModel = new PermissionGlobalRoleRelationModel();
+        $globalPermUserRoleModel = new PermissionGlobalUserRoleModel();
+        if ($model->deleteById($globalRoleId)
+            && $globalPermRoleRelationModel->deleteByRoleId($globalRoleId)
+            && $globalPermUserRoleModel->deleteByRoleId($globalRoleId)) {
+            $model->db->commit();
+            $this->ajaxSuccess('ok');
         } else {
-            $globalPermRoleRelationModel = new PermissionGlobalRoleRelationModel();
-            $globalPermRoleRelationModel->deleteByRoleId($globalRoleId);
+            $model->db->rollBack();
+            $this->ajaxFailed('服务器错误', '删除角色失败');
         }
-
-
-        $this->ajaxSuccess('ok');
     }
 
     /**

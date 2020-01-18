@@ -348,7 +348,7 @@ class Mind extends BaseUserCtrl
 
         $model = new MindProjectAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color', 'text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
@@ -380,7 +380,7 @@ class Mind extends BaseUserCtrl
 
         $model = new MindSprintAttributeModel();
         $updateInfo = [];
-        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color'];
+        $fields = ['layout', 'shape', 'color', 'icon', 'font_family', 'font_size', 'font_bold', 'font_italic', 'bg_color', 'text_color'];
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $updateInfo[$field] = $_POST[$field];
@@ -413,7 +413,7 @@ class Mind extends BaseUserCtrl
         if (!isset($_GET['group_by']) || empty($_GET['group_by'])) {
             $this->ajaxFailed('参数错误', 'group_by不能为空');
         }
-        if (!isset($_GET['group_by_id']) || empty($_GET['group_by_id'])) {
+        if (!isset($_GET['group_by_id'])) {
             $this->ajaxFailed('参数错误', 'group_by_id不能为空');
         }
 
