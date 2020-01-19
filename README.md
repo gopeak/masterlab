@@ -162,7 +162,7 @@ http://www.masterlab.vip/help.php
 ![首页](http://www.masterlab.vip/fireshot/index2.png "首页")
 ![事项列表](http://www.masterlab.vip/fireshot/issue.png "事项列表")
 ![看板](http://www.masterlab.vip/fireshot/kanban.png "看板")
-![WBS](http://www.masterlab.vip/fireshot/wbs.jpg "看板")
+![WBS](http://www.masterlab.vip/fireshot/wbs.jpg "思维导图与事项整合")
 
 
 在使用中有任何问题，请使用以下联系方式联系我们
