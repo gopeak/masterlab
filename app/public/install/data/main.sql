@@ -1,10 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 5.0.0
---
--- 主机： 127.0.0.1
--- 生成日期： 2020-01-18 10:08:24
--- 服务器版本： 8.0.18
--- PHP 版本： 7.1.12
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -12,16 +6,12 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+
 /*!40101 SET NAMES utf8mb4 */;
 
 --
 -- 数据库： `masterlab
 --
-
--- --------------------------------------------------------
 
 --
 -- 表的结构 `agile_board`
@@ -38,7 +28,7 @@ CREATE TABLE `agile_board` (
   `range_type` enum('current_sprint','all','sprints','modules','issue_types') NOT NULL COMMENT '看板数据范围',
   `range_data` varchar(1024) NOT NULL COMMENT '范围数据',
   `is_system` tinyint(2) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `agile_board`
@@ -60,7 +50,7 @@ CREATE TABLE `agile_board_column` (
   `board_id` int(11) UNSIGNED NOT NULL,
   `data` varchar(1000) NOT NULL,
   `weight` int(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `agile_board_column`
@@ -93,7 +83,7 @@ CREATE TABLE `agile_sprint` (
   `target` text NOT NULL COMMENT 'sprint目标内容',
   `inspect` text NOT NULL COMMENT 'Sprint 评审会议内容',
   `review` text NOT NULL COMMENT 'Sprint 回顾会议内容'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `agile_sprint`
@@ -120,7 +110,7 @@ CREATE TABLE `agile_sprint_issue_report` (
   `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
   `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
   `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -139,7 +129,7 @@ CREATE TABLE `field_custom_value` (
   `text_value` longtext,
   `date_value` datetime DEFAULT NULL,
   `valuet_ype` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -157,7 +147,7 @@ CREATE TABLE `field_layout_default` (
   `isrequired` varchar(60) DEFAULT NULL,
   `sequence` int(11) UNSIGNED DEFAULT NULL,
   `tab` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `field_layout_default`
@@ -230,7 +220,7 @@ CREATE TABLE `field_layout_project_custom` (
   `isrequired` varchar(60) DEFAULT NULL,
   `sequence` int(11) UNSIGNED DEFAULT NULL,
   `tab` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -249,7 +239,7 @@ CREATE TABLE `field_main` (
   `options` varchar(5000) DEFAULT '' COMMENT '{}',
   `order_weight` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `extra_attr` varchar(512) NOT NULL DEFAULT '' COMMENT '额外的html属性'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `field_main`
@@ -293,7 +283,7 @@ CREATE TABLE `field_type` (
   `name` varchar(64) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `type` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `field_type`
@@ -336,7 +326,7 @@ CREATE TABLE `hornet_cache_key` (
   `module` varchar(64) DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
   `expire` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -354,7 +344,7 @@ CREATE TABLE `hornet_user` (
   `reg_time` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `last_login_time` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `company_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB   COMMENT='用户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- --------------------------------------------------------
 
@@ -367,7 +357,7 @@ CREATE TABLE `issue_assistant` (
   `issue_id` int(11) UNSIGNED DEFAULT NULL,
   `user_id` int(11) UNSIGNED DEFAULT NULL,
   `join_time` int(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -381,7 +371,7 @@ CREATE TABLE `issue_description_template` (
   `content` text NOT NULL,
   `created` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '更新时间'
-) ENGINE=InnoDB   COMMENT='新增事项时描述的模板';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='新增事项时描述的模板';
 
 --
 -- 转存表中的数据 `issue_description_template`
@@ -401,7 +391,7 @@ CREATE TABLE `issue_effect_version` (
   `id` int(11) UNSIGNED NOT NULL,
   `issue_id` int(11) UNSIGNED DEFAULT NULL,
   `version_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB   ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -413,8 +403,8 @@ CREATE TABLE `issue_extra_worker_day` (
   `id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL DEFAULT '0',
   `day` date NOT NULL,
-  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
-) ENGINE=InnoDB ;
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_extra_worker_day`
@@ -439,7 +429,7 @@ CREATE TABLE `issue_field_layout_project` (
   `ishidden` varchar(60) DEFAULT NULL,
   `isrequired` varchar(60) DEFAULT NULL,
   `renderertype` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -459,7 +449,7 @@ CREATE TABLE `issue_file_attachment` (
   `file_size` int(11) DEFAULT '0',
   `author` int(11) DEFAULT '0',
   `file_ext` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_file_attachment`
@@ -486,7 +476,7 @@ CREATE TABLE `issue_filter` (
   `fav_count` decimal(18,0) DEFAULT NULL,
   `name_lower` varchar(255) DEFAULT NULL,
   `is_adv_query` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级查询'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -498,7 +488,7 @@ CREATE TABLE `issue_fix_version` (
   `id` int(11) UNSIGNED NOT NULL,
   `issue_id` int(11) UNSIGNED DEFAULT NULL,
   `version_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -510,7 +500,7 @@ CREATE TABLE `issue_follow` (
   `id` int(11) UNSIGNED NOT NULL,
   `issue_id` int(11) UNSIGNED NOT NULL,
   `user_id` int(11) UNSIGNED NOT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -522,8 +512,8 @@ CREATE TABLE `issue_holiday` (
   `id` int(11) NOT NULL,
   `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `day` date NOT NULL,
-  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
-) ENGINE=InnoDB ;
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -537,7 +527,7 @@ CREATE TABLE `issue_label` (
   `title` varchar(64) NOT NULL,
   `color` varchar(20) NOT NULL,
   `bg_color` varchar(20) NOT NULL DEFAULT ''
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_label`
@@ -558,7 +548,7 @@ CREATE TABLE `issue_label_data` (
   `id` int(11) UNSIGNED NOT NULL,
   `issue_id` int(11) UNSIGNED DEFAULT NULL,
   `label_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -568,17 +558,17 @@ CREATE TABLE `issue_label_data` (
 
 CREATE TABLE `issue_main` (
   `id` int(11) UNSIGNED NOT NULL,
-  `pkey` varchar(32)  DEFAULT NULL,
-  `issue_num` varchar(64)  DEFAULT NULL,
+  `pkey` varchar(32) DEFAULT NULL,
+  `issue_num` varchar(64) DEFAULT NULL,
   `project_id` int(11) DEFAULT '0',
   `issue_type` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `creator` int(11) UNSIGNED DEFAULT '0',
   `modifier` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `reporter` int(11) DEFAULT '0',
   `assignee` int(11) DEFAULT '0',
-  `summary` varchar(255)  DEFAULT '',
-  `description` text ,
-  `environment` varchar(128)  DEFAULT '',
+  `summary` varchar(255) DEFAULT '',
+  `description` text,
+  `environment` varchar(128) DEFAULT '',
   `priority` int(11) DEFAULT '0',
   `resolve` int(11) DEFAULT '0',
   `status` int(11) DEFAULT '0',
@@ -589,34 +579,36 @@ CREATE TABLE `issue_main` (
   `duration` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `resolve_date` date DEFAULT NULL,
   `module` int(11) DEFAULT '0',
-  `milestone` varchar(20)  DEFAULT NULL,
+  `milestone` varchar(20) DEFAULT NULL,
   `sprint` int(11) NOT NULL DEFAULT '0',
   `weight` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '优先级权重值',
   `backlog_weight` int(11) NOT NULL DEFAULT '0' COMMENT 'backlog排序权重',
   `sprint_weight` int(11) NOT NULL DEFAULT '0' COMMENT 'sprint排序权重',
-  `assistants` varchar(256)  NOT NULL DEFAULT '',
+  `assistants` varchar(256) NOT NULL DEFAULT '',
   `level` tinyint(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '甘特图级别',
   `master_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
   `have_children` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否拥有子任务',
   `followed_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '被关注人数',
   `comment_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '评论数',
   `progress` tinyint(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '完成百分比',
-  `depends` varchar(64)  NOT NULL DEFAULT '' COMMENT '前置任务',
+  `depends` varchar(64) NOT NULL DEFAULT '' COMMENT '前置任务',
   `gant_proj_sprint_weight` bigint(18) NOT NULL DEFAULT '0' COMMENT '项目甘特图中该事项在同级的排序权重',
   `gant_proj_module_weight` bigint(18) NOT NULL DEFAULT '0' COMMENT '项目甘特图中该事项在同级的排序权重',
   `gant_sprint_weight` bigint(18) NOT NULL DEFAULT '0' COMMENT '迭代甘特图中该事项在同级的排序权重',
   `gant_hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '甘特图中是否隐藏该事项',
   `is_start_milestone` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `is_end_milestone` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ;
 
 --
 -- 转存表中的数据 `issue_main`
 --
 
 INSERT INTO `issue_main` (`id`, `pkey`, `issue_num`, `project_id`, `issue_type`, `creator`, `modifier`, `reporter`, `assignee`, `summary`, `description`, `environment`, `priority`, `resolve`, `status`, `created`, `updated`, `start_date`, `due_date`, `duration`, `resolve_date`, `module`, `milestone`, `sprint`, `weight`, `backlog_weight`, `sprint_weight`, `assistants`, `level`, `master_id`, `have_children`, `followed_count`, `comment_count`, `progress`, `depends`, `gant_proj_sprint_weight`, `gant_proj_module_weight`, `gant_sprint_weight`, `gant_hide`, `is_start_milestone`, `is_end_milestone`) VALUES
-(1, 'example', '1', 1, 2, 1, 0, 1, 12164, '数据库设计', '**功能描述**\r\n一句话简洁清晰的描述功能，例如：\r\n作为一个开发者，在项目开启后，我想要项目的数据存储起来，以便于接下来的编程\r\n\r\n**功能点**\r\n1. 需求分析\r\n2. 表结构设计\r\n3. er设计\r\n\r\n**规则和影响**\r\n1. 整个项目的基础\r\n\r\n**解决方案**\r\n 解决方案的描述\r\n\r\n**备用方案**\r\n Mysql8\r\n\r\n\r\n\r\n', '', 3, 2, 1, 1579249719, 1579249719, '2020-01-17', '2020-01-30', 12, NULL, 1, NULL, 1, 80, 0, 0, '', 0, 0, 0, 0, 0, 0, '', 100000, 0, 0, 0, 0, 0),
-(2, 'example', '2', 1, 2, 1, 1, 1, 12164, '服务器端开发框架设计', '**功能描述**\r\n\r\n作为一个后端开发工程师，在项目开启下，为了实现项目的各项功能，以便于早日完成项目预期\r\n\r\n**功能点**\r\n1. 开发语言的确定\r\n2. 开发框架的评估和分析\r\n3. 开发框架的试用\r\n4. 开发框架的确认\r\n5. 开发框架的培训\r\n\r\n**规则和影响**\r\n1. 后端开发人员都要使用\r\n\r\n\r\n**解决方案**\r\n 解决方案的描述\r\n\r\n**备用方案**\r\n spring boot \r\n\r\n\r\n', '', 2, 2, 1, 1579250062, 1579250062, '2020-01-20', '2020-01-31', 11, NULL, 1, NULL, 1, 80, 0, 0, '', 0, 0, 0, 0, 0, 0, '', 200000, 0, 0, 0, 0, 0);
+(1, 'example', '1', 1, 2, 1, 0, 1, 12164, '数据库设计', '**功能描述**\r\n一句话简洁清晰的描述功能，例如：\r\n作为一个开发者，在项目开启后，我想要项目的数据存储起来，以便于接下来的编程\r\n\r\n**功能点**\r\n1. 需求分析\r\n2. 表结构设计\r\n3. er设计\r\n\r\n**规则和影响**\r\n1. 整个项目的基础\r\n\r\n**解决方案**\r\n 解决方案的描述\r\n\r\n**备用方案**\r\n Mysql8\r\n\r\n\r\n\r\n', '', 3, 2, 1, 1579249719, 1579249719, '2020-01-17', '2020-01-30', 12, NULL, 1, NULL, 1, 80, 0, 100000, '', 0, 0, 0, 0, 0, 0, '', 100000, 0, 0, 0, 0, 0),
+(2, 'example', '2', 1, 2, 1, 1, 1, 12164, '服务器端开发框架设计', '**功能描述**\r\n\r\n作为一个后端开发工程师，在项目开启下，为了实现项目的各项功能，以便于早日完成项目预期\r\n\r\n**功能点**\r\n1. 开发语言的确定\r\n2. 开发框架的评估和分析\r\n3. 开发框架的试用\r\n4. 开发框架的确认\r\n5. 开发框架的培训\r\n\r\n**规则和影响**\r\n1. 后端开发人员都要使用\r\n\r\n\r\n**解决方案**\r\n 解决方案的描述\r\n\r\n**备用方案**\r\n spring boot \r\n\r\n\r\n', '', 2, 2, 1, 1579250062, 1579250062, '2020-01-20', '2020-01-31', 11, NULL, 1, NULL, 1, 80, 0, 200000, '', 0, 0, 0, 0, 0, 0, '', 200000, 0, 0, 0, 0, 0),
+(3, 'example', '3', 1, 2, 1, 1, 1, 12168, 'UI设计', '**功能描述**\r\n根据原型进行界面设计\r\n\r\n**功能点**\r\n1. xx\r\n2. xxx\r\n3. xxxx\r\n\r\n**规则和影响**\r\n1. xx\r\n2. xxx\r\n\r\n**解决方案**\r\n 解决方案的描述\r\n\r\n**备用方案**\r\n 备用方案的描述\r\n\r\n**附加内容**\r\n\r\n', '', 3, 2, 1, 1579423228, 1579423228, '2020-01-20', '2020-01-24', 5, NULL, 3, NULL, 1, 60, 0, 0, '', 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0),
+(4, 'example', '4', 1, 3, 1, 1, 1, 12166, '测试用例', '根据原型设计进行测试用例的编写\r\n', '', 2, 2, 1, 1579423320, 1579423320, '2020-01-19', '2020-01-24', 5, NULL, 6, NULL, 1, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, '', 100000, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -628,7 +620,7 @@ CREATE TABLE `issue_moved_issue_key` (
   `id` decimal(18,0) NOT NULL,
   `old_issue_key` varchar(255) DEFAULT NULL,
   `issue_id` decimal(18,0) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -646,7 +638,7 @@ CREATE TABLE `issue_priority` (
   `status_color` varchar(60) DEFAULT NULL,
   `font_awesome` varchar(40) DEFAULT NULL,
   `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_priority`
@@ -696,7 +688,7 @@ CREATE TABLE `issue_recycle` (
   `master_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
   `data` text,
   `time` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -713,7 +705,7 @@ CREATE TABLE `issue_resolve` (
   `font_awesome` varchar(32) DEFAULT NULL,
   `color` varchar(20) DEFAULT NULL,
   `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_resolve`
@@ -745,7 +737,7 @@ CREATE TABLE `issue_status` (
   `is_system` tinyint(1) UNSIGNED DEFAULT '0',
   `color` varchar(20) DEFAULT NULL COMMENT 'Default Primary Success Info Warning Danger可选',
   `text_color` varchar(12) NOT NULL DEFAULT 'black' COMMENT '字体颜色'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_status`
@@ -778,7 +770,7 @@ CREATE TABLE `issue_type` (
   `custom_icon_url` varchar(128) DEFAULT NULL,
   `is_system` tinyint(1) UNSIGNED DEFAULT '0',
   `form_desc_tpl_id` int(11) UNSIGNED DEFAULT '0' COMMENT '创建事项时,描述字段对应的模板id'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_type`
@@ -806,7 +798,7 @@ CREATE TABLE `issue_type_scheme` (
   `name` varchar(64) DEFAULT NULL,
   `description` varchar(100) DEFAULT NULL,
   `is_default` tinyint(1) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB   COMMENT='问题方案表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题方案表';
 
 --
 -- 转存表中的数据 `issue_type_scheme`
@@ -827,7 +819,7 @@ CREATE TABLE `issue_type_scheme_data` (
   `id` int(11) UNSIGNED NOT NULL,
   `scheme_id` int(11) UNSIGNED DEFAULT NULL,
   `type_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB   COMMENT='问题方案字表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题方案字表';
 
 --
 -- 转存表中的数据 `issue_type_scheme_data`
@@ -866,7 +858,7 @@ CREATE TABLE `issue_ui` (
   `order_weight` int(10) UNSIGNED DEFAULT NULL,
   `tab_id` int(11) UNSIGNED DEFAULT '0',
   `required` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否必填项'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_ui`
@@ -1081,37 +1073,6 @@ INSERT INTO `issue_ui` (`id`, `issue_type_id`, `ui_type`, `field_id`, `order_wei
 (1461, 2, 'edit', 9, 2, 82, 0),
 (1462, 2, 'edit', 3, 1, 82, 0),
 (1463, 2, 'edit', 26, 0, 82, 0),
-(1464, 3, 'create', 1, 12, 0, 1),
-(1465, 3, 'create', 6, 11, 0, 0),
-(1466, 3, 'create', 2, 10, 0, 0),
-(1467, 3, 'create', 7, 9, 0, 0),
-(1468, 3, 'create', 8, 8, 0, 0),
-(1469, 3, 'create', 3, 7, 0, 0),
-(1470, 3, 'create', 4, 6, 0, 0),
-(1471, 3, 'create', 19, 5, 0, 0),
-(1472, 3, 'create', 10, 4, 0, 0),
-(1473, 3, 'create', 11, 3, 0, 0),
-(1474, 3, 'create', 12, 2, 0, 0),
-(1475, 3, 'create', 13, 1, 0, 0),
-(1476, 3, 'create', 20, 0, 0, 0),
-(1477, 3, 'edit', 1, 14, 0, 1),
-(1478, 3, 'edit', 6, 13, 0, 0),
-(1479, 3, 'edit', 2, 12, 0, 0),
-(1480, 3, 'edit', 7, 11, 0, 0),
-(1481, 3, 'edit', 9, 10, 0, 0),
-(1482, 3, 'edit', 8, 9, 0, 0),
-(1483, 3, 'edit', 3, 8, 0, 0),
-(1484, 3, 'edit', 4, 7, 0, 0),
-(1485, 3, 'edit', 19, 6, 0, 0),
-(1486, 3, 'edit', 10, 5, 0, 0),
-(1487, 3, 'edit', 11, 4, 0, 0),
-(1488, 3, 'edit', 12, 3, 0, 0),
-(1489, 3, 'edit', 13, 2, 0, 0),
-(1490, 3, 'edit', 20, 1, 0, 0),
-(1491, 3, 'edit', 26, 0, 0, 0),
-(1492, 3, 'edit', 20, 2, 83, 0),
-(1493, 3, 'edit', 9, 1, 83, 0),
-(1494, 3, 'edit', 3, 0, 83, 0),
 (1495, 1, 'create', 1, 9, 0, 1),
 (1496, 1, 'create', 6, 8, 0, 0),
 (1497, 1, 'create', 2, 7, 0, 1),
@@ -1146,7 +1107,40 @@ INSERT INTO `issue_ui` (`id`, `issue_type_id`, `ui_type`, `field_id`, `order_wei
 (1526, 1, 'edit', 20, 3, 85, 0),
 (1527, 1, 'edit', 21, 2, 85, 0),
 (1528, 1, 'edit', 8, 1, 85, 0),
-(1529, 1, 'edit', 9, 0, 85, 0);
+(1529, 1, 'edit', 9, 0, 85, 0),
+(1530, 3, 'create', 1, 13, 0, 1),
+(1531, 3, 'create', 6, 12, 0, 0),
+(1532, 3, 'create', 2, 11, 0, 0),
+(1533, 3, 'create', 7, 10, 0, 0),
+(1534, 3, 'create', 8, 9, 0, 0),
+(1535, 3, 'create', 3, 8, 0, 0),
+(1536, 3, 'create', 4, 7, 0, 0),
+(1537, 3, 'create', 19, 6, 0, 0),
+(1538, 3, 'create', 10, 5, 0, 0),
+(1539, 3, 'create', 11, 4, 0, 0),
+(1540, 3, 'create', 12, 3, 0, 0),
+(1541, 3, 'create', 13, 2, 0, 0),
+(1542, 3, 'create', 20, 1, 0, 0),
+(1543, 3, 'create', 15, 0, 0, 0),
+(1544, 3, 'edit', 1, 15, 0, 1),
+(1545, 3, 'edit', 6, 14, 0, 0),
+(1546, 3, 'edit', 2, 13, 0, 0),
+(1547, 3, 'edit', 7, 12, 0, 0),
+(1548, 3, 'edit', 9, 11, 0, 0),
+(1549, 3, 'edit', 8, 10, 0, 0),
+(1550, 3, 'edit', 3, 9, 0, 0),
+(1551, 3, 'edit', 4, 8, 0, 0),
+(1552, 3, 'edit', 19, 7, 0, 0),
+(1553, 3, 'edit', 10, 6, 0, 0),
+(1554, 3, 'edit', 11, 5, 0, 0),
+(1555, 3, 'edit', 12, 4, 0, 0),
+(1556, 3, 'edit', 13, 3, 0, 0),
+(1557, 3, 'edit', 20, 2, 0, 0),
+(1558, 3, 'edit', 26, 1, 0, 0),
+(1559, 3, 'edit', 15, 0, 0, 0),
+(1560, 3, 'edit', 20, 2, 86, 0),
+(1561, 3, 'edit', 9, 1, 86, 0),
+(1562, 3, 'edit', 3, 0, 86, 0);
 
 -- --------------------------------------------------------
 
@@ -1160,7 +1154,7 @@ CREATE TABLE `issue_ui_tab` (
   `name` varchar(255) DEFAULT NULL,
   `order_weight` int(11) DEFAULT NULL,
   `ui_type` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_ui_tab`
@@ -1176,9 +1170,9 @@ INSERT INTO `issue_ui_tab` (`id`, `issue_type_id`, `name`, `order_weight`, `ui_t
 (64, 4, '\n            \n            \n            更多\n             \n            \n        \n             \n            \n        \n             \n            \n        ', 0, 'edit'),
 (81, 2, '更 多', 0, 'create'),
 (82, 2, '\n            \n            \n            \n            \n            \n            \n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             ', 0, 'edit'),
-(83, 3, '\n            \n            \n            \n            其他\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        ', 0, 'edit'),
 (84, 1, '更 多', 0, 'create'),
-(85, 1, '\n            \n            \n            \n            \n            \n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            ', 0, 'edit');
+(85, 1, '\n            \n            \n            \n            \n            \n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            ', 0, 'edit'),
+(86, 3, '\n            \n            \n            \n            \n            其他\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        ', 0, 'edit');
 
 -- --------------------------------------------------------
 
@@ -1203,7 +1197,7 @@ CREATE TABLE `log_base` (
   `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
   `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
   `time` int(11) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB   COMMENT='组合模糊查询索引';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
 -- --------------------------------------------------------
 
@@ -1228,7 +1222,7 @@ CREATE TABLE `log_operating` (
   `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
   `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
   `time` int(11) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB   COMMENT='组合模糊查询索引';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
 --
 -- 转存表中的数据 `log_operating`
@@ -1251,7 +1245,13 @@ INSERT INTO `log_operating` (`id`, `project_id`, `module`, `obj_id`, `uid`, `use
 (14, 0, '用户', 1, 1, 'master', 'Master', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1\",\"directory_id\":\"1\",\"phone\":\"18002510000\",\"username\":\"master\",\"openid\":\"q7a752741f667201b54780c926faec4e\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"master\",\"display_name\":\"Master\",\"email\":\"master@masterlab.vip\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"1\",\"birthday\":\"2019-01-13\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1.png?t=1579249493\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1579236329\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u7ba1\\u7406\\u5458\",\"sign\":\"~~~\\u4ea4\\u4ed8\\u5353\\u8d8a\\u4ea7\\u54c1!\"}', '{\"display_name\":\"Master\",\"sex\":1,\"sign\":\"~~~\\u4ea4\\u4ed8\\u5353\\u8d8a\\u4ea7\\u54c1!\",\"birthday\":\"2019-01-13\",\"avatar\":\"avatar\\/1.png?t=1579249493\"}', '127.0.0.1', 1579249493),
 (15, 1, '事项', 1, 1, 'master', 'Master', '/issue/main/add', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"\\u6570\\u636e\\u5e93\\u8bbe\\u8ba1\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1579249719,\"updated\":1579249719,\"project_id\":1,\"issue_type\":2,\"status\":1,\"priority\":3,\"resolve\":\"2\",\"assignee\":12164,\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\u4e00\\u53e5\\u8bdd\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u529f\\u80fd\\uff0c\\u4f8b\\u5982\\uff1a\\r\\n\\u4f5c\\u4e3a\\u4e00\\u4e2a\\u5f00\\u53d1\\u8005\\uff0c\\u5728\\u9879\\u76ee\\u5f00\\u542f\\u540e\\uff0c\\u6211\\u60f3\\u8981\\u9879\\u76ee\\u7684\\u6570\\u636e\\u5b58\\u50a8\\u8d77\\u6765\\uff0c\\u4ee5\\u4fbf\\u4e8e\\u63a5\\u4e0b\\u6765\\u7684\\u7f16\\u7a0b\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. \\u9700\\u6c42\\u5206\\u6790\\r\\n2. \\u8868\\u7ed3\\u6784\\u8bbe\\u8ba1\\r\\n3. er\\u8bbe\\u8ba1\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. \\u6574\\u4e2a\\u9879\\u76ee\\u7684\\u57fa\\u7840\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u5907\\u7528\\u65b9\\u6848**\\r\\n Mysql8\\r\\n\\r\\n\\r\\n\\r\\n\",\"module\":\"1\",\"environment\":\"\",\"sprint\":1,\"weight\":80,\"start_date\":\"2020-0', '127.0.0.1', 1579249719),
 (16, 1, '事项', 2, 1, 'master', 'Master', '/issue/main/add', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"\\u670d\\u52a1\\u5668\\u7aef\\u5f00\\u53d1\\u6846\\u67b6\\u8bbe\\u8ba1\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1579250062,\"updated\":1579250062,\"project_id\":1,\"issue_type\":2,\"status\":1,\"priority\":2,\"resolve\":\"2\",\"assignee\":12164,\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\r\\n\\u4f5c\\u4e3a\\u4e00\\u4e2a\\u540e\\u7aef\\u5f00\\u53d1\\u5de5\\u7a0b\\u5e08\\uff0c\\u5728\\u9879\\u76ee\\u5f00\\u542f\\u4e0b\\uff0c\\u4e3a\\u4e86\\u5b9e\\u73b0\\u9879\\u76ee\\u7684\\u5404\\u9879\\u529f\\u80fd\\uff0c\\u4ee5\\u4fbf\\u4e8e\\u65e9\\u65e5\\u5b8c\\u6210\\u9879\\u76ee\\u9884\\u671f\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. \\u5f00\\u53d1\\u8bed\\u8a00\\u7684\\u786e\\u5b9a\\r\\n2. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bc4\\u4f30\\u548c\\u5206\\u6790\\r\\n3. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bd5\\u7528\\r\\n4. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u786e\\u8ba4\\r\\n5. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u57f9\\u8bad\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. \\u540e\\u7aef\\u5f00\\u53d1\\u4eba\\u5458\\u90fd\\u8981\\u4f7f\\u7528\\r\\n\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u', '127.0.0.1', 1579250062),
-(17, 1, '事项', 2, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"2\",\"pkey\":\"example\",\"issue_num\":\"2\",\"project_id\":\"1\",\"issue_type\":\"2\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"12164\",\"summary\":\"\\u670d\\u52a1\\u5668\\u7aef\\u5f00\\u53d1\\u6846\\u67b6\\u8bbe\\u8ba1\",\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\r\\n\\u4f5c\\u4e3a\\u4e00\\u4e2a\\u540e\\u7aef\\u5f00\\u53d1\\u5de5\\u7a0b\\u5e08\\uff0c\\u5728\\u9879\\u76ee\\u5f00\\u542f\\u4e0b\\uff0c\\u4e3a\\u4e86\\u5b9e\\u73b0\\u9879\\u76ee\\u7684\\u5404\\u9879\\u529f\\u80fd\\uff0c\\u4ee5\\u4fbf\\u4e8e\\u65e9\\u65e5\\u5b8c\\u6210\\u9879\\u76ee\\u9884\\u671f\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. \\u5f00\\u53d1\\u8bed\\u8a00\\u7684\\u786e\\u5b9a\\r\\n2. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bc4\\u4f30\\u548c\\u5206\\u6790\\r\\n3. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bd5\\u7528\\r\\n4. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u786e\\u8ba4\\r\\n5. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u57f9\\u8bad\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. \\u540e\\u7aef\\u5f00\\u53d1\\u4eba\\u5458\\u90fd\\u8981\\u4f7f\\u7528\\r\\n\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\', '{\"id\":\"2\",\"pkey\":\"example\",\"issue_num\":\"2\",\"project_id\":\"1\",\"issue_type\":\"2\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12164\",\"summary\":\"\\u670d\\u52a1\\u5668\\u7aef\\u5f00\\u53d1\\u6846\\u67b6\\u8bbe\\u8ba1\",\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\r\\n\\u4f5c\\u4e3a\\u4e00\\u4e2a\\u540e\\u7aef\\u5f00\\u53d1\\u5de5\\u7a0b\\u5e08\\uff0c\\u5728\\u9879\\u76ee\\u5f00\\u542f\\u4e0b\\uff0c\\u4e3a\\u4e86\\u5b9e\\u73b0\\u9879\\u76ee\\u7684\\u5404\\u9879\\u529f\\u80fd\\uff0c\\u4ee5\\u4fbf\\u4e8e\\u65e9\\u65e5\\u5b8c\\u6210\\u9879\\u76ee\\u9884\\u671f\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. \\u5f00\\u53d1\\u8bed\\u8a00\\u7684\\u786e\\u5b9a\\r\\n2. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bc4\\u4f30\\u548c\\u5206\\u6790\\r\\n3. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bd5\\u7528\\r\\n4. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u786e\\u8ba4\\r\\n5. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u57f9\\u8bad\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. \\u540e\\u7aef\\u5f00\\u53d1\\u4eba\\u5458\\u90fd\\u8981\\u4f7f\\u7528\\r\\n\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\', '127.0.0.1', 1579250089);
+(17, 1, '事项', 2, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"2\",\"pkey\":\"example\",\"issue_num\":\"2\",\"project_id\":\"1\",\"issue_type\":\"2\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"12164\",\"summary\":\"\\u670d\\u52a1\\u5668\\u7aef\\u5f00\\u53d1\\u6846\\u67b6\\u8bbe\\u8ba1\",\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\r\\n\\u4f5c\\u4e3a\\u4e00\\u4e2a\\u540e\\u7aef\\u5f00\\u53d1\\u5de5\\u7a0b\\u5e08\\uff0c\\u5728\\u9879\\u76ee\\u5f00\\u542f\\u4e0b\\uff0c\\u4e3a\\u4e86\\u5b9e\\u73b0\\u9879\\u76ee\\u7684\\u5404\\u9879\\u529f\\u80fd\\uff0c\\u4ee5\\u4fbf\\u4e8e\\u65e9\\u65e5\\u5b8c\\u6210\\u9879\\u76ee\\u9884\\u671f\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. \\u5f00\\u53d1\\u8bed\\u8a00\\u7684\\u786e\\u5b9a\\r\\n2. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bc4\\u4f30\\u548c\\u5206\\u6790\\r\\n3. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bd5\\u7528\\r\\n4. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u786e\\u8ba4\\r\\n5. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u57f9\\u8bad\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. \\u540e\\u7aef\\u5f00\\u53d1\\u4eba\\u5458\\u90fd\\u8981\\u4f7f\\u7528\\r\\n\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\', '{\"id\":\"2\",\"pkey\":\"example\",\"issue_num\":\"2\",\"project_id\":\"1\",\"issue_type\":\"2\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12164\",\"summary\":\"\\u670d\\u52a1\\u5668\\u7aef\\u5f00\\u53d1\\u6846\\u67b6\\u8bbe\\u8ba1\",\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\r\\n\\u4f5c\\u4e3a\\u4e00\\u4e2a\\u540e\\u7aef\\u5f00\\u53d1\\u5de5\\u7a0b\\u5e08\\uff0c\\u5728\\u9879\\u76ee\\u5f00\\u542f\\u4e0b\\uff0c\\u4e3a\\u4e86\\u5b9e\\u73b0\\u9879\\u76ee\\u7684\\u5404\\u9879\\u529f\\u80fd\\uff0c\\u4ee5\\u4fbf\\u4e8e\\u65e9\\u65e5\\u5b8c\\u6210\\u9879\\u76ee\\u9884\\u671f\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. \\u5f00\\u53d1\\u8bed\\u8a00\\u7684\\u786e\\u5b9a\\r\\n2. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bc4\\u4f30\\u548c\\u5206\\u6790\\r\\n3. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u8bd5\\u7528\\r\\n4. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u786e\\u8ba4\\r\\n5. \\u5f00\\u53d1\\u6846\\u67b6\\u7684\\u57f9\\u8bad\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. \\u540e\\u7aef\\u5f00\\u53d1\\u4eba\\u5458\\u90fd\\u8981\\u4f7f\\u7528\\r\\n\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\', '127.0.0.1', 1579250089),
+(18, 1, '事项', 3, 1, 'master', 'Master', '/issue/main/add', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"UI\\u8bbe\\u8ba1\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1579423228,\"updated\":1579423228,\"project_id\":1,\"issue_type\":2,\"status\":1,\"priority\":3,\"resolve\":\"2\",\"assignee\":12168,\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\u6839\\u636e\\u539f\\u578b\\u8fdb\\u884c\\u754c\\u9762\\u8bbe\\u8ba1\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. xx\\r\\n2. xxx\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u5907\\u7528\\u65b9\\u6848**\\r\\n \\u5907\\u7528\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u9644\\u52a0\\u5185\\u5bb9**\\r\\n\\r\\n\",\"module\":\"\",\"environment\":\"\",\"sprint\":1,\"weight\":60,\"start_date\":\"2020-01-20\",\"due_date\":\"2020-01-24\",\"duration\":5,\"progress\":0,\"is_start_milestone\":0,\"is_end_milestone\":0}', '127.0.0.1', 1579423228),
+(19, 1, '事项', 3, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"3\",\"pkey\":\"example\",\"issue_num\":\"3\",\"project_id\":\"1\",\"issue_type\":\"2\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"12168\",\"summary\":\"UI\\u8bbe\\u8ba1\",\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\u6839\\u636e\\u539f\\u578b\\u8fdb\\u884c\\u754c\\u9762\\u8bbe\\u8ba1\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. xx\\r\\n2. xxx\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u5907\\u7528\\u65b9\\u6848**\\r\\n \\u5907\\u7528\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u9644\\u52a0\\u5185\\u5bb9**\\r\\n\\r\\n\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1579423228\",\"updated\":\"1579423228\",\"start_date\":\"2020-01-20\",\"due_date\":\"2020-01-24\",\"duration\":\"5\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"60\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",', '{\"id\":\"3\",\"pkey\":\"example\",\"issue_num\":\"3\",\"project_id\":\"1\",\"issue_type\":\"2\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12168\",\"summary\":\"UI\\u8bbe\\u8ba1\",\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\u6839\\u636e\\u539f\\u578b\\u8fdb\\u884c\\u754c\\u9762\\u8bbe\\u8ba1\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. xx\\r\\n2. xxx\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u5907\\u7528\\u65b9\\u6848**\\r\\n \\u5907\\u7528\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u9644\\u52a0\\u5185\\u5bb9**\\r\\n\\r\\n\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1579423228\",\"updated\":\"1579423228\",\"start_date\":\"2020-01-20\",\"due_date\":\"2020-01-24\",\"duration\":\"5\",\"resolve_date\":null,\"module\":\"3\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"60\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",', '127.0.0.1', 1579423252),
+(20, 1, '事项', 4, 1, 'master', 'Master', '/issue/main/add', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"\\u6d4b\\u8bd5\\u7528\\u4f8b\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1579423320,\"updated\":1579423320,\"project_id\":1,\"issue_type\":3,\"status\":1,\"priority\":2,\"resolve\":\"2\",\"assignee\":12166,\"description\":\"\\u6839\\u636e\\u539f\\u578b\\u8bbe\\u8ba1\\u8fdb\\u884c\\u6d4b\\u8bd5\\u7528\\u4f8b\\u7684\\u7f16\\u5199\\r\\n\",\"module\":\"\",\"start_date\":\"2020-01-19\",\"due_date\":\"2020-01-24\",\"duration\":5,\"is_start_milestone\":0,\"is_end_milestone\":0}', '127.0.0.1', 1579423320),
+(21, 1, '项目', 0, 1, 'master', 'Master', '/project/module/add?project_id=1', NULL, NULL, '新增', '新建项目模块', '[]', '{\"project_id\":1,\"name\":\"\\u6d4b\\u8bd5\",\"description\":\"\",\"lead\":0,\"default_assignee\":0,\"ctime\":1579423336}', '127.0.0.1', 1579423336),
+(22, 1, '事项', 4, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"4\",\"pkey\":\"example\",\"issue_num\":\"4\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"12166\",\"summary\":\"\\u6d4b\\u8bd5\\u7528\\u4f8b\",\"description\":\"\\u6839\\u636e\\u539f\\u578b\\u8bbe\\u8ba1\\u8fdb\\u884c\\u6d4b\\u8bd5\\u7528\\u4f8b\\u7684\\u7f16\\u5199\\r\\n\",\"environment\":\"\",\"priority\":\"2\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1579423320\",\"updated\":\"1579423320\",\"start_date\":\"2020-01-19\",\"due_date\":\"2020-01-24\",\"duration\":\"5\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_proj_sprint_weight\":\"0\",\"gant_proj_module_weight\":\"0\",\"gant_sprint_weight\":\"0\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '{\"id\":\"4\",\"pkey\":\"example\",\"issue_num\":\"4\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12166\",\"summary\":\"\\u6d4b\\u8bd5\\u7528\\u4f8b\",\"description\":\"\\u6839\\u636e\\u539f\\u578b\\u8bbe\\u8ba1\\u8fdb\\u884c\\u6d4b\\u8bd5\\u7528\\u4f8b\\u7684\\u7f16\\u5199\\r\\n\",\"environment\":\"\",\"priority\":\"2\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1579423320\",\"updated\":\"1579423320\",\"start_date\":\"2020-01-19\",\"due_date\":\"2020-01-24\",\"duration\":\"5\",\"resolve_date\":null,\"module\":\"6\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_proj_sprint_weight\":\"0\",\"gant_proj_module_weight\":\"0\",\"gant_sprint_weight\":\"0\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '127.0.0.1', 1579423346),
+(23, 1, '事项', 4, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"4\",\"pkey\":\"example\",\"issue_num\":\"4\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12166\",\"summary\":\"\\u6d4b\\u8bd5\\u7528\\u4f8b\",\"description\":\"\\u6839\\u636e\\u539f\\u578b\\u8bbe\\u8ba1\\u8fdb\\u884c\\u6d4b\\u8bd5\\u7528\\u4f8b\\u7684\\u7f16\\u5199\\r\\n\",\"environment\":\"\",\"priority\":\"2\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1579423320\",\"updated\":\"1579423320\",\"start_date\":\"2020-01-19\",\"due_date\":\"2020-01-24\",\"duration\":\"5\",\"resolve_date\":null,\"module\":\"6\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_proj_sprint_weight\":\"100000\",\"gant_proj_module_weight\":\"0\",\"gant_sprint_weight\":\"0\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '{\"id\":\"4\",\"pkey\":\"example\",\"issue_num\":\"4\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12166\",\"summary\":\"\\u6d4b\\u8bd5\\u7528\\u4f8b\",\"description\":\"\\u6839\\u636e\\u539f\\u578b\\u8bbe\\u8ba1\\u8fdb\\u884c\\u6d4b\\u8bd5\\u7528\\u4f8b\\u7684\\u7f16\\u5199\\r\\n\",\"environment\":\"\",\"priority\":\"2\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1579423320\",\"updated\":\"1579423320\",\"start_date\":\"2020-01-19\",\"due_date\":\"2020-01-24\",\"duration\":\"5\",\"resolve_date\":null,\"module\":\"6\",\"milestone\":null,\"sprint\":1,\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_proj_sprint_weight\":\"100000\",\"gant_proj_module_weight\":\"0\",\"gant_sprint_weight\":\"0\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '127.0.0.1', 1579423447);
 
 -- --------------------------------------------------------
 
@@ -1268,7 +1268,7 @@ CREATE TABLE `log_runtime_error` (
   `date` date NOT NULL,
   `err` varchar(32) NOT NULL DEFAULT '',
   `errstr` varchar(255) NOT NULL DEFAULT ''
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1288,7 +1288,7 @@ CREATE TABLE `main_action` (
   `updateauthor` varchar(255) DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
   `actionnum` decimal(18,0) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1306,7 +1306,7 @@ CREATE TABLE `main_activity` (
   `title` varchar(128) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `time` int(11) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_activity`
@@ -1325,7 +1325,13 @@ INSERT INTO `main_activity` (`id`, `user_id`, `project_id`, `action`, `type`, `o
 (10, 1, 0, '更新了资料', 'user', 1, 'Master', '2020-01-17', 1579249493),
 (11, 1, 1, '创建了事项', 'issue', 1, '数据库设计', '2020-01-17', 1579249719),
 (12, 1, 1, '创建了事项', 'issue', 2, '服务器端开发框架设计', '2020-01-17', 1579250062),
-(13, 1, 1, '更新了事项', 'issue', 2, '服务器端开发框架设计', '2020-01-17', 1579250089);
+(13, 1, 1, '更新了事项', 'issue', 2, '服务器端开发框架设计', '2020-01-17', 1579250089),
+(14, 1, 1, '创建了事项', 'issue', 3, 'UI设计', '2020-01-19', 1579423228),
+(15, 1, 1, '更新了事项', 'issue', 3, 'UI设计', '2020-01-19', 1579423252),
+(16, 1, 1, '创建了事项', 'issue', 4, '测试用例', '2020-01-19', 1579423320),
+(17, 1, 1, '创建了模块', 'project', 6, '测试', '2020-01-19', 1579423336),
+(18, 1, 1, '更新了事项', 'issue', 4, '测试用例', '2020-01-19', 1579423346),
+(19, 1, 1, '更新了事项', 'issue', 4, '测试用例', '2020-01-19', 1579423447);
 
 -- --------------------------------------------------------
 
@@ -1339,7 +1345,7 @@ CREATE TABLE `main_announcement` (
   `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0为禁用,1为发布中',
   `flag` int(11) DEFAULT '0' COMMENT '每次发布将自增该字段',
   `expire_time` int(11) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_announcement`
@@ -1359,7 +1365,7 @@ CREATE TABLE `main_cache_key` (
   `module` varchar(64) DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
   `expire` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_cache_key`
@@ -1371,6 +1377,7 @@ INSERT INTO `main_cache_key` (`key`, `module`, `datetime`, `expire`) VALUES
 ('dict/label/getAll/0,*', 'dict/label', '2020-01-24 16:34:32', 1579854872),
 ('dict/main/getAll/0,*', 'dict/main', '2020-01-24 16:19:53', 1579853993),
 ('dict/main/getAll/1,*', 'dict/main', '2020-01-24 16:28:39', 1579854519),
+('dict/sprint/getItemById/1', 'dict/sprint', '2020-01-26 10:58:31', 1580007511),
 ('dict/type/getAll/0,*', 'dict/type', '2020-01-24 16:19:53', 1579853993),
 ('dict/type_scheme/getAll/1,*', 'dict/type_scheme', '2020-01-24 15:08:11', 1579849691),
 ('dict/workflow_scheme/getAll/1,*', 'dict/workflow_scheme', '2020-01-24 15:08:22', 1579849702),
@@ -1392,7 +1399,7 @@ CREATE TABLE `main_eventtype` (
   `name` varchar(255) DEFAULT NULL,
   `description` text,
   `event_type` varchar(60) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_eventtype`
@@ -1432,7 +1439,7 @@ CREATE TABLE `main_group` (
   `description` varchar(255) DEFAULT NULL,
   `group_type` varchar(60) DEFAULT NULL,
   `directory_id` decimal(18,0) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_group`
@@ -1459,7 +1466,7 @@ CREATE TABLE `main_mail_queue` (
   `status` varchar(10) DEFAULT NULL,
   `create_time` int(11) UNSIGNED DEFAULT NULL,
   `error` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_mail_queue`
@@ -1469,7 +1476,12 @@ INSERT INTO `main_mail_queue` (`id`, `seq`, `title`, `address`, `status`, `creat
 (1, '1579249186992', '[default/example] 新增迭代 #1 1.0迭代', 'master@masterlab.vip;json@masterlab.vip;shelly@masterlab.vip;Alex@masterlab.vip;Max@masterlab.vip;sandy@masterlab.vip', 'error', 1579249187, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
 (2, '1579249719062', '[default/example] 事项创建 #example1 数据库设计', 'master@masterlab.vip;json@masterlab.vip', 'error', 1579249720, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
 (3, '1579250062050', '[default/example] 事项创建 #example2 服务器端开发框架设计', 'master@masterlab.vip;json@masterlab.vip', 'error', 1579250063, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
-(4, '1579250089575', '[default/example] 事项更新 #example2 服务器端开发框架设计', 'master@masterlab.vip;json@masterlab.vip', 'error', 1579250090, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n');
+(4, '1579250089575', '[default/example] 事项更新 #example2 服务器端开发框架设计', 'master@masterlab.vip;json@masterlab.vip', 'error', 1579250090, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(5, '1579423228667', '[default/example] 事项创建 #example3 UI设计', 'master@masterlab.vip;sandy@masterlab.vip', 'error', 1579423229, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(6, '1579423252856', '[default/example] 事项更新 #example3 UI设计', 'master@masterlab.vip;sandy@masterlab.vip', 'error', 1579423253, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(7, '1579423320068', '[default/example] 事项创建 #example4 测试用例', 'master@masterlab.vip;Alex@masterlab.vip', 'error', 1579423321, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(8, '1579423346324', '[default/example] 事项更新 #example4 测试用例', 'master@masterlab.vip;Alex@masterlab.vip', 'error', 1579423347, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(9, '1579423447160', '[default/example] 事项更新 #example4 测试用例', 'master@masterlab.vip;Alex@masterlab.vip', 'error', 1579423448, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n');
 
 -- --------------------------------------------------------
 
@@ -1479,9 +1491,9 @@ INSERT INTO `main_mail_queue` (`id`, `seq`, `title`, `address`, `status`, `creat
 
 CREATE TABLE `main_notify_scheme` (
   `id` int(11) NOT NULL,
-  `name` varchar(20)  NOT NULL,
+  `name` varchar(20) NOT NULL,
   `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_notify_scheme`
@@ -1499,10 +1511,10 @@ INSERT INTO `main_notify_scheme` (`id`, `name`, `is_system`) VALUES
 CREATE TABLE `main_notify_scheme_data` (
   `id` int(11) UNSIGNED NOT NULL,
   `scheme_id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(20)  NOT NULL,
-  `flag` varchar(128)  DEFAULT NULL,
-  `user` varchar(1024)  NOT NULL DEFAULT '[]' COMMENT '项目成员,经办人,报告人,关注人'
-) ENGINE=InnoDB ;
+  `name` varchar(20) NOT NULL,
+  `flag` varchar(128) DEFAULT NULL,
+  `user` varchar(1024) NOT NULL DEFAULT '[]' COMMENT '项目成员,经办人,报告人,关注人'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_notify_scheme_data`
@@ -1538,7 +1550,7 @@ CREATE TABLE `main_org` (
   `created` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `updated` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `scope` tinyint(2) NOT NULL DEFAULT '1' COMMENT '1 private, 2 internal , 3 public'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_org`
@@ -1565,7 +1577,7 @@ CREATE TABLE `main_setting` (
   `form_input_type` enum('datetime','date','textarea','select','checkbox','radio','img','color','file','int','number','text') DEFAULT 'text' COMMENT '表单项类型',
   `form_optional_value` varchar(5000) DEFAULT NULL COMMENT '待选的值定义,为json格式',
   `description` varchar(200) DEFAULT ''
-) ENGINE=InnoDB   COMMENT='系统配置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统配置表';
 
 --
 -- 转存表中的数据 `main_setting`
@@ -1635,7 +1647,7 @@ CREATE TABLE `main_timeline` (
   `content` text NOT NULL,
   `content_html` text NOT NULL,
   `time` int(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1645,19 +1657,19 @@ CREATE TABLE `main_timeline` (
 
 CREATE TABLE `main_widget` (
   `id` int(11) NOT NULL COMMENT '主键id',
-  `name` varchar(255)  DEFAULT NULL COMMENT '工具名称',
-  `_key` varchar(64)  NOT NULL,
-  `method` varchar(64)  NOT NULL DEFAULT '',
-  `module` varchar(20)  NOT NULL,
-  `pic` varchar(255)  NOT NULL,
-  `type` enum('list','chart_line','chart_pie','chart_bar','text')  DEFAULT NULL COMMENT '工具类型',
+  `name` varchar(255) DEFAULT NULL COMMENT '工具名称',
+  `_key` varchar(64) NOT NULL,
+  `method` varchar(64) NOT NULL DEFAULT '',
+  `module` varchar(20) NOT NULL,
+  `pic` varchar(255) NOT NULL,
+  `type` enum('list','chart_line','chart_pie','chart_bar','text') DEFAULT NULL COMMENT '工具类型',
   `status` tinyint(2) DEFAULT '1' COMMENT '状态（1可用，0不可用）',
   `is_default` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `required_param` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否需要参数才能获取数据',
-  `description` varchar(512)  DEFAULT '' COMMENT '描述',
-  `parameter` varchar(1024)  NOT NULL DEFAULT '{}' COMMENT '支持的参数说明',
+  `description` varchar(512) DEFAULT '' COMMENT '描述',
+  `parameter` varchar(1024) NOT NULL DEFAULT '{}' COMMENT '支持的参数说明',
   `order_weight` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `main_widget`
@@ -1699,20 +1711,20 @@ CREATE TABLE `mind_issue_attribute` (
   `id` int(11) UNSIGNED NOT NULL,
   `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `issue_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `source` varchar(20)  NOT NULL DEFAULT '',
-  `group_by` varchar(20)  NOT NULL DEFAULT '',
-  `layout` varchar(20)  NOT NULL DEFAULT '',
-  `shape` varchar(20)  NOT NULL DEFAULT '',
-  `color` varchar(20)  NOT NULL DEFAULT '',
-  `icon` varchar(64)  NOT NULL DEFAULT '',
-  `font_family` varchar(32)  NOT NULL DEFAULT '',
+  `source` varchar(20) NOT NULL DEFAULT '',
+  `group_by` varchar(20) NOT NULL DEFAULT '',
+  `layout` varchar(20) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `color` varchar(20) NOT NULL DEFAULT '',
+  `icon` varchar(64) NOT NULL DEFAULT '',
+  `font_family` varchar(32) NOT NULL DEFAULT '',
   `font_size` tinyint(2) NOT NULL DEFAULT '1',
   `font_bold` tinyint(1) NOT NULL DEFAULT '0',
   `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16)  NOT NULL,
-  `text_color` varchar(32)  NOT NULL,
-  `side` varchar(16)  NOT NULL
-) ENGINE=InnoDB ;
+  `bg_color` varchar(16) NOT NULL,
+  `text_color` varchar(32) NOT NULL,
+  `side` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `mind_issue_attribute`
@@ -1740,18 +1752,18 @@ INSERT INTO `mind_issue_attribute` (`id`, `project_id`, `issue_id`, `source`, `g
 CREATE TABLE `mind_project_attribute` (
   `id` int(11) UNSIGNED NOT NULL,
   `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `layout` varchar(20)  NOT NULL DEFAULT '',
-  `shape` varchar(20)  NOT NULL DEFAULT '',
-  `color` varchar(20)  NOT NULL DEFAULT '',
-  `icon` varchar(64)  NOT NULL DEFAULT '',
-  `font_family` varchar(32)  NOT NULL DEFAULT '',
+  `layout` varchar(20) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `color` varchar(20) NOT NULL DEFAULT '',
+  `icon` varchar(64) NOT NULL DEFAULT '',
+  `font_family` varchar(32) NOT NULL DEFAULT '',
   `font_size` tinyint(2) NOT NULL DEFAULT '1',
   `font_bold` tinyint(1) NOT NULL DEFAULT '0',
   `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16)  NOT NULL,
-  `text_color` varchar(16)  NOT NULL,
-  `side` varchar(16)  NOT NULL
-) ENGINE=InnoDB ;
+  `bg_color` varchar(16) NOT NULL,
+  `text_color` varchar(16) NOT NULL,
+  `side` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `mind_project_attribute`
@@ -1769,21 +1781,21 @@ INSERT INTO `mind_project_attribute` (`id`, `project_id`, `layout`, `shape`, `co
 CREATE TABLE `mind_second_attribute` (
   `id` int(11) UNSIGNED NOT NULL,
   `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `source` varchar(20)  NOT NULL DEFAULT '',
-  `group_by` varchar(20)  NOT NULL DEFAULT '',
-  `group_by_id` varchar(20)  NOT NULL DEFAULT '',
-  `layout` varchar(20)  NOT NULL DEFAULT '',
-  `shape` varchar(20)  NOT NULL DEFAULT '',
-  `color` varchar(20)  NOT NULL DEFAULT '',
-  `icon` varchar(64)  NOT NULL DEFAULT '',
-  `font_family` varchar(32)  NOT NULL DEFAULT '',
+  `source` varchar(20) NOT NULL DEFAULT '',
+  `group_by` varchar(20) NOT NULL DEFAULT '',
+  `group_by_id` varchar(20) NOT NULL DEFAULT '',
+  `layout` varchar(20) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `color` varchar(20) NOT NULL DEFAULT '',
+  `icon` varchar(64) NOT NULL DEFAULT '',
+  `font_family` varchar(32) NOT NULL DEFAULT '',
   `font_size` tinyint(2) NOT NULL DEFAULT '1',
   `font_bold` tinyint(1) NOT NULL DEFAULT '0',
   `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16)  NOT NULL,
-  `text_color` varchar(16)  NOT NULL,
-  `side` varchar(16)  NOT NULL
-) ENGINE=InnoDB ;
+  `bg_color` varchar(16) NOT NULL,
+  `text_color` varchar(16) NOT NULL,
+  `side` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `mind_second_attribute`
@@ -1800,10 +1812,10 @@ INSERT INTO `mind_second_attribute` (`id`, `project_id`, `source`, `group_by`, `
 (29, 3, '44', 'module', '7', '', '', '', '', '', 1, 0, 0, '', '#000000', ''),
 (33, 1, 'all', 'sprint', '0', '', '', '', '', '', 1, 0, 0, '', '#000000', ''),
 (34, 1, '1', 'module', '2', '', '', '', '', '', 1, 0, 0, '', '#000000', ''),
-(35, 1, '1', 'module', '1', '', '', '', '', '', 1, 0, 0, '', '#000000', ''),
 (36, 1, '1', 'module', '3', '', '', '', '', '', 1, 0, 0, '', '#000000', ''),
 (37, 1, '1', 'module', '4', '', '', '', '', '', 1, 0, 0, '', '#000000', ''),
-(38, 1, '1', 'module', '5', '', '', '', '', '', 1, 0, 0, '', '#000000', '');
+(38, 1, '1', 'module', '5', '', '', '', '', '', 1, 0, 0, '', '#000000', ''),
+(39, 1, '1', 'module', '1', '', '', '', '', '', 1, 0, 0, '', '#000000', '');
 
 -- --------------------------------------------------------
 
@@ -1814,18 +1826,18 @@ INSERT INTO `mind_second_attribute` (`id`, `project_id`, `source`, `group_by`, `
 CREATE TABLE `mind_sprint_attribute` (
   `id` int(11) UNSIGNED NOT NULL,
   `sprint_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `layout` varchar(20)  NOT NULL DEFAULT '',
-  `shape` varchar(20)  NOT NULL DEFAULT '',
-  `color` varchar(20)  NOT NULL DEFAULT '',
-  `icon` varchar(64)  NOT NULL DEFAULT '',
-  `font_family` varchar(32)  NOT NULL DEFAULT '',
+  `layout` varchar(20) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `color` varchar(20) NOT NULL DEFAULT '',
+  `icon` varchar(64) NOT NULL DEFAULT '',
+  `font_family` varchar(32) NOT NULL DEFAULT '',
   `font_size` tinyint(2) NOT NULL DEFAULT '1',
   `font_bold` tinyint(1) NOT NULL DEFAULT '0',
   `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16)  NOT NULL,
-  `text_color` varchar(16)  NOT NULL,
-  `side` varchar(16)  NOT NULL
-) ENGINE=InnoDB ;
+  `bg_color` varchar(16) NOT NULL,
+  `text_color` varchar(16) NOT NULL,
+  `side` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `mind_sprint_attribute`
@@ -1846,7 +1858,7 @@ CREATE TABLE `permission` (
   `name` varchar(64) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `_key` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `permission`
@@ -1881,7 +1893,7 @@ CREATE TABLE `permission_default_role` (
   `name` varchar(64) DEFAULT NULL,
   `description` varchar(256) DEFAULT NULL,
   `project_id` int(11) UNSIGNED DEFAULT '0' COMMENT '如果为0表示系统初始化的角色，不为0表示某一项目特有的角色'
-) ENGINE=InnoDB   COMMENT='项目角色表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目角色表';
 
 --
 -- 转存表中的数据 `permission_default_role`
@@ -1904,7 +1916,7 @@ CREATE TABLE `permission_default_role_relation` (
   `id` int(11) UNSIGNED NOT NULL,
   `role_id` int(11) UNSIGNED DEFAULT NULL,
   `perm_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `permission_default_role_relation`
@@ -1961,7 +1973,7 @@ CREATE TABLE `permission_global` (
   `name` varchar(64) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `_key` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB   ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- 转存表中的数据 `permission_global`
@@ -1984,7 +1996,7 @@ CREATE TABLE `permission_global_group` (
   `id` int(11) UNSIGNED NOT NULL,
   `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
   `group_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `permission_global_group`
@@ -2001,10 +2013,10 @@ INSERT INTO `permission_global_group` (`id`, `perm_global_id`, `group_id`) VALUE
 
 CREATE TABLE `permission_global_role` (
   `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(40)   DEFAULT NULL,
-  `description` varchar(255)   DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `permission_global_role`
@@ -2029,7 +2041,7 @@ CREATE TABLE `permission_global_role_relation` (
   `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
   `role_id` int(11) UNSIGNED DEFAULT NULL,
   `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否系统自带'
-) ENGINE=InnoDB   COMMENT='用户组拥有的全局权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户组拥有的全局权限';
 
 --
 -- 转存表中的数据 `permission_global_role_relation`
@@ -2052,7 +2064,7 @@ CREATE TABLE `permission_global_user_role` (
   `id` int(11) UNSIGNED NOT NULL,
   `user_id` int(11) UNSIGNED DEFAULT '0',
   `role_id` int(11) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB   ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- 转存表中的数据 `permission_global_user_role`
@@ -2072,7 +2084,7 @@ CREATE TABLE `project_category` (
   `name` varchar(255) DEFAULT NULL,
   `description` text,
   `color` varchar(20) DEFAULT ''
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2086,7 +2098,14 @@ CREATE TABLE `project_flag` (
   `flag` varchar(64) NOT NULL,
   `value` text NOT NULL,
   `update_time` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `project_flag`
+--
+
+INSERT INTO `project_flag` (`id`, `project_id`, `flag`, `value`, `update_time`) VALUES
+(1, 1, 'sprint_1_weight', '{\"2\":200000,\"1\":100000}', 1579402711);
 
 -- --------------------------------------------------------
 
@@ -2099,7 +2118,7 @@ CREATE TABLE `project_gantt_setting` (
   `project_id` int(11) UNSIGNED DEFAULT NULL,
   `source_type` varchar(20) DEFAULT NULL COMMENT 'project,active_sprint,module 可选',
   `source_from` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB   ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- 转存表中的数据 `project_gantt_setting`
@@ -2129,7 +2148,7 @@ CREATE TABLE `project_issue_report` (
   `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
   `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
   `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2141,7 +2160,7 @@ CREATE TABLE `project_issue_type_scheme_data` (
   `id` int(11) UNSIGNED NOT NULL,
   `issue_type_scheme_id` int(11) UNSIGNED DEFAULT NULL,
   `project_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `project_issue_type_scheme_data`
@@ -2160,7 +2179,7 @@ CREATE TABLE `project_key` (
   `id` decimal(18,0) NOT NULL,
   `project_id` decimal(18,0) DEFAULT NULL,
   `project_key` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2175,7 +2194,7 @@ CREATE TABLE `project_label` (
   `color` varchar(20) NOT NULL,
   `bg_color` varchar(20) NOT NULL DEFAULT '',
   `description` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2188,7 +2207,7 @@ CREATE TABLE `project_list_count` (
   `project_type_id` smallint(5) UNSIGNED DEFAULT NULL,
   `project_total` int(10) UNSIGNED DEFAULT NULL,
   `remark` varchar(50) DEFAULT ''
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2199,16 +2218,16 @@ CREATE TABLE `project_list_count` (
 CREATE TABLE `project_main` (
   `id` int(10) UNSIGNED NOT NULL,
   `org_id` int(11) NOT NULL DEFAULT '1',
-  `org_path` varchar(64)  NOT NULL DEFAULT '',
-  `name` varchar(64)  DEFAULT NULL,
-  `url` varchar(255)  DEFAULT NULL,
+  `org_path` varchar(64) NOT NULL DEFAULT '',
+  `name` varchar(64) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
   `lead` int(11) UNSIGNED DEFAULT '0',
-  `description` varchar(2000)  DEFAULT NULL,
-  `key` varchar(20)  DEFAULT NULL,
+  `description` varchar(2000) DEFAULT NULL,
+  `key` varchar(20) DEFAULT NULL,
   `pcounter` decimal(18,0) DEFAULT NULL,
   `default_assignee` int(11) UNSIGNED DEFAULT '0',
   `assignee_type` int(11) DEFAULT NULL,
-  `avatar` varchar(255)  DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
   `category` int(11) UNSIGNED DEFAULT NULL,
   `type` tinyint(2) DEFAULT '1',
   `type_child` tinyint(2) DEFAULT '0',
@@ -2219,7 +2238,7 @@ CREATE TABLE `project_main` (
   `un_done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '未完成事项数',
   `done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '已经完成事项数',
   `closed_count` int(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ;
 
 --
 -- 转存表中的数据 `project_main`
@@ -2238,7 +2257,7 @@ CREATE TABLE `project_main_extra` (
   `id` int(10) UNSIGNED NOT NULL,
   `project_id` int(10) UNSIGNED DEFAULT '0',
   `detail` text
-) ENGINE=InnoDB  ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 --
 -- 转存表中的数据 `project_main_extra`
@@ -2256,9 +2275,9 @@ INSERT INTO `project_main_extra` (`id`, `project_id`, `detail`) VALUES
 CREATE TABLE `project_mind_setting` (
   `id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
-  `setting_key` varchar(32)  NOT NULL,
-  `setting_value` varchar(64)  NOT NULL
-) ENGINE=InnoDB ;
+  `setting_key` varchar(32) NOT NULL,
+  `setting_value` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `project_mind_setting`
@@ -2285,7 +2304,7 @@ CREATE TABLE `project_module` (
   `default_assignee` int(11) UNSIGNED DEFAULT NULL,
   `ctime` int(10) UNSIGNED DEFAULT '0',
   `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `project_module`
@@ -2296,7 +2315,8 @@ INSERT INTO `project_module` (`id`, `project_id`, `name`, `description`, `lead`,
 (2, 1, '前端架构', '', 0, 0, 1579249118, 0),
 (3, 1, '用户', '', 0, 0, 1579249127, 0),
 (4, 1, '首页', '', 0, 0, 1579249131, 0),
-(5, 1, '引擎', '', 0, 0, 1579249144, 0);
+(5, 1, '引擎', '', 0, 0, 1579249144, 0),
+(6, 1, '测试', '', 0, 0, 1579423336, 0);
 
 -- --------------------------------------------------------
 
@@ -2310,7 +2330,7 @@ CREATE TABLE `project_permission` (
   `name` varchar(64) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `_key` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB   ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- 转存表中的数据 `project_permission`
@@ -2346,7 +2366,7 @@ CREATE TABLE `project_role` (
   `name` varchar(40) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `project_role`
@@ -2370,7 +2390,7 @@ CREATE TABLE `project_role_relation` (
   `project_id` int(11) UNSIGNED DEFAULT NULL,
   `role_id` int(11) UNSIGNED DEFAULT NULL,
   `perm_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `project_role_relation`
@@ -2426,7 +2446,7 @@ CREATE TABLE `project_user_role` (
   `user_id` int(11) UNSIGNED DEFAULT '0',
   `project_id` int(11) UNSIGNED DEFAULT '0',
   `role_id` int(11) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `project_user_role`
@@ -2458,7 +2478,7 @@ CREATE TABLE `project_version` (
   `url` varchar(255) DEFAULT NULL,
   `start_date` int(10) UNSIGNED DEFAULT NULL,
   `release_date` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2472,7 +2492,7 @@ CREATE TABLE `project_workflows` (
   `creatorname` varchar(255) DEFAULT NULL,
   `descriptor` longtext,
   `islocked` varchar(60) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2484,7 +2504,7 @@ CREATE TABLE `project_workflow_status` (
   `id` decimal(18,0) NOT NULL,
   `status` varchar(255) DEFAULT NULL,
   `parentname` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2504,7 +2524,7 @@ CREATE TABLE `report_project_issue` (
   `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
   `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
   `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2524,7 +2544,7 @@ CREATE TABLE `report_sprint_issue` (
   `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
   `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
   `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2538,7 +2558,7 @@ CREATE TABLE `service_config` (
   `clazz` varchar(255) DEFAULT NULL,
   `servicename` varchar(255) DEFAULT NULL,
   `cron_expression` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB  ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -2556,7 +2576,7 @@ CREATE TABLE `user_application` (
   `description` varchar(255) DEFAULT NULL,
   `application_type` varchar(255) DEFAULT NULL,
   `credential` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `user_application`
@@ -2578,7 +2598,7 @@ CREATE TABLE `user_attributes` (
   `attribute_name` varchar(255) DEFAULT NULL,
   `attribute_value` varchar(255) DEFAULT NULL,
   `lower_attribute_value` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2593,7 +2613,7 @@ CREATE TABLE `user_email_active` (
   `uid` int(11) UNSIGNED NOT NULL,
   `verify_code` varchar(32) NOT NULL,
   `time` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2606,7 +2626,7 @@ CREATE TABLE `user_email_find_password` (
   `uid` int(11) UNSIGNED NOT NULL,
   `verify_code` varchar(32) NOT NULL,
   `time` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2623,7 +2643,7 @@ CREATE TABLE `user_email_token` (
   `created_at` int(10) UNSIGNED NOT NULL,
   `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT '1-有效，0-无效',
   `used_model` varchar(255) NOT NULL DEFAULT '' COMMENT '用于哪个模型或功能'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2635,7 +2655,7 @@ CREATE TABLE `user_group` (
   `id` int(11) UNSIGNED NOT NULL,
   `uid` int(11) UNSIGNED DEFAULT NULL,
   `group_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `user_group`
@@ -2656,7 +2676,7 @@ CREATE TABLE `user_ip_login_times` (
   `ip` varchar(20) NOT NULL DEFAULT '',
   `times` int(11) NOT NULL DEFAULT '0',
   `up_time` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2668,8 +2688,8 @@ CREATE TABLE `user_issue_display_fields` (
   `id` int(11) NOT NULL,
   `user_id` int(11) UNSIGNED NOT NULL,
   `project_id` int(11) UNSIGNED NOT NULL,
-  `fields` varchar(512)  NOT NULL
-) ENGINE=InnoDB ;
+  `fields` varchar(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `user_issue_display_fields`
@@ -2692,7 +2712,14 @@ CREATE TABLE `user_login_log` (
   `uid` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `time` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `ip` varchar(24) NOT NULL DEFAULT ''
-) ENGINE=InnoDB   COMMENT='登录日志表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录日志表';
+
+--
+-- 转存表中的数据 `user_login_log`
+--
+
+INSERT INTO `user_login_log` (`id`, `session_id`, `token`, `uid`, `time`, `ip`) VALUES
+(1, 'kprv8i9pdu6in7cmqqoh5qhk55', '', 1, 1579402672, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -2727,14 +2754,14 @@ CREATE TABLE `user_main` (
   `login_counter` int(11) UNSIGNED DEFAULT '0' COMMENT '登录次数',
   `title` varchar(32) DEFAULT NULL,
   `sign` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `user_main`
 --
 
 INSERT INTO `user_main` (`uid`, `directory_id`, `phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`, `update_time`, `avatar`, `source`, `ios_token`, `android_token`, `version`, `token`, `last_login_time`, `is_system`, `login_counter`, `title`, `sign`) VALUES
-(1, 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', 'master@masterlab.vip', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 1, '2019-01-13', 0, 0, 'avatar/1.png?t=1579249493', '', NULL, NULL, NULL, NULL, 1579236329, 0, 0, '管理员', '~~~交付卓越产品!'),
+(1, 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', 'master@masterlab.vip', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 1, '2019-01-13', 0, 0, 'avatar/1.png?t=1579249493', '', NULL, NULL, NULL, NULL, 1579402672, 0, 0, '管理员', '~~~交付卓越产品!'),
 (12164, NULL, NULL, 'json', '87655dd189dc13a7eb36f62a3a8eed4c', 1, NULL, NULL, 'Json', 'json@masterlab.vip', '$2y$10$hW2HeFe4kUO/IDxGW5A68e7r.sERM6.VtP3VrYLXeyHVb0ZjXo2Sm', 0, NULL, 1579247721, 0, 'avatar/12164.png?t=1579247721', '', NULL, NULL, NULL, '', 0, 0, 0, 'Java开发工程师', NULL),
 (12165, NULL, NULL, 'shelly', '74eb77b447ad46f0ba76dba8de3e8489', 1, NULL, NULL, 'Shelly', 'shelly@masterlab.vip', '$2y$10$RXindYr74f9I1GyaGtovE.KgD6pgcjE6Z9SZyqLO9UykzImG6n2kS', 0, NULL, 1579247769, 0, 'avatar/12165.png?t=1579247769', '', NULL, NULL, NULL, '', 0, 0, 0, '软件测试工程师', NULL),
 (12166, NULL, NULL, 'alex', '22778739b6553330c4f9e8a29d0e1d5f', 1, NULL, NULL, 'Alex', 'Alex@masterlab.vip', '$2y$10$ENToGF7kfUrXm0i6DISJ6utmjq076tSCaVuEyeqQRdQocgUwxZKZ6', 0, NULL, 1579247886, 0, 'avatar/12166.png?t=1579247886', '', NULL, NULL, NULL, '', 0, 0, 0, '产品经理', NULL),
@@ -2758,7 +2785,7 @@ CREATE TABLE `user_message` (
   `readed` tinyint(1) UNSIGNED NOT NULL,
   `type` tinyint(2) UNSIGNED NOT NULL,
   `create_time` int(11) UNSIGNED NOT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2769,7 +2796,7 @@ CREATE TABLE `user_message` (
 CREATE TABLE `user_password` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `hash` varchar(72) DEFAULT '' COMMENT 'password_hash()值'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2780,7 +2807,7 @@ CREATE TABLE `user_password` (
 CREATE TABLE `user_password_strategy` (
   `id` int(1) UNSIGNED NOT NULL,
   `strategy` tinyint(1) UNSIGNED DEFAULT NULL COMMENT '1允许所有密码;2不允许非常简单的密码;3要求强密码  关于安全密码策略'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `user_password_strategy`
@@ -2800,7 +2827,7 @@ CREATE TABLE `user_phone_find_password` (
   `phone` varchar(20) NOT NULL,
   `verify_code` varchar(128) NOT NULL DEFAULT '',
   `time` int(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB   COMMENT='找回密码表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='找回密码表';
 
 -- --------------------------------------------------------
 
@@ -2812,15 +2839,17 @@ CREATE TABLE `user_posted_flag` (
   `id` int(11) NOT NULL,
   `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `_date` date NOT NULL,
-  `ip` varchar(32)  NOT NULL
-) ENGINE=InnoDB ;
+  `ip` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `user_posted_flag`
 --
 
 INSERT INTO `user_posted_flag` (`id`, `user_id`, `_date`, `ip`) VALUES
-(1, 1, '2020-01-17', '127.0.0.1');
+(2, 0, '2020-01-19', '127.0.0.1'),
+(1, 1, '2020-01-17', '127.0.0.1'),
+(3, 1, '2020-01-19', '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -2832,7 +2861,7 @@ CREATE TABLE `user_refresh_token` (
   `uid` int(10) UNSIGNED NOT NULL,
   `refresh_token` varchar(256) NOT NULL,
   `expire` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB   COMMENT='用户刷新的token表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户刷新的token表';
 
 -- --------------------------------------------------------
 
@@ -2845,7 +2874,7 @@ CREATE TABLE `user_setting` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `_key` varchar(64) DEFAULT NULL,
   `_value` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `user_setting`
@@ -2873,7 +2902,14 @@ CREATE TABLE `user_token` (
   `token_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'token过期时间',
   `refresh_token` varchar(255) NOT NULL DEFAULT '' COMMENT '刷新token',
   `refresh_token_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '刷新token过期时间'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `user_token`
+--
+
+INSERT INTO `user_token` (`id`, `uid`, `token`, `token_time`, `refresh_token`, `refresh_token_time`) VALUES
+(1, 1, '5eb95116dd7b1eb350c36d946ff05406d577f1ce9f04b405a5df223412471be6', 1579402672, '1b1feb4d5bb574d525aed57a5d40cff25b3eb0f3d2246b922f5b1a7759aa70a4', 1579402672);
 
 -- --------------------------------------------------------
 
@@ -2886,10 +2922,10 @@ CREATE TABLE `user_widget` (
   `user_id` int(11) UNSIGNED NOT NULL COMMENT '用户id',
   `widget_id` int(11) NOT NULL COMMENT 'main_widget主键id',
   `order_weight` int(11) UNSIGNED DEFAULT NULL COMMENT '工具顺序',
-  `panel` varchar(40)  NOT NULL,
-  `parameter` varchar(1024)  NOT NULL,
+  `panel` varchar(40) NOT NULL,
+  `parameter` varchar(1024) NOT NULL,
   `is_saved_parameter` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否保存了过滤参数'
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `user_widget`
@@ -2923,7 +2959,7 @@ CREATE TABLE `workflow` (
   `steps` tinyint(2) UNSIGNED DEFAULT NULL,
   `data` text,
   `is_system` tinyint(1) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `workflow`
@@ -2948,7 +2984,7 @@ CREATE TABLE `workflow_block` (
   `position_x` smallint(4) UNSIGNED DEFAULT NULL,
   `position_y` smallint(4) UNSIGNED DEFAULT NULL,
   `inner_html` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2963,7 +2999,7 @@ CREATE TABLE `workflow_connector` (
   `title` varchar(64) DEFAULT NULL,
   `source_id` varchar(64) DEFAULT NULL,
   `target_id` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2976,7 +3012,7 @@ CREATE TABLE `workflow_scheme` (
   `name` varchar(128) DEFAULT NULL,
   `description` varchar(256) DEFAULT NULL,
   `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `workflow_scheme`
@@ -2999,7 +3035,7 @@ CREATE TABLE `workflow_scheme_data` (
   `scheme_id` int(11) UNSIGNED DEFAULT NULL,
   `issue_type_id` int(11) UNSIGNED DEFAULT NULL,
   `workflow_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB  ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `workflow_scheme_data`
@@ -3214,7 +3250,8 @@ ALTER TABLE `issue_main` ADD FULLTEXT KEY `issue_num` (`issue_num`);
 -- 表的索引 `issue_moved_issue_key`
 --
 ALTER TABLE `issue_moved_issue_key`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `idx_old_issue_key` (`old_issue_key`);
 
 --
 -- 表的索引 `issue_priority`
@@ -3945,7 +3982,7 @@ ALTER TABLE `issue_label_data`
 -- 使用表AUTO_INCREMENT `issue_main`
 --
 ALTER TABLE `issue_main`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `issue_priority`
@@ -3993,13 +4030,13 @@ ALTER TABLE `issue_type_scheme_data`
 -- 使用表AUTO_INCREMENT `issue_ui`
 --
 ALTER TABLE `issue_ui`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1530;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1563;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- 使用表AUTO_INCREMENT `log_base`
@@ -4011,7 +4048,7 @@ ALTER TABLE `log_base`
 -- 使用表AUTO_INCREMENT `log_operating`
 --
 ALTER TABLE `log_operating`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- 使用表AUTO_INCREMENT `log_runtime_error`
@@ -4023,7 +4060,7 @@ ALTER TABLE `log_runtime_error`
 -- 使用表AUTO_INCREMENT `main_activity`
 --
 ALTER TABLE `main_activity`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- 使用表AUTO_INCREMENT `main_group`
@@ -4035,7 +4072,7 @@ ALTER TABLE `main_group`
 -- 使用表AUTO_INCREMENT `main_mail_queue`
 --
 ALTER TABLE `main_mail_queue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- 使用表AUTO_INCREMENT `main_notify_scheme`
@@ -4089,7 +4126,7 @@ ALTER TABLE `mind_project_attribute`
 -- 使用表AUTO_INCREMENT `mind_second_attribute`
 --
 ALTER TABLE `mind_second_attribute`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- 使用表AUTO_INCREMENT `mind_sprint_attribute`
@@ -4128,13 +4165,13 @@ ALTER TABLE `permission_global_group`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- 使用表AUTO_INCREMENT ` `
+-- 使用表AUTO_INCREMENT `permission_global_role`
 --
 ALTER TABLE `permission_global_role`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- 使用表AUTO_INCREMENT ` _relation`
+-- 使用表AUTO_INCREMENT `permission_global_role_relation`
 --
 ALTER TABLE `permission_global_role_relation`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
@@ -4155,7 +4192,7 @@ ALTER TABLE `project_category`
 -- 使用表AUTO_INCREMENT `project_flag`
 --
 ALTER TABLE `project_flag`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `project_gantt_setting`
@@ -4191,7 +4228,7 @@ ALTER TABLE `project_list_count`
 -- 使用表AUTO_INCREMENT `project_main`
 --
 ALTER TABLE `project_main`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_main_extra`
@@ -4209,7 +4246,7 @@ ALTER TABLE `project_mind_setting`
 -- 使用表AUTO_INCREMENT `project_module`
 --
 ALTER TABLE `project_module`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `project_permission`
@@ -4287,7 +4324,7 @@ ALTER TABLE `user_issue_display_fields`
 -- 使用表AUTO_INCREMENT `user_login_log`
 --
 ALTER TABLE `user_login_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `user_main`
@@ -4311,7 +4348,7 @@ ALTER TABLE `user_phone_find_password`
 -- 使用表AUTO_INCREMENT `user_posted_flag`
 --
 ALTER TABLE `user_posted_flag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `user_refresh_token`
@@ -4329,7 +4366,7 @@ ALTER TABLE `user_setting`
 -- 使用表AUTO_INCREMENT `user_token`
 --
 ALTER TABLE `user_token`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `user_widget`
@@ -4367,8 +4404,4 @@ ALTER TABLE `workflow_scheme`
 ALTER TABLE `workflow_scheme_data`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 

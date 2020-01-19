@@ -160,7 +160,7 @@ class Gantt extends BaseUserCtrl
         list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
         if ($ret) {
             $model = new HolidayModel();
-            $model->truncate();
+            $model->deleteByProject($projectId);
             $holidaysArr = json_decode($_POST['holiday_dates'], true);
             foreach ($holidaysArr as $date) {
                 $arr = [];
@@ -170,7 +170,7 @@ class Gantt extends BaseUserCtrl
             }
 
             $model = new ExtraWorkerDayModel();
-            $model->truncate();
+            $model->deleteByProject($projectId);
             $holidaysArr = json_decode($_POST['extra_holiday_dates'], true);
             foreach ($holidaysArr as $date) {
                 $arr = [];

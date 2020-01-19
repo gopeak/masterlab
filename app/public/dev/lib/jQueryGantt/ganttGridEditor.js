@@ -540,7 +540,7 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
             auth_check(resp);
             var issue = resp.data.issue;
             $('#summary').val(issue.summary);
-
+            $('#create_issue_types_select').val(issue.issue_type);
             $('#priority').val(issue.priority);
             $('#gantt_status').val(issue.gantt_status);
             $('#assignee').val(issue.assignee);

@@ -19,7 +19,6 @@ MasterLab是一款简单高效、基于敏捷开发的项目管理工具，以�
 </div>
 
 
-
 ## 功能特点
 - 简单易用,拥有良好的用户体验和扁平化风格
 - 创新的将思维导图和项目事项进行整合，让项目管理更轻松
@@ -32,8 +31,33 @@ MasterLab是一款简单高效、基于敏捷开发的项目管理工具，以�
 - 可定制的状态工作流和界面
 - 直观数据统计和图表，可以随时了解项目和迭代的进展 
 
+
+## **在线演示**
+
+http://demo.masterlab.vip
+账号 master 密码 testtest
+
+
 ## **安装**
- 1. 搭建php的运行环境 ,参考 http://www.masterlab.vip/help.php?md=install  
+ 1. 搭建php的运行环境 
+     ```
+     - Web Server : Nginx 或 Apache
+     
+     - Php
+       - 版本 >= 5.6 
+       - 必备扩展 ：curl,mysqlnd,pdo,mysqli,mbstring
+       - php.ini   修改 upload_max_filesize = 8M
+       - php.ini   修改 post_max_size = 8M
+       - php.ini   修改 memory_limit = 128M  
+       - php.ini   修改 max_execution_time = 30  
+       
+     - Mysql
+       - 版本 >= 5.7
+     
+     -  masterlab\app\storage 目录要求写入权限
+     -  masterlab\app\public\attachment 目录要求写入权限
+     -  masterlab\app\public\install 目录要求写入权限
+     ```
  2. 下载代码，可前往官方网站 http://www.masterlab.vip/download.php 下载最新的完整包 
      或者从 github上克隆代码,github上下载的代码没有包含运行的类库，因此需要使用php的composer工具下载类库 
        ```text
@@ -41,7 +65,7 @@ MasterLab是一款简单高效、基于敏捷开发的项目管理工具，以�
         php composer.phar config -g repo.packagist composer https://mirrors.aliyun.com/composer/
         php composer.phar update
        ```
- 3. 在web服务器添加虚拟主机并绑定到masterlab的 app/public 目录  
+ 3. 在web服务器添加虚拟主机并映射到masterlab的 app/public 目录  
     如果Web服务器是Apache
       ```text
       <VirtualHost *:80>
@@ -127,22 +151,18 @@ MasterLab是一款简单高效、基于敏捷开发的项目管理工具，以�
     chmod +x bin/masterlab_socket
     ./bin/masterlab_socket
     ```
- 6. 访问 /install ,根据提示进行安装  
+ 6. 在浏览器访问 /install ,根据提示进行安装  
  
  
 ## **更多文档**
 http://www.masterlab.vip/help.php
-
-## **在线演示**
-
-http://demo.masterlab.vip
-账号 master 密码 testtest
 
 
 ## 截 图
 ![首页](http://www.masterlab.vip/fireshot/index2.png "首页")
 ![事项列表](http://www.masterlab.vip/fireshot/issue.png "事项列表")
 ![看板](http://www.masterlab.vip/fireshot/kanban.png "看板")
+![WBS](http://www.masterlab.vip/fireshot/wbs.jpg "看板")
 
 
 在使用中有任何问题，请使用以下联系方式联系我们
@@ -150,23 +170,7 @@ http://demo.masterlab.vip
 
 QQ技术支持群: 314155057 https://jq.qq.com/?_wv=1027&k=51oDG9Z
 
-Email: (weichaoduo#163.com, 把#换成@)
 
-
-
-## **特别鸣谢**
-
-感谢以下的项目,排名不分先后
-
-Gitlab：http://www.gitlab.com , v1.0前端我们直接使用Gitlab的UI和交互，在接下来的2.0版本我们使用VUE或AntDesign替换 
-
-Bootstrap：http://getbootstrap.com
-
-jQuery：http://jquery.com
-
-Sweetalert：https://sweetalert.js.org/
-
-... 等
 
 
 

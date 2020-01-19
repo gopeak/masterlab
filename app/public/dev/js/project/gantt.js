@@ -26,7 +26,6 @@ var Gantt = (function () {
         $('#create_issue_types_select').empty();
 
         for (var _key in  issue_types) {
-
             issue_types_select.options.add(new Option(issue_types[_key].name, issue_types[_key].id));
         }
         console.log(issue_types_select);
