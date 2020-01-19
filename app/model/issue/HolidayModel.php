@@ -19,6 +19,11 @@ class HolidayModel extends CacheModel
 
     const   DATA_KEY = 'issue_holiday';
 
+    /**
+     * 获取项目的假期日
+     * @param $projectId
+     * @return array
+     */
     public function getDays($projectId)
     {
         $conditions = ['project_id'=>$projectId];
@@ -28,6 +33,18 @@ class HolidayModel extends CacheModel
             $days[] = $row['day'];
         }
         return $days;
+    }
+
+    /**
+     * 删除项目的数据
+     * @param $projectId
+     * @return int
+     */
+    public function deleteByProject($projectId)
+    {
+        $conditions = ['project_id'=>$projectId];
+        $ret =  $this->delete($conditions);
+        return $ret;
     }
 
 }

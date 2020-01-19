@@ -19,6 +19,11 @@ class ExtraWorkerDayModel extends CacheModel
 
     const   DATA_KEY = 'issue_extra_worker_day';
 
+    /**
+     * 获取项目的额外上班日
+     * @param $projectId
+     * @return array
+     */
     public function getDays($projectId)
     {
         $conditions = ['project_id'=>$projectId];
@@ -28,6 +33,18 @@ class ExtraWorkerDayModel extends CacheModel
             $days[] = $row['day'];
         }
         return $days;
+    }
+
+    /**
+     * 删除项目的数据
+     * @param $projectId
+     * @return int
+     */
+    public function deleteByProject($projectId)
+    {
+        $conditions = ['project_id'=>$projectId];
+        $ret =  $this->delete($conditions);
+        return $ret;
     }
 
 }
