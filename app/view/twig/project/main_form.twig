@@ -70,7 +70,7 @@
 										<label class="control-label" for="">项目名称
 											<i class="required">*</i>
 										</label>
-										<div class="col-sm-4">
+										<div class="col-sm-6">
 											<input placeholder="请输入名称,最多{{project_name_max_length}}字符" class="form-control" type="text" name="params[name]" id="project_name" maxlength="{{project_name_max_length}}">
 											<p id="tip-project_name" class="gl-field-error hide"></p>
 										</div>
@@ -83,7 +83,7 @@
 												<i class="required">*</i>
 											</span>
 										</label>
-										<div class="col-sm-4">
+										<div class="col-sm-6">
 											<div class="select2-container">
 												<select class="selectpicker js-org" data-live-search="true" name="params[org_id]">
 													{% for org in org_list %}
@@ -100,7 +100,7 @@
 											<span>项目Key <i class="required">*</i>
 											</span>
 										</label>
-										<div class="col-sm-4">
+										<div class="col-sm-6">
 											<div class="input-group">
 												<span class="input-group-addon" id="basic-addon3">{{root_domain}}<span class="js-org-key"></span>/
 												</span>
@@ -130,7 +130,7 @@
 											项目类型
 											<i class="required">*</i>
 										</label>
-										<div class="col-sm-4 radio-with">
+										<div class="col-sm-6 radio-with">
 											{% for type_id,type_item in full_type %}
 												<div class="radio">
 													<label>
