@@ -1,12 +1,12 @@
 
-function fetchList(url, tpl_id, render_id, page)
+function fetchList(url, tpl_id, render_id, page, is_archived)
 {
     $.ajax({
         type: "GET",
         dataType: "json",
         async: true,
         url: url,
-        data: "page="+page,
+        data: "page="+page+"&is_archived="+is_archived,
         success: function(resp) {
             auth_check(resp);
             if(resp.data.rows.length){
@@ -20,7 +20,7 @@ function fetchList(url, tpl_id, render_id, page)
                     totalPages: resp.data.pages,
                     onPageClicked: function(e,originalEvent,type,page){
                         console.log("Page item clicked, type: "+type+" page: "+page);
-                        fetchList('/admin/project/filterData', tpl_id, render_id, page);
+                        fetchList('/admin/project/filterData', tpl_id, render_id, page, is_archived);
                     }
                 };
 
@@ -68,3 +68,27 @@ function projectRemove(projectId, projectTypeId)
     });
 }
 
+function projectArchived(projectId)
+{
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        async: true,
+        url: root_url+"admin/project/doArchived",
+        data: "project_id="+projectId,
+        success: function(resp) {
+            auth_check(resp);
+            if (resp.ret == 200) {
+                notify_success('归档成功');
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            } else {
+                notify_error('归档失败: ' + resp.msg);
+            }
+        },
+        error: function(res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
