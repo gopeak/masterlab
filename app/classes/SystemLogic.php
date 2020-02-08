@@ -167,9 +167,9 @@ class SystemLogic
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
             $mail->From = trimStr($config['send_mailer']);
             $mail->FromName = isset($others['from_name']) ? $others['from_name'] : 'Masterlab';
-            if (in_array($mail->Port, [465, 994])) {
+            if (in_array($mail->Port, [465, 994, 995, 993])) {
                 $mail->SMTPSecure = 'ssl';
-            } elseif (in_array($mail->Port, [587])) {
+            } else {
                 $mail->SMTPSecure = 'tls';
             }
 
