@@ -95,6 +95,9 @@ class Org extends BaseUserCtrl
         $projects = $model->getsByOrigin($id);
         foreach ($projects as $key => &$project) {
             $project = ProjectLogic::formatProject($project);
+            if ($project['archived'] == 'Y') {
+                $project['name'] = $project['name'] . ' [已归档]';
+            }
 
             if (!$isAdmin && !in_array($project['id'], $projectIdArr)) {
                 unset($projects[$key]);

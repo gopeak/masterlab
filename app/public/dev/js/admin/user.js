@@ -289,6 +289,7 @@ function userAdd() {
             if (resp.ret === '200') {
                 notify_success(resp.msg, resp.data);
                 //setTimeout("window.location.reload();", 2000)
+                //$('#modal-user_add').modal('hide');
             } else {
                 notify_error('添加失败,' + resp.msg);
             }

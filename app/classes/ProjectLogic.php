@@ -366,7 +366,7 @@ class ProjectLogic
     }
 
     /**
-     * 项目左连接用户表
+     * 未归档项目左连接用户表
      * @return array
      * @throws \Exception
      */
@@ -381,14 +381,37 @@ class ProjectLogic
         $sql = "SELECT {$fields} FROM {$projectTable} p
                 LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
                 LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
-                ORDER BY p.id ASC";
+                WHERE p.archived='N' ORDER BY p.id ASC";
+        //echo $sql;exit;
 
+        return $model->db->getRows($sql);
+    }
+
+    /**
+     * 已归档项目左连接用户表
+     * @return array
+     * @throws \Exception
+     */
+    public function projectListJoinUserArchived()
+    {
+        $model = new ProjectModel();
+        $projectTable = $model->getTable();
+        $userTable = 'user_main';
+
+        $fields = " p.*, u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display ";
+
+        $sql = "SELECT {$fields} FROM {$projectTable} p
+                LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
+                LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
+                WHERE p.archived='Y' ORDER BY p.id ASC";
+        //echo $sql;exit;
         return $model->db->getRows($sql);
     }
 
     /**
      * 获取所有项目的简单信息
      * @return array
+     * @throws \Exception
      */
     public function getAllShortProjects()
     {
@@ -415,11 +438,11 @@ class ProjectLogic
         return $model->db->getRows($sql);
     }
 
-
     /**
      * 格式化项目项的内容
-     * @param array $item
+     * @param $item
      * @return mixed
+     * @throws \Exception
      */
     public static function formatProject($item)
     {
