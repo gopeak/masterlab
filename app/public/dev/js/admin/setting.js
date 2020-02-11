@@ -556,6 +556,32 @@ $(function () {
         });
     });
 
+    $(".btn-save").click(function () {
+
+        var method = 'post';
+        var url = '';
+
+        method =  $(this).closest('form').attr('method') ;
+        url =  $(this).closest('form').attr('action') ;
+        var params = $(this).closest('form').serialize();
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: url,
+            data: params ,
+            success: function (resp) {
+                auth_check(resp);
+                notify_success(resp.msg);
+                setTimeout("window.location.reload();", 2000)
+            },
+            error: function (resp) {
+                notify_error("请求数据错误" + resp);
+            }
+        });
+
+    });
+
     $(".btn-remove").click(function () {
 
         var method = 'post';
