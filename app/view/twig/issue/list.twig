@@ -546,9 +546,11 @@
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="issue_type"
                                                        data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
-                                                        类
-                                                        型
-                                                        {{ sort_field == 'issue_type' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}</a>
+                                                        类型
+                                                        {% if sort_field == 'issue_type' %}
+                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                        {% endif %}
+                                                    </a>
                                                 </th>
                                             {% endif %}
 
