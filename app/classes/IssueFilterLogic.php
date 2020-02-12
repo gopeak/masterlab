@@ -351,12 +351,13 @@ class IssueFilterLogic
 
         $orderBy = 'id';
         if (isset($_GET['sort_field'])) {
-            $orderBy = $_GET['sort_field'];
+            $orderBy = trimStr($_GET['sort_field']);
         }
         $sortBy = 'DESC';
         if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
-            $sortBy = $_GET['sort_by'];
+            $sortBy = trimStr($_GET['sort_by']);
         }
+
         if ($sysFilter == 'recently_create') {
             $orderBy = 'created';
             $sortBy = 'DESC';
@@ -396,7 +397,7 @@ class IssueFilterLogic
 
             $sql .= ' ' . $order . $limit;
             //print_r($params);
-            //echo $sql;die;
+            // echo $sql;die;
 
             $arr = $model->db->getRows($sql, $params);
             $idArr = [];
