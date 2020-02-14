@@ -140,6 +140,8 @@ http://demo.masterlab.vip
  4. 重启web服务器  
 
  5. 运行 masterlab_socket  
+    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序吗, 下载地址 https://github.com/gopeak/masterlab_socket/releases  
+    
      Windows操作系统的
      ```text
     # 在masterlab目录直接运行
@@ -151,6 +153,8 @@ http://demo.masterlab.vip
     chmod +x bin/masterlab_socket
     ./bin/masterlab_socket
     ```
+     其他操作系统 参考 https://github.com/gopeak/masterlab_socket 的文档自行编译  
+     
  6. 在浏览器访问 /install ,根据提示进行安装  
  
  
