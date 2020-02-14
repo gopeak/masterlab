@@ -530,7 +530,7 @@ class Passport extends BaseCtrl
             //'很抱歉,服务器繁忙，请重试!!';
             $this->ajaxFailed('服务器错误', '插入失败,详情:' . $insertId);
         }
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('邮件已发送');
     }
 
 
