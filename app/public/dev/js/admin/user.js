@@ -45,7 +45,7 @@ function fetchUsers(url, tpl_id, parent_id) {
                 });
                 $(".order_by_li").click(function () {
                     $('#filter_order_by').val($(this).attr('data-order-by'));
-                    $('#filter_sort').html($(this).attr('data-sort'));
+                    $('#filter_sort').val($(this).attr('data-sort'));
                     $('#order_view').html($(this).attr('data-title'));
                 });
 

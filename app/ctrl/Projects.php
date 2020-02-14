@@ -34,7 +34,7 @@ class Projects extends BaseUserCtrl
         parent::__construct();
         parent::addGVar('top_menu_active', 'project');
     }
-    
+
     /**
      * @throws \Exception
      */
