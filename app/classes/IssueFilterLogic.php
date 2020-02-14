@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\async\email;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
@@ -428,10 +429,10 @@ class IssueFilterLogic
 
         // 项目筛选
         $projectId = null;
-        if (isset($_GET['project']) && !empty($_GET['project'])) {
-            $projectId = (int)$_GET['project'];
-            $sql .= " AND project_id=:project";
-            $params['project'] = $projectId;
+        if (isset($_GET['project_id']) && !empty($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+            $sql .= " AND project_id=:project_id ";
+            $params['project_id'] = $projectId;
         } else {
             // 如果没有指定某一项目，则获取用户参与的项目
             $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr(UserAuth::getId());
@@ -461,7 +462,7 @@ class IssueFilterLogic
         }
         $startBracesNum = 0;
         $endBracesNum = 0;
-        $sql .= 'AND ( ';
+        $sql .= ' AND ( ';
         $i = 0;
         foreach ($queryArr as $item) {
             $i++;
@@ -503,7 +504,7 @@ class IssueFilterLogic
                     $params[$field] = $value;
                     break;
                 case 'like':
-                    $sql .= " $field  {$opt} ':$field' ";
+                    $sql .= " $field  {$opt} :$field ";
                     $params[$field] = $value;
                     break;
                 case 'like %...%':
@@ -545,7 +546,7 @@ class IssueFilterLogic
         }
 
         $orderBy = 'id';
-        if (isset($_GET['sort_field'])) {
+        if (isset($_GET['sort_field']) && !empty($_GET['sort_field'])) {
             $orderBy = $_GET['sort_field'];
         }
         $sortBy = 'DESC';
@@ -563,8 +564,8 @@ class IssueFilterLogic
         try {
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
-            // echo $sqlCount;
-           //  print_r($params);
+            //echo $sqlCount;
+            //print_r($params);
             $count = $model->db->getOne($sqlCount, $params);
             $fields = '*';
             $sql = "SELECT {$fields} FROM  {$table} " . $sql;

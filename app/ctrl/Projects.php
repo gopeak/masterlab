@@ -6,6 +6,7 @@ use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
+use main\app\model\issue\IssueModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;
@@ -33,7 +34,7 @@ class Projects extends BaseUserCtrl
         parent::__construct();
         parent::addGVar('top_menu_active', 'project');
     }
-
+    
     /**
      * @throws \Exception
      */
