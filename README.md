@@ -39,6 +39,15 @@ http://demo.masterlab.vip
 
 
 ## **安装**
+
+详细的安装示例  
+
+[Windows安装教程](http://www.masterlab.vip/help.php?md=install-windows "Windows安装教程")  
+[Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
+[Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
+
+本质上的安装步骤如下:  
+
  1. 搭建php的运行环境 
      ```
      - Web Server : Nginx 或 Apache
@@ -140,7 +149,7 @@ http://demo.masterlab.vip
  4. 重启web服务器  
 
  5. 运行 masterlab_socket  
-    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序吗, 下载地址 https://github.com/gopeak/masterlab_socket/releases  
+    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,该步骤可省略, 下载地址 https://github.com/gopeak/masterlab_socket/releases  
     
      Windows操作系统的
      ```text
