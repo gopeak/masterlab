@@ -125,6 +125,7 @@ class User extends BaseAdminCtrl
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
         $data['users'] = array_values($users);
+        $data['cur_group_id'] = $groupId;
         $this->ajaxSuccess('ok', $data);
     }
 

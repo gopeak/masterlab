@@ -11,7 +11,16 @@ function fetchUsers(url, tpl_id, parent_id) {
         data: $('#user_filter_form').serialize(),
         success: function (resp) {
             auth_check(resp);
-            console.log(resp.data.users);
+            //console.log(resp.data.users);
+
+            if("undefined" != typeof resp.data.groups){
+                if(resp.data.cur_group_id <= 0){
+                    $('#select_group_view').html("所属用户组");
+                } else {
+                    $('#select_group_view').html(resp.data.groups[resp.data.cur_group_id - 1].name);
+                }
+            }
+            
             if (resp.data.users.length) {
                 var source = $('#' + tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -23,7 +32,7 @@ function fetchUsers(url, tpl_id, parent_id) {
                 result = template(resp.data);
                 $('#select_group').html(result);
 
-                $(".user_for_edit ").click(function () {
+                $(".user_for_edit").click(function () {
                     userEdit($(this).attr("data-uid"));
                 });
 
@@ -35,7 +44,7 @@ function fetchUsers(url, tpl_id, parent_id) {
                     userActive($(this).attr("data-uid"));
                 });
 
-                $(".user_for_group ").click(function () {
+                $(".user_for_group").click(function () {
                     userGroup($(this).attr("data-uid"));
                 });
 
