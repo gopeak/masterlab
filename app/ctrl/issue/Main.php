@@ -1980,8 +1980,8 @@ class Main extends BaseUserCtrl
 
         $filename = null;
         $projectId = null;
-        if (isset($_POST['project_id']) && !empty($_POST['project_id'])) {
-            $projectId = (int)$_POST['project_id'];
+        if (isset($_REQUEST['project_id']) && !empty($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
         }
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');

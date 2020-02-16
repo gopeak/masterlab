@@ -20,7 +20,7 @@ function fetchUsers(url, tpl_id, parent_id) {
                     $('#select_group_view').html(resp.data.groups[resp.data.cur_group_id - 1].name);
                 }
             }
-            
+
             if (resp.data.users.length) {
                 var source = $('#' + tpl_id).html();
                 var template = Handlebars.compile(source);
