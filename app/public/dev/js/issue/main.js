@@ -362,12 +362,15 @@ var IssueMain = (function () {
         //     {"logic":"and", "start_braces":"",  "field":"summary",     "opt":"regexp",    "value":encodeURIComponent("^标题[^>]+\\d+"),                  "end_braces":""}
         // ];
         let btn_adv_sumit = $('#btn-adv_submit');
+        let sort_by = $('#adv_sort_by').val();
+        let sort_field = $('#adv_sort_field').val();
+
         btn_adv_sumit.addClass('disabled');
         $.ajax({
             type: 'get',
             dataType: "json",
             url: "/issue/main/adv_filter",
-            data: { project_id: window.cur_project_id, adv_query_json: jsonData },
+            data: { project_id: window.cur_project_id, adv_query_json: jsonData , sort_field: sort_field, sort_by: sort_by},
             success: function (resp) {
                 btn_adv_sumit.removeClass('disabled');
                 $('#modal-adv_query').modal('hide');

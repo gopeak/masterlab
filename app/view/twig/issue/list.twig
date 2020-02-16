@@ -546,9 +546,11 @@
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="issue_type"
                                                        data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
-                                                        类
-                                                        型
-                                                        {{ sort_field == 'issue_type' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}</a>
+                                                        类型
+                                                        {% if sort_field == 'issue_type' %}
+                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                        {% endif %}
+                                                    </a>
                                                 </th>
                                             {% endif %}
 
@@ -614,7 +616,7 @@
                                             {% if ('assignee'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="assignee"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }} " href="#">
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
                                                         经办人
                                                         {% if sort_field == 'assignee' %}
                                                             <i class="fa fa-sort-{{ sort_by }}"></i>
@@ -651,7 +653,7 @@
                                             {% if ('resolve'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="resolve"
-                                                       data-sortby=" {{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
                                                         解决结果
                                                         {% if sort_field == 'resolve' %}
                                                             <i class="fa fa-sort-{{ sort_by }}"></i>
@@ -669,7 +671,7 @@
                                             {% if ('plan_date'in display_fields) %}
                                                 <th class="js-pipeline-date pipeline-date">
                                                     <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }} " href="#">
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
                                                         限
                                                         期
                                                         {% if sort_field == 'due_date' %}
