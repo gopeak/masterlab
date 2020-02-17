@@ -296,9 +296,10 @@ function userAdd() {
                 return;
             }
             if (resp.ret === '200') {
+                fetchUsers('/admin/user/filter','user_tpl','render_id');
                 notify_success(resp.msg, resp.data);
                 //setTimeout("window.location.reload();", 2000)
-                //$('#modal-user_add').modal('hide');
+                $('#modal-user_add').modal('hide');
             } else {
                 notify_error('添加失败,' + resp.msg);
             }
@@ -326,8 +327,10 @@ function userUpdate() {
                 return;
             }
             if (resp.ret === '200') {
+                fetchUsers('/admin/user/filter','user_tpl','render_id');
                 notify_success(resp.msg, resp.data);
-                setTimeout("window.location.reload();", 2000)
+                //setTimeout("window.location.reload();", 2000)
+                $('#modal-user_edit').modal('hide');
             } else {
                 notify_error('更新失败,' + resp.msg);
             }
