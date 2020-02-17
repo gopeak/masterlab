@@ -695,9 +695,9 @@ var IssueForm = (function () {
         var html = '';
         html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"  title=""   >';
         if (default_value == '0') {
-            html += '<option value="0" selected>待办事项</option>';
+            html += '<option value="0" selected>不使用迭代</option>';
         } else {
-            html += '<option value="0">待办事项</option>';
+            html += '<option value="0">不使用迭代</option>';
         }
 
 
