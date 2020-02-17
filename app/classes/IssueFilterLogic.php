@@ -505,7 +505,7 @@ class IssueFilterLogic
                     break;
                 case 'like':
                     $sql .= " $field  {$opt} :$field ";
-                    $params[$field] = $value;
+                    $params[$field] = '%'.$value.'%';
                     break;
                 case 'like %...%':
                     if ($versionNum < 5.70) {
