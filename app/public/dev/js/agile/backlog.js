@@ -43,6 +43,13 @@ var Backlog = (function () {
     }
 
     Backlog.prototype.addSprint = function () {
+        let add_name_obj = $('#id_name');
+        if(is_empty(add_name_obj.val())){
+            notify_error('参数错误', '迭代名称不能为空');
+            add_name_obj.focus();
+            return;
+        }
+
         $.ajax({
             type: 'post',
             dataType: "json",
