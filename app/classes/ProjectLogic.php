@@ -217,6 +217,7 @@ class ProjectLogic
             'create_uid' => $createUid,
             'create_time' => time(),
             //'detail' => $projectInfo['detail'],
+            'issue_update_time' => time(),
         );
 
         $projectModel = new ProjectModel();
@@ -381,7 +382,7 @@ class ProjectLogic
         $sql = "SELECT {$fields} FROM {$projectTable} p
                 LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
                 LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
-                WHERE p.archived='N' ORDER BY p.id ASC";
+                WHERE p.archived='N' ORDER BY p.issue_update_time DESC";
         //echo $sql;exit;
 
         return $model->db->getRows($sql);
@@ -403,7 +404,7 @@ class ProjectLogic
         $sql = "SELECT {$fields} FROM {$projectTable} p
                 LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
                 LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
-                WHERE p.archived='Y' ORDER BY p.id ASC";
+                WHERE p.archived='Y' ORDER BY p.issue_update_time DESC";
         //echo $sql;exit;
         return $model->db->getRows($sql);
     }
