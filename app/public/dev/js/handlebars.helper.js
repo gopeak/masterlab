@@ -13,14 +13,14 @@ $(function () {
         // console.log(value,arr );
         var ret = false;
         for (i = 0; i < arr.length; i++) {
-            if(value==arr[i]){
+            if (value == arr[i]) {
                 ret = true;
                 break;
             }
         }
-        if(ret){
+        if (ret) {
             return opts.fn(this);
-        }else{
+        } else {
             return opts.inverse(this);
         }
     });
@@ -62,10 +62,10 @@ $(function () {
     Handlebars.registerHelper('lightSearch', function (summary, search) {
 
         var html = '';
-        if(search==''){
+        if (search == '') {
             return summary;
         }
-        var fen=summary.split(search);
+        var fen = summary.split(search);
         html = fen.join('<span style="background:#cfc;">' + search + '</span> ');
         return new Handlebars.SafeString(html);
     });
@@ -135,7 +135,7 @@ $(function () {
             }
         }
         var project_url = root_url + org_path + "/" + project_key;
-        html += "<div class=\"branch-commit\"> <a class=\"commit-id monospace\" href='"  +project_url+ "' >" + project_name + "</a></div>";
+        html += "<div class=\"branch-commit\"> <a class=\"commit-id monospace\" href='" + project_url + "' >" + project_name + "</a></div>";
 
         return new Handlebars.SafeString(html);
     });
@@ -150,7 +150,7 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name"><a href="/' + user.username + '"><image width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
+        html += '<span class="list-item-name"><a href="/' + user.username + '"><image width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-placement="left" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
         return new Handlebars.SafeString(html);
     });
 
@@ -165,7 +165,7 @@ $(function () {
             return '';
         }
         html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '">' +
-            '<img width="26px" height="26px" class=" float-none" style="border-radius: 50%;"   data-toggle="tooltip" data-placement="top"  title="' + user.username + ' ' + user.display_name + '" src="' + user.avatar + '" />' +
+            '<img width="26px" height="26px" class=" float-none" style="border-radius: 50%;"   data-toggle="tooltip" data-placement="bottom"  title="' + user.username + ' ' + user.display_name + '" src="' + user.avatar + '" />' +
             '</a></span>';
         return new Handlebars.SafeString(html);
     });
@@ -182,7 +182,7 @@ $(function () {
         html += ' <a href="/user/profile/' + user.uid + '">' +
             '<img width="26px" height="26px" class=" float-none" style="border-radius: 50%;"  ' +
             ' data-toggle="tooltip" data-placement="top"  title="负责人:' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" />' +
-            ' '+user.display_name+
+            ' ' + user.display_name +
             '</a>';
         return new Handlebars.SafeString(html);
     });
@@ -200,7 +200,7 @@ $(function () {
             if (user == null) {
                 return '';
             }
-            html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
+            html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-placement="left" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
         }
         return new Handlebars.SafeString(html);
     });
@@ -232,7 +232,7 @@ $(function () {
                 return '';
             }
             html += '<div class="participants-author js-participants-author">';
-            html += '    <a class="author_link has-tooltip" title="" data-container="body" href="'+root_url+'user/profile/' + uid + '" data-original-title="' + user.display_name + '" ><img width="24" class="avatar avatar-inline s24 " alt="" src="' + user.avatar + '"></a>';
+            html += '    <a class="author_link has-tooltip" title="" data-container="body" href="' + root_url + 'user/profile/' + uid + '" data-original-title="' + user.display_name + '" ><img width="24" class="avatar avatar-inline s24 " alt="" src="' + user.avatar + '"></a>';
             html += '    </div>';
         }
         return new Handlebars.SafeString(html);
@@ -257,7 +257,7 @@ $(function () {
 
     Handlebars.registerHelper('priority_html', function (priority_id) {
         var html = '';
-        if ( is_empty(priority_id) ) {
+        if (is_empty(priority_id)) {
             return '';
         }
         var priority_row = getValueByKey(_issueConfig.priority, priority_id);
@@ -270,7 +270,7 @@ $(function () {
 
     Handlebars.registerHelper('status_html', function (status_id) {
         var html = '';
-        if ( is_empty(status_id) ) {
+        if (is_empty(status_id)) {
             return '';
         }
         var status_row = getValueByKey(_issueConfig.issue_status, status_id);
@@ -284,7 +284,7 @@ $(function () {
 
     Handlebars.registerHelper('resolve_html', function (resolve_id) {
         var html = '';
-        if ( is_empty(resolve_id) ) {
+        if (is_empty(resolve_id)) {
             return '';
         }
         var resolve = getValueByKey(_issueConfig.issue_resolve, resolve_id);
@@ -292,14 +292,14 @@ $(function () {
             html = '<span>一</span>';
             return new Handlebars.SafeString(html);
         }
-        html += '<span style="color:'+resolve.color+'">' + resolve.name + '</span>';
+        html += '<span style="color:' + resolve.color + '">' + resolve.name + '</span>';
         return new Handlebars.SafeString(html);
     });
 
     Handlebars.registerHelper('module_html', function (module_id) {
 
         var html = '';
-        if ( is_empty(module_id) ) {
+        if (is_empty(module_id)) {
             return '';
         }
 
@@ -307,7 +307,7 @@ $(function () {
         if (module == null) {
             return '';
         }
-        html += '<a href="?state=opened&模块='+module.name+'" class="commit-id monospace">' + module.name + '</a>';
+        html += '<a href="?state=opened&模块=' + module.name + '" class="commit-id monospace">' + module.name + '</a>';
 
         return new Handlebars.SafeString(html);
     });
@@ -315,22 +315,22 @@ $(function () {
     Handlebars.registerHelper('make_issue_sprint', function (sprint_id) {
 
         var html = '';
-        if ( is_empty(sprint_id) ) {
+        if (is_empty(sprint_id)) {
             return '';
         }
         //console.log(_issueConfig.sprint);
-        var sprint = getArrayValue(_issueConfig.sprint, 'id', sprint_id  );
+        var sprint = getArrayValue(_issueConfig.sprint, 'id', sprint_id);
         //console.log(sprint);
         if (sprint == null) {
             return '';
         }
-        html += '<a href="?state=opened&迭代='+sprint.name+'" class="commit-id monospace">' + sprint.name + '</a>';
+        html += '<a href="?state=opened&迭代=' + sprint.name + '" class="commit-id monospace">' + sprint.name + '</a>';
         return new Handlebars.SafeString(html);
     });
 
     Handlebars.registerHelper('make_issue_type', function (issue_type_id, issue_types) {
         var html = '';
-        if ( is_empty(issue_type_id) ) {
+        if (is_empty(issue_type_id)) {
             return '';
         }
         var issue_type = getValueByKey(issue_types, issue_type_id);
@@ -344,7 +344,7 @@ $(function () {
 
     Handlebars.registerHelper('issue_type_html', function (issue_type_id) {
         var html = '';
-        if ( is_empty(issue_type_id) ) {
+        if (is_empty(issue_type_id)) {
             return '';
         }
         var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
@@ -358,7 +358,7 @@ $(function () {
 
     Handlebars.registerHelper('issue_type_short_html', function (issue_type_id) {
         var html = '';
-        if ( is_empty(issue_type_id) ) {
+        if (is_empty(issue_type_id)) {
             return '';
         }
         var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
@@ -372,20 +372,20 @@ $(function () {
 
     Handlebars.registerHelper('issue_type_icon', function (issue_type_id) {
         var html = '';
-        if ( is_empty(issue_type_id) ) {
+        if (is_empty(issue_type_id)) {
             return '';
         }
         var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
         if (issue_type == null) {
             return '';
         }
-        html += '<i class="fa ' + issue_type.font_awesome + '"></i>' ;
+        html += '<i class="fa ' + issue_type.font_awesome + '"></i>';
         return new Handlebars.SafeString(html);
     });
 
     Handlebars.registerHelper('make_backlog_issue_type', function (issue_type_id) {
         var html = '';
-        if ( is_empty(issue_type_id) ) {
+        if (is_empty(issue_type_id)) {
             return '';
         }
         var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
@@ -395,9 +395,9 @@ $(function () {
         html += '<i class="fa ' + issue_type.font_awesome + '"></i>\n'
         return new Handlebars.SafeString(html);
     });
-	Handlebars.registerHelper('user_name_html', function (uid) {
+    Handlebars.registerHelper('user_name_html', function (uid) {
         var html = '';
-        if ( is_empty(uid) ) {
+        if (is_empty(uid)) {
             return '';
         }
         var user = getValueByKey(_issueConfig.users, uid);
@@ -405,12 +405,12 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name">by '+user.display_name+'</span>';
+        html += '<span class="list-item-name">by ' + user.display_name + '</span>';
         return new Handlebars.SafeString(html);
     });
-	Handlebars.registerHelper('updated_text_html', function (updated_text) {
+    Handlebars.registerHelper('updated_text_html', function (updated_text) {
         var html = '';
-        if ( is_empty(updated_text) ) {
+        if (is_empty(updated_text)) {
             return '';
         }
         html += '<span   style="color:#707070">更新于 ' + updated_text + '</span>';
@@ -418,13 +418,13 @@ $(function () {
     });
 
 
-	Handlebars.registerHelper('created_text_html', function (created,created_text, created_full) {
+    Handlebars.registerHelper('created_text_html', function (created, created_text, created_full) {
         var html = '';
-        if ( is_empty(created_text) ) {
+        if (is_empty(created_text)) {
             return '';
         }
-        html += '·创建于<span  datetime="'+created+'" data-toggle="tooltip" data-placement="top" title="' + created_full + '">' + created_text + '</span>';
-		
+        html += '·创建于<span  datetime="' + created + '" data-toggle="tooltip" data-placement="top" title="' + created_full + '">' + created_text + '</span>';
+
         return new Handlebars.SafeString(html);
     });
 
