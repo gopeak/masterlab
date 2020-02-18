@@ -49,6 +49,11 @@ class Passport extends BaseCtrl
         $data['is_login_page'] = true;
         $data['captcha_login_switch'] = (new SettingsLogic())->loginRequireCaptcha();
         $data['captcha_reg_switch'] = (new SettingsLogic())->regRequireCaptcha();
+
+        // 是否开启用户注册
+        $isAllowReg = (new SettingsLogic())->allowUserReg();
+        $data['is_allow_user_reg'] = $isAllowReg;
+
         $this->render('gitlab/passport/login.php', $data);
     }
 
@@ -280,6 +285,12 @@ class Passport extends BaseCtrl
      */
     public function register()
     {
+        // 是否开启用户注册
+        $isAllowReg = (new SettingsLogic())->allowUserReg();
+        if (!$isAllowReg) {
+            $this->ajaxFailed('注册功能不可用', [], 500);
+        }
+
         //参数检查
         $settingModel = new SettingModel();
 
@@ -519,7 +530,7 @@ class Passport extends BaseCtrl
             //'很抱歉,服务器繁忙，请重试!!';
             $this->ajaxFailed('服务器错误', '插入失败,详情:' . $insertId);
         }
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('邮件已发送');
     }
 
 

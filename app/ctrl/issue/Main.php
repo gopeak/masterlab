@@ -10,6 +10,7 @@ use main\app\classes\IssueFavFilterLogic;
 use main\app\classes\IssueLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\NotifyLogic;
+use main\app\classes\PermissionGlobal;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
@@ -21,6 +22,8 @@ use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
+use main\app\model\issue\ExtraWorkerDayModel;
+use main\app\model\issue\HolidayModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -94,26 +97,36 @@ class Main extends BaseUserCtrl
                 die;
             }
         }
+
+        $data['is_adv_filter'] = '0';
+        $data['adv_filter_json'] = '[]';
+
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
-                $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
-                $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
-                $filter = $fav['filter'] . '&active_id=' . $favFilterId;
-                $issueUrl = 'issue/main';
-                if (!empty($fav['projectid'])) {
-                    $model = new ProjectModel();
-                    $project = $model->getById($fav['projectid']);
-                    if (isset($project['org_path'])) {
-                        $issueUrl = $project['org_path'] . '/' . $project['key'];
+                if ($fav['is_adv_query'] == '0') {
+                    $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
+                    $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
+                    $filter = $fav['filter'] . '&active_id=' . $favFilterId;
+                    $issueUrl = 'issue/main';
+                    if (!empty($fav['projectid'])) {
+                        $model = new ProjectModel();
+                        $project = $model->getById($fav['projectid']);
+                        if (isset($project['org_path'])) {
+                            $issueUrl = $project['org_path'] . '/' . $project['key'];
+                        }
+                        unset($project);
                     }
-                    unset($project);
+                    // @todo 防止传入 fav_filter 参数进入死循环
+                    header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
+                    die;
+                } else {
+                    $data['adv_filter_json'] = $fav['filter'];
+                    $data['is_adv_filter'] = '1';
                 }
-                // @todo 防止传入 fav_filter 参数进入死循环
-                header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
-                die;
+
             }
         }
         // 用户的过滤器
@@ -128,7 +141,7 @@ class Main extends BaseUserCtrl
         $issueLogic = new IssueLogic();
         $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
         $data['uiDisplayFields'] = IssueLogic::$uiDisplayFields;
-        //print_r($data['display_fields']);die;
+        $data['advFields'] = IssueFilterLogic::$advFields;
 
         // 事项展示的视图方式
         $data['issue_view'] = SettingModel::getInstance()->getValue('issue_view');
@@ -145,6 +158,7 @@ class Main extends BaseUserCtrl
         $data['is_all_issues'] = false;
         if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
             $data['is_all_issues'] = true;
+            $data['display_fields'][] = 'project_id';
         }
 
         ConfigLogic::getAllConfigs($data);
@@ -407,7 +421,6 @@ class Main extends BaseUserCtrl
      */
     public function mobileUpload()
     {
-
         $tmpIssueId = '';
         if (isset($_GET['tmp_issue_id'])) {
             $tmpIssueId = $_GET['tmp_issue_id'];
@@ -541,7 +554,41 @@ class Main extends BaseUserCtrl
         if (isset($_GET['page'])) {
             $page = max(1, intval($_GET['page']));
         }
+
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
+        if ($ret) {
+            foreach ($data['issues'] as &$issue) {
+                IssueFilterLogic::formatIssue($issue);
+            }
+            $data['total'] = (int)$total;
+            $data['pages'] = ceil($total / $pageSize);
+            $data['page_size'] = $pageSize;
+            $data['page'] = $page;
+            $_SESSION['filter_current_page'] = $page;
+            $_SESSION['filter_pages'] = $data['pages'];
+            $_SESSION['filter_page_size'] = $pageSize;
+            $this->ajaxSuccess('success', $data);
+        } else {
+            $this->ajaxFailed('failed', $data['issues']);
+        }
+    }
+
+    /**
+     * 高级查询
+     * @throws \Exception
+     */
+    public function advFilter()
+    {
+        $issueFilterLogic = new IssueFilterLogic();
+
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
+        }
+
+        list($ret, $data['issues'], $total) = $issueFilterLogic->getAdvQueryList($page, $pageSize);
         if ($ret) {
             foreach ($data['issues'] as &$issue) {
                 IssueFilterLogic::formatIssue($issue);
@@ -622,6 +669,39 @@ class Main extends BaseUserCtrl
             $this->ajaxSuccess('success', $msg);
         } else {
             $this->ajaxFailed('failed', [], $msg);
+        }
+    }
+
+    public function saveAdvFilter()
+    {
+        $err = [];
+        if (@empty($_POST['name'])) {
+            $err['name'] = '名称不能为空';
+        }
+        if (@empty($_POST['filter'])) {
+            $err['filter'] = '数据不能为空';
+        }
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
+        $projectId = null;
+        if (isset($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
+        }
+
+        $filterModel = IssueFilterModel::getInstance();
+        $info = [];
+        $info['author'] = UserAuth::getInstance()->getId();
+        $info['name'] = $_POST['name'];
+        $info['projectid'] = $projectId;
+        $info['filter'] = $_POST['filter'];
+        $info['is_adv_query'] = '1';
+        list($ret, $msg) = $filterModel->insert($info);
+        if ($ret) {
+            $this->ajaxSuccess('提示', '操作成功');
+        } else {
+            $this->ajaxFailed('提示', $msg);
         }
     }
 
@@ -787,7 +867,6 @@ class Main extends BaseUserCtrl
      * 新增某一事项
      * @param array $params
      * @throws \Exception
-     * @throws \Exception
      */
     public function add($params = [])
     {
@@ -893,7 +972,6 @@ class Main extends BaseUserCtrl
         }
         $model->updateById($issueId, $issueUpdateInfo);
 
-
         unset($project);
         //写入操作日志
         $logData = [];
@@ -923,6 +1001,8 @@ class Main extends BaseUserCtrl
             $model = new IssueLabelDataModel();
             $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
         }
+
+
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
@@ -963,7 +1043,9 @@ class Main extends BaseUserCtrl
             $info['duration'] = $params['duration'];
         } else {
             if (!empty($info['due_date']) && !empty($info['start_date'])) {
-                $info['duration'] = countDays($info['due_date'], $info['start_date']);
+                $holidays = (new HolidayModel())->getDays($params['project_id']);
+                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
+                $info['duration'] = getWorkingDays($info['start_date'], $info['due_date'], $holidays, $extraWorkerDays);
             }
         }
         if (isset($params['progress'])) {
@@ -1001,7 +1083,6 @@ class Main extends BaseUserCtrl
             }
             unset($model, $belowIssue);
         }
-
     }
 
     /**
@@ -1021,6 +1102,9 @@ class Main extends BaseUserCtrl
 
         if (isset($params['issue_type'])) {
             $info['issue_type'] = (int)$params['issue_type'];
+        }else{
+            $issueTypeId = (new IssueTypeModel())->getIdByKey('task');
+            $info['issue_type'] = $issueTypeId;
         }
 
         // 状态
@@ -1032,6 +1116,9 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('param_error:status_not_found');
             }
             unset($issueStatusArr);
+            $info['status'] = $statusId;
+        }else{
+            $statusId = (new IssueStatusModel())->getIdByKey('open');
             $info['status'] = $statusId;
         }
 
@@ -1045,6 +1132,9 @@ class Main extends BaseUserCtrl
             }
             unset($issuePriority);
             $info['priority'] = $priorityId;
+        }else{
+            $priorityId = (new IssuePriorityModel())->getIdByKey('normal');
+            $info['priority'] = $priorityId;
         }
 
         // 解决结果
@@ -1056,6 +1146,9 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('param_error:resolve_not_found');
             }
             unset($issueResolves);
+            $info['resolve'] = $resolveId;
+        }else{
+            $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
             $info['resolve'] = $resolveId;
         }
 
@@ -1069,6 +1162,8 @@ class Main extends BaseUserCtrl
             }
             unset($user);
             $info['assignee'] = $assigneeUid;
+        }else{
+            $info['assignee'] = UserAuth::getId();
         }
 
         // 报告人
@@ -1081,10 +1176,14 @@ class Main extends BaseUserCtrl
             }
             unset($user);
             $info['reporter'] = $reporterUid;
+        }else{
+            $info['reporter'] = UserAuth::getId();
         }
 
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
+        } else {
+            $info['description'] = '';
         }
 
         if (isset($params['module'])) {
@@ -1109,7 +1208,6 @@ class Main extends BaseUserCtrl
         }
 
         $this->getGanttInfo($params, $info);
-
         // print_r($info);
         return $info;
     }
@@ -1139,7 +1237,6 @@ class Main extends BaseUserCtrl
     /**
      * 更新事项的内容
      * @param $params
-     * @throws \Exception
      * @throws \Exception
      */
     public function update($params)
@@ -1200,7 +1297,6 @@ class Main extends BaseUserCtrl
         if (!empty($err)) {
             $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
-
         $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
         if (!$updatePerm) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
@@ -1225,9 +1321,13 @@ class Main extends BaseUserCtrl
 
         if (!empty($info)) {
             $info['modifier'] = $uid;
-
             // 如果是关闭状态则要检查权限
             if (isset($info['status']) && $issue['status'] != $info['status']) {
+                //检测当前用户角色权限是否有修改事项状态的权限
+                if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_STATUS)) {
+                    $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项状态权限');
+                }
+
                 if ($info['status'] == $statusClosedId) {
                     // todo
                 }
@@ -1254,6 +1354,9 @@ class Main extends BaseUserCtrl
             }
             // 如果是关闭状态则要检查权限
             if (isset($info['resolve']) && $issue['resolve'] != $info['resolve']) {
+                if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_RESOLVE)) {
+                    $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项解决结果权限');
+                }
 
                 $resolve = IssueResolveModel::getInstance()->getByKey('done');
                 $resolveDoneId = $resolve['id'];
@@ -1849,7 +1952,7 @@ class Main extends BaseUserCtrl
 
         $ymd = date("Ymd");
         $userId = UserAuth::getId();
-        $saveRet = UploadLogic::saveFileText($base64, STORAGE_PATH . 'attachment/image/' . $ymd . '/', $userId);
+        $saveRet = UploadLogic::saveFileText($base64, PUBLIC_PATH . 'attachment/image/' . $ymd . '/', $userId);
         $url = '';
         if ($saveRet !== false) {
             $url = '/attachment/image/' . $ymd . '/' . $saveRet;
@@ -1877,8 +1980,8 @@ class Main extends BaseUserCtrl
 
         $filename = null;
         $projectId = null;
-        if (isset($_POST['project_id']) && !empty($_POST['project_id'])) {
-            $projectId = (int)$_POST['project_id'];
+        if (isset($_REQUEST['project_id']) && !empty($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
         }
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
@@ -1895,7 +1998,7 @@ class Main extends BaseUserCtrl
         if (!empty($ret['error'])) {
             $this->ajaxFailed('上传错误', $ret['message']);
         }
-        $filename = STORAGE_PATH . 'attachment/' . $ret['relate_path'];
+        $filename = PUBLIC_PATH . 'attachment/' . $ret['relate_path'];
         //var_dump($filename);
         if (empty($filename) || !file_exists($filename)) {
             $this->ajaxFailed('参数错误', '找不到上传文件');

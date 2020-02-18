@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+	<head>
+
+		{% include 'twig/common/header/include.twig' %}
+		<script src="/dev/js/admin/setting.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+
+	</head>
+	<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+		{% include 'twig/common/body/script.twig' %}
+
+		<section class="has-sidebar page-layout max-sidebar">
+			{% include 'twig/common/body/page-left.twig' %}
+
+			<div class="page-layout page-content-body system-page">
+				{% include 'twig/common/body/header-content.twig' %}
+
+				<script>
+					var findFileURL = "";
+				</script>
+				<div class="page-with-sidebar system-page">
+
+					{% include 'twig/admin/common-page-nav-admin.twig' %}
+
+					<div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+						<div class="alert-wrapper">
+
+							<div class="flash-container flash-container-page"></div>
+
+						</div>
+
+
+						<div class="content">
+							<div class="container-fluid">
+								<div style="padding-left: 6px;">
+									<div class="top-area">
+										<ul class="nav-links user-state-filters" style="float:left">
+											<li class="active" data-value="">
+												<a id="state-opened" title="服务器信息">
+													<span>
+														服务器信息
+													</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+
+									<div class="content-list pipelines">
+										<div class="table-holder">
+											<table class="table">
+												<tbody>
+													<tr class="commit">
+														<td width="15%">
+															<strong>主页 URL</strong>
+														</td>
+														<td>{{ sys_domain }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>系统时间</strong>
+														</td>
+														<td>{{ sys_datetime }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>系统时区</strong>
+														</td>
+														<td>{{ sys_timezone }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>当前工作目录</strong>
+														</td>
+														<td>{{ sys_workpath }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>PHP版本</strong>
+														</td>
+														<td>{{ sys_php_version }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>操作系统</strong>
+														</td>
+														<td>{{ sys_os }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>Web应用服务器</strong>
+														</td>
+														<td>{{ sys_web_engine }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>服务器主机名</strong>
+														</td>
+														<td>{{ sys_hostname }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>PHP用户</strong>
+														</td>
+														<td>{{ sys_php_user }}</td>
+													</tr>
+
+													<tr class="commit">
+														<td width="15%">
+															<strong>数据库类型</strong>
+														</td>
+														<td>MySQL</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>数据库版本</strong>
+														</td>
+														<td>{{ sys_mysql_version }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>数据库地址</strong>
+														</td>
+														<td>{{ sys_mysql_host }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>数据库端口</strong>
+														</td>
+														<td>{{ sys_mysql_port }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>当前数据库名称</strong>
+														</td>
+														<td>{{ sys_mysql_dbname }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>当前数据库用户</strong>
+														</td>
+														<td>{{ sys_mysql_use_user }}</td>
+													</tr>
+
+												</tbody>
+											</table>
+										</div>
+
+									</div>
+
+
+									<div class="top-area">
+										<ul class="nav-links user-state-filters" style="float:left">
+											<li class="active" data-value="">
+												<a id="state-opened" title="Masterlab信息">
+													<span>
+														Masterlab信息
+													</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+									<div class="content-list pipelines">
+										<div class="table-holder">
+											<table class="table">
+												<tbody>
+													<tr class="commit">
+														<td width="15%">
+															<strong>版本</strong>
+														</td>
+														<td>{{ masterlab_version }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>默认语言</strong>
+														</td>
+														<td>简体中文</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>编码</strong>
+														</td>
+														<td>UTF-8</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>官网地址</strong>
+														</td>
+														<td>
+															<a href="http://www.masterlab.vip/" target="_blank">http://www.masterlab.vip/</a>
+														</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>源码托管地址</strong>
+														</td>
+														<td>
+															<a href="https://github.com/gopeak/masterlab" target="_blank">https://github.com/gopeak/masterlab</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+
+
+									<div class="top-area">
+										<ul class="nav-links user-state-filters" style="float:left">
+											<li class="active" data-value="">
+												<a id="state-opened" title="PHP信息">
+													<span>
+														PHP信息
+													</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+									<div class="content-list pipelines">
+										<div class="table-holder">
+											<table class="table">
+												<tbody>
+													<tr class="commit">
+														<td width="15%">
+															<strong>PHP已加载扩展</strong>
+														</td>
+														<td>{{ extListFormat }}</td>
+													</tr>
+													<tr class="commit">
+														<td width="15%">
+															<strong>phpinfo</strong>
+														</td>
+														<td>
+															<a href="{{ sys_domain }}p.php" , target="_blank">{{ sys_domain }}p.php</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+
+		<script type="text/javascript">
+
+			$(function () {});
+		</script>
+
+	</body>
+</html>

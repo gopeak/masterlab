@@ -85,6 +85,26 @@ class AgileLogic
         return $boards;
     }
 
+    public function getBoardsByProjectV2($projectId)
+    {
+        // 首先获取活动的Sprint
+        $agileBoardModel = new AgileBoardModel();
+        $defaultBoards = $agileBoardModel->getsByDefault();
+        $projectBoards = $agileBoardModel->getsByProject($projectId);
+
+        $boards = $defaultBoards;
+        foreach ($projectBoards as $projectBoard) {
+            $boards[] = $projectBoard;
+        }
+        $i = 0;
+        foreach ($boards as &$board) {
+            $i++;
+            $board['i'] = $i;
+        }
+        return $boards;
+    }
+
+
     /**
      * 获取 backlog 事项
      * @param $projectId
@@ -394,9 +414,9 @@ class AgileLogic
     }
 
     /**
-     * @todo 分页
      * @param $projectId
      * @return array
+     * @todo 分页
      */
     public function getClosedIssues($projectId)
     {
@@ -599,146 +619,143 @@ class AgileLogic
     }
 
     /**
+     * 获取看板的泳道数据
      * @param $projectId
+     * @param $board
      * @param $columns
      * @return array
+     * @throws \Exception
      */
-    public function getBoardColumnByLabel($projectId, &$columns)
+    public function getBoardColumnCommon($projectId, $board, &$columns)
     {
         try {
-            $model = new ProjectLabelModel();
-            $issueLabels = $model->getsByProject($projectId);
-            if (empty($issueLabels)) {
-                return [false, 'project labels is empty'];
-            }
-            $configsKeyForId = [];
-            foreach ($issueLabels as $k => $label) {
-                $index = (int)$k;
-                $configsKeyForId[$index] = [];
-            }
-            unset($label);
-
-            $field = 'label_data';
-            list($fetchRet, $issues) = $this->getNotBacklogIssues($projectId);
-            if (empty($issues) || !$fetchRet) {
-                return [true, 'fetch empty issues'];
+            $issueModel = new IssueModel();
+            $issueStatusModel = IssueStatusModel::getInstance();
+            $issueResolveModel = IssueResolveModel::getInstance();
+            $issueLabelDataModel = IssueLabelDataModel::getInstance();
+            $model = new SprintModel();
+            $activeSprint = $model->getActive($projectId);
+            $activeSprintId = null;
+            if ($activeSprint) {
+                $activeSprintId = $activeSprint['id'];
             }
 
-            foreach ($columns as & $column) {
+            $statusKeyArr = [];
+            foreach ($issueStatusModel->getAll(false) as $item) {
+                $statusKeyArr[$item['_key']] = $item['id'];
+            }
+            $resolveKeyArr = [];
+            foreach ($issueResolveModel->getAll(false) as $item) {
+                $resolveKeyArr[$item['_key']] = $item['id'];
+            }
+            foreach ($columns as &$column) {
                 $column['count'] = 0;
-                $columnDataArr = json_decode($column['data'], true);
-                $tmp = [];
-                foreach ($columnDataArr as $item) {
-                    $item = trimStr($item);
-                    if (isset($configsKeyForId[$item])) {
-                        $tmp[] = (int)$configsKeyForId[$item];
-                    }
-                }
-                unset($columnDataArr);
                 $column['issues'] = [];
-                foreach ($issues as $issue) {
-                    if (!isset($issue[$field])) {
-                        continue;
+                $filterDataArr = json_decode($column['data'], true);
+                $params = [];
+                $sql = " WHERE  (  ";
+                $filtered = false;
+                foreach ($filterDataArr as $type => $itemArr) {
+                    if ($type == 'status' && !empty($itemArr)) {
+                        $filtered = true;
+                        $sql .= "     status in ( :status ) ";
+                        $idArr = self::getIdArrByKeys($statusKeyArr, $itemArr);
+                        $params['status'] = implode(',', $idArr);
                     }
-                    $fieldValueArr = explode(',', $issue[$field]);
-                    if (empty($fieldValueArr) || !is_array($fieldValueArr)) {
-                        continue;
+                    if ($type == 'resolve' && !empty($itemArr)) {
+                        $filtered = true;
+                        $sql .= " OR   resolve in ( :resolve ) ";
+                        $idArr = self::getIdArrByKeys($resolveKeyArr, $itemArr);
+                        $params['resolve'] = implode(',', $idArr);
                     }
-                    foreach ($tmp as $value) {
-                        if (in_array($value, $fieldValueArr)) {
-                            IssueFilterLogic::formatIssue($issue);
-                            $column['issues'][] = $issue;
-                            break;
-                        }
+                    if ($type == 'assignee' && !empty($itemArr)) {
+                        $filtered = true;
+                        $sql .= " OR   assignee in ( :assignee ) ";
+                        $params['assignee'] = implode(',', $itemArr);
+                    }
+                    if ($type == 'label' && !empty($itemArr)) {
+                        $filtered = true;
+                        $issueIdArr = $issueLabelDataModel->getIssueIdArrByIds($itemArr);
+                        $issueIdStr = implode(',', $issueIdArr);
+                        $sql .= " OR   id  in ( :label_issue_ids ) ";
+                        $params['label_issue_ids'] = $issueIdStr;
                     }
                 }
-                $column['count'] = count($column['issues']);
+                if (!$filtered) {
+                    continue;
+                }
+                $sql .= "  ) AND project_id=:project_id ";
+                $params['project_id'] = $projectId;
+
+                if ($board['range_type'] == 'sprints') {
+                    $rangeDataArr = json_decode($board['range_data'], true);
+                    $sql .= " AND   sprint  in ( :sprints ) ";
+                    $params['sprints'] = implode(',', $rangeDataArr);
+                }
+                if ($board['range_type'] == 'current_sprint') {
+                    if (!$activeSprintId) {
+                        continue;
+                    }
+                    $sql .= " AND   sprint =:active_sprint_id ";
+                    $params['active_sprint_id'] = $activeSprintId;
+                }
+                if ($board['range_type'] == 'modules') {
+                    $rangeDataArr = json_decode($board['range_data'], true);
+                    $sql .= " AND   module in  ( :modules ) ";
+                    $params['modules'] = implode(',', $rangeDataArr);
+                }
+                if ($board['range_type'] == 'issue_types') {
+                    $rangeDataArr = json_decode($board['range_data'], true);
+                    $sql .= " AND   issue_type in ( :issue_types ) ";
+                    $params['issue_types'] = implode(',', $rangeDataArr);
+                }
+                $orderBy = 'id';
+                $sortBy = 'DESC';
+                $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
+
+                $table = $issueModel->getTable();
+                // 获取总数
+                $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
+                //echo $sqlCount;
+                //print_r($params);
+                $count = $issueModel->db->getOne($sqlCount, $params);
+                // var_dump($count);
+                $column['count'] = $count;
+
+                $fields = '*';
+                $sql = "SELECT {$fields} FROM  {$table} " . $sql;
+                $sql .= ' ' . $order;
+                //print_r($params);
+                //echo $sql;die;
+                $arr = $issueModel->db->getRows($sql, $params);
+                $column['issues'] = $arr;
             }
-            unset($issues);
             return [true, 'ok'];
         } catch (\PDOException $e) {
             return [false, $e->getMessage()];
         }
     }
 
-    public function getBoardColumnCommon($projectId, $columns, $field)
+    /**
+     * 通过key获取id数组
+     * @param $arr
+     * @param $key
+     * @param $keyArr
+     * @return array
+     */
+    public static function getIdArrByKeys($arr, $keyArr)
     {
-        try {
-            $model = null;
-            switch ($field) {
-                case 'status':
-                    $model = IssueStatusModel::getInstance();
-                    break;
-                case 'resolve':
-                    $model = IssueResolveModel::getInstance();
-                    break;
-                case 'issue_type':
-                    $model = IssueTypeModel::getInstance();
-                    break;
-                case 'module':
-                    $model = ProjectModuleModel::getInstance();
-                    break;
-            }
-            if (empty($model)) {
-                return [false, 'type_is_error'];
-            }
-            if (!method_exists($model, 'getAll')) {
-                return [false, 'type_getAll_not_found'];
-            }
-
-            $configs = $model->getAll(true);
-            $configsKeyForId = [];
-            if ($field == 'module') {
-                foreach ($configs as $k => $row) {
-                    $index = $row['id'];
-                    $configsKeyForId[$index] = $k;
-                }
-            } else {
-                foreach ($configs as $k => $row) {
-                    $index = $row['key'];
-                    $configsKeyForId[$index] = $k;
-                }
-            }
-
-            unset($row);
-            if (empty($configsKeyForId)) {
-                return [false, 'issue_config_is_empty'];
-            }
-
-            list($fetchRet, $issues) = $this->getNotBacklogIssues($projectId);
-            if (empty($issues) || !$fetchRet) {
-                return [true, 'fetch empty issues'];
-            }
-            foreach ($columns as & $column) {
-                $column['count'] = 0;
-                $columnDataArr = json_decode($column['data'], true);
-                $tmp = [];
-                foreach ($columnDataArr as $item) {
-                    $item = trimStr($item);
-                    if (isset($configsKeyForId[$item])) {
-                        $tmp[] = (int)$configsKeyForId[$item];
-                    }
-                }
-                unset($columnDataArr);
-                $column['issues'] = [];
-                foreach ($issues as $key => $issue) {
-                    if (!isset($issue[$field])) {
-                        continue;
-                    }
-                    $fieldValue = (int)$issue[$field];
-                    if (in_array($fieldValue, $tmp)) {
-                        IssueFilterLogic::formatIssue($issue);
-                        $column['issues'][] = $issue;
-                        unset($issues[$key]);
-                    }
-                }
-                $column['count'] = count($column['issues']);
-            }
-            unset($issues);
-            return [true, 'ok'];
-        } catch (\PDOException $e) {
-            return [false, $e->getMessage()];
+        $idArr = [];
+        if (empty($keyArr) || empty($arr)) {
+            return $idArr;
         }
+
+        foreach ($keyArr as $value) {
+            if (isset($arr[$value])) {
+                $idArr[] = $arr[$value];
+            }
+        }
+        return $idArr;
     }
 
     /**

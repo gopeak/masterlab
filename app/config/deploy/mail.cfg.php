@@ -2,7 +2,6 @@
 
 $_config = array(
 
-
     'host' => 'smtpdm.aliyun.com',
     'port' => 25,
     'from' => array('address' => 'sender@smtp.masterlab.vip', 'name' => 'MasterlabSender'),

@@ -13,3 +13,4 @@ env.ini
 /app/public/node_modules
 /app/public/develop
 app/public/install/lock
+/app/config/deploy/cache.cfg.php

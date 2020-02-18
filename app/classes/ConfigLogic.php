@@ -44,6 +44,7 @@ class ConfigLogic
         $data['issue_resolve'] = self::getResolves(true);
         $data['users'] = self::getAllUser(true);
         $data['projects'] = self::getAllProjects();
+        $data['project_users'] = self::getProjectUsers($projectId);
         $data['project_modules'] = self::getModules($projectId, true);
         $data['project_versions'] = self::getVersions($projectId, true);
         $data['project_labels'] = self::getLabels($projectId, true);
@@ -60,6 +61,22 @@ class ConfigLogic
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
         return $users;
+    }
+
+    /**
+     * 加入到项目的成员
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public static function getProjectUsers($projectId){
+        $userLogic = new UserLogic();
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
+        $ret = [];
+        foreach ($projectUsers as $user) {
+            $ret[] = UserLogic::format($user);
+        }
+        return $ret;
     }
 
     /**

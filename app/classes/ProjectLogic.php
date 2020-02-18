@@ -22,15 +22,15 @@ use main\app\model\project\ProjectUserRoleModel;
  */
 class ProjectLogic
 {
-    const PROJECT_TYPE_GROUP_SOFTWARE = 1;
-    const PROJECT_TYPE_GROUP_BUSINESS = 2;
+    const PROJECT_TYPE_GROUP_SOFTWARE = GlobalConstant::PROJECT_TYPE_GROUP_SOFTWARE;
+    const PROJECT_TYPE_GROUP_BUSINESS = GlobalConstant::PROJECT_TYPE_GROUP_BUSINESS;
 
-    const PROJECT_TYPE_SCRUM = 10;
-    const PROJECT_TYPE_KANBAN = 20;
-    const PROJECT_TYPE_SOFTWARE_DEV = 30;
-    const PROJECT_TYPE_PROJECT_MANAGE = 40;
-    const PROJECT_TYPE_FLOW_MANAGE = 50;
-    const PROJECT_TYPE_TASK_MANAGE = 60;
+    const PROJECT_TYPE_SCRUM = GlobalConstant::PROJECT_TYPE_SCRUM;
+    const PROJECT_TYPE_KANBAN = GlobalConstant::PROJECT_TYPE_KANBAN;
+    const PROJECT_TYPE_SOFTWARE_DEV = GlobalConstant::PROJECT_TYPE_SOFTWARE_DEV;
+    const PROJECT_TYPE_PROJECT_MANAGE = GlobalConstant::PROJECT_TYPE_PROJECT_MANAGE;
+    const PROJECT_TYPE_FLOW_MANAGE = GlobalConstant::PROJECT_TYPE_FLOW_MANAGE;
+    const PROJECT_TYPE_TASK_MANAGE = GlobalConstant::PROJECT_TYPE_TASK_MANAGE;
 
     static public $type_all = [
         self::PROJECT_TYPE_SCRUM,
@@ -44,7 +44,7 @@ class ProjectLogic
     static public $typeAll = [
         self::PROJECT_TYPE_SCRUM => '敏捷开发',//'Scrum software development',
         //self::PROJECT_TYPE_KANBAN => '看板开发',//'Kanban software development',
-        self::PROJECT_TYPE_SOFTWARE_DEV => '软件开发',//'Basic software development',
+        self::PROJECT_TYPE_SOFTWARE_DEV => '传统软件开发',//'Basic software development',
         //self::PROJECT_TYPE_PROJECT_MANAGE => '项目管理',
         //self::PROJECT_TYPE_FLOW_MANAGE => '流程管理',
         self::PROJECT_TYPE_TASK_MANAGE => '任务管理',
@@ -322,8 +322,8 @@ class ProjectLogic
         if (strpos($avatar, '?') !== false) {
             list($avatar) = explode('?', $avatar);
         }
-        //var_dump(STORAGE_PATH .'attachment/'. $avatar);
-        $file = STORAGE_PATH . 'attachment/' . $avatar;
+        //var_dump(PUBLIC_PATH .'attachment/'. $avatar);
+        $file = PUBLIC_PATH . 'attachment/' . $avatar;
         if (!is_dir($file) && file_exists($file)) {
             $avatar = ATTACHMENT_URL . $avatar;
         } else {
@@ -366,7 +366,7 @@ class ProjectLogic
     }
 
     /**
-     * 项目左连接用户表
+     * 未归档项目左连接用户表
      * @return array
      * @throws \Exception
      */
@@ -381,14 +381,37 @@ class ProjectLogic
         $sql = "SELECT {$fields} FROM {$projectTable} p
                 LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
                 LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
-                ORDER BY p.id ASC";
+                WHERE p.archived='N' ORDER BY p.id ASC";
+        //echo $sql;exit;
 
+        return $model->db->getRows($sql);
+    }
+
+    /**
+     * 已归档项目左连接用户表
+     * @return array
+     * @throws \Exception
+     */
+    public function projectListJoinUserArchived()
+    {
+        $model = new ProjectModel();
+        $projectTable = $model->getTable();
+        $userTable = 'user_main';
+
+        $fields = " p.*, u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display ";
+
+        $sql = "SELECT {$fields} FROM {$projectTable} p
+                LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
+                LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
+                WHERE p.archived='Y' ORDER BY p.id ASC";
+        //echo $sql;exit;
         return $model->db->getRows($sql);
     }
 
     /**
      * 获取所有项目的简单信息
      * @return array
+     * @throws \Exception
      */
     public function getAllShortProjects()
     {
@@ -415,11 +438,11 @@ class ProjectLogic
         return $model->db->getRows($sql);
     }
 
-
     /**
      * 格式化项目项的内容
-     * @param array $item
+     * @param $item
      * @return mixed
+     * @throws \Exception
      */
     public static function formatProject($item)
     {
@@ -486,7 +509,7 @@ class ProjectLogic
             $defaultRoleRelation = $defaultRoleRelationModel->getAll(false);
             $defaultRoleRelationArr = [];
             foreach ($defaultRoleRelation as $item) {
-                $defaultRoleRelationArr[$item['default_role_id']][] = $item;
+                $defaultRoleRelationArr[$item['role_id']][] = $item;
             }
             //print_r($defaultRoleRelationArr);
             unset($defaultRoleRelation);

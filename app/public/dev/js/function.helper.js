@@ -1,3 +1,17 @@
+Array.prototype.indexOf = function(val) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] == val) return i;
+    }
+    return -1;
+};
+
+Array.prototype.remove = function(val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+        this.splice(index, 1);
+    }
+};
+
 function getValueByKey($map, $key) {
 
     var value = null;
@@ -18,6 +32,27 @@ function getArrayValue(arr, $key, value ) {
     }
     return null;
 }
+
+function getObjectValue(objs, id) {
+    var obj = null;
+    for (var i in objs) {
+        if (parseInt(objs[i].id) === parseInt(id)) {
+            return objs[i];
+        }
+    }
+    return obj;
+}
+
+function getUser(users, uid) {
+    var obj = null;
+    for (var i in users) {
+        if (parseInt(users[i].uid) === parseInt(uid)) {
+            return users[i];
+        }
+    }
+    return obj;
+}
+
 
 /**
  * @author kenhins
@@ -182,6 +217,11 @@ function notify_error(title, message, setting) {
  * @param {Object} value 元素值
  */
 function isInArray(arr, value) {
+
+    if(is_empty(arr)){
+        return false;
+    }
+
     for (var i = 0; i < arr.length; i++) {
         if (value === arr[i]) {
             return true;
@@ -211,4 +251,8 @@ function form_check(resp) {
         return false;
     }
     return true;
+}
+
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
 }

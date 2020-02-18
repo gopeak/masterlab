@@ -76,4 +76,16 @@ class IssueResolveModel extends BaseDictionaryModel
         $id = $this->getOne("id", $where);
         return $id;
     }
+
+    public function getIdArrByKeys($keyArr)
+    {
+        $idArr = [];
+        $all = $this->getAllItem();
+        foreach ($all as $row) {
+            if (in_array($row['_key'], $keyArr)) {
+                $idArr[] = (int)$row['id'];
+            }
+        }
+        return $idArr;
+    }
 }

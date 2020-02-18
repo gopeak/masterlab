@@ -346,6 +346,15 @@ class Detail extends BaseUserCtrl
         $followModel = new IssueFollowModel();
         $followRow = $followModel->getItemsByIssueUserId($issueId, UserAuth::getId());
         $issue['followed'] = empty($followRow) ? '0' : '1';
+
+        $followRows = $followModel->getItemsByIssueId($issueId);
+        $issue['followed_users_arr'] = [];
+        if ($followRows) {
+            foreach ($followRows as $item) {
+                $issue['followed_users_arr'][] = $item['user_id'];
+            }
+        }
+        $issue['followed_users_arr'] = array_unique($issue['followed_users_arr']);
         unset($followModel);
 
         // 自定义字段

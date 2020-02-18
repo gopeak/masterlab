@@ -60,9 +60,9 @@ let Member = (function() {
                 } else {
                     defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
-                        message : '标签为空',
+                        message : '团队成员为空',
                         name: 'label',
-                        handleHtml: `<a class="btn btn-new js-create-label" href="${project_root_url}/settings_label_new">添加标签</a>`
+                        handleHtml: `<a class="btn btn-new js-create-label" href="${project_root_url}/settings_project_member">团队成员为空</a>`
                     })
                 }
             },

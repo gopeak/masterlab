@@ -12,7 +12,7 @@ use main\app\classes\PermissionLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserLogic;
 use main\app\classes\UserAuth;
-use main\app\model\permission\PermissionModel;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\user\UserModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;
@@ -47,7 +47,6 @@ class Member extends BaseUserCtrl
 
         $userLogic = new UserLogic();
         $projectUsers = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
-
         foreach ($projectUsers as &$user) {
             $user = UserLogic::format($user);
         }

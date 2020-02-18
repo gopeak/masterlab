@@ -69,7 +69,7 @@ class Dashboard extends BaseUserCtrl
 
         $data['user_layout'] = 'aa';
         $userSettingModel = new UserSettingModel();
-        $layout = $userSettingModel->getSettingByKey($userId, 'user_layout');
+        $layout = $userSettingModel->getSettingByKey($userId, 'layout');
         if (!empty($layout)) {
             $data['user_layout'] = $layout;
         }

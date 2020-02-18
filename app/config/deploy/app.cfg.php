@@ -3,19 +3,19 @@
 // 设置错误报告
 error_reporting(E_ERROR);
 
-// URL手动设置, 结尾必须带上/
-define('ROOT_URL', 'http://masterlab.ink/');
+// URL手动设置
+define('ROOT_URL', currentHttpDomain());
 
-// 附件URL
+//
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 当前版本号
-define('MASTERLAB_VERSION', '1.2');
+define('MASTERLAB_VERSION', '2.0');
 
-// 是否将数据存储在缓存中
-define('ENABLE_CACHE', true);
+// 使用twig模板引擎
+define('TPL_ENGINE', 'twig');
 
-// 设置缓存的存储引擎
+// 设置缓存的存储引擎,由3个值可选：Membase,Redis,APC
 define('CACHE_HANDLER', 'Redis');
 
 // 定义数据缓存的过期时间(秒)

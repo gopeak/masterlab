@@ -4,7 +4,7 @@ namespace main\app\test\featrue\ctrl\admin;
 
 use main\app\classes\SettingsLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
-use main\app\model\permission\PermissionModel;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\SettingModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;

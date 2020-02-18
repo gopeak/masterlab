@@ -1,30 +1,3 @@
-function Board(opts) {
-    this.el = $(opts.el)
-    this.handle = opts.handle
-    this.list = this.el.find('.board-list-component')
-    this.init()
-}
-
-Board.prototype.init = function () {
-    if (this.el.hasClass("close")) {
-        this.list.hide()
-    }
-    this.trigger()
-}
-Board.prototype.trigger = function () {
-    const self = this
-
-    this.handle.on("click", function (event) {
-        var p = $(this).closest('.board')
-        if (p.hasClass("close")) {
-            p.removeClass("close")
-            self.list.show()
-        } else {
-            p.addClass("close")
-            self.list.hide()
-        }
-    })
-}
 
 var BoardColumn = (function () {
 
@@ -43,18 +16,18 @@ var BoardColumn = (function () {
     };
 
     BoardColumn.prototype.setOptions = function (options) {
-        for (i in  options) {
+        for (i in options) {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
             // }
         }
     };
 
-    BoardColumn.prototype.editHandler = function(){
-        $(".boards-list").on('mouseover', '.board-item', function(){
+    BoardColumn.prototype.editHandler = function () {
+        $(".boards-list").on('mouseover', '.board-item', function () {
             $(this).find('.board-item-edit').show()
         })
-        $(".boards-list").on('mouseout', '.board-item', function(){
+        $(".boards-list").on('mouseout', '.board-item', function () {
             $(this).find('.board-item-edit').hide()
         })
     }
@@ -101,7 +74,7 @@ var BoardColumn = (function () {
         })
         var items = document.getElementsByClassName('board-list');
         var columnNode = null;
-        if(window._perm_kanban!=0) {
+        if (window._perm_kanban != 0) {
             [].forEach.call(items, function (el) {
                 Sortable.create(el, {
                     group: 'item',
@@ -134,31 +107,32 @@ var BoardColumn = (function () {
                         var targetStatus = JSON.parse(ulData);
                         var issue_status = _issueConfig.issue_status;
                         var myCourse = document.createElement("select");
-                        myCourse.setAttribute("className", "selectpicker");
-                        for (var i = 0; i < targetStatus.length; i++) {
+                        myCourse.setAttribute("class", "deSelectpicker");
+                        for (var i = 0; i < targetStatus.status.length; i++) {
                             var myOption = document.createElement("option");
-                            myOption.value = targetStatus[i];
-                            myOption.text = targetStatus[i];
+                            myOption.value = targetStatus.status[i];
+                            myOption.text = targetStatus.status[i];
                             for (var skey in issue_status) {
-                                if (issue_status[skey]._key == targetStatus[i]) {
+                                if (issue_status[skey]._key == targetStatus.status[i]) {
                                     myOption.text = issue_status[skey].name;
                                     break;
                                 }
                             }
-                            myCourse.add(myOption);
+                            $(myCourse).append(myOption);
                         }
+                        console.log(myCourse[0])
                         swal({
-                                title: "请选择变更的状态？",
-                                text: myCourse.outerHTML,
-                                html: true,
-                                type: "warning",
-                                showCancelButton: true,
-                                confirmButtonColor: "#DD6B55",
-                                confirmButtonText: "确 定",
-                                cancelButtonText: "取 消！",
-                                closeOnConfirm: false,
-                                closeOnCancel: false
-                            },
+                            title: "请选择变更的状态？",
+                            text: myCourse.outerHTML,
+                            html: true,
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "确 定",
+                            cancelButtonText: "取 消",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
                             function (isConfirm) {
                                 if (isConfirm) {
                                     $.ajax({
@@ -196,9 +170,10 @@ var BoardColumn = (function () {
 
     }
 
+
     BoardColumn.prototype.fetchBoardBySprint = function (sprint_id) {
 
-        var params = {format: 'json'};
+        var params = { format: 'json' };
         var project_id = window._cur_project_id;
         var urls = parseURL(window.location.href);
         urls.searchObject.id = sprint_id;
@@ -221,14 +196,14 @@ var BoardColumn = (function () {
 
     BoardColumn.prototype.fetchBoardById = function (board_id) {
 
-        var params = {format: 'json'};
+        var params = { format: 'json' };
         var project_id = window._cur_project_id;
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: root_url + 'agile/fetchBoardById',
-            data: {id: board_id, project_id: project_id},
+            data: { id: board_id, project_id: project_id },
             success: function (resp) {
                 auth_check(resp);
                 BoardColumn.prototype.handlerResponse(resp);

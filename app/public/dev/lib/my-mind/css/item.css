@@ -10,15 +10,16 @@
 	display: none;
 }
 
-.content {
+.mind-content {
 	position: relative;
 	display: inline-block;
 	white-space: nowrap;
 	cursor: pointer;
+	padding: 2px 8px 8px;
 }
 
-.content > * {
-	vertical-align: middle;
+.mind-content > * {
+	margin: 0 2px;
 }
 
 .text {
@@ -26,7 +27,7 @@
 	text-align: center;
 	min-width: 0.5em;
 	min-height: 1.3em;
-	line-height: 1.3em;
+	line-height: 0.8em;
 	outline: none;
 }
 
@@ -74,8 +75,8 @@ canvas {
 
 .toggle {
 	position: absolute;
-	width: 12px;
-	height: 12px;
+	width: 16px;
+	height: 16px;
 	line-height: 12px;
 	cursor: pointer;
 	border-radius: 50%;

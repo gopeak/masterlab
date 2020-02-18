@@ -14,6 +14,8 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\classes\RewriteUrl;
 use main\app\classes\ProjectGantt;
+use main\app\model\issue\ExtraWorkerDayModel;
+use main\app\model\issue\HolidayModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectGanttSettingModel;
@@ -59,10 +61,10 @@ class Gantt extends BaseUserCtrl
                 die;
             }
         }
-
+        $projectId = $data['project_id'];
         $data['current_uid'] = UserAuth::getId();
         $userLogic = new UserLogic();
-        $projectUsers = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
 
         foreach ($projectUsers as &$user) {
             $user = UserLogic::format($user);
@@ -70,17 +72,118 @@ class Gantt extends BaseUserCtrl
         $data['project_users'] = $projectUsers;
 
         $projectRolemodel = new ProjectRoleModel();
-        $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
+        $data['roles'] = $projectRolemodel->getsByProject($projectId);
 
         $projectGanttModel = new ProjectGanttSettingModel();
-        $setting = $projectGanttModel->getByProject($data['project_id']);
+        $setting = $projectGanttModel->getByProject($projectId);
         $class = new ProjectGantt();
         if (empty($setting)) {
-            $class->initGanttSetting($data['project_id']);
+            $class->initGanttSetting($projectId);
+        }
+
+        // 迭代数据
+        $data['sprints'] = [];
+        $data['active_sprint'] = [];
+        if (!empty($data['project_id'])) {
+            $sprintModel = new SprintModel();
+            $data['sprints'] = $sprintModel->getItemsByProject($projectId);
+            $data['active_sprint'] = $sprintModel->getActive($projectId);
         }
 
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/gantt/gantt_project.php', $data);
+        $this->render('gitlab/project/gantt_project.php', $data);
+    }
+
+    public function fetchSetting()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $projectGanttModel = new ProjectGanttSettingModel();
+        $ganttSetting = $projectGanttModel->getByProject($projectId);
+        $class = new ProjectGantt();
+        if (empty($ganttSetting)) {
+            $class->initGanttSetting($projectId);
+            $ganttSetting = $projectGanttModel->getByProject($projectId);
+        }
+        $sourceType = 'project';
+        $sourceArr = ['project', 'active_sprint', 'module'];
+        if (in_array($ganttSetting['source_type'], $sourceArr)) {
+            $sourceType = $sourceType = $ganttSetting['source_type'];
+        }
+        $data = [];
+        $data['source_type'] = $sourceType;
+
+        $holidays = (new HolidayModel())->getDays($projectId);
+        $data['holidays'] = $holidays;
+
+        $extraHolidays = (new ExtraWorkerDayModel())->getDays($projectId);
+        $data['extra_holidays'] = $extraHolidays;
+
+        $this->ajaxSuccess('获取成功', $data);
+    }
+
+    /**
+     * 保存甘特图有设置
+     * @throws \Exception
+     */
+    public function saveSetting()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $projectGanttModel = new ProjectGanttSettingModel();
+        $sourceType = 'project';
+        $sourceArr = ['project', 'active_sprint', 'module'];
+        if (isset($_POST['source_type'])) {
+            if (in_array($_POST['source_type'], $sourceArr)) {
+                $sourceType = $_POST['source_type'];
+            }
+        }
+        $updateInfo['source_type'] = $sourceType;
+        list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
+        if ($ret) {
+            $model = new HolidayModel();
+            $model->deleteByProject($projectId);
+            $holidaysArr = json_decode($_POST['holiday_dates'], true);
+            foreach ($holidaysArr as $date) {
+                $arr = [];
+                $arr['project_id'] = $projectId;
+                $arr['day'] = $date;
+                $model->insert($arr);
+            }
+
+            $model = new ExtraWorkerDayModel();
+            $model->deleteByProject($projectId);
+            $holidaysArr = json_decode($_POST['extra_holiday_dates'], true);
+            foreach ($holidaysArr as $date) {
+                $arr = [];
+                $arr['project_id'] = $projectId;
+                $arr['day'] = $date;
+                $model->insert($arr);
+            }
+
+            $this->ajaxSuccess('操作成功', $sourceType);
+        } else {
+            $this->ajaxFailed('服务器执行错误', $msg);
+        }
+
     }
 
     /**

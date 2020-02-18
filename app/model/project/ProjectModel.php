@@ -38,7 +38,7 @@ class ProjectModel extends CacheModel
     public function getAllCount()
     {
         $field = "count(*) as cc ";
-        return (int)$this->getOne($field, []);
+        return (int)$this->getOne($field, ['archived' => 'N']);
     }
 
     public function getAll($primaryKey = true, $fields = '*')
@@ -47,7 +47,7 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array(), null, 'id', 'asc', null, $primaryKey);
+        return $this->getRows($fields, array('archived' => 'N'), null, 'id', 'asc', null, $primaryKey);
     }
 
     public function filterByType($typeId, $primaryKey = false, $fields = '*')
@@ -56,7 +56,7 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array('type' => $typeId), null, 'id', 'asc', null, $primaryKey);
+        return $this->getRows($fields, array('type' => $typeId, 'archived' => 'N'), null, 'id', 'asc', null, $primaryKey);
     }
 
     public function filterByNameOrKey($keyword)
@@ -84,7 +84,7 @@ class ProjectModel extends CacheModel
         $start = $page_size * ($page - 1);
         $limit = wrapBlank("LIMIT {$start}, " . $page_size);
         $order = wrapBlank("ORDER BY id ASC");
-        $where = wrapBlank("WHERE 1");
+        $where = wrapBlank("WHERE archived='N' ");
         $where .= $order . $limit;
         $sql = "SELECT * FROM " . $table . $where;
         $rows = $this->db->getRows($sql, $params, false);
@@ -122,6 +122,14 @@ class ProjectModel extends CacheModel
         $fields = "name";
         $where = ['id' => $projectId];
         $row = $this->getRow($fields, $where);
+        return $row;
+    }
+
+    public function getFieldNameById($projectId)
+    {
+        $field = "name";
+        $where = ['id' => $projectId];
+        $row = $this->getOne($field, $where);
         return $row;
     }
 

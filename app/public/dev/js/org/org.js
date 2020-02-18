@@ -228,9 +228,7 @@ var Org = (function() {
                 notify_error("请求数据错误" + res);
             }
         });
-
-
-    }
+    };
 
     Org.prototype.fetchAll = function(  ) {
 
@@ -247,6 +245,7 @@ var Org = (function() {
                 if(resp.data.orgs.length){
                     var source = $('#'+_options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
+                    resp.data.is_admin = window.$is_admin;
                     var result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
 

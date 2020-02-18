@@ -2,6 +2,8 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\PermissionGlobal;
+use main\app\classes\UserAuth;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\ctrl\BaseCtrl;
 use main\app\model\field\FieldModel;
@@ -12,7 +14,26 @@ use main\app\model\field\FieldTypeModel;
  */
 class Field extends BaseAdminCtrl
 {
+    /**
+     * Field constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $userId = UserAuth::getId();
+        $this->addGVar('top_menu_active', 'system');
+        $check = PermissionGlobal::check($userId, PermissionGlobal::MANAGER_ISSUE_PERM_ID);
 
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];

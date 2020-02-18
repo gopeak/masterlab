@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\PermissionGlobal;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
@@ -15,21 +16,46 @@ use main\app\classes\UserAuth;
 use main\app\classes\PermissionLogic;
 
 /**
- * 系统管理的项目模块
+ * 后台的项目管理模块
  */
 class Project extends BaseAdminCtrl
 {
     public static $page_sizes = [10, 20, 50, 100];
 
+    /**
+     * 后台的项目管理的构造函数
+     * Project constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $userId = UserAuth::getId();
+        $this->addGVar('top_menu_active', 'system');
+        $check = PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID);
+
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
+        }
+    }
+
     public function pageIndex()
     {
         $data = [];
-
-        // $data['list'] = $list;
         $data['title'] = 'Projects';
         $data['nav_links_active'] = 'project';
         $data['left_nav_active'] = 'list';
         $this->render('gitlab/admin/project_list.php', $data);
+    }
+
+    public function pageArchived()
+    {
+        $data = [];
+        $data['title'] = 'Projects';
+        $data['nav_links_active'] = 'project';
+        $data['left_nav_active'] = 'archived';
+        $this->render('gitlab/admin/project_list_archived.php', $data);
     }
 
     /**
@@ -46,19 +72,29 @@ class Project extends BaseAdminCtrl
     /**
      * 项目查询
      * @param int $page
+     * @param int $is_archived
      * @throws \Exception
      */
-    public function filterData($page = 1)
+    public function filterData($page = 1, $is_archived = 0)
     {
+        $is_archived = intval($is_archived);
         $pageLength = 30;
 
         $projectLogic = new ProjectLogic();
-        $projects = $projectLogic->projectListJoinUser();
+
+        if ($is_archived) {
+            $projects = $projectLogic->projectListJoinUserArchived();
+        } else {
+            $projects = $projectLogic->projectListJoinUser();
+        }
 
         foreach ($projects as &$item) {
             $item = ProjectLogic::formatProject($item);
+            if ($item['archived'] == 'Y') {
+                $item['name'] = $item['name'] . ' [已归档]';
+            }
         }
-       // unset($item);
+        unset($item);
 
         $data['total'] = count($projects);
         $data['page'] = $page;
@@ -97,6 +133,29 @@ class Project extends BaseAdminCtrl
         }
     }
 
+    /**
+     * 项目归档
+     * @throws \Exception
+     */
+    public function doArchived()
+    {
+        $projectId = null;
+        if (isset($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '参数错误');
+        }
+
+        $model = new ProjectModel();
+        $ret = $model->updateById(['archived' => 'Y'], $projectId);
+
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '更新数据失败');
+        } else {
+            $this->ajaxSuccess('归档成功');
+        }
+    }
 
     /**
      * 删除项目
