@@ -113,7 +113,6 @@
   <div class="ganttButtonBar noprint">
     <div class="buttons">
       <a style="display:none" href="https://gantt.twproject.com/"><img src="res/twGanttLogo.png" alt="Twproject" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
-
       <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite " title="undo"><span class="teamworkIcon">&#39;</span></button>
       <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite " title="redo"><span class="teamworkIcon">&middot;</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanAdd hide"></span>
@@ -131,28 +130,29 @@
       <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;" class="button textual icon " title="展开"><span class="teamworkIcon">6</span></button>
       <button onclick="$('#workSpace').trigger('collapseAll.gantt'); return false;" class="button textual icon " title="折叠"><span class="teamworkIcon">5</span></button>
 
-    <span class="ganttButtonSeparator"></span>
+      <span class="ganttButtonSeparator"></span>
       <button onclick="$('#workSpace').trigger('zoomMinus.gantt'); return false;" class="button textual icon " title="放大日期"><span class="teamworkIcon">)</span></button>
       <button onclick="$('#workSpace').trigger('zoomPlus.gantt');return false;" class="button textual icon " title="缩小日期"><span class="teamworkIcon">(</span></button>
-    <span class="ganttButtonSeparator"></span>
+      <span class="ganttButtonSeparator"></span>
       <button onclick="$('#workSpace').trigger('print.gantt');return false;" class="button textual icon " title="打印"><span class="teamworkIcon">p</span></button>
-    <span class="ganttButtonSeparator"></span>
-      <button onclick="ge.gantt.showCriticalPath=!ge.gantt.showCriticalPath; ge.redraw();return false;" class="button textual icon requireCanSeeCriticalPath" title="CRITICAL_PATH"><span class="teamworkIcon">&pound;</span></button>
-    <span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
+      <span class="ganttButtonSeparator"></span>
+      <button onclick="ge.gantt.showCriticalPath=!ge.gantt.showCriticalPath; ge.redraw();return false;" class="button textual icon requireCanSeeCriticalPath" title="关键路径"><span class="teamworkIcon">&pound;</span></button>
+      <span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
       <button onclick="ge.splitter.resize(.1);return false;" class="button textual icon" ><span class="teamworkIcon">F</span></button>
       <button onclick="ge.splitter.resize(50);return false;" class="button textual icon" ><span class="teamworkIcon">O</span></button>
       <button onclick="ge.splitter.resize(100);return false;" class="button textual icon"><span class="teamworkIcon">R</span></button>
       <span class="ganttButtonSeparator"></span>
       <button id="toggle_focus_mode"  onclick="$('#workSpace').trigger('fullScreen.gantt');return false;" class="button textual icon" title="全屏模式" id="fullscrbtn"><span class="teamworkIcon">@</span></button>
       <button onclick="ge.element.toggleClass('colorByStatus' );return false;" class="button textual icon"  title="颜色设置"><span class="teamworkIcon">&sect;</span></button>
-    <button onclick="editResources();" class="button textual requireWrite" title="项目成员设置"><span class="teamworkIcon">M</span></button>
-    <button onclick="show_setting();" class="button textual requireWrite" title="数据源设置"><span class="teamworkIcon">g</span></button>
+      <button onclick="editResources();" class="button textual requireWrite" title="项目成员设置"><span class="teamworkIcon">M</span></button>
+     <button onclick="show_setting();" class="button textual requireWrite" title="数据源设置"><span class="teamworkIcon">g</span></button>
       &nbsp; &nbsp;
-    <button onclick="saveGanttOnServer();" class="button first big requireWrite hide"  title="Save">Save</button>
-    <button onclick='newProject();' class='button requireWrite newproject hide' ><em>clear project</em></button>
-    <button class="button login hide" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
-    <button class="button opt collab hide" title="Start with Twproject" onclick="collaborate($(this));"  ><em>collaborate</em></button>
-    </div></div>
+     <button onclick="saveGanttOnServer();" class="button first big requireWrite hide"  title="Save">Save</button>
+     <button onclick='newProject();' class='button requireWrite newproject hide' ><em>clear project</em></button>
+     <button class="button login hide" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
+     <button class="button opt collab hide" title="Start with Twproject" onclick="collaborate($(this));"  ><em>collaborate</em></button>
+     </div>
+     </div>
   --></div>
 
   <div class="__template__" type="TASKSEDITHEAD"><!--
@@ -565,7 +565,6 @@
                     <div class="form-group">
                         <label class="control-label"  >数据源：</label>
                         <div class="col-sm-10">
-
                             <div class="form-group col-md-8">
                                 <label class="radio-inline">
                                     <input type="radio" name="source" id="source_active_sprint" value="active_sprint"> 当前迭代
@@ -575,6 +574,24 @@
                                 </label>
                                 <label class="radio-inline hide">
                                     <input type="radio" name="source" id="source_module" value="module"> 模块
+                                </label>
+                            </div>
+                            <div class="form-group  col-md-1">
+                            </div>
+                            <div class="form-group col-md-2">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  >显示待办事项：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-8">
+                                <label class="radio-inline">
+                                    <input type="radio" name="is_display_backlog" id="is_display_backlog_0" value="0"> 否
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="is_display_backlog" id="is_display_backlog_1" value="1"> 是
                                 </label>
                             </div>
                             <div class="form-group  col-md-1">

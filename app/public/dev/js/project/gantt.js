@@ -78,6 +78,7 @@ var Gantt = (function () {
                 auth_check(resp);
                 if(resp.ret==="200"){
                     $("#source_"+resp.data.source_type).attr('checked', 'true');
+                    $("#is_display_backlog_"+resp.data.is_display_backlog).attr('checked', 'true');
                     let source = $('#tpl_holiday_a').html();
                     let template = Handlebars.compile(source);
                     let result = template(resp.data);
@@ -126,16 +127,16 @@ var Gantt = (function () {
 
 
     Gantt.prototype.saveGanttSetting = function( ) {
-        let setting_value = $("input[name='source']:checked").val();
+        let source_type_value = $("input[name='source']:checked").val();
         let method = 'POST';
         let url = '/project/gantt/saveSetting/'+window._cur_project_id;
         let holiday_dates_str = $('#holiday_dates').val();
         let extra_holiday_dates_str = $('#extra_holiday_dates').val();
-
+        let is_display_backlog_value = $("input[name='is_display_backlog']:checked").val();
         $.ajax({
             type: method,
             dataType: "json",
-            data: {source_type:setting_value, holiday_dates:holiday_dates_str,extra_holiday_dates:extra_holiday_dates_str},
+            data: {source_type:source_type_value, is_display_backlog:is_display_backlog_value,holiday_dates:holiday_dates_str,extra_holiday_dates:extra_holiday_dates_str},
             url: url,
             success: function (resp) {
                 auth_check(resp);

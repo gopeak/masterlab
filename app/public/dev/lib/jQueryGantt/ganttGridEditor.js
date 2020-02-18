@@ -87,7 +87,7 @@ GridEditor.prototype.fillEmptyLines = function () {
 
 
 GridEditor.prototype.addTask = function (task, row, hideIfParentCollapsed) {
-  //console.debug("GridEditor.addTask",task,row);
+  console.debug("GridEditor.addTask",task,row);
   //var prof = new Profiler("ganttGridEditor.addTask");
 
   //remove extisting row
@@ -593,7 +593,7 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
 
 GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
   var self = this;
-
+  return;
 
   if (!self.master.permissions.canSeePopEdit)
     return;

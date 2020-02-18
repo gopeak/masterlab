@@ -2117,18 +2117,19 @@ CREATE TABLE `project_gantt_setting` (
   `id` int(11) UNSIGNED NOT NULL,
   `project_id` int(11) UNSIGNED DEFAULT NULL,
   `source_type` varchar(20) DEFAULT NULL COMMENT 'project,active_sprint,module 可选',
-  `source_from` varchar(20) DEFAULT NULL
+  `source_from` varchar(20) DEFAULT NULL,
+  `is_display_backlog` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否在甘特图中显示待办事项'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- 转存表中的数据 `project_gantt_setting`
 --
 
-INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_from`) VALUES
-(1, 1, 'active_sprint', NULL),
-(2, 3, 'project', NULL),
-(3, 2, 'project', NULL),
-(4, 11, 'project', NULL);
+INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_from`,`is_display_backlog`) VALUES
+(1, 1, 'active_sprint', NULL,0),
+(2, 3, 'project', NULL,0),
+(3, 2, 'project', NULL,0),
+(4, 11, 'project', NULL,0);
 
 -- --------------------------------------------------------
 

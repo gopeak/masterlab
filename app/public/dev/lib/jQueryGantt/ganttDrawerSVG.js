@@ -254,8 +254,12 @@ Ganttalendar.prototype.drawTask = function (task) {
         })
 
       }).dblclick(function () {
-        if (self.master.permissions.canSeePopEdit)
-          self.master.editor.openFullEditor(task,false);
+        if (self.master.permissions.canSeePopEdit){
+            if(task.id>0){
+                self.master.editor.openMasterlabEditor(task, false)
+            }
+        }
+        //  self.master.editor.openFullEditor(task,false);
       }).mouseenter(function () {
         //bring to top
         var el = $(this);
