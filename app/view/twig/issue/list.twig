@@ -2674,16 +2674,34 @@
                             var avatar = $select.data("avatar");
                         }
                         let field_name = $('#adv_field').val();
+                        let opt = $("#adv_opt").val();
+                        let value = $(".form-control[name='content']").val();
+
+                        if (typeof field_name == "undefined" || field_name == null || field_name == "") {
+                            notify_error("请选择查询字段");
+                            return false;
+                        }
+                        if (typeof opt == "undefined" || opt == null || opt == "") {
+                            notify_error("请选择操作符");
+                            return false;
+                        }
+
+                        if (typeof value == "undefined" || value == null || value == "") {
+                            notify_error("值不能为空");
+                            return false;
+                        }
+
+
                         var temp = {
                             logic: $("#adv_andor").val() || "and",
                             start_braces: "",
                             field_title: field_title,
                             field: field_name,
-                            opt: $("#adv_opt").val(),
+                            opt: opt,
                             data_type: advQueryType,
                             data_source: advQuerySource,
                             data_title: advQueryTitle,
-                            value: $(".form-control[name='content']").val(),
+                            value: value,
                             avatar: avatar || "",
                             display_html: display_html,
                             end_braces: ""
