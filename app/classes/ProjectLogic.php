@@ -217,6 +217,7 @@ class ProjectLogic
             'create_uid' => $createUid,
             'create_time' => time(),
             //'detail' => $projectInfo['detail'],
+            'issue_update_time' => time(),
         );
 
         $projectModel = new ProjectModel();
