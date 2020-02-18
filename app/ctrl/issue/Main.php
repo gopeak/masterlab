@@ -923,8 +923,8 @@ class Main extends BaseUserCtrl
             $projectId = (int)$_REQUEST['project_id'];
         }
 
-        $model = new ProjectModel();
-        $project = $model->getById($projectId);
+        $projectModel = new ProjectModel();
+        $project = $projectModel->getById($projectId);
         if (!isset($project['id'])) {
             $this->ajaxFailed('项目参数错误');
         }
@@ -971,6 +971,8 @@ class Main extends BaseUserCtrl
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
+        // 更新项目事项时间
+        $projectModel->updateById(['issue_update_time' => time()], $projectId);
 
         unset($project);
         //写入操作日志
@@ -1372,6 +1374,9 @@ class Main extends BaseUserCtrl
             if (!$ret) {
                 $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
             }
+
+            $projectModel = new ProjectModel();
+            $projectModel->updateById(['issue_update_time' => time()], $issue['project_id']);
         }
 
         //写入操作日志

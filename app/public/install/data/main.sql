@@ -2238,7 +2238,8 @@ CREATE TABLE `project_main` (
   `un_done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '未完成事项数',
   `done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '已经完成事项数',
   `closed_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `archived` enum('Y','N') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT '已归档'
+  `archived` enum('Y','N') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT '已归档',
+  `issue_update_time` INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '事项更新时间'
 ) ;
 
 --
