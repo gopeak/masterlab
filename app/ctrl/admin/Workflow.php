@@ -75,6 +75,7 @@ class Workflow extends BaseAdminCtrl
         $id = 1;
         $workflowModel = new WorkflowModel();
         $data['workflow'] = $workflowModel->getById($id);
+        $data['workflow']['data'] = json_decode($data['workflow']['data']);
         $data['params'] = $params;
         $this->render('gitlab/admin/workflow_new.php', $data);
     }
