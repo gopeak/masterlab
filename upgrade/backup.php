@@ -14,13 +14,14 @@ foreach ($commandArr as $key=>$command) {
 
 $databaseCfg = getConfigVar('database');
 $useDbCfg = $databaseCfg['database']['default'];
-$dbHost = $useDbCfg['host'] . ':' . $useDbCfg['port'];
+$dbHost = $useDbCfg['host'];
+$dbPort = $useDbCfg['port'];
 $dbUser = $useDbCfg['user'];
 $dbPass = $useDbCfg['password'];
 $dbName = $useDbCfg['db_name'];
 
 $backupFile = 'masterlab-backup' . date("Y-m-d-H-i-s") . '.gz';
-$command = "mysqldump --opt -h $dbHost -u $dbUser -p $dbPass --single-transaction --set-gtid-purged=off  " .
+$command = "mysqldump --opt -h $dbHost -P $dbPort -u $dbUser -p$dbPass --single-transaction --set-gtid-purged=off  " .
     $dbName . " | gzip > $backupFile";
 
 system($command);
