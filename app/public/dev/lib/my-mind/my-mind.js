@@ -1778,6 +1778,47 @@ MM.Action.MoveItem = function (item, newParent, newIndex, newSide) {
 	this._oldParent = item.getParent();
 	this._oldIndex = this._oldParent.getChildren().indexOf(item);
 	this._oldSide = item.getSide();
+
+    if(item._type==='issue'){
+    	let current_issue_id = item._id.replace('issue_','');
+        let targetItem = newParent;
+        if(targetItem._type==='project'){
+
+        }
+        if(targetItem._type==='root_sprint'){
+
+        }
+        if(targetItem._type==='second'){
+            let arr = targetItem._id.split('_');
+            if(arr.length>1 ){
+                let target_id = arr[1];
+                let post_data = {}
+                post_data[arr[0]] = target_id;
+                post_data['remove_master'] = '1';
+                if(target_id){
+                    var fnc = function(){
+                        window.$mindAjax.removeChild(current_issue_id)
+                    }
+                    window.$mindAjax.update(current_issue_id, post_data, fnc);
+                }
+            }
+        }
+        if(targetItem._type==='issue'){
+            let master_issue_id = targetItem._id.replace('issue_','');
+            if(master_issue_id){
+                let range_type = $("#source_range").val();
+                let second_type = '';
+                if(range_type==='all'){
+                    second_type = $('#all-group_by').val();
+                }else{
+                    second_type = $('#sprint-group_by').val();
+                }
+                window.$mindAjax.convertChild(current_issue_id, master_issue_id, second_type);
+            }
+        }
+    }
+
+
 }
 MM.Action.MoveItem.prototype = Object.create(MM.Action.prototype);
 MM.Action.MoveItem.prototype.perform = function () {
@@ -4968,7 +5009,7 @@ MM.UI.IssueType.prototype.handleEvent = function (e) {
         let issue_type_id = $(this._select).find("option:selected").attr("origin-id");
         if(issue_id && issue_type_id){
             let post_data = {issue_type:issue_type_id}
-              window.$mindAjax.update(issue_id, post_data);
+            window.$mindAjax.update(issue_id, post_data);
         }
     }
 }

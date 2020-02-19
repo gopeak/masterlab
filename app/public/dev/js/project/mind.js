@@ -408,6 +408,49 @@ let MindAjax = (function () {
         });
     }
 
+
+    MindAjax.prototype.convertChild = function (issue_id, master_id, second_type) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/convertChild",
+            data: { issue_id: issue_id, master_id: master_id, second_type:second_type },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('删除失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    MindAjax.prototype.removeChild = function (issue_id) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/removeChild",
+            data: { issue_id: issue_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('删除失败:' + resp.msg);
+                    return;
+                }
+                // notify_success('操作成功');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
     MindAjax.prototype.updateIssueFormat = function (issue_id, format, fnc) {
         // 初始必填项
         let project_id = window._cur_project_id;

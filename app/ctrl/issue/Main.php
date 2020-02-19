@@ -1893,9 +1893,16 @@ class Main extends BaseUserCtrl
         if (empty($masterId)) {
             $this->ajaxFailed('参数错误', '父事项id不能为空');
         }
+        $issueModel = new IssueModel();
+        $masterIssue = $issueModel->getById($masterId);
+
+        $secondType = null;
+        if (isset($_POST['second_type'])) {
+            $secondType = $_POST['second_type'];
+        }
 
         $issueLogic = new IssueLogic();
-        list($ret, $msg) = $issueLogic->convertChild($issueId, $masterId);
+        list($ret, $msg) = $issueLogic->convertChild($issueId, $masterId, $secondType);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
