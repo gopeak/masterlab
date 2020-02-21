@@ -1266,6 +1266,7 @@ class Main extends BaseUserCtrl
         }
 
         $info = $info + $this->getFormInfo($params);
+        //print_r($info);exit;
         if (empty($info)) {
             $this->ajaxFailed('参数错误,数据为空');
         }
@@ -1291,7 +1292,7 @@ class Main extends BaseUserCtrl
                 if (in_array($fieldName, $excludeFieldArr)) {
                     continue;
                 }
-                if (isset($info[$fieldName]) && empty(trimStr($params[$fieldName]))) {
+                if (isset($info[$fieldName]) && isset($params[$fieldName]) && empty(trimStr($params[$fieldName]))) {
                     $err[$fieldName] = $field['title'] . '不能为空';
                 }
             }
