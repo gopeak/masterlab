@@ -436,8 +436,8 @@ class Widget extends BaseUserCtrl
         $projectId = $this->getParamProjectId();
 
         $field = 'assignee';
-        if (isset($_GET['data_type'])) {
-            $field = $_GET['data_type'];
+        if (isset($_GET['data_field'])) {
+            $field = $_GET['data_field'];
         }
 
         $startDate = null;
