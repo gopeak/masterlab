@@ -151,7 +151,8 @@ var IssueAdvQuery = (function () {
                 auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
-                    window.qtipApi.hide()
+                    $('#modal-adv_query').modal('hide');
+                    window.qtipApi.hide();
                     $('#btn-save_adv_filter').qtip('api').toggle(false);
                 } else {
                     notify_error('保存失败,错误信息:' + resp.msg);

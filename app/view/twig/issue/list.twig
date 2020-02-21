@@ -447,7 +447,7 @@
                                                     border: 1px solid #e8e8e8;
                                                     color: #666;
                                                     font-size: 12px;
-                                                    margin: 0 5px 5px 4px;
+                                                    margin: 0 5px 0 4px;
                                                     padding: 2px 6px 2px 6px;
                                                     cursor: pointer;
                                                 }
@@ -1598,10 +1598,10 @@
                 <script type="text/html" id="save_adv_filter_tpl">
                     <div class="row">
                         <div class="col-md-8">
-                            <input type="text" id="save_filter_text" placeholder="请输入过滤器名称" name="save_filter_text" class="form-control"/>
+                            <input type="text" id="save_adv_filter_text" placeholder="请输入过滤器名称" name="save_adv_filter_text" class="form-control"/>
                         </div>
                         <div class="col-md-4">
-                            <a class="btn btn-sm" id="save_filter_btn" onclick="IssueAdvQuery.prototype.saveAdvQuery($('#save_filter_text').val())" href="#">确定</a>
+                            <a class="btn btn-sm" id="save_adv_filter_btn" onclick="IssueAdvQuery.prototype.saveAdvQuery($('#save_adv_filter_text').val())" href="#">确定</a>
                         </div>
                     </div>
                 </script>
@@ -2423,6 +2423,9 @@
                             return n
                         });
 
+                        window.qtipApi.hide()
+                        $('#btn-save_adv_filter').qtip('api').toggle(false);
+
                         if(is_empty(temp)){
                             notify_warn('提示','查询条件为空!');
                             return;
@@ -2929,6 +2932,12 @@
                             title: "新增过滤器",
                             button: "关闭"
                         },
+                        position: {
+                            target: 'event', 
+                            at: 'top left',
+                            my: "right center",
+                            adjust: {x: -5}
+                        },
                         show: 'click',
                         hide: 'click',
                         style: {
@@ -2937,12 +2946,20 @@
                         },
                         events: {
                             show: function (event, api) {
-                                var t = setTimeout("$('#save_filter_text').focus();", 200)
+                                var t = setTimeout("$('#save_adv_filter_text').focus();", 200)
                             }
                         }
                     });
                     window.qtipApi = $('#btn-save_adv_filter').qtip('api');
 
+                    $(document).click(function(event){
+                            var _con = $('.qtip');  // 设置目标区域
+                            var _event = $("#btn-save_adv_filter");
+                            if(!_con.is(event.target) && _con.has(event.target).length === 0 && !_event.is(event.target) && _event.has(event.target).length === 0){ 
+                                window.qtipApi.hide()
+                                $('#btn-save_adv_filter').qtip('api').toggle(false);
+                            }
+                    });
 
                     $('#custom-filter-more').qtip({
                         content: {
