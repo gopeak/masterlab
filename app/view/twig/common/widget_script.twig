@@ -182,30 +182,36 @@
         var length2 = $item_second.length;
         var length3 = $item_third.length;
 
+        var temp_first_widgets = JSON.parse(JSON.stringify(first_widgets)) || [],
+            temp_second_widgets = JSON.parse(JSON.stringify(second_widgets)) || [],
+            temp_third_widgets = JSON.parse(JSON.stringify(third_widgets)) || [];
+
         switch(layoutType.length)
         {
             case 1:
                 $panel_first.append($panel_second.html() + $panel_third.html());
                 $panel_second.html("");
                 $panel_third.html("");
-                _user_widgets.first = first_widgets.concat(second_widgets).concat(third_widgets);
+                _user_widgets.first = first_widgets.concat(temp_second_widgets).concat(temp_third_widgets);
                 _user_widgets.second = [];
                 _user_widgets.third = [];
                 saveUserWidget(_user_widgets);
                 break;
-            case 2:
+            case 2:                    
                 if (length1 > 1 && length2 === 0 && length3 === 0) {
                     $item_first.each(function (i) {
-                        if (i >= length1/2) {
+                        if (i === length1-1) {
                             $panel_second.append($(this).prop('outerHTML'));
                             $(this).remove();
-                            _user_widgets.second = second_widgets.push(first_widgets[i]);
-                            _user_widgets.first = first_widgets.splice(i, 1);
+                            second_widgets.push(temp_first_widgets[i]);
+                            _user_widgets.second = second_widgets;
+                            first_widgets.splice(i, 1);
+                            _user_widgets.first = first_widgets;
                         }
                     });
                 } else if (length3 > 0) {
                     $panel_second.append($panel_third.html());
-                    _user_widgets.second = second_widgets.concat(third_widgets);
+                    _user_widgets.second = second_widgets.concat(temp_third_widgets);
                 }
 
                 $panel_third.html("");
@@ -214,33 +220,41 @@
                 break;
             case 3:
                 if (length1 > 1 && length2 === 0 && length3 === 0) {
+                    var temp_third, temp_second;
                     $item_first.each(function (i) {
-                        if (i >= length1/3 && i < length1 * 2/3 ) {
+                        if ((length1 < 3 && i === length1 - 1) || (length1 > 3 && i === length1 - 2)) {
                             $panel_second.append($(this).prop('outerHTML'));
-                            second_widgets.push(first_widgets[i]);
-                            first_widgets.splice(i, 1);
-                            _user_widgets.second = second_widgets;
-                            _user_widgets.first = first_widgets;
+                            second_widgets.push(temp_first_widgets[i]);
+                            temp_second = i;
                             $(this).remove();
                         }
 
-                        if (i >= i < length1 * 2/3) {
-                            $panel_third.append($(this));
-                            third_widgets.push(first_widgets[i]);
-                            first_widgets.splice(i, 1);
-                            _user_widgets.third = third_widgets;
-                            _user_widgets.first = first_widgets;
+                        if (length1 > 3 && i === length1 -1) {
+                            $panel_third.append($(this).prop('outerHTML'));
+                            third_widgets.push(temp_first_widgets[i]);
+                            temp_third = i;
                             $(this).remove();
                         }
+
+                        if (temp_third) {
+                            first_widgets.splice(temp_third, 1);
+                            first_widgets.splice(temp_second, 1);
+                        } else {
+                            first_widgets.splice(temp_second, 1);
+                        }
+                        _user_widgets.third = third_widgets;
+                        _user_widgets.second = second_widgets;
+                        _user_widgets.first = first_widgets;
+
                     });
                 } else if (length2 > 1 && length3 === 0) {
                     $item_second.each(function (i) {
                         if (i >= length2/2) {
                             $panel_third.append($(this).prop('outerHTML'));
-                            third_widgets.push(second_widgets[i]);
+                            third_widgets.push(temp_second_widgets[i]);
                             second_widgets.splice(i, 1);
                             _user_widgets.third = third_widgets;
-                            _user_widgets.first = second_widgets;
+                            _user_widgets.second = second_widgets;
                             $(this).remove();
                         }
                     });
@@ -248,7 +262,7 @@
                     $item_first.each(function (i) {
                         if (i === length1-1) {
                             $panel_third.append($(this).prop('outerHTML'));
-                            third_widgets.push(first_widgets[i]);
+                            third_widgets.push(temp_first_widgets[i]);
                             first_widgets.splice(i, 1);
                             _user_widgets.third = third_widgets;
                             _user_widgets.first = first_widgets;
