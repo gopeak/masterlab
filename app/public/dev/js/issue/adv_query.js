@@ -48,7 +48,7 @@ var IssueAdvQuery = (function () {
 
     function IssueAdvQuery(options) {
         var tempOptions = JSON.parse(JSON.stringify(options));
-        console.log(options);
+        console.log("options", options);
         for (var value of Object.values(advFields)) {
             adv_options.fields.push({
                 value: value.title,
@@ -93,7 +93,7 @@ var IssueAdvQuery = (function () {
             });
         }
 
-        adv_options.sprint = tempOptions.sprint;
+        adv_options.sprints = tempOptions.sprint;
 
         for (var [key, value] of Object.entries(tempOptions.users)) {
             adv_options.users.push({
@@ -102,8 +102,6 @@ var IssueAdvQuery = (function () {
                 avatar: value.avatar
             });
         }
-
-        console.log(adv_options);
     };
 
     IssueAdvQuery.prototype.renderAdvQuery = function (details) {
