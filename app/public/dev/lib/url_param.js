@@ -1,3 +1,27 @@
+/**
+ * [获取URL中的参数名及参数值的集合]
+ * 示例URL:http://masterlab.ink/getrequest.html?uid=admin&rid=1&fid=2&name=masterlab
+ * @param {[string]} urlStr [当该参数不为空的时候，则解析该url中的参数集合]
+ * @return {[string]}       [参数集合]
+ */
+function getRequestParams(urlStr) {
+    if (typeof urlStr == "undefined") {
+        var url = decodeURI(location.search);
+    } else {
+        var url = "?" + urlStr.split("?")[1];
+    }
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = decodeURI(strs[i].split("=")[1]);
+        }
+    }
+    return theRequest;
+}
+
+
 function getQueStr(url, ref) //取获参数值
 {
     var str = url.substr(url.indexOf('?') + 1);

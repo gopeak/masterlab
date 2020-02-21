@@ -332,6 +332,12 @@ function userAdd() {
                 fetchUsers('/admin/user/filter', 'user_tpl', 'render_id');
                 notify_success(resp.msg, resp.data);
                 //setTimeout("window.location.reload();", 2000)
+
+                // 清空form表单
+                $("#form-user_add input").each(function(){
+                    $(this).val('');
+                });
+
                 $('#modal-user_add').modal('hide');
             } else {
                 notify_error('添加失败,' + resp.msg);
