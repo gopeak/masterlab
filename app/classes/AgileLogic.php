@@ -658,9 +658,36 @@ class AgileLogic
                 foreach ($filterDataArr as $type => $itemArr) {
                     if ($type == 'status' && !empty($itemArr)) {
                         $filtered = true;
-                        $sql .= "     status in ( :status ) ";
                         $idArr = self::getIdArrByKeys($statusKeyArr, $itemArr);
-                        $params['status'] = implode(',', $idArr);
+
+                        // 按状态搜索事项
+                        $statusId = null;
+                        if (isset($_GET[urlencode('状态')])) {
+                            $model = new IssueStatusModel();
+                            $row = $model->getByName(urldecode($_GET[urlencode('状态')]));
+                            if (isset($row['id'])) {
+                                $statusId = $row['id'];
+                            }
+                            unset($row);
+                        }
+                        if (isset($_GET['status_id'])) {
+                            $statusId = (int)$_GET['status_id'];
+                        }
+
+                        if (empty($statusId)) {
+                            $sql .= "     status in ( :status ) ";
+                            $params['status'] = implode(',', $idArr);
+                        } else if (in_array($statusId, $idArr)) {
+                            $sql .= "     status=:status";
+                            $params['status'] = $statusId;
+                        } else if (!in_array($statusId, $idArr)) {
+                            $sql .= "     status=:status";
+                            $params['status'] = 0;
+                        } else {
+                            $sql .= "     status in ( :status ) ";
+                            $params['status'] = implode(',', $idArr);
+                        }
+
                     }
                     if ($type == 'resolve' && !empty($itemArr)) {
                         $filtered = true;
@@ -817,30 +844,13 @@ class AgileLogic
                     $params['resolve'] = $resolveId;
                 }
 
-                // 按状态搜索事项
-                $statusId = null;
-                if (isset($_GET[urlencode('状态')])) {
-                    $model = new IssueStatusModel();
-                    $row = $model->getByName(urldecode($_GET[urlencode('状态')]));
-                    if (isset($row['id'])) {
-                        $statusId = $row['id'];
-                    }
-                    unset($row);
-                }
-                if (isset($_GET['status_id'])) {
-                    $statusId = (int)$_GET['status_id'];
-                }
 
-                if ($statusId !== null) {
-                    $sql .= " AND status=:status";
-                    $params['status'] = $statusId;
-                }
 
 
                 $orderBy = 'id';
                 $sortBy = 'DESC';
                 $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
-
+                //echo $sql;die;
                 $table = $issueModel->getTable();
                 // 获取总数
                 $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
