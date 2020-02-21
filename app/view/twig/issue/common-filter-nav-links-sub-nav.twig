@@ -31,39 +31,21 @@
                 <a title="我报告的事项" href="{{ issue_main_url}}?sys_filter=my_report"><span>我报告的</span>
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'open') %} {{ 'active' }}{% endif %}">
-                <a title="打开的事项" href="{{ issue_main_url}}?sys_filter=open"><span>打开的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'unsolved') %} {{ 'active' }}{% endif %}">
-                <a title="非'已经解决'状态的事项" href="{{ issue_main_url}}?sys_filter=unsolved"><span>未解决的</span>
-                </a>
-            </li>
             <li class="filter_nav_li  {% if (sys_filter == 'active_sprint_unsolved') %} {{ 'active' }}{% endif %}">
                 <a title="当前活跃迭代的未解决事项" href="{{ issue_main_url}}?sys_filter=active_sprint_unsolved"><span>当前迭代未解决的</span>
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'done') %} {{ 'active' }}{% endif %}">
-                <a title="'已经解决'状态的事项" href="{{ issue_main_url}}?sys_filter=done"><span>完成的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'recently_create') %} {{ 'active' }}{% endif %}">
-                <a title="按最近创建时间排序" href="{{ issue_main_url}}?sys_filter=recently_create"><span>最近创建的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'recently_resolve') %} {{ 'active' }}{% endif %}">
-                <a title="最近解决的" href="{{ issue_main_url}}?sys_filter=recently_resolve"><span>最近解决的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'recently_update') %} {{ 'active' }}{% endif %}">
-                <a title="最近更新的" href="{{ issue_main_url}}?sys_filter=recently_update"><span>最近更新的</span>
-                </a>
+
+            <li class="filter_nav_li  ">
+                | 过滤器：
             </li>
             {% if ( favFilters) %}
                 <li class="filter_nav_li  ">
-                    <a id="custom-filter-more" title="您收藏的过滤器 <a>管理</a>" href="#"><span>自定义过滤器</span><i class="fa fa-caret-down"></i>
+                    <a id="custom-filter-more" title="您收藏的过滤器 <a>管理</a>" href="#"><span>更 多</span><i class="fa fa-caret-down"></i>
                     </a>
                 </li>
+            {% else %}
+                无
             {% endif %}
         </ul>
 

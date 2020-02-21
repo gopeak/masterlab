@@ -942,7 +942,7 @@ class Main extends BaseUserCtrl
 
         $info['issue_type'] = $issueTypeId;
 
-        $info = $info + $this->getFormInfo($params);
+        $info = $info + $this->getAddFormInfo($params);
 
         $model = new IssueModel();
 
@@ -1053,37 +1053,41 @@ class Main extends BaseUserCtrl
         if (isset($params['progress'])) {
             $info['progress'] = (int)$params['progress'];
         }
+
         if (isset($params['depends'])) {
             $info['depends'] = (int)$params['depends'];
         }
-        if (isset($params['is_start_milestone'])) {
-            $info['is_start_milestone'] = 1;
-        } else {
-            $info['is_start_milestone'] = 0;
-        }
-        if (isset($params['is_end_milestone'])) {
-            $info['is_end_milestone'] = 1;
-        } else {
-            $info['is_end_milestone'] = 0;
-        }
-        if (isset($params['below_id']) && !empty($params['below_id'])) {
-            $belowIssueId = (int)$params['below_id'];
-            $model = new IssueModel();
-            $belowIssue = $model->getById($belowIssueId);
-            $fieldWeight = '';
-            if (isset($params['gant_type']) && $params['gant_type'] == 'project_sprint') {
-                $fieldWeight = 'gant_proj_sprint_weight';
+
+        if(isset($_GET['from_gantt']) && $_GET['from_gantt']=='1'){
+            if (isset($params['is_start_milestone'])) {
+                $info['is_start_milestone'] = 1;
+            } else {
+                $info['is_start_milestone'] = 0;
             }
-            if (isset($params['gant_type']) && $params['gant_type'] == 'project_module') {
-                $fieldWeight = 'gant_proj_module_weight';
+            if (isset($params['is_end_milestone'])) {
+                $info['is_end_milestone'] = 1;
+            } else {
+                $info['is_end_milestone'] = 0;
             }
-            if (isset($params['gant_type']) && $params['gant_type'] == 'sprint') {
-                $fieldWeight = 'gant_sprint_weight';
+            if (isset($params['below_id']) && !empty($params['below_id'])) {
+                $belowIssueId = (int)$params['below_id'];
+                $model = new IssueModel();
+                $belowIssue = $model->getById($belowIssueId);
+                $fieldWeight = '';
+                if (isset($params['gant_type']) && $params['gant_type'] == 'project_sprint') {
+                    $fieldWeight = 'gant_proj_sprint_weight';
+                }
+                if (isset($params['gant_type']) && $params['gant_type'] == 'project_module') {
+                    $fieldWeight = 'gant_proj_module_weight';
+                }
+                if (isset($params['gant_type']) && $params['gant_type'] == 'sprint') {
+                    $fieldWeight = 'gant_sprint_weight';
+                }
+                if ($fieldWeight != '' && isset($belowIssue[$fieldWeight])) {
+                    $info[$fieldWeight] = (int)$belowIssue[$fieldWeight] + 1;
+                }
+                unset($model, $belowIssue);
             }
-            if ($fieldWeight != '' && isset($belowIssue[$fieldWeight])) {
-                $info[$fieldWeight] = (int)$belowIssue[$fieldWeight] + 1;
-            }
-            unset($model, $belowIssue);
         }
     }
 
@@ -1093,7 +1097,7 @@ class Main extends BaseUserCtrl
      * @return array
      * @throws \Exception
      */
-    private function getFormInfo($params = [])
+    private function getAddFormInfo($params = [])
     {
         $info = [];
 
@@ -1208,6 +1212,109 @@ class Main extends BaseUserCtrl
         if (isset($params['weight'])) {
             $info['weight'] = (int)$params['weight'];
         }
+        $this->getGanttInfo($params, $info);
+
+        // print_r($info);
+        return $info;
+    }
+
+    private function getUpdateFormInfo($params = [])
+    {
+        $info = [];
+
+        // 标题
+        if (isset($params['summary'])) {
+            $info['summary'] = $params['summary'];
+        }
+
+        if (isset($params['issue_type'])) {
+            $info['issue_type'] = (int)$params['issue_type'];
+        }
+
+        // 状态
+        if (isset($params['status'])) {
+            $statusId = (int)$params['status'];
+            $model = new IssueStatusModel();
+            $issueStatusArr = $model->getAll();
+            if (!isset($issueStatusArr[$statusId])) {
+                $this->ajaxFailed('param_error:status_not_found');
+            }
+            unset($issueStatusArr);
+            $info['status'] = $statusId;
+        }
+
+        // 优先级
+        if (isset($params['priority'])) {
+            $priorityId = (int)$params['priority'];
+            $model = new IssuePriorityModel();
+            $issuePriority = $model->getAll();
+            if (!isset($issuePriority[$priorityId])) {
+                $this->ajaxFailed('param_error:priority_not_found');
+            }
+            unset($issuePriority);
+            $info['priority'] = $priorityId;
+        }
+
+        // 解决结果
+        if (isset($params['resolve']) && !empty($params['resolve'])) {
+            $resolveId = (int)$params['resolve'];
+            $model = new IssueResolveModel();
+            $issueResolves = $model->getAll();
+            if (!isset($issueResolves[$resolveId])) {
+                $this->ajaxFailed('param_error:resolve_not_found');
+            }
+            unset($issueResolves);
+            $info['resolve'] = $resolveId;
+        }
+
+        // 负责人
+        if (isset($params['assignee']) && !empty($params['assignee'])) {
+            $assigneeUid = (int)$params['assignee'];
+            $model = new UserModel();
+            $user = $model->getByUid($assigneeUid);
+            if (!isset($user['uid'])) {
+                $this->ajaxFailed('param_error:assignee_not_found');
+            }
+            unset($user);
+            $info['assignee'] = $assigneeUid;
+        }
+
+        // 报告人
+        if (isset($params['reporter']) && !empty($params['reporter'])) {
+            $reporterUid = (int)$params['reporter'];
+            $model = new UserModel();
+            $user = $model->getByUid($reporterUid);
+            if (!isset($user['uid'])) {
+                $this->ajaxFailed('param_error:reporter_not_found');
+            }
+            unset($user);
+            $info['reporter'] = $reporterUid;
+        }
+
+        if (isset($params['description'])) {
+            $info['description'] = $params['description'];
+        }
+
+        if (isset($params['module'])) {
+            $info['module'] = $params['module'];
+        }
+
+        if (isset($params['environment'])) {
+            $info['environment'] = $params['environment'];
+        }
+
+
+        if (isset($params['milestone'])) {
+            $info['milestone'] = (int)$params['milestone'];
+        }
+
+        if (array_key_exists('sprint', $params)) {
+            $info['sprint'] = (int)$params['sprint'];
+        }
+        //print_r($info);
+        if (isset($params['weight'])) {
+            $info['weight'] = (int)$params['weight'];
+        }
 
         $this->getGanttInfo($params, $info);
         // print_r($info);
@@ -1265,7 +1372,7 @@ class Main extends BaseUserCtrl
             $info['summary'] = $params['summary'];
         }
 
-        $info = $info + $this->getFormInfo($params);
+        $info = $info + $this->getUpdateFormInfo($params);
         if (empty($info)) {
             $this->ajaxFailed('参数错误,数据为空');
         }

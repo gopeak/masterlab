@@ -1140,7 +1140,12 @@ GanttMaster.prototype.updateSyncServerTask = function () {
     var cnt=0;
 
     //change dates
-    task.setPeriod(Date.parseString($("#start_date").val()).getTime(), Date.parseString($("#due_date").val()).getTime() + (3600000 * 22));
+    let start_date = $("#start_date").val();
+    let due_date = $("#due_date").val();
+    console.log(start_date, due_date);
+    if(!is_empty(start_date) && !is_empty(due_date)){
+        task.setPeriod(Date.parseString(start_date).getTime(), Date.parseString(due_date).getTime() + (3600000 * 22));
+    }
 
     //change status
     // task.changeStatus($("#status").val());
@@ -1151,7 +1156,7 @@ GanttMaster.prototype.updateSyncServerTask = function () {
         //closeBlackPopup();
     }
     var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-    var url = '/issue/main/update';
+    var url = '/issue/main/update?from_gantt=1';
     $.ajax({
         type: 'post',
         dataType: "json",
@@ -1209,7 +1214,7 @@ GanttMaster.prototype.addSyncServerTask = function () {
     var self = this;
 
     var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-    var url = '/issue/main/add';
+    var url = '/issue/main/add?from_gantt=1';
 
     $.ajax({
         type: 'post',
