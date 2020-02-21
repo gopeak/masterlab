@@ -1266,7 +1266,6 @@ class Main extends BaseUserCtrl
         }
 
         $info = $info + $this->getFormInfo($params);
-        //print_r($info);exit;
         if (empty($info)) {
             $this->ajaxFailed('参数错误,数据为空');
         }
