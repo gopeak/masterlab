@@ -40,14 +40,13 @@ body.stop-scrolling {
       right: 15px; } }
   .sweet-alert h2 {
     color: #575757;
-    font-size: 30px;
+    font-size: 18px;
     text-align: center;
     font-weight: 600;
     text-transform: none;
     position: relative;
-    margin: 25px 0;
+    margin: 0 0 15px;
     padding: 0;
-    line-height: 40px;
     display: block; }
   .sweet-alert p {
     color: #797979;
@@ -174,12 +173,12 @@ body.stop-scrolling {
     color: white;
     border: none;
     box-shadow: none;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 500;
     -webkit-border-radius: 4px;
     border-radius: 5px;
-    padding: 10px 32px;
-    margin: 26px 5px 0 5px;
+    padding: 8px 32px;
+    margin: 16px 5px 0 5px;
     cursor: pointer; }
     .sweet-alert button:focus {
       outline: none;
@@ -212,8 +211,8 @@ body.stop-scrolling {
   .sweet-alert[data-has-confirm-button=false][data-has-cancel-button=false] {
     padding-bottom: 40px; }
   .sweet-alert .sa-icon {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border: 4px solid gray;
     -webkit-border-radius: 40px;
     border-radius: 40px;
@@ -248,7 +247,7 @@ body.stop-scrolling {
       .sweet-alert .sa-icon.sa-warning .sa-body {
         position: absolute;
         width: 5px;
-        height: 47px;
+        height: 27px;
         left: 50%;
         top: 10px;
         -webkit-border-radius: 2px;
