@@ -867,6 +867,7 @@ var Widgets = (function () {
                 }
 
                 resp.data['options'] = options;
+                console.log("ctx_sprint_burndown", window.ctx_sprint_burndown);
                 if (window.ctx_sprint_burndown) {
                     window.ctx_sprint_burndown.destroy();
                 }
