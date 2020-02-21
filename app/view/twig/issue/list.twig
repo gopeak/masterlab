@@ -59,6 +59,20 @@
 		<link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
 		<link rel="stylesheet" href="/dev/css/issue/list.css?v={{_version}}"/>
+        <style type="text/css">
+            .active_underline a{
+                text-decoration: underline;
+                font-weight: 600;
+                font-size: 14px;
+                line-height: 28px;
+            }
+            .active_underline a span{
+                color: #1f78d1;
+            }
+            .filter_active_underline a span{
+                color: #fc9403;
+            }
+        </style>
 	</head>
 
 	<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -2104,14 +2118,15 @@
 
             <script type="text/tpl" id="custom-filter-tpl">
 
-			 {% for f in favFilters %}
+
+			 {% for f in otherFavFilters %}
                 {% set active = '' %}
                 {% set class = '' %}
                 {% if (f['id'] == active_id) %}
                     {% set active = ' √' %}
                     {% set class = 'label deploy-project-label' %}
                 {% endif %}
-                    <a class=" {{ class }} " id="fav_filter-{{ f['id'] }}" href="?fav_filter={{ f['id'] }}">
+                    <a  style="color:#fc9403" class=" {{ class }} " id="fav_filter-{{ f['id'] }}" href="?fav_filter={{ f['id'] }}">
                         {{ f['name'] }}{{ active }}
                     </a><br>
 			 {% endfor %}
@@ -2964,7 +2979,7 @@
                     $('#custom-filter-more').qtip({
                         content: {
                             text: $('#custom-filter-tpl').html(),
-                            title: "您收藏的过滤器",
+                            title: "更多过滤器",
                             button: "关闭"
                         },
                         show: 'click',

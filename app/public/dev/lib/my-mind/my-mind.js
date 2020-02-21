@@ -367,6 +367,8 @@ MM.Item = function () {
 	this._dom.create.classList.add("fa");
 	this._dom.create.classList.add("fa-pencil");
 
+
+
 	this._dom.content.appendChild(this._dom.project_img);
 	this._dom.content.appendChild(this._dom.issue_assignee_img);
 	this._dom.content.appendChild(this._dom.issue_priority_label);
@@ -1164,6 +1166,10 @@ MM.Item.prototype._updateIssuePriorityLabel = function () {
 	} else {
 		this._dom.issue_priority_label.style.display = "none";
 	}
+    let setting = MM.App.server_settings;
+    if(setting.is_display_priority!=1){
+        this._dom.issue_priority_label.style.display = 'none';
+    }
 }
 
 // _updateIssueStatusIcon
@@ -1189,6 +1195,10 @@ MM.Item.prototype._updateIssueStatuslabel = function () {
 		this._computed.issue_status_label = null;
 		this._dom.issue_status_label.style.display = "none";
 	}
+    let setting = MM.App.server_settings;
+    if(setting.is_display_status!=1){
+        this._dom.issue_status_label.style.display = 'none';
+    }
 }
 MM.Item.prototype._updateIssueAssigneeImg = function () {
 	// this._dom.issue_assignee_img.className = "avatar";
@@ -1209,6 +1219,10 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
 		this._computed.issue_assignee_img = null;
 		this._dom.issue_assignee_img.style.display = "none";
 	}
+    let setting = MM.App.server_settings;
+    if(setting.is_display_assignee!=1){
+        this._dom.issue_assignee_img.style.display = 'none';
+    }
 }
 
 MM.Item.prototype._updateProjectImg = function () {
@@ -1272,6 +1286,10 @@ MM.Item.prototype._updateIssueProgressImg = function () {
 	} else {
 		this._dom.issue_progress_img.style.display = "none";
 	}
+    let setting = MM.App.server_settings;
+    if(setting.is_display_progress!=1){
+        this._dom.issue_progress_img.style.display = 'none';
+    }
 }
 
 
@@ -1288,6 +1306,10 @@ MM.Item.prototype._updateIssueTypeIcon = function () {
 		this._computed.issue_type_icon = null;
 		this._dom.issue_type_icon.style.display = "none";
 	}
+    let setting = MM.App.server_settings;
+    if(setting.is_display_type!=1){
+        this._dom.issue_type_icon.style.display = 'none';
+    }
 }
 
 MM.Item.prototype._updateValue = function () {
@@ -6357,6 +6379,7 @@ setInterval(function() {
  *
  */
 MM.App = {
+	server_settings:{},
 	keyboard: null,
 	current: null,
 	editing: false,
@@ -6437,6 +6460,10 @@ MM.App = {
 				break;
 		}
 	},
+
+    setServerSettings: function (server_settings) {
+        this.server_settings = server_settings;
+    },
 
 	setThrobber: function (visible) {
 		this._throbber.classList[visible ? "add" : "remove"]("visible");

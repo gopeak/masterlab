@@ -588,19 +588,73 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group hide">
-                        <label class="control-label"  >是否显示标签：</label>
+                    <div class="form-group">
+                        <label class="control-label"  >显示经办人：</label>
                         <div class="col-sm-10">
                             <div class="form-group col-md-6">
                                 <label class="radio-inline">
-                                    <input type="hidden" name="is_display_label" id="is_display_label" value="0">
-                                    <input type="checkbox" name="checkbox-is_display_label" id="checkbox-is_display_label" value="1">
+                                    <input type="hidden" name="is_display_assignee" id="is_display_assignee" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_assignee" id="checkbox-is_display_assignee" value="1">
                                 </label>
                             </div>
                             <div class="col-md-4">
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label"  >显示优先级：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_priority" id="is_display_priority" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_priority" id="checkbox-is_display_priority" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  >显示状态：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_status" id="is_display_status" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_status" id="checkbox-is_display_status" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  >显示类型：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_type" id="is_display_type" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_type" id="checkbox-is_display_type" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label"  >显示进度：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_progress" id="is_display_progress" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_progress" id="checkbox-is_display_progress" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="control-label"  ></label>
                         <div class="col-sm-10">
@@ -707,6 +761,7 @@
     window.onload = function() {
         MM.App.init();
         MM.App.io.fetchIssues();
+        MM.App.setServerSettings(window.mind_setting);
     }
     $(function () {
         window.$projects = new Project({})

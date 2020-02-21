@@ -90,7 +90,7 @@ class Mind extends BaseUserCtrl
         $projectMindModel = new ProjectMindSettingModel();
         $dbSettingsArr = $projectMindModel->getByProject($projectId);
         $settingArr = ProjectMind::$initSettingArr;
-        if (!empty($settingsArr)) {
+        if (!empty($dbSettingsArr)) {
             foreach ($dbSettingsArr as $item) {
                 $settingArr[$item['setting_key']] = $item['setting_value'];
             }
@@ -151,7 +151,6 @@ class Mind extends BaseUserCtrl
         }
         $data['project_users'] = $projectUsers;
 
-        $projectGanttModel = new ProjectMindSettingModel();
         $class = new ProjectMind();
 
         $filterArr = [];

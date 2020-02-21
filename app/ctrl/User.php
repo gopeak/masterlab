@@ -189,7 +189,6 @@ class User extends BaseUserCtrl
     {
         $userId = UserAuth::getInstance()->getId();
         $model = new IssueFilterModel();
-
         $data['filters'] = $model->getCurUserFilter($userId);
         $this->ajaxSuccess('ok', $data);
     }

@@ -131,7 +131,26 @@ class Main extends BaseUserCtrl
         }
         // 用户的过滤器
         $IssueFavFilterLogic = new IssueFavFilterLogic();
-        $data['favFilters'] = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
+        $favFilters = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
+        $showFavFilterNumber = 5;
+        $showFavFilters = [];
+        $otherFavFilters = [];
+        if (count($favFilters) > 0) {
+            $i = 0;
+            foreach ($favFilters as $favFilter) {
+                $i++;
+                if ($i < $showFavFilterNumber) {
+                    $showFavFilters[] = $favFilter;
+                } else {
+                    $otherFavFilters[] = $favFilter;
+                }
+            }
+        }
+        $data['showFavFilters'] = $showFavFilters;
+        $data['otherFavFilters'] = $otherFavFilters;
+
+        // 获取当前用户未解决的数量
+        $data['unResolveCount'] =  IssueFilterLogic::getUnResolveCountByAssigneeProject(UserAuth::getId(), $data['project_id']);
 
         // 描述模板
         $descTplModel = new IssueDescriptionTemplateModel();
@@ -1058,7 +1077,7 @@ class Main extends BaseUserCtrl
             $info['depends'] = (int)$params['depends'];
         }
 
-        if(isset($_GET['from_gantt']) && $_GET['from_gantt']=='1'){
+        if (isset($_GET['from_gantt']) && $_GET['from_gantt'] == '1') {
             if (isset($params['is_start_milestone'])) {
                 $info['is_start_milestone'] = 1;
             } else {
@@ -1108,7 +1127,7 @@ class Main extends BaseUserCtrl
 
         if (isset($params['issue_type'])) {
             $info['issue_type'] = (int)$params['issue_type'];
-        }else{
+        } else {
             $issueTypeId = (new IssueTypeModel())->getIdByKey('task');
             $info['issue_type'] = $issueTypeId;
         }
@@ -1123,7 +1142,7 @@ class Main extends BaseUserCtrl
             }
             unset($issueStatusArr);
             $info['status'] = $statusId;
-        }else{
+        } else {
             $statusId = (new IssueStatusModel())->getIdByKey('open');
             $info['status'] = $statusId;
         }
@@ -1138,7 +1157,7 @@ class Main extends BaseUserCtrl
             }
             unset($issuePriority);
             $info['priority'] = $priorityId;
-        }else{
+        } else {
             $priorityId = (new IssuePriorityModel())->getIdByKey('normal');
             $info['priority'] = $priorityId;
         }
@@ -1153,7 +1172,7 @@ class Main extends BaseUserCtrl
             }
             unset($issueResolves);
             $info['resolve'] = $resolveId;
-        }else{
+        } else {
             $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
             $info['resolve'] = $resolveId;
         }
@@ -1168,7 +1187,7 @@ class Main extends BaseUserCtrl
             }
             unset($user);
             $info['assignee'] = $assigneeUid;
-        }else{
+        } else {
             $info['assignee'] = UserAuth::getId();
         }
 
@@ -1182,7 +1201,7 @@ class Main extends BaseUserCtrl
             }
             unset($user);
             $info['reporter'] = $reporterUid;
-        }else{
+        } else {
             $info['reporter'] = UserAuth::getId();
         }
 

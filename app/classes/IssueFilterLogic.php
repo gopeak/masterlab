@@ -653,6 +653,28 @@ class IssueFilterLogic
     }
 
     /**
+     * 获取未解决的数量
+     * @param $userId
+     * @param $projectId
+     * @return int
+     * @throws \Exception
+     */
+    public static function getUnResolveCountByAssigneeProject($userId, $projectId)
+    {
+        if (empty($userId)) {
+            return 0;
+        }
+        $params = [];
+        $params['assignee'] = $userId;
+        $params['project_id'] = $projectId;
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND project_id=:project_id AND  " . self::getUnDoneSql() ;
+        $count = $model->db->getOne($sql, $params);
+        return intval($count);
+    }
+
+    /**
      * 获取迭代的事项数量
      * @param $sprintId
      * @return int
