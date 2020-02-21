@@ -198,12 +198,17 @@ var BoardColumn = (function () {
 
         var params = { format: 'json' };
         var project_id = window._cur_project_id;
+
+        var urls = parseURL(window.location.href);
+        var post_data = { id: board_id, project_id: project_id };
+        Object.assign(post_data, urls.searchObject);
+
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: root_url + 'agile/fetchBoardById',
-            data: { id: board_id, project_id: project_id },
+            data: post_data,
             success: function (resp) {
                 auth_check(resp);
                 BoardColumn.prototype.handlerResponse(resp);

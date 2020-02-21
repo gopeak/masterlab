@@ -709,6 +709,134 @@ class AgileLogic
                     $sql .= " AND   issue_type in ( :issue_types ) ";
                     $params['issue_types'] = implode(',', $rangeDataArr);
                 }
+
+                // 按经办人搜索事项
+                $assigneeUid = null;
+                if (isset($_GET[urlencode('经办人')])) {
+                    $userModel = new UserModel();
+                    $row = $userModel->getByUsername(urldecode($_GET[urlencode('经办人')]));
+                    if (isset($row['uid'])) {
+                        $assigneeUid = $row['uid'];
+                    }
+                    unset($row);
+                }
+                if (isset($_GET['assignee'])) {
+                    $assigneeUid = (int)$_GET['assignee'];
+                }
+                if ($assigneeUid !== null) {
+                    $sql .= " AND assignee=:assignee";
+                    $params['assignee'] = $assigneeUid;
+                }
+
+                // 按报告人搜索事项
+                $reporterUid = null;
+                if (isset($_GET[urlencode('报告人')])) {
+                    $userModel = new UserModel();
+                    $row = $userModel->getByUsername(urldecode($_GET[urlencode('报告人')]));
+                    if (isset($row['uid'])) {
+                        $reporterUid = $row['uid'];
+                    }
+                    unset($row);
+                }
+                if (isset($_GET['reporter_uid'])) {
+                    $reporterUid = (int)$_GET['reporter_uid'];
+                }
+                if ($reporterUid !== null) {
+                    $sql .= " AND reporter=:reporter";
+                    $params['reporter'] = $reporterUid;
+                }
+
+                // 按模块搜索事项
+                $moduleId = null;
+                if (isset($_GET[urlencode('模块')])) {
+                    $projectModuleModel = new ProjectModuleModel();
+                    $moduleName = urldecode($_GET[urlencode('模块')]);
+                    $row = $projectModuleModel->getByProjectAndName($projectId, $moduleName);
+                    if (isset($row['id'])) {
+                        $moduleId = $row['id'];
+                    }
+                    unset($row);
+                }
+                if (isset($_GET['module_id'])) {
+                    $moduleId = (int)$_GET['module_id'];
+                }
+                if (!empty($moduleId)) {
+                    $sql .= " AND module=:module";
+                    $params['module'] = $moduleId;
+                }
+
+                // 按迭代搜索事项
+                $sprintId = null;
+                if (isset($_GET[urlencode('迭代')])) {
+                    $sprintModel = new SprintModel();
+                    $sprintName = urldecode($_GET[urlencode('迭代')]);
+                    $row = $sprintModel->getByProjectAndName($projectId, $sprintName);
+                    //print_r($row);
+                    if (isset($row['id'])) {
+                        $sprintId = $row['id'];
+                    }
+                    unset($row);
+                }
+                if (isset($_GET['sprint_id'])) {
+                    $sprintId = (int)$_GET['sprint_id'];
+                }
+                if (!empty($sprintId)) {
+                    $sql .= " AND sprint=:sprint";
+                    $params['sprint'] = $sprintId;
+                }
+
+                // 按优先级搜索事项
+                $priorityId = null;
+                if (isset($_GET[urlencode('优先级')])) {
+                    $model = new IssuePriorityModel();
+                    $row = $model->getByName(urldecode($_GET[urlencode('优先级')]));
+                    if (isset($row['id'])) {
+                        $priorityId = $row['id'];
+                    }
+                    unset($row);
+                }
+                if (isset($_GET['priority_id'])) {
+                    $priorityId = (int)$_GET['priority_id'];
+                }
+                if ($priorityId !== null) {
+                    $sql .= " AND priority=:priority";
+                    $params['priority'] = $priorityId;
+                }
+
+                // 按解决结果搜索事项
+                $resolveId = null;
+                if (isset($_GET[urlencode('解决结果')])) {
+                    $resolveId = IssueResolveModel::getInstance()->getIdByName(urldecode($_GET[urlencode('解决结果')]));
+                    unset($row);
+                }
+                if (isset($_GET['resolve_id'])) {
+                    $resolveId = (int)$_GET['resolve_id'];
+                }
+                if ($resolveId !== null) {
+                    $sql .= " AND resolve=:resolve";
+                    $params['resolve'] = $resolveId;
+                }
+
+                // 按状态搜索事项
+                $statusId = null;
+                if (isset($_GET[urlencode('状态')])) {
+                    $model = new IssueStatusModel();
+                    $row = $model->getByName(urldecode($_GET[urlencode('状态')]));
+                    if (isset($row['id'])) {
+                        $statusId = $row['id'];
+                    }
+                    unset($row);
+                }
+                if (isset($_GET['status_id'])) {
+                    $statusId = (int)$_GET['status_id'];
+                }
+
+                if ($statusId !== null) {
+                    $sql .= " AND status=:status";
+                    $params['status'] = $statusId;
+                }
+
+
                 $orderBy = 'id';
                 $sortBy = 'DESC';
                 $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
