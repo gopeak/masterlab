@@ -23,7 +23,7 @@
 
     // 可用的工具列表
     var _widgets = {{widgets|json_encode()|raw}};
-    console.log(_widgets);
+    console.log("_widgets", _widgets);
 
     // 用户布局方式
     var _layout = '{{user_layout}}';
@@ -186,8 +186,6 @@
         {
             case 1:
                 $panel_first.append($panel_second.html() + $panel_third.html());
-//                $panel_second.hide();
-//                $panel_third.hide();
                 $panel_second.html("");
                 $panel_third.html("");
                 _user_widgets.first = first_widgets.concat(second_widgets).concat(third_widgets);
@@ -211,9 +209,8 @@
                 }
 
                 $panel_third.html("");
+                _user_widgets.third = [];
                 saveUserWidget(_user_widgets);
-//                $panel_second.show();
-//                $panel_third.hide();
                 break;
             case 3:
                 if (length1 > 1 && length2 === 0 && length3 === 0) {
@@ -260,8 +257,6 @@
                     });
                 }
 
-//                $panel_second.show();
-//                $panel_third.show();
                 saveUserWidget(_user_widgets);
                 break;
         }
@@ -277,11 +272,31 @@
             panel_data = panel_data.concat(value);
         }
 
-        panel_data.forEach(function (user_widget) {
+        for(var i = 0; i < panel_data.length; i++) {
+            for(var j = i + 1; j < panel_data.length; j++) {
+                if (panel_data[i].widget_id === panel_data[j].widget_id) {
+                    panel_data.splice(j, 1);
+                    j--;
+                }
+            }
+        }
+
+        _user_widgets.first = panel_data.filter(function (val) {
+            return val.panel === "first";
+        });
+
+        _user_widgets.second = panel_data.filter(function (val) {
+            return val.panel === "second";
+        });
+
+        _user_widgets.third = panel_data.filter(function (val) {
+            return val.panel === "third";
+        });
+
+        panel_data.forEach(function (user_widget) {             
             var config_widget = getConfigWidgetData(user_widget.widget_id);
             user_widget['_key'] = config_widget._key;
             user_widget['config_widget'] = config_widget;
-            console.log(user_widget);
             addTool(user_widget, user_widget.panel, true);
         });
     }
@@ -428,8 +443,8 @@
     }
 
     function saveUserWidget(user_widgets){
-        console.log('saveUserWidget:');
-        console.log(JSON.stringify(window._last_widgets),JSON.stringify(user_widgets))
+        console.log('saveUserWidget:', user_widgets);
+        //console.log(JSON.stringify(window._last_widgets),JSON.stringify(user_widgets))
         if(JSON.stringify(window._last_widgets)==JSON.stringify(user_widgets)){
             return;
         }
