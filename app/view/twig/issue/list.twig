@@ -2438,7 +2438,7 @@
                             return n
                         });
 
-                        window.qtipApi.hide()
+                        window.qtipApi.hide();
                         $('#btn-save_adv_filter').qtip('api').toggle(false);
 
                         if(is_empty(temp)){
@@ -2966,7 +2966,7 @@
                         }
                     });
                     window.qtipApi = $('#btn-save_adv_filter').qtip('api');
-
+                    /*
                     $(document).click(function(event){
                             var _con = $('.qtip');  // 设置目标区域
                             var _event = $("#btn-save_adv_filter");
@@ -2975,6 +2975,7 @@
                                 $('#btn-save_adv_filter').qtip('api').toggle(false);
                             }
                     });
+                    */
 
                     $('#custom-filter-more').qtip({
                         content: {
