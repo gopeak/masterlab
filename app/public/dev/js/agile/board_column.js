@@ -162,12 +162,7 @@ var BoardColumn = (function () {
                                 } else {
                                     swal.close();
                                     var oldParent = $(evt.from)
-                                    var targetLi = oldParent.find('li')
-                                    if (targetLi.length) {
-                                        $(evt.item).insertBefore(oldParent.find('li')[evt.oldIndex])
-                                    } else {
-                                        oldParent.append($(evt.item))
-                                    }
+                                    oldParent.prepend($(evt.item))
                                 }
                             });
                     }
