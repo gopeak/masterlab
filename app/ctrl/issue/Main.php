@@ -101,8 +101,10 @@ class Main extends BaseUserCtrl
         $data['is_adv_filter'] = '0';
         $data['adv_filter_json'] = '[]';
 
+        $data['fav_filter'] = '';
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
+            $data['fav_filter'] = $favFilterId;
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {

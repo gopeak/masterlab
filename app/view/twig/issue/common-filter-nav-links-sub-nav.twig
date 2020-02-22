@@ -43,7 +43,7 @@
                 |  过滤器：
             </li>
             {% for favFilter in showFavFilters %}
-                <li class="filter_nav_li  {% if (active_id ==  favFilter.id) %} {{ 'active_underline filter_active_underline' }}{% endif %}">
+                <li class="filter_nav_li  {% if (active_id ==  favFilter.id  or fav_filter==favFilter.id ) %} {{ 'active_underline filter_active_underline' }}{% endif %}">
                     <a title="{{ favFilter.name }}" href="{{ issue_main_url}}?fav_filter={{ favFilter.id }}" style="color:#fc9403"><span>{{ favFilter.name }}</span>
                     </a>
                 </li>
