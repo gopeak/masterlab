@@ -2227,7 +2227,8 @@
                     "users": {{ users|json_encode()|raw }},
                     "project_users": {{ project_users|json_encode()|raw }},
                     "projects": {{ projects|json_encode()|raw }},
-                    "sprint": {{ sprints|json_encode()|raw }}
+                    "sprint": {{ sprints|json_encode()|raw }},
+                    "project_root_url": "{{ project_root_url }}"
                 };
                 var _project_issue_types = {{ project_issue_types|json_encode()|raw }};
 

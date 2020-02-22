@@ -455,7 +455,8 @@ var IssueForm = (function () {
             value_title: value_title,
             is_default: is_default,
             name: field.name,
-            id: ui_type + "_issue_labels_" + name
+            id: ui_type + "_issue_labels_" + name,
+            project_root_url: _issueConfig.project_root_url
         };
 
         var source = $('#labels_tpl').html();
@@ -992,7 +993,8 @@ var IssueForm = (function () {
             default_value: default_value,
             field_name: field_name,
             name: field.name,
-            id: ui_type + "_issue_" + name
+            id: ui_type + "_issue_" + name,
+            project_root_url: _issueConfig.project_root_url
         };
 
         var source = $('#module_tpl').html();
