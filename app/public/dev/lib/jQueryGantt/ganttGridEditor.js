@@ -533,7 +533,7 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
         type: 'get',
         dataType: "json",
         async: true,
-        url: root_url + "issue/detail/get/" + task.id,
+        url: root_url + "issue/detail/get/" + task.id+'&from=gantt',
         data: {},
         success: function (resp) {
             loading.hide('#modal-body');
@@ -544,6 +544,7 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
             $('#priority').val(issue.priority);
             $('#gantt_status').val(issue.gantt_status);
             $('#assignee').val(issue.assignee);
+            $('#gantt_assignee').val(issue.assignee);
             $('#sprint').val(issue.sprint);
             $('#start_date').val(issue.start_date);
             $('#due_date').val(issue.due_date);
@@ -558,7 +559,9 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
             $('.selectpicker').selectpicker('refresh');
 
             let user = getUser(window._issueConfig.users, issue.assignee);
-            $('#user_dropdown-toggle-text').html(user.display_name);
+            if(!is_empty(user)){
+                $('#user_dropdown-toggle-text').html(user.display_name);
+            }
 
             let sprint = getObjectValue(window._issueConfig.sprint, issue.sprint);
             if(is_empty(sprint)){

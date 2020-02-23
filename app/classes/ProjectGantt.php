@@ -103,6 +103,29 @@ class ProjectGantt
         return $item;
     }
 
+    public static function reFormatIssueDate($item, $issue, $sprint)
+    {
+        $startTime = strtotime($issue['start_date']);
+        if (!$startTime || $startTime < strtotime('1970-01-01')) {
+            $startTime = time();
+            if (!empty(@$sprint['start'])) {
+                $startTime = $sprint['start'];
+            }
+        }
+        $item['start'] = $startTime * 1000;
+        $item['duration'] = '';
+        $dueTime = strtotime($issue['due_date']);
+        if (!$dueTime || $dueTime < strtotime('1970-01-01')) {
+            $dueTime = time();
+            if (!empty(@$sprint['end'])) {
+                $dueTime = $sprint['end'];
+            }
+        }
+        $item['end'] = $dueTime * 1000;
+
+        $item['duration'] = floor((($dueTime + 86400) - $startTime) / 86400);
+        return $item;
+    }
     /**
      * @param $sprint
      * @return array
