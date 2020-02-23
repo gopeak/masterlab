@@ -427,42 +427,12 @@
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">经办人:<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <div class="issuable-form-select-holder">
-                                <input type="hidden" value="" name="params[assignee]" id="assignee"/>
-                                <div class="dropdown ">
-                                    <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search"
-                                            type="button" data-first-user="sven"
-                                            data-null-user="true"
-                                            data-current-user="true"
-                                            data-project-id="1"
-                                            data-selected="null"
-                                            data-field-name="params[assignee]"
-                                            data-default-label="经办人"
-                                            data-selected=""
-                                            data-toggle="dropdown">
-                                        <span id="user_dropdown-toggle-text" class="dropdown-toggle-text is-default">经办人</span>
-                                        <i class="fa fa-chevron-down"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
-                                        <div class="dropdown-title">
-                                            <span>选择经办人</span>
-                                            <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                                                <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                            </button>
-                                        </div>
-                                        <div class="dropdown-input">
-                                            <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee"
-                                                   autocomplete="off"/>
-                                            <i class="fa fa-search dropdown-input-search"></i>
-                                            <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                        </div>
-                                        <div class="dropdown-content "></div>
-                                        <div class="dropdown-loading">
-                                            <i class="fa fa-spinner fa-spin"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <select id="gantt_assignee" name="params[assignee]" title="经办人" class="selectpicker">
+                                {% for row in project_users %}
+                                    {% set  display_name = row['display_name'] %}
+                                    <option value="{{row.uid}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{row.uid}}.png' > {{display_name}}"  >{{display_name}}</option>
+                                {% endfor %}
+                            </select>
                             <p id="tip-assignee" class="gl-field-error hide"></p>
 
                         </div>
@@ -488,9 +458,9 @@
 
                     <div class="form-group">
                         <div class="col-sm-1"></div>
-                        <div class="col-sm-2">用时(天):<span class="required"> *</span></div>
+                        <div class="col-sm-2">用时(天):</div>
                         <div class="col-sm-4">
-                            <input type="number"  style="width: 30%"    class="form-control" name="params[duration]" id="duration"  value="1" autocomplete="off">
+                            <!--<input type="number"  style="width: 30%"    class="form-control" name="params[duration]" id="duration"  value="1" autocomplete="off">-->
                             <p id="tip-duration" class="gl-field-error hide"></p>
                         </div>
                         <div class="col-sm-1">进度:<span class="required"> *</span></div>

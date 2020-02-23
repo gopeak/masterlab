@@ -179,11 +179,16 @@ var IssueDetail = (function () {
 
                 //父任务
                 if (resp.data.issue.master_id != '0') {
+
                     source = $('#parent_issue_tpl').html();
                     template = Handlebars.compile(source);
                     result = template(_edit_issue.master_info);
                     $('#parent_issue_div').html(result);
                     $('#parent_block').removeClass('hide');
+
+                    $('#master_issue_h4').removeClass('hide');
+                    $('#master_issue_a').html(_edit_issue.master_info.summary);
+                    $('#master_issue_a').attr('href','/issue/detail/index/'+_edit_issue.master_info.id);
                 }
 
                 // 子任务
