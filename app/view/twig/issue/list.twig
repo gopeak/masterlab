@@ -266,6 +266,16 @@
 																		</li>
 																	</ul>
 																</div>
+																<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="类型" data-icon="info" data-tag="issue_type" data-type="input" id="js-dropdown-issue_type">
+
+																	<ul class="filter-dropdown" data-dropdown data-dynamic>
+																		<li class="filter-dropdown-item">
+																			<button class="btn btn-link">
+																				<span  class="label-title js-data-value">{{name}}</span>
+																			</button>
+																		</li>
+																	</ul>
+																</div>
 															</div>
 														{% endverbatim %}
                                             </div>
@@ -1466,9 +1476,9 @@
                                             <option value="IN (...)">IN (...)</option>
                                             <option value="NOT IN (...)">NOT IN (...)</option>
                                             <!--option value="BETWEEN">BETWEEN</option>
-                                            <option value="NOT BETWEEN">NOT BETWEEN</option-->
+                                            <option value="NOT BETWEEN">NOT BETWEEN</option>
                                             <option value="IS NULL">IS NULL</option>
-                                            <option value="IS NOT NULL">IS NOT NULL</option>
+                                            <option value="IS NOT NULL">IS NOT NULL</option-->
                                         </select>
                                     </div>
                                     {#<div class="col-sm-3 dynamic-form">#}
@@ -2864,6 +2874,7 @@
                         var value = $self.val();
 
                         adv_details[index][field_name] = value;
+                        adv_details[index].display_html = value;
 
                         IssueAdvQuery.prototype.renderAdvQuery(adv_details);
                     });
