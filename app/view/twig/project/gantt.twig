@@ -400,27 +400,26 @@
                         <hr id="create_header_hr" style="display: block;">
 
                         <div class="form-group">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-2">标 题:<span class="required"> *</span></div>
-                            <div class="col-md-8">
+                            <label class="control-label" for="issue_type">标 题:<span class="required"> *</span></label>
+                            <div class="col-sm-10">
                                 <input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
                                 <p id="tip-summary" class="gl-field-error hide"></p>
                             </div>
-                            <div class="col-md-1"></div>
                         </div>
                     <div class="form-group">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-2">优先级:<span class="required"> *</span></div>
-                        <div class="col-sm-4">
-                            <select id="priority" name="params[priority]" class="selectpicker"    title=""   >
-                            </select>
-                            <p id="tip-priority" class="gl-field-error hide"></p>
+                        <div class="col-sm-6">
+                            <label class="control-label" for="issue_type">优先级:<span class="required"> *</span></label>
+                            <div class="col-sm-6">
+                                <select id="priority" name="params[priority]" class="selectpicker"    title=""   ></select>
+                                <p id="tip-priority" class="gl-field-error hide"></p>
+                            </div>
                         </div>
-                        <div class="col-sm-1">状态:<span class="required"> *</span></div>
-                        <div class="col-sm-4">
-                            <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   >
-                            </select>
+                        <div class="col-sm-6">
+                            <label class="control-label" for="issue_type">状态:<span class="required"> *</span></label>
+                            <div class="col-sm-10">
+                                <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   ></select>
                             <p id="tip-status" class="gl-field-error hide"></p>
+                            </div>
                         </div>
                     </div>
 
