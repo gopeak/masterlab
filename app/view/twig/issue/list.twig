@@ -1409,7 +1409,7 @@
                                     4.查看执行结果
                                 </div>
                                 <div class="col-sm-9">
-                                    <div class="form-control " style="min-height:200px;font-size: 10px"
+                                    <div class="form-control " style="min-height:200px; font-size: 10px; overflow: hidden; overflow-y: scroll;"
                                          name="import_excel_result" id="import_excel_result"></div>
                                 </div>
                                 <div class="col-sm-1"></div>
@@ -1417,8 +1417,7 @@
                         </div>
 
                         <div class="modal-footer form-actions">
-                            <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="window.location.reload()">取
-                                消</a>
+                            <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="window.location.reload()">关闭</a>
                         </div>
                     </div>
                 </div>
@@ -2237,7 +2236,8 @@
                     "users": {{ users|json_encode()|raw }},
                     "project_users": {{ project_users|json_encode()|raw }},
                     "projects": {{ projects|json_encode()|raw }},
-                    "sprint": {{ sprints|json_encode()|raw }}
+                    "sprint": {{ sprints|json_encode()|raw }},
+                    "project_root_url": "{{ project_root_url }}"
                 };
                 var _project_issue_types = {{ project_issue_types|json_encode()|raw }};
 

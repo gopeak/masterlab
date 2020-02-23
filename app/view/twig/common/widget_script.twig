@@ -581,7 +581,7 @@
     }
 
     function makeDateSelectHtml(id, field, value, selected_value ) {
-        var html = `<input type="text" class="laydate_input_date form-control" name="${field}" id="${field}_date_${id}"  value="${selected_value}"  />`;
+        var html = `<input type="text" autocomplete="off" class="laydate_input_date form-control" name="${field}" id="${field}_date_${id}"  value="${selected_value}"  />`;
         $(`#${field}_${id}`).html(html);
         laydate.render({
             elem: `#${field}_date_${id}`

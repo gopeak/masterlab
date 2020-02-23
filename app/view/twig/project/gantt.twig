@@ -365,7 +365,7 @@
 </div>
 
 <div class="modal" id="modal-create-issue" style=" padding-right: 16px;">
-    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="create_issue" action="/issue/main/add" accept-charset="UTF-8" method="post">
+    <form autocomplete="off" class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="create_issue" action="/issue/main/add" accept-charset="UTF-8" method="post">
         <div class="modal-dialog issue-modal-dialog" style="width: 900px;">
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
@@ -400,27 +400,26 @@
                         <hr id="create_header_hr" style="display: block;">
 
                         <div class="form-group">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-2">标 题:<span class="required"> *</span></div>
-                            <div class="col-md-8">
+                            <label class="control-label" for="issue_type">标 题:<span class="required"> *</span></label>
+                            <div class="col-sm-10">
                                 <input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
                                 <p id="tip-summary" class="gl-field-error hide"></p>
                             </div>
-                            <div class="col-md-1"></div>
                         </div>
                     <div class="form-group">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-2">优先级:<span class="required"> *</span></div>
-                        <div class="col-sm-4">
-                            <select id="priority" name="params[priority]" class="selectpicker"    title=""   >
-                            </select>
-                            <p id="tip-priority" class="gl-field-error hide"></p>
+                        <div class="col-sm-6">
+                            <label class="control-label" for="issue_type">优先级:<span class="required"> *</span></label>
+                            <div class="col-sm-6">
+                                <select id="priority" name="params[priority]" class="selectpicker"    title=""   ></select>
+                                <p id="tip-priority" class="gl-field-error hide"></p>
+                            </div>
                         </div>
-                        <div class="col-sm-1">状态:<span class="required"> *</span></div>
-                        <div class="col-sm-4">
-                            <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   >
-                            </select>
+                        <div class="col-sm-6">
+                            <label class="control-label" for="issue_type">状态:<span class="required"> *</span></label>
+                            <div class="col-sm-10">
+                                <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   ></select>
                             <p id="tip-status" class="gl-field-error hide"></p>
+                            </div>
                         </div>
                     </div>
 
@@ -477,12 +476,12 @@
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">开始日期:<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="start_date"  value=""  />
+                            <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="start_date"  value="" autocomplete="off"  />
                             <p id="tip-start_date" class="gl-field-error hide"></p>
                         </div>
                         <div class="col-sm-1">日期:<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="due_date"  value=""  />
+                            <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="due_date"  value="" autocomplete="off" />
                             <p id="tip-due_date" class="gl-field-error hide"></p>
                         </div>
                     </div>
@@ -491,12 +490,12 @@
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">用时(天):<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <input type="number"  style="width: 30%"    class="form-control" name="params[duration]" id="duration"  value="1" >
+                            <input type="number"  style="width: 30%"    class="form-control" name="params[duration]" id="duration"  value="1" autocomplete="off">
                             <p id="tip-duration" class="gl-field-error hide"></p>
                         </div>
                         <div class="col-sm-1">进度:<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="progress"  value="1" >
+                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="progress"  value="1" autocomplete="off">
                             <p id="tip-progress" class="gl-field-error hide"></p>
                         </div>
                     </div>
