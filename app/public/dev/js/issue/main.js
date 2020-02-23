@@ -464,6 +464,8 @@ var IssueMain = (function () {
             $(".issue_create_child").bind("click", function () {
                 $("#btn-create-issue").click();
                 $('#master_issue_id').val($(this).data('issue_id'));
+                $('#create_master_div').show();
+                $('#create_master_title').html($(this).data('title'));
             });
 
 
@@ -687,6 +689,8 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.fetchChildren = function (issue_id, display_id) {
+
+        loading.show('#' + display_id);
         $.ajax({
             type: 'get',
             dataType: "json",
@@ -705,6 +709,7 @@ var IssueMain = (function () {
                 var result = template(resp.data);
                 console.log(resp.data);
                 $('#' + display_id).html(result);
+                loading.hide('#' + display_id);
 
             },
             error: function (res) {

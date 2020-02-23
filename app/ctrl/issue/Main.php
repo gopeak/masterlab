@@ -1776,7 +1776,6 @@ class Main extends BaseUserCtrl
         // {
         //$this->ajaxFailed(Permission::$errorMsg);
         //}
-
         $issueId = null;
         if (isset($_GET['_target'][2])) {
             $issueId = (int)$_GET['_target'][2];

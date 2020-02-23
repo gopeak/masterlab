@@ -561,7 +561,12 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
             $('#user_dropdown-toggle-text').html(user.display_name);
 
             let sprint = getObjectValue(window._issueConfig.sprint, issue.sprint);
-            $('#sprint_name').html(sprint.name);
+            if(is_empty(sprint)){
+                $('#sprint_name').html('待办事项');
+            }else{
+                $('#sprint_name').html(sprint.name);
+            }
+
          // if(!window._editor_md){
           $('#gantt_description').text(issue.description);
             window._editor_md = editormd({

@@ -1702,7 +1702,7 @@
 											{{#if_eq have_children '0'}}
 												{{^}}
 												<a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}" class="have_children prepend-left-5 has-tooltip" data-original-title="该事项拥有{{have_children}}项子任务">
-													子任务
+													查看子任务
 													<span class="badge">{{have_children}}</span>
 												</a>
 											{{/if_eq}}
@@ -1829,7 +1829,7 @@
 															</li>
 														{{/if_eq}}
 														<li class="aui-list-item">
-															<a href="javascript:;" class="issue_create_child" data-issue_id="{{id}}" data-issuekey="{{issue_num}}">创建子任务</a>
+															<a href="javascript:;" class="issue_create_child" data-issue_id="{{id}}" data-title="{{summary}}" data-issuekey="{{issue_num}}">创建子任务</a>
 														</li>
 														{{#if_eq master_id '0' }}
 															<li class="aui-list-item">
@@ -2383,6 +2383,7 @@
 
                     $("#btn-create-issue").bind("click", function () {
                         $('#master_issue_id').val('');
+                        $('#create_master_div').hide();
                         if (window._cur_project_id !== '') {
                             var issue_types = [];
                             _cur_form_project_id = _cur_project_id;
