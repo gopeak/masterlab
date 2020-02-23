@@ -16,6 +16,7 @@ use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueFollowModel;
+use main\app\model\issue\IssueTypeModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
@@ -161,21 +162,17 @@ class IssueFilterLogic
                 if (strpos($versionStr, 'MariaDB') !== false) {
                     $versionNum = 0;
                 }
-                if ($versionNum < 5.70) {
-                    // 使用LOCATE模糊搜索
-                    if (strlen($search) < 10) {
-                        $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
-                        $params['pkey'] = $search;
-                        $params['summary'] = $search;
-                    } else {
-                        $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
-                        $params['summary'] = $search;
-                    }
+
+                // 使用LOCATE模糊搜索
+                if (strlen($search) < 10) {
+                    $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
+                    $params['pkey'] = $search;
+                    $params['summary'] = $search;
                 } else {
-                    // 使用全文索引
-                    $sql .= " AND MATCH (`summary`) AGAINST (:summary IN NATURAL LANGUAGE MODE) ";
+                    $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
                     $params['summary'] = $search;
                 }
+
             }
         }
 
@@ -268,6 +265,26 @@ class IssueFilterLogic
             $sql .= " AND status=:status";
             $params['status'] = $statusId;
         }
+
+        // 事项类型
+        $typeId = null;
+        if (isset($_GET[urlencode('类型')])) {
+            $model = new IssueTypeModel();
+            $row = $model->getByName(urldecode($_GET[urlencode('类型')]));
+            if (isset($row['id'])) {
+                $typeId = $row['id'];
+            }
+            unset($row);
+        }
+        if (isset($_GET['type_id'])) {
+            $typeId = (int)$_GET['type_id'];
+        }
+
+        if ($typeId !== null) {
+            $sql .= " AND issue_type=:issue_type";
+            $params['issue_type'] = $typeId;
+        }
+
         // 我未解决的
         if ($sysFilter == 'my_unsolved') {
             $params['assignee'] = UserAuth::getInstance()->getId();
@@ -508,14 +525,8 @@ class IssueFilterLogic
                     $params[$field] = '%'.$value.'%';
                     break;
                 case 'like %...%':
-                    if ($versionNum < 5.70) {
-                        $sql .= "   LOCATE(:$field,$field)>0  ";
-                        $params[$field] = $value;
-                    } else {
-                        // 使用全文索引
-                        $sql .= "  MATCH ($field) AGAINST (:$field IN NATURAL LANGUAGE MODE) ";
-                        $params[$field] = $value;
-                    }
+                    $sql .= "   LOCATE(:$field,$field)>0  ";
+                    $params[$field] = $value;
                     break;
                 case 'is null':
                 case 'is not null':
@@ -564,8 +575,8 @@ class IssueFilterLogic
         try {
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
-            //echo $sqlCount;
-            //print_r($params);
+            // echo $sqlCount;
+            // print_r($params);
             $count = $model->db->getOne($sqlCount, $params);
             $fields = '*';
             $sql = "SELECT {$fields} FROM  {$table} " . $sql;
