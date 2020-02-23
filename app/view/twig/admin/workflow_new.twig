@@ -108,7 +108,7 @@
 <script type="text/javascript">
 
     var $Workflow = null;
-    var workflow_data = {{workflow['data']}};
+    var workflow_data =  {{ workflow['data']|json_encode()|raw }};
     $(function() {
 
         $('[data-toggle="popover"]').popover();

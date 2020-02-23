@@ -47,7 +47,7 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array('archived' => 'N'), null, 'id', 'asc', null, $primaryKey);
+        return $this->getRows($fields, array('archived' => 'N'), null, 'issue_update_time', 'desc', null, $primaryKey);
     }
 
     public function filterByType($typeId, $primaryKey = false, $fields = '*')
@@ -56,7 +56,7 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array('type' => $typeId, 'archived' => 'N'), null, 'id', 'asc', null, $primaryKey);
+        return $this->getRows($fields, array('type' => $typeId, 'archived' => 'N'), null, 'issue_update_time', 'desc', null, $primaryKey);
     }
 
     public function filterByNameOrKey($keyword)
@@ -83,7 +83,7 @@ class ProjectModel extends CacheModel
 
         $start = $page_size * ($page - 1);
         $limit = wrapBlank("LIMIT {$start}, " . $page_size);
-        $order = wrapBlank("ORDER BY id ASC");
+        $order = wrapBlank("ORDER BY issue_update_time DESC");
         $where = wrapBlank("WHERE archived='N' ");
         $where .= $order . $limit;
         $sql = "SELECT * FROM " . $table . $where;

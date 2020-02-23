@@ -46,6 +46,11 @@ class IssueFilterModel extends CacheModel
         return $this->getRows('*', ['author' => $userId]);
     }
 
+    public function getCountCurUserFilter($userId)
+    {
+        return $this->getCount(['author' => $userId]);
+    }
+
     public function getItemById($id)
     {
         return $this->getRowById($id);

@@ -176,13 +176,15 @@
 .helper-btn .helper-hint.show_hint{
     -webkit-transform:translateX(-40px);
     transform:translateX(-40px);
-    opacity:1
+    opacity:1;
+    display: block;
 }
 
 .helper-btn .helper-hint.hide_hint{
     opacity:0;
     -webkit-transform:translateX(0);
-    transform:translateX(0)
+    transform:translateX(0);
+    display: none;
 }
 
 .helper-btn .helper-hint.notice-tooltip{

@@ -91,7 +91,7 @@ class Gantt extends BaseUserCtrl
         }
 
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/gantt_project.php', $data);
+        $this->render('gitlab/project/gantt.php', $data);
     }
 
     public function fetchSetting()
@@ -119,8 +119,15 @@ class Gantt extends BaseUserCtrl
         if (in_array($ganttSetting['source_type'], $sourceArr)) {
             $sourceType = $sourceType = $ganttSetting['source_type'];
         }
+
+        $isDisplayBacklog = '0';
+        if (isset($ganttSetting['is_display_backlog'])) {
+            $isDisplayBacklog = $ganttSetting['is_display_backlog'];
+        }
+
         $data = [];
         $data['source_type'] = $sourceType;
+        $data['is_display_backlog'] = $isDisplayBacklog;
 
         $holidays = (new HolidayModel())->getDays($projectId);
         $data['holidays'] = $holidays;
@@ -157,6 +164,12 @@ class Gantt extends BaseUserCtrl
             }
         }
         $updateInfo['source_type'] = $sourceType;
+
+        $isDisplayBacklog = '0';
+        if (isset($_POST['is_display_backlog']) && $_POST['is_display_backlog']=='1') {
+            $isDisplayBacklog = '1';
+        }
+        $updateInfo['is_display_backlog'] = $isDisplayBacklog;
         list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
         if ($ret) {
             $model = new HolidayModel();
@@ -187,7 +200,7 @@ class Gantt extends BaseUserCtrl
     }
 
     /**
-     * 获取项目的统计数据
+     * 获取项目的事项数据
      * @throws \Exception
      */
     public function fetchProjectIssues()
@@ -232,13 +245,17 @@ class Gantt extends BaseUserCtrl
         if (in_array($ganttSetting['source_type'], $sourceArr)) {
             $sourceType = $sourceType = $ganttSetting['source_type'];
         }
+        $isDisplayBacklog = '0';
+        if (isset($ganttSetting['is_display_backlog'])) {
+            $isDisplayBacklog = $ganttSetting['is_display_backlog'];
+        }
 
         $data['tasks'] = [];
         if ($sourceType == 'project') {
-            $data['tasks'] = $class->getIssuesGroupBySprint($projectId);
+            $data['tasks'] = $class->getIssuesGroupBySprint($projectId, false, $isDisplayBacklog);
         }
         if ($sourceType == 'active_sprint') {
-            $data['tasks'] = $class->getIssuesGroupBySprint($projectId, true);
+            $data['tasks'] = $class->getIssuesGroupBySprint($projectId, true, $isDisplayBacklog);
         }
         if ($sourceType == 'module') {
             $data['tasks'] = $class->getIssuesGroupByModule($projectId);

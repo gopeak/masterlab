@@ -101,8 +101,10 @@ class Main extends BaseUserCtrl
         $data['is_adv_filter'] = '0';
         $data['adv_filter_json'] = '[]';
 
+        $data['fav_filter'] = '';
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
+            $data['fav_filter'] = $favFilterId;
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
@@ -131,7 +133,26 @@ class Main extends BaseUserCtrl
         }
         // 用户的过滤器
         $IssueFavFilterLogic = new IssueFavFilterLogic();
-        $data['favFilters'] = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
+        $favFilters = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
+        $showFavFilterNumber = 5;
+        $showFavFilters = [];
+        $otherFavFilters = [];
+        if (count($favFilters) > 0) {
+            $i = 0;
+            foreach ($favFilters as $favFilter) {
+                $i++;
+                if ($i < $showFavFilterNumber) {
+                    $showFavFilters[] = $favFilter;
+                } else {
+                    $otherFavFilters[] = $favFilter;
+                }
+            }
+        }
+        $data['showFavFilters'] = $showFavFilters;
+        $data['otherFavFilters'] = $otherFavFilters;
+
+        // 获取当前用户未解决的数量
+        $data['unResolveCount'] =  IssueFilterLogic::getUnResolveCountByAssigneeProject(UserAuth::getId(), $data['project_id']);
 
         // 描述模板
         $descTplModel = new IssueDescriptionTemplateModel();
@@ -923,8 +944,8 @@ class Main extends BaseUserCtrl
             $projectId = (int)$_REQUEST['project_id'];
         }
 
-        $model = new ProjectModel();
-        $project = $model->getById($projectId);
+        $projectModel = new ProjectModel();
+        $project = $projectModel->getById($projectId);
         if (!isset($project['id'])) {
             $this->ajaxFailed('项目参数错误');
         }
@@ -942,7 +963,7 @@ class Main extends BaseUserCtrl
 
         $info['issue_type'] = $issueTypeId;
 
-        $info = $info + $this->getFormInfo($params);
+        $info = $info + $this->getAddFormInfo($params);
 
         $model = new IssueModel();
 
@@ -971,6 +992,8 @@ class Main extends BaseUserCtrl
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
+        // 更新项目事项时间
+        $projectModel->updateById(['issue_update_time' => time()], $projectId);
 
         unset($project);
         //写入操作日志
@@ -1051,37 +1074,41 @@ class Main extends BaseUserCtrl
         if (isset($params['progress'])) {
             $info['progress'] = (int)$params['progress'];
         }
+
         if (isset($params['depends'])) {
             $info['depends'] = (int)$params['depends'];
         }
-        if (isset($params['is_start_milestone'])) {
-            $info['is_start_milestone'] = 1;
-        } else {
-            $info['is_start_milestone'] = 0;
-        }
-        if (isset($params['is_end_milestone'])) {
-            $info['is_end_milestone'] = 1;
-        } else {
-            $info['is_end_milestone'] = 0;
-        }
-        if (isset($params['below_id']) && !empty($params['below_id'])) {
-            $belowIssueId = (int)$params['below_id'];
-            $model = new IssueModel();
-            $belowIssue = $model->getById($belowIssueId);
-            $fieldWeight = '';
-            if (isset($params['gant_type']) && $params['gant_type'] == 'project_sprint') {
-                $fieldWeight = 'gant_proj_sprint_weight';
+
+        if (isset($_GET['from_gantt']) && $_GET['from_gantt'] == '1') {
+            if (isset($params['is_start_milestone'])) {
+                $info['is_start_milestone'] = 1;
+            } else {
+                $info['is_start_milestone'] = 0;
             }
-            if (isset($params['gant_type']) && $params['gant_type'] == 'project_module') {
-                $fieldWeight = 'gant_proj_module_weight';
+            if (isset($params['is_end_milestone'])) {
+                $info['is_end_milestone'] = 1;
+            } else {
+                $info['is_end_milestone'] = 0;
             }
-            if (isset($params['gant_type']) && $params['gant_type'] == 'sprint') {
-                $fieldWeight = 'gant_sprint_weight';
+            if (isset($params['below_id']) && !empty($params['below_id'])) {
+                $belowIssueId = (int)$params['below_id'];
+                $model = new IssueModel();
+                $belowIssue = $model->getById($belowIssueId);
+                $fieldWeight = '';
+                if (isset($params['gant_type']) && $params['gant_type'] == 'project_sprint') {
+                    $fieldWeight = 'gant_proj_sprint_weight';
+                }
+                if (isset($params['gant_type']) && $params['gant_type'] == 'project_module') {
+                    $fieldWeight = 'gant_proj_module_weight';
+                }
+                if (isset($params['gant_type']) && $params['gant_type'] == 'sprint') {
+                    $fieldWeight = 'gant_sprint_weight';
+                }
+                if ($fieldWeight != '' && isset($belowIssue[$fieldWeight])) {
+                    $info[$fieldWeight] = (int)$belowIssue[$fieldWeight] + 1;
+                }
+                unset($model, $belowIssue);
             }
-            if ($fieldWeight != '' && isset($belowIssue[$fieldWeight])) {
-                $info[$fieldWeight] = (int)$belowIssue[$fieldWeight] + 1;
-            }
-            unset($model, $belowIssue);
         }
     }
 
@@ -1091,7 +1118,7 @@ class Main extends BaseUserCtrl
      * @return array
      * @throws \Exception
      */
-    private function getFormInfo($params = [])
+    private function getAddFormInfo($params = [])
     {
         $info = [];
 
@@ -1102,7 +1129,7 @@ class Main extends BaseUserCtrl
 
         if (isset($params['issue_type'])) {
             $info['issue_type'] = (int)$params['issue_type'];
-        }else{
+        } else {
             $issueTypeId = (new IssueTypeModel())->getIdByKey('task');
             $info['issue_type'] = $issueTypeId;
         }
@@ -1117,7 +1144,7 @@ class Main extends BaseUserCtrl
             }
             unset($issueStatusArr);
             $info['status'] = $statusId;
-        }else{
+        } else {
             $statusId = (new IssueStatusModel())->getIdByKey('open');
             $info['status'] = $statusId;
         }
@@ -1132,7 +1159,7 @@ class Main extends BaseUserCtrl
             }
             unset($issuePriority);
             $info['priority'] = $priorityId;
-        }else{
+        } else {
             $priorityId = (new IssuePriorityModel())->getIdByKey('normal');
             $info['priority'] = $priorityId;
         }
@@ -1147,7 +1174,7 @@ class Main extends BaseUserCtrl
             }
             unset($issueResolves);
             $info['resolve'] = $resolveId;
-        }else{
+        } else {
             $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
             $info['resolve'] = $resolveId;
         }
@@ -1162,7 +1189,7 @@ class Main extends BaseUserCtrl
             }
             unset($user);
             $info['assignee'] = $assigneeUid;
-        }else{
+        } else {
             $info['assignee'] = UserAuth::getId();
         }
 
@@ -1176,7 +1203,7 @@ class Main extends BaseUserCtrl
             }
             unset($user);
             $info['reporter'] = $reporterUid;
-        }else{
+        } else {
             $info['reporter'] = UserAuth::getId();
         }
 
@@ -1184,6 +1211,109 @@ class Main extends BaseUserCtrl
             $info['description'] = $params['description'];
         } else {
             $info['description'] = '';
+        }
+
+        if (isset($params['module'])) {
+            $info['module'] = $params['module'];
+        }
+
+        if (isset($params['environment'])) {
+            $info['environment'] = $params['environment'];
+        }
+
+
+        if (isset($params['milestone'])) {
+            $info['milestone'] = (int)$params['milestone'];
+        }
+
+        if (array_key_exists('sprint', $params)) {
+            $info['sprint'] = (int)$params['sprint'];
+        }
+        //print_r($info);
+        if (isset($params['weight'])) {
+            $info['weight'] = (int)$params['weight'];
+        }
+        $this->getGanttInfo($params, $info);
+
+        // print_r($info);
+        return $info;
+    }
+
+    private function getUpdateFormInfo($params = [])
+    {
+        $info = [];
+
+        // 标题
+        if (isset($params['summary'])) {
+            $info['summary'] = $params['summary'];
+        }
+
+        if (isset($params['issue_type'])) {
+            $info['issue_type'] = (int)$params['issue_type'];
+        }
+
+        // 状态
+        if (isset($params['status'])) {
+            $statusId = (int)$params['status'];
+            $model = new IssueStatusModel();
+            $issueStatusArr = $model->getAll();
+            if (!isset($issueStatusArr[$statusId])) {
+                $this->ajaxFailed('param_error:status_not_found');
+            }
+            unset($issueStatusArr);
+            $info['status'] = $statusId;
+        }
+
+        // 优先级
+        if (isset($params['priority'])) {
+            $priorityId = (int)$params['priority'];
+            $model = new IssuePriorityModel();
+            $issuePriority = $model->getAll();
+            if (!isset($issuePriority[$priorityId])) {
+                $this->ajaxFailed('param_error:priority_not_found');
+            }
+            unset($issuePriority);
+            $info['priority'] = $priorityId;
+        }
+
+        // 解决结果
+        if (isset($params['resolve']) && !empty($params['resolve'])) {
+            $resolveId = (int)$params['resolve'];
+            $model = new IssueResolveModel();
+            $issueResolves = $model->getAll();
+            if (!isset($issueResolves[$resolveId])) {
+                $this->ajaxFailed('param_error:resolve_not_found');
+            }
+            unset($issueResolves);
+            $info['resolve'] = $resolveId;
+        }
+
+        // 负责人
+        if (isset($params['assignee']) && !empty($params['assignee'])) {
+            $assigneeUid = (int)$params['assignee'];
+            $model = new UserModel();
+            $user = $model->getByUid($assigneeUid);
+            if (!isset($user['uid'])) {
+                $this->ajaxFailed('param_error:assignee_not_found');
+            }
+            unset($user);
+            $info['assignee'] = $assigneeUid;
+        }
+
+        // 报告人
+        if (isset($params['reporter']) && !empty($params['reporter'])) {
+            $reporterUid = (int)$params['reporter'];
+            $model = new UserModel();
+            $user = $model->getByUid($reporterUid);
+            if (!isset($user['uid'])) {
+                $this->ajaxFailed('param_error:reporter_not_found');
+            }
+            unset($user);
+            $info['reporter'] = $reporterUid;
+        }
+
+        if (isset($params['description'])) {
+            $info['description'] = $params['description'];
         }
 
         if (isset($params['module'])) {
@@ -1263,7 +1393,7 @@ class Main extends BaseUserCtrl
             $info['summary'] = $params['summary'];
         }
 
-        $info = $info + $this->getFormInfo($params);
+        $info = $info + $this->getUpdateFormInfo($params);
         if (empty($info)) {
             $this->ajaxFailed('参数错误,数据为空');
         }
@@ -1289,7 +1419,7 @@ class Main extends BaseUserCtrl
                 if (in_array($fieldName, $excludeFieldArr)) {
                     continue;
                 }
-                if (isset($info[$fieldName]) && empty(trimStr($params[$fieldName]))) {
+                if (isset($info[$fieldName]) && isset($params[$fieldName]) && empty(trimStr($params[$fieldName]))) {
                     $err[$fieldName] = $field['title'] . '不能为空';
                 }
             }
@@ -1372,6 +1502,9 @@ class Main extends BaseUserCtrl
             if (!$ret) {
                 $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
             }
+
+            $projectModel = new ProjectModel();
+            $projectModel->updateById(['issue_update_time' => time()], $issue['project_id']);
         }
 
         //写入操作日志
@@ -1888,9 +2021,16 @@ class Main extends BaseUserCtrl
         if (empty($masterId)) {
             $this->ajaxFailed('参数错误', '父事项id不能为空');
         }
+        $issueModel = new IssueModel();
+        $masterIssue = $issueModel->getById($masterId);
+
+        $secondType = null;
+        if (isset($_POST['second_type'])) {
+            $secondType = $_POST['second_type'];
+        }
 
         $issueLogic = new IssueLogic();
-        list($ret, $msg) = $issueLogic->convertChild($issueId, $masterId);
+        list($ret, $msg) = $issueLogic->convertChild($issueId, $masterId, $secondType);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
@@ -1980,8 +2120,8 @@ class Main extends BaseUserCtrl
 
         $filename = null;
         $projectId = null;
-        if (isset($_POST['project_id']) && !empty($_POST['project_id'])) {
-            $projectId = (int)$_POST['project_id'];
+        if (isset($_REQUEST['project_id']) && !empty($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
         }
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');

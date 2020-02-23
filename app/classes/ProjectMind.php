@@ -39,8 +39,12 @@ class ProjectMind
         'fold_count' => 5,
         'default_source' => 'sprint',
         'default_source_id' => '0',
+        'is_display_assignee' => 1,
+        'is_display_priority' => 1,
+        'is_display_status' => 1,
+        'is_display_type'=>1,
         'is_display_label' => 1,
-
+        'is_display_progress'=>1
     ];
 
     /**

@@ -365,18 +365,22 @@ var BoardSetting = (function () {
                     selects[source] = $('#select_' + source + '_column_' + i);
                     selects[source].empty();
                     let select_datas = window._issueConfig.issue_labels;
-                    for (let _k in select_datas) {
-                        let row = select_datas[_k];
-                        let value = _k;
-                        let title = row.title;
-                        let selected = '';
-                        if (("undefined" !== typeof swim_data[source]) && isInArray(source_data, value)) {
-                            selected = 'selected';
+
+                    if (select_datas.length !== 0) {
+                        for (let _k in select_datas) {
+                            let row = select_datas[_k];
+                            let value = _k;
+                            let title = row.title;
+                            let selected = '';
+                            if (("undefined" !== typeof swim_data[source]) && isInArray(source_data, value)) {
+                                selected = 'selected';
+                            }
+                            let opt = "<option  value='" + value + "' " + selected + " >" + title + "</option>";
+                            //console.log(opt)
+                            selects[source].append(opt);
                         }
-                        let opt = "<option  value='" + value + "' " + selected + " >" + title + "</option>";
-                        //console.log(opt)
-                        selects[source].append(opt);
                     }
+
                 }
                 if (source === 'assignee') {
                     let source_data = swim_data[source];

@@ -44,6 +44,7 @@ class ProjectGantt
             if (!empty($activeSprint)) {
                 $addArr['source_type'] = 'active_sprint';
             }
+            $addArr['is_display_backlog'] = '0';
             $projectGanttModel->insertByProjectId($addArr, $projectId);
         }
     }
@@ -265,15 +266,15 @@ class ProjectGantt
         }
     }
 
-
     /**
      * 按迭代分解的甘特图
      * @param $projectId
-     * @param string $type
+     * @param bool $isActiveSprint
+     * @param string $isDisplayBacklog
      * @return array
      * @throws \Exception
      */
-    public function getIssuesGroupBySprint($projectId, $isActiveSprint = false)
+    public function getIssuesGroupBySprint($projectId, $isActiveSprint = false, $isDisplayBacklog='0')
     {
         $projectId = (int)$projectId;
         $issueModel = IssueModel::getInstance();
@@ -294,8 +295,10 @@ class ProjectGantt
             $sprint = $sprintModel->getActive($projectId);
             $sprints = [$sprint];
         }
+        if($isDisplayBacklog=='1'){
+            $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
+        }
 
-        $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
         $finalArr = [];
         $sprintRows = [];
         foreach ($sprints as $sprint) {

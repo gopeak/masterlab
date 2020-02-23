@@ -239,7 +239,7 @@ class IssueLogic
      * @return array
      * @throws \Exception
      */
-    public function convertChild($currentId, $masterId)
+    public function convertChild($currentId, $masterId, $secondType=null)
     {
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($currentId);
@@ -247,7 +247,12 @@ class IssueLogic
             return [false, 'data_is_empty'];
         }
         $master = $issueModel->getById($masterId);
-        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => $masterId,'module'=>$master['module']]);
+        $updateInfo = ['master_id' => $masterId,'module'=>$master['module']];
+        if(isset($master[$secondType])){
+            $updateInfo[$secondType] = $master[$secondType];
+        }
+        //print_r($updateInfo);
+        list($ret, $msg) = $issueModel->updateById($currentId, $updateInfo);
         if (!$ret) {
             return [false, 'server_error:' . $msg];
         } else {

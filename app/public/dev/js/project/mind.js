@@ -238,12 +238,36 @@ let MindAjax = (function () {
                 }
                 $('#default_source_id').val(setting.default_source_id);
                 $('#fold_count').val(setting.fold_count);
-                if (setting.is_display_label == '1') {
-                    $('#is_display_label').attr('checked', true);
+
+                if (setting.is_display_assignee == 1) {
+                    $('#checkbox-is_display_assignee').attr('checked', true);
                 } else {
-                    $('#is_display_label').removeAttr('checked');
+                    $('#checkbox-is_display_assignee').removeAttr('checked');
                 }
 
+                if (setting.is_display_priority == 1) {
+                    $('#checkbox-is_display_priority').attr('checked', true);
+                } else {
+                    $('#checkbox-is_display_priority').removeAttr('checked');
+                }
+
+                if (setting.is_display_status == 1) {
+                    $('#checkbox-is_display_status').attr('checked', true);
+                } else {
+                    $('#checkbox-is_display_status').removeAttr('checked');
+                }
+
+                if (setting.is_display_type == 1) {
+                    $('#checkbox-is_display_type').attr('checked', true);
+                } else {
+                    $('#checkbox-is_display_type').removeAttr('checked');
+                }
+
+                if (setting.is_display_progress == 1) {
+                    $('#checkbox-is_display_progress').attr('checked', true);
+                } else {
+                    $('#checkbox-is_display_progress').removeAttr('checked');
+                }
 
             },
             error: function (res) {
@@ -256,11 +280,38 @@ let MindAjax = (function () {
         loading.show('#setting-modal-body', '正在执行');
         var params = {format: 'json'};
         var project_id = window._cur_project_id;
+
+        if($('#checkbox-is_display_assignee').prop("checked")){
+            $('#is_display_assignee').val('1');
+        }else{
+            $('#is_display_assignee').val('0');
+        }
+        if($('#checkbox-is_display_priority').prop("checked")){
+            $('#is_display_priority').val('1');
+        }else{
+            $('#is_display_priority').val('0');
+        }
+        if($('#checkbox-is_display_status').prop("checked")){
+            $('#is_display_status').val('1');
+        }else{
+            $('#is_display_status').val('0');
+        }
+        if($('#checkbox-is_display_type').prop("checked")){
+            $('#is_display_type').val('1');
+        }else{
+            $('#is_display_type').val('0');
+        }
+        if($('#checkbox-is_display_progress').prop("checked")){
+            $('#is_display_progress').val('1');
+        }else{
+            $('#is_display_progress').val('0');
+        }
         if($('#checkbox-is_display_label').prop("checked")){
             $('#is_display_label').val('1');
         }else{
             $('#is_display_label').val('0');
         }
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -271,6 +322,7 @@ let MindAjax = (function () {
                 auth_check(resp);
                 loading.closeAll();
                 notify_success('操作成功');
+                setTimeout("window.location.reload();", 1000)
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -407,6 +459,49 @@ let MindAjax = (function () {
             }
         });
     }
+
+
+    MindAjax.prototype.convertChild = function (issue_id, master_id, second_type) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/convertChild",
+            data: { issue_id: issue_id, master_id: master_id, second_type:second_type },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('删除失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    MindAjax.prototype.removeChild = function (issue_id) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/removeChild",
+            data: { issue_id: issue_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('删除失败:' + resp.msg);
+                    return;
+                }
+                // notify_success('操作成功');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
 
     MindAjax.prototype.updateIssueFormat = function (issue_id, format, fnc) {
         // 初始必填项

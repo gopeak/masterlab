@@ -42,10 +42,11 @@ let Sprint = (function() {
                     $.post("/agile/deleteSprint",{sprint_id:sprint_id},function(result){
                         if(result.ret ==="200" ){
                             //location.reload();
-                            notify_success(resp.msg, resp.data);
-                            $('#li_data_id_'+sprint_id).remove();
+                            notify_success(result.msg, result.data);
+                            //$('#li_data_id_'+sprint_id).remove();
+                            Sprint.prototype.fetchAll();
                         } else {
-                            notify_error(resp.msg, resp.data);
+                            notify_error(result.msg, result.data);
                         }
                     });
                     swal.close();
@@ -97,7 +98,7 @@ let Sprint = (function() {
                 if(resp.ret ==="200" ){
                     notify_success(resp.msg, resp.data);
                     Sprint.prototype.fetchAll();
-                    $('#modal-edit-sprint').modal('hide')
+                    $('#modal-edit-sprint').modal('hide');
                 } else {
                     notify_error(resp.msg);
                 }

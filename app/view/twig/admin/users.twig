@@ -272,7 +272,7 @@
                             <div class="form-group">
                                 <img id="js-user-avatar-edit" alt="" class="avatar s60 js-user-avatar-edit" src="">
                                 <a class="btn js-choose-user-avatar-button-edit" data-target="#edit-avatar-modal" data-toggle="modal">编辑头像</a>
-                                <input type="text" class="form-control hidden" name="params[avatar]"   id="edit_avatar"  value="" />
+                                <input type="text" class="form-control hidden" name="params[avatar]" id="edit_avatar" />
                             </div>
                         </div>
                     </div>
@@ -522,7 +522,6 @@
 </script>{% endverbatim %}
 <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-
     var _issueConfig = {
         priority:{{priority|json_encode()|raw}},
         issue_types:{{issue_types|json_encode()|raw}},

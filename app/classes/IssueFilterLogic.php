@@ -505,7 +505,7 @@ class IssueFilterLogic
                     break;
                 case 'like':
                     $sql .= " $field  {$opt} :$field ";
-                    $params[$field] = $value;
+                    $params[$field] = '%'.$value.'%';
                     break;
                 case 'like %...%':
                     if ($versionNum < 5.70) {
@@ -649,6 +649,28 @@ class IssueFilterLogic
         $conditions['assignee'] = $userId;
         $model = new IssueModel();
         $count = $model->getOne('count(*) as cc', $conditions);
+        return intval($count);
+    }
+
+    /**
+     * 获取未解决的数量
+     * @param $userId
+     * @param $projectId
+     * @return int
+     * @throws \Exception
+     */
+    public static function getUnResolveCountByAssigneeProject($userId, $projectId)
+    {
+        if (empty($userId)) {
+            return 0;
+        }
+        $params = [];
+        $params['assignee'] = $userId;
+        $params['project_id'] = $projectId;
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND project_id=:project_id AND  " . self::getUnDoneSql() ;
+        $count = $model->db->getOne($sql, $params);
         return intval($count);
     }
 
