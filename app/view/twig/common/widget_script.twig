@@ -421,8 +421,8 @@
     function removeWidget(_key) {
         console.log(_key);
         var $panel = $(`#widget_${_key}`);
-        var index = $panel.index;
-        var parent_index = $panel.index();
+        var index = $panel.index();
+        var parent_index = $panel.parent().index();
         $(`#widget_${_key}`).remove();
 
         var parent_text = "first";
@@ -431,6 +431,8 @@
         } else if (parent_index === 2) {
             parent_text = "third";
         }
+        console.log(index, parent_text);
+        
         _user_widgets[parent_text].splice(index, 1);
 
         $.ajax({
@@ -453,7 +455,7 @@
             }
         });
 
-        console.log(_user_widgets);
+        console.log("removeWidgets", _user_widgets);
     }
 
     function saveUserWidget(user_widgets){
