@@ -2864,6 +2864,7 @@
                         var value = $self.val();
 
                         adv_details[index][field_name] = value;
+                        adv_details[index].display_html = value;
 
                         IssueAdvQuery.prototype.renderAdvQuery(adv_details);
                     });
