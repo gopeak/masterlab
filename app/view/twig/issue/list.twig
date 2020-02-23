@@ -1635,8 +1635,7 @@
             {% verbatim %}
 						<script type="text/html" id="list_tpl">
 							{{#issues}}
-								<tr class="tree-item" data-id="{{id}}">
-
+								<tr class="tree-item" data-id="{{id}}" data-summary="{{summary}}">
 									<td class="width_6">
 										<div class="checkbox">
 											<label>
@@ -1878,7 +1877,7 @@
             {% verbatim %}
 						<script type="text/html" id="responsive_tpl">
 							{{#issues}}
-								<li class="issue-item" data-id="{{id}}" id="li_issue_{{id}}" url="/issue/detail/index/{{id}}">
+								<li class="issue-item" data-id="{{id}}" data-summary="{{summary}}" id="li_issue_{{id}}" url="/issue/detail/index/{{id}}">
 									<div class="issuable-avatar">
 										{{user_html assignee}}
 									</div>
@@ -1964,7 +1963,7 @@
             {% verbatim %}
 						<script type="text/html" id="list_tpl_detail">
 							{{#issues}}
-								<div class="issue-box" class="display-flex" data-id="{{id}}">
+								<div class="issue-box" class="display-flex" data-id="{{id}}" data-summary="{{summary}}">
 									<div class="issuable-info-container display-flex">
 										<div class="checkbox">
 											<label style="padding-top: 15%;">
@@ -2271,6 +2270,7 @@
                 var qtipApi = null;
 
                 var _fineUploader = null;
+                var _detailFineUploader = null;
 
                 var subtack = [];
                 var isFloatPart = false;
@@ -2309,9 +2309,7 @@
                     IssueAdvQuery.prototype.renderAdvQuery(adv_details);
                 }
 
-                $(function () {
-                    getFineUploader();
-
+                $(function () { 
                     keyMaster.addKeys([
                         {
                             key: 'e',
@@ -2448,8 +2446,10 @@
                             return n
                         });
 
-                        window.qtipApi.hide();
-                        $('#btn-save_adv_filter').qtip('api').toggle(false);
+                        if (window.qtipApi) {
+                            window.qtipApi.hide();
+                            $('#btn-save_adv_filter').qtip('api').toggle(false);
+                        }                        
 
                         if(is_empty(temp)){
                             notify_warn('提示','查询条件为空!');
@@ -2567,12 +2567,13 @@
                             var firstTabelTr = $('#list_render_id tr:first-child');
                             var detailRender = $('#detail_render_id');
                             var dataId = firstTabelTr.data('id') || $('#detail_render_id div:first-child').data('id');
+                            var dataSummary = firstTabelTr.data('summary') || $('#detail_render_id div:first-child').data('summary') || "";
                             isFloatPart = true;
 
                             if (detailRender.length) {
-                                showFloatDetail(dataId);
+                                showFloatDetail(dataId, dataSummary);
                             } else {
-                                showFloatDetail(dataId, true);
+                                showFloatDetail(dataId, dataSummary);
                             }
                             firstTabelTr.addClass('active');
                             detailRender.children(":first").addClass('issue-box-active');
@@ -2654,19 +2655,21 @@
                     $("#list_render_id").on("click", ".tree-item", function() {
                         if (isFloatPart) {
                             var dataId = $(this).data("id");
+                            var dataSummary = $(this).data("summary") || "";
                             $(this).addClass("active").siblings(".tree-item").removeClass("active");
-                            console.log(dataId);
-                            showFloatDetail(dataId, true);
+                            showFloatDetail(dataId, dataSummary);
+                            
                             return false;
                         }
                     });
 
                     $('#detail_render_id').on('click', '.issue-box', function (e) {
                         var dataId = $(this).data('id');
+                        var dataSummary = $(this).data("summary") || "";
                         if (!$(e.target).attr('type') && !$(e.target).hasClass('commit-id') && !$(e.target).hasClass('label') && !$(e.target).hasClass('prepend-left-5') && !$(e.target).parent().hasClass('resolve-select')) {
                             $(this).addClass('issue-box-active').siblings('.issue-box').removeClass('issue-box-active');
                             if (isFloatPart) {
-                                showFloatDetail(dataId);
+                                showFloatDetail(dataId, dataSummary);
                                 return false;
                             }
                         }
@@ -2922,7 +2925,7 @@
                     // 获取详情页信息
                     function getRightPartData(dataId) {
                         $('.maskLayer').removeClass('hide'); // 可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
-                        _issue_id = dataId;
+                        _issue_id = dataId;                        
 
                         IssueMain.prototype.initIssueItem();
 
@@ -2931,7 +2934,8 @@
                     }
 
                     // 显示右侧浮动窗
-                    function showFloatDetail(dataId) {
+                    function showFloatDetail(dataId, dataSummary) {
+                        getFineUploader(dataId, dataSummary);
                         getRightPartData(dataId);
                         $('.float-right-side').show();
                     }
@@ -3116,13 +3120,15 @@
                     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 
                     // 获取上传插件
-                    function getFineUploader() {
+                    function getFineUploader(issue_id, sum = "121") {
+                        _fineUploader = null;
+                        $("#issue_right_attachments_uploder").html("");
                         _fineUploader = new qq.FineUploader({
                             element: document.getElementById('issue_right_attachments_uploder'),
                             template: 'qq-template-gallery',
                             multiple: true,
                             request: {
-                                endpoint: '/issue/main/upload?project_id=' + _cur_project_id + '&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
+                                endpoint: '/issue/main/upload?project_id=' + _cur_project_id + '&issue_id=' + issue_id + '&summary=' + sum + '&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
                             },
                             deleteFile: {
                                 enabled: true,
@@ -3162,7 +3168,7 @@
                                     'txt'
                                 ]
                             }
-                        });
+                        });                      
                     }
                 });
                 startWS();

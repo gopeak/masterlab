@@ -1368,6 +1368,7 @@ var IssueMain = (function () {
         }
         $(".fine_uploader_img").each(function (i) {
             var id = $(this).attr('id');
+            console.log("id", id);
             //if( typeof(window._fineUploader[id])=='undefined' ){
             var uploader = new qq.FineUploader({
                 element: document.getElementById(id),
