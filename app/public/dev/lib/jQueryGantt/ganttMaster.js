@@ -439,7 +439,7 @@ GanttMaster.prototype.addTask = function (task, row) {
 GanttMaster.prototype.loadProject = function (project) {
   //console.debug("loadProject", project)
   this.beginTransaction();
-  this.serverClientTimeOffset = typeof project.serverTimeOffset !="undefined"? (parseInt(project.serverTimeOffset) + new Date().getTimezoneOffset() * 60000) : 0;
+  this.serverClientTimeOffset = 0;// typeof project.serverTimeOffset !="undefined"? (parseInt(project.serverTimeOffset) + new Date().getTimezoneOffset() * 60000) : 0;
   this.resources = project.resources;
   this.roles = project.roles;
 
