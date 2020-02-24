@@ -67,12 +67,27 @@ GridEditor.prototype.fillEmptyLines = function () {
         start = master.tasks[0].start;
         level = master.tasks[0].level + 1;
       }
+      let end = start + 3600*24*1000;
+     // let parent = this.master.currentTask.getParent();
+        let last_task = null;
+        if(master.tasks.length>0){
+            last_task=master.tasks[master.tasks.length-1];
+        }else{
+          // alert();
+        }
+        console.log(last_task);
+        let sprint_id = '0';
+        let sprint_name = '待办事项';
+        if(last_task!==null){
+            sprint_id = last_task .sprint_id;
+            sprint_name = last_task .sprint_name;
+        }
 
       //fill all empty previouses
       var cnt=0;
       emptyRow.prevAll(".emptyRow").addBack().each(function () {
         cnt++;
-        var ch = factory.build("tmp_fk" + new Date().getTime()+"_"+cnt, "", "", level, start, Date.workingPeriodResolution);
+        var ch = factory.build("tmp_fk" + new Date().getTime()+"_"+cnt, "", "", level, start,end, Date.workingPeriodResolution,'',sprint_id,sprint_name);
         var task = master.addTask(ch);
         lastTask = ch;
       });
@@ -523,79 +538,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 };
 
 GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
-
-    $('#modal-create-issue').modal('show');
-    loading.show('#modal-body');
-    $('#issue_id').val(task.id);
-    $('#action').val('update');
-    $('#gantt_description').text('');
-    $.ajax({
-        type: 'get',
-        dataType: "json",
-        async: true,
-        url: root_url + "issue/detail/get/" + task.id+'&from=gantt',
-        data: {},
-        success: function (resp) {
-            loading.hide('#modal-body');
-            auth_check(resp);
-            var issue = resp.data.issue;
-            $('#summary').val(issue.summary);
-            $('#create_issue_types_select').val(issue.issue_type);
-            $('#priority').val(issue.priority);
-            $('#gantt_status').val(issue.gantt_status);
-            $('#assignee').val(issue.assignee);
-            $('#gantt_assignee').val(issue.assignee);
-            $('#sprint').val(issue.sprint);
-            $('#start_date').val(issue.start_date);
-            $('#due_date').val(issue.due_date);
-            $('#edit_duration').html(issue.duration);
-            $('#progress').val(issue.progress);
-            if(issue.is_start_milestone!='0'){
-                $('#is_start_milestone').attr("checked", true);
-            }
-            if(issue.is_end_milestone!='0'){
-                $('#is_end_milestone').attr("checked", true);
-            }
-            $('.selectpicker').selectpicker('refresh');
-
-            let user = getUser(window._issueConfig.users, issue.assignee);
-            if(!is_empty(user)){
-                $('#user_dropdown-toggle-text').html(user.display_name);
-            }
-
-            let sprint = getObjectValue(window._issueConfig.sprint, issue.sprint);
-            if(is_empty(sprint)){
-                $('#sprint_name').html('待办事项');
-            }else{
-                $('#sprint_name').html(sprint.name);
-            }
-
-         // if(!window._editor_md){
-          $('#gantt_description').text(issue.description);
-            window._editor_md = editormd({
-              id   : "description_md",
-              placeholder : "",
-              width: "600px",
-              readOnly:false,
-              styleActiveLine:true,
-              lineNumbers:true,
-              height: 240,
-              markdown: issue.description,
-              path: '/dev/lib/editor.md/lib/',
-              imageUpload: true,
-              imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-              imageUploadURL: "/issue/detail/editormd_upload",
-              saveHTMLToTextarea: true,
-              emoji: true,
-              toolbarIcons      : "custom",
-            })
-         // }
-
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
+     window.$_gantAjax.makeEditIssueForm(task, editOnlyAssig);
 }
 
 

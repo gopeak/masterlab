@@ -49,7 +49,7 @@ function runSql($sql,   $db)
             if (substr($query, 0, 12) == 'CREATE TABLE') {
                 $line = explode('`', $query);
                 $data_name = $line[1];
-                showJsMessage('数据表  ' . $data_name . ' ... 创建成功');
+                echo '数据表  ' . $data_name . ' ... 创建成功'."ok\n";
                 $db->exec(droptable($data_name));
                 $db->exec($query);
                 unset($line, $data_name);

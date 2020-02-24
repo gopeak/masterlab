@@ -61,6 +61,7 @@ class ProjectGantt
         $item['gant_proj_sprint_weight'] = (int)$row['gant_proj_sprint_weight'];
         $item['code'] = '#' . $row['issue_num'];
         $item['name'] = $row['summary'];
+        $item['sprint_info'] = $sprint;
         $item['progress'] = (int)$row['progress'];
         $item['progressByWorklog'] = false;
         $item['relevance'] = (int)$row['weight'];
@@ -141,6 +142,7 @@ class ProjectGantt
             $item['code'] = '#' . 'backlog';
         }
         $item['name'] = $sprint['name'];
+        $item['sprint_info'] = $sprint;
         $item['progress'] = 0;
         $item['progressByWorklog'] = false;
         $item['relevance'] = (int)$sprint['order_weight'];
@@ -187,6 +189,7 @@ class ProjectGantt
         $item['gant_proj_sprint_weight'] = 0;
         $item['code'] = '#module' . $module['id'];
         $item['name'] = $module['name'];
+        $item['sprint_info'] = [];
         $item['progress'] = 0;
         $item['progressByWorklog'] = false;
         $item['relevance'] = (int)$module['order_weight'];

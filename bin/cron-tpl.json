@@ -19,7 +19,7 @@
       "name": "SprintReport",
       "exe_bin": "{{exe_bin}}",
       "exp": "0 59 23 * * ?",
-      "file": "{{root_path}}server/timer/sprintDayReport.php",
+      "file": "{{root_path}}app/server/timer/sprintDayReport.php",
       "arg": "-f"
     }
   ]

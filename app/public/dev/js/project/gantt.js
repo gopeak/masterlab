@@ -153,6 +153,122 @@ var Gantt = (function () {
         });
     };
 
+    Gantt.prototype.initEditIssueForm = function( task ) {
+        $('#summary').val('');
+        $('#create_issue_types_select').val('');
+        $('#priority').val('3');
+        $('#gantt_status').val('1');
+        $('#assignee').val('');
+        $('#gantt_assignee').val('');
+        $('#start_date').val('');
+        $('#due_date').val('');
+        $('#edit_duration').html('');
+        $('#progress').val('');
+        $('#is_start_milestone').attr("checked", false);
+        $('#is_end_milestone').attr("checked", false);
+        $('.selectpicker').selectpicker('refresh');
+        $('#sprint').val(task.sprint_id);
+        $('#sprint_name').html(task.sprint_name);
+
+        // if(!window._editor_md){
+        $('#gantt_description').text('');
+        window._editor_md = editormd({
+            id   : "description_md",
+            placeholder : "",
+            width: "600px",
+            readOnly:false,
+            styleActiveLine:true,
+            lineNumbers:true,
+            height: 240,
+            markdown: '',
+            path: '/dev/lib/editor.md/lib/',
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/issue/detail/editormd_upload",
+            saveHTMLToTextarea: true,
+            emoji: true,
+            toolbarIcons      : "custom",
+        })
+        // }
+    };
+
+    Gantt.prototype.makeEditIssueForm = function( task, editOnlyAssig ) {
+
+        Gantt.prototype.initEditIssueForm(task);
+        $('#modal-create-issue').modal('show');
+        loading.show('#modal-body');
+        $('#issue_id').val(task.id);
+        $('#action').val('update');
+        $('#gantt_description').text('');
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/detail/get/" + task.id+'&from=gantt',
+            data: {},
+            success: function (resp) {
+                loading.hide('#modal-body');
+                auth_check(resp);
+                var issue = resp.data.issue;
+                $('#summary').val(issue.summary);
+                $('#create_issue_types_select').val(issue.issue_type);
+                $('#priority').val(issue.priority);
+                $('#gantt_status').val(issue.gantt_status);
+                $('#assignee').val(issue.assignee);
+                $('#gantt_assignee').val(issue.assignee);
+                $('#sprint').val(issue.sprint);
+                $('#start_date').val(issue.start_date);
+                $('#due_date').val(issue.due_date);
+                $('#edit_duration').html(issue.duration);
+                $('#progress').val(issue.progress);
+                if(issue.is_start_milestone!='0'){
+                    $('#is_start_milestone').attr("checked", true);
+                }
+                if(issue.is_end_milestone!='0'){
+                    $('#is_end_milestone').attr("checked", true);
+                }
+                $('.selectpicker').selectpicker('refresh');
+
+                let user = getUser(window._issueConfig.users, issue.assignee);
+                if(!is_empty(user)){
+                    $('#user_dropdown-toggle-text').html(user.display_name);
+                }
+
+                let sprint = getObjectValue(window._issueConfig.sprint, issue.sprint);
+                if(is_empty(sprint.id)){
+                    $('#sprint_name').html('待办事项');
+                }else{
+                    $('#sprint_name').html(sprint.name);
+                }
+
+                // if(!window._editor_md){
+                $('#gantt_description').text(issue.description);
+                window._editor_md = editormd({
+                    id   : "description_md",
+                    placeholder : "",
+                    width: "600px",
+                    readOnly:false,
+                    styleActiveLine:true,
+                    lineNumbers:true,
+                    height: 240,
+                    markdown: issue.description,
+                    path: '/dev/lib/editor.md/lib/',
+                    imageUpload: true,
+                    imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                    imageUploadURL: "/issue/detail/editormd_upload",
+                    saveHTMLToTextarea: true,
+                    emoji: true,
+                    toolbarIcons      : "custom",
+                })
+                // }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
     Gantt.prototype.fetchResource = function (project_id) {
 
         var url = '/project/member/fetchAll/'+project_id;
