@@ -458,9 +458,10 @@
 
                     <div class="form-group">
                         <div class="col-sm-1"></div>
-                        <div class="col-sm-2">用时(天):</div>
+                        <div class="col-sm-2">用时:</div>
                         <div class="col-sm-4">
                             <!--<input type="number"  style="width: 30%"    class="form-control" name="params[duration]" id="duration"  value="1" autocomplete="off">-->
+                            <span id="edit_duration"></span>天
                             <p id="tip-duration" class="gl-field-error hide"></p>
                         </div>
                         <div class="col-sm-1">进度:<span class="required"> *</span></div>
@@ -1075,6 +1076,68 @@
             $('.layout-nav').toggleClass('hidden');
         });
         new UsersSelect();
+        // 计算用时(天)
+        var due_date_laydate = laydate.render({
+            elem: '#due_date'
+            ,format: 'yyyy-MM-dd'
+            ,mark: {
+                '0-11-08': '生日'
+                ,'0-12-31': '跨年' //每年12月31日
+                ,'0-1-1': '元旦' //每年1月1日
+                ,'0-5-1': '劳动节' //每年5月1日
+                ,'0-10-1': '国庆日' //每年10月1日
+                ,'0-0-10': '工资' //每个月10号
+                ,'2017-8-20': '预发' //如果为空字符，则默认显示数字+徽章
+                ,'2017-8-21': '发布'
+            }
+            ,done: function(value, date){
+                computeDuration();
+            }
+        });
+        var start_date_laydate = laydate.render({
+            elem: '#start_date'
+            ,format: 'yyyy-MM-dd'
+            ,mark: {
+                '0-11-08': '生日'
+                ,'0-12-31': '跨年' //每年12月31日
+                ,'0-1-1': '元旦' //每年1月1日
+                ,'0-5-1': '劳动节' //每年5月1日
+                ,'0-10-1': '国庆日' //每年10月1日
+                ,'0-0-10': '工资' //每个月10号
+                ,'2017-8-20': '预发' //如果为空字符，则默认显示数字+徽章
+                ,'2017-8-21': '发布'
+            }
+            ,done: function(value, date){
+                computeDuration();
+            }
+        });
+
+        function computeDuration(){
+            let project_id = window._cur_project_id;
+            let start_date = $('#start_date').val();
+            let due_date = $('#due_date').val();
+            if(start_date!='' && due_date!=''){
+                var url = '/issue/main/getDuration/?project'+project_id;
+                $.ajax({
+                    type: 'GET',
+                    dataType: "json",
+                    data: {project_id:project_id, start_date:start_date, due_date:due_date },
+                    url: url,
+                    success: function (resp) {
+                        auth_check(resp);
+                        if(resp.ret==="200"){
+                            $('#edit_duration').html(resp.data);
+                        }else{
+                            notify_error(resp.msg , resp.data);
+                        }
+                    },
+                    error: function (res) {
+                        notify_error("请求数据错误" + res);
+                    }
+                });
+            }
+        }
+
         var holiday_laydate = laydate.render({
             elem: '#holiday_laydate'
             ,format: 'yyyy-MM-dd'

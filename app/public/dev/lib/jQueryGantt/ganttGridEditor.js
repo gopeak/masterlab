@@ -87,7 +87,7 @@ GridEditor.prototype.fillEmptyLines = function () {
 
 
 GridEditor.prototype.addTask = function (task, row, hideIfParentCollapsed) {
-  console.debug("GridEditor.addTask",task,row);
+  //console.debug("GridEditor.addTask",task,row);
   //var prof = new Profiler("ganttGridEditor.addTask");
 
   //remove extisting row
@@ -548,7 +548,7 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
             $('#sprint').val(issue.sprint);
             $('#start_date').val(issue.start_date);
             $('#due_date').val(issue.due_date);
-            $('#duration').val(issue.duration);
+            $('#edit_duration').html(issue.duration);
             $('#progress').val(issue.progress);
             if(issue.is_start_milestone!='0'){
                 $('#is_start_milestone').attr("checked", true);
