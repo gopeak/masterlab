@@ -129,6 +129,7 @@ var IssueMain = (function () {
                     auth_check(resp);
                     if (resp.ret == '200') {
                         notify_success('保存成功');
+                        setTimeout('window.location.reload()',1000);
                         //window.qtipApi.hide()
                         $('#custom-filter-more').qtip('api').toggle(false);
                     } else {
