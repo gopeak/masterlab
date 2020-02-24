@@ -546,15 +546,15 @@ var IssueMain = (function () {
                         let html = "";
 
                         for (var status of status_list) {
-                            html += `<li data-value="${status.id}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
+                            html += `<li data-value="${status.id}" data-color="${status.color}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
                         }
                         list_box.html(html);
 
                         $(".status-list li").on("click", function () {
                             let id = $(this).data("value");
-                            let text = $(this).text()
-                            console.log(text)
-                            IssueDetail.prototype.updateIssueStatus(issue_id, id, $self, text)
+                            let text = $(this).text();
+                            let color = $(this).data("color")
+                            IssueDetail.prototype.updateIssueStatus(issue_id, id, $self, text, color)
                         });
 
                         $(document).on("click", function () {
