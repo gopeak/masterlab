@@ -40,7 +40,7 @@ var IssueDetail = (function () {
     };
 
     IssueDetail.prototype.setOptions = function (options) {
-        for (i in  options) {
+        for (i in options) {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
             // }
@@ -87,15 +87,15 @@ var IssueDetail = (function () {
                 var result = template(resp.data);
                 $('#issuable-header').html(result);
 
-                if(resp.data.prev_issue_id!=0){
+                if (resp.data.prev_issue_id != 0) {
                     var prev_issue_link = $('#prev_issue_link');
                     prev_issue_link.removeClass('disabled');
-                    prev_issue_link.attr('href','/issue/detail/index/'+resp.data.prev_issue_id);
+                    prev_issue_link.attr('href', '/issue/detail/index/' + resp.data.prev_issue_id);
                 }
-                if(resp.data.next_issue_id!=0){
+                if (resp.data.next_issue_id != 0) {
                     var next_issue_link = $('#next_issue_link');
                     next_issue_link.removeClass('disabled');
-                    $('#next_issue_link').attr('href','/issue/detail/index/'+resp.data.next_issue_id);
+                    $('#next_issue_link').attr('href', '/issue/detail/index/' + resp.data.next_issue_id);
                 }
 
 
@@ -188,7 +188,7 @@ var IssueDetail = (function () {
 
                     $('#master_issue_h4').removeClass('hide');
                     $('#master_issue_a').html(_edit_issue.master_info.summary);
-                    $('#master_issue_a').attr('href','/issue/detail/index/'+_edit_issue.master_info.id);
+                    $('#master_issue_a').attr('href', '/issue/detail/index/' + _edit_issue.master_info.id);
                 }
 
                 // 子任务
@@ -307,7 +307,7 @@ var IssueDetail = (function () {
                         dataType: "json",
                         async: true,
                         url: "/issue/detail/update_timeline/",
-                        data: {id: timeline_id, content: content, content_html: content_html},
+                        data: { id: timeline_id, content: content, content_html: content_html },
                         success: function (resp) {
                             auth_check(resp);
                             if (resp.ret == '200') {
@@ -346,7 +346,7 @@ var IssueDetail = (function () {
                             dataType: "json",
                             async: true,
                             url: $(this).data('url'),
-                            data: {id: $(this).data('id')},
+                            data: { id: $(this).data('id') },
                             success: function (resp) {
 
                                 auth_check(resp);
@@ -374,28 +374,28 @@ var IssueDetail = (function () {
 
     IssueDetail.prototype.fetchActivity = function (issue_id, page) {
         // url,  list_tpl_id, list_render_id
-        var params = {format: 'json'};
+        var params = { format: 'json' };
         var _key = 'activity';
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+'widget/fetchIssueActivity',
-            data: {page: page, issue_id:issue_id},
+            url: root_url + 'widget/fetchIssueActivity',
+            data: { page: page, issue_id: issue_id },
             success: function (resp) {
                 auth_check(resp);
-                if(resp.data.activity.length){
+                if (resp.data.activity.length) {
                     var activitys = [];
-                    for(var i=0; i<resp.data.activity.length;  i++) {
+                    for (var i = 0; i < resp.data.activity.length; i++) {
                         var user_id = resp.data.activity[i].user_id;
-                        resp.data.activity[i].user = getValueByKey(_issueConfig.users,user_id);
+                        resp.data.activity[i].user = getValueByKey(_issueConfig.users, user_id);
                     }
 
-                    var source = $('#'+_key+'_tpl').html();
+                    var source = $('#' + _key + '_tpl').html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
-                    $('#'+_key+'_wrap').html(result);
-                    $(`#tool_${_key}`).find("time").each(function(i, el){
+                    $('#' + _key + '_wrap').html(result);
+                    $(`#tool_${_key}`).find("time").each(function (i, el) {
                         var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                         $(el).html(t)
                     })
@@ -403,7 +403,7 @@ var IssueDetail = (function () {
                     window._cur_activity_page = parseInt(page);
                     var pages = parseInt(resp.data.pages);
                     if (pages > 1) {
-                        $('#'+_key+'_more').show();
+                        $('#' + _key + '_more').show();
                     }
                     $(`#toolform_${_key}`).hide();
                     $(`#tool_${_key}`).show();
@@ -417,14 +417,14 @@ var IssueDetail = (function () {
                             console.log("Page item clicked, type: " + type + " page: " + page);
                             //$("#filter_page").val(page);
                             //_options.query_param_obj["page"] = page;
-                            IssueDetail.prototype.fetchActivity(issue_id,page);
+                            IssueDetail.prototype.fetchActivity(issue_id, page);
                         }
                     };
                     $('#ampagination-activity').bootstrapPaginator(options);
-                }else{
+                } else {
                     var emptyHtml = defineStatusHtml({
-                        wrap: '#tool_'+_key,
-                        message : '数据为空'
+                        wrap: '#tool_' + _key,
+                        message: '数据为空'
                     })
                 }
 
@@ -450,7 +450,7 @@ var IssueDetail = (function () {
             dataType: "json",
             async: true,
             url: root_url + "issue/detail/add_timeline/",
-            data: {issue_id: issue_id, content: content, content_html: content_html, reopen: reopen},
+            data: { issue_id: issue_id, content: content, content_html: content_html, reopen: reopen },
             success: function (resp) {
                 auth_check(resp);
                 //alert(resp.msg);
@@ -467,18 +467,20 @@ var IssueDetail = (function () {
         });
     }
 
-    IssueDetail.prototype.updateIssueStatus = function (issue_id, status_id) {
+    IssueDetail.prototype.updateIssueStatus = function (issue_id, status_id, target, text) {
         var method = 'post';
         $.ajax({
             type: method,
             dataType: "json",
             async: true,
             url: root_url + "issue/main/update/",
-            data: {issue_id: issue_id, params: {status: status_id}},
+            data: { issue_id: issue_id, params: { status: status_id } },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret == '200') {
-                    window.location.reload();
+                    target.text(text)
+                    notify_success('操作成功');
+                    // window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }
@@ -489,49 +491,49 @@ var IssueDetail = (function () {
         });
     },
 
-    IssueDetail.prototype.updateIssueResolve = function (issue_id, resolve_id) {
-        var method = 'post';
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: true,
-            url: root_url + "issue/main/update/",
-            data: {issue_id: issue_id, params: {resolve: resolve_id}},
-            success: function (resp) {
-                auth_check(resp);
-                if (resp.ret === '200') {
-                    window.location.reload();
-                } else {
-                    notify_error(resp.msg);
+        IssueDetail.prototype.updateIssueResolve = function (issue_id, resolve_id) {
+            var method = 'post';
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: root_url + "issue/main/update/",
+                data: { issue_id: issue_id, params: { resolve: resolve_id } },
+                success: function (resp) {
+                    auth_check(resp);
+                    if (resp.ret === '200') {
+                        window.location.reload();
+                    } else {
+                        notify_error(resp.msg);
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
                 }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    },
-    IssueDetail.prototype.follow = function (issue_id, follow_action) {
+            });
+        },
+        IssueDetail.prototype.follow = function (issue_id, follow_action) {
 
-        var method = 'get';
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: true,
-            url: root_url + "issue/main/" + follow_action,
-            data: {issue_id: issue_id},
-            success: function (resp) {
-                auth_check(resp);
-                if (resp.ret == '200') {
-                    window.location.reload();
-                } else {
-                    notify_error(resp.msg);
+            var method = 'get';
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: root_url + "issue/main/" + follow_action,
+                data: { issue_id: issue_id },
+                success: function (resp) {
+                    auth_check(resp);
+                    if (resp.ret == '200') {
+                        window.location.reload();
+                    } else {
+                        notify_error(resp.msg);
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
                 }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    }
+            });
+        }
 
     return IssueDetail;
 })();
