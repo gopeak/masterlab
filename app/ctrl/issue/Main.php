@@ -217,6 +217,29 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    public function getDuration()
+    {
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (!$projectId) {
+            $this->ajaxFailed('提示', '请同时提供project_id参数');
+        }
+        if (!isset($_GET['start_date']) || !isset($_GET['due_date'])) {
+            $this->ajaxFailed('提示', '请同时提供start_date和due_date参数');
+        }
+
+        $holidays = (new HolidayModel())->getDays($projectId);
+        $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
+        $startDate = $_GET['start_date'];
+        $dueDate = $_GET['due_date'];
+        $duration = getWorkingDays($startDate, $dueDate, $holidays, $extraWorkerDays);
+
+        $this->ajaxSuccess('ok', $duration);
+
+    }
+
     /**
      * 以patch方式更新事项内容
      * @throws \Exception
@@ -1776,7 +1799,6 @@ class Main extends BaseUserCtrl
         // {
         //$this->ajaxFailed(Permission::$errorMsg);
         //}
-
         $issueId = null;
         if (isset($_GET['_target'][2])) {
             $issueId = (int)$_GET['_target'][2];

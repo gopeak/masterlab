@@ -370,7 +370,7 @@ var IssueMain = (function () {
             type: 'get',
             dataType: "json",
             url: "/issue/main/adv_filter",
-            data: { project_id: window.cur_project_id, adv_query_json: jsonData , sort_field: sort_field, sort_by: sort_by},
+            data: { project_id: window.cur_project_id, adv_query_json: jsonData, sort_field: sort_field, sort_by: sort_by },
             success: function (resp) {
                 btn_adv_sumit.removeClass('disabled');
                 $('#modal-adv_query').modal('hide');
@@ -464,6 +464,8 @@ var IssueMain = (function () {
             $(".issue_create_child").bind("click", function () {
                 $("#btn-create-issue").click();
                 $('#master_issue_id').val($(this).data('issue_id'));
+                $('#create_master_div').show();
+                $('#create_master_title').html($(this).data('title'));
             });
 
 
@@ -550,8 +552,9 @@ var IssueMain = (function () {
 
                         $(".status-list li").on("click", function () {
                             let id = $(this).data("value");
-
-                            IssueDetail.prototype.updateIssueStatus(issue_id, id);
+                            let text = $(this).text()
+                            console.log(text)
+                            IssueDetail.prototype.updateIssueStatus(issue_id, id, $self, text)
                         });
 
                         $(document).on("click", function () {
@@ -687,6 +690,8 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.fetchChildren = function (issue_id, display_id) {
+
+        loading.show('#' + display_id);
         $.ajax({
             type: 'get',
             dataType: "json",
@@ -705,6 +710,7 @@ var IssueMain = (function () {
                 var result = template(resp.data);
                 console.log(resp.data);
                 $('#' + display_id).html(result);
+                loading.hide('#' + display_id);
 
             },
             error: function (res) {
@@ -1368,6 +1374,7 @@ var IssueMain = (function () {
         }
         $(".fine_uploader_img").each(function (i) {
             var id = $(this).attr('id');
+            console.log("id", id);
             //if( typeof(window._fineUploader[id])=='undefined' ){
             var uploader = new qq.FineUploader({
                 element: document.getElementById(id),
@@ -1465,7 +1472,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type, updatedIssueTypeId) {
-        if(typeof MM !='undefined'){
+        if (typeof MM != 'undefined') {
             MM.App.editing = true;
         }
 
