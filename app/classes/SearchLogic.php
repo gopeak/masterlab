@@ -114,13 +114,13 @@ class SearchLogic
         $model = new ProjectModel();
         $table = $model->getTable();
         // var_export(self::$mysqlVersion);
-        if (self::$mysqlVersion < 5.70) {
+        //if (self::$mysqlVersion < 5.70) {
             // 使用LOCATE模糊搜索
             $where = "WHERE locate(:keyword,name) > 0  OR  locate(:keyword,`key`) > 0 ";
-        } else {
+        //} else {
             // 使用全文索引
-            $where =" WHERE MATCH (`name`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
-        }
+        //    $where =" WHERE MATCH (`name`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+        //}
         $params['keyword'] = $keyword;
 
         $sqlCount = "SELECT count(*)  as cc  FROM {$table}  " . $where;
