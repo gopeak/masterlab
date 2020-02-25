@@ -129,7 +129,7 @@ var IssueMain = (function () {
                     auth_check(resp);
                     if (resp.ret == '200') {
                         notify_success('保存成功');
-                        setTimeout('window.location.reload()',1000);
+                        setTimeout('window.location.reload()', 1000);
                         //window.qtipApi.hide()
                         $('#custom-filter-more').qtip('api').toggle(false);
                     } else {
@@ -504,13 +504,16 @@ var IssueMain = (function () {
                 let html = "";
                 for (let i in resolve_list) {
                     //console.log(resolve_list[i]);
-                    html += `<li data-value="${resolve_list[i].id}"><span style="color:${resolve_list[i].color}" class="prepend-left-5">${resolve_list[i].name}</span></li>`;
+                    html += `<li data-color="${resolve_list[i].color}" data-value="${resolve_list[i].id}"><span style="color:${resolve_list[i].color}" class="prepend-left-5">${resolve_list[i].name}</span></li>`;
                 }
                 list_box.html(html);
 
                 $(".resolve-list li").on("click", function () {
                     let id = $(this).data("value");
-                    IssueDetail.prototype.updateIssueResolve(issue_id, id);
+                    let color = $(this).data("color")
+                    let text = $(this).text()
+                    console.log(text, color)
+                    IssueDetail.prototype.updateIssueResolve(issue_id, id, $self, text, color);
                 });
 
                 $(document).on("click", function () {
