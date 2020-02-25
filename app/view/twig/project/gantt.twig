@@ -117,7 +117,7 @@
       <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite " title="redo"><span class="teamworkIcon">&middot;</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanAdd hide"></span>
       <button onclick="$('#workSpace').trigger('showAddAboveCurrentTask.gantt');" title="添加事项"   class="button textual icon requireCanWrite requireCanAdd"  ><span class="teamworkIcon">l</span></button>
-      <button  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"  class="button textual icon requireCanWrite requireCanAdd"  ><span class="teamworkIcon">X</span></button>
+      <button  onclick="$('#workSpace').trigger('showAddBelowCurrentTask.gantt');" title="添加事项"    class="button textual icon requireCanWrite requireCanAdd"  ><span class="teamworkIcon">X</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanInOutdent"></span>
       <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="升级"><span class="teamworkIcon">.</span></button>
       <button onclick="$('#workSpace').trigger('indentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="降级"><span class="teamworkIcon">:</span></button>
@@ -381,8 +381,9 @@
                     <input type="hidden" name="action" id="action" value="">
                     <input type="hidden" name="issue_id" id="issue_id" value="">
                     <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
-                    <input type="hidden" name="params[gant_type]" id="gant_type" value="project_sprint">
                     <input type="hidden" name="params[below_id]" id="below_id" value="">
+                    <input type="hidden" name="params[above_id]" id="above_id" value="">
+                    <input type="hidden" name="params[sprint]" id="sprint" value="0">
                     <input type="hidden" name="params[add_gantt_dir]" id="addAction" value="">
                     <input type="hidden" name="authenticity_token" value="">
 
@@ -445,7 +446,7 @@
                             <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="start_date"  value="" autocomplete="off"  />
                             <p id="tip-start_date" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-2">日期:<span class="required"> *</span></div>
+                        <div class="col-sm-2">结束日期:<span class="required"> *</span></div>
                         <div class="col-sm-4">
                             <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="due_date"  value="" autocomplete="off" />
                             <p id="tip-due_date" class="gl-field-error hide"></p>
@@ -459,7 +460,7 @@
                             <span id="edit_duration"></span>天
                             <p id="tip-duration" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-2">进度:<span class="required"> *</span></div>
+                        <div class="col-sm-2">进度:</div>
                         <div class="col-sm-4">
                             <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="progress"  value="1" autocomplete="off">
                             <p id="tip-progress" class="gl-field-error hide"></p>
@@ -1257,9 +1258,9 @@
         });
         $('#btn-add').bind('click',function(){
             if($('#action').val()=='update'){
-                window.ge.updateSyncServerTask();
+                window.$_gantAjax.updateSyncServerTask();
             }else{
-                window.ge.addSyncServerTask();
+                window.$_gantAjax.addSyncServerTask();
             }
         });
 

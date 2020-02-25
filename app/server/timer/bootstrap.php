@@ -4,10 +4,9 @@
  */
 
 $appDir = realpath(dirname(__FILE__). '/../../') ;
-$wwwDir = realpath(dirname(__FILE__). '/../../../../') ;
+$wwwDir = realpath(dirname(__FILE__). '/../../../') ;
 
-require_once $appDir.'/globals.php';
-require_once $wwwDir.'/hornet-framework/src/framework/bootstrap.php';
+require_once $appDir . DIRECTORY_SEPARATOR . 'globals.php';
 
 // 初始化开发框架基本设置
 $config = new \stdClass();
@@ -27,5 +26,4 @@ $config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
 $config->customRewriteFunction = "orgRoute";
 
 // 实例化开发框架对象
-$framework = new  framework\HornetEngine($config);
-
+$framework = new \framework\HornetEngine($config);

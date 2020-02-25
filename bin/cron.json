@@ -19,7 +19,7 @@
       "name": "SprintReport",
       "exe_bin": "C:/xampp7.2/php/php.exe",
       "exp": "0 59 23 * * ?",
-      "file": "C:/www/masterlab/server/timer/sprintDayReport.php",
+      "file": "C:/www/masterlab/app/server/timer/sprintDayReport.php",
       "arg": "-f"
     }
   ]

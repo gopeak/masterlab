@@ -30,17 +30,17 @@ function TaskFactory() {
   /**
    * Build a new Task
    */
-  this.build = function (id, name, code, level, start, end, duration, collapsed) {
+  this.build = function (id, name, code, level, start, end, duration, collapsed, sprint_id, sprint_name) {
     // Set at beginning of day
     //console.log( 'task.start:' , start);
     var adjusted_start = computeStart(start);
     var calculated_end = computeEndByDuration(adjusted_start, duration);
-    return new Task(id, name, code, level, adjusted_start, end, duration, collapsed);
+    return new Task(id, name, code, level, adjusted_start, end, duration, collapsed, sprint_id, sprint_name);
   };
 
 }
 
-function Task(id, name, code, level, start, end, duration, collapsed) {
+function Task(id, name, code, level, start, end, duration, collapsed, sprint_id, sprint_name) {
   this.id = id;
   this.name = name;
   this.progress = 0;
@@ -62,6 +62,12 @@ function Task(id, name, code, level, start, end, duration, collapsed) {
   this.endIsMilestone = false;
 
   this.collapsed = collapsed;
+
+  this.sprint_id = sprint_id;
+  this.sprint_name = sprint_name;
+
+  this.syncedServer = false;
+
 
   //permissions
   // by default all true, but must be inherited from parent

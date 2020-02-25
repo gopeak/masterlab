@@ -4,24 +4,34 @@
  * crontab 命令 1 * * * * /usr/bin/php /data/www/masterlab_demo/app/server/timer/restoreDemoData.php
  */
 
-$currentDir = realpath(dirname(__FILE__). '/') ;
+$currentDir = realpath(dirname(__FILE__). DIRECTORY_SEPARATOR) ;
 
-require $currentDir.'/bootstrap.php';
+require $currentDir. DIRECTORY_SEPARATOR . 'bootstrap.php';
 use \main\app\model\user\UserModel;
 
 try{
     $model = new UserModel();
     $model->db->connect();
+
+    // 判断当前数据库是否演示项目数据库
+    $database = $model->db->getOne('select database()');
+    if (strpos($database, 'demo') === false) {
+        showLine('Not masterlab demo project, restore abandoned!');
+        die;
+    }
+
     $tables = $model->db->getRows('show tables');
-    foreach ( $tables   as $row) {
+    foreach ( $tables as $row) {
         $table = current($row);
         $sql = "TRUNCATE $table ;";
+        showLine('数据表  ' . $table . ' ...删除成功');
         $ret = $model->db->exec($sql);
         //var_dump($ret);
     }
-    $sql = file_get_contents(APP_PATH.'public/install/data/demo.sql');
-    runSql($sql,  $model->db);
-    echo "ok\n";
+    $demoSqlFile = realpath(APP_PATH . 'public/install/data/demo.sql');
+    $sql = file_get_contents($demoSqlFile);
+    runSql($sql, $model->db);
+    showLine('OK');
 }catch (Exception $exception){
     print $exception->getMessage();
 }
@@ -49,7 +59,7 @@ function runSql($sql,   $db)
             if (substr($query, 0, 12) == 'CREATE TABLE') {
                 $line = explode('`', $query);
                 $data_name = $line[1];
-                showJsMessage('数据表  ' . $data_name . ' ... 创建成功');
+                showLine('数据表  ' . $data_name . ' ... 创建成功');
                 $db->exec(droptable($data_name));
                 $db->exec($query);
                 unset($line, $data_name);
@@ -65,4 +75,13 @@ function droptable($table_name)
     return "DROP TABLE IF EXISTS `" . $table_name . "`;";
 }
 
-
+/**
+ * 控制台显示信息
+ *
+ * @param $message
+ */
+function showLine($message)
+{
+    echo $message . PHP_EOL;
+    flush();
+}

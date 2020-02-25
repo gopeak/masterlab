@@ -59,8 +59,10 @@ class ProjectGantt
         $item['id'] = $row['id'];
         $item['level'] = (int)$row['level'];
         $item['gant_proj_sprint_weight'] = (int)$row['gant_proj_sprint_weight'];
+        $item['gant_sprint_weight'] = (int)$row['gant_sprint_weight'];
         $item['code'] = '#' . $row['issue_num'];
         $item['name'] = $row['summary'];
+        $item['sprint_info'] = $sprint;
         $item['progress'] = (int)$row['progress'];
         $item['progressByWorklog'] = false;
         $item['relevance'] = (int)$row['weight'];
@@ -141,6 +143,7 @@ class ProjectGantt
             $item['code'] = '#' . 'backlog';
         }
         $item['name'] = $sprint['name'];
+        $item['sprint_info'] = $sprint;
         $item['progress'] = 0;
         $item['progressByWorklog'] = false;
         $item['relevance'] = (int)$sprint['order_weight'];
@@ -187,6 +190,7 @@ class ProjectGantt
         $item['gant_proj_sprint_weight'] = 0;
         $item['code'] = '#module' . $module['id'];
         $item['name'] = $module['name'];
+        $item['sprint_info'] = [];
         $item['progress'] = 0;
         $item['progressByWorklog'] = false;
         $item['relevance'] = (int)$module['order_weight'];
@@ -292,12 +296,11 @@ class ProjectGantt
     /**
      * 按迭代分解的甘特图
      * @param $projectId
-     * @param bool $isActiveSprint
      * @param string $isDisplayBacklog
      * @return array
      * @throws \Exception
      */
-    public function getIssuesGroupBySprint($projectId, $isActiveSprint = false, $isDisplayBacklog='0')
+    public function getIssuesGroupBySprint($projectId, $isDisplayBacklog='0')
     {
         $projectId = (int)$projectId;
         $issueModel = IssueModel::getInstance();
@@ -305,19 +308,13 @@ class ProjectGantt
         $issueResolveModel = new IssueResolveModel();
         $closedId = $statusModel->getIdByKey('closed');
         $resolveId = $issueResolveModel->getIdByKey('done');
+        $orderBy = "Order by gant_proj_sprint_weight desc , start_date asc";
 
-        $condition = "project_id={$projectId} AND gant_hide!=1 AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc";
-        $sql = "select * from {$issueModel->getTable()} where {$condition}";
-        //echo $sql;
-        $rows = $issueModel->db->getRows($sql);
+        $table = $issueModel->getTable();
 
         $sprintModel = new SprintModel();
-        if (!$isActiveSprint) {
-            $sprints = $sprintModel->getItemsByProject($projectId);
-        } else {
-            $sprint = $sprintModel->getActive($projectId);
-            $sprints = [$sprint];
-        }
+        $sprints = $sprintModel->getItemsByProject($projectId);
+
         if($isDisplayBacklog=='1'){
             $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
         }
@@ -333,18 +330,24 @@ class ProjectGantt
                 continue;
             }
             $finalArr[] = self::formatRowBySprint($sprint);
-            foreach ($rows as $k => &$row) {
-                if ($row['sprint'] == $sprint['id']) {
-                    $sprintRows[$sprint['id']][] = $row;
-                }
-            }
+            $sprintId = $sprint['id'];
+            $condition = "project_id={$projectId} AND sprint={$sprintId} AND gant_hide!=1  {$orderBy}";
+            $sql = "select * from {$table} where {$condition}";
+            $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
+
             $otherArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
+                // 初始化排序值,每个迭代最多会创建1万个事项
+                $maxWeight = 100000 * 10000;
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
                     if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
                         $row['level'] = 1;
                         $otherArr[$row['id']] = self::formatRowByIssue($row, $sprint);
                     }
+                    // @todo 通过判断，避免频繁的更新
+                    $issueModel->updateItemById($row['id'], ['gant_proj_sprint_weight' => $maxWeight]);
+                    $maxWeight = $maxWeight - 100000;
+
                 }
             }
 
@@ -367,16 +370,6 @@ class ProjectGantt
             foreach ($otherArr as $item) {
                 $treeArr[] = $item;
             }
-
-            $first = current($otherArr);
-            $w = 100000 * count($otherArr);
-            if (isset($first['gant_proj_sprint_weight']) && intval($first['gant_proj_sprint_weight']) == 0) {
-                foreach ($otherArr as $item) {
-                    $issueModel->updateItemById($item['id'], ['gant_proj_sprint_weight' => $w]);
-                    $w = $w - 100000;
-                }
-            }
-
             foreach ($treeArr as $item) {
                 if (isset($item['children']) && count($item['children']) > 0) {
                     $tmp = $item;
@@ -391,78 +384,72 @@ class ProjectGantt
         return $finalArr;
     }
 
-    /**
-     * 按模块分解的甘特图
-     * @param $projectId
-     * @return array
-     * @throws \Exception
-     */
-    public function getIssuesGroupByModule($projectId)
+    public function getIssuesGroupByActiveSprint($projectId, $isDisplayBacklog='0')
     {
         $projectId = (int)$projectId;
-        $issueModel = new IssueModel();
-        $statusModel = new IssueStatusModel();
-        $issueResolveModel = new IssueResolveModel();
-        $closedId = $statusModel->getIdByKey('closed');
-        $resolveId = $issueResolveModel->getIdByKey('done');
-        $condition = "project_id={$projectId} AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc";
-        $sql = "select * from {$issueModel->getTable()} where {$condition}";
-        //echo $sql;
-        $rows = $issueModel->db->getRows($sql);
+        $issueModel = IssueModel::getInstance();
 
-        $moduleModel = new ProjectModuleModel();
-        $modules = $moduleModel->getByProject($projectId);
-        $modules[] = ['id' => -1, 'name' => '默认', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
-        $finalArr = [];
-        $moduleRows = [];
-        $moduleIdArr = [];
-        foreach ($modules as $module) {
-            $moduleIdArr[] = $module['id'];
+        $orderBy = "Order by gant_sprint_weight desc , start_date asc";
+        $table = $issueModel->getTable();
+
+
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getActive($projectId);
+        $sprints = [$sprint];
+
+        if($isDisplayBacklog=='1'){
+            $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
         }
-        foreach ($modules as $module) {
 
-            $finalArr[] = self::formatRowByModule($module);
-            foreach ($rows as $k => &$row) {
-                $row['description'] = '';
-                if (!in_array($row['module'], $moduleIdArr)) {
-                    $row['module'] = -1;
-                }
-                if ($row['module'] == $module['id']) {
-                    $moduleRows[$module['id']][] = $row;
-                }
+        $finalArr = [];
+        $sprintRows = [];
+        foreach ($sprints as $sprint) {
+            if(empty($sprint)){
+                continue;
             }
-            // print_r($moduleRows[$module['id']]);
+            if ($sprint['status'] != '1') {
+                continue;
+            }
+            $finalArr[] = self::formatRowBySprint($sprint);
+            $sprintId = $sprint['id'];
+            $condition = "project_id={$projectId} AND sprint={$sprintId} AND gant_hide!=1  {$orderBy}";
+            $sql = "select * from {$table} where {$condition}";
+            $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
             $otherArr = [];
-            if (!empty($moduleRows[$module['id']])) {
-                foreach ($moduleRows[$module['id']] as $k => &$row) {
+            if (!empty($sprintRows[$sprint['id']])) {
+                // 初始化排序值,每个迭代最多会创建1万个事项
+                $maxWeight = 100000 * 10000;
+                //2147483647
+
+                foreach ($sprintRows[$sprint['id']] as $k => &$row) {
                     if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
                         $row['level'] = 1;
-                        $otherArr[$row['id']] = self::formatRowByIssue($row, []);
+                        $otherArr[$row['id']] = self::formatRowByIssue($row, $sprint);
                     }
+                    // @todo 通过判断，避免频繁的更新
+                    $issueModel->updateItemById($row['id'], ['gant_sprint_weight' => $maxWeight]);
+                    $maxWeight = $maxWeight - 100000;
                 }
             }
-
             $treeArr = [];
-            if (!empty($moduleRows[$module['id']])) {
-                foreach ($moduleRows[$module['id']] as $k => &$row) {
+            if (!empty($sprintRows[$sprint['id']])) {
+                foreach ($sprintRows[$sprint['id']] as $k => &$row) {
                     if ($row['master_id'] == '0' && intval($row['have_children']) > 0) {
                         $row['level__'] = 1;
                         $row['level'] = 1;
                         $row['child'] = [];
-                        $item = self::formatRowByIssue($row, []);
-                        unset($moduleRows[$module['id']][$k]);
+                        $item = self::formatRowByIssue($row, $sprint);
+                        unset($sprintRows[$sprint['id']][$k]);
                         $level = 1;
                         //print_r($item);
-                        $this->recurIssue($moduleRows[$module['id']], $item, $level, []);
+                        $this->recurIssue($sprintRows[$sprint['id']], $item, $level, $sprint);
                         $treeArr[] = $item;
                     }
                 }
             }
-
             foreach ($otherArr as $item) {
                 $treeArr[] = $item;
             }
-
             foreach ($treeArr as $item) {
                 if (isset($item['children']) && count($item['children']) > 0) {
                     $tmp = $item;
@@ -474,10 +461,8 @@ class ProjectGantt
                 }
             }
         }
-        // print_r($moduleRows);
         return $finalArr;
     }
-
 
     public function batchUpdateGanttLevel()
     {
