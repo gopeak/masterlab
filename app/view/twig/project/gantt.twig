@@ -11,7 +11,7 @@
     <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
 
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
@@ -126,6 +126,7 @@
       <button onclick="$('#workSpace').trigger('moveDownCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanMoveUpDown" title="向下移动"><span class="teamworkIcon">j</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanDelete"></span>
       <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon delete requireCanWrite" title="隐藏事项(删除事项需到事项列表操作)"><span class="teamworkIcon">&cent;</span></button>
+      <button onclick="show_be_hidden_list();" class="button textual icon delete requireCanWrite" title="恢复隐藏事项"><span class="teamworkIcon">h</span></button>
       <span class="ganttButtonSeparator"></span>
       <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;" class="button textual icon " title="展开"><span class="teamworkIcon">6</span></button>
       <button onclick="$('#workSpace').trigger('collapseAll.gantt'); return false;" class="button textual icon " title="折叠"><span class="teamworkIcon">5</span></button>
@@ -601,7 +602,7 @@
                     <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-setting').modal('hide');">取消</a>
                     <span class="append-right-10">
                          <input  id="btn-setting-save"  type="button" value="保 存" class="btn btn-create" >
-                </span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -698,6 +699,64 @@
     </form>
 </div>
 
+<div class="modal" id="modal_be_hidden_issue_list" style=" padding-right: 16px;">
+    <div class="modal-dialog issue-modal-dialog" style="width: 700px;">
+        <div class="modal-content issue-modal-content">
+            <div class="modal-header issue-modal-header">
+                <h3 class="modal-header-title">恢复隐藏事项</h3>
+                <a class="close" data-dismiss="modal" href="#">×</a>
+            </div>
+            <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
+
+                <table class="table table-hover table-condensed">
+
+                    <thead>
+                        <tr>
+                            <th>编号#</th>
+                            <th>主题</th>
+                            <th>模块</th>
+                            <th>迭代</th>
+                            <th>时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tr_be_hidden_issue_list_content">
+
+                    </tbody>
+                </table>
+
+                <hr style="display: block;">
+
+                <div class="gl-pagination border-0" id="ampagination-bootstrap"></div>
+
+            </div>
+            <div class="modal-footer issue-modal-footer footer-block row-content-block">
+                <!--a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-setting').modal('hide');">取消</a-->
+                <span class="append-right-10">
+                    <input type="button" value="刷新数据" class="btn btn-create js-masterlab-refresh-clicked" >
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% verbatim %}
+<script type="text/html" id="be_hidden_issue_list_tpl">
+    {{#tasks}}
+    <tr class="js-hidden-row-id-{{id}}">
+        <th scope="row">#{{issue_num}}</th>
+        <td>{{summary}}</td>
+        <td>{{format_module_name}}</td>
+        <td>{{format_sprint_name}}</td>
+        <td>{{format_create_time}}</td>
+        <td>
+            <a class="btn btn-transparent js-masterlab-behidden-clicked" data-id="{{id}}" title="恢复" href="javascript:void(0)">
+                <i class="fa fa-reply"></i>
+            </a>
+        </td>
+    </tr>
+    {{/tasks}}
+</script>{% endverbatim %}
 
 {% verbatim %}
 <script id="tpl_holiday_a" type="text/tpl">
@@ -860,6 +919,10 @@
         $("#btn-setting-save").click(function(){
             window.$_gantAjax.saveGanttSetting();
          });
+    }
+
+    function show_be_hidden_list(){
+        window.$_gantAjax.fetchGanttBeHiddenIssueList(window._cur_project_id);
     }
 
     //-------------------------------------------  Open a black popup for managing resources. This is only an axample of implementation (usually resources come from server) ------------------------------------------------------

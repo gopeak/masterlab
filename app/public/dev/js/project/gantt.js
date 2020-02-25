@@ -199,7 +199,7 @@ var Gantt = (function () {
         });
 
         $('.selectpicker').selectpicker('refresh');
-    }
+    };
 
     Gantt.prototype.addResource = function( ) {
 
@@ -254,7 +254,7 @@ var Gantt = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    };
 
     Gantt.prototype.delMember = function(user_id, displayname,projectname) {
 
@@ -297,7 +297,79 @@ var Gantt = (function () {
                 }
             }
         );
-    }
+    };
+
+    Gantt.prototype.fetchGanttBeHiddenIssueList = function (project_id, page) {
+
+        var url = '/project/gantt/fetchGanttBeHiddenIssueList/'+project_id;
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            data: {"page": page},
+            url: url,
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret==="200") {
+                    let source = $('#be_hidden_issue_list_tpl').html();
+                    let template = Handlebars.compile(source);
+                    let result = template(resp.data);
+                    //console.log(result);
+                    $('#tr_be_hidden_issue_list_content').html(result);
+
+                    if (resp.data.pages > 1) {
+                        let options = {
+                            currentPage: resp.data.page,
+                            totalPages: resp.data.pages,
+                            onPageClicked: function (e, originalEvent, type, page) {
+                                console.log("Page item clicked, type: " + type + " page: " + page);
+                                Gantt.prototype.fetchGanttBeHiddenIssueList(project_id, page);
+                            }
+                        };
+                        $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    }
+
+                    $('.js-masterlab-behidden-clicked').click(function(){
+                        var id = $(this).data('id');
+                        Gantt.prototype.recoverBeHiddenIssue(project_id, id);
+                    });
+                    $('.js-masterlab-refresh-clicked').click(function(){
+                        window.location.reload();
+                    });
+
+                    $('#modal_be_hidden_issue_list').modal('show');
+                } else {
+                    notify_error("请求数据源失败:" + resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+
+    };
+
+    Gantt.prototype.recoverBeHiddenIssue = function (project_id, issue_id) {
+        var url = '/project/gantt/recoverGanttBeHiddenIssue/'+project_id;
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            data: {"issue_id": issue_id},
+            url: url,
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret==="200") {
+                    $(".js-hidden-row-id-"+issue_id).remove();
+                    notify_success(resp.msg);
+                } else {
+                    notify_error("请求数据源失败:" + resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
     return Gantt;
 })();
 

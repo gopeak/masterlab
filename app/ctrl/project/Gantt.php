@@ -17,6 +17,7 @@ use main\app\classes\ProjectGantt;
 use main\app\model\issue\ExtraWorkerDayModel;
 use main\app\model\issue\HolidayModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectRoleModel;
@@ -286,6 +287,78 @@ class Gantt extends BaseUserCtrl
         $data['canAdd'] = true;
         $this->ajaxSuccess('ok', $data);
     }
+
+
+    /**
+     * 获取被隐藏的事项列表
+     * @throws \Exception
+     */
+    public function fetchGanttBeHiddenIssueList()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目ID不能为空');
+        }
+
+        $page = 1;
+        $pageSize = 20;
+        if (isset($_GET['page'])) {
+            $page = max(1, (int)$_GET['page']);
+        }
+
+        $data['current_uid'] = UserAuth::getId();
+
+        $data['tasks'] = [];
+
+        $class = new ProjectGantt();
+        list($rows, $total) = $class->getBeHiddenIssuesByPage($projectId, $page, $pageSize);
+
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $data['tasks'] = $rows;
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 甘特图 恢复已隐藏的事项
+     * @throws \Exception
+     */
+    public function recoverGanttBeHiddenIssue()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目ID不能为空');
+        }
+
+        $issueId = null;
+        if (isset($_GET['issue_id'])) {
+            $issueId = (int)$_GET['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('参数错误', '缺少ID');
+        }
+        $data = [];
+        $issueModel = new IssueModel();
+        $issueModel->updateItemById($issueId, ['gant_hide' => 0]);
+
+        $this->ajaxSuccess('已恢复显示该事项', $data);
+    }
+
 
     public function moveUpIssue()
     {
