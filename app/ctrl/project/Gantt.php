@@ -252,15 +252,11 @@ class Gantt extends BaseUserCtrl
 
         $data['tasks'] = [];
         if ($sourceType == 'project') {
-            $data['tasks'] = $class->getIssuesGroupBySprint($projectId, false, $isDisplayBacklog);
+            $data['tasks'] = $class->getIssuesGroupBySprint($projectId,  $isDisplayBacklog);
         }
         if ($sourceType == 'active_sprint') {
-            $data['tasks'] = $class->getIssuesGroupBySprint($projectId, true, $isDisplayBacklog);
+            $data['tasks'] = $class->getIssuesGroupByActiveSprint($projectId,  $isDisplayBacklog);
         }
-        if ($sourceType == 'module') {
-            $data['tasks'] = $class->getIssuesGroupByModule($projectId);
-        }
-
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
         foreach ($data['tasks'] as &$task) {

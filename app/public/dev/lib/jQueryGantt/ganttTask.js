@@ -63,8 +63,11 @@ function Task(id, name, code, level, start, end, duration, collapsed, sprint_id,
 
   this.collapsed = collapsed;
 
-    this.sprint_id = sprint_id;
-    this.sprint_name = sprint_name;
+  this.sprint_id = sprint_id;
+  this.sprint_name = sprint_name;
+
+  this.syncedServer = false;
+
 
   //permissions
   // by default all true, but must be inherited from parent

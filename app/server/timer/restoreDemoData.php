@@ -1,8 +1,9 @@
 <?php
 /**
  * 每隔一个小时还原demo数据
- * crontab 命令 1 * * * * /usr/bin/php /data/www/masterlab_demo/app/server/timer/restoreDemoData.php
+ * crontab 命令
  */
+//  */60  * * * * /usr/bin/php /data/www/masterlab_demo/app/server/timer/restoreDemoData.php
 
 $currentDir = realpath(dirname(__FILE__). '/') ;
 

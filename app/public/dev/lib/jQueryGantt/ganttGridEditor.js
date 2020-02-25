@@ -96,6 +96,7 @@ GridEditor.prototype.fillEmptyLines = function () {
         lastTask.rowElement.find("[name=name]").focus();//focus to "name" input
       }
     });
+
     this.element.append(emptyRow);
   }
 };
@@ -109,7 +110,7 @@ GridEditor.prototype.addTask = function (task, row, hideIfParentCollapsed) {
   this.element.find("#tid_" + task.id).remove();
 
   var taskRow = $.JST.createFromTemplate(task, "TASKROW");
-  console.log(task);
+  //console.log(task);
   if (!this.master.permissions.canSeeDep)
     taskRow.find(".requireCanSeeDep").hide();
 
@@ -418,7 +419,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           }
             self.master.changeTaskDeps(task); //dates recomputation from dependencies
             var params = {depends:task.depends};
-            self.master.updateIssue(task.id, params)
+            window.$_gantAjax.updateIssue(task.id, params)
 
         }
 
@@ -447,8 +448,11 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           event.preventDefault();
           //return false;
       }
-
     }
+      if (field == "name" && el.val() != "" && task.syncedServer===false){
+          window.$_gantAjax.syncAddLastTask(task);
+      }
+
   });
 
   //cursor key movement

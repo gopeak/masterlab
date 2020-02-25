@@ -155,7 +155,7 @@ var Gantt = (function () {
 
     Gantt.prototype.initEditIssueForm = function( task ) {
         $('#summary').val('');
-        $('#create_issue_types_select').val('');
+        $('#create_issue_types_select').val('3');
         $('#priority').val('3');
         $('#gantt_status').val('1');
         $('#assignee').val('');
@@ -166,10 +166,9 @@ var Gantt = (function () {
         $('#progress').val('');
         $('#is_start_milestone').attr("checked", false);
         $('#is_end_milestone').attr("checked", false);
-        $('.selectpicker').selectpicker('refresh');
         $('#sprint').val(task.sprint_id);
         $('#sprint_name').html(task.sprint_name);
-
+        $('.selectpicker').selectpicker('refresh');
         // if(!window._editor_md){
         $('#gantt_description').text('');
         window._editor_md = editormd({
@@ -262,6 +261,268 @@ var Gantt = (function () {
                 })
                 // }
 
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    Gantt.prototype.syncAddLastTask = function (task) {
+        console.log("syncAddLastTask:",  task)
+        if(task.name===''){
+            return;
+        }
+
+        let sprint = getObjectValue(_issueConfig.sprint,task.sprint_id);
+        let start_date = timestampToDate(task.start,'Y-m-d');
+        let due_date = timestampToDate(task.end,'Y-m-d');
+        if(!is_empty(sprint.start_date) && is_empty(start_date)){
+            start_date = sprint.start_date;
+        }
+        if(!is_empty(sprint.end_date) && is_empty(due_date)){
+            due_date = sprint.end_date;
+        }
+        let is_start_milestone = null;
+        if(task.startIsMilestone){
+            is_start_milestone = 1;
+        }else{
+            is_start_milestone = 0;
+        }
+        let is_end_milestone = null;
+        if(task.endIsMilestone){
+            is_end_milestone = 1;
+        }else{
+            is_end_milestone = 0;
+        }
+        let assignee = '';
+        if(task.assignee){
+            assignee = task.assignee[0];
+        }
+
+        var params = {};
+        params = {
+            project_id:window.cur_project_id,
+            sprint:task.sprint_id,
+            issue_type:2,
+            summary:task.name,
+            status:1,
+            assignee:assignee,
+            start_date:start_date,
+            due_date:due_date,
+            progress:0,
+            is_start_milestone: is_start_milestone,
+            is_end_milestone: is_end_milestone,
+            description:''
+        }
+        let prev_task = null;
+        if(window.ge.tasks.length>0){
+            prev_task = window.ge.tasks[window.ge.tasks.length-1];
+        }
+        if(!is_empty(prev_task.id)){
+            params['below_id'] = prev_task.id;
+        }
+
+        var url = '/issue/main/add?from_gantt=1';
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            url: url,
+            data: {params:params},
+            success: function (resp) {
+                auth_check(resp);
+                if(!form_check(resp)){
+                    return;
+                }
+                if (resp.ret === '200') {
+                    var ret;
+                    for (var i = 0; i < window.ge.tasks.length; i++) {
+                        var tsk = window.ge.tasks[i];
+                        if (tsk.id == task.id) {
+                            window.ge.tasks[i].syncedServer = true;
+                            window.ge.tasks[i].id = resp.data;
+                            window.ge.tasks[i].code = '#'+resp.data;
+                            break;
+                        }
+                    }
+                    notify_success(resp.msg);
+                }else{
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+
+    Gantt.prototype.addSyncServerTask = function () {
+        //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+        var self = window.ge;
+
+        var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+        var url = '/issue/main/add?from_gantt=1';
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            url: url,
+            data: params,
+            success: function (resp) {
+                auth_check(resp);
+                if(!form_check(resp)){
+                    return;
+                }
+                if (resp.ret == '200') {
+                    notify_success(resp.msg);
+                    $('#modal-create-issue').modal('hide');
+                    let action = $("#add_gantt_dir").val();
+                    if(action==='addAboveCurrentTask'){
+                        // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
+                        let id = resp.data;
+                        let name = $('#summary').val();
+                        let code = "#"+id;
+                        let start_date = $('#start_date').val();
+                        start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
+                        let timestamp = new Date(start_date).getTime()*1000
+                        let duration = parseInt($('#duration').val());
+                        self.addAboveCurrentTask(id, name, code, timestamp, duration);
+                    }
+                    if(action==='addBelowCurrentTask'){
+                        // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
+                        let id = resp.data;
+                        let name = $('#summary').val();
+                        let code = "#"+id;
+                        let start_date = $('#start_date').val();
+                        start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
+                        let timestamp = new Date(start_date).getTime()*1000
+                        let duration = parseInt($('#duration').val());
+                        self.addBelowCurrentTask(id, name, code, timestamp, duration);
+                    }
+                }else{
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+
+    Gantt.prototype.updateSyncServerTask = function () {
+        //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+        var self = window.ge;
+
+        $('#modal-create-issue').modal('hide');
+        var taskId = $("#issue_id").val();
+        var task = self.getTask(taskId); // get task again because in case of rollback old task is lost
+
+        self.beginTransaction();
+        task.name = $("#summary").val();
+        task.description = $("#description").val();
+        task.code = "#"+taskId;
+        task.progress = parseInt($("#progress").val());
+        //task.duration = parseInt(taskEditor.find("#duration").val()); //bicch rimosso perchè devono essere ricalcolata dalla start end, altrimenti sbaglia
+        task.startIsMilestone = $("#is_start_milestone").is(":checked");
+        task.endIsMilestone = $("#is_end_milestone").is(":checked");
+
+        task.type = '';
+        task.typeId = '';
+        task.relevance = 0;
+        task.progressByWorklog=  false;//taskEditor.find("#progressByWorklog").is(":checked");
+
+        //set assignments
+        var cnt=0;
+
+        //change dates
+        let start_date = $("#start_date").val();
+        let due_date = $("#due_date").val();
+        console.log(start_date, due_date);
+        if(!is_empty(start_date) && !is_empty(due_date)){
+            task.setPeriod(Date.parseString(start_date).getTime(), Date.parseString(due_date).getTime() + (3600000 * 22));
+        }
+
+        //change status
+        // task.changeStatus($("#status").val());
+
+        if (self.endTransaction()) {
+            //var taskEditor =  new GridEditor(this);
+            //taskEditor.find(":input").updateOldValue();
+            //closeBlackPopup();
+        }
+        var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+        var url = '/issue/main/update?from_gantt=1';
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            url: url,
+            data: params,
+            success: function (resp) {
+                auth_check(resp);
+                if(!form_check(resp)){
+                    notify_success("提交参数错误",resp.msg);
+                    return;
+                }
+                if (resp.ret == 200) {
+                    notify_success(resp.msg);
+
+                }else{
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+
+    Gantt.prototype.updateIssue = function (issue_id, params) {
+        //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+        var self = window.ge;
+        var url = '/issue/main/update?issue_id='+issue_id+"&from_gantt=1";
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            url: url,
+            data: {params:params},
+            success: function (resp) {
+                auth_check(resp);
+                if(!form_check(resp)){
+                    notify_success("提交参数错误",resp.msg);
+                    return;
+                }
+                if (resp.ret == 200) {
+                    notify_success(resp.msg);
+
+                }else{
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    Gantt.prototype.deleteTask = function(taskId, params ) {
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url+"issue/main/update",
+            data: {issue_id: taskId, params: params},
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('操作失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
