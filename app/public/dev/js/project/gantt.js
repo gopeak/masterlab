@@ -748,7 +748,7 @@ var Gantt = (function () {
 
 
                     if ($("#tr_be_hidden_issue_list_content tr").length > 0) {
-                        
+
                     } else {
                         defineStatusHtml({
                             wrap: '#tr_be_hidden_issue_list_content_empty',

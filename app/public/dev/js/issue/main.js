@@ -1268,7 +1268,9 @@ var IssueMain = (function () {
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
 
-                // websocket广州宣讲添加
+
+                /*
+                 * websocket广州宣讲添加
                 if (typeof (_is_ai_cmd_create) != "undefined") {
                     if (_ws_summary) {
                         $('#create_issue_text_summary').val(_ws_summary);
@@ -1277,7 +1279,7 @@ var IssueMain = (function () {
                     $('.selectpicker').selectpicker('refresh');
                     $('.assign-to-me-link ').click();
                 }
-
+                */
 
             },
             error: function (res) {
