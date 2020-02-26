@@ -1279,8 +1279,6 @@ var IssueMain = (function () {
                     } else {
                         $('#create_issue_text_summary').val(window.create_issue_onchange_issuetype_cache.summary_val);
                     }
-                    var xxx = $('#create_issue_simplemde_description').val();
-                    alert(xxx);
                     $('#create_issue_priority').val('3');
                     $('.selectpicker').selectpicker('refresh');
                     $('.assign-to-me-link ').click();
