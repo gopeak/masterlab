@@ -379,27 +379,31 @@ var Gantt = (function () {
                     notify_success(resp.msg);
                     $('#modal-create-issue').modal('hide');
                     let action = $("#add_gantt_dir").val();
+                    let id = resp.data;
+                    let name = $('#summary').val();
+                    let code = "#"+id;
+                    let sprint_id = $('#sprint').val();
+                    let sprint_name = $('#sprint_name').html();
+                    let sprint = getObjectValue(window._issueConfig.sprint, sprint_id);
+                    let start_date = $('#start_date').val().replace(/-/g, '/');// 把所有-转化成/
+                    let startTime = 0;
+                    if(start_date==="" && !is_empty(sprint.start_date)){
+                        start_date = sprint.start_date;
+                    }
+                    startTime = (new Date(start_date).getTime())*1000;
+                    let due_date =  $('#due_date').val().replace(/-/g, '/');
+                    let endTime = 0;
+                    if(due_date==="" && !is_empty(sprint.due_date)){
+                        due_date = sprint.due_date;
+                    }
+                    endTime = (new Date(due_date).getTime())*1000;
+                    let duration = parseInt($('#duration').val());
+
                     if(action==='addAboveCurrentTask'){
-                        // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
-                        let id = resp.data;
-                        let name = $('#summary').val();
-                        let code = "#"+id;
-                        let start_date = $('#start_date').val();
-                        start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
-                        let timestamp = new Date(start_date).getTime()*1000
-                        let duration = parseInt($('#duration').val());
-                        self.addAboveCurrentTask(id, name, code, timestamp, duration);
+                        self.addAboveCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name);
                     }
                     if(action==='addBelowCurrentTask'){
-                        // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
-                        let id = resp.data;
-                        let name = $('#summary').val();
-                        let code = "#"+id;
-                        let start_date = $('#start_date').val();
-                        start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
-                        let timestamp = new Date(start_date).getTime()*1000
-                        let duration = parseInt($('#duration').val());
-                        self.addBelowCurrentTask(id, name, code, timestamp, duration);
+                        self.addBelowCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name);
                     }
                 }else{
                     notify_error(resp.msg);

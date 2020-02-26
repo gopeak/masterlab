@@ -1054,7 +1054,7 @@ GanttMaster.prototype.showAddBelowCurrentTask = function () {
     window.$_gantAjax.initEditIssueForm(self.currentTask);
 }
 
-GanttMaster.prototype.addBelowCurrentTask = function () {
+GanttMaster.prototype.addBelowCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id,sprint_name) {
   var self = this;
   console.debug("addBelowCurrentTask",self.currentTask)
   var factory = new TaskFactory();
@@ -1071,13 +1071,14 @@ GanttMaster.prototype.addBelowCurrentTask = function () {
     if (!canAddBrother && !canAddChild){
         return;
     }
-    let sprint_id = self.currentTask .sprint_id;
-    let sprint_name = self.currentTask .sprint_name;
-    ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level+ (addNewBrother ?0:1), self.currentTask.start, self.currentTask.end,1,'',sprint_id,sprint_name);
+    let collapsed = 1;
+    let level = self.currentTask.level+ (addNewBrother ?0:1);
+    ch = factory.build(id, name, code,  level, startTime, endTime, duration, collapsed, sprint_id,sprint_name);
     row = self.currentTask.getRow() + 1;
 
     if (row>0) {
       self.beginTransaction();
+      ch.syncedServer = true;
       var task = self.addTask(ch, row);
       if (task) {
         task.rowElement.click();
@@ -1109,7 +1110,7 @@ GanttMaster.prototype.showAddAboveCurrentTask = function () {
     window.$_gantAjax.initEditIssueForm(self.currentTask);
 }
 
-GanttMaster.prototype.addAboveCurrentTask = function (id, name, code,  start, duration) {
+GanttMaster.prototype.addAboveCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id,sprint_name) {
   var self = this;
   // console.debug("addAboveCurrentTask",self.currentTask)
 
@@ -1127,12 +1128,13 @@ GanttMaster.prototype.addAboveCurrentTask = function (id, name, code,  start, du
       return;
 
     //ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
-    let sprint_id = self.currentTask .sprint_id;
-    let sprint_name = self.currentTask .sprint_name;
-    ch = factory.build(id, name, code, self.currentTask.level,   self.currentTask.start,self.currentTask.end, duration, sprint_id, sprint_name);
+      let collapsed = 1;
+      let level = self.currentTask.level+ (addNewBrother ?0:1);
+    ch = factory.build(id, name, code,  level, startTime, endTime, duration, collapsed, sprint_id,sprint_name);
     row = self.currentTask.getRow();
     if (row > 0) {
       self.beginTransaction();
+      ch.syncedServer = true;
       var task = self.addTask(ch, row);
       if (task) {
         task.rowElement.click();
