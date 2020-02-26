@@ -75,7 +75,22 @@ http://demo.masterlab.vip
         php composer.phar update
        ```
  3. 在web服务器添加虚拟主机并映射到masterlab的 app/public 目录  
-    如果Web服务器是Apache
+    如果Web服务器是Apache,首先编辑主配置文件`httpd.conf`将  
+      ```
+      <Directory />
+          AllowOverride none
+          Require all denied
+      </Directory>
+      ```
+      替换为  
+      ```
+      <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+        #Allow from All
+      </Directory>
+      ``
+      找到 `httpd-vhosts.conf` 文件，添加：  
       ```text
       <VirtualHost *:80>
         # 请更改为实际的masterlab目录
