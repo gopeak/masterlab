@@ -487,7 +487,8 @@ var Gantt = (function () {
     Gantt.prototype.updateIssue = function (issue_id, params) {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
-        var url = '/issue/main/update?issue_id='+issue_id+"&from_gantt=1";
+        let project_id = window._cur_project_id;
+        var url = '/issue/main/update?issue_id='+issue_id+'project_id='+project_id+'&from_gantt=1';
         $.ajax({
             type: 'post',
             dataType: "json",

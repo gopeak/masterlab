@@ -355,7 +355,9 @@ class Gantt extends BaseUserCtrl
         $this->ajaxSuccess('已恢复显示该事项', $data);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function moveUpIssue()
     {
         $currentId = null;
@@ -372,12 +374,12 @@ class Gantt extends BaseUserCtrl
         $issueModel = new IssueModel();
         $currentIsuse = $issueModel->getById($currentId);
         $newIssue = $issueModel->getById($newId);
-        if (!isset($currentIsuse['gant_proj_sprint_weight']) || !isset($newIssue['gant_proj_sprint_weight'])) {
+        if (!isset($currentIsuse['gant_sprint_weight']) || !isset($newIssue['gant_sprint_weight'])) {
             $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
         }
 
-        $currentWeight = (int)$currentIsuse['gant_proj_sprint_weight'];
-        $newWeight = (int)$newIssue['gant_proj_sprint_weight'];
+        $currentWeight = (int)$currentIsuse['gant_sprint_weight'];
+        $newWeight = (int)$newIssue['gant_sprint_weight'];
         if ($currentWeight == $newWeight) {
             $currentWeight++;
         } else {
@@ -385,8 +387,8 @@ class Gantt extends BaseUserCtrl
             $newWeight = $currentWeight;
             $currentWeight = $tmp;
         }
-        $currentInfo = ['gant_proj_sprint_weight' => $currentWeight];
-        $newInfo = ['gant_proj_sprint_weight' => $newWeight];
+        $currentInfo = ['gant_sprint_weight' => $currentWeight];
+        $newInfo = ['gant_sprint_weight' => $newWeight];
         $issueModel->updateItemById($currentId, $currentInfo);
         $issueModel->updateItemById($newId, $newInfo);
 
@@ -409,12 +411,12 @@ class Gantt extends BaseUserCtrl
         $issueModel = new IssueModel();
         $currentIsuse = $issueModel->getById($currentId);
         $newIssue = $issueModel->getById($newId);
-        if (!isset($currentIsuse['gant_proj_sprint_weight']) || !isset($newIssue['gant_proj_sprint_weight'])) {
+        if (!isset($currentIsuse['gant_sprint_weight']) || !isset($newIssue['gant_sprint_weight'])) {
             $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
         }
 
-        $currentWeight = (int)$currentIsuse['gant_proj_sprint_weight'];
-        $newWeight = (int)$newIssue['gant_proj_sprint_weight'];
+        $currentWeight = (int)$currentIsuse['gant_sprint_weight'];
+        $newWeight = (int)$newIssue['gant_sprint_weight'];
         if ($currentWeight == $newWeight) {
             $newWeight++;
         } else {
@@ -422,8 +424,8 @@ class Gantt extends BaseUserCtrl
             $newWeight = $currentWeight;
             $currentWeight = $tmp;
         }
-        $currentInfo = ['gant_proj_sprint_weight' => $currentWeight];
-        $newInfo = ['gant_proj_sprint_weight' => $newWeight];
+        $currentInfo = ['gant_sprint_weight' => $currentWeight];
+        $newInfo = ['gant_sprint_weight' => $newWeight];
         $issueModel->updateItemById($currentId, $currentInfo);
         $issueModel->updateItemById($newId, $newInfo);
 
@@ -466,13 +468,13 @@ class Gantt extends BaseUserCtrl
             if (!empty($masterIssue) && isset($masterIssue['master_id'])) {
                 $masterId = $masterIssue['master_id'];
                 $level = (int)$masterIssue['level'];
-                $masterWeight = $masterIssue['gant_proj_sprint_weight'];
+                $masterWeight = $masterIssue['gant_sprint_weight'];
             }
         }
         if ($nextId != '0') {
             $nextIssue = $issueModel->getById($nextId);
             if (!empty($nextIssue)) {
-                $nextWeight = $nextIssue['gant_proj_sprint_weight'];
+                $nextWeight = $nextIssue['gant_sprint_weight'];
                 $nextMasterId = (int)$nextIssue['master_id'];
             }
         }
@@ -481,7 +483,7 @@ class Gantt extends BaseUserCtrl
         $currentInfo = [];
         $currentInfo['level'] = $level;
         $currentInfo['master_id'] = $masterId;
-        $currentInfo['gant_proj_sprint_weight'] = $weight;
+        $currentInfo['gant_sprint_weight'] = $weight;
         $issueModel->updateItemById($issueId, $currentInfo);
 
         if (!empty($children)) {
@@ -529,14 +531,14 @@ class Gantt extends BaseUserCtrl
         $nextWeight = 0;
         if ($masterId != '0') {
             $masterIssue = $issueModel->getById($masterId);
-            if (isset($masterIssue['gant_proj_sprint_weight'])) {
-                $masterWeight = $masterIssue['gant_proj_sprint_weight'];
+            if (isset($masterIssue['gant_sprint_weight'])) {
+                $masterWeight = $masterIssue['gant_sprint_weight'];
             }
         }
         if ($nextId != '0') {
             $nextIssue = $issueModel->getById($nextId);
-            if (isset($nextIssue['gant_proj_sprint_weight'])) {
-                $nextWeight = $nextIssue['gant_proj_sprint_weight'];
+            if (isset($nextIssue['gant_sprint_weight'])) {
+                $nextWeight = $nextIssue['gant_sprint_weight'];
             }
         }
 
@@ -545,7 +547,7 @@ class Gantt extends BaseUserCtrl
         $currentInfo = [];
         $currentInfo['level'] = max(0, (int)$issue['level'] - 1);
         $currentInfo['master_id'] = $masterId;
-        $currentInfo['gant_proj_sprint_weight'] = $weight;
+        $currentInfo['gant_sprint_weight'] = $weight;
         list($ret, $msg) = $issueModel->updateItemById($issueId, $currentInfo);
         if ($ret) {
             if (!empty($children)) {

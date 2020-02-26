@@ -27,6 +27,8 @@ use main\app\model\project\ProjectModuleModel;
 class ProjectGantt
 {
 
+    public $maxWeight = 100000 * 10000;
+
     /**
      * 初始化甘特图设置
      * @param $projectId
@@ -58,7 +60,6 @@ class ProjectGantt
         $item = [];
         $item['id'] = $row['id'];
         $item['level'] = (int)$row['level'];
-        $item['gant_proj_sprint_weight'] = (int)$row['gant_proj_sprint_weight'];
         $item['gant_sprint_weight'] = (int)$row['gant_sprint_weight'];
         $item['code'] = '#' . $row['issue_num'];
         $item['name'] = $row['summary'];
@@ -137,7 +138,6 @@ class ProjectGantt
         $item = [];
         $item['id'] = intval('-' . $sprint['id']);
         $item['level'] = 0;
-        $item['gant_proj_sprint_weight'] = 0;
         $item['code'] = '#sprint' . $sprint['id'];
         if (empty($sprint['id'])) {
             $item['code'] = '#' . 'backlog';
@@ -178,40 +178,6 @@ class ProjectGantt
         return $item;
     }
 
-    /**
-     * @param $module
-     * @return array
-     */
-    public static function formatRowByModule($module)
-    {
-        $item = [];
-        $item['id'] = intval('-' . $module['id']);
-        $item['level'] = 0;
-        $item['gant_proj_sprint_weight'] = 0;
-        $item['code'] = '#module' . $module['id'];
-        $item['name'] = $module['name'];
-        $item['sprint_info'] = [];
-        $item['progress'] = 0;
-        $item['progressByWorklog'] = false;
-        $item['relevance'] = (int)$module['order_weight'];
-        $item['type'] = 'module';
-        $item['typeId'] = '2';
-        $item['description'] = $module['description'];
-        $item['status'] = 'STATUS_ACTIVE';
-        $item['depends'] = '';
-        $item['canWrite'] = true;
-        $item['start'] = '';
-        $item['duration'] = 1;//'';
-        $item['end'] = '';
-        $item['startIsMilestone'] = false;
-        $item['endIsMilestone'] = false;
-        $item['collapsed'] = false;
-        $item['assigs'] = '';
-        $item['hasChild'] = true;
-        $item['master_id'] = '';
-        $item['have_children'] = 1;
-        return $item;
-    }
 
     /**
      * @param $children
@@ -227,7 +193,7 @@ class ProjectGantt
 
         foreach ($children as $k => $row) {
             $i++;
-            $weight = intval($row['gant_proj_sprint_weight']);
+            $weight = intval($row['gant_sprint_weight']);
             if (empty($weight)) {
                 $key = $i;
             } else {
@@ -236,11 +202,11 @@ class ProjectGantt
             $tmp[$key] = $row;
         }
         krsort($tmp);
-        if (intval($first['gant_proj_sprint_weight']) == 0) {
+        if (intval($first['gant_sprint_weight']) == 0) {
             $w = 100000 * count($tmp);
             $issueModel = IssueModel::getInstance();
             foreach ($tmp as $k => $row) {
-                $issueModel->updateItemById($row['id'], ['gant_proj_sprint_weight' => $w]);
+                //$issueModel->updateItemById($row['id'], ['gant_sprint_weight' => $w]);
                 $w = $w - 100000;
             }
         }
@@ -308,7 +274,7 @@ class ProjectGantt
         $issueResolveModel = new IssueResolveModel();
         $closedId = $statusModel->getIdByKey('closed');
         $resolveId = $issueResolveModel->getIdByKey('done');
-        $orderBy = "Order by gant_proj_sprint_weight desc , start_date asc";
+        $orderBy = "Order by gant_sprint_weight desc , start_date asc";
 
         $table = $issueModel->getTable();
 
@@ -334,20 +300,16 @@ class ProjectGantt
             $condition = "project_id={$projectId} AND sprint={$sprintId} AND gant_hide!=1  {$orderBy}";
             $sql = "select * from {$table} where {$condition}";
             $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
-
+            // 更新排序权重值
+            $this->updateProjectSprintWeight($rows);
             $otherArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
                 // 初始化排序值,每个迭代最多会创建1万个事项
-                $maxWeight = 100000 * 10000;
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
                     if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
                         $row['level'] = 1;
                         $otherArr[$row['id']] = self::formatRowByIssue($row, $sprint);
                     }
-                    // @todo 通过判断，避免频繁的更新
-                    $issueModel->updateItemById($row['id'], ['gant_proj_sprint_weight' => $maxWeight]);
-                    $maxWeight = $maxWeight - 100000;
-
                 }
             }
 
@@ -384,6 +346,48 @@ class ProjectGantt
         return $finalArr;
     }
 
+    /**
+     * 初始化和更新排序值
+     * @param $issues
+     * @throws \Exception
+     */
+    public function updateProjectSprintWeight($issues)
+    {
+        $fieldWeight = 'gant_sprint_weight';
+        $issueModel = new IssueModel();
+        if (!empty($issues)) {
+            // 初始化排序值,每个迭代最多会创建1万个事项
+            $maxWeight = $this->maxWeight;
+            $firstIssue = current($issues);
+            if(intval($firstIssue[$fieldWeight])!=$maxWeight){
+                foreach ($issues as  $issue) {
+                    $issueModel->updateItemById($issue['id'], [$fieldWeight => $maxWeight]);
+                    //print_r([$issue['id'], [$fieldWeight => $maxWeight]]);
+                    $maxWeight = $maxWeight - 100000;
+                }
+            }else{
+                foreach ($issues as $k=> &$issue) {
+                    if($issue['id']!=$firstIssue['id']){
+                        if(empty($issue[$fieldWeight])){
+                            $prevIssueWeight = (int)$issues[$k-1][$fieldWeight];
+                            if($prevIssueWeight>(100000*2)){
+                                $currentIssueWeight = $prevIssueWeight-100000;
+                            }else{
+                                $currentIssueWeight = intval($prevIssueWeight/2);
+                            }
+                            list($ret) = $issueModel->updateItemById($issue['id'], [$fieldWeight => $currentIssueWeight]);
+                            //print_r([$issue['id'], [$fieldWeight => $currentIssueWeight]]);
+                            if($ret){
+                                $issue[$fieldWeight] = $currentIssueWeight;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     public function getIssuesGroupByActiveSprint($projectId, $isDisplayBacklog='0')
     {
         $projectId = (int)$projectId;
@@ -415,20 +419,15 @@ class ProjectGantt
             $condition = "project_id={$projectId} AND sprint={$sprintId} AND gant_hide!=1  {$orderBy}";
             $sql = "select * from {$table} where {$condition}";
             $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
+            $this->updateProjectSprintWeight($rows);
+
             $otherArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
-                // 初始化排序值,每个迭代最多会创建1万个事项
-                $maxWeight = 100000 * 10000;
-                //2147483647
-
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
                     if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
                         $row['level'] = 1;
                         $otherArr[$row['id']] = self::formatRowByIssue($row, $sprint);
                     }
-                    // @todo 通过判断，避免频繁的更新
-                    $issueModel->updateItemById($row['id'], ['gant_sprint_weight' => $maxWeight]);
-                    $maxWeight = $maxWeight - 100000;
                 }
             }
             $treeArr = [];
