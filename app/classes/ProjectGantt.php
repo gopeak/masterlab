@@ -503,4 +503,47 @@ class ProjectGantt
             $issueModel->db->query($sql);
         }
     }
+
+
+    public function getBeHiddenIssuesByPage($projectId, $page = 1, $pageSize = 20)
+    {
+        $projectId = (int)$projectId;
+        $issueModel = IssueModel::getInstance();
+        $statusModel = new IssueStatusModel();
+        $issueResolveModel = new IssueResolveModel();
+        $closedId = $statusModel->getIdByKey('closed');
+        $resolveId = $issueResolveModel->getIdByKey('done');
+
+        $start = $pageSize * ($page - 1);
+        $limit = " limit {$start}, " . $pageSize;
+
+        $condition =
+            "project_id={$projectId} AND gant_hide=1 AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc " . $limit;
+
+        $count = $issueModel->db->getOne("SELECT count(*) as cc FROM {$issueModel->getTable()} WHERE {$condition}");
+
+        $sql = "SELECT * FROM {$issueModel->getTable()} WHERE {$condition}";
+        //echo $sql;
+        $rows = $issueModel->db->getRows($sql);
+
+        if (!empty($rows)) {
+            $fieldLogic = new FieldLogic();
+            $sprints = $fieldLogic->getSprintMapByProjectID($projectId);
+            $modules = $fieldLogic->getModuleMapByProjectID($projectId);
+
+            foreach ($rows as &$row) {
+                $row['format_sprint_name'] = $sprints[$row['sprint']];
+                $row['format_module_name'] = $modules[$row['module']];
+                $row['format_create_time'] = date('Y-m-d H:i', $row['created']);
+            }
+            unset($row);
+            return [$rows, $count];
+        } else {
+            return [[], 0];
+        }
+
+
+
+
+    }
 }

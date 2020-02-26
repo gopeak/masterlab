@@ -24,8 +24,8 @@ class ProjectModuleModel extends CacheModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws \PDOException
      * @return self
+     * @throws \Exception
      */
     public static function getInstance($persistent = false)
     {
