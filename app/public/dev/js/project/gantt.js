@@ -693,6 +693,17 @@ var Gantt = (function () {
                     //console.log(result);
                     $('#tr_be_hidden_issue_list_content').html(result);
 
+                    if (Number(resp.data.total) < 1) {
+                        defineStatusHtml({
+                            wrap: '#tr_be_hidden_issue_list_content_empty',
+                            message : '没有数据',
+                            name: 'label',
+                            handleHtml: ``
+                        })
+                    } else {
+                        $('#tr_be_hidden_issue_list_content_empty').empty();
+                    }
+
                     if (resp.data.pages > 1) {
                         let options = {
                             currentPage: resp.data.page,
@@ -708,9 +719,6 @@ var Gantt = (function () {
                     $('.js-masterlab-behidden-clicked').click(function(){
                         var id = $(this).data('id');
                         Gantt.prototype.recoverBeHiddenIssue(project_id, id);
-                    });
-                    $('.js-masterlab-refresh-clicked').click(function(){
-                        window.location.reload();
                     });
 
                     $('#modal_be_hidden_issue_list').modal('show');
@@ -735,7 +743,22 @@ var Gantt = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret==="200") {
+                    window.ge.loadProject(loadFromLocalStorage());
                     $(".js-hidden-row-id-"+issue_id).remove();
+
+
+                    if ($("#tr_be_hidden_issue_list_content tr").length > 0) {
+                        
+                    } else {
+                        defineStatusHtml({
+                            wrap: '#tr_be_hidden_issue_list_content_empty',
+                            message : '没有数据',
+                            name: 'label',
+                            handleHtml: ``
+                        })
+                    }
+
+
                     notify_success(resp.msg);
                 } else {
                     notify_error("请求数据源失败:" + resp.msg);
