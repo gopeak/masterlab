@@ -1219,6 +1219,11 @@ var IssueMain = (function () {
             }
         }
 
+        var tempcache = $('#create_issue_text_summary').val();
+        if(tempcache){
+            window.create_issue_onchange_issuetype_cache.summary_val = tempcache;
+        }
+
         $.ajax({
             type: method,
             dataType: "json",
@@ -1250,6 +1255,8 @@ var IssueMain = (function () {
                     $(id).html(html);
                 }
 
+
+
                 if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
                     $('#create_tabs').show();
@@ -1261,12 +1268,17 @@ var IssueMain = (function () {
                 $('#a_create_default_tab').click();
 
 
+
                 _default_data = IssueMain.prototype.getFormData();
 
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
                 if (typeof (_is_ai_cmd_create) != "undefined") {
-                    $('#create_issue_text_summary').val(_ws_summary);
+                    if (_ws_summary) {
+                        $('#create_issue_text_summary').val(_ws_summary);
+                    } else {
+                        $('#create_issue_text_summary').val(window.create_issue_onchange_issuetype_cache.summary_val);
+                    }
                     $('#create_issue_priority').val('3');
                     $('.selectpicker').selectpicker('refresh');
                     $('.assign-to-me-link ').click();
