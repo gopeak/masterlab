@@ -89,7 +89,7 @@ http://demo.masterlab.vip
         AllowOverride All
         #Allow from All
       </Directory>
-      ``
+      ```
       找到 `httpd-vhosts.conf` 文件，添加：  
       ```text
       <VirtualHost *:80>
