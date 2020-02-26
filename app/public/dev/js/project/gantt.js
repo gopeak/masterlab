@@ -697,7 +697,7 @@ var Gantt = (function () {
                         defineStatusHtml({
                             wrap: '#tr_be_hidden_issue_list_content_empty',
                             message : '没有数据',
-                            name: 'label',
+                            name: 'backlog',
                             handleHtml: ``
                         })
                     } else {
@@ -753,7 +753,7 @@ var Gantt = (function () {
                         defineStatusHtml({
                             wrap: '#tr_be_hidden_issue_list_content_empty',
                             message : '没有数据',
-                            name: 'label',
+                            name: 'backlog',
                             handleHtml: ``
                         })
                     }
