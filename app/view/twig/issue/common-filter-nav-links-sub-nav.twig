@@ -39,18 +39,18 @@
                 </a>
             </li>
 
-            <li class="filter_nav_li ">
-                |  过滤器：
+            <li class="filter_nav_li" style="border-left: 1px solid #ddd; padding-left: 12px;">
+                过滤器：
             </li>
             {% for favFilter in showFavFilters %}
                 <li class="filter_nav_li  {% if (active_id ==  favFilter.id  or fav_filter==favFilter.id ) %} {{ 'active_underline filter_active_underline' }}{% endif %}">
-                    <a title="{{ favFilter.name }}" href="{{ issue_main_url}}?fav_filter={{ favFilter.id }}" style="color:#fc9403"><span>{{ favFilter.name }}</span>
+                    <a title="{{ favFilter.name }}" href="{{ issue_main_url}}?fav_filter={{ favFilter.id }}" style="color:#fc9403; font-size: 12px; padding: 11px 4px 9px;"><span>{{ favFilter.name }}</span>
                     </a>
                 </li>
             {% endfor %}
             {% if ( otherFavFilters) %}
                 <li class="filter_nav_li  ">
-                    <a  style="color:#fc9403" id="custom-filter-more" title="更多的过滤器 <a>管理</a>" href="#"><span>更 多</span><i class="fa fa-caret-down"></i>
+                    <a  style="color:#fc9403; font-size: 12px; padding: 11px 4px 9px;" id="custom-filter-more" title="更多的过滤器 <a>管理</a>" href="#"><span>更 多</span><i class="fa fa-caret-down"></i>
                     </a>
                 </li>
             {% endif %}
