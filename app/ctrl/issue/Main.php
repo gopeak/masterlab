@@ -1456,6 +1456,8 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $uid = $this->getCurrentUid();
+        $user = $this->auth->getUser();
+        $userDisplayName = $user['display_name'];
 
         $info = [];
 
@@ -1470,6 +1472,25 @@ class Main extends BaseUserCtrl
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
+
+        // 生成日志备注详情
+        $moduleNames = [
+            'issue_list' => '事项列表',
+            'gantt' => '甘特图',
+            'mind' => '事项分解',
+            'kanban' => '看板',
+            'sprint' => '迭代',
+            'backlog' => '待办事项'
+        ];
+
+        $fromModule = strtolower(trim($_POST['from_module']));
+        $actionContent = $this->makeActionInfo($issue, $info);
+        $moduleName = '"事项"';
+        if (isset($moduleNames[$fromModule])) {
+            $moduleName = '"事项 - {$fromModule}"';
+        }
+        $actionInfo = " 在 {$moduleName} 模块中修改事项";
+
         $issueType = $issue['issue_type'];
         if (isset($params['issue_type'])) {
             $issueType = $params['issue_type'];
@@ -1623,11 +1644,13 @@ class Main extends BaseUserCtrl
         $issueLogic = new IssueLogic();
         $statusModel = new IssueStatusModel();
         $resolveModel = new IssueResolveModel();
-        $actionInfo = $issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
+        // 使用新的actionInfo表述方式，此处注释掉
+        //$actionInfo = $issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
         $activityInfo['action'] = $actionInfo;
+        $activityInfo['content'] = $actionContent;
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $issue['summary'];
@@ -1653,6 +1676,84 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('更新成功');
     }
 
+    /**
+     * 组装事项操作日志备注信息
+     *
+     * @param $issueOldValues
+     * @param $issueNewValues
+     * @return string
+     */
+    private function makeActionInfo($issueOldValues, $issueNewValues)
+    {
+        $fieldLabels = [
+            'issue_type' => '事项类型',
+            'priority' => '优先级',
+            'module' => '模块',
+            'summary' => '标题',
+            'assignee' => '经办人',
+            'status' => '状态',
+            'resolve' => '解决结果',
+            'start_date' => '开始日期',
+            'due_date' => '结束日期',
+            'assistants' => '协助人'
+        ];
+
+        $fields = array_keys($fieldLabels);
+
+        $maps = [];
+        $userModel = new UserModel();
+        $users = $userModel->getAll();
+        $maps['assignee'] = $maps['assistants'] = $users;
+
+        $issueTypeModel = new IssueTypeModel();
+        $types = $issueTypeModel->getAll();
+        $maps['issue_type'] = $types;
+
+        $issuePriorityModel = new IssuePriorityModel();
+        $priorities = $issuePriorityModel->getAll();
+        $maps['priority'] = $priorities;
+
+        $projectModuleModel = new ProjectModuleModel();
+        $modules = $projectModuleModel->getByProject($issueOldValues['project_id'], true);
+        $maps['module'] = $modules;
+
+        $issueStatusModel = new IssueStatusModel();
+        $status = $issueStatusModel->getAll();
+        $maps['status'] = $status;
+
+        $issueResolveModel = new IssueResolveModel();
+        $resolves = $issueResolveModel->getAll();
+        $maps['resolve'] = $resolves;
+
+        $changes = [];
+        foreach ($issueNewValues as $field => $issueNewValue) {
+            if (in_array($field, $fields)) {
+                $issueOldValue = $issueOldValues[$field];
+                if ($issueNewValue != $issueOldValue) {
+                    if ($field == 'assignee' || $field == 'assistants') {
+                        $issueNewValue = isset($users[$issueNewValue]) ? $users[$issueNewValue]['display_name'] . '@'. $users[$issueNewValue]['username'] : '未知';
+                        $issueOldValue = isset($users[$issueOldValue]) ? $users[$issueOldValue]['display_name'] . '@'. $users[$issueOldValue]['username'] : '未知';
+                    } elseif (isset($maps[$field])) {
+                        $mapValues = $maps[$field];
+                        $issueNewValue = isset($mapValues[$issueNewValue]) ? $mapValues[$issueNewValue]['name']: '未知';
+                        $issueOldValue = isset($mapValues[$issueOldValue]) ? $mapValues[$issueOldValue]['name']: '未知';
+                    }
+
+                    $change = $fieldLabels[$field] . '：' . $issueOldValue . ' --> ' . $issueNewValue;
+                    if ($field == 'summary') {
+                        $change = '标题 变更为 ' . $issueNewValue;
+                    }
+                    $changes[] = $change;
+                }
+            }
+        }
+
+        if ($changes) {
+            return join('，', $changes);
+        } else {
+            return '';
+        }
+    }
 
     /**
      * 批量修改
