@@ -387,13 +387,13 @@ var Gantt = (function () {
                     let sprint = getObjectValue(window._issueConfig.sprint, sprint_id);
                     let start_date = $('#start_date').val().replace(/-/g, '/');// 把所有-转化成/
                     let startTime = 0;
-                    if(start_date==="" && !is_empty(sprint.start_date)){
+                    if(start_date==="" && !isUndefined(sprint.start_date)){
                         start_date = sprint.start_date;
                     }
                     startTime = (new Date(start_date).getTime())*1000;
                     let due_date =  $('#due_date').val().replace(/-/g, '/');
                     let endTime = 0;
-                    if(due_date==="" && !is_empty(sprint.due_date)){
+                    if(due_date==="" && !isUndefined(sprint.due_date)){
                         due_date = sprint.due_date;
                     }
                     endTime = (new Date(due_date).getTime())*1000;

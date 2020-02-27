@@ -451,11 +451,12 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
       }
     }
     // 在最下方新增一个事项
-    if (field == "name" && el.val() != "" && task.syncedServer===false){
+    if (field == "name" && trimStr(el.val()) != "" && task.syncedServer===false){
         window.$_gantAjax.syncAddLastTask(task);
      }
+
      // 更新事项标题
-      if (field == "name" && el.val() != "" && task.name!=taskOriginName && task.syncedServer===true){
+      if (field == "name" && trimStr(el.val()) != "" && task.name!=taskOriginName && task.syncedServer===true){
           let project_id = window._cur_project_id;
           window.$_gantAjax.updateIssue(task.id, {summary:el.val(), project_id:project_id});
       }

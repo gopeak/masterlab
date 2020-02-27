@@ -27,7 +27,10 @@ use main\app\model\project\ProjectModuleModel;
 class ProjectGantt
 {
 
-    public $maxWeight = 100000 * 10000;
+    public static  $maxWeight = 100000 * 10000;
+
+    public static $offset = 100000;
+
 
     /**
      * 初始化甘特图设置
@@ -63,13 +66,13 @@ class ProjectGantt
         $item['gant_sprint_weight'] = (int)$row['gant_sprint_weight'];
         $item['code'] = '#' . $row['issue_num'];
         $item['name'] = $row['summary'];
-        $item['sprint_info'] = $sprint;
+        $item['sprint_info'] = [];//$sprint;
         $item['progress'] = (int)$row['progress'];
         $item['progressByWorklog'] = false;
         $item['relevance'] = (int)$row['weight'];
         $item['type'] = $row['issue_type'];
         $item['typeId'] = $row['issue_type'];
-        $item['description'] = $row['description'];
+        $item['description'] = '';//$row['description'];
         $item['status'] = 'STATUS_DONE'; //$row['status'];
         $item['depends'] = $row['depends'];
         $item['canWrite'] = true;
@@ -233,8 +236,8 @@ class ProjectGantt
         // 注意递归调用必须加个判断，否则会无限循环
         if (count($levelRow['children']) > 0) {
             $levelRow['children'] = $this->sortChildrenByWeight($levelRow['children']);
-            foreach ($levelRow['children'] as &$item) {
-                $this->recurIssue($rows, $item, $level, $sprint);
+            foreach ($levelRow['children'] as &$child) {
+                $this->recurIssue($rows, $child, $level, $sprint);
             }
         } else {
             return;
@@ -247,14 +250,15 @@ class ProjectGantt
      * @param $levelRow
      * @param $level
      */
-    public function recurTreeIssue(&$finalArr, &$children)
+    public function recurTreeIssue(&$finalArr, &$children, &$sprintIssueArr)
     {
         foreach ($children as $k => $row) {
             $item = $row;
             unset($row['children']);
             $finalArr [] = $row;
+            $sprintIssueArr[] = $row;
             if (count($item['children']) > 0) {
-                $this->recurTreeIssue($finalArr, $item['children']);
+                $this->recurTreeIssue($finalArr, $item['children'], $sprintIssueArr);
             }
         }
     }
@@ -270,10 +274,6 @@ class ProjectGantt
     {
         $projectId = (int)$projectId;
         $issueModel = IssueModel::getInstance();
-        $statusModel = new IssueStatusModel();
-        $issueResolveModel = new IssueResolveModel();
-        $closedId = $statusModel->getIdByKey('closed');
-        $resolveId = $issueResolveModel->getIdByKey('done');
         $orderBy = "Order by gant_sprint_weight desc , start_date asc";
 
         $table = $issueModel->getTable();
@@ -299,49 +299,44 @@ class ProjectGantt
             $sprintId = $sprint['id'];
             $condition = "project_id={$projectId} AND sprint={$sprintId} AND gant_hide!=1  {$orderBy}";
             $sql = "select * from {$table} where {$condition}";
-            $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
-            // 更新排序权重值
-            $this->updateProjectSprintWeight($rows);
-            $otherArr = [];
-            if (!empty($sprintRows[$sprint['id']])) {
-                // 初始化排序值,每个迭代最多会创建1万个事项
-                foreach ($sprintRows[$sprint['id']] as $k => &$row) {
-                    if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
-                        $row['level'] = 1;
-                        $otherArr[$row['id']] = self::formatRowByIssue($row, $sprint);
-                    }
-                }
-            }
-
+            //echo $sql;
+            $sprintRows[$sprint['id']]  = $issueModel->db->getRows($sql);
+            $sprintIssueArr = [];
+            //print_r($sprintRows[$sprint['id']]);
             $treeArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
+                    $row['level__'] = 1;
+                    $row['level'] = 1;
+                    $row['child'] = [];
+                    $item = self::formatRowByIssue($row, $sprint);
+                    unset($sprintRows[$sprint['id']][$k]);
                     if ($row['master_id'] == '0' && intval($row['have_children']) > 0) {
-                        $row['level__'] = 1;
-                        $row['level'] = 1;
-                        $row['child'] = [];
-                        $item = self::formatRowByIssue($row, $sprint);
-                        unset($sprintRows[$sprint['id']][$k]);
                         $level = 1;
                         //print_r($item);
                         $this->recurIssue($sprintRows[$sprint['id']], $item, $level, $sprint);
                         $treeArr[] = $item;
+                    }else{
+                        $treeArr[] = $item;
                     }
                 }
             }
-            foreach ($otherArr as $item) {
-                $treeArr[] = $item;
-            }
+            //print_r($treeArr);
             foreach ($treeArr as $item) {
-                if (isset($item['children']) && count($item['children']) > 0) {
+                if(!isset($item['children']) &&  intval($item['have_children'])<=0){
+                    $finalArr[] = $item;
+                    $sprintIssueArr[] = $item;
+                }else{
                     $tmp = $item;
                     unset($tmp['children']);
                     $finalArr[] = $tmp;
-                    $this->recurTreeIssue($finalArr, $item['children']);
-                } else {
-                    $finalArr[] = $item;
+                    $sprintIssueArr[] = $tmp;
+                    $this->recurTreeIssue($finalArr, $item['children'], $sprintIssueArr);
                 }
             }
+           //print_r($sprintIssueArr);
+            // 更新排序权重值
+            $this->updateProjectSprintWeight($sprintIssueArr);
         }
         return $finalArr;
     }
@@ -357,21 +352,22 @@ class ProjectGantt
         $issueModel = new IssueModel();
         if (!empty($issues)) {
             // 初始化排序值,每个迭代最多会创建1万个事项
-            $maxWeight = $this->maxWeight;
+            $maxWeight = self::$maxWeight;
+            $offset = self::$offset;
             $firstIssue = current($issues);
             if(intval($firstIssue[$fieldWeight])!=$maxWeight){
                 foreach ($issues as  $issue) {
                     $issueModel->updateItemById($issue['id'], [$fieldWeight => $maxWeight]);
                     //print_r([$issue['id'], [$fieldWeight => $maxWeight]]);
-                    $maxWeight = $maxWeight - 100000;
+                    $maxWeight = $maxWeight - $offset;
                 }
             }else{
                 foreach ($issues as $k=> &$issue) {
                     if($issue['id']!=$firstIssue['id']){
                         if(empty($issue[$fieldWeight])){
                             $prevIssueWeight = (int)$issues[$k-1][$fieldWeight];
-                            if($prevIssueWeight>(100000*2)){
-                                $currentIssueWeight = $prevIssueWeight-100000;
+                            if($prevIssueWeight>($offset*2)){
+                                $currentIssueWeight = $prevIssueWeight-$offset;
                             }else{
                                 $currentIssueWeight = intval($prevIssueWeight/2);
                             }
@@ -418,9 +414,10 @@ class ProjectGantt
             $sprintId = $sprint['id'];
             $condition = "project_id={$projectId} AND sprint={$sprintId} AND gant_hide!=1  {$orderBy}";
             $sql = "select * from {$table} where {$condition}";
-            $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
-            $this->updateProjectSprintWeight($rows);
 
+            $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
+
+            $sprintIssueArr = [];
             $otherArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
@@ -454,11 +451,15 @@ class ProjectGantt
                     $tmp = $item;
                     unset($tmp['children']);
                     $finalArr[] = $tmp;
-                    $this->recurTreeIssue($finalArr, $item['children']);
+                    $sprintIssueArr[] = $tmp;
+                    $this->recurTreeIssue($finalArr, $item['children'], $sprintIssueArr);
                 } else {
                     $finalArr[] = $item;
+                    $sprintIssueArr[] = $item;
                 }
             }
+            // 更新排序权重值
+            $this->updateProjectSprintWeight($sprintIssueArr);
         }
         return $finalArr;
     }

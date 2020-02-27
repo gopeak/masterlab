@@ -356,6 +356,7 @@ class Gantt extends BaseUserCtrl
     }
 
     /**
+     * 向上移动事项处理
      * @throws \Exception
      */
     public function moveUpIssue()
@@ -364,74 +365,173 @@ class Gantt extends BaseUserCtrl
         if (isset($_POST['current_id'])) {
             $currentId = (int)$_POST['current_id'];
         }
-        $newId = null;
+        $targetId = null;
         if (isset($_POST['new_id'])) {
-            $newId = (int)$_POST['new_id'];
+            $targetId = (int)$_POST['new_id'];
         }
-        if (!$currentId || !$newId) {
+        if (!$currentId || !$targetId) {
             $this->ajaxFailed('参数错误', $_POST);
         }
+        $fieldWeight = 'gant_sprint_weight';
+        $fields = "id,sprint,summary ,{$fieldWeight},have_children";
         $issueModel = new IssueModel();
-        $currentIsuse = $issueModel->getById($currentId);
-        $newIssue = $issueModel->getById($newId);
-        if (!isset($currentIsuse['gant_sprint_weight']) || !isset($newIssue['gant_sprint_weight'])) {
+        $currentIsuse = $issueModel->getRow($fields,['id'=>$currentId]);
+        $targetIssue = $issueModel->getRow($fields,['id'=>$targetId]);
+
+        if (!isset($currentIsuse[$fieldWeight]) || !isset($targetIssue[$fieldWeight])) {
             $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
         }
-
-        $currentWeight = (int)$currentIsuse['gant_sprint_weight'];
-        $newWeight = (int)$newIssue['gant_sprint_weight'];
-        if ($currentWeight == $newWeight) {
-            $currentWeight++;
-        } else {
-            $tmp = $newWeight;
-            $newWeight = $currentWeight;
+        $currentWeight = (int)$currentIsuse[$fieldWeight];
+        $targetWeight = (int)$targetIssue[$fieldWeight];
+        $currentIsuse['have_children'] = (int)$currentIsuse['have_children'];
+        $targetIssue['have_children'] = (int)$targetIssue['have_children'];
+        // 如果两个事项都没有子任务，则交换排序权重值
+        if($currentIsuse['have_children']==0 && $targetIssue['have_children']==0){
+            if ($currentWeight == $targetWeight) {
+                $targetWeight = max(0,$targetWeight-ProjectGantt::$offset);
+            }
+            $tmp = $targetWeight;
             $currentWeight = $tmp;
-        }
-        $currentInfo = ['gant_sprint_weight' => $currentWeight];
-        $newInfo = ['gant_sprint_weight' => $newWeight];
-        $issueModel->updateItemById($currentId, $currentInfo);
-        $issueModel->updateItemById($newId, $newInfo);
+            $targetWeight = $currentWeight;
+            // 执行更新操作
+            $currentArr = [$fieldWeight => $currentWeight];
+            $issueModel->updateItemById($currentId, $currentArr);
+            $targetArr = [$fieldWeight => $targetWeight];
+            $issueModel->updateItemById($targetId, $targetArr);
+        }else{
+            //  否则，先取出当前事项及子任务，再取出目标事项及子任务，最后这两个数组合并在重新计算排序值
+            $sortArr = [];
+            $sortArr[] = $currentIsuse;
+            // 取出当前事项子任务
+            $table = $issueModel->getTable();
+            $sprintId = $currentIsuse['sprint'];
+            $currentId = $currentIsuse['id'];
+            $sql = "Select {$fields} From {$table} Where  master_id={$currentId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ,start_date asc";
+            $currentChildrenArr =  $issueModel->db->getRows( $sql );
+            if($currentChildrenArr && is_array($currentChildrenArr)){
+                foreach ($currentChildrenArr as $item) {
+                    $sortArr[] = $item;
+                }
+            }
+            // 取出目标事项子任务
+            $sortArr[] = $targetIssue;
+            $sprintId = $targetIssue['sprint'];
+            $sql = "Select {$fields} From {$table} Where `$fieldWeight` >$currentWeight AND `$fieldWeight`<$targetWeight   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ";
+            $targetChildrenArr =  $issueModel->db->getRows( $sql );
+            if($targetChildrenArr && is_array($targetChildrenArr)){
+                foreach ($targetChildrenArr as $item) {
+                    $sortArr[] = $item;
+                }
+            }
+            $sql = "Select {$fields} From {$table} Where  master_id={$currentId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} ASC    limit 1";
+            $minWeight = max(0, (int)$issueModel->db->getOne($sql));
 
-        $this->ajaxSuccess('更新成功', [$currentId => $currentInfo, $newId => $newInfo]);
+            $count = count($sortArr);
+            $maxWeight = $targetWeight;
+            $decWeight = intval(($targetWeight-$minWeight)/$count);
+            // 重新更新权重值
+            foreach ($sortArr as &$midRow) {
+                $updateArr = [$fieldWeight=>$maxWeight];
+                $midRow[$fieldWeight] = $maxWeight;
+                $issueModel->updateItemById($midRow['id'], $updateArr);
+                $maxWeight = intval($maxWeight-$decWeight);
+            }
+            //print_r($sortArr);
+        }
+        $this->ajaxSuccess('上移成功' );
     }
 
+    /**
+     * 下移事项处理
+     * @throws \Exception
+     */
     public function moveDownIssue()
     {
         $currentId = null;
         if (isset($_POST['current_id'])) {
             $currentId = (int)$_POST['current_id'];
         }
-        $newId = null;
+        $targetId = null;
         if (isset($_POST['new_id'])) {
-            $newId = (int)$_POST['new_id'];
+            $targetId = (int)$_POST['new_id'];
         }
-        if (!$currentId || !$newId) {
+        if (!$currentId || !$targetId) {
             $this->ajaxFailed('参数错误', $_POST);
         }
+        $fieldWeight = 'gant_sprint_weight';
+        $fields = "id,sprint,summary ,{$fieldWeight},have_children";
         $issueModel = new IssueModel();
-        $currentIsuse = $issueModel->getById($currentId);
-        $newIssue = $issueModel->getById($newId);
-        if (!isset($currentIsuse['gant_sprint_weight']) || !isset($newIssue['gant_sprint_weight'])) {
+        $currentIsuse = $issueModel->getRow($fields,['id'=>$currentId]);
+        $targetIssue = $issueModel->getRow($fields,['id'=>$targetId]);
+
+        if (!isset($currentIsuse[$fieldWeight]) || !isset($targetIssue[$fieldWeight])) {
             $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
         }
-
-        $currentWeight = (int)$currentIsuse['gant_sprint_weight'];
-        $newWeight = (int)$newIssue['gant_sprint_weight'];
-        if ($currentWeight == $newWeight) {
-            $newWeight++;
-        } else {
-            $tmp = $newWeight;
-            $newWeight = $currentWeight;
-            $currentWeight = $tmp;
+        $currentWeight = (int)$currentIsuse[$fieldWeight];
+        $targetWeight = (int)$targetIssue[$fieldWeight];
+        $currentIsuse['have_children'] = (int)$currentIsuse['have_children'];
+        $targetIssue['have_children'] = (int)$targetIssue['have_children'];
+        // 如果两个事项都没有子任务，则交换排序权重值
+        if($currentIsuse['have_children']==0 && $targetIssue['have_children']==0){
+            if ($currentWeight == $targetWeight) {
+                $currentWeight = max(0,$currentWeight-ProjectGantt::$offset);
+            }
+            $tmp = $currentWeight;
+            $currentWeight = $targetWeight;
+            $targetWeight = $tmp;
+            // 执行更新操作
+            $currentArr = [$fieldWeight => $currentWeight];
+            $issueModel->updateItemById($currentId, $currentArr);
+            $targetArr = [$fieldWeight => $targetWeight];
+            $issueModel->updateItemById($targetId, $targetArr);
+        }else{
+            //  否则，先取出目标事项及子任务，再取出当前事项及子任务，最后这两个数组合并在重新计算排序值
+            $sortArr = [];
+            $sortArr[] = $targetIssue;
+            // 取出目标事项及子任务
+            $table = $issueModel->getTable();
+            $sprintId = $targetIssue['sprint'];
+            $targetId = $targetIssue['id'];
+            $sql = "Select {$fields} From {$table} Where  master_id={$targetId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ,start_date asc";
+            $targetChildrenArr =  $issueModel->db->getRows( $sql );
+            if($targetChildrenArr && is_array($targetChildrenArr)){
+                foreach ($targetChildrenArr as $item) {
+                    $sortArr[] = $item;
+                }
+            }
+            // 取出当前事项及子任务
+            $sortArr[] = $currentIsuse;
+            $sprintId = $currentIsuse['sprint'];
+            $sql = "Select {$fields} From {$table} Where `$fieldWeight` >$targetWeight AND `$fieldWeight`<$currentWeight   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ";
+            $currentChildrenArr =  $issueModel->db->getRows( $sql );
+            if($currentChildrenArr && is_array($currentChildrenArr)){
+                foreach ($currentChildrenArr as $item) {
+                    $sortArr[] = $item;
+                }
+            }
+            // 获取最小的权重值
+            $sql = "Select {$fields} From {$table} Where  master_id={$targetId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} ASC    limit 1";
+            $minWeight = max(0, (int)$issueModel->db->getOne($sql));
+            $count = count($sortArr);
+            $maxWeight = $currentWeight;
+            $decWeight = intval(($currentWeight-$minWeight)/$count);
+            // 重新更新权重值
+            foreach ($sortArr as &$midRow) {
+                $updateArr = [$fieldWeight=>$maxWeight];
+                $midRow[$fieldWeight] = $maxWeight;
+                $issueModel->updateItemById($midRow['id'], $updateArr);
+                $maxWeight = intval($maxWeight-$decWeight);
+            }
+            //print_r($sortArr);
         }
-        $currentInfo = ['gant_sprint_weight' => $currentWeight];
-        $newInfo = ['gant_sprint_weight' => $newWeight];
-        $issueModel->updateItemById($currentId, $currentInfo);
-        $issueModel->updateItemById($newId, $newInfo);
-
-        $this->ajaxSuccess('更新成功', [$currentId => $currentInfo, $newId => $newInfo]);
+        $this->ajaxSuccess('下移成功' );
     }
 
+
+    /**
+     * 向左移动事项
+     * @throws \Exception
+     */
     public function outdent()
     {
         $issueId = null;
@@ -495,9 +595,13 @@ class Gantt extends BaseUserCtrl
         if (!empty($issue['master_id']) && $issue['master_id'] != '0') {
             $issueModel->dec('have_children', $issue['master_id'], 'id');
         }
-        $this->ajaxSuccess('更新成功', []);
+        $this->ajaxSuccess('向左移动成功', []);
     }
 
+    /**
+     * 向右移动事项
+     * @throws \Exception
+     */
     public function indent()
     {
         $issueId = null;
@@ -562,7 +666,7 @@ class Gantt extends BaseUserCtrl
             $this->ajaxFailed($msg);
         }
 
-        $this->ajaxSuccess('更新成功', $_POST);
+        $this->ajaxSuccess('向右移动成功', $_POST);
     }
 
     /**

@@ -83,6 +83,10 @@ function objIsEmpty(obj) {
 }
 
 function is_empty(a) {
+
+    if (typeof(a)==='undefined') { // 只能用 === 运算来测试某个值是否是未定义的
+        return true;
+    }
     if (a === undefined) { // 只能用 === 运算来测试某个值是否是未定义的
         return true;
     }
@@ -296,4 +300,25 @@ function timestampToDate(timestamp, formats) {
         })[matches];
     });
 };
+
+/**
+ * 去除空格
+ * @param str
+ * @returns {*}
+ */
+function trimStr(str){
+    return str.replace(/ /g,'')
+}
+
+/**
+ * 判断是否定义变量
+ * @param val
+ * @returns {boolean}
+ */
+function isUndefined(val){
+    if (typeof(val)==='undefined') { // 只能用 === 运算来测试某个值是否是未定义的
+        return true;
+    }
+    return false;
+}
 

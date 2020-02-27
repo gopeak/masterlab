@@ -512,10 +512,16 @@ GanttMaster.prototype.loadTasks = function (tasks, selectedRow) {
       if (!(task instanceof Task)) {
         let sprint_id = '0';
         let sprint_name = '待办事项';
-        if(!is_empty(task.sprint_info.id)){
-            sprint_id = task.sprint_info.id;
-            sprint_name = task.sprint_info.name;
+        if(task.type==='sprint'){
+            sprint_id = task.id;
+            sprint_name = task.name;
+        }else{
+            if(!is_empty(task.sprint_info)){
+                sprint_id = task.sprint_info.id;
+                sprint_name = task.sprint_info.name;
+            }
         }
+
         var t = factory.build(task.id, task.name, task.code, task.level, task.start, task.end,task.duration, task.collapsed, sprint_id, sprint_name);
         for (var key in task) {
           if (key != "end" && key != "start"){
@@ -1123,26 +1129,26 @@ GanttMaster.prototype.addAboveCurrentTask = function (id, name, code, startTime,
   var ch;
   var row = 0;
   if (self.currentTask  && self.currentTask.name) {
-    //cannot add brothers to root
-    if (self.currentTask.level <= 0)
-      return;
+     //cannot add brothers to root
+     if (self.currentTask.level <= 0)
+       return;
 
-    //ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
+     //ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
       let collapsed = 1;
       let level = self.currentTask.level+ (addNewBrother ?0:1);
-    ch = factory.build(id, name, code,  level, startTime, endTime, duration, collapsed, sprint_id,sprint_name);
-    row = self.currentTask.getRow();
-    if (row > 0) {
-      self.beginTransaction();
-      ch.syncedServer = true;
-      var task = self.addTask(ch, row);
-      if (task) {
-        task.rowElement.click();
-        task.rowElement.find("[name=name]").focus();
-      }
-      self.endTransaction();
+     ch = factory.build(id, name, code,  level, startTime, endTime, duration, collapsed, sprint_id,sprint_name);
+     row = self.currentTask.getRow();
+     if (row > 0) {
+        self.beginTransaction();
+        ch.syncedServer = true;
+        var task = self.addTask(ch, row);
+        if (task) {
+          task.rowElement.click();
+          task.rowElement.find("[name=name]").focus();
+        }
+        self.endTransaction();
 
-    }
+     }
   }
 };
 
