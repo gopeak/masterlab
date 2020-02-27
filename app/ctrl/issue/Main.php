@@ -1483,11 +1483,11 @@ class Main extends BaseUserCtrl
             'backlog' => '待办事项'
         ];
 
-        $fromModule = strtolower(trim($_POST['from_module']));
+        $fromModule = strtolower(trim($params['from_module']));
         $actionContent = $this->makeActionInfo($issue, $info);
         $moduleName = '"事项"';
         if (isset($moduleNames[$fromModule])) {
-            $moduleName = '"事项 - {$fromModule}"';
+            $moduleName = '"事项 - ' . $moduleNames[$fromModule] . '"';
         }
         $actionInfo = " 在 {$moduleName} 模块中修改事项";
 
