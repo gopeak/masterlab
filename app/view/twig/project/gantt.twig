@@ -126,7 +126,7 @@
       <button onclick="$('#workSpace').trigger('moveDownCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanMoveUpDown" title="向下移动"><span class="teamworkIcon">j</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanDelete"></span>
       <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon delete requireCanWrite" title="隐藏事项(删除事项需到事项列表操作)"><span class="teamworkIcon">&cent;</span></button>
-      <button onclick="show_be_hidden_list();" class="button textual icon delete requireCanWrite" title="恢复隐藏事项"><span class="teamworkIcon">q</span></button>
+      <button onclick="show_be_hidden_list();" class="button textual icon delete requireCanWrite" title="隐藏的事项列表"><span class="teamworkIcon">q</span></button>
       <span class="ganttButtonSeparator"></span>
       <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;" class="button textual icon " title="展开"><span class="teamworkIcon">6</span></button>
       <button onclick="$('#workSpace').trigger('collapseAll.gantt'); return false;" class="button textual icon " title="折叠"><span class="teamworkIcon">5</span></button>
@@ -723,7 +723,7 @@
     <div class="modal-dialog issue-modal-dialog" style="width: 700px;">
         <div class="modal-content issue-modal-content">
             <div class="modal-header issue-modal-header">
-                <h3 class="modal-header-title">恢复隐藏事项</h3>
+                <h3 class="modal-header-title">隐藏的事项列表</h3>
                 <a class="close" data-dismiss="modal" href="#">×</a>
             </div>
             <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
@@ -743,6 +743,11 @@
                     <tbody id="tr_be_hidden_issue_list_content">
 
                     </tbody>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" id="tr_be_hidden_issue_list_content_empty"></td>
+                        </tr>
+                    </tbody>
                 </table>
 
                 <hr style="display: block;">
@@ -751,10 +756,7 @@
 
             </div>
             <div class="modal-footer issue-modal-footer footer-block row-content-block">
-                <!--a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-setting').modal('hide');">取消</a-->
-                <span class="append-right-10">
-                    <input type="button" value="刷新数据" class="btn btn-create js-masterlab-refresh-clicked" >
-                </span>
+                <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-setting').modal('hide');">取消</a>
             </div>
         </div>
     </div>
