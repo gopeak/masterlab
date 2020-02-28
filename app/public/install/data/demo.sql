@@ -737,8 +737,6 @@ CREATE TABLE `issue_main` (
   `comment_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '评论数',
   `progress` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '完成百分比',
   `depends` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '前置任务',
-  `gant_proj_sprint_weight` bigint(18) NOT NULL DEFAULT '0' COMMENT '项目甘特图中该事项在同级的排序权重',
-  `gant_proj_module_weight` bigint(18) NOT NULL DEFAULT '0' COMMENT '项目甘特图中该事项在同级的排序权重',
   `gant_sprint_weight` bigint(18) NOT NULL DEFAULT '0' COMMENT '迭代甘特图中该事项在同级的排序权重',
   `gant_hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '甘特图中是否隐藏该事项',
   `is_start_milestone` tinyint(1) unsigned NOT NULL DEFAULT '0',

@@ -1122,60 +1122,34 @@ class Main extends BaseUserCtrl
                 $belowIssueId = (int)$params['below_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $belowIssue = $model->getRow("gant_proj_sprint_weight, gant_sprint_weight, sprint",['id'=>$belowIssueId]);
-                if (isset($ganttSetting['source_type']) && $ganttSetting['source_type'] == 'project') {
-                    $fieldWeight = 'gant_proj_sprint_weight';
-                    $aboveWeight = (int)$belowIssue[$fieldWeight];
-                    $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `project_id` = {$projectId} Order by {$fieldWeight} DESC limit 1";
-                    echo $sql;
-                    $nextWeight = $model->db->getOne( $sql );
-                    if(empty($nextWeight)){
-                        $nextWeight = 0;
-                    }
-                    //var_dump($nextWeight);
-                    $info[$fieldWeight] =  max(0,$nextWeight+intval(($aboveWeight-$nextWeight)/2));
+                $belowIssue = $model->getRow("gant_sprint_weight, sprint",['id'=>$belowIssueId]);
+                $fieldWeight = 'gant_sprint_weight';
+                $aboveWeight = (int)$belowIssue[$fieldWeight];
+                $sprintId = $belowIssue['sprint'];
+                $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
+                $nextWeight = (int)$model->db->getOne( $sql );
+                if(empty($nextWeight)){
+                    $nextWeight = 0;
                 }
-                if (isset($ganttSetting['source_type']) && $ganttSetting['source_type'] == 'active_sprint') {
-                    $fieldWeight = 'gant_sprint_weight';
-                    $aboveWeight = (int)$belowIssue[$fieldWeight];
-                    $sprintId = $belowIssue['sprint'];
-                    $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
-                    $nextWeight = $model->db->getOne( $sql );
-                    if(empty($nextWeight)){
-                        $nextWeight = 0;
-                    }
-                    $info[$fieldWeight] =  max(0,$nextWeight+intval(($aboveWeight-$nextWeight)/2));
-                }
+                $info[$fieldWeight] =  max(0,$nextWeight+intval(($aboveWeight-$nextWeight)/2));
                 unset($model, $belowIssue);
             }
             // 如果是在某一事项之上,排序值是两个事项之间二分之一
             if (isset($params['above_id']) && !empty($params['above_id'])) {
                 $aboveIssueId = (int)$params['above_id'];
                 $model = new IssueModel();
-                $aboveIssue = $model->getRow("gant_proj_sprint_weight, gant_sprint_weight, sprint",['id'=>$aboveIssueId]);
-                if (isset($ganttSetting['source_type']) && $ganttSetting['source_type'] == 'project') {
-                    $fieldWeight = 'gant_proj_sprint_weight';
-                    $belowWeight = (int)$aboveIssue[$fieldWeight];
-                    $sql = "Select {$fieldWeight} From {$table} Where $fieldWeight>$belowWeight  AND project_id=$projectId Order by {$fieldWeight} ASC limit 1";
-                    //echo $sql;
-                    $prevWeight = $model->db->getOne($fieldWeight, $sql );
-                    if(empty($prevWeight)){
-                        $prevWeight = 0;
-                    }
-                    $info[$fieldWeight] =  max(0,$belowWeight+intval(($prevWeight-$belowWeight)/2));
+                $table = $model->getTable();
+                $aboveIssue = $model->getRow("gant_sprint_weight, sprint",['id'=>$aboveIssueId]);
+                $fieldWeight = 'gant_sprint_weight';
+                $belowWeight = (int)$aboveIssue[$fieldWeight];
+                $sprintId = $aboveIssue['sprint'];
+                $sql = "Select {$fieldWeight} From {$table} Where $fieldWeight>$belowWeight  AND sprint=$sprintId Order by {$fieldWeight} DESC limit 1";
+                // echo $sql;
+                $prevWeight = (int)$model->db->getOne( $sql );
+                if(empty($prevWeight)){
+                    $prevWeight = 0;
                 }
-                if (isset($ganttSetting['source_type']) && $ganttSetting['source_type'] == 'active_sprint') {
-                    $fieldWeight = 'gant_sprint_weight';
-                    $belowWeight = (int)$aboveIssue[$fieldWeight];
-                    $sprintId = $aboveWeight['sprint'];
-                    $sql = "Select {$fieldWeight} From {$table} Where $fieldWeight<$aboveWeight  AND sprint=$sprintId Order by {$fieldWeight} ASC limit 1";
-                    echo $sql;
-                    $prevWeight = $model->db->getOne($fieldWeight, $sql );
-                    if(empty($prevWeight)){
-                        $prevWeight = 0;
-                    }
-                    $info[$fieldWeight] = max(0, $belowWeight+intval(($prevWeight-$belowWeight)/2));
-                }
+                $info[$fieldWeight] = max(0, $belowWeight+intval(($prevWeight-$belowWeight)/2));
                 unset($model, $belowIssue);
             }
             //print_r($info);

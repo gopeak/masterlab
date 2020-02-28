@@ -38,6 +38,10 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 class IssueLogic
 {
 
+    /**
+     * 定义事项列表的显示字段
+     * @var array
+     */
     public static $uiDisplayFields = [
         'issue_num' => '编号',
         'issue_type' => '类型',
@@ -60,6 +64,10 @@ class IssueLogic
         'created' => '创建时间',
         'updated' => '最后修改时间',
     ];
+    /**
+     * 默认显示的字段
+     * @var array
+     */
     public static $defaultDisplayFields = [
         'issue_num',
         'issue_type',

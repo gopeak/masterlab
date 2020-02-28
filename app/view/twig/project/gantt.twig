@@ -380,21 +380,23 @@
                     <input type="hidden" name="params[project_id]" id="project_id" value="{{project_id}}">
                     <input type="hidden" name="action" id="action" value="">
                     <input type="hidden" name="issue_id" id="issue_id" value="">
-                    <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
+                    <input type="hidden" name="params[master_issue_id]" id="gantt_master_issue_id" value="">
                     <input type="hidden" name="params[below_id]" id="below_id" value="">
                     <input type="hidden" name="params[above_id]" id="above_id" value="">
-                    <input type="hidden" name="params[sprint]" id="sprint" value="0">
-                    <input type="hidden" name="params[add_gantt_dir]" id="addAction" value="">
+                    <input type="hidden" name="params[sprint]" id="gantt_sprint" value="0">
+                    <input type="hidden" name="params[add_gantt_dir]" id="add_gantt_dir" value="">
+                    <input type="hidden"  name="params[description]" id="gantt_description" value=""></input>
                     <input type="hidden" name="authenticity_token" value="">
 
                         <div class="form-group">
                             <div class="col-sm-2">事项类型:</div>
                             <div class="col-sm-10">
-                                <select id="create_issue_types_select" name="params[issue_type]"
+                                <select id="gantt_issue_type" name="params[issue_type]"
                                         class="selectpicker"
                                         dropdownAlignRight="true"
                                         data-live-search="true"
-                                        title="">
+                                        title=""
+                                >
                                     <option value="">请选择类型</option>
                                 </select>
                             </div>
@@ -404,7 +406,7 @@
                         <div class="form-group">
                             <div class="col-sm-2">标 题:<span class="required"> *</span></div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
+                                <input type="text" class="form-control" name="params[summary]" id="gantt_summary"  value=""  />
                                 <p id="tip-summary" class="gl-field-error hide"></p>
                             </div>
                         </div>
@@ -412,7 +414,7 @@
                         <div class="form-group">
                             <div class="col-sm-2">优先级:<span class="required"> *</span></div>
                             <div class="col-sm-4">
-                                <select id="priority" name="params[priority]" class="selectpicker"    title=""   ></select>
+                                <select id="gantt_priority" name="params[priority]" class="selectpicker"    title=""   ></select>
                                     <p id="tip-priority" class="gl-field-error hide"></p>
                             </div>
                             <div class="col-sm-2">状态:<span class="required"> *</span></div>
@@ -443,12 +445,12 @@
                     <div class="form-group">
                         <div class="col-sm-2">开始日期:<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="start_date"  value="" autocomplete="off"  />
+                            <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="gantt_start_date"  value="" autocomplete="off"  />
                             <p id="tip-start_date" class="gl-field-error hide"></p>
                         </div>
                         <div class="col-sm-2">结束日期:<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="due_date"  value="" autocomplete="off" />
+                            <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="gantt_due_date"  value="" autocomplete="off" />
                             <p id="tip-due_date" class="gl-field-error hide"></p>
                         </div>
                     </div>
@@ -462,7 +464,7 @@
                         </div>
                         <div class="col-sm-2">进度:</div>
                         <div class="col-sm-4">
-                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="progress"  value="1" autocomplete="off">
+                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="gantt_progress"  value="1" autocomplete="off">
                             <p id="tip-progress" class="gl-field-error hide"></p>
                         </div>
                     </div>
@@ -472,7 +474,7 @@
                         <div class="col-sm-4">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox"  name="params[is_start_milestone]" id="is_start_milestone" >
+                                    <input type="checkbox"  name="params[is_start_milestone]" id="gantt_is_start_milestone" >
                                 </label>
                             </div>
                             <p id="tip-is_start_milestone" class="gl-field-error hide"></p>
@@ -481,7 +483,7 @@
                         <div class="col-sm-4">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox"  name="params[is_end_milestone]" id="is_end_milestone" >
+                                    <input type="checkbox"  name="params[is_end_milestone]" id="gantt_is_end_milestone" >
                                 </label>
                             </div>
                             <p id="tip-is_end_milestone" class="gl-field-error hide"></p>
@@ -492,7 +494,7 @@
                         <div class="col-sm-2">描 述:</div>
                         <div class="col-sm-10">
                             <div id="description_md" style="margin: 0">
-                                <textarea style="display:none;" name="params[description]" id="gantt_description"></textarea>
+
                             </div>
                             <p id="tip-description" class="gl-field-error hide"></p>
                         </div>
@@ -556,6 +558,24 @@
                                 <label class="radio-inline">
                                     <input type="radio" name="is_display_backlog" id="is_display_backlog_1" value="1"> 是
                                 </label>
+                            </div>
+                            <div class="form-group  col-md-1">
+                            </div>
+                            <div class="form-group col-md-2">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  title="定义哪些类型的事项不会出现在甘特图中">隐藏的类型：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-8">
+                                <select id="hide_issue_types" name="params[hide_issue_types]" title="事项类型" class="selectpicker">
+                                    {% for row in issue_types %}
+                                        {% set  display_name = row['display_name'] %}
+                                        <option value="{{row._key}}"  data-content="<i class='fa {{ row.font_awesome }}'  ></i> {{row.name}}"  >{{row.name}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="form-group  col-md-1">
                             </div>
@@ -979,7 +999,6 @@
                     }
                 }
             }
-
             //loop on new rows
             var cnt=0
             resourceEditor.find("[resId=new]").each(function(){
@@ -989,9 +1008,7 @@
                 if (name && name!="")
                     newRes.push (new Resource("tmp_"+new Date().getTime()+"_"+cnt,name));
             });
-
             ge.resources=newRes;
-
             closeBlackPopup();
             ge.redraw();
         });
@@ -1000,7 +1017,6 @@
 
         new UsersSelect();
     }
-
 
     function showBaselineInfo (event,element){
         //alert(element.attr("data-label"));
@@ -1049,7 +1065,6 @@
         }
     });
 
-
     function loadI18n(){
         GanttMaster.messages = {
             "CANNOT_WRITE":"没有权限修改.",
@@ -1082,7 +1097,6 @@
         var row = el.closest("tr[taskid]");
         var name = row.find("[name=resourceId_txt]").val();
         var url = contextPath + "/applications/teamwork/resource/resourceNew.jsp?CM=ADD&name=" + encodeURI(name);
-
         openBlackPopup(url, 700, 320, function (response) {
             //fillare lo smart combo
             if (response && response.resId && response.resName) {
@@ -1100,12 +1114,11 @@
 
     var _simplemde = {};
 
-    var _cur_uid = null;
-    var _editor_md = null;
+    var _cur_uid = '{{G_uid}}';
+    var _gantt_editor_md = null;
 
     var $_gantAjax = null;
 
-    _editor_md = null;
     var _issueConfig = {
         "priority":{{priority|json_encode()|raw}},
         "issue_types":{{issue_types|json_encode()|raw}},
@@ -1119,11 +1132,12 @@
         "projects":{{projects|json_encode()|raw}},
         "sprint":{{sprints|json_encode()|raw}}
     };
-    var _project_issue_types =  {{project_issue_types|json_encode()|raw}};
+    var _project_issue_types = {{project_issue_types|json_encode()|raw}};
 
 
 
     $(function(){
+
         window.$_gantAjax = new Gantt({});
 
         // 聚焦模式切换
@@ -1132,10 +1146,10 @@
             $('.with-horizontal-nav').toggleClass('hidden');
             $('.layout-nav').toggleClass('hidden');
         });
-        new UsersSelect();
+
         // 计算用时(天)
         var due_date_laydate = laydate.render({
-            elem: '#due_date'
+            elem: '#gantt_due_date'
             ,format: 'yyyy-MM-dd'
             ,mark: {
                 '0-11-08': '生日'
@@ -1152,7 +1166,7 @@
             }
         });
         var start_date_laydate = laydate.render({
-            elem: '#start_date'
+            elem: '#gantt_start_date'
             ,format: 'yyyy-MM-dd'
             ,mark: {
                 '0-11-08': '生日'
@@ -1171,8 +1185,8 @@
 
         function computeDuration(){
             let project_id = window._cur_project_id;
-            let start_date = $('#start_date').val();
-            let due_date = $('#due_date').val();
+            let start_date = $('#gantt_start_date').val();
+            let due_date = $('#gantt_due_date').val();
             if(start_date!='' && due_date!=''){
                 var url = '/issue/main/getDuration/?project'+project_id;
                 $.ajax({
@@ -1259,6 +1273,43 @@
             });
         });
         $('#btn-add').bind('click',function(){
+
+            let err = {};
+            if(is_empty(trimStr($('#gantt_summary').val()))){
+                err['summary'] = '标题不能为空';
+            }
+            if(is_empty(trimStr($('#gantt_priority').val()))){
+                err['priority'] = '优先级不能为空';
+            }
+            if(is_empty(trimStr($('#gantt_status').val()))){
+                err['status'] = '状态不能为空';
+            }
+            if(is_empty(trimStr($('#gantt_assignee').val()))){
+                err['assignee'] = '经办人不能为空';
+            }
+            if(is_empty($('#gantt_start_date').val())){
+                err['start_date'] = '开始日期不能为空';
+            }
+            let due_date = trimStr($('#gantt_due_date').val());
+            if(is_empty($('#gantt_due_date').val())){
+                err['due_date'] = '截止日期不能为空';
+            }
+            // priority
+            $('#tip-summary').addClass('hide');
+            $('#tip-priority').addClass('hide');
+            $('#tip-status').addClass('hide');
+            $('#tip-assignee').addClass('hide');
+            $('#tip-start_date').addClass('hide');
+            $('#tip-due_date').addClass('hide');
+            if(!is_empty(err)){
+                for (var key in err) {
+                    $('#tip-'+key).html(err[key]);
+                    $('#tip-'+key).removeClass('hide');
+                }
+                notify_warn('提示','表单验证未通过');
+                return;
+            }
+
             if($('#action').val()=='update'){
                 window.$_gantAjax.updateSyncServerTask();
             }else{
@@ -1267,7 +1318,6 @@
         });
 
         $('#modal-team').on('show.bs.modal', function (e) {
-
 
         })
 

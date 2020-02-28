@@ -250,7 +250,6 @@ GridEditor.prototype.bindRowEvents = function (task, taskRow) {
     }
   });
 
-
   if (this.master.permissions.canWrite || task.canWrite) {
     self.bindRowInputEvents(task, taskRow);
 
@@ -375,6 +374,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
     var row = el.closest("tr");
     var taskId = row.attr("taskId");
     var task = self.master.getTask(taskId);
+    var taskOriginName = task.name;
     //update task from editor
     var field = el.prop("name");
     if (el.isValueChanged()) {
@@ -449,8 +449,15 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           //return false;
       }
     }
-      if (field == "name" && el.val() != "" && task.syncedServer===false){
-          window.$_gantAjax.syncAddLastTask(task);
+    // 在最下方新增一个事项
+    if (field == "name" && trimStr(el.val()) != "" && task.syncedServer===false){
+        window.$_gantAjax.syncAddLastTask(task);
+     }
+
+     // 更新事项标题
+      if (field == "name" && trimStr(el.val()) != "" && task.name!=taskOriginName && task.syncedServer===true){
+          let project_id = window._cur_project_id;
+          window.$_gantAjax.updateIssue(task.id, {summary:el.val(), project_id:project_id});
       }
 
   });
@@ -517,6 +524,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 
   //change status
   taskRow.find(".taskStatus").click(function () {
+    return;
     var el = $(this);
     var tr = el.closest("[taskid]");
     var taskId = tr.attr("taskid");

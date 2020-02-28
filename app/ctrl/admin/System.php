@@ -1068,7 +1068,10 @@ class System extends BaseAdminCtrl
         }
         if ($params['send_to'] == 'group') {
             $tmp = $systemLogic->getUserEmailByGroup($params['to_group']);
-            $emails = $emails + $tmp;
+            //$emails = $emails + $tmp;
+            foreach ($tmp as $item) {
+                $emails[] = $item;
+            }
             unset($tmp);
         }
         if (empty($emails)) {

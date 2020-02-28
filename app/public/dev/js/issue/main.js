@@ -150,17 +150,6 @@ var IssueMain = (function () {
 
     IssueMain.prototype.initCreateIssueType = function (issue_types, on_change) {
 
-        var icons = {
-            "1": "fa-bug",
-            "2": "fa-plus",
-            "3": "fa-tasks",
-            "4": "fa-arrow-circle-o-up",
-            "5": "fa-arrow-circle-o-up",
-            "6": "fa-users",
-            "7": "fa-cogs",
-            "8": "fa-address-book-o"
-        }
-
         var issue_types_select = $('#create_issue_types_select');
         $('#create_issue_types_select').empty();
 
@@ -169,7 +158,7 @@ var IssueMain = (function () {
             if (i == 0) {
                 first_issue_type = issue_types[i];
             }
-            var content = "<div class=issue-types-icon><i class=" + icons[issue_types[i].id] + "></i> " + issue_types[i].name + "</div>"
+            var content = "<div class=issue-types-icon><i class=" + issue_types[i].font_awesome + "></i> " + issue_types[i].name + "</div>"
             issue_types_select.append("<option data-content='" + content + "' value='" + issue_types[i].id + "'>" + issue_types[i].name + "</option>")
         }
         console.log(issue_types_select)
@@ -1490,17 +1479,6 @@ var IssueMain = (function () {
 
         $(".simplemde_text").each(function (i) {
             var id = $(this).attr('id');
-            // if (typeof(_simplemde[id]) == 'undefined') {
-            //     // var mk = new SimpleMDE({
-            //     //     element: document.getElementById(id),
-            //     //     autoDownloadFontAwesome: false,
-            //     //     toolbar:toolbars,
-            //     //     initialValue:desc_tpl_value
-            //     // });
-            //
-            //     // _simplemde[id] = mk;
-            // }
-
             _editor_md = editormd(id, {
                 width: "100%",
                 height: 220,

@@ -34,10 +34,6 @@ ALTER TABLE `issue_main` ADD COLUMN `progress` tinyint(2) UNSIGNED NOT NULL DEFA
 
 ALTER TABLE `issue_main` ADD COLUMN `depends` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '前置任务' AFTER `progress`;
 
-ALTER TABLE `issue_main` ADD COLUMN `gant_proj_sprint_weight` bigint(18) NOT NULL DEFAULT 0 COMMENT '项目甘特图中该事项在同级的排序权重' AFTER `depends`;
-
-ALTER TABLE `issue_main` ADD COLUMN `gant_proj_module_weight` bigint(18) NOT NULL DEFAULT 0 COMMENT '项目甘特图中该事项在同级的排序权重' AFTER `gant_proj_sprint_weight`;
-
 ALTER TABLE `issue_main` ADD COLUMN `gant_sprint_weight` bigint(18) NOT NULL DEFAULT 0 COMMENT '迭代甘特图中该事项在同级的排序权重' AFTER `gant_proj_module_weight`;
 
 ALTER TABLE `issue_main` ADD COLUMN `gant_hide` tinyint(1) NOT NULL DEFAULT 0 COMMENT '甘特图中是否隐藏该事项' AFTER `gant_sprint_weight`;
