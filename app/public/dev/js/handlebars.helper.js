@@ -305,9 +305,10 @@ $(function () {
 
         var module = getValueByKey(_issueConfig.issue_module, module_id);
         if (module == null) {
-            return '';
-        }
-        html += '<a href="?state=opened&模块=' + module.name + '" class="commit-id monospace">' + module.name + '</a>';
+            html += '<a href="javascript:;" class="commit-id monospace"></a>';
+        } else {
+            html += '<a href="?state=opened&模块=' + module.name + '" class="commit-id monospace">' + module.name + '</a>';
+        }        
 
         return new Handlebars.SafeString(html);
     });
@@ -322,9 +323,11 @@ $(function () {
         var sprint = getArrayValue(_issueConfig.sprint, 'id', sprint_id);
         //console.log(sprint);
         if (sprint == null) {
-            return '';
+            html += '<a href="javascript:;" class="commit-id monospace"></a>';
+        } else {
+            html += '<a href="?state=opened&迭代=' + sprint.name + '" class="commit-id monospace">' + sprint.name + '</a>';
         }
-        html += '<a href="?state=opened&迭代=' + sprint.name + '" class="commit-id monospace">' + sprint.name + '</a>';
+        
         return new Handlebars.SafeString(html);
     });
 

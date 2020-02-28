@@ -11,7 +11,7 @@
     <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
 
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
@@ -117,7 +117,7 @@
       <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite " title="redo"><span class="teamworkIcon">&middot;</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanAdd hide"></span>
       <button onclick="$('#workSpace').trigger('showAddAboveCurrentTask.gantt');" title="添加事项"   class="button textual icon requireCanWrite requireCanAdd"  ><span class="teamworkIcon">l</span></button>
-      <button  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"  class="button textual icon requireCanWrite requireCanAdd"  ><span class="teamworkIcon">X</span></button>
+      <button  onclick="$('#workSpace').trigger('showAddBelowCurrentTask.gantt');" title="添加事项"    class="button textual icon requireCanWrite requireCanAdd"  ><span class="teamworkIcon">X</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanInOutdent"></span>
       <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="升级"><span class="teamworkIcon">.</span></button>
       <button onclick="$('#workSpace').trigger('indentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="降级"><span class="teamworkIcon">:</span></button>
@@ -126,6 +126,7 @@
       <button onclick="$('#workSpace').trigger('moveDownCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanMoveUpDown" title="向下移动"><span class="teamworkIcon">j</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanDelete"></span>
       <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon delete requireCanWrite" title="隐藏事项(删除事项需到事项列表操作)"><span class="teamworkIcon">&cent;</span></button>
+      <button onclick="show_be_hidden_list();" class="button textual icon delete requireCanWrite" title="隐藏的事项列表"><span class="teamworkIcon">q</span></button>
       <span class="ganttButtonSeparator"></span>
       <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;" class="button textual icon " title="展开"><span class="teamworkIcon">6</span></button>
       <button onclick="$('#workSpace').trigger('collapseAll.gantt'); return false;" class="button textual icon " title="折叠"><span class="teamworkIcon">5</span></button>
@@ -379,20 +380,23 @@
                     <input type="hidden" name="params[project_id]" id="project_id" value="{{project_id}}">
                     <input type="hidden" name="action" id="action" value="">
                     <input type="hidden" name="issue_id" id="issue_id" value="">
-                    <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
-                    <input type="hidden" name="params[gant_type]" id="gant_type" value="project_sprint">
+                    <input type="hidden" name="params[master_issue_id]" id="gantt_master_issue_id" value="">
                     <input type="hidden" name="params[below_id]" id="below_id" value="">
-                    <input type="hidden" name="params[add_gantt_dir]" id="addAction" value="">
+                    <input type="hidden" name="params[above_id]" id="above_id" value="">
+                    <input type="hidden" name="params[sprint]" id="gantt_sprint" value="0">
+                    <input type="hidden" name="params[add_gantt_dir]" id="add_gantt_dir" value="">
+                    <input type="hidden"  name="params[description]" id="gantt_description" value=""></input>
                     <input type="hidden" name="authenticity_token" value="">
 
                         <div class="form-group">
                             <div class="col-sm-2">事项类型:</div>
                             <div class="col-sm-10">
-                                <select id="create_issue_types_select" name="params[issue_type]"
+                                <select id="gantt_issue_type" name="params[issue_type]"
                                         class="selectpicker"
                                         dropdownAlignRight="true"
                                         data-live-search="true"
-                                        title="">
+                                        title=""
+                                >
                                     <option value="">请选择类型</option>
                                 </select>
                             </div>
@@ -402,7 +406,7 @@
                         <div class="form-group">
                             <div class="col-sm-2">标 题:<span class="required"> *</span></div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
+                                <input type="text" class="form-control" name="params[summary]" id="gantt_summary"  value=""  />
                                 <p id="tip-summary" class="gl-field-error hide"></p>
                             </div>
                         </div>
@@ -410,7 +414,7 @@
                         <div class="form-group">
                             <div class="col-sm-2">优先级:<span class="required"> *</span></div>
                             <div class="col-sm-4">
-                                <select id="priority" name="params[priority]" class="selectpicker"    title=""   ></select>
+                                <select id="gantt_priority" name="params[priority]" class="selectpicker"    title=""   ></select>
                                     <p id="tip-priority" class="gl-field-error hide"></p>
                             </div>
                             <div class="col-sm-2">状态:<span class="required"> *</span></div>
@@ -441,12 +445,12 @@
                     <div class="form-group">
                         <div class="col-sm-2">开始日期:<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="start_date"  value="" autocomplete="off"  />
+                            <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="gantt_start_date"  value="" autocomplete="off"  />
                             <p id="tip-start_date" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-2">日期:<span class="required"> *</span></div>
+                        <div class="col-sm-2">结束日期:<span class="required"> *</span></div>
                         <div class="col-sm-4">
-                            <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="due_date"  value="" autocomplete="off" />
+                            <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="gantt_due_date"  value="" autocomplete="off" />
                             <p id="tip-due_date" class="gl-field-error hide"></p>
                         </div>
                     </div>
@@ -458,9 +462,9 @@
                             <span id="edit_duration"></span>天
                             <p id="tip-duration" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-2">进度:<span class="required"> *</span></div>
+                        <div class="col-sm-2">进度:</div>
                         <div class="col-sm-4">
-                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="progress"  value="1" autocomplete="off">
+                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="gantt_progress"  value="1" autocomplete="off">
                             <p id="tip-progress" class="gl-field-error hide"></p>
                         </div>
                     </div>
@@ -470,7 +474,7 @@
                         <div class="col-sm-4">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox"  name="params[is_start_milestone]" id="is_start_milestone" >
+                                    <input type="checkbox"  name="params[is_start_milestone]" id="gantt_is_start_milestone" >
                                 </label>
                             </div>
                             <p id="tip-is_start_milestone" class="gl-field-error hide"></p>
@@ -479,7 +483,7 @@
                         <div class="col-sm-4">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox"  name="params[is_end_milestone]" id="is_end_milestone" >
+                                    <input type="checkbox"  name="params[is_end_milestone]" id="gantt_is_end_milestone" >
                                 </label>
                             </div>
                             <p id="tip-is_end_milestone" class="gl-field-error hide"></p>
@@ -490,7 +494,7 @@
                         <div class="col-sm-2">描 述:</div>
                         <div class="col-sm-10">
                             <div id="description_md" style="margin: 0">
-                                <textarea style="display:none;" name="params[description]" id="gantt_description"></textarea>
+
                             </div>
                             <p id="tip-description" class="gl-field-error hide"></p>
                         </div>
@@ -562,6 +566,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label"  title="定义哪些类型的事项不会出现在甘特图中">隐藏的类型：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-8">
+                                <select id="hide_issue_types" name="params[hide_issue_types]" title="事项类型" class="selectpicker">
+                                    {% for row in issue_types %}
+                                        {% set  display_name = row['display_name'] %}
+                                        <option value="{{row._key}}"  data-content="<i class='fa {{ row.font_awesome }}'  ></i> {{row.name}}"  >{{row.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group  col-md-1">
+                            </div>
+                            <div class="form-group col-md-2">
+
+                            </div>
+                        </div>
+                    </div>
                     <hr style="display: block;">
                     <div class="form-group">
                         <label class="control-label" for="label_holiday">节假日：</label>
@@ -601,7 +623,7 @@
                     <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-setting').modal('hide');">取消</a>
                     <span class="append-right-10">
                          <input  id="btn-setting-save"  type="button" value="保 存" class="btn btn-create" >
-                </span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -698,6 +720,66 @@
     </form>
 </div>
 
+<div class="modal" id="modal_be_hidden_issue_list" style=" padding-right: 16px;">
+    <div class="modal-dialog issue-modal-dialog" style="width: 700px;">
+        <div class="modal-content issue-modal-content">
+            <div class="modal-header issue-modal-header">
+                <h3 class="modal-header-title">隐藏的事项列表</h3>
+                <a class="close" data-dismiss="modal" href="#">×</a>
+            </div>
+            <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
+
+                <table class="table table-hover table-condensed">
+
+                    <thead>
+                        <tr>
+                            <th>编号#</th>
+                            <th>主题</th>
+                            <th>模块</th>
+                            <th>迭代</th>
+                            <th>时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tr_be_hidden_issue_list_content">
+
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" id="tr_be_hidden_issue_list_content_empty"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr style="display: block;">
+
+                <div class="gl-pagination border-0" id="ampagination-bootstrap"></div>
+
+            </div>
+            <div class="modal-footer issue-modal-footer footer-block row-content-block">
+                <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-setting').modal('hide');">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% verbatim %}
+<script type="text/html" id="be_hidden_issue_list_tpl">
+    {{#tasks}}
+    <tr class="js-hidden-row-id-{{id}}">
+        <th scope="row">#{{issue_num}}</th>
+        <td>{{summary}}</td>
+        <td>{{format_module_name}}</td>
+        <td>{{format_sprint_name}}</td>
+        <td>{{format_create_time}}</td>
+        <td>
+            <a class="btn btn-transparent js-masterlab-behidden-clicked" data-id="{{id}}" title="恢复" href="javascript:void(0)">
+                <i class="fa fa-reply"></i>
+            </a>
+        </td>
+    </tr>
+    {{/tasks}}
+</script>{% endverbatim %}
 
 {% verbatim %}
 <script id="tpl_holiday_a" type="text/tpl">
@@ -862,6 +944,10 @@
          });
     }
 
+    function show_be_hidden_list(){
+        window.$_gantAjax.fetchGanttBeHiddenIssueList(window._cur_project_id);
+    }
+
     //-------------------------------------------  Open a black popup for managing resources. This is only an axample of implementation (usually resources come from server) ------------------------------------------------------
     function editResources(){
 
@@ -913,7 +999,6 @@
                     }
                 }
             }
-
             //loop on new rows
             var cnt=0
             resourceEditor.find("[resId=new]").each(function(){
@@ -923,9 +1008,7 @@
                 if (name && name!="")
                     newRes.push (new Resource("tmp_"+new Date().getTime()+"_"+cnt,name));
             });
-
             ge.resources=newRes;
-
             closeBlackPopup();
             ge.redraw();
         });
@@ -934,7 +1017,6 @@
 
         new UsersSelect();
     }
-
 
     function showBaselineInfo (event,element){
         //alert(element.attr("data-label"));
@@ -983,7 +1065,6 @@
         }
     });
 
-
     function loadI18n(){
         GanttMaster.messages = {
             "CANNOT_WRITE":"没有权限修改.",
@@ -1016,7 +1097,6 @@
         var row = el.closest("tr[taskid]");
         var name = row.find("[name=resourceId_txt]").val();
         var url = contextPath + "/applications/teamwork/resource/resourceNew.jsp?CM=ADD&name=" + encodeURI(name);
-
         openBlackPopup(url, 700, 320, function (response) {
             //fillare lo smart combo
             if (response && response.resId && response.resName) {
@@ -1034,12 +1114,11 @@
 
     var _simplemde = {};
 
-    var _cur_uid = null;
-    var _editor_md = null;
+    var _cur_uid = '{{G_uid}}';
+    var _gantt_editor_md = null;
 
     var $_gantAjax = null;
 
-    _editor_md = null;
     var _issueConfig = {
         "priority":{{priority|json_encode()|raw}},
         "issue_types":{{issue_types|json_encode()|raw}},
@@ -1053,11 +1132,12 @@
         "projects":{{projects|json_encode()|raw}},
         "sprint":{{sprints|json_encode()|raw}}
     };
-    var _project_issue_types =  {{project_issue_types|json_encode()|raw}};
+    var _project_issue_types = {{project_issue_types|json_encode()|raw}};
 
 
 
     $(function(){
+
         window.$_gantAjax = new Gantt({});
 
         // 聚焦模式切换
@@ -1066,10 +1146,10 @@
             $('.with-horizontal-nav').toggleClass('hidden');
             $('.layout-nav').toggleClass('hidden');
         });
-        new UsersSelect();
+
         // 计算用时(天)
         var due_date_laydate = laydate.render({
-            elem: '#due_date'
+            elem: '#gantt_due_date'
             ,format: 'yyyy-MM-dd'
             ,mark: {
                 '0-11-08': '生日'
@@ -1086,7 +1166,7 @@
             }
         });
         var start_date_laydate = laydate.render({
-            elem: '#start_date'
+            elem: '#gantt_start_date'
             ,format: 'yyyy-MM-dd'
             ,mark: {
                 '0-11-08': '生日'
@@ -1105,8 +1185,8 @@
 
         function computeDuration(){
             let project_id = window._cur_project_id;
-            let start_date = $('#start_date').val();
-            let due_date = $('#due_date').val();
+            let start_date = $('#gantt_start_date').val();
+            let due_date = $('#gantt_due_date').val();
             if(start_date!='' && due_date!=''){
                 var url = '/issue/main/getDuration/?project'+project_id;
                 $.ajax({
@@ -1193,15 +1273,51 @@
             });
         });
         $('#btn-add').bind('click',function(){
+
+            let err = {};
+            if(is_empty(trimStr($('#gantt_summary').val()))){
+                err['summary'] = '标题不能为空';
+            }
+            if(is_empty(trimStr($('#gantt_priority').val()))){
+                err['priority'] = '优先级不能为空';
+            }
+            if(is_empty(trimStr($('#gantt_status').val()))){
+                err['status'] = '状态不能为空';
+            }
+            if(is_empty(trimStr($('#gantt_assignee').val()))){
+                err['assignee'] = '经办人不能为空';
+            }
+            if(is_empty($('#gantt_start_date').val())){
+                err['start_date'] = '开始日期不能为空';
+            }
+            let due_date = trimStr($('#gantt_due_date').val());
+            if(is_empty($('#gantt_due_date').val())){
+                err['due_date'] = '截止日期不能为空';
+            }
+            // priority
+            $('#tip-summary').addClass('hide');
+            $('#tip-priority').addClass('hide');
+            $('#tip-status').addClass('hide');
+            $('#tip-assignee').addClass('hide');
+            $('#tip-start_date').addClass('hide');
+            $('#tip-due_date').addClass('hide');
+            if(!is_empty(err)){
+                for (var key in err) {
+                    $('#tip-'+key).html(err[key]);
+                    $('#tip-'+key).removeClass('hide');
+                }
+                notify_warn('提示','表单验证未通过');
+                return;
+            }
+
             if($('#action').val()=='update'){
-                window.ge.updateSyncServerTask();
+                window.$_gantAjax.updateSyncServerTask();
             }else{
-                window.ge.addSyncServerTask();
+                window.$_gantAjax.addSyncServerTask();
             }
         });
 
         $('#modal-team').on('show.bs.modal', function (e) {
-
 
         })
 

@@ -264,7 +264,7 @@
 
 
 <script id="activity-body_tpl" type="text/html">
-    <ul  id="activity_wrap" class="event-list" id="panel_activity">
+    <ul  id="activity_wrap" class="event-list">
     </ul>
 </script>
 
@@ -298,6 +298,9 @@
                     {{#if_eq type 'project'}}
                         <a href="/project/main/home/?project_id={{project_id}}">{{title}}</a>
                     {{/if_eq}}
+                    <div>
+                        {{content}}
+                    </div>
                 </span>
             </h4>
             <time class="event-time js-time" title=""

@@ -133,8 +133,8 @@ GanttMaster.prototype.init = function (workSpace) {
     self.deleteCurrentTask();
   }).bind("showAddAboveCurrentTask.gantt", function () {
     self.showAddAboveCurrentTask();
-  }).bind("addBelowCurrentTask.gantt", function () {
-    self.addBelowCurrentTask();
+  }).bind("showAddBelowCurrentTask.gantt", function () {
+    self.showAddBelowCurrentTask();
   }).bind("indentCurrentTask.gantt", function () {
     self.indentCurrentTask();
   }).bind("outdentCurrentTask.gantt", function () {
@@ -163,7 +163,8 @@ GanttMaster.prototype.init = function (workSpace) {
     //self.editor.openFullEditor(self.currentTask,false);
       self.editor.openMasterlabEditor(self.currentTask, false);
   }).bind("openAssignmentEditor.gantt", function () {
-    self.editor.openFullEditor(self.currentTask,true);
+    //self.editor.openFullEditor(self.currentTask,true);
+    self.editor.openMasterlabEditor(self.currentTask, false);
   }).bind("addIssue.gantt", function () {
     self.addIssue();
   }).bind("openExternalEditor.gantt", function () {
@@ -295,9 +296,9 @@ GanttMaster.messages = {
 };
 
 
-GanttMaster.prototype.createTask = function (id, name, code, level, start, duration) {
+GanttMaster.prototype.createTask = function (id, name, code, level, start, end, duration, sprint_id, sprint_name) {
   var factory = new TaskFactory();
-  return factory.build(id, name, code, level, start, duration);
+  return factory.build(id, name, code, level, start, end, duration, sprint_id, sprint_name);
 };
 
 
@@ -510,10 +511,24 @@ GanttMaster.prototype.loadTasks = function (tasks, selectedRow) {
     for (var i = 0; i < tasks.length; i++) {
       var task = tasks[i];
       if (!(task instanceof Task)) {
-        var t = factory.build(task.id, task.name, task.code, task.level, task.start, task.end,task.duration, task.collapsed);
+        let sprint_id = '0';
+        let sprint_name = '待办事项';
+        if(task.type==='sprint'){
+            sprint_id = task.id;
+            sprint_name = task.name;
+        }else{
+            if(!is_empty(task.sprint_info)){
+                sprint_id = task.sprint_info.id;
+                sprint_name = task.sprint_info.name;
+            }
+        }
+
+        var t = factory.build(task.id, task.name, task.code, task.level, task.start, task.end,task.duration, task.collapsed, sprint_id, sprint_name);
         for (var key in task) {
-          if (key != "end" && key != "start")
-            t[key] = task[key]; //copy all properties
+          if (key != "end" && key != "start"){
+              t[key] = task[key]; //copy all properties
+          }
+          t.syncedServer = true;
         }
         task = t;
       }
@@ -1026,9 +1041,29 @@ GanttMaster.prototype.indentCurrentTask = function () {
   }
 };
 
-GanttMaster.prototype.addBelowCurrentTask = function () {
+GanttMaster.prototype.showAddBelowCurrentTask = function () {
+    var self = this;
+    console.debug("showAddBelowCurrentTask",self.currentTask)
+
+    //check permissions
+    if ((self.currentTask.getParent() && !self.currentTask.getParent().canAdd) ){
+        return;
+    }
+    var parent = self.currentTask.getParent();
+
+    if(parent!=null && parent.level!=0){
+        $("#master_issue_id").val(parent.id);
+    }
+
+    $("#below_id").val(self.currentTask.id);
+    $("#add_gantt_dir").val('addBelowCurrentTask');
+    $('#modal-create-issue').modal('show');
+    window.$_gantAjax.initEditIssueForm(self.currentTask);
+}
+
+GanttMaster.prototype.addBelowCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id,sprint_name) {
   var self = this;
-  //console.debug("addBelowCurrentTask",self.currentTask)
+  console.debug("addBelowCurrentTask",self.currentTask)
   var factory = new TaskFactory();
   var ch;
   var row = 0;
@@ -1038,19 +1073,19 @@ GanttMaster.prototype.addBelowCurrentTask = function () {
 
     var canAddChild=self.currentTask.canAdd;
     var canAddBrother=self.currentTask.getParent() && self.currentTask.getParent().canAdd;
-
     //if you cannot add a brother you will try to add a child
     addNewBrother=addNewBrother&&canAddBrother;
-
-    if (!canAddBrother && !canAddChild)
+    if (!canAddBrother && !canAddChild){
         return;
-
-
-    ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level+ (addNewBrother ?0:1), self.currentTask.start, 1);
+    }
+    let collapsed = 1;
+    let level = self.currentTask.level+ (addNewBrother ?0:1);
+    ch = factory.build(id, name, code,  level, startTime, endTime, duration, collapsed, sprint_id,sprint_name);
     row = self.currentTask.getRow() + 1;
 
     if (row>0) {
       self.beginTransaction();
+      ch.syncedServer = true;
       var task = self.addTask(ch, row);
       if (task) {
         task.rowElement.click();
@@ -1076,12 +1111,13 @@ GanttMaster.prototype.showAddAboveCurrentTask = function () {
         $("#master_issue_id").val(parent.id);
     }
 
-    $("#below_id").val(self.currentTask.id);
+    $("#above_id").val(self.currentTask.id);
     $("#add_gantt_dir").val('addAboveCurrentTask');
     $('#modal-create-issue').modal('show');
+    window.$_gantAjax.initEditIssueForm(self.currentTask);
 }
 
-GanttMaster.prototype.addAboveCurrentTask = function (id, name, code,  start, duration) {
+GanttMaster.prototype.addAboveCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id,sprint_name) {
   var self = this;
   // console.debug("addAboveCurrentTask",self.currentTask)
 
@@ -1094,162 +1130,27 @@ GanttMaster.prototype.addAboveCurrentTask = function (id, name, code,  start, du
   var ch;
   var row = 0;
   if (self.currentTask  && self.currentTask.name) {
-    //cannot add brothers to root
-    if (self.currentTask.level <= 0)
-      return;
+     //cannot add brothers to root
+     if (self.currentTask.level <= 0)
+       return;
 
-    //ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
-    ch = factory.build(id, name, code, self.currentTask.level,   self.currentTask.start, duration);
-    row = self.currentTask.getRow();
-    if (row > 0) {
-      self.beginTransaction();
-      var task = self.addTask(ch, row);
-      if (task) {
-        task.rowElement.click();
-        task.rowElement.find("[name=name]").focus();
-      }
-      self.endTransaction();
+     //ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
+      let collapsed = 1;
+      let level = self.currentTask.level+ (addNewBrother ?0:1);
+     ch = factory.build(id, name, code,  level, startTime, endTime, duration, collapsed, sprint_id,sprint_name);
+     row = self.currentTask.getRow();
+     if (row > 0) {
+        self.beginTransaction();
+        ch.syncedServer = true;
+        var task = self.addTask(ch, row);
+        if (task) {
+          task.rowElement.click();
+          task.rowElement.find("[name=name]").focus();
+        }
+        self.endTransaction();
 
-    }
+     }
   }
-};
-
-GanttMaster.prototype.updateSyncServerTask = function () {
-    //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
-    var self = this;
-
-    $('#modal-create-issue').modal('hide');
-    var taskId = $("#issue_id").val();
-    var task = self.getTask(taskId); // get task again because in case of rollback old task is lost
-
-    self.beginTransaction();
-    task.name = $("#summary").val();
-    task.description = $("#description").val();
-    task.code = "#"+taskId;
-    task.progress = parseInt($("#progress").val());
-    //task.duration = parseInt(taskEditor.find("#duration").val()); //bicch rimosso perchè devono essere ricalcolata dalla start end, altrimenti sbaglia
-    task.startIsMilestone = $("#is_start_milestone").is(":checked");
-    task.endIsMilestone = $("#is_end_milestone").is(":checked");
-
-    task.type = '';
-    task.typeId = '';
-    task.relevance = 0;
-    task.progressByWorklog=  false;//taskEditor.find("#progressByWorklog").is(":checked");
-
-    //set assignments
-    var cnt=0;
-
-    //change dates
-    let start_date = $("#start_date").val();
-    let due_date = $("#due_date").val();
-    console.log(start_date, due_date);
-    if(!is_empty(start_date) && !is_empty(due_date)){
-        task.setPeriod(Date.parseString(start_date).getTime(), Date.parseString(due_date).getTime() + (3600000 * 22));
-    }
-
-    //change status
-    // task.changeStatus($("#status").val());
-
-    if (self.endTransaction()) {
-        //var taskEditor =  new GridEditor(this);
-        //taskEditor.find(":input").updateOldValue();
-        //closeBlackPopup();
-    }
-    var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-    var url = '/issue/main/update?from_gantt=1';
-    $.ajax({
-        type: 'post',
-        dataType: "json",
-        url: url,
-        data: params,
-        success: function (resp) {
-            auth_check(resp);
-            if(!form_check(resp)){
-                notify_success("提交参数错误",resp.msg);
-                return;
-            }
-            if (resp.ret == 200) {
-                notify_success(resp.msg);
-
-            }else{
-                notify_error(resp.msg);
-            }
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
-};
-
-GanttMaster.prototype.updateIssue = function (issue_id, params) {
-    //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
-    var self = this;
-    var url = '/issue/main/update?issue_id='+issue_id;
-    $.ajax({
-        type: 'post',
-        dataType: "json",
-        url: url,
-        data: {params:params},
-        success: function (resp) {
-            auth_check(resp);
-            if(!form_check(resp)){
-                notify_success("提交参数错误",resp.msg);
-                return;
-            }
-            if (resp.ret == 200) {
-                notify_success(resp.msg);
-
-            }else{
-                notify_error(resp.msg);
-            }
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
-};
-
-GanttMaster.prototype.addSyncServerTask = function () {
-    //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
-    var self = this;
-
-    var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-    var url = '/issue/main/add?from_gantt=1';
-
-    $.ajax({
-        type: 'post',
-        dataType: "json",
-        url: url,
-        data: params,
-        success: function (resp) {
-            auth_check(resp);
-            if(!form_check(resp)){
-                return;
-            }
-            if (resp.ret == 200) {
-                notify_success(resp.msg);
-                $('#modal-create-issue').modal('hide');
-                var action = $("#add_gantt_dir").val();
-                if(action=='addAboveCurrentTask'){
-                    // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
-                    let id = resp.data;
-                    let name = $('#summary').val();
-                    let code = "#"+id;
-                    let start_date = $('#start_date').val();
-                    start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
-                    let timestamp = new Date(start_date).getTime()*1000
-
-                    var duration = parseInt($('#duration').val());
-                    self.addAboveCurrentTask(id, name, code, timestamp, duration);
-                }
-            }else{
-                notify_error(resp.msg);
-            }
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
 };
 
 GanttMaster.prototype.deleteCurrentTask = function (taskId) {
@@ -1270,26 +1171,8 @@ GanttMaster.prototype.deleteCurrentTask = function (taskId) {
   var row = task.getRow();
   if (task && (row > 0 || self.isMultiRoot || task.isNew()) ) {
     if(!task.isNew() && task.name!=''){
-        $.ajax({
-            type: 'post',
-            dataType: "json",
-            async: true,
-            url: root_url+"issue/main/update",
-            data: {issue_id: task.id, params: {gant_hide:1}},
-            success: function (resp) {
-                auth_check(resp);
-                if (resp.ret != '200') {
-                    notify_error('操作失败:' + resp.msg);
-                    return;
-                }
-                notify_success('操作成功');
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
+      window.$_gantAjax.deleteTask(task.id, {gant_hide:1});
     }
-
 
     var par = task.getParent();
     self.beginTransaction();

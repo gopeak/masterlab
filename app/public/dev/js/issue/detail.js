@@ -467,7 +467,7 @@ var IssueDetail = (function () {
         });
     }
 
-    IssueDetail.prototype.updateIssueStatus = function (issue_id, status_id, target, text) {
+    IssueDetail.prototype.updateIssueStatus = function (issue_id, status_id, target, text, color) {
         var method = 'post';
         $.ajax({
             type: method,
@@ -479,6 +479,7 @@ var IssueDetail = (function () {
                 auth_check(resp);
                 if (resp.ret == '200') {
                     target.text(text)
+                    target.attr('class', `label current label-${color} prepend-left-5`)
                     notify_success('操作成功');
                     // window.location.reload();
                 } else {
@@ -491,7 +492,7 @@ var IssueDetail = (function () {
         });
     },
 
-        IssueDetail.prototype.updateIssueResolve = function (issue_id, resolve_id) {
+        IssueDetail.prototype.updateIssueResolve = function (issue_id, resolve_id, target, text, color) {
             var method = 'post';
             $.ajax({
                 type: method,
@@ -502,7 +503,9 @@ var IssueDetail = (function () {
                 success: function (resp) {
                     auth_check(resp);
                     if (resp.ret === '200') {
-                        window.location.reload();
+                        target.text(text)
+                        target.css('color', color)
+                        notify_success('操作成功');
                     } else {
                         notify_error(resp.msg);
                     }

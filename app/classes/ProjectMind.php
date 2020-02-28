@@ -78,7 +78,7 @@ class ProjectMind
         $item = [];
         $item['id'] = $row['id'];
         $item['level'] = (int)$row['level'];
-        $item['gant_proj_sprint_weight'] = (int)$row['gant_proj_sprint_weight'];
+        $item['gant_sprint_weight'] = (int)$row['gant_sprint_weight'];
         $item['code'] = '#' . $row['issue_num'];
         $item['name'] = $row['summary'];
         $item['progress'] = (int)$row['progress'];

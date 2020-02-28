@@ -81,7 +81,9 @@ class AgileLogic
             $customBoard['type'] = 'custom_board';
             $customBoard['sprint_id'] = '0';
         }
-        $boards = $boards + $customBoards;
+        foreach ($customBoards as $customBoard) {
+            $boards[] = $customBoard;
+        }
         return $boards;
     }
 

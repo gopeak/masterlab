@@ -438,9 +438,10 @@ class IssueFilterLogic
      * @return array
      * @throws \Exception
      */
-    public function getAdvQueryList($page = 1, $pageSize = 50)
+    public function getAdvQueryList($page = 1, $pageSize = 20)
     {
         // sys_filter=1&fav_filter=2&project=2&reporter=2&title=fdsfdsfsd&assignee=2&created_start=232131&update_start=43432&sort_by=&32323&mod=123&reporter=12&priority=2&status=23&resolution=2
+        $paramsField = [];
         $params = [];
         $sql = " WHERE 1";
 
@@ -512,17 +513,32 @@ class IssueFilterLogic
                 case '>=':
                 case '<=':
                 case '<':
-                    $sql .= " $field {$opt}:$field ";
-                    $params[$field] = $value;
+                    if (in_array($field, $paramsField)) {
+                        $sql .= sprintf(" %s %s :%s_%s ", $field, $opt, $field, $i);
+                        $params[$field . '_' . $i] = $value;
+                    } else {
+                        $sql .= " $field {$opt}:$field ";
+                        $params[$field] = $value;
+                    }
                     break;
                 case 'in':
                 case 'not in':
-                    $sql .= " $field  {$opt} ( :$field ) ";
-                    $params[$field] = $value;
+                    if (in_array($field, $paramsField)) {
+                        $sql .= sprintf(" %s %s ( :%s_%s ) ", $field, $opt, $field, $i);
+                        $params[$field . '_' . $i] = $value;
+                    } else {
+                        $sql .= " $field  {$opt} ( :$field ) ";
+                        $params[$field] = $value;
+                    }
                     break;
                 case 'like':
-                    $sql .= " $field  {$opt} :$field ";
-                    $params[$field] = '%'.$value.'%';
+                    if (in_array($field, $paramsField)) {
+                        $sql .= sprintf(" %s %s :%s_%s ", $field, $opt, $field, $i);
+                        $params[$field . '_' . $i] = '%'.$value.'%';
+                    } else {
+                        $sql .= " $field  {$opt} :$field ";
+                        $params[$field] = '%'.$value.'%';
+                    }
                     break;
                 case 'like %...%':
                     $sql .= "   LOCATE(:$field,$field)>0  ";
@@ -546,10 +562,17 @@ class IssueFilterLogic
                     $sql .= "  $field {$opt}  '^{$value}$' ";
                     break;
                 default:
-                    $sql .= " $field  {$opt} :$field ";
-                    $params[$field] = $value;
+                    if (in_array($field, $paramsField)) {
+                        $sql .= sprintf(" %s %s :%s_%s ", $field, $opt, $field, $i);
+                        $params[$field . '_' . $i] = $value;
+                    } else {
+                        $sql .= " $field  {$opt} :$field ";
+                        $params[$field] = $value;
+                    }
             }
             $sql .= " {$endBraces} ";
+
+            $paramsField[] = $field;
         }
         $sql .= ' ) ';
         if ($startBracesNum != $endBracesNum) {
@@ -582,7 +605,7 @@ class IssueFilterLogic
             $sql = "SELECT {$fields} FROM  {$table} " . $sql;
             $sql .= ' ' . $order . $limit;
             //print_r($params);
-            //echo $sql;die;
+            //echo $sql;print_r($params);die;
             $arr = $model->db->getRows($sql, $params);
             // var_dump( $arr, $count);
             return [true, $arr, $count];
