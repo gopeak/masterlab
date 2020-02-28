@@ -107,9 +107,6 @@ function is_empty(a) {
     if (a.length == 0) { // "",[]
         return true;
     }
-    if (!a.length) { // "",[]
-        return true;
-    }
     // Object {}
     if (objIsEmpty(a)) {
         return true;
@@ -307,7 +304,8 @@ function timestampToDate(timestamp, formats) {
  * @returns {*}
  */
 function trimStr(str){
-    return str.replace(/ /g,'')
+    console.log('str:',str)
+    return  str.replace(/\s+/g,"");
 }
 
 /**

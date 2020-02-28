@@ -68,7 +68,6 @@ function Task(id, name, code, level, start, end, duration, collapsed, sprint_id,
 
   this.syncedServer = false;
 
-
   //permissions
   // by default all true, but must be inherited from parent
   this.canWrite = true;
@@ -79,7 +78,6 @@ function Task(id, name, code, level, start, end, duration, collapsed, sprint_id,
   this.rowElement; //row editor html element
   this.ganttElement; //gantt html element
   this.master;
-
 
   this.assigs = [];
 }
@@ -1144,8 +1142,8 @@ Task.prototype.moveUp = function () {
   //is a parent or a brother
   if (this.master.tasks[newRow].level == this.level) {
       var current_id = this.master.tasks[row].id;
-      var new_id = this.master.tasks[newRow].id;
-      this.syncMoveUpServer(current_id, new_id );
+      var target_id = this.master.tasks[newRow].id;
+      window.$_gantAjax.syncMoveUpServer(current_id, target_id );
 
     ret = true;
     //compute descendant
@@ -1177,54 +1175,6 @@ Task.prototype.moveUp = function () {
   return ret;
 };
 
-
-Task.prototype.syncMoveUpServer = function (current_id, new_id) {
-
-    var method = 'post';
-    var params = {"project_id":window.cur_project_id,"current_id":current_id,"new_id":new_id}
-    $.ajax({
-        type: method,
-        dataType: "json",
-        async: true,
-        url: '/project/gantt/moveUpIssue',
-        data: params,
-        success: function (resp) {
-            if (resp.ret == 200) {
-                notify_success(resp.msg);
-            }else{
-                notify_error(resp.msg);
-            }
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
-}
-
-Task.prototype.syncMoveDownServer = function (current_id, new_id) {
-
-    var method = 'post';
-    var params = {"project_id":window.cur_project_id,"current_id":current_id,"new_id":new_id}
-    $.ajax({
-        type: method,
-        dataType: "json",
-        async: true,
-        url: '/project/gantt/moveUpIssue',
-        data: params,
-        success: function (resp) {
-            if (resp.ret == 200) {
-                notify_success(resp.msg);
-            }else{
-                notify_error(resp.msg);
-            }
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
-}
-
-
 Task.prototype.moveDown = function () {
   //console.debug("moveDown", this);
 
@@ -1245,8 +1195,8 @@ Task.prototype.moveDown = function () {
   //is brother
   if (this.master.tasks[newRow] && this.master.tasks[newRow].level == this.level) {
       var current_id = this.master.tasks[row].id;
-      var new_id = this.master.tasks[newRow].id;
-      this.syncMoveDownServer(current_id, new_id );
+      var target_id = this.master.tasks[newRow].id;
+      window.$_gantAjax.syncMoveDownServer(current_id, target_id );
     ret = true;
     //find last desc
     for (newRow = newRow + 1; newRow < this.master.tasks.length; newRow++) {

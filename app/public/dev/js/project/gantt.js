@@ -22,8 +22,8 @@ var Gantt = (function () {
 
      Gantt.prototype.initIssueType = function (issue_types) {
         //console.log(issue_types)
-        var issue_types_select = document.getElementById('create_issue_types_select');
-        $('#create_issue_types_select').empty();
+        var issue_types_select = document.getElementById('gantt_issue_type');
+        $('#gantt_issue_type').empty();
 
         for (var _key in  issue_types) {
             issue_types_select.options.add(new Option(issue_types[_key].name, issue_types[_key].id));
@@ -35,7 +35,7 @@ var Gantt = (function () {
     Gantt.prototype.initPriority = function (prioritys) {
         //console.log(prioritys)
         var issue_types_select = document.getElementById('priority');
-        $('#priority').empty();
+        $('#gantt_priority').empty();
 
         for (var _key in  prioritys) {
             var row = prioritys[_key];
@@ -43,7 +43,7 @@ var Gantt = (function () {
             var title = row.name;
             var color = row.status_color;
             var opt = "<option data-content=\"<span style='color:" + color + "'>" + title + "</span>\" value='"+id+"'>"+title+"</option>";
-            $('#priority').append(opt);
+            $('#gantt_priority').append(opt);
         }
         //data-content="<span style='color:red'>紧 急</span>"
         $('.selectpicker').selectpicker('refresh');
@@ -154,41 +154,42 @@ var Gantt = (function () {
     };
 
     Gantt.prototype.initEditIssueForm = function( task ) {
-        $('#summary').val('');
-        $('#create_issue_types_select').val('3');
-        $('#priority').val('3');
+        $('#gantt_summary').val('');
+        $('#gantt_issue_type').val('3');
+        $('#gantt_priority').val('3');
         $('#gantt_status').val('1');
         $('#assignee').val('');
-        $('#gantt_assignee').val('');
-        $('#start_date').val('');
-        $('#due_date').val('');
+        $('#gantt_assignee').val(window.current_uid);
+        $('#gantt_start_date').val('');
+        $('#gantt_due_date').val('');
         $('#edit_duration').html('');
-        $('#progress').val('');
-        $('#is_start_milestone').attr("checked", false);
-        $('#is_end_milestone').attr("checked", false);
-        $('#sprint').val(task.sprint_id);
+        $('#gantt_progress').val('');
+        $('#gantt_is_start_milestone').attr("checked", false);
+        $('#gantt_is_end_milestone').attr("checked", false);
+        $('#gantt_sprint').val(task.sprint_id);
         $('#sprint_name').html(task.sprint_name);
         $('.selectpicker').selectpicker('refresh');
-        // if(!window._editor_md){
-        $('#gantt_description').text('');
-        window._editor_md = editormd({
-            id   : "description_md",
-            placeholder : "",
-            width: "600px",
-            readOnly:false,
-            styleActiveLine:true,
-            lineNumbers:true,
-            height: 240,
-            markdown: '',
-            path: '/dev/lib/editor.md/lib/',
-            imageUpload: true,
-            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL: "/issue/detail/editormd_upload",
-            saveHTMLToTextarea: true,
-            emoji: true,
-            toolbarIcons      : "custom",
-        })
-        // }
+
+        if(is_empty(_gantt_editor_md)){
+            _gantt_editor_md = editormd('description_md', {
+                width: "640px",
+                height: 220,
+                watch: false,
+                markdown: '',
+                path: root_url + 'dev/lib/editor.md/lib/',
+                imageUpload: true,
+                imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL: root_url + "issue/detail/editormd_upload",
+                tocm: true,    // Using [TOCM]
+                emoji: true,
+                saveHTMLToTextarea: true,
+                toolbarIcons: "custom"
+            });
+        }else{
+            _gantt_editor_md.setMarkdown('');
+        }
+
+
     };
 
     Gantt.prototype.makeEditIssueForm = function( task, editOnlyAssig ) {
@@ -198,33 +199,34 @@ var Gantt = (function () {
         loading.show('#modal-body');
         $('#issue_id').val(task.id);
         $('#action').val('update');
-        $('#gantt_description').text('');
+
         $.ajax({
             type: 'get',
             dataType: "json",
             async: true,
-            url: root_url + "issue/detail/get/" + task.id+'&from=gantt',
+            url: root_url + "issue/detail/get/" + task.id+'?from=gantt',
             data: {},
             success: function (resp) {
                 loading.hide('#modal-body');
                 auth_check(resp);
                 var issue = resp.data.issue;
-                $('#summary').val(issue.summary);
-                $('#create_issue_types_select').val(issue.issue_type);
-                $('#priority').val(issue.priority);
+                $('#gantt_summary').val(issue.summary);
+                $('#gantt_master_issue_id').val(issue.master_id);
+                $('#gantt_issue_type').val(issue.issue_type);
+                $('#gantt_priority').val(issue.priority);
                 $('#gantt_status').val(issue.gantt_status);
                 $('#assignee').val(issue.assignee);
                 $('#gantt_assignee').val(issue.assignee);
-                $('#sprint').val(issue.sprint);
-                $('#start_date').val(issue.start_date);
-                $('#due_date').val(issue.due_date);
+                $('#gantt_sprint').val(issue.sprint);
+                $('#gantt_start_date').val(issue.start_date);
+                $('#gantt_due_date').val(issue.due_date);
                 $('#edit_duration').html(issue.duration);
-                $('#progress').val(issue.progress);
+                $('#gantt_progress').val(issue.progress);
                 if(issue.is_start_milestone!='0'){
-                    $('#is_start_milestone').attr("checked", true);
+                    $('#gantt_is_start_milestone').attr("checked", true);
                 }
                 if(issue.is_end_milestone!='0'){
-                    $('#is_end_milestone').attr("checked", true);
+                    $('#gantt_is_end_milestone').attr("checked", true);
                 }
                 $('.selectpicker').selectpicker('refresh');
 
@@ -239,27 +241,8 @@ var Gantt = (function () {
                 }else{
                     $('#sprint_name').html(sprint.name);
                 }
+                _gantt_editor_md.setMarkdown(issue.description);
 
-                // if(!window._editor_md){
-                $('#gantt_description').text(issue.description);
-                window._editor_md = editormd({
-                    id   : "description_md",
-                    placeholder : "",
-                    width: "600px",
-                    readOnly:false,
-                    styleActiveLine:true,
-                    lineNumbers:true,
-                    height: 240,
-                    markdown: issue.description,
-                    path: '/dev/lib/editor.md/lib/',
-                    imageUpload: true,
-                    imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                    imageUploadURL: "/issue/detail/editormd_upload",
-                    saveHTMLToTextarea: true,
-                    emoji: true,
-                    toolbarIcons      : "custom",
-                })
-                // }
 
             },
             error: function (res) {
@@ -361,7 +344,6 @@ var Gantt = (function () {
     Gantt.prototype.addSyncServerTask = function () {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
-
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
         var url = '/issue/main/add?from_gantt=1';
 
@@ -393,8 +375,8 @@ var Gantt = (function () {
                     startTime = (new Date(start_date).getTime())*1000;
                     let due_date =  $('#due_date').val().replace(/-/g, '/');
                     let endTime = 0;
-                    if(due_date==="" && !isUndefined(sprint.due_date)){
-                        due_date = sprint.due_date;
+                    if(due_date==="" && !isUndefined(sprint.end_date)){
+                        due_date = sprint.end_date;
                     }
                     endTime = (new Date(due_date).getTime())*1000;
                     let duration = parseInt($('#duration').val());
@@ -425,13 +407,13 @@ var Gantt = (function () {
         var task = self.getTask(taskId); // get task again because in case of rollback old task is lost
 
         self.beginTransaction();
-        task.name = $("#summary").val();
-        task.description = $("#description").val();
+        task.name = $("#gantt_summary").val();
+        task.description = window._gantt_editor_md.getMarkdown();
         task.code = "#"+taskId;
-        task.progress = parseInt($("#progress").val());
+        task.progress = parseInt($("#gantt_progress").val());
         //task.duration = parseInt(taskEditor.find("#duration").val()); //bicch rimosso perchè devono essere ricalcolata dalla start end, altrimenti sbaglia
-        task.startIsMilestone = $("#is_start_milestone").is(":checked");
-        task.endIsMilestone = $("#is_end_milestone").is(":checked");
+        task.startIsMilestone = $("#gantt_is_start_milestone").is(":checked");
+        task.endIsMilestone = $("#gantt_is_end_milestone").is(":checked");
 
         task.type = '';
         task.typeId = '';
@@ -442,8 +424,8 @@ var Gantt = (function () {
         var cnt=0;
 
         //change dates
-        let start_date = $("#start_date").val();
-        let due_date = $("#due_date").val();
+        let start_date = $("#gantt_start_date").val();
+        let due_date = $("#gantt_due_date").val();
         console.log(start_date, due_date);
         if(!is_empty(start_date) && !is_empty(due_date)){
             task.setPeriod(Date.parseString(start_date).getTime(), Date.parseString(due_date).getTime() + (3600000 * 22));
@@ -751,7 +733,6 @@ var Gantt = (function () {
                     window.ge.loadProject(loadFromLocalStorage());
                     $(".js-hidden-row-id-"+issue_id).remove();
 
-
                     if ($("#tr_be_hidden_issue_list_content tr").length > 0) {
 
                     } else {
@@ -763,7 +744,6 @@ var Gantt = (function () {
                         })
                     }
 
-
                     notify_success(resp.msg);
                 } else {
                     notify_error("请求数据源失败:" + resp.msg);
@@ -774,6 +754,54 @@ var Gantt = (function () {
             }
         });
     };
+
+
+    Gantt.prototype.syncMoveUpServer = function (current_id, target_id) {
+
+        var method = 'post';
+        var params = {"project_id":window.cur_project_id,"current_id":current_id,"target_id":target_id}
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: '/project/gantt/moveUpIssue',
+            data: params,
+            success: function (resp) {
+                if (resp.ret == 200) {
+                    notify_success(resp.msg);
+                }else{
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    Gantt.prototype.syncMoveDownServer = function (current_id, target_id) {
+
+        var method = 'post';
+        var params = {"project_id":window.cur_project_id,"current_id":current_id,"target_id":target_id}
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: '/project/gantt/moveDownIssue',
+            data: params,
+            success: function (resp) {
+                if (resp.ret == '200') {
+                    notify_success(resp.msg);
+                }else{
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
 
     return Gantt;
 })();

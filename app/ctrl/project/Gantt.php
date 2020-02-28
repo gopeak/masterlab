@@ -366,8 +366,8 @@ class Gantt extends BaseUserCtrl
             $currentId = (int)$_POST['current_id'];
         }
         $targetId = null;
-        if (isset($_POST['new_id'])) {
-            $targetId = (int)$_POST['new_id'];
+        if (isset($_POST['target_id'])) {
+            $targetId = (int)$_POST['target_id'];
         }
         if (!$currentId || !$targetId) {
             $this->ajaxFailed('参数错误', $_POST);
@@ -452,8 +452,8 @@ class Gantt extends BaseUserCtrl
             $currentId = (int)$_POST['current_id'];
         }
         $targetId = null;
-        if (isset($_POST['new_id'])) {
-            $targetId = (int)$_POST['new_id'];
+        if (isset($_POST['target_id'])) {
+            $targetId = (int)$_POST['target_id'];
         }
         if (!$currentId || !$targetId) {
             $this->ajaxFailed('参数错误', $_POST);
@@ -499,6 +499,7 @@ class Gantt extends BaseUserCtrl
                     $sortArr[] = $item;
                 }
             }
+            // print_r($targetChildrenArr);
             // 取出当前事项及子任务
             $sortArr[] = $currentIsuse;
             $sprintId = $currentIsuse['sprint'];
@@ -509,12 +510,15 @@ class Gantt extends BaseUserCtrl
                     $sortArr[] = $item;
                 }
             }
+            // print_r($currentChildrenArr);
             // 获取最小的权重值
             $sql = "Select {$fields} From {$table} Where  master_id={$targetId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} ASC    limit 1";
             $minWeight = max(0, (int)$issueModel->db->getOne($sql));
             $count = count($sortArr);
             $maxWeight = $currentWeight;
             $decWeight = intval(($currentWeight-$minWeight)/$count);
+            // print_r($decWeight);
+            // print_r($sortArr);
             // 重新更新权重值
             foreach ($sortArr as &$midRow) {
                 $updateArr = [$fieldWeight=>$maxWeight];

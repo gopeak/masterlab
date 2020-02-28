@@ -66,13 +66,13 @@ class ProjectGantt
         $item['gant_sprint_weight'] = (int)$row['gant_sprint_weight'];
         $item['code'] = '#' . $row['issue_num'];
         $item['name'] = $row['summary'];
-        $item['sprint_info'] = [];//$sprint;
+        $item['sprint_info'] = $sprint;
         $item['progress'] = (int)$row['progress'];
         $item['progressByWorklog'] = false;
         $item['relevance'] = (int)$row['weight'];
         $item['type'] = $row['issue_type'];
         $item['typeId'] = $row['issue_type'];
-        $item['description'] = '';//$row['description'];
+        $item['description'] = isset($row['description']) ? $row['description']:'';
         $item['status'] = 'STATUS_DONE'; //$row['status'];
         $item['depends'] = $row['depends'];
         $item['canWrite'] = true;
@@ -413,10 +413,9 @@ class ProjectGantt
             $finalArr[] = self::formatRowBySprint($sprint);
             $sprintId = $sprint['id'];
             $condition = "project_id={$projectId} AND sprint={$sprintId} AND gant_hide!=1  {$orderBy}";
-            $sql = "select * from {$table} where {$condition}";
-
+            $fields = "id,issue_num,issue_type,status,summary,assignee,have_children,master_id,level,depends,start_date,due_date,duration,progress,weight,gant_sprint_weight";
+            $sql = "select {$fields} from {$table} where {$condition}";
             $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
-
             $sprintIssueArr = [];
             $otherArr = [];
             if (!empty($sprintRows[$sprint['id']])) {

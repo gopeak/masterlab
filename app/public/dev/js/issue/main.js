@@ -1479,17 +1479,6 @@ var IssueMain = (function () {
 
         $(".simplemde_text").each(function (i) {
             var id = $(this).attr('id');
-            // if (typeof(_simplemde[id]) == 'undefined') {
-            //     // var mk = new SimpleMDE({
-            //     //     element: document.getElementById(id),
-            //     //     autoDownloadFontAwesome: false,
-            //     //     toolbar:toolbars,
-            //     //     initialValue:desc_tpl_value
-            //     // });
-            //
-            //     // _simplemde[id] = mk;
-            // }
-
             _editor_md = editormd(id, {
                 width: "100%",
                 height: 220,
