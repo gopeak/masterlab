@@ -1736,8 +1736,8 @@ class Main extends BaseUserCtrl
                 $issueOldValue = $issueOldValues[$field];
                 if ($issueNewValue != $issueOldValue) {
                     if ($field == 'assignee' || $field == 'assistants') {
-                        $issueNewValue = isset($users[$issueNewValue]) ? '<span style="color:#337ab7">' . $users[$issueNewValue]['display_name'] . '@'. $users[$issueNewValue]['username'] . '</span>' : '<span>未知</span>';
-                        $issueOldValue = isset($users[$issueOldValue]) ? '<span style="color:#337ab7">' . $users[$issueOldValue]['display_name'] . '@'. $users[$issueOldValue]['username'] . '</span>' : '<span>未知</span>';
+                        $issueNewValue = isset($users[$issueNewValue]) ? '<span style="color:#337ab7">' . $users[$issueNewValue]['display_name'] . '</span>' : '<span>未知</span>';
+                        $issueOldValue = isset($users[$issueOldValue]) ? '<span style="color:#337ab7">' . $users[$issueOldValue]['display_name'] . '</span>' : '<span>未知</span>';
                     } elseif ($field == 'issue_type') {
                         $issueNewValue = isset($types[$issueNewValue]) ? '<span style="color:#337ab7">' . $types[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
                         $issueOldValue = isset($types[$issueOldValue]) ? '<span style="color:#337ab7">' . $types[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';

@@ -523,19 +523,22 @@
 
                                             <div class="event-list-item-content">
                                                 <h4 class="event-list-item-title">
-                                                    <a href="/user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
+                                                    <a href="/user/profile/{{user_id}}">{{user.display_name}}</a>
                                                     <span class="event">
-                                                        <a href="javascript:void()">{{action}}</a>
+                                                        {{action}}
                                                         {{#if_eq type ''}}
-                                                            <span href="javascript:void()">{{title}}</span>
+                                                            <a href="javascript:void()">{{title}}</a>
                                                         {{/if_eq}}
                                                         {{#if_eq type 'issue'}}
-                                                            <span href="javascript:void()">{{title}}</span>
+                                                            <a href="javascript:void()">{{title}}</a>
                                                         {{/if_eq}}
                                                         {{#if_eq type 'issue_comment'}}
-                                                            <span href="javascript:void()">{{title}}</span>
+                                                            <a href="javascript:void()">{{title}}</a>
                                                         {{/if_eq}}
                                                     </span>
+                                                    <div>
+                                                        {{{content}}}
+                                                    </div>
                                                 </h4>
                                                 <time class="event-time js-time" title=""
                                                       datetime="{{time}}"
