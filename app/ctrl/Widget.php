@@ -236,6 +236,12 @@ class Widget extends BaseUserCtrl
         }
         $userId = UserAuth::getId();
         list($data['activity'], $total) = ActivityLogic::filterByIndex($userId, $page, $pageSize);
+        foreach ($data['activity'] as &$item) {
+            $item['zip_title'] = $item['title'];
+            if (mb_strlen($data['title']) > 40) {
+                $item['zip_title'] = mb_substr($item['title'], 0, 40) . '...';
+            }
+        }
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
