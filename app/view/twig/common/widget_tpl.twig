@@ -277,7 +277,7 @@
 
         <div class="event-list-item-content">
             <h4 class="event-list-item-title">
-                <a href="/user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
+                <a href="/user/profile/{{user_id}}">{{user.display_name}}</a>
                 <span class="event">
                     {{action}}
                     {{#if_eq type ''}}
@@ -299,7 +299,7 @@
                         <a href="/project/main/home/?project_id={{project_id}}">{{title}}</a>
                     {{/if_eq}}
                     <div>
-                        {{content}}
+                        {{{content}}}
                     </div>
                 </span>
             </h4>

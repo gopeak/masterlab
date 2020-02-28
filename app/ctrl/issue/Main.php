@@ -1487,6 +1487,8 @@ class Main extends BaseUserCtrl
         $fromModule = null;
         if (isset($params['from_module'])) {
             $fromModule = strtolower(trim($params['from_module']));
+        } elseif (isset($_REQUEST['from_module'])) {
+            $fromModule = strtolower(trim($_REQUEST['from_module']));
         }
 
         $actionInfo = "修改事项";
@@ -1706,30 +1708,53 @@ class Main extends BaseUserCtrl
 
         $fields = array_keys($fieldLabels);
 
-        $maps = [];
         $userModel = new UserModel();
         $users = $userModel->getAll();
-        $maps['assignee'] = $maps['assistants'] = $users;
 
         $issueTypeModel = new IssueTypeModel();
         $types = $issueTypeModel->getAll();
-        $maps['issue_type'] = $types;
 
         $issuePriorityModel = new IssuePriorityModel();
         $priorities = $issuePriorityModel->getAll();
-        $maps['priority'] = $priorities;
 
         $projectModuleModel = new ProjectModuleModel();
         $modules = $projectModuleModel->getByProject($issueOldValues['project_id'], true);
-        $maps['module'] = $modules;
 
         $issueStatusModel = new IssueStatusModel();
         $status = $issueStatusModel->getAll();
-        $maps['status'] = $status;
 
         $issueResolveModel = new IssueResolveModel();
         $resolves = $issueResolveModel->getAll();
-        $maps['resolve'] = $resolves;
+
+        $priorityColors = [
+            1 => '#ff0000',
+            2 => '#cc0000',
+            3 => '#ff0000',
+            4 => '#006600',
+            5 => '#003300',
+        ];
+
+        $statusStyles = [
+            1 => 'label label-info',
+            3 => 'label label-primary',
+            4 => 'label label-warning',
+            5 => 'label label-success',
+            6 => 'label label-success',
+            10001 => 'label label-success',
+            10002 => 'label label-info',
+            10100 => 'label label-info',
+        ];
+
+        $resolveColors = [
+            1 => '#1aaa55',
+            2 => '#db3b21',
+            3 => '#db3b21',
+            4 => '#db3b21',
+            5 => '#db3b21',
+            10000 => '#1aaa55',
+            10100 => 'color:rgba(0,0,0,0.85)',
+            10101 => 'color:rgba(0,0,0,0.85)',
+        ];
 
         $changes = [];
         foreach ($issueNewValues as $field => $issueNewValue) {
@@ -1737,17 +1762,37 @@ class Main extends BaseUserCtrl
                 $issueOldValue = $issueOldValues[$field];
                 if ($issueNewValue != $issueOldValue) {
                     if ($field == 'assignee' || $field == 'assistants') {
-                        $issueNewValue = isset($users[$issueNewValue]) ? $users[$issueNewValue]['display_name'] . '@'. $users[$issueNewValue]['username'] : '未知';
-                        $issueOldValue = isset($users[$issueOldValue]) ? $users[$issueOldValue]['display_name'] . '@'. $users[$issueOldValue]['username'] : '未知';
-                    } elseif (isset($maps[$field])) {
-                        $mapValues = $maps[$field];
-                        $issueNewValue = isset($mapValues[$issueNewValue]) ? $mapValues[$issueNewValue]['name']: '未知';
-                        $issueOldValue = isset($mapValues[$issueOldValue]) ? $mapValues[$issueOldValue]['name']: '未知';
+                        $issueNewValue = isset($users[$issueNewValue]) ? '<span style="color:#337ab7">' . $users[$issueNewValue]['display_name'] . '@'. $users[$issueNewValue]['username'] . '</span>' : '<span>未知</span>';
+                        $issueOldValue = isset($users[$issueOldValue]) ? '<span style="color:#337ab7">' . $users[$issueOldValue]['display_name'] . '@'. $users[$issueOldValue]['username'] . '</span>' : '<span>未知</span>';
+                    } elseif ($field == 'issue_type') {
+                        $issueNewValue = isset($types[$issueNewValue]) ? '<span style="color:#337ab7">' . $types[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueOldValue = isset($types[$issueOldValue]) ? '<span style="color:#337ab7">' . $types[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                    } elseif ($field == 'priority') {
+                        $newColor = $priorityColors[$issueNewValue];
+                        $oldColor = $priorityColors[$issueOldValue];
+                        $issueNewValue = isset($priorities[$issueNewValue]) ? '<span style="color:' . $newColor . '">' . $priorities[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueOldValue = isset($priorities[$issueOldValue]) ? '<span style="color:' . $oldColor . '">' . $priorities[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                    } elseif ($field == 'module') {
+                        $issueNewValue = isset($modules[$issueNewValue]) ? '<span style="color:#337ab7">' . $modules[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueOldValue = isset($modules[$issueOldValue]) ? '<span style="color:#337ab7">' . $modules[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                    } elseif ($field == 'status') {
+                        $newStyle = $statusStyles[$issueNewValue];
+                        $oldStyle = $statusStyles[$issueOldValue];
+                        $issueNewValue = isset($status[$issueNewValue]) ? '<span class="' . $newStyle . '">' . $status[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueOldValue = isset($status[$issueOldValue]) ? '<span class="' . $oldStyle . '">' . $status[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                    } elseif ($field == 'resolve') {
+                        $newColor = $resolveColors[$issueNewValue];
+                        $oldColor = $resolveColors[$issueOldValue];
+                        $issueNewValue = isset($resolves[$issueNewValue]) ? '<span style="color:' . $newColor . '">' . $resolves[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $oldColor . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                    } else {
+                        $issueNewValue = '<span style="color:#337ab7">' . $issueNewValue . '</span>';
+                        $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
                     }
 
                     $change = $fieldLabels[$field] . '：' . $issueOldValue . ' --> ' . $issueNewValue;
                     if ($field == 'summary') {
-                        $change = '标题 变更为 ' . $issueNewValue;
+                        $change = '标题 变更为 <span style="color:#337ab7">' . $issueNewValue . '</span>';
                     }
                     $changes[] = $change;
                 }

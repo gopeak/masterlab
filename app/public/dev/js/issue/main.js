@@ -555,7 +555,7 @@ var IssueMain = (function () {
                 var module_list = _issueConfig.issue_module;
                 var html = "";
                 for (var value of Object.values(module_list)) {
-                    html += `<li data-name="${value.name}" data-value="${value.project_id}"><span class="prepend-left-5">${value.name}</span></li>`;
+                    html += `<li data-name="${value.name}" data-value="${value.id}"><span class="prepend-left-5">${value.name}</span></li>`;
                 }
                 list_box.html(html);
 
