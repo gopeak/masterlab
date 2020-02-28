@@ -1450,6 +1450,7 @@ class Main extends BaseUserCtrl
         // 生成日志备注详情
         $moduleNames = [
             'issue_list' => '事项列表',
+            'issue_detail' => '事项详情',
             'gantt' => '甘特图',
             'mind' => '事项分解',
             'kanban' => '看板',
@@ -1457,13 +1458,18 @@ class Main extends BaseUserCtrl
             'backlog' => '待办事项'
         ];
 
-        $fromModule = strtolower(trim($params['from_module']));
-        $actionContent = $this->makeActionInfo($issue, $info);
-        $moduleName = '"事项"';
-        if (isset($moduleNames[$fromModule])) {
-            $moduleName = '"事项 - ' . $moduleNames[$fromModule] . '"';
+        $fromModule = null;
+        if (isset($params['from_module'])) {
+            $fromModule = strtolower(trim($params['from_module']));
         }
-        $actionInfo = " 在 {$moduleName} 模块中修改事项";
+
+        $actionInfo = "修改事项";
+        if ($fromModule && isset($moduleNames[$fromModule]) && !in_array($fromModule, ['issue_list', 'issue_detail'])) {
+            $moduleName = $moduleNames[$fromModule];
+            $actionInfo = "在 \"{$moduleName}\" 模块中修改事项";
+        }
+
+        $actionContent = $this->makeActionInfo($issue, $info);
 
         $issueType = $issue['issue_type'];
         if (isset($params['issue_type'])) {
