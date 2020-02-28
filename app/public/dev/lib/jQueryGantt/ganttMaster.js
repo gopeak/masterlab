@@ -163,7 +163,8 @@ GanttMaster.prototype.init = function (workSpace) {
     //self.editor.openFullEditor(self.currentTask,false);
       self.editor.openMasterlabEditor(self.currentTask, false);
   }).bind("openAssignmentEditor.gantt", function () {
-    self.editor.openFullEditor(self.currentTask,true);
+    //self.editor.openFullEditor(self.currentTask,true);
+    self.editor.openMasterlabEditor(self.currentTask, false);
   }).bind("addIssue.gantt", function () {
     self.addIssue();
   }).bind("openExternalEditor.gantt", function () {

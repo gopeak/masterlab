@@ -252,13 +252,15 @@ class ProjectGantt
      */
     public function recurTreeIssue(&$finalArr, &$children, &$sprintIssueArr)
     {
-        foreach ($children as $k => $row) {
-            $item = $row;
-            unset($row['children']);
-            $finalArr [] = $row;
-            $sprintIssueArr[] = $row;
-            if (count($item['children']) > 0) {
-                $this->recurTreeIssue($finalArr, $item['children'], $sprintIssueArr);
+        if(!empty($children)){
+            foreach ($children as $k => $row) {
+                $item = $row;
+                unset($row['children']);
+                $finalArr [] = $row;
+                $sprintIssueArr[] = $row;
+                if (count($item['children']) > 0) {
+                    $this->recurTreeIssue($finalArr, $item['children'], $sprintIssueArr);
+                }
             }
         }
     }

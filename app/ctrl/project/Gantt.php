@@ -548,11 +548,6 @@ class Gantt extends BaseUserCtrl
             $masterId = (int)$_POST['old_master_id'];
         }
 
-        $nextId = '0';
-        if (isset($_POST['next_id'])) {
-            $nextId = (int)$_POST['next_id'];
-        }
-
         $children = [];
         if (isset($_POST['children'])) {
             $children = $_POST['children'];
@@ -563,38 +558,32 @@ class Gantt extends BaseUserCtrl
         }
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-        $masterWeight = 0;
-        $nextWeight = 0;
         $level = 0;
-        $nextMasterId = 0;
         if ($masterId != '0') {
             $masterIssue = $issueModel->getById($masterId);
             if (!empty($masterIssue) && isset($masterIssue['master_id'])) {
                 $masterId = $masterIssue['master_id'];
                 $level = (int)$masterIssue['level'];
-                $masterWeight = $masterIssue['gant_sprint_weight'];
             }
         }
-        if ($nextId != '0') {
-            $nextIssue = $issueModel->getById($nextId);
-            if (!empty($nextIssue)) {
-                $nextWeight = $nextIssue['gant_sprint_weight'];
-                $nextMasterId = (int)$nextIssue['master_id'];
-            }
-        }
-        $weight = round(($masterWeight - $nextWeight) / 2);
 
         $currentInfo = [];
         $currentInfo['level'] = $level;
         $currentInfo['master_id'] = $masterId;
-        $currentInfo['gant_sprint_weight'] = $weight;
-        $issueModel->updateItemById($issueId, $currentInfo);
+        list($ret, $msg) = $issueModel->updateItemById($issueId, $currentInfo);
+        if(!$ret){
+            $this->ajaxFailed('操作失败,数据库执行失败：'.$msg);
+        }
+        if($masterId!='0'){
+            $issueModel->inc('have_children', $masterId, 'id');
+        }
 
         if (!empty($children)) {
             foreach ($children as $childId) {
-                $issueModel->updateItemById($childId, ['master_id' => $issueId]);
+                $childLevel = max(1,intval($level-1));
+                $issueModel->updateItemById($childId, ['level' => $childLevel,'master_id'=>$issueId]);
+                $issueModel->inc('have_children', $issueId, 'id');
             }
-            $issueModel->inc('have_children', $issueId, 'id');
         }
         if (!empty($issue['master_id']) && $issue['master_id'] != '0') {
             $issueModel->dec('have_children', $issue['master_id'], 'id');
@@ -617,11 +606,6 @@ class Gantt extends BaseUserCtrl
         if (isset($_POST['master_id'])) {
             $masterId = (int)$_POST['master_id'];
         }
-        $nextId = '0';
-        if (isset($_POST['next_id'])) {
-            $nextId = (int)$_POST['next_id'];
-        }
-
         $children = [];
         if (isset($_POST['children'])) {
             $children = $_POST['children'];
@@ -635,27 +619,10 @@ class Gantt extends BaseUserCtrl
         if (!isset($issue['id'])) {
             $this->ajaxFailed('参数错误', $_POST);
         }
-        $masterWeight = 0;
-        $nextWeight = 0;
-        if ($masterId != '0') {
-            $masterIssue = $issueModel->getById($masterId);
-            if (isset($masterIssue['gant_sprint_weight'])) {
-                $masterWeight = $masterIssue['gant_sprint_weight'];
-            }
-        }
-        if ($nextId != '0') {
-            $nextIssue = $issueModel->getById($nextId);
-            if (isset($nextIssue['gant_sprint_weight'])) {
-                $nextWeight = $nextIssue['gant_sprint_weight'];
-            }
-        }
-
-        $weight = round(($masterWeight - $nextWeight) / 2);
 
         $currentInfo = [];
         $currentInfo['level'] = max(0, (int)$issue['level'] - 1);
         $currentInfo['master_id'] = $masterId;
-        $currentInfo['gant_sprint_weight'] = $weight;
         list($ret, $msg) = $issueModel->updateItemById($issueId, $currentInfo);
         if ($ret) {
             if (!empty($children)) {
@@ -665,6 +632,9 @@ class Gantt extends BaseUserCtrl
             }
             if ($masterId != '0') {
                 $issueModel->inc('have_children', $masterId, 'id');
+            }
+            if (!empty($issue['master_id']) && $issue['master_id'] != '0') {
+                $issueModel->dec('have_children', $issue['master_id'], 'id');
             }
         } else {
             $this->ajaxFailed($msg);

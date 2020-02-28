@@ -260,10 +260,10 @@ var Gantt = (function () {
         let sprint = getObjectValue(_issueConfig.sprint,task.sprint_id);
         let start_date = timestampToDate(task.start,'Y-m-d');
         let due_date = timestampToDate(task.end,'Y-m-d');
-        if(!is_empty(sprint.start_date) && is_empty(start_date)){
+        if(!is_empty(sprint) && is_empty(start_date)){
             start_date = sprint.start_date;
         }
-        if(!is_empty(sprint.end_date) && is_empty(due_date)){
+        if(!is_empty(sprint) && is_empty(due_date)){
             due_date = sprint.end_date;
         }
         let is_start_milestone = null;
@@ -299,8 +299,8 @@ var Gantt = (function () {
             description:''
         }
         let prev_task = null;
-        if(window.ge.tasks.length>0){
-            prev_task = window.ge.tasks[window.ge.tasks.length-1];
+        if(window.ge.tasks.length>1){
+            prev_task = window.ge.tasks[window.ge.tasks.length-2];
         }
         if(!is_empty(prev_task.id)){
             params['below_id'] = prev_task.id;
@@ -326,6 +326,7 @@ var Gantt = (function () {
                             window.ge.tasks[i].syncedServer = true;
                             window.ge.tasks[i].id = resp.data;
                             window.ge.tasks[i].code = '#'+resp.data;
+                            window.ge.tasks[i].changeStatus("STATUS_DONE");
                             break;
                         }
                     }

@@ -250,7 +250,6 @@ GridEditor.prototype.bindRowEvents = function (task, taskRow) {
     }
   });
 
-
   if (this.master.permissions.canWrite || task.canWrite) {
     self.bindRowInputEvents(task, taskRow);
 
@@ -525,6 +524,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 
   //change status
   taskRow.find(".taskStatus").click(function () {
+    return;
     var el = $(this);
     var tr = el.closest("[taskid]");
     var taskId = tr.attr("taskid");
