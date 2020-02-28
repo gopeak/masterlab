@@ -1700,8 +1700,6 @@ class Main extends BaseUserCtrl
         $issueResolveModel = new IssueResolveModel();
         $resolves = $issueResolveModel->getAll();
 
-
-
         $changes = [];
         foreach ($issueNewValues as $field => $issueNewValue) {
             if (in_array($field, $fields)) {
