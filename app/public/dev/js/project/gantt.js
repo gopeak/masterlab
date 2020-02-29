@@ -471,6 +471,7 @@ var Gantt = (function () {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
         let project_id = window._cur_project_id;
+        params['project_id'] = project_id;
         var url = '/issue/main/update?issue_id='+issue_id+'project_id='+project_id+'&from_gantt=1';
         $.ajax({
             type: 'post',
@@ -801,6 +802,40 @@ var Gantt = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
+    }
+
+
+
+    Gantt.prototype.computeTaskRowDuration = function(task, start_date, due_date,rowtr){
+        let project_id = window._cur_project_id;
+        if(start_date!=='' && due_date!==''){
+            var url = '/issue/main/getDuration/?project'+project_id;
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                data: {project_id:project_id, start_date:start_date, due_date:due_date },
+                url: url,
+                success: function (resp) {
+                    auth_check(resp);
+                    if(resp.ret==="200"){
+                        //notify_error(resp.msg , resp.data);
+                        rowtr.find("[name=duration]").val(resp.data)
+                        for (var i = 0; i < window.ge.tasks.length; i++) {
+                            var tsk = window.ge.tasks[i];
+                            if (tsk.id == task.id) {
+                                window.ge.tasks[i].duration = resp.data;
+                                break;
+                            }
+                        }
+                    }else{
+                        notify_error(resp.msg , resp.data);
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        }
     }
 
 

@@ -862,7 +862,6 @@
         delete ge.gantt.zoom;
 
         var project=loadFromLocalStorage();
-
         if (!project.canWrite){
             $(".ganttButtonBar button.requireWrite").attr("disabled","true");
         }
@@ -1208,6 +1207,7 @@
                 });
             }
         }
+
 
         var holiday_laydate = laydate.render({
             elem: '#holiday_laydate'
