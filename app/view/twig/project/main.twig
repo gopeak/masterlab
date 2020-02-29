@@ -238,6 +238,18 @@
             $('.js-masterlab-filter-selector-sort').removeClass('is-active');
             $(this).addClass('is-active');
             $('#js-masterlab-selected-sort').text($(this).text());
+
+            $('#js-masterlab-project-type-tab-main').addClass("active").siblings("li").removeClass("active");
+
+            var search_key = $(this).val();
+            var search_sort = $('#project-filter-sort').val();
+            var options = {
+                list_render_id: "list_render_id",
+                list_tpl_id: "list_tpl",
+                filter_url: "/projects/fetch_all?name="+search_key+"&sort="+search_sort
+            };
+            window.$projects = new Project(options);
+            window.$projects.fetchAll();
         });
     });
 
