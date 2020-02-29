@@ -740,7 +740,7 @@ var IssueMain = (function () {
             $(".have_children").bind("click", function () {
                 if (isFloatPart) {
                     var issue_id = $(this).data('issue_id');
-                    $('#tr_subtask_' + issue_id).toggleClass('hide');
+                    $('#tr_subtask_' + issue_id).removeClass('hide');
                     IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
                 }
             });

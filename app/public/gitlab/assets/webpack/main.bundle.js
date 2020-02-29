@@ -10387,6 +10387,7 @@ THE SOFTWARE.
                                             t = gl.groupOptions,
                                             e = gl.dashboardOptions,
                                             d.isInGroupsPage() && t ? r = t[d.getGroupSlug()] : d.isInProjectPage() && c ? r = c[d.getProjectSlug()] : e && (r = e),
+                                            console.log(r)
                                             i = r.issuesPath,
                                             n = r.mrPath,
                                             o = r.name,

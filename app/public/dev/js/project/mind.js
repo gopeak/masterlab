@@ -73,7 +73,7 @@ let MindAjax = (function () {
         issue.endIsMilestone = $("#is_end_milestone").is(":checked");
 
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-        var url = '/issue/main/update';
+        var url = '/issue/main/update?from_module=mind';
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -104,7 +104,7 @@ let MindAjax = (function () {
         let self = this;
 
         let params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-        let url = '/issue/main/add';
+        let url = '/issue/main/add?&from_module=mind';
 
         $.ajax({
             type: 'post',
@@ -187,7 +187,7 @@ let MindAjax = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url + "issue/main/update",
+            url: root_url + "issue/main/update?from_module=mind",
             data: post_data,
             success: function (resp) {
                 loading.closeAll();
@@ -397,7 +397,7 @@ let MindAjax = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/add?source=mind&project="+window._cur_project_id,
+            url: "/issue/main/add?source=mind&project="+window._cur_project_id+'&from_module=mind',
             data:  {params:post_data},
             single: 'single',
             mine: true, // 当single重复时用自身并放弃之前的ajax请求
@@ -437,7 +437,7 @@ let MindAjax = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/update?project="+window._cur_project_id,
+            url: "/issue/main/update?project="+window._cur_project_id+'&from_module=mind',
             data: {params:post_data,issue_id:issue_id},
             success: function (resp) {
                 auth_check(resp);

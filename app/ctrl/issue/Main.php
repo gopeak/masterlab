@@ -154,7 +154,7 @@ class Main extends BaseUserCtrl
         $data['otherFavFilters'] = $otherFavFilters;
 
         // 获取当前用户未解决的数量
-        $data['unResolveCount'] =  IssueFilterLogic::getUnResolveCountByAssigneeProject(UserAuth::getId(), $data['project_id']);
+        $data['unResolveCount'] = IssueFilterLogic::getUnResolveCountByAssigneeProject(UserAuth::getId(), $data['project_id']);
 
         // 描述模板
         $descTplModel = new IssueDescriptionTemplateModel();
@@ -1104,12 +1104,12 @@ class Main extends BaseUserCtrl
 
         if (isset($_GET['from_gantt']) && $_GET['from_gantt'] == '1') {
             if (isset($params['is_start_milestone'])) {
-                $info['is_start_milestone'] = (int)$params['is_start_milestone']>0?1:0;
+                $info['is_start_milestone'] = (int)$params['is_start_milestone'] > 0 ? 1 : 0;
             } else {
                 $info['is_start_milestone'] = 0;
             }
             if (isset($params['is_end_milestone'])) {
-                $info['is_end_milestone'] = (int)$params['is_end_milestone']>0?1:0;
+                $info['is_end_milestone'] = (int)$params['is_end_milestone'] > 0 ? 1 : 0;
             } else {
                 $info['is_end_milestone'] = 0;
             }
@@ -1120,16 +1120,16 @@ class Main extends BaseUserCtrl
                 $belowIssueId = (int)$params['below_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $belowIssue = $model->getRow("gant_sprint_weight, sprint",['id'=>$belowIssueId]);
+                $belowIssue = $model->getRow("gant_sprint_weight, sprint", ['id' => $belowIssueId]);
                 $fieldWeight = 'gant_sprint_weight';
                 $aboveWeight = (int)$belowIssue[$fieldWeight];
                 $sprintId = $belowIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
-                $nextWeight = (int)$model->db->getOne( $sql );
-                if(empty($nextWeight)){
+                $nextWeight = (int)$model->db->getOne($sql);
+                if (empty($nextWeight)) {
                     $nextWeight = 0;
                 }
-                $info[$fieldWeight] =  max(0,$nextWeight+intval(($aboveWeight-$nextWeight)/2));
+                $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
                 unset($model, $belowIssue);
             }
             // 如果是在某一事项之上,排序值是两个事项之间二分之一
@@ -1137,17 +1137,17 @@ class Main extends BaseUserCtrl
                 $aboveIssueId = (int)$params['above_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $aboveIssue = $model->getRow("gant_sprint_weight, sprint",['id'=>$aboveIssueId]);
+                $aboveIssue = $model->getRow("gant_sprint_weight, sprint", ['id' => $aboveIssueId]);
                 $fieldWeight = 'gant_sprint_weight';
                 $belowWeight = (int)$aboveIssue[$fieldWeight];
                 $sprintId = $aboveIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where $fieldWeight>$belowWeight  AND sprint=$sprintId Order by {$fieldWeight} DESC limit 1";
                 // echo $sql;
-                $prevWeight = (int)$model->db->getOne( $sql );
-                if(empty($prevWeight)){
+                $prevWeight = (int)$model->db->getOne($sql);
+                if (empty($prevWeight)) {
                     $prevWeight = 0;
                 }
-                $info[$fieldWeight] = max(0, $belowWeight+intval(($prevWeight-$belowWeight)/2));
+                $info[$fieldWeight] = max(0, $belowWeight + intval(($prevWeight - $belowWeight) / 2));
                 unset($model, $belowIssue);
             }
             //print_r($info);
@@ -1161,20 +1161,37 @@ class Main extends BaseUserCtrl
         $model = new IssueModel();
         $table = $model->getTable();
         $sprintId = 0;
-        if(isset($params['sprint'])){
+        if (isset($params['sprint'])) {
             $sprintId = intval($params['sprint']);
         }
         if (@empty($params['above_id']) && @empty($params['below_id'])) {
             $model = new IssueModel();
-            $sql = "Select {$fieldWeight} From {$table} Where   sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
-            $minWeight = (int)$model->db->getOne( $sql );
-            if($minWeight>(ProjectGantt::$offset * 2) ){
-                $info[$fieldWeight] = $minWeight- ProjectGantt::$offset;
-            }else{
-                $info[$fieldWeight] = max(0, intval($minWeight/2));
+            if (isset($params['master_issue_id']) && !empty($params['master_issue_id'])) {
+                // 如果是子任务
+                $masterId = (int)$params['master_issue_id'];
+                $sql = "Select {$fieldWeight} From {$table} Where master_id={$masterId}  sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
+                $prevWeight = (int)$model->db->getOne($sql);
+                $sql = "Select {$fieldWeight} From {$table} Where $prevWeight>{$fieldWeight}  sprint={$sprintId} Order by {$fieldWeight} DESC limit 1";
+                $nextWeight = (int)$model->db->getOne($sql);
+                if (($prevWeight - $nextWeight) > (ProjectGantt::$offset * 2)) {
+                    $info[$fieldWeight] = $prevWeight - ProjectGantt::$offset;
+                } else {
+                    $info[$fieldWeight] = max(0, intval($prevWeight-($prevWeight - $nextWeight) / 2));
+                }
+            } else {
+                // 如果是普通任务
+                $sql = "Select {$fieldWeight} From {$table} Where   sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
+                $minWeight = (int)$model->db->getOne($sql);
+                if ($minWeight > (ProjectGantt::$offset * 2)) {
+                    $info[$fieldWeight] = $minWeight - ProjectGantt::$offset;
+                } else {
+                    $info[$fieldWeight] = max(0, intval($minWeight / 2));
+                }
             }
+
         }
     }
+
     /**
      * 取新增或编辑时提交上来的事项内容
      * @param array $params

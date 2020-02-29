@@ -306,7 +306,7 @@ var Gantt = (function () {
             params['below_id'] = prev_task.id;
         }
 
-        var url = '/issue/main/add?from_gantt=1';
+        var url = '/issue/main/add?from_gantt=1&from_module=gantt';
 
         $.ajax({
             type: 'post',
@@ -346,7 +346,7 @@ var Gantt = (function () {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-        var url = '/issue/main/add?from_gantt=1';
+        var url = '/issue/main/add?from_gantt=1&from_module=gantt';
 
         $.ajax({
             type: 'post',
@@ -441,7 +441,7 @@ var Gantt = (function () {
             //closeBlackPopup();
         }
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-        var url = '/issue/main/update?from_gantt=1';
+        var url = '/issue/main/update?from_gantt=1&from_module=gantt';
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -472,7 +472,7 @@ var Gantt = (function () {
         var self = window.ge;
         let project_id = window._cur_project_id;
         params['project_id'] = project_id;
-        var url = '/issue/main/update?issue_id='+issue_id+'project_id='+project_id+'&from_gantt=1';
+        var url = '/issue/main/update?issue_id='+issue_id+'project_id='+project_id+'&from_gantt=1&from_module=gantt';
         $.ajax({
             type: 'post',
             dataType: "json",
