@@ -90,6 +90,24 @@ class Projects extends BaseUserCtrl
      */
     public function fetchAll($typeId = 0)
     {
+        $searchSortArr = [
+            'latest_activity_desc' => ['issue_update_time', 'desc'],
+            'created_desc' => ['create_time', 'desc'],
+            'name_asc' => ['name', 'asc'],
+        ];
+        $searchKey = '';
+        if (isset($_GET['name']) && !empty($_GET['name'])) {
+            $searchKey = $_GET['name'];
+        }
+        $searchOrderBy = 'issue_update_time';
+        $searchSort = 'desc';
+        if (isset($_GET['sort']) && !empty($_GET['sort'])) {
+            if (array_key_exists($_GET['sort'], $searchSortArr)) {
+                $searchOrderBy = $searchSortArr[$_GET['sort']][0];
+                $searchSort = $searchSortArr[$_GET['sort']][1];
+            }
+        }
+
         $userId = UserAuth::getId();
         $typeId = intval($typeId);
         $isAdmin = false;
@@ -103,11 +121,14 @@ class Projects extends BaseUserCtrl
         $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
         $projectModel = new ProjectModel();
+
         if ($typeId) {
             $projects = $projectModel->filterByType($typeId, false);
         } else {
-            $projects = $projectModel->getAll(false);
+            //$projects = $projectModel->getAll(false);
+            $projects = $projectModel->filterByNameOrKey($searchKey, $searchOrderBy, $searchSort);
         }
+
 
         if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $isAdmin = true;

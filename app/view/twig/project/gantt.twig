@@ -366,7 +366,7 @@
 </div>
 
 <div class="modal" id="modal-create-issue" style=" padding-right: 16px;">
-    <form autocomplete="off" class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="create_issue" action="/issue/main/add" accept-charset="UTF-8" method="post">
+    <form autocomplete="off" class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="create_issue" action="/issue/main/add?&from_module=mind" accept-charset="UTF-8" method="post">
         <div class="modal-dialog issue-modal-dialog" style="width: 900px;">
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
@@ -862,7 +862,6 @@
         delete ge.gantt.zoom;
 
         var project=loadFromLocalStorage();
-
         if (!project.canWrite){
             $(".ganttButtonBar button.requireWrite").attr("disabled","true");
         }
@@ -1208,6 +1207,7 @@
                 });
             }
         }
+
 
         var holiday_laydate = laydate.render({
             elem: '#holiday_laydate'

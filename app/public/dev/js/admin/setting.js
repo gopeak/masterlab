@@ -509,32 +509,6 @@ $(function () {
         });
     });
 
-    $("#btn-permission_update").click(function () {
-        var method = 'post';
-        var params = $('#form_permission_edit').serialize();
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: true,
-            url: "/admin/system/update_perm",
-            data: params,
-            success: function (resp) {
-
-                auth_check(resp);
-                if (resp.ret == 200) {
-                    notify_success("执行成功");
-                    $("#modal-permission_edit").modal('hide');
-                    //window.location.reload();
-                } else {
-                    notify_error(resp.msg, resp.data);
-                }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    });
-
     $("#btn-update").click(function () {
         var method = 'post';
         $.ajax({

@@ -11,6 +11,7 @@ use main\app\classes\IssueLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\NotifyLogic;
 use main\app\classes\PermissionGlobal;
+use main\app\classes\ProjectGantt;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
@@ -153,7 +154,7 @@ class Main extends BaseUserCtrl
         $data['otherFavFilters'] = $otherFavFilters;
 
         // 获取当前用户未解决的数量
-        $data['unResolveCount'] =  IssueFilterLogic::getUnResolveCountByAssigneeProject(UserAuth::getId(), $data['project_id']);
+        $data['unResolveCount'] = IssueFilterLogic::getUnResolveCountByAssigneeProject(UserAuth::getId(), $data['project_id']);
 
         // 描述模板
         $descTplModel = new IssueDescriptionTemplateModel();
@@ -1048,8 +1049,6 @@ class Main extends BaseUserCtrl
             $model = new IssueLabelDataModel();
             $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
         }
-
-
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
@@ -1105,33 +1104,32 @@ class Main extends BaseUserCtrl
 
         if (isset($_GET['from_gantt']) && $_GET['from_gantt'] == '1') {
             if (isset($params['is_start_milestone'])) {
-                $info['is_start_milestone'] = (int)$params['is_start_milestone']>0?1:0;
+                $info['is_start_milestone'] = (int)$params['is_start_milestone'] > 0 ? 1 : 0;
             } else {
                 $info['is_start_milestone'] = 0;
             }
             if (isset($params['is_end_milestone'])) {
-                $info['is_end_milestone'] = (int)$params['is_end_milestone']>0?1:0;
+                $info['is_end_milestone'] = (int)$params['is_end_milestone'] > 0 ? 1 : 0;
             } else {
                 $info['is_end_milestone'] = 0;
             }
             $projectGanttModel = new ProjectGanttSettingModel();
             $projectId = $params['project_id'];
-            $ganttSetting = $projectGanttModel->getByProject($projectId);
             // 如果是在某一事项之下,排序值是两个事项之间二分之一
             if (isset($params['below_id']) && !empty($params['below_id'])) {
                 $belowIssueId = (int)$params['below_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $belowIssue = $model->getRow("gant_sprint_weight, sprint",['id'=>$belowIssueId]);
+                $belowIssue = $model->getRow("gant_sprint_weight, sprint", ['id' => $belowIssueId]);
                 $fieldWeight = 'gant_sprint_weight';
                 $aboveWeight = (int)$belowIssue[$fieldWeight];
                 $sprintId = $belowIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
-                $nextWeight = (int)$model->db->getOne( $sql );
-                if(empty($nextWeight)){
+                $nextWeight = (int)$model->db->getOne($sql);
+                if (empty($nextWeight)) {
                     $nextWeight = 0;
                 }
-                $info[$fieldWeight] =  max(0,$nextWeight+intval(($aboveWeight-$nextWeight)/2));
+                $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
                 unset($model, $belowIssue);
             }
             // 如果是在某一事项之上,排序值是两个事项之间二分之一
@@ -1139,20 +1137,59 @@ class Main extends BaseUserCtrl
                 $aboveIssueId = (int)$params['above_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $aboveIssue = $model->getRow("gant_sprint_weight, sprint",['id'=>$aboveIssueId]);
+                $aboveIssue = $model->getRow("gant_sprint_weight, sprint", ['id' => $aboveIssueId]);
                 $fieldWeight = 'gant_sprint_weight';
                 $belowWeight = (int)$aboveIssue[$fieldWeight];
                 $sprintId = $aboveIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where $fieldWeight>$belowWeight  AND sprint=$sprintId Order by {$fieldWeight} DESC limit 1";
                 // echo $sql;
-                $prevWeight = (int)$model->db->getOne( $sql );
-                if(empty($prevWeight)){
+                $prevWeight = (int)$model->db->getOne($sql);
+                if (empty($prevWeight)) {
                     $prevWeight = 0;
                 }
-                $info[$fieldWeight] = max(0, $belowWeight+intval(($prevWeight-$belowWeight)/2));
+                $info[$fieldWeight] = max(0, $belowWeight + intval(($prevWeight - $belowWeight) / 2));
                 unset($model, $belowIssue);
             }
             //print_r($info);
+        }
+    }
+
+    private function initAddGanttWeight($params = [], &$info)
+    {
+        // 如果是不在甘特图提交的
+        $fieldWeight = 'gant_sprint_weight';
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sprintId = 0;
+        if (isset($params['sprint'])) {
+            $sprintId = intval($params['sprint']);
+        }
+        if (@empty($params['above_id']) && @empty($params['below_id'])) {
+            $model = new IssueModel();
+            if (isset($params['master_issue_id']) && !empty($params['master_issue_id'])) {
+                // 如果是子任务
+                $masterId = (int)$params['master_issue_id'];
+                $sql = "Select {$fieldWeight} From {$table} Where master_id={$masterId}  AND sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
+                $prevWeight = (int)$model->db->getOne($sql);
+                $sql = "Select {$fieldWeight} From {$table} Where $prevWeight>{$fieldWeight} AND sprint={$sprintId} Order by {$fieldWeight} DESC limit 1";
+                //echo $sql;
+                $nextWeight = (int)$model->db->getOne($sql);
+                if (($prevWeight - $nextWeight) > (ProjectGantt::$offset * 2)) {
+                    $info[$fieldWeight] = $prevWeight - ProjectGantt::$offset;
+                } else {
+                    $info[$fieldWeight] = max(0, intval($prevWeight-($prevWeight - $nextWeight) / 2));
+                }
+            } else {
+                // 如果是普通任务
+                $sql = "Select {$fieldWeight} From {$table} Where   sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
+                $minWeight = (int)$model->db->getOne($sql);
+                if ($minWeight > (ProjectGantt::$offset * 2)) {
+                    $info[$fieldWeight] = $minWeight - ProjectGantt::$offset;
+                } else {
+                    $info[$fieldWeight] = max(0, intval($minWeight / 2));
+                }
+            }
+
         }
     }
 
@@ -1279,6 +1316,7 @@ class Main extends BaseUserCtrl
         }
         $this->getGanttInfo($params, $info);
 
+        $this->initAddGanttWeight($params, $info);
         // print_r($info);
         return $info;
     }
@@ -1461,6 +1499,8 @@ class Main extends BaseUserCtrl
         $fromModule = null;
         if (isset($params['from_module'])) {
             $fromModule = strtolower(trim($params['from_module']));
+        } elseif (isset($_REQUEST['from_module'])) {
+            $fromModule = strtolower(trim($_REQUEST['from_module']));
         }
 
         $actionInfo = "修改事项";
@@ -1680,30 +1720,23 @@ class Main extends BaseUserCtrl
 
         $fields = array_keys($fieldLabels);
 
-        $maps = [];
         $userModel = new UserModel();
         $users = $userModel->getAll();
-        $maps['assignee'] = $maps['assistants'] = $users;
 
         $issueTypeModel = new IssueTypeModel();
         $types = $issueTypeModel->getAll();
-        $maps['issue_type'] = $types;
 
         $issuePriorityModel = new IssuePriorityModel();
         $priorities = $issuePriorityModel->getAll();
-        $maps['priority'] = $priorities;
 
         $projectModuleModel = new ProjectModuleModel();
         $modules = $projectModuleModel->getByProject($issueOldValues['project_id'], true);
-        $maps['module'] = $modules;
 
         $issueStatusModel = new IssueStatusModel();
         $status = $issueStatusModel->getAll();
-        $maps['status'] = $status;
 
         $issueResolveModel = new IssueResolveModel();
         $resolves = $issueResolveModel->getAll();
-        $maps['resolve'] = $resolves;
 
         $changes = [];
         foreach ($issueNewValues as $field => $issueNewValue) {
@@ -1711,17 +1744,40 @@ class Main extends BaseUserCtrl
                 $issueOldValue = $issueOldValues[$field];
                 if ($issueNewValue != $issueOldValue) {
                     if ($field == 'assignee' || $field == 'assistants') {
-                        $issueNewValue = isset($users[$issueNewValue]) ? $users[$issueNewValue]['display_name'] . '@'. $users[$issueNewValue]['username'] : '未知';
-                        $issueOldValue = isset($users[$issueOldValue]) ? $users[$issueOldValue]['display_name'] . '@'. $users[$issueOldValue]['username'] : '未知';
-                    } elseif (isset($maps[$field])) {
-                        $mapValues = $maps[$field];
-                        $issueNewValue = isset($mapValues[$issueNewValue]) ? $mapValues[$issueNewValue]['name']: '未知';
-                        $issueOldValue = isset($mapValues[$issueOldValue]) ? $mapValues[$issueOldValue]['name']: '未知';
+                        $issueNewValue = isset($users[$issueNewValue]) ? '<span style="color:#337ab7">' . $users[$issueNewValue]['display_name'] . '</span>' : '<span>未分配</span>';
+                        $issueOldValue = isset($users[$issueOldValue]) ? '<span style="color:#337ab7">' . $users[$issueOldValue]['display_name'] . '</span>' : '<span>未分配</span>';
+                    } elseif ($field == 'issue_type') {
+                        $issueNewValue = isset($types[$issueNewValue]) ? '<span style="color:#337ab7">' . $types[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($types[$issueOldValue]) ? '<span style="color:#337ab7">' . $types[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
+                    } elseif ($field == 'priority') {
+                        $issueNewValue = isset($priorities[$issueNewValue]) ? '<span style="color:' . $priorities[$issueNewValue]['status_color'] . '">' . $priorities[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($priorities[$issueOldValue]) ? '<span style="color:' . $priorities[$issueOldValue]['status_color'] . '">' . $priorities[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
+                    } elseif ($field == 'module') {
+                        $issueNewValue = isset($modules[$issueNewValue]) ? '<span style="color:#337ab7">' . $modules[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($modules[$issueOldValue]) ? '<span style="color:#337ab7">' . $modules[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
+                    } elseif ($field == 'status') {
+                        $issueNewValue = isset($status[$issueNewValue]) ? '<span class="label label-' . $status[$issueNewValue]['color'] . '">' . $status[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($status[$issueOldValue]) ? '<span class="label label-' . $status[$issueOldValue]['color'] . '">' . $status[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
+                    } elseif ($field == 'resolve') {
+                        $issueNewValue = isset($resolves[$issueNewValue]) ? '<span style="color:' . $resolves[$issueNewValue]['color'] . '">' . $resolves[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $resolves[$issueOldValue]['color'] . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
+                    } elseif ($field == 'start_date' || $field == 'due_date') {
+                        $issueNewValue = trim($issueNewValue);
+                        $issueNewValue = $issueNewValue ? '<span style="color:#337ab7">' . $issueNewValue . '</span>' : '<span>无</span>';
+
+                        if ($issueOldValue && ($issueOldValue != '0000-00-00')) {
+                            $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
+                        } else {
+                            $issueOldValue = '<span>无</span>';
+                        }
+                    } else {
+                        $issueNewValue = '<span style="color:#337ab7">' . $issueNewValue . '</span>';
+                        $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
                     }
 
                     $change = $fieldLabels[$field] . '：' . $issueOldValue . ' --> ' . $issueNewValue;
                     if ($field == 'summary') {
-                        $change = '标题 变更为 ' . $issueNewValue;
+                        $change = '标题 变更为 <span style="color:#337ab7">' . $issueNewValue . '</span>';
                     }
                     $changes[] = $change;
                 }

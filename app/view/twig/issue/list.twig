@@ -1635,7 +1635,7 @@
             {% verbatim %}
 						<script type="text/html" id="list_tpl">
 							{{#issues}}
-								<tr class="tree-item" data-id="{{id}}" data-summary="{{summary}}">
+								<tr class="tree-item " data-id="{{id}}"  data-have_children="{{have_children}}"  data-summary="{{summary}}">
 									<td class="width_6">
 										<div class="checkbox">
 											<label>
@@ -1709,9 +1709,10 @@
 
 											{{#if_eq have_children '0'}}
 												{{^}}
-												<a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}" class="have_children prepend-left-5 has-tooltip" data-original-title="该事项拥有{{have_children}}项子任务">
-													查看子任务
-													<span class="badge">{{have_children}}</span>
+												<a href="#" style="color:#FF33FF" data-id="{{id}}" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
+												 data-have_children="{{have_children}}"
+												 class="have_children prepend-left-5 has-tooltip" data-original-title="该事项拥有{{have_children}}项子任务">
+													<span class="badge">{{have_children}}</span>子任务
 												</a>
 											{{/if_eq}}
 
@@ -1869,7 +1870,7 @@
 								{{#if_eq have_children '0'}}
 
 									{{else}}
-										<tr id="tr_subtask_{{id}}" class='pop_subtack hide' data-master_id="{{master_id}}">
+										<tr id="tr_subtask_{{id}}" class='pop_subtack hide' data-master_id="{{id}}">
 											<td colspan="12">
 												<div class="td-block">
 													<h5>子任务:</h5>
@@ -2066,22 +2067,6 @@
 										</div>
 									</div>
 								</div>
-
-
-								<!--新增一个tr当他们点击子【更多子任务】的时候-->
-								<!--{{#if_eq have_children '0'}}
-																																
-																																                {{else}}
-																																                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">
-																																                        <h5>子任务:</h5>
-																																                        <div class="event-body">
-																																                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">
-																																
-																																                            </ul>
-																																                        </div>
-																																                    </div>
-																																                {{/if_eq}}-->
-
 							{{/issues}}
 
 						</script>
@@ -2633,7 +2618,8 @@
                     // $('.textarea-tips').addClass('hide');
                     });
 
-                    var _isTable = $("#list_render_id").length;
+                    let el_list_render_id = $('#list_render_id');
+                    var _isTable = el_list_render_id.length;
 
                     $(document).on('click', '.detail-pager .previous:not(".disabled")', function () {
                         IssueMain.prototype.prevIssueItem();
@@ -2643,27 +2629,21 @@
                         IssueMain.prototype.nextIssueItem();
                     });
 
-                    // 左侧菜单的内容
-                    $('#list_render_id').on('click', function (e) {
+                    // 点击事件，以及左侧菜单的内容
+                    el_list_render_id.on('click', function (e) {
                         $('#list_render_id tr.active').removeClass('active');
                         if ($(e.target).attr('href') && $(e.target).parent().hasClass('show-tooltip')) {
-                            var dataId = $(e.target).parent().parent().attr('data-id');
                             $(e.target).parent().parent().addClass('active');
-
-                            /*if (isFloatPart) {
-                                showFloatDetail(dataId, true);
-                                return false;
-                            }*/
                         } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
-                            $(e.target).parent().next().removeClass('hide');
+                            //$(e.target).parent().next().removeClass('hide');
                             $(e.target).parent().addClass('active');
                         } else if ($(e.target).parent().next().hasClass('pop_subtack')) {
-                            $(e.target).parent().next().addClass('hide');
+                            //$(e.target).parent().next().addClass('hide');
                             $(e.target).parent().removeClass('active');
                         }
                     });
 
-                    $("#list_render_id").on("click", ".tree-item", function() {
+                    el_list_render_id.on("click", ".tree-item", function() {
                         if (isFloatPart) {
                             var dataId = $(this).data("id");
                             var dataSummary = $(this).data("summary") || "";
@@ -2671,6 +2651,14 @@
                             showFloatDetail(dataId, dataSummary);
                             
                             return false;
+                        }else{
+                            let have_children = 0;
+                            var issue_id = $(this).data('id');
+                            $('#tr_subtask_' + issue_id).toggleClass('hide');
+                            have_children = $(this).data('have_children');
+                            if( have_children>0){
+                                IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                            }
                         }
                     });
 

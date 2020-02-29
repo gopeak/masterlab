@@ -207,11 +207,19 @@ var IssueDetail = (function () {
                 }
 
                 $('.allow_update_status').bind('click', function () {
-                    IssueDetail.prototype.updateIssueStatus(id, $(this).data('status_id'));
+                    let status_id = $(this).data('status_id');
+                    let text = $(this).data("name");
+                    let color = $(this).data("color");
+                    let $self = $('#detail_status');
+                    IssueDetail.prototype.updateIssueStatus(id, $(this).data('status_id'), $self, text, color);
                 });
 
                 $('.allow_update_resolve').bind('click', function () {
-                    IssueDetail.prototype.updateIssueResolve(id, $(this).data('resolve_id'));
+                    let resolve_id = $(this).data('resolve_id');
+                    let text = $(this).data("name");
+                    let color = $(this).data("color");
+                    let $self = $('#detail_resolve');
+                    IssueDetail.prototype.updateIssueResolve(id, resolve_id, $self, text, color);
                 });
                 var follow_action = '';
                 if (_edit_issue.followed == '0') {

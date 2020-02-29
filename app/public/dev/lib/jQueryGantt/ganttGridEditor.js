@@ -184,6 +184,7 @@ GridEditor.prototype.refreshTaskRow = function (task) {
   row.find("[status]").attr("status", task.status);
 
   row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
+  row.find("[name=duration]").attr('readonly',true);
   row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true);
   row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
   row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) ); // called on dates only because for other field is called on focus event
@@ -325,17 +326,43 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           inp.val(inp.getOldValue());
 
         } else {
-          var row = inp.closest("tr");
-          var taskId = row.attr("taskId");
-          var task = self.master.getTask(taskId);
+            var row = inp.closest("tr");
+            var taskId = row.attr("taskId");
+            var task = self.master.getTask(taskId);
 
-          var leavingField = inp.prop("name");
-          var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
-          //console.debug("resynchDates",new Date(dates.start), new Date(dates.end),dates.duration)
-          //update task from editor
-          self.master.beginTransaction();
-          self.master.changeTaskDates(task, dates.start, dates.end);
-          self.master.endTransaction();
+            var leavingField = inp.prop("name");
+            console.log(leavingField,inp.val(),task);
+
+            var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
+            console.log('dates:',dates);
+            // console.debug("resynchDates",new Date(dates.start), new Date(dates.end),dates.duration)
+           //update task from editor
+            let params ={}
+            if(leavingField==='start'){
+                params = {start_date:inp.val().replace(/\//g,'-')};
+                let start_date = inp.val().replace(/\//g,'-');
+                let due_date = timestampToDate(task.end);
+                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row);
+            }
+            if(leavingField==='end'){
+                params = {due_date:inp.val().replace(/\//g,'-')};
+                let start_date = timestampToDate(task.start);
+                let due_date = inp.val().replace(/\//g,'-');
+                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row);
+            }
+            window.$_gantAjax.updateIssue(task.id,params);
+
+            self.master.beginTransaction();
+            try{
+                self.master.changeTaskDates(task, dates.start, dates.end);
+                self.master.endTransaction();
+            }catch (e) {
+                console.log(e.name,e.message);
+                self.master.endTransaction();
+            }
+
+
+
           inp.updateOldValue(); //in order to avoid multiple call if nothing changed
         }
       }
@@ -404,18 +431,17 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           }
 
           if (oneFailed){
-            task.changeStatus("STATUS_FAILED")
+            // task.changeStatus("STATUS_FAILED")
           } else if (oneUndefined){
-            task.changeStatus("STATUS_UNDEFINED")
+            // task.changeStatus("STATUS_UNDEFINED")
           } else if (oneActive){
-            //task.changeStatus("STATUS_SUSPENDED")
-            task.changeStatus("STATUS_WAITING")
+            // task.changeStatus("STATUS_WAITING")
           } else  if (oneSuspended){
-            task.changeStatus("STATUS_SUSPENDED")
+            // task.changeStatus("STATUS_SUSPENDED")
           } else  if (oneWaiting){
-            task.changeStatus("STATUS_WAITING")
+            // task.changeStatus("STATUS_WAITING")
           } else {
-            task.changeStatus("STATUS_ACTIVE")
+            // task.changeStatus("STATUS_ACTIVE")
           }
             self.master.changeTaskDeps(task); //dates recomputation from dependencies
             var params = {depends:task.depends};
@@ -424,8 +450,9 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
         }
 
       } else if (field == "duration") {
-        var dates = resynchDates(el, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
-        self.master.changeTaskDates(task, dates.start, dates.end);
+        //var dates = resynchDates(el, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
+       // self.master.changeTaskDates(task, dates.start, dates.end);
+          alert('不能修改duration');
 
       } else if (field == "name" && el.val() == "") { // remove unfilled task
         self.master.deleteCurrentTask(taskId);

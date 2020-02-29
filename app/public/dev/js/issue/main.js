@@ -438,7 +438,7 @@ var IssueMain = (function () {
                 }
             };
             $('#ampagination-bootstrap').bootstrapPaginator(options);
-            console.log(success);
+            //console.log(success);
             if (typeof (success) != 'undefined' && typeof (success) === "function") {
                 success(resp.data);
             }
@@ -542,9 +542,10 @@ var IssueMain = (function () {
                 list_box.slideDown(100);
 
                 var module_list = _issueConfig.issue_module;
+                //console.log(module_list);
                 var html = "";
                 for (var value of Object.values(module_list)) {
-                    html += `<li data-name="${value.name}" data-value="${value.project_id}"><span class="prepend-left-5">${value.name}</span></li>`;
+                    html += `<li data-name="${value.name}" data-value="${value.k}"><span class="prepend-left-5">${value.name}</span></li>`;
                 }
                 list_box.html(html);
 
@@ -737,9 +738,11 @@ var IssueMain = (function () {
 
 
             $(".have_children").bind("click", function () {
-                var issue_id = $(this).data('issue_id');
-                $('#tr_subtask_' + issue_id).toggleClass('hide');
-                IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                if (isFloatPart) {
+                    var issue_id = $(this).data('issue_id');
+                    $('#tr_subtask_' + issue_id).removeClass('hide');
+                    IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                }
             });
 
             $("#btn-join_sprint").bind("click", function () {
