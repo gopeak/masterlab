@@ -122,15 +122,13 @@ class Projects extends BaseUserCtrl
 
         $projectModel = new ProjectModel();
 
-        if (!empty($searchKey)) {
-            $projects = $projectModel->filterByNameOrKey($searchKey, $searchOrderBy, $searchSort);
+        if ($typeId) {
+            $projects = $projectModel->filterByType($typeId, false);
         } else {
-            if ($typeId) {
-                $projects = $projectModel->filterByType($typeId, false);
-            } else {
-                $projects = $projectModel->getAll(false);
-            }
+            //$projects = $projectModel->getAll(false);
+            $projects = $projectModel->filterByNameOrKey($searchKey, $searchOrderBy, $searchSort);
         }
+
 
         if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $isAdmin = true;
