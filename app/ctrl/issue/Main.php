@@ -11,6 +11,7 @@ use main\app\classes\IssueLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\NotifyLogic;
 use main\app\classes\PermissionGlobal;
+use main\app\classes\ProjectGantt;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
@@ -1048,8 +1049,6 @@ class Main extends BaseUserCtrl
             $model = new IssueLabelDataModel();
             $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
         }
-
-
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
@@ -1116,7 +1115,6 @@ class Main extends BaseUserCtrl
             }
             $projectGanttModel = new ProjectGanttSettingModel();
             $projectId = $params['project_id'];
-            $ganttSetting = $projectGanttModel->getByProject($projectId);
             // 如果是在某一事项之下,排序值是两个事项之间二分之一
             if (isset($params['below_id']) && !empty($params['below_id'])) {
                 $belowIssueId = (int)$params['below_id'];
@@ -1156,6 +1154,27 @@ class Main extends BaseUserCtrl
         }
     }
 
+    private function initAddGanttWeight($params = [], &$info)
+    {
+        // 如果是不在甘特图提交的
+        $fieldWeight = 'gant_sprint_weight';
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sprintId = 0;
+        if(isset($params['sprint'])){
+            $sprintId = intval($params['sprint']);
+        }
+        if (@empty($params['above_id']) && @empty($params['below_id'])) {
+            $model = new IssueModel();
+            $sql = "Select {$fieldWeight} From {$table} Where   sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
+            $minWeight = (int)$model->db->getOne( $sql );
+            if($minWeight>(ProjectGantt::$offset * 2) ){
+                $info[$fieldWeight] = $minWeight- ProjectGantt::$offset;
+            }else{
+                $info[$fieldWeight] = max(0, intval($minWeight/2));
+            }
+        }
+    }
     /**
      * 取新增或编辑时提交上来的事项内容
      * @param array $params
@@ -1279,6 +1298,7 @@ class Main extends BaseUserCtrl
         }
         $this->getGanttInfo($params, $info);
 
+        $this->initAddGanttWeight($params, $info);
         // print_r($info);
         return $info;
     }
@@ -1706,23 +1726,32 @@ class Main extends BaseUserCtrl
                 $issueOldValue = $issueOldValues[$field];
                 if ($issueNewValue != $issueOldValue) {
                     if ($field == 'assignee' || $field == 'assistants') {
-                        $issueNewValue = isset($users[$issueNewValue]) ? '<span style="color:#337ab7">' . $users[$issueNewValue]['display_name'] . '</span>' : '<span>未知</span>';
-                        $issueOldValue = isset($users[$issueOldValue]) ? '<span style="color:#337ab7">' . $users[$issueOldValue]['display_name'] . '</span>' : '<span>未知</span>';
+                        $issueNewValue = isset($users[$issueNewValue]) ? '<span style="color:#337ab7">' . $users[$issueNewValue]['display_name'] . '</span>' : '<span>未分配</span>';
+                        $issueOldValue = isset($users[$issueOldValue]) ? '<span style="color:#337ab7">' . $users[$issueOldValue]['display_name'] . '</span>' : '<span>未分配</span>';
                     } elseif ($field == 'issue_type') {
-                        $issueNewValue = isset($types[$issueNewValue]) ? '<span style="color:#337ab7">' . $types[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
-                        $issueOldValue = isset($types[$issueOldValue]) ? '<span style="color:#337ab7">' . $types[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueNewValue = isset($types[$issueNewValue]) ? '<span style="color:#337ab7">' . $types[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($types[$issueOldValue]) ? '<span style="color:#337ab7">' . $types[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
                     } elseif ($field == 'priority') {
-                        $issueNewValue = isset($priorities[$issueNewValue]) ? '<span style="color:' . $priorities[$issueNewValue]['status_color'] . '">' . $priorities[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
-                        $issueOldValue = isset($priorities[$issueOldValue]) ? '<span style="color:' . $priorities[$issueOldValue]['status_color'] . '">' . $priorities[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueNewValue = isset($priorities[$issueNewValue]) ? '<span style="color:' . $priorities[$issueNewValue]['status_color'] . '">' . $priorities[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($priorities[$issueOldValue]) ? '<span style="color:' . $priorities[$issueOldValue]['status_color'] . '">' . $priorities[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
                     } elseif ($field == 'module') {
-                        $issueNewValue = isset($modules[$issueNewValue]) ? '<span style="color:#337ab7">' . $modules[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
-                        $issueOldValue = isset($modules[$issueOldValue]) ? '<span style="color:#337ab7">' . $modules[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueNewValue = isset($modules[$issueNewValue]) ? '<span style="color:#337ab7">' . $modules[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($modules[$issueOldValue]) ? '<span style="color:#337ab7">' . $modules[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
                     } elseif ($field == 'status') {
-                        $issueNewValue = isset($status[$issueNewValue]) ? '<span class="label label-' . $status[$issueNewValue]['color'] . '">' . $status[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
-                        $issueOldValue = isset($status[$issueOldValue]) ? '<span class="label label-' . $status[$issueOldValue]['color'] . '">' . $status[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueNewValue = isset($status[$issueNewValue]) ? '<span class="label label-' . $status[$issueNewValue]['color'] . '">' . $status[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($status[$issueOldValue]) ? '<span class="label label-' . $status[$issueOldValue]['color'] . '">' . $status[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
                     } elseif ($field == 'resolve') {
-                        $issueNewValue = isset($resolves[$issueNewValue]) ? '<span style="color:' . $resolves[$issueNewValue]['color'] . '">' . $resolves[$issueNewValue]['name'] . '</span>' : '<span>未知</span>';
-                        $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $resolves[$issueOldValue]['color'] . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>未知</span>';
+                        $issueNewValue = isset($resolves[$issueNewValue]) ? '<span style="color:' . $resolves[$issueNewValue]['color'] . '">' . $resolves[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
+                        $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $resolves[$issueOldValue]['color'] . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
+                    } elseif ($field == 'start_date' || $field == 'due_date') {
+                        $issueNewValue = trim($issueNewValue);
+                        $issueNewValue = $issueNewValue ? '<span style="color:#337ab7">' . $issueNewValue . '</span>' : '<span>无</span>';
+
+                        if ($issueOldValue && ($issueOldValue != '0000-00-00')) {
+                            $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
+                        } else {
+                            $issueOldValue = '<span>无</span>';
+                        }
                     } else {
                         $issueNewValue = '<span style="color:#337ab7">' . $issueNewValue . '</span>';
                         $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';

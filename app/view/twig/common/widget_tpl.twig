@@ -281,22 +281,22 @@
                 <span class="event">
                     {{action}}
                     {{#if_eq type ''}}
-                        <a href="#">{{title}}</a>
+                        <a href="#" title="{{title}}">{{{zip_title}}}</a>
                     {{/if_eq}}
                     {{#if_eq type 'agile'}}
-                        <a href="/default/ERP/sprints/{{obj_id}}" title="{{title}}">{{zip_title}}</a>
+                        <a href="/default/ERP/sprints/{{obj_id}}" title="{{title}}">{{{zip_title}}}</a>
                     {{/if_eq}}
                     {{#if_eq type 'issue'}}
-                        <a href="/issue/detail/index/{{obj_id}}" title="{{title}}">{{zip_title}}</a>
+                        <a href="/issue/detail/index/{{obj_id}}" title="{{title}}">{{{zip_title}}}</a>
                     {{/if_eq}}
                     {{#if_eq type 'issue_comment'}}
-                        <a href="/issue/detail/index/{{obj_id}}" title="{{title}}">{{zip_title}}</a>
+                        <a href="/issue/detail/index/{{obj_id}}" title="{{title}}">{{{zip_title}}}</a>
                     {{/if_eq}}
                     {{#if_eq type 'user'}}
-                        <a href="/user/profile/{{user_id}}" title="{{title}}">{{zip_title}}</a>
+                        <a href="/user/profile/{{user_id}}" title="{{title}}">{{{zip_title}}}</a>
                     {{/if_eq}}
                     {{#if_eq type 'project'}}
-                        <a href="/project/main/home/?project_id={{project_id}}" title="{{title}}">{{zip_title}}</a>
+                        <a href="/project/main/home/?project_id={{project_id}}" title="{{title}}">{{{zip_title}}}</a>
                     {{/if_eq}}
                     <div>
                         {{{content}}}

@@ -238,8 +238,12 @@ class Widget extends BaseUserCtrl
         list($data['activity'], $total) = ActivityLogic::filterByIndex($userId, $page, $pageSize);
         foreach ($data['activity'] as &$item) {
             $item['zip_title'] = $item['title'];
-            if (mb_strlen($item['title']) > 40) {
+            if (mb_strlen($data['title']) > 40) {
                 $item['zip_title'] = mb_substr($item['title'], 0, 40) . '...';
+            }
+
+            if (($item['action'] == '删除了事项' || (strpos($item['content'], '标题 变更为') !== false))) {
+                $item['zip_title'] = '<span style="text-decoration: line-through;">' . $item['zip_title'] . '</span>';
             }
         }
         unset($item);
@@ -260,6 +264,12 @@ class Widget extends BaseUserCtrl
         }
         $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : null;
         list($data['activity'], $total) = ActivityLogic::filterByIssueId($issueId, $page, $pageSize);
+        foreach ($data['activity'] as &$item) {
+            if (($item['action'] == '删除了事项' || (strpos($item['content'], '标题 变更为') !== false))) {
+                $item['title'] = '<span style="text-decoration: line-through;">' . $item['title'] . '</span>';
+            }
+        }
+        unset($item);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

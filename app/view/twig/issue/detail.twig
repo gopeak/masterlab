@@ -327,7 +327,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-sm-2">解决结果:</label>
                                         <div class="col-sm-10">
-                                            <span style=" color: {{issue.resolve_info.color}}">{{issue.resolve_info.name}}</span>
+                                            <span  id="detail_resolve" style=" color: {{issue.resolve_info.color}}">{{issue.resolve_info.name}}</span>
                                         </div>
                                     </div>
 
@@ -337,13 +337,13 @@
                                 <div class="form-group col-lg-6 ">
                                     <label class="control-label col-sm-2">状态:</label>
                                     <div class="col-sm-10">
-                                        <span class="label label-{{issue.status_info.color}} prepend-left-5">{{issue.status_info.name}}</span>
+                                        <span id="detail_status" class="label label-{{issue.status_info.color}} prepend-left-5">{{issue.status_info.name}}</span>
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6">
                                     <label class="control-label col-sm-2" for="issue_label_ids">优先级:</label>
                                     <div class="col-sm-10">
-                                        <span class="label " style="color:{{issue.priority_info.status_color}}">{{issue.priority_info.name}}</span>
+                                        <span class="label "  style="color:{{issue.priority_info.status_color}}">{{issue.priority_info.name}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -527,13 +527,13 @@
                                                     <span class="event">
                                                         {{action}}
                                                         {{#if_eq type ''}}
-                                                            <a href="javascript:void()">{{title}}</a>
+                                                            <a href="javascript:void()">{{{title}}}</a>
                                                         {{/if_eq}}
                                                         {{#if_eq type 'issue'}}
-                                                            <a href="javascript:void()">{{title}}</a>
+                                                            <a href="javascript:void()">{{{title}}}</a>
                                                         {{/if_eq}}
                                                         {{#if_eq type 'issue_comment'}}
-                                                            <a href="javascript:void()">{{title}}</a>
+                                                            <a href="javascript:void()">{{{title}}}</a>
                                                         {{/if_eq}}
                                                     </span>
                                                     <div>
@@ -1022,14 +1022,14 @@
 
     <script type="text/html" id="allow_update_status_tpl">
         {{#allow_update_status}}
-        <li><a id="btn-{{_key}}" data-status_id="{{id}}" class="allow_update_status" href="#">
-                <span class="label label-{{color}} prepend-left-5">{{name}}</span></a></li>
+        <li><a id="btn-{{_key}}" data-status_id="{{id}}" data-color="{{color}}" data-name="{{name}}" class="allow_update_status" href="#">
+                <span  class="label label-{{color}} prepend-left-5">{{name}}</span></a></li>
         {{/allow_update_status}}
     </script>
 
      <script type="text/html" id="allow_update_resolves_tpl">
         {{#allow_update_resolves}}
-        <li><a id="btn-{{_key}}" data-resolve_id="{{id}}" class="allow_update_resolve" href="#" style="color:{{color}}">{{name}}</a>
+        <li><a id="btn-{{_key}}" data-resolve_id="{{id}}"   data-color="{{color}}" data-name="{{name}}"  class="allow_update_resolve" href="#" style="color:{{color}}">{{name}}</a>
         </li>
         {{/allow_update_resolves}}
     </script>
