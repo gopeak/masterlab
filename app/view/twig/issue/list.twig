@@ -1635,7 +1635,7 @@
             {% verbatim %}
 						<script type="text/html" id="list_tpl">
 							{{#issues}}
-								<tr class="tree-item" data-id="{{id}}" data-summary="{{summary}}">
+								<tr class="tree-item " data-id="{{id}}"  data-have_children="{{have_children}}"  data-summary="{{summary}}">
 									<td class="width_6">
 										<div class="checkbox">
 											<label>
@@ -2066,22 +2066,6 @@
 										</div>
 									</div>
 								</div>
-
-
-								<!--新增一个tr当他们点击子【更多子任务】的时候-->
-								<!--{{#if_eq have_children '0'}}
-																																
-																																                {{else}}
-																																                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">
-																																                        <h5>子任务:</h5>
-																																                        <div class="event-body">
-																																                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">
-																																
-																																                            </ul>
-																																                        </div>
-																																                    </div>
-																																                {{/if_eq}}-->
-
 							{{/issues}}
 
 						</script>
@@ -2633,7 +2617,8 @@
                     // $('.textarea-tips').addClass('hide');
                     });
 
-                    var _isTable = $("#list_render_id").length;
+                    let el_list_render_id = $('#list_render_id');
+                    var _isTable = el_list_render_id.length;
 
                     $(document).on('click', '.detail-pager .previous:not(".disabled")', function () {
                         IssueMain.prototype.prevIssueItem();
@@ -2643,17 +2628,11 @@
                         IssueMain.prototype.nextIssueItem();
                     });
 
-                    // 左侧菜单的内容
-                    $('#list_render_id').on('click', function (e) {
+                    // 点击事件，以及左侧菜单的内容
+                    el_list_render_id.on('click', function (e) {
                         $('#list_render_id tr.active').removeClass('active');
                         if ($(e.target).attr('href') && $(e.target).parent().hasClass('show-tooltip')) {
-                            var dataId = $(e.target).parent().parent().attr('data-id');
                             $(e.target).parent().parent().addClass('active');
-
-                            /*if (isFloatPart) {
-                                showFloatDetail(dataId, true);
-                                return false;
-                            }*/
                         } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
                             $(e.target).parent().next().removeClass('hide');
                             $(e.target).parent().addClass('active');
@@ -2663,7 +2642,7 @@
                         }
                     });
 
-                    $("#list_render_id").on("click", ".tree-item", function() {
+                    el_list_render_id.on("click", ".tree-item", function() {
                         if (isFloatPart) {
                             var dataId = $(this).data("id");
                             var dataSummary = $(this).data("summary") || "";
@@ -2671,6 +2650,11 @@
                             showFloatDetail(dataId, dataSummary);
                             
                             return false;
+                        }else{
+                            if($(this).next().hasClass('hide')){
+                                var issue_id = $(this).data('id');
+                                IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                            }
                         }
                     });
 
