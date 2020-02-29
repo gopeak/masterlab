@@ -59,12 +59,20 @@ class ProjectModel extends CacheModel
         return $this->getRows($fields, array('type' => $typeId, 'archived' => 'N'), null, 'issue_update_time', 'desc', null, $primaryKey);
     }
 
-    public function filterByNameOrKey($keyword)
+    /**
+     * 通过名字搜索
+     * @param $keyword
+     * @param string $orderBy
+     * @param string $sort
+     * @return array
+     */
+    public function filterByNameOrKey($keyword, $orderBy = 'issue_update_time', $sort = 'desc')
     {
         $table = $this->getTable();
         $params = array();
-        $where = wrapBlank("WHERE `name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%'");
-        $sql = "SELECT * FROM " . $table . $where;
+        $where = wrapBlank("WHERE (`name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%') AND archived='N' ");
+        $orderBy = " ORDER BY $orderBy $sort";
+        $sql = "SELECT * FROM " . $table . $where . $orderBy;
         return $this->db->getRows($sql, $params, false);
     }
 
