@@ -542,10 +542,10 @@ var IssueMain = (function () {
                 list_box.slideDown(100);
 
                 var module_list = _issueConfig.issue_module;
-                console.log(module_list);
+                //console.log(module_list);
                 var html = "";
                 for (var value of Object.values(module_list)) {
-                    html += `<li data-name="${value.name}" data-value="${value.project_id}"><span class="prepend-left-5">${value.name}</span></li>`;
+                    html += `<li data-name="${value.name}" data-value="${value.k}"><span class="prepend-left-5">${value.name}</span></li>`;
                 }
                 list_box.html(html);
 
