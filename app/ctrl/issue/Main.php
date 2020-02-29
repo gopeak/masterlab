@@ -1169,9 +1169,10 @@ class Main extends BaseUserCtrl
             if (isset($params['master_issue_id']) && !empty($params['master_issue_id'])) {
                 // 如果是子任务
                 $masterId = (int)$params['master_issue_id'];
-                $sql = "Select {$fieldWeight} From {$table} Where master_id={$masterId}  sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
+                $sql = "Select {$fieldWeight} From {$table} Where master_id={$masterId}  AND sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
                 $prevWeight = (int)$model->db->getOne($sql);
-                $sql = "Select {$fieldWeight} From {$table} Where $prevWeight>{$fieldWeight}  sprint={$sprintId} Order by {$fieldWeight} DESC limit 1";
+                $sql = "Select {$fieldWeight} From {$table} Where $prevWeight>{$fieldWeight} AND sprint={$sprintId} Order by {$fieldWeight} DESC limit 1";
+                //echo $sql;
                 $nextWeight = (int)$model->db->getOne($sql);
                 if (($prevWeight - $nextWeight) > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $prevWeight - ProjectGantt::$offset;
