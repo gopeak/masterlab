@@ -108,10 +108,7 @@ class ConfigLogic
         }
         $model = new ProjectModuleModel();
         $rows = $model->getByProject($projectId, $primaryKey);
-        foreach ($rows as $k => &$row) {
-            if (!isset($row['id'])) {
-                $row['id'] = $k;
-            }
+        foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];
         }
