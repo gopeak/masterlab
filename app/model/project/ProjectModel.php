@@ -77,6 +77,24 @@ class ProjectModel extends CacheModel
     }
 
     /**
+     * 通过名字搜索(带类型)
+     * @param $keyword
+     * @param $typeId
+     * @param string $orderBy
+     * @param string $sort
+     * @return array
+     */
+    public function filterByNameOrKeyAndType($keyword, $typeId, $orderBy = 'issue_update_time', $sort = 'desc')
+    {
+        $table = $this->getTable();
+        $params = array();
+        $where = wrapBlank("WHERE `type`=$typeId AND (`name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%') AND archived='N' ");
+        $orderBy = " ORDER BY $orderBy $sort";
+        $sql = "SELECT * FROM " . $table . $where . $orderBy;
+        return $this->db->getRows($sql, $params, false);
+    }
+
+    /**
      * @param $page
      * @param $page_size
      * @return array

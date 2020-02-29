@@ -123,7 +123,8 @@ class Projects extends BaseUserCtrl
         $projectModel = new ProjectModel();
 
         if ($typeId) {
-            $projects = $projectModel->filterByType($typeId, false);
+            //$projects = $projectModel->filterByType($typeId, false);
+            $projects = $projectModel->filterByNameOrKeyAndType($searchKey, $typeId, $searchOrderBy, $searchSort);
         } else {
             //$projects = $projectModel->getAll(false);
             $projects = $projectModel->filterByNameOrKey($searchKey, $searchOrderBy, $searchSort);
