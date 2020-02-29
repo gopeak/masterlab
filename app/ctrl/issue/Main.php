@@ -1743,6 +1743,15 @@ class Main extends BaseUserCtrl
                     } elseif ($field == 'resolve') {
                         $issueNewValue = isset($resolves[$issueNewValue]) ? '<span style="color:' . $resolves[$issueNewValue]['color'] . '">' . $resolves[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
                         $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $resolves[$issueOldValue]['color'] . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
+                    } elseif ($field == 'start_date' || $field == 'due_date') {
+                        $issueNewValue = trim($issueNewValue);
+                        $issueNewValue = $issueNewValue ? '<span style="color:#337ab7">' . $issueNewValue . '</span>' : '<span>无</span>';
+
+                        if ($issueOldValue && ($issueOldValue != '0000-00-00')) {
+                            $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
+                        } else {
+                            $issueOldValue = '<span>无</span>';
+                        }
                     } else {
                         $issueNewValue = '<span style="color:#337ab7">' . $issueNewValue . '</span>';
                         $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
