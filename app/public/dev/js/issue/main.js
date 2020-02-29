@@ -438,7 +438,7 @@ var IssueMain = (function () {
                 }
             };
             $('#ampagination-bootstrap').bootstrapPaginator(options);
-            console.log(success);
+            //console.log(success);
             if (typeof (success) != 'undefined' && typeof (success) === "function") {
                 success(resp.data);
             }
@@ -738,9 +738,11 @@ var IssueMain = (function () {
 
 
             $(".have_children").bind("click", function () {
-                var issue_id = $(this).data('issue_id');
-                $('#tr_subtask_' + issue_id).toggleClass('hide');
-                IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                if (isFloatPart) {
+                    var issue_id = $(this).data('issue_id');
+                    $('#tr_subtask_' + issue_id).removeClass('hide');
+                    IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                }
             });
 
             $("#btn-join_sprint").bind("click", function () {
