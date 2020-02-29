@@ -775,8 +775,72 @@ class System extends BaseAdminCtrl
 
         $issueModel = new IssueModel();
         $data['redis_configs'] = $issueModel->cache->config;
+        $data['redis_is_used'] = $issueModel->cache->use ? '开启':'未开启';
 
         $this->render('gitlab/admin/system_cache.php', $data);
+    }
+
+    /**
+     * 缓存配置：获取redis缓存连接配置
+     * @throws \Exception
+     */
+    public function fetchCacheConfig()
+    {
+        $issueModel = new IssueModel();
+        $data['redis_configs'] = $issueModel->cache->config;
+        $data['redis_configs_length'] = sizeof($issueModel->cache->config);
+        $data['redis_is_used'] = $issueModel->cache->use ? 1:0;
+        // 是否分组显示
+        $data['show_cache_group'] = $data['redis_configs_length'] > 1 ? 1:0;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 更新缓存配置文件
+     * @param $params
+     * @throws \Exception
+     */
+    public function settingCacheConfig($params)
+    {
+        if (!isset($params['redis']) || !isset($params['enable'])) {
+            $this->ajaxFailed('请求失败', '缺少参数');
+        }
+
+        if (!is_array($params['redis'])) {
+            $this->ajaxFailed('请求失败', '缺少错误');
+        }
+
+        $cacheConfigFile = APP_PATH."config/".APP_STATUS."/cache.cfg.php";
+        if (file_exists($cacheConfigFile)) {
+            if ((int)$params['enable'] && !empty($params['redis'])) {
+                try {
+                    $redis = new \Redis();
+                    foreach ($params['redis'] as $linkConfig) {
+                        $redis->connect($linkConfig[0], $linkConfig[1], 5);
+                    }
+                } catch (\RedisException $e) {
+                    $this->ajaxFailed('连接失败', 'Redis连接测试失败，请检查配置');
+                    //throw new \Exception('\Redis connect failed:' . $e->getMessage(), 500);
+                }
+            }
+
+            $cacheConfig = getConfigVar('cache');
+
+            if ((int)$params['enable']) {
+                $cacheConfig['redis']['data'] = $params['redis'];
+            }
+            $cacheConfig['enable'] = (int)$params['enable'] ? true : false;
+
+            $contents = "<?php \n" . '$_config = ' . var_export($cacheConfig, true) . ';' . "\n\n" . 'return $_config;';
+
+            if (file_put_contents($cacheConfigFile, $contents) === false) {
+                $this->ajaxFailed('操作失败', '请检查缓存配置文件写入权限');
+            }
+        } else {
+            $this->ajaxFailed('操作失败', '请检查缓存配置文件是否存在');
+        }
+
+        $this->ajaxSuccess('缓存配置已生效');
     }
 
     /**
