@@ -299,6 +299,7 @@ class IssueFilterLogic
             $curUserId = UserAuth::getInstance()->getId();
             $issueFollowModel = new IssueFollowModel();
             $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
+
             $followIssueIdArr = [];
             if (!empty($issueFollows)) {
                 foreach ($issueFollows as $issueFollow) {
@@ -309,6 +310,8 @@ class IssueFilterLogic
                     $issueIdStr = implode(',', $followIssueIdArr);
                     $sql .= "  AND id in ({$issueIdStr})";
                 }
+            }else{
+                $sql .= " AND  id in (0) ";
             }
             unset($issueFollowModel, $issueFollows, $followIssueIdArr);
         }
@@ -407,7 +410,7 @@ class IssueFilterLogic
             $field = '*';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
-            // echo $sqlCount;
+           // echo $sqlCount;
             // print_r($params);
             $count = $model->db->getOne($sqlCount, $params);
 

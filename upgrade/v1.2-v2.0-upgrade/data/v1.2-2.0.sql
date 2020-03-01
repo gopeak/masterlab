@@ -324,4 +324,22 @@ INSERT INTO `permission_global_role_relation` (`id`, `perm_global_id`, `role_id`
 INSERT INTO `permission_global_role_relation` (`id`, `perm_global_id`, `role_id`, `is_system`) VALUES ('10', '4', '1', '1');
 INSERT INTO `permission_global_role_relation` (`id`, `perm_global_id`, `role_id`, `is_system`) VALUES ('11', '5', '1', '1');
 
+TRUNCATE `agile_board`;
+
+INSERT INTO `agile_board` (`id`, `name`, `project_id`, `type`, `is_filter_backlog`, `is_filter_closed`, `weight`, `range_type`, `range_data`, `is_system`) VALUES ('1', '进行中的迭代', '0', 'status', '0', '1', '99999', 'current_sprint', '', '1');
+INSERT INTO `agile_board` (`id`, `name`, `project_id`, `type`, `is_filter_backlog`, `is_filter_closed`, `weight`, `range_type`, `range_data`, `is_system`) VALUES ('2', '整个项目', '0', 'status', '0', '1', '99998', 'all', '', '1');
+INSERT INTO `agile_board` (`id`, `name`, `project_id`, `type`, `is_filter_backlog`, `is_filter_closed`, `weight`, `range_type`, `range_data`, `is_system`) VALUES ('18', 'ddcccssss', '1', NULL, '1', '1', '0', 'all', '[]', '0');
+
+TRUNCATE `agile_board_column`;
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('1', '准 备', '1', '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '3');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('2', '进行中', '1', '{\"status\":[\"in_progress\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '2');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('3', '已完成', '1', '{\"status\":[\"closed\",\"done\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '1');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('4', '准备中', '2', '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '0');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('5', '进行中', '2', '{\"status\":[\"in_progress\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '0');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('6', '已完成', '2', '{\"status\":[\"closed\",\"done\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '0');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('60', '准备中asdasd', '18', '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":null,\"assignee\":null}', '3');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('61', '进行中', '18', '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', '2');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('62', '已解决', '18', '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', '1');
+
+
 SET FOREIGN_KEY_CHECKS=1;
