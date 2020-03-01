@@ -60,7 +60,7 @@ var Gantt = (function () {
             var title = row.name;
             var color = row.color;
             var opt = "<option data-content=\"<span class='label label-" + color + "'>" + title + "</span>\" value='"+id+"'>"+title+"</option>";
-            console.log(opt)
+            //console.log(opt)
             $('#gantt_status').append(opt);
         }
         $('.selectpicker').selectpicker('refresh');
@@ -79,6 +79,7 @@ var Gantt = (function () {
                 if(resp.ret==="200"){
                     $("#source_"+resp.data.source_type).attr('checked', 'true');
                     $("#is_display_backlog_"+resp.data.is_display_backlog).attr('checked', 'true');
+                    $('#hide_issue_types').val(resp.data.hide_issue_types);
                     let source = $('#tpl_holiday_a').html();
                     let template = Handlebars.compile(source);
                     let result = template(resp.data);
@@ -90,8 +91,8 @@ var Gantt = (function () {
                     result = template(resp.data);
                     $('#extra_holidays_list' ).html(result);
                     $('#extra_holiday_dates').val(JSON.stringify(resp.data.extra_holidays));
-
                     Gantt.prototype.bindRemoveExtraHolidayDate();
+                    $('.selectpicker').selectpicker('refresh');
                     $('#modal-setting').modal('show');
                 }else{
                     notify_error("获取甘特图数据源失败:" + resp.msg);
@@ -133,16 +134,20 @@ var Gantt = (function () {
         let holiday_dates_str = $('#holiday_dates').val();
         let extra_holiday_dates_str = $('#extra_holiday_dates').val();
         let is_display_backlog_value = $("input[name='is_display_backlog']:checked").val();
+        let post_data = {source_type:source_type_value, holiday_dates:holiday_dates_str,extra_holiday_dates:extra_holiday_dates_str}
+        post_data['is_display_backlog'] = is_display_backlog_value;
+        post_data['hide_issue_types'] = $('#hide_issue_types').val();
         $.ajax({
             type: method,
             dataType: "json",
-            data: {source_type:source_type_value, is_display_backlog:is_display_backlog_value,holiday_dates:holiday_dates_str,extra_holiday_dates:extra_holiday_dates_str},
+            data: post_data,
             url: url,
             success: function (resp) {
                 auth_check(resp);
                 if( resp.ret === "200" ){
                     notify_success(resp.msg);
-                    setTimeout("window.location.reload();", 2000)
+                    setTimeout("window.location.reload();", 1200)
+                    //window.ge.loadProject(loadGanttFromServer(window._cur_project_id));
                 } else {
                     notify_error(resp.msg);
                 }
@@ -363,24 +368,24 @@ var Gantt = (function () {
                     $('#modal-create-issue').modal('hide');
                     let action = $("#add_gantt_dir").val();
                     let id = resp.data;
-                    let name = $('#summary').val();
+                    let name = $('#gantt_summary').val();
                     let code = "#"+id;
-                    let sprint_id = $('#sprint').val();
+                    let sprint_id = $('#gantt_sprint').val();
                     let sprint_name = $('#sprint_name').html();
                     let sprint = getObjectValue(window._issueConfig.sprint, sprint_id);
-                    let start_date = $('#start_date').val().replace(/-/g, '/');// 把所有-转化成/
+                    let start_date = $('#gantt_start_date').val().replace(/-/g, '/');// 把所有-转化成/
                     let startTime = 0;
                     if(start_date==="" && !isUndefined(sprint.start_date)){
                         start_date = sprint.start_date;
                     }
-                    startTime = (new Date(start_date).getTime())*1000;
-                    let due_date =  $('#due_date').val().replace(/-/g, '/');
+                    startTime = (new Date(start_date).getTime());
+                    let due_date =  $('#gantt_due_date').val().replace(/-/g, '/');
                     let endTime = 0;
                     if(due_date==="" && !isUndefined(sprint.end_date)){
                         due_date = sprint.end_date;
                     }
-                    endTime = (new Date(due_date).getTime())*1000;
-                    let duration = parseInt($('#duration').val());
+                    endTime = (new Date(due_date).getTime());
+                    let duration = parseInt($('#gantt_duration').val());
 
                     if(action==='addAboveCurrentTask'){
                         self.addAboveCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name);
@@ -719,7 +724,6 @@ var Gantt = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-
     };
 
     Gantt.prototype.recoverBeHiddenIssue = function (project_id, issue_id) {
@@ -732,11 +736,9 @@ var Gantt = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret==="200") {
-                    window.ge.loadProject(loadFromLocalStorage());
+                    window.ge.loadProject(loadGanttFromServer(project_id));
                     $(".js-hidden-row-id-"+issue_id).remove();
-
                     if ($("#tr_be_hidden_issue_list_content tr").length > 0) {
-
                     } else {
                         defineStatusHtml({
                             wrap: '#tr_be_hidden_issue_list_content_empty',
@@ -745,7 +747,6 @@ var Gantt = (function () {
                             handleHtml: ``
                         })
                     }
-
                     notify_success(resp.msg);
                 } else {
                     notify_error("请求数据源失败:" + resp.msg);

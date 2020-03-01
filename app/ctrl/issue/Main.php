@@ -1000,6 +1000,7 @@ class Main extends BaseUserCtrl
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
         $issueUpdateInfo['issue_num'] = $issueId;
+        // print_r($params);
         if (isset($params['master_issue_id'])) {
             $masterId = (int)$params['master_issue_id'];
             $master = $model->getById($masterId);
@@ -1120,7 +1121,7 @@ class Main extends BaseUserCtrl
                 $belowIssueId = (int)$params['below_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $belowIssue = $model->getRow("gant_sprint_weight, sprint", ['id' => $belowIssueId]);
+                $belowIssue = $model->getRow("gant_sprint_weight,sprint,master_id", ['id' => $belowIssueId]);
                 $fieldWeight = 'gant_sprint_weight';
                 $aboveWeight = (int)$belowIssue[$fieldWeight];
                 $sprintId = $belowIssue['sprint'];
@@ -1130,6 +1131,11 @@ class Main extends BaseUserCtrl
                     $nextWeight = 0;
                 }
                 $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
+
+                if(!empty($belowIssue['master_id'])){
+                    $params['master_issue_id'] = $belowIssue['master_id'];
+                }
+                // print_r($params);
                 unset($model, $belowIssue);
             }
             // 如果是在某一事项之上,排序值是两个事项之间二分之一
@@ -1137,7 +1143,7 @@ class Main extends BaseUserCtrl
                 $aboveIssueId = (int)$params['above_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $aboveIssue = $model->getRow("gant_sprint_weight, sprint", ['id' => $aboveIssueId]);
+                $aboveIssue = $model->getRow("gant_sprint_weight, sprint,master_id", ['id' => $aboveIssueId]);
                 $fieldWeight = 'gant_sprint_weight';
                 $belowWeight = (int)$aboveIssue[$fieldWeight];
                 $sprintId = $aboveIssue['sprint'];
@@ -1199,7 +1205,7 @@ class Main extends BaseUserCtrl
      * @return array
      * @throws \Exception
      */
-    private function getAddFormInfo($params = [])
+    private function getAddFormInfo(&$params = [])
     {
         $info = [];
 

@@ -243,7 +243,7 @@ class Widget extends BaseUserCtrl
                 $item['zip_title'] = mb_substr($item['title'], 0, 40) . '...';
             }
 
-            if (($item['action'] == '删除了事项' || (strpos($item['content'], '标题 变更为') !== false))) {
+            if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['zip_title'] = '<span style="text-decoration: line-through;">' . $item['zip_title'] . '</span>';
             }
         }
@@ -266,7 +266,7 @@ class Widget extends BaseUserCtrl
         $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : null;
         list($data['activity'], $total) = ActivityLogic::filterByIssueId($issueId, $page, $pageSize);
         foreach ($data['activity'] as &$item) {
-            if (($item['action'] == '删除了事项' || (strpos($item['content'], '标题 变更为') !== false))) {
+            if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['title'] = '<span style="text-decoration: line-through;">' . $item['title'] . '</span>';
             }
         }
