@@ -34,7 +34,7 @@ function TaskFactory() {
     // Set at beginning of day
     //console.log( 'task.start:' , start);
     var adjusted_start = computeStart(start);
-    var calculated_end = computeEndByDuration(adjusted_start, duration);
+    // var calculated_end = computeEndByDuration(adjusted_start, duration);
     return new Task(id, name, code, level, adjusted_start, end, duration, collapsed, sprint_id, sprint_name);
   };
 

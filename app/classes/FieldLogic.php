@@ -79,6 +79,7 @@ class FieldLogic
                 $moduleMap[$key] = $row['name'];
             }
         }
+
         return $moduleMap;
     }
 }

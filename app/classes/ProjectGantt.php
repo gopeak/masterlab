@@ -50,6 +50,7 @@ class ProjectGantt
                 $addArr['source_type'] = 'active_sprint';
             }
             $addArr['is_display_backlog'] = '0';
+            $addArr['hide_issue_types'] = '';
             $projectGanttModel->insertByProjectId($addArr, $projectId);
         }
     }
@@ -414,7 +415,7 @@ class ProjectGantt
             }
             $finalArr[] = self::formatRowBySprint($sprint);
             $sprintId = $sprint['id'];
-            $condition = "project_id={$projectId} AND sprint={$sprintId} AND gant_hide!=1  {$orderBy}";
+            $condition = "project_id={$projectId} AND sprint={$sprintId}   {$orderBy}";
             $fields = "id,issue_num,issue_type,status,summary,assignee,have_children,master_id,level,depends,start_date,due_date,duration,progress,weight,gant_sprint_weight";
             $sql = "select {$fields} from {$table} where {$condition}";
             $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
@@ -463,6 +464,18 @@ class ProjectGantt
             $this->updateProjectSprintWeight($sprintIssueArr);
         }
         return $finalArr;
+    }
+
+    private function filterIssues($finalArr)
+    {
+        $filteredArr = [];
+        if(!empty($finalArr)){
+            foreach ($finalArr as $item) {
+                if($item['gant_hide']=='1'){
+                    $filteredArr[] = $item;
+                }
+            }
+        }
     }
 
     public function batchUpdateGanttLevel()
@@ -533,8 +546,8 @@ class ProjectGantt
             $modules = $fieldLogic->getModuleMapByProjectID($projectId);
 
             foreach ($rows as &$row) {
-                $row['format_sprint_name'] = $sprints[$row['sprint']];
-                $row['format_module_name'] = $modules[$row['module']];
+                $row['format_sprint_name'] = @$sprints[$row['sprint']];
+                $row['format_module_name'] = @$modules[$row['module']];
                 $row['format_create_time'] = date('Y-m-d H:i', $row['created']);
             }
             unset($row);
