@@ -28,7 +28,7 @@ if (!(($input == 'yes') || ($input == 'y'))) {
 showLine('');
 
 $currentDir = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
-$globals = $currentDir . '../app' . DIRECTORY_SEPARATOR . 'globals.php';
+$globals = $currentDir . '../../app' . DIRECTORY_SEPARATOR . 'globals.php';
 $globals = realpath($globals);
 require_once $globals;
 
