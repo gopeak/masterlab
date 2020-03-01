@@ -55,13 +55,13 @@ $framework = new  framework\HornetEngine($config);
 $projectDir = realpath(APP_PATH . '..' . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 // 数据库补丁文件路径，要求sql格式
-$sqlFile = $currentDir . 'v1.2-2.0.sql';
+$sqlFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.sql';
 
 // 代码补丁压缩包路径，要求zip格式
-$patchFile = $currentDir . 'v1.2-2.0.patch.zip';
+$patchFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.patch.zip';
 
 // vendor目录压缩包，要求zip格式
-$vendorFile = $currentDir . 'vendor.zip';
+$vendorFile = $currentDir . 'data'. DIRECTORY_SEPARATOR . 'vendor.zip';
 
 // lock文件
 $lockFile = $currentDir . 'upgrade.lock';
