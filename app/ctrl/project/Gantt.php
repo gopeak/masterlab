@@ -19,6 +19,7 @@ use main\app\model\issue\HolidayModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
+use main\app\model\issue\IssueTypeModel;
 use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectRoleModel;
 
@@ -91,6 +92,12 @@ class Gantt extends BaseUserCtrl
             $data['active_sprint'] = $sprintModel->getActive($projectId);
         }
 
+        $holidays = (new HolidayModel())->getDays($projectId);
+        $data['holidays'] = $holidays;
+
+        $extraHolidays = (new ExtraWorkerDayModel())->getDays($projectId);
+        $data['extra_holidays'] = $extraHolidays;
+
         ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/project/gantt.php', $data);
     }
@@ -125,10 +132,15 @@ class Gantt extends BaseUserCtrl
         if (isset($ganttSetting['is_display_backlog'])) {
             $isDisplayBacklog = $ganttSetting['is_display_backlog'];
         }
+        $hideIssueTypes = [];
+        if (isset($ganttSetting['hide_issue_types'])) {
+            $hideIssueTypes = explode(',', $ganttSetting['hide_issue_types']);
+        }
 
         $data = [];
         $data['source_type'] = $sourceType;
         $data['is_display_backlog'] = $isDisplayBacklog;
+        $data['hide_issue_types'] = $hideIssueTypes;
 
         $holidays = (new HolidayModel())->getDays($projectId);
         $data['holidays'] = $holidays;
@@ -171,6 +183,18 @@ class Gantt extends BaseUserCtrl
             $isDisplayBacklog = '1';
         }
         $updateInfo['is_display_backlog'] = $isDisplayBacklog;
+
+        // hide_issue_types
+        if (isset($_POST['hide_issue_types'])) {
+            $hideIssueTypes = $_POST['hide_issue_types'];
+            if(is_array($hideIssueTypes)){
+                $hideIssueTypes = implode(',',$hideIssueTypes);
+            }else{
+                $hideIssueTypes = strval($hideIssueTypes);
+            }
+            $updateInfo['hide_issue_types'] = $hideIssueTypes;
+        }
+
         list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
         if ($ret) {
             $model = new HolidayModel();
@@ -251,16 +275,25 @@ class Gantt extends BaseUserCtrl
             $isDisplayBacklog = $ganttSetting['is_display_backlog'];
         }
 
-        $data['tasks'] = [];
+        $issues = [];
         if ($sourceType == 'project') {
-            $data['tasks'] = $class->getIssuesGroupBySprint($projectId,  $isDisplayBacklog);
+            $issues = $class->getIssuesGroupBySprint($projectId,  $isDisplayBacklog);
         }
         if ($sourceType == 'active_sprint') {
-            $data['tasks'] = $class->getIssuesGroupByActiveSprint($projectId,  $isDisplayBacklog);
+            $issues = $class->getIssuesGroupByActiveSprint($projectId,  $isDisplayBacklog);
         }
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
-        foreach ($data['tasks'] as &$task) {
+
+        $hideIssueTypeKeyArr = [];
+        if(!empty($ganttSetting['hide_issue_types'])){
+            $hideIssueTypeKeyArr = explode(',', $ganttSetting['hide_issue_types']);
+        }
+        $issueTypeModel = new IssueTypeModel();
+        $issueTypeIdArr = $issueTypeModel->getAllItem(true);
+
+        $filteredArr = [];
+        foreach ($issues as &$task) {
             $assigs = [];
             if (isset($users[$task['assigs']]['display_name'])) {
                 $tmp = [];
@@ -271,8 +304,19 @@ class Gantt extends BaseUserCtrl
                 $assigs[] = $tmp;
             }
             $task['assigs'] = $assigs;
+            // 只有事项的才进行过滤
+            if($task['type']!='sprint'){
+                $issueTypeKey = isset($issueTypeIdArr[$task['type']]) ? $issueTypeIdArr[$task['type']]['_key']:null;
+                if( empty($task['gant_hide']) && !in_array($issueTypeKey, $hideIssueTypeKeyArr)){
+                    $filteredArr[] = $task;
+                }
+            }else{
+                $filteredArr[] = $task;
+            }
+
         }
         unset($users);
+        $data['tasks'] = $filteredArr;
         $data['selectedRow'] = 2;
         $data['deletedTaskIds'] = [];
         $data['resources'] = $resources;

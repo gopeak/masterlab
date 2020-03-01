@@ -370,9 +370,7 @@
         <div class="modal-dialog issue-modal-dialog" style="width: 900px;">
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
-
                     <h3 class="modal-header-title">事项维护</h3>
-
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
                 <div id="modal-body" class="modal-body issue-modal-body form-horizontal" style="padding: 15px 50px;">
@@ -384,14 +382,16 @@
                     <input type="hidden" name="params[below_id]" id="below_id" value="">
                     <input type="hidden" name="params[above_id]" id="above_id" value="">
                     <input type="hidden" name="params[sprint]" id="gantt_sprint" value="0">
+                    <input type="hidden" name="params[duration]" id="gantt_duration" value="0">
                     <input type="hidden" name="params[add_gantt_dir]" id="add_gantt_dir" value="">
-                    <input type="hidden"  name="params[description]" id="gantt_description" value=""></input>
+                    <input type="hidden"  name="params[description]" id="gantt_description" value="">
                     <input type="hidden" name="authenticity_token" value="">
 
                         <div class="form-group">
                             <div class="col-sm-2">事项类型:</div>
                             <div class="col-sm-10">
-                                <select id="gantt_issue_type" name="params[issue_type]"
+                                <select id="gantt_issue_type"
+                                        name="params[issue_type]"
                                         class="selectpicker"
                                         dropdownAlignRight="true"
                                         data-live-search="true"
@@ -414,12 +414,12 @@
                         <div class="form-group">
                             <div class="col-sm-2">优先级:<span class="required"> *</span></div>
                             <div class="col-sm-4">
-                                <select id="gantt_priority" name="params[priority]" class="selectpicker"    title=""   ></select>
+                                <select id="gantt_priority" name="params[priority]" class="selectpicker"   title=""  ></select>
                                     <p id="tip-priority" class="gl-field-error hide"></p>
                             </div>
                             <div class="col-sm-2">状态:<span class="required"> *</span></div>
                             <div class="col-sm-4">
-                                <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   ></select>
+                                <select id="gantt_status" name="params[status]" class="selectpicker"   title=""  ></select>
                                 <p id="tip-status" class="gl-field-error hide"></p>
                             </div>
                         </div>
@@ -570,7 +570,7 @@
                         <label class="control-label"  title="定义哪些类型的事项不会出现在甘特图中">隐藏的类型：</label>
                         <div class="col-sm-10">
                             <div class="form-group col-md-8">
-                                <select id="hide_issue_types" name="params[hide_issue_types]" title="事项类型" class="selectpicker">
+                                <select id="hide_issue_types" name="hide_issue_types" title="事项类型" class="selectpicker" multiple>
                                     {% for row in issue_types %}
                                         {% set  display_name = row['display_name'] %}
                                         <option value="{{row._key}}"  data-content="<i class='fa {{ row.font_awesome }}'  ></i> {{row.name}}"  >{{row.name}}</option>
@@ -836,288 +836,18 @@
     {{/project_users}}
 </script>{% endverbatim %}
 
-
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/project/member.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/project/gantt.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-
 <script type="text/javascript">
-
+    // JqueryGantt的全局变量实例
     var ge;
-    $(function() {
-        let options = {};
 
-        var canWrite=true; //this is the default for test purposes
-        // here starts gantt initialization
-        ge = new GanttMaster();
-        ge.set100OnClose=true;
-
-        ge.shrinkParent=true;
-
-        ge.init($("#workSpace"));
-        loadI18n(); //overwrite with localized ones
-
-        //in order to force compute the best-fitting zoom level
-        delete ge.gantt.zoom;
-
-        var project=loadFromLocalStorage();
-        if (!project.canWrite){
-            $(".ganttButtonBar button.requireWrite").attr("disabled","true");
-        }
-
-        ge.loadProject(project);
-        ge.checkpoint(); //empty the undo stack
-
-    });
-
-    function fetGanttIssues(){
-        //console.debug("getDemoProject")
-
-        ret= {};
-        var method = 'get';
-        var url = '/project/gantt/fetchProjectIssues/{{project_id}}';
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: false,
-            url: url,
-            data: {} ,
-            success: function (resp) {
-                ret = resp.data;
-            },
-            error: function (res) {
-                //notify_error("请求数据错误" + res);
-                ret = {};
-                return false;
-            }
-        });
-        console.log(ret);
-
-        return ret;
-    }
-
-    function loadGanttFromServer(taskId, callback) {
-
-        //this is a simulation: load data from the local storage if you have already played with the demo or a textarea with starting demo data
-        var ret=loadFromLocalStorage();
-        return ret;
-    }
-
-    //-------------------------------------------  Get project file as JSON (used for migrate project from gantt to Teamwork) ------------------------------------------------------
-    function getFile() {
-        $("#gimBaPrj").val(JSON.stringify(ge.saveProject()));
-        $("#gimmeBack").submit();
-        $("#gimBaPrj").val("");
-
-        /*  var uriContent = "data:text/html;charset=utf-8," + encodeURIComponent(JSON.stringify(prj));
-         neww=window.open(uriContent,"dl");*/
-    }
-
-
-    function loadFromLocalStorage() {
-        var ret;
-        ret = fetGanttIssues();
-        return ret;
-    }
-
-
-    function saveGanttOnServer() {
-        var prj = ge.saveProject();
-        console.log(prj);
-    }
-
-    function saveInLocalStorage() {
-        var prj = ge.saveProject();
-        console.log(prj);
-        if (localStorage) {
-            //localStorage.setObject("teamworkGantDemo", prj);
-        }
-    }
-
-    function show_setting(){
-        window.$_gantAjax.fetchGanttSetting(window._cur_project_id);
-        //
-        $("#btn-setting-save").click(function(){
-            window.$_gantAjax.saveGanttSetting();
-         });
-    }
-
-    function show_be_hidden_list(){
-        window.$_gantAjax.fetchGanttBeHiddenIssueList(window._cur_project_id);
-    }
-
-    //-------------------------------------------  Open a black popup for managing resources. This is only an axample of implementation (usually resources come from server) ------------------------------------------------------
-    function editResources(){
-
-        //make resource editor
-        window.$_gantAjax.fetchResource(window._cur_project_id);
-        // btn-member-add
-        $("#btn-member-add").click(function(){
-            window.$_gantAjax.addResource();
-        });
-        return;
-
-        var resourceEditor = $.JST.createFromTemplate({}, "RESOURCE_EDITOR");
-        var resTbl=resourceEditor.find("#resourcesTable");
-
-        for (var i=0;i<ge.resources.length;i++){
-            var res=ge.resources[i];
-            resTbl.append($.JST.createFromTemplate(res, "RESOURCE_ROW"))
-        }
-
-        //bind add resource
-        resourceEditor.find("#addResource").click(function(){
-            resTbl.append($.JST.createFromTemplate({id:"new",name:"resource"}, "RESOURCE_ROW"))
-        });
-
-        //bind save event
-        resourceEditor.find("#resSaveButton").click(function(){
-            var newRes=[];
-            //find for deleted res
-            for (var i=0;i<ge.resources.length;i++){
-                var res=ge.resources[i];
-                var row = resourceEditor.find("[resId="+res.id+"]");
-                if (row.length>0){
-                    //if still there save it
-                    var name = row.find("input[name]").val();
-                    if (name && name!="")
-                        res.name=name;
-                    newRes.push(res);
-                } else {
-                    //remove assignments
-                    for (var j=0;j<ge.tasks.length;j++){
-                        var task=ge.tasks[j];
-                        var newAss=[];
-                        for (var k=0;k<task.assigs.length;k++){
-                            var ass=task.assigs[k];
-                            if (ass.resourceId!=res.id)
-                                newAss.push(ass);
-                        }
-                        task.assigs=newAss;
-                    }
-                }
-            }
-            //loop on new rows
-            var cnt=0
-            resourceEditor.find("[resId=new]").each(function(){
-                cnt++;
-                var row = $(this);
-                var name = row.find("input[name]").val();
-                if (name && name!="")
-                    newRes.push (new Resource("tmp_"+new Date().getTime()+"_"+cnt,name));
-            });
-            ge.resources=newRes;
-            closeBlackPopup();
-            ge.redraw();
-        });
-
-        var ndo = createModalPopup(400, 500).append(resourceEditor);
-
-        new UsersSelect();
-    }
-
-    function showBaselineInfo (event,element){
-        //alert(element.attr("data-label"));
-        $(element).showBalloon(event, $(element).attr("data-label"));
-        ge.splitter.secondBox.one("scroll",function(){
-            $(element).hideBalloon();
-        })
-    }
-
-</script>
-
-<script type="text/javascript">
-
-    $("#role_select").selectpicker({title: "请选择角色",  showTick: true, iconBase: "fa", tickIcon: "fa-check"});
-
-    $.JST.loadDecorator("RESOURCE_ROW", function(resTr, res){
-        resTr.find(".delRes").click(function(){$(this).closest("tr").remove()});
-    });
-
-    $.JST.loadDecorator("ASSIGNMENT_ROW", function(assigTr, taskAssig){
-        var resEl = assigTr.find("[name=resourceId]");
-        var opt = $("<option>");
-        resEl.append(opt);
-        for(var i=0; i< taskAssig.task.master.resources.length;i++){
-            var res = taskAssig.task.master.resources[i];
-            opt = $("<option>");
-            opt.val(res.id).html(res.name);
-            if(taskAssig.assig.resourceId == res.id)
-                opt.attr("selected", "true");
-            resEl.append(opt);
-        }
-        var roleEl = assigTr.find("[name=roleId]");
-        for(var i=0; i< taskAssig.task.master.roles.length;i++){
-            var role = taskAssig.task.master.roles[i];
-            var optr = $("<option>");
-            optr.val(role.id).html(role.name);
-            if(taskAssig.assig.roleId == role.id)
-                optr.attr("selected", "true");
-            roleEl.append(optr);
-        }
-
-        if(taskAssig.task.master.permissions.canWrite && taskAssig.task.canWrite){
-            assigTr.find(".delAssig").click(function(){
-                var tr = $(this).closest("[assId]").fadeOut(200, function(){$(this).remove()});
-            });
-        }
-    });
-
-    function loadI18n(){
-        GanttMaster.messages = {
-            "CANNOT_WRITE":"没有权限修改.",
-            "CHANGE_OUT_OF_SCOPE":"没有权限更新.",
-            "START_IS_MILESTONE":"里程碑开始日期.",
-            "END_IS_MILESTONE":"里程碑结束日期.",
-            "TASK_HAS_CONSTRAINTS":"该事项已经被限制.",
-            "GANTT_ERROR_DEPENDS_ON_OPEN_TASK":"依赖一个开启的事项发生错误.",
-            "GANTT_ERROR_DESCENDANT_OF_CLOSED_TASK":"Error: 不能派生一个关闭的事项.",
-            "TASK_HAS_EXTERNAL_DEPS":"该事项已经有了依赖.",
-            "GANNT_ERROR_LOADING_DATA_TASK_REMOVED":"载入数据错误，事项可能已经被删除",
-            "CIRCULAR_REFERENCE":"循环引用.",
-            "CANNOT_DEPENDS_ON_ANCESTORS":"不能依赖于父级实现.",
-            "INVALID_DATE_FORMAT":"无效的日期格式.",
-            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED":"载入数据错误，事项可能已经被删除",
-            "CANNOT_CLOSE_TASK_IF_OPEN_ISSUE":"不能关闭打开的事项",
-            "TASK_MOVE_INCONSISTENT_LEVEL":"不能移动不同级别的事项.",
-            "CANNOT_MOVE_TASK":"无法移动此事项",
-            "PLEASE_SAVE_PROJECT":"请保存项目",
-            "GANTT_SEMESTER":"周期",
-            "GANTT_SEMESTER_SHORT":"s.",
-            "GANTT_QUARTER":"4 /",
-            "GANTT_QUARTER_SHORT":"q.",
-            "GANTT_WEEK":"Week",
-            "GANTT_WEEK_SHORT":"w."
-        };
-    }
-
-    function createNewResource(el) {
-        var row = el.closest("tr[taskid]");
-        var name = row.find("[name=resourceId_txt]").val();
-        var url = contextPath + "/applications/teamwork/resource/resourceNew.jsp?CM=ADD&name=" + encodeURI(name);
-        openBlackPopup(url, 700, 320, function (response) {
-            //fillare lo smart combo
-            if (response && response.resId && response.resName) {
-                //fillare lo smart combo e chiudere l'editor
-                row.find("[name=resourceId]").val(response.resId);
-                row.find("[name=resourceId_txt]").val(response.resName).focus().blur();
-            }
-
-        });
-    }
-</script>
-<script type="text/javascript">
-
+    // 后端传递给页面的全局变量
     var _cur_project_id = '{{project_id}}';
-
-    var _simplemde = {};
-
     var _cur_uid = '{{G_uid}}';
     var _gantt_editor_md = null;
-
     var $_gantAjax = null;
-
     var _issueConfig = {
         "priority":{{priority|json_encode()|raw}},
         "issue_types":{{issue_types|json_encode()|raw}},
@@ -1132,207 +862,15 @@
         "sprint":{{sprints|json_encode()|raw}}
     };
     var _project_issue_types = {{project_issue_types|json_encode()|raw}};
-
-
-
-    $(function(){
-
-        window.$_gantAjax = new Gantt({});
-
-        // 聚焦模式切换
-        $('#toggle_focus_mode').bind('click',function(){
-            $('.main-sidebar').toggleClass('hidden');
-            $('.with-horizontal-nav').toggleClass('hidden');
-            $('.layout-nav').toggleClass('hidden');
-        });
-
-        // 计算用时(天)
-        var due_date_laydate = laydate.render({
-            elem: '#gantt_due_date'
-            ,format: 'yyyy-MM-dd'
-            ,mark: {
-                '0-11-08': '生日'
-                ,'0-12-31': '跨年' //每年12月31日
-                ,'0-1-1': '元旦' //每年1月1日
-                ,'0-5-1': '劳动节' //每年5月1日
-                ,'0-10-1': '国庆日' //每年10月1日
-                ,'0-0-10': '工资' //每个月10号
-                ,'2017-8-20': '预发' //如果为空字符，则默认显示数字+徽章
-                ,'2017-8-21': '发布'
-            }
-            ,done: function(value, date){
-                computeDuration();
-            }
-        });
-        var start_date_laydate = laydate.render({
-            elem: '#gantt_start_date'
-            ,format: 'yyyy-MM-dd'
-            ,mark: {
-                '0-11-08': '生日'
-                ,'0-12-31': '跨年' //每年12月31日
-                ,'0-1-1': '元旦' //每年1月1日
-                ,'0-5-1': '劳动节' //每年5月1日
-                ,'0-10-1': '国庆日' //每年10月1日
-                ,'0-0-10': '工资' //每个月10号
-                ,'2017-8-20': '预发' //如果为空字符，则默认显示数字+徽章
-                ,'2017-8-21': '发布'
-            }
-            ,done: function(value, date){
-                computeDuration();
-            }
-        });
-
-        function computeDuration(){
-            let project_id = window._cur_project_id;
-            let start_date = $('#gantt_start_date').val();
-            let due_date = $('#gantt_due_date').val();
-            if(start_date!='' && due_date!=''){
-                var url = '/issue/main/getDuration/?project'+project_id;
-                $.ajax({
-                    type: 'GET',
-                    dataType: "json",
-                    data: {project_id:project_id, start_date:start_date, due_date:due_date },
-                    url: url,
-                    success: function (resp) {
-                        auth_check(resp);
-                        if(resp.ret==="200"){
-                            $('#edit_duration').html(resp.data);
-                        }else{
-                            notify_error(resp.msg , resp.data);
-                        }
-                    },
-                    error: function (res) {
-                        notify_error("请求数据错误" + res);
-                    }
-                });
-            }
-        }
-
-
-        var holiday_laydate = laydate.render({
-            elem: '#holiday_laydate'
-            ,format: 'yyyy-MM-dd'
-            ,mark: {
-                '0-11-08': '生日'
-                ,'0-12-31': '跨年' //每年12月31日
-                ,'0-1-1': '元旦' //每年1月1日
-                ,'0-5-1': '劳动节' //每年5月1日
-                ,'0-10-1': '国庆日' //每年10月1日
-                ,'0-0-10': '工资' //每个月10号
-                ,'2017-8-20': '预发' //如果为空字符，则默认显示数字+徽章
-                ,'2017-8-21': '发布'
-            }
-            ,done: function(value, date){
-                let dateArr = JSON.parse($('#holiday_dates').val());
-                if(isInArray(dateArr,value)){
-                    return;
-                }
-                dateArr.push(value);
-                let source = $('#tpl_holiday_a').html();
-                let template = Handlebars.compile(source);
-                let data  = {holidays:dateArr}
-                let result = template(data);
-                $('#holidays_list' ).html(result);
-                $('#holiday_dates').val(JSON.stringify(dateArr));
-                Gantt.prototype.bindRemoveHolidayDate();
-            }
-        });
-        var extra_holiday_laydate = laydate.render({
-            elem: '#extra_holiday_laydate'
-            ,format: 'yyyy-MM-dd'
-            ,mark: {
-                '0-11-08': '生日'
-                ,'0-12-31': '跨年' //每年12月31日
-                ,'0-1-1': '元旦' //每年1月1日
-                ,'0-5-1': '劳动节' //每年5月1日
-                ,'0-10-1': '国庆日' //每年10月1日
-                ,'0-0-10': '工资' //每个月10号
-                ,'2017-8-20': '预发' //如果为空字符，则默认显示数字+徽章
-                ,'2017-8-21': '发布'
-            }
-            ,done: function(value, date){
-                let dateArr = JSON.parse($('#extra_holiday_dates').val());
-                if(isInArray(dateArr,value)){
-                    return;
-                }
-                dateArr.push(value);
-                let source = $('#tpl_extra_holiday_a').html();
-                let template = Handlebars.compile(source);
-                let data  = {extra_holidays:dateArr}
-                let result = template(data);
-                $('#extra_holidays_list' ).html(result);
-                $('#extra_holiday_dates').val(JSON.stringify(dateArr));
-                Gantt.prototype.bindRemoveExtraHolidayDate();
-            }
-        });
-        $(".laydate_input_date").each(function (i) {
-            var id = $(this).attr('id');
-            laydate.render({
-                elem: '#' + id,
-                position: 'fixed'
-            });
-        });
-        $('#btn-add').bind('click',function(){
-
-            let err = {};
-            if(is_empty(trimStr($('#gantt_summary').val()))){
-                err['summary'] = '标题不能为空';
-            }
-            if(is_empty(trimStr($('#gantt_priority').val()))){
-                err['priority'] = '优先级不能为空';
-            }
-            if(is_empty(trimStr($('#gantt_status').val()))){
-                err['status'] = '状态不能为空';
-            }
-            if(is_empty(trimStr($('#gantt_assignee').val()))){
-                err['assignee'] = '经办人不能为空';
-            }
-            if(is_empty($('#gantt_start_date').val())){
-                err['start_date'] = '开始日期不能为空';
-            }
-            let due_date = trimStr($('#gantt_due_date').val());
-            if(is_empty($('#gantt_due_date').val())){
-                err['due_date'] = '截止日期不能为空';
-            }
-            // priority
-            $('#tip-summary').addClass('hide');
-            $('#tip-priority').addClass('hide');
-            $('#tip-status').addClass('hide');
-            $('#tip-assignee').addClass('hide');
-            $('#tip-start_date').addClass('hide');
-            $('#tip-due_date').addClass('hide');
-            if(!is_empty(err)){
-                for (var key in err) {
-                    $('#tip-'+key).html(err[key]);
-                    $('#tip-'+key).removeClass('hide');
-                }
-                notify_warn('提示','表单验证未通过');
-                return;
-            }
-
-            if($('#action').val()=='update'){
-                window.$_gantAjax.updateSyncServerTask();
-            }else{
-                window.$_gantAjax.addSyncServerTask();
-            }
-        });
-
-        $('#modal-team').on('show.bs.modal', function (e) {
-
-        })
-
-        $('#modal-create-issue').on('show.bs.modal', function (e) {
-            window.$_gantAjax.initIssueType(_project_issue_types);
-            window.$_gantAjax.initPriority(window._issueConfig.priority);
-            window.$_gantAjax.initStatus(window._issueConfig.issue_status);
-
-        })
-
-        $('.gantt-content').css('height', $(document).height() - 200 + 'px')
-
-    })
+    var _holidays = {{holidays|json_encode()|raw}};
+    var _extra_holidays = {{extra_holidays|json_encode()|raw}};
 
 </script>
+
+<script src="/dev/js/project/gantt_ajax.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/gantt_origin.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/gantt_ready.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/gantt_date.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>
 
