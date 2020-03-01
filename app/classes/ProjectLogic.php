@@ -575,6 +575,28 @@ class ProjectLogic
     }
 
     /**
+     * 创建项目,为用户赋予该项目的权限
+     * @param $projectId
+     * @param $userId
+     * @param string $roleName  默认为普通用户角色
+     * @return array
+     * @throws \Exception
+     */
+    public static function assignProjectRoleForUser($projectId, $userId, $roleName = 'Users')
+    {
+        $projectRoleModel = new ProjectRoleModel();
+        $projectRoleId = $projectRoleModel->getProjectRoleIdByProjectIdRoleName($projectId, $roleName);
+        $projectUserRoleModel = new ProjectUserRoleModel();
+
+        list($ret, $msg) = $projectUserRoleModel->insertRole($userId, $projectId, $projectRoleId);
+        if (!$ret) {
+            return [false, $msg];
+        }
+
+        return [true, $msg];
+    }
+
+    /**
      * 获取所有项目的ID和name的map，ID为indexKey
      * 用于ID与可视化名字的映射
      * @return array
