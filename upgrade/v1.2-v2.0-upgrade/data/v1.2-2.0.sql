@@ -46,16 +46,17 @@ ALTER TABLE `issue_main` ADD COLUMN `duration`  int(11) UNSIGNED NOT NULL DEFAUL
 ALTER TABLE `issue_main` ADD COLUMN `level`  tinyint(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '甘特图级别' AFTER `assistants`;
 ALTER TABLE `issue_main` ADD COLUMN `progress`  tinyint(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '完成百分比' AFTER `comment_count`;
 ALTER TABLE `issue_main` ADD COLUMN `depends`  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '前置任务' AFTER `progress`;
-ALTER TABLE `issue_main` ADD COLUMN `gant_proj_sprint_weight`  bigint(18) NOT NULL DEFAULT 0 COMMENT '项目甘特图中该事项在同级的排序权重' AFTER `depends`;
-ALTER TABLE `issue_main` ADD COLUMN `gant_proj_module_weight`  bigint(18) NOT NULL DEFAULT 0 COMMENT '项目甘特图中该事项在同级的排序权重' AFTER `gant_proj_sprint_weight`;
-ALTER TABLE `issue_main` ADD COLUMN `gant_sprint_weight`  bigint(18) NOT NULL DEFAULT 0 COMMENT '迭代甘特图中该事项在同级的排序权重' AFTER `gant_proj_module_weight`;
+ALTER TABLE `issue_main` ADD COLUMN `gant_sprint_weight`  int(11) NOT NULL DEFAULT 0 COMMENT '迭代甘特图中该事项在同级的排序权重' AFTER `depends`;
 ALTER TABLE `issue_main` ADD COLUMN `gant_hide`  tinyint(1) NOT NULL DEFAULT 0 COMMENT '甘特图中是否隐藏该事项' AFTER `gant_sprint_weight`;
 ALTER TABLE `issue_main` ADD COLUMN `is_start_milestone`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `gant_hide`;
 ALTER TABLE `issue_main` ADD COLUMN `is_end_milestone`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `is_start_milestone`;
 DROP INDEX `summary` ON `issue_main`;
 CREATE INDEX `summary` ON `issue_main`(`summary`) USING BTREE ;
 CREATE INDEX `status` ON `issue_main`(`status`) USING BTREE ;
+CREATE INDEX `gant_sprint_weight` ON `issue_main`(`gant_sprint_weight`) USING BTREE ;
 ALTER TABLE `issue_status` ADD COLUMN `text_color`  varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'black' COMMENT '字体颜色' AFTER `color`;
+ALTER TABLE `main_activity` ADD COLUMN `content`  varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '内容' AFTER `action`;
+ALTER TABLE `main_activity` MODIFY COLUMN `title`  varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '相关的事项标题' AFTER `obj_id`;
 ALTER TABLE `main_notify_scheme` DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 ALTER TABLE `main_notify_scheme` MODIFY COLUMN `name`  varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `id`;
 ALTER TABLE `main_notify_scheme_data` DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
@@ -216,9 +217,10 @@ ROW_FORMAT=Dynamic
 CREATE TABLE `project_gantt_setting` (
 `id`  int(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
 `project_id`  int(11) UNSIGNED NULL DEFAULT NULL ,
-`source_type`  varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'project,active_sprint,module 可选' ,
+`source_type`  varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'project,active_sprint' ,
 `source_from`  varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
 `is_display_backlog`  tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否在甘特图中显示待办事项' ,
+`hide_issue_types`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '要隐藏的事项类型key以逗号分隔' ,
 PRIMARY KEY (`id`),
 UNIQUE INDEX `project_id` (`project_id`) USING BTREE 
 )
@@ -248,6 +250,9 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 ROW_FORMAT=Dynamic
 ;
 ALTER TABLE `project_module` ADD COLUMN `order_weight`  int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '排序权重' AFTER `ctime`;
+-- 删除创建表project_permission的语句
+
+-- 修改下面这一句，去掉一个方括号
 CREATE INDEX `project_id` ON `project_role`(`project_id`) USING BTREE ;
 ALTER TABLE `service_config` DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 ALTER TABLE `service_config` MODIFY COLUMN `clazz`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `delaytime`;
