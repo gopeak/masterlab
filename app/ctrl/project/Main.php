@@ -765,7 +765,10 @@ class Main extends Base
             // 把项目负责人赋予该项目的管理员权限
             list($flagAssignAdminRole) = ProjectLogic::assignAdminRoleForProjectLeader($ret['data']['project_id'], $info['lead']);
             // 把项目创建人添加到该项目，并赋予项目角色-普通用户
-            ProjectLogic::assignProjectRoleForUser($ret['data']['project_id'], $uid, 'Users');
+            if ($uid != $info['lead']) {
+                ProjectLogic::assignProjectRoleForUser($ret['data']['project_id'], $uid, 'Users');
+            }
+
 
             //写入操作日志
             $logData = [];
