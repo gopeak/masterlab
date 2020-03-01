@@ -6088,6 +6088,9 @@ MM.Mouse.handleEvent = function (e) {
 			e.preventDefault();
 
 			var item = MM.App.map.getItemFor(e.target);
+			if(!item){
+                break;
+			}
 			item && MM.App.select(item);
 			if (item._id && item._id.search('issue_') === -1) {
 				$("button[data-command='InsertSibling']").hide();
@@ -6114,7 +6117,7 @@ MM.Mouse.handleEvent = function (e) {
 				MM.Command.Finish.execute(); /* clicked elsewhere => finalize edit */
 			}
 
-			if (e.type == "mousedown") { e.preventDefault(); } /* to prevent blurring the clipboard node */
+			if (e.type == "mousedown") { MM.App.select(item);e.preventDefault(); } /* to prevent blurring the clipboard node */
 
 			if (e.type == "touchstart") { /* context menu here, after we have the item */
 				this._touchTimeout = setTimeout(function () {
