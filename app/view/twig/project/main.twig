@@ -48,7 +48,7 @@
 
                                 <div class="nav-controls row-fixed-content">
                                     <input type="search" name="name" id="project-filter-form-field" placeholder="通过项目名搜索" class="form-control input-short" spellcheck="false" tabindex="2">
-                                    <input type="hidden" name="sort" id="project-filter-sort" value="latest_activity_desc">
+                                    <input type="hidden" name="sort" id="project-filter-sort" value="{% if (projects_sort) %}{{ projects_sort }}{% else %}latest_activity_desc{% endif %}">
                                     <!--form class="project-filter-form qa-project-filter-form" id="project-filter-form" action="/projects" accept-charset="UTF-8" method="get">
                                         <input name="utf8" type="hidden" value="✓">
                                         <input type="search" name="name" id="project-filter-form-field" placeholder="通过项目名搜索" class="form-control input-short" spellcheck="false" tabindex="2">
@@ -203,13 +203,23 @@
 
 
     $(function () {
+        var search_sort = $('#project-filter-sort').val();
         var options = {
             list_render_id: "list_render_id",
             list_tpl_id: "list_tpl",
-            filter_url: "/projects/fetch_all?name=&sort="
+            filter_url: "/projects/fetch_all?name=&sort="+search_sort
         };
         window.$projects = new Project(options);
         window.$projects.fetchAll();
+
+        $('.js-masterlab-filter-selector-sort').removeClass('is-active');
+        $('.js-masterlab-filter-selector-sort').each(function(){
+            if ($(this).data('filter_sort') === search_sort) {
+                $(this).addClass('is-active');
+                $('#js-masterlab-selected-sort').text($(this).text());
+            }
+        });
+
 
         $(".issues-state-filters li").eq(0).addClass("active");
 

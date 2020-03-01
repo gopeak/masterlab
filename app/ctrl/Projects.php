@@ -15,6 +15,7 @@ use main\app\classes\ConfigLogic;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
 use main\app\classes\UploadLogic;
+use main\app\model\user\UserSettingModel;
 use main\lib\MySqlDump;
 
 /**
@@ -40,6 +41,8 @@ class Projects extends BaseUserCtrl
      */
     public function pageIndex()
     {
+        $userId = UserAuth::getId();
+
         $data = [];
         $data['title'] = '项目';
         $data['sub_nav_active'] = 'project';
@@ -79,6 +82,14 @@ class Projects extends BaseUserCtrl
             $data['is_admin'] = true;
         }
 
+        // 获取用户搜索排序的个性化设置
+        $data['project_sort'] = '';
+        $userSettingModel = new UserSettingModel();
+        $projectsSort = $userSettingModel->getSettingByKey($userId, 'projects_sort');
+        if ($projectsSort) {
+            $data['projects_sort'] = $projectsSort;
+        }
+
         ConfigLogic::getAllConfigs($data);
 
         $this->render('gitlab/project/main.php', $data);
@@ -90,6 +101,10 @@ class Projects extends BaseUserCtrl
      */
     public function fetchAll($typeId = 0)
     {
+        $userId = UserAuth::getId();
+        $typeId = intval($typeId);
+        $isAdmin = false;
+
         $searchSortArr = [
             'latest_activity_desc' => ['issue_update_time', 'desc'],
             'created_desc' => ['create_time', 'desc'],
@@ -105,12 +120,17 @@ class Projects extends BaseUserCtrl
             if (array_key_exists($_GET['sort'], $searchSortArr)) {
                 $searchOrderBy = $searchSortArr[$_GET['sort']][0];
                 $searchSort = $searchSortArr[$_GET['sort']][1];
+
+                $userSettingModel = new UserSettingModel();
+                $projectsSort = $userSettingModel->getSettingByKey($userId, 'projects_sort');
+                if ($projectsSort) {
+                    $userSettingModel->updateSetting($userId, 'projects_sort', $_GET['sort']);
+                } else {
+                    $userSettingModel->insertSetting($userId, 'projects_sort', $_GET['sort']);
+                }
             }
         }
-
-        $userId = UserAuth::getId();
-        $typeId = intval($typeId);
-        $isAdmin = false;
+        
 
         // 至少获取20个项目用户
         $fetchProjectUserNum = 20;
