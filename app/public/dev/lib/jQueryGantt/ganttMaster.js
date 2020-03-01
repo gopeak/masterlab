@@ -1136,7 +1136,7 @@ GanttMaster.prototype.addAboveCurrentTask = function (id, name, code, startTime,
 
      //ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
       let collapsed = 1;
-      let level = self.currentTask.level+ (addNewBrother ?0:1);
+      let level = self.currentTask.level;
      ch = factory.build(id, name, code,  level, startTime, endTime, duration, collapsed, sprint_id,sprint_name);
      row = self.currentTask.getRow();
      if (row > 0) {

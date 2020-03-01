@@ -304,7 +304,7 @@ function timestampToDate(timestamp, formats) {
  * @returns {*}
  */
 function trimStr(str){
-    console.log('str:',str)
+    //console.log('str:',str)
     return  str.replace(/\s+/g,"");
 }
 
