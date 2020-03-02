@@ -151,14 +151,16 @@ try {
     showLine('');
     showLine('Backing up database......');
     $result = backupDatabase($db, $databaseBackupFilename);
-    showLine('');
     if ($result) {
-        showLine('Database was backed up to ' . $databaseConfigBackupFile);
+        showLine('Done!');
+        showLine('Database was backed up to ' . $databaseBackupFilename);
     } else {
         showLine('Database backup failed, upgrade aborted!');
         die;
     }
 
+    showLine('');
+    showLine('Upgrading database......');
     $sql = file_get_contents($sqlFile);
     runSql($sql, $db);
 
@@ -175,7 +177,7 @@ try {
             $roleId = $projectRole['id'];
             $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
             $db->exec($sql);
-            showLine('EXECUTE SQL: ' . $sql);
+            // showLine('EXECUTE SQL: ' . $sql);
         }
 
         $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Developers', 'is_system' => 1]);
@@ -184,7 +186,7 @@ try {
             $roleId = $projectRole['id'];
             $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016')";
             $db->exec($sql);
-            showLine('EXECUTE SQL: ' . $sql);
+            // showLine('EXECUTE SQL: ' . $sql);
         }
 
         $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Administrators', 'is_system' => 1]);
@@ -193,7 +195,7 @@ try {
             $roleId = $projectRole['id'];
             $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
             $db->exec($sql);
-            showLine('EXECUTE SQL: ' . $sql);
+            // showLine('EXECUTE SQL: ' . $sql);
         }
 
         $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'PO', 'is_system' => 1]);
@@ -202,11 +204,14 @@ try {
             $roleId = $projectRole['id'];
             $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
             $db->exec($sql);
-            showLine('EXECUTE SQL: ' . $sql);
+            // showLine('EXECUTE SQL: ' . $sql);
         }
     }
 
+    showLine('Done!');
     showLine('');
+
+    showLine('Patching code......');
 
     // 解压缩代码补丁
     patchCode($patchFile, $projectDir);
@@ -214,6 +219,7 @@ try {
     // 解压缩vendor补丁
     patchCode($vendorFile, $projectDir);
 
+    showLine('Done!');
     showLine('');
 
     // 恢复 database.cfg.php 文件
@@ -237,7 +243,7 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage();
     showLine('');
-    showLine('Oops, there is something wrong, restoring database...');
+    showLine('Oops, there is something wrong, restoring database......');
     restoreDatabase($db, $databaseBackupFilename);
     showLine('');
     showLine('Error occurred, upgrade aborted! Database restored.');
@@ -266,7 +272,7 @@ $queries = parseSql($sql);
 foreach ($queries as $query) {
     try {
         $db->exec($query);
-        showLine($query);
+        // showLine($query);
     } catch (Exception $e) {
         echo $e->getMessage();
         showLine('Table index process failed: ' . $query);
@@ -274,8 +280,8 @@ foreach ($queries as $query) {
     }
 }
 
+showLine('Done!');
 showLine('');
-showLine('Done');
 
 // 生成锁文件
 touch($lockFile);
@@ -309,11 +315,11 @@ function runSql($sql, $db)
                 $db->exec(makeDropTableSql($tableName));
                 $db->exec($query);
 
-                showLine('EXECUTE SQL: ' . $query);
-                //showLine("Data table '" . $tableName . "' created'");
+                // showLine('EXECUTE SQL: ' . $query);
+                // showLine("Data table '" . $tableName . "' created'");
             } else {
                 $db->exec($query);
-                showLine('EXECUTE SQL: ' . $query);
+                // showLine('EXECUTE SQL: ' . $query);
             }
         }
     }
@@ -464,7 +470,7 @@ function patchCode($filename, $path)
                 //最大读取6M，如果文件过大，跳过解压，继续下一个
                 if ($fileSize < (1024 * 1024 * 6)) {
                     $content = zip_entry_read($dirResource, $fileSize);
-                    showLine('Unpacking: ' . $zipEntryPath);
+                    // showLine('Unpacking: ' . $zipEntryPath);
                     file_put_contents($zipEntryPath, $content);
                 } else {
                     if ($isWindows) {
@@ -492,15 +498,12 @@ function patchCode($filename, $path)
  * @return bool
  */
 function backupDatabase(\main\lib\MyPdo $db, $filename) {
-    $sql = 'SHOW TABLES';
-    $rows = $db->getRows($sql);
-
     $str = "/*\r\nMasterlab database backup\r\n";
     $str .= "Data:" . date('Y-m-d H:i:s', time()) . "\r\n*/\r\n";
     $str .= "SET FOREIGN_KEY_CHECKS=0;\r\n";
 
-    foreach ($rows as $row) {
-        $table = current($row);
+    $tables = getTables($db);
+    foreach ($tables as $table) {
         $ddl = getDDL($db, $table);
         $data = getData($db, $table);
 
@@ -528,8 +531,45 @@ function backupDatabase(\main\lib\MyPdo $db, $filename) {
  * @param $filename
  */
 function restoreDatabase(\main\lib\MyPdo $db, $filename) {
+    dropTables($db);
     $sql = file_get_contents($filename);
     runSql($sql, $db);
+}
+
+/**
+ * 获取数据库所有表名
+ *
+ * @param \main\lib\MyPdo $db
+ * @return array
+ */
+function getTables(\main\lib\MyPdo $db) {
+    $sql = 'SHOW TABLES';
+    $rows = $db->getRows($sql);
+
+    $tables = [];
+    foreach ($rows as $row) {
+        $table = current($row);
+        $tables[] = $table;
+    }
+
+    return $tables;
+}
+
+/**
+ * 删除表
+ *
+ * @param \main\lib\MyPdo $db
+ * @param array $tables
+ */
+function dropTables(\main\lib\MyPdo $db, $tables = []) {
+    if (!$tables) {
+        $tables = getTables($db);
+    }
+
+    foreach ($tables as $table) {
+        $sql = "DROP TABLE IF EXISTS `{$table}`";
+        $db->exec($sql);
+    }
 }
 
 /**
@@ -568,8 +608,7 @@ function getData(\main\lib\MyPdo $db, $table)
     foreach ($rows as $values) {
         $dataSqlRows = [];
         foreach ($values as $value) {
-            $value = addslashes($value);
-            $dataSqlRows[] = "'{$value}'";
+            $dataSqlRows[] = $db->pdo->quote($value);
         }
         $dataSql = join(',', $dataSqlRows);
         $queries[] = "INSERT INTO `{$table}` ({$columns}) VALUES ({$dataSql});";
