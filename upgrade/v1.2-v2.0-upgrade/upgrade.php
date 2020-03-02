@@ -13,9 +13,7 @@
  */
 
 showLine('');
-showLine('Please make sure you have backed up your masterlab database!');
-showLine('');
-echo 'Have you backed up your masterlab database? (Yes, No): ';
+echo 'Are you sure you want to upgrade now? (Yes, No): ';
 flush();
 $input = trim(fgets(STDIN));
 $input = strtolower($input);
@@ -63,6 +61,16 @@ $patchFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.patch.zip';
 // vendor目录压缩包，要求zip格式
 $vendorFile = $currentDir . 'data'. DIRECTORY_SEPARATOR . 'vendor.zip';
 
+// storage/attachment目录迁移
+$oldAttachmentDir = realpath(APP_PATH) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'attachment';
+$newAttachmentDir = realpath(APP_PATH) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'attachment';
+
+// 数据库备份文件
+$databaseBackupFilename = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'masterlab.bak.sql';
+
+// 索引操作语句SQL文件
+$indexSqlFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0_index.sql';
+
 // lock文件
 $lockFile = $currentDir . 'upgrade.lock';
 
@@ -77,17 +85,23 @@ if (!file_exists($patchFile)) {
     showLine('Error: Code patch file not exists!');
     $checkOk = false;
 }
+
+if (!file_exists($indexSqlFile)) {
+    showLine('Error: Database index patch file not exists!');
+    $checkOk = false;
+}
+
 if (!extension_loaded('zip')) {
     showLine('Error: php-extension zip not loaded');
     $checkOk = false;
 }
 
-if (!is_path_writable($projectDir)) {
+if (!isPathWritable($projectDir)) {
     showLine('Error: Project folder is not writable, can not write patch code');
     $checkOk = false;
 }
 
-if (!is_path_writable($currentDir)) {
+if (!isPathWritable($currentDir)) {
     showLine('Error: current folder is not writable, can not write patch code');
     $checkOk = false;
 }
@@ -114,12 +128,39 @@ try {
     showLine('Database config file backup to: ' . $databaseConfigBackupFile);
     copy($cacheConfigFile, $cacheConfigBackupFile);
     showLine('Cache config file backup to: ' . $cacheConfigBackupFile);
+} catch (Exception $e) {
+    echo $e->getMessage();
+    showLine('');
+    showLine('Error occurred, upgrade aborted!');
+    die;
+}
 
+try {
     $model = new \main\app\model\CacheModel();
     $db = $model->db;
     $db->connect();
+} catch (Exception $e) {
+    echo $e->getMessage();
+    showLine('');
+    showLine('Database connect failed, upgrade aborted!');
+    die;
+}
+
+try {
+    // 备份数据库
+    showLine('');
+    showLine('Backing up database......');
+    $result = backupDatabase($db, $databaseBackupFilename);
+    showLine('');
+    if ($result) {
+        showLine('Database was backed up to ' . $databaseConfigBackupFile);
+    } else {
+        showLine('Database backup failed, upgrade aborted!');
+        die;
+    }
+
     $sql = file_get_contents($sqlFile);
-    runSql($sql, $model->db);
+    runSql($sql, $db);
 
     $projectModel = new \main\app\model\project\ProjectModel();
     $projects = $projectModel->getRows();
@@ -187,25 +228,66 @@ try {
 
     showLine('');
 
-    // 清除缓存数据
+    // 移动storage/attachment目录
+    showLine('Copying attachment folder');
+    if (is_dir($oldAttachmentDir)) {
+        rename($oldAttachmentDir, $newAttachmentDir);
+        showLine('Attachment folder has been copied to ' . $newAttachmentDir);
+    }
+} catch (Exception $e) {
+    echo $e->getMessage();
+    showLine('');
+    showLine('Oops, there is something wrong, restoring database...');
+    restoreDatabase($db, $databaseBackupFilename);
+    showLine('');
+    showLine('Error occurred, upgrade aborted! Database restored.');
+    die;
+}
+
+showLine('');
+
+// 清除缓存数据
+try {
     $model->cache->connect();
     $ret = $model->cache->flush();
-    showLine('Cache flushed');
-
-    // 生成锁文件
-    touch($lockFile);
-
-    showLine('');
-    showLine('Upgrade completed successfully!');
-} catch (Exception $exception) {
-    echo $exception->getMessage();
+    showLine('Cache has been flushed');
+} catch (Exception $e) {
+    showLine('Clear cache failed, please do it manually');
+    showLine('Ignored');
 }
+
+showLine('');
+showLine('Processing table index......');
+
+// 操作数据表索引
+$sql = file_get_contents($indexSqlFile);
+$queries = parseSql($sql);
+
+foreach ($queries as $query) {
+    try {
+        $db->exec($query);
+        showLine($query);
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        showLine('Table index process failed: ' . $query);
+        showLine('Ignored');
+    }
+}
+
+showLine('');
+showLine('Done');
+
+// 生成锁文件
+touch($lockFile);
+
+showLine('');
+showLine('Upgrade completed successfully!');
 
 /**
  * 执行SQL
  *
  * @param $sql
- * @param $db
+ * @param \main\lib\MyPdo $db
  * @return bool
  */
 function runSql($sql, $db)
@@ -216,30 +298,9 @@ function runSql($sql, $db)
         return false;
     }
 
-    // \r\n，\r全部替换为\n
-    $sql = str_replace("\r\n", "\n", $sql);
-    $sql = str_replace("\r", "\n", $sql);
+    $queries = parseSql($sql);
 
-    $ret = [];
-    $num = 0;
-    $sqlRows = explode(";\n", $sql);
-    unset($sql);
-
-    foreach ($sqlRows as $sqlRow) {
-        $sqlRow = trim($sqlRow);
-        if (!$sqlRow) {
-            continue;
-        }
-
-        $ret[$num] = '';
-        $sqlLines = explode("\n", $sqlRow);
-        foreach ($sqlLines as $sqlLine) {
-            $ret[$num] .= (isset($sqlLine[0]) && $sqlLine[0] == '#') || (isset($sqlLine[1]) && isset($sqlLine[1]) && $sqlLine[0] . $sqlLine[1] == '--') ? '' : ' ' . $sqlLine;
-        }
-        $num++;
-    }
-
-    foreach ($ret as $query) {
+    foreach ($queries as $query) {
         $query = trim($query);
         if ($query) {
             if (substr($query, 0, 12) == 'CREATE TABLE') {
@@ -260,6 +321,55 @@ function runSql($sql, $db)
     return true;
 }
 
+/**
+ * 解析SQL文件为SQL语句数组
+ *
+ * @param $sql
+ * @return array
+ */
+function parseSql($sql) {
+    $sql = trim($sql);
+    // 删除/**/注释
+    $sql = preg_replace('/\/\*([\s\S]*?)\*\//', '', $sql);
+
+    // \r\n，\r全部替换为\n
+    $sql = str_replace("\r\n", "\n", $sql);
+    $sql = str_replace("\r", "\n", $sql);
+    $sql = preg_replace('/\n+/', "\n", $sql);
+
+    $rows = [];
+    $sqlRows = explode(";\n", $sql);
+    unset($sql);
+
+    foreach ($sqlRows as $sqlRow) {
+        $sqlRow = trim($sqlRow);
+        if (!$sqlRow) {
+            continue;
+        }
+
+        $sqlLines = explode("\n", $sqlRow);
+        $lines = [];
+        foreach ($sqlLines as $sqlLine) {
+            if ((substr($sqlLine, 0, 1) != '#') && (substr($sqlLine, 0, 2) != '--')) {
+                $lines[] = $sqlLine;
+            }
+        }
+
+        if ($lines) {
+            $row = join(' ', $lines);
+            $rows[] = $row;
+        }
+    }
+
+    return $rows;
+}
+
+/**
+ * 生成删除表语句
+ *
+ * @param $tableName
+ * @return string
+ */
 function makeDropTableSql($tableName)
 {
     return "DROP TABLE IF EXISTS `" . $tableName . "`;";
@@ -279,22 +389,23 @@ function showLine($message)
 /**
  * 文件或目录是否可写
  *
- * @param $file
+ * @param $path
  * @return bool
  */
-function is_path_writable($file)
+function isPathWritable($path)
 {
-    if (is_dir($file)) {
-        $dir = $file;
-        if ($fp = @fopen("$dir/test.txt", 'w')) {
+    if (is_dir($path)) {
+        $dir = $path;
+        $template = $dir . DIRECTORY_SEPARATOR . randString(10);
+        if ($fp = @fopen($template, 'w')) {
             @fclose($fp);
-            @unlink("$dir/test.txt");
+            @unlink($template);
             $writable = true;
         } else {
             $writable = false;
         }
     } else {
-        if ($fp = @fopen($file, 'a+')) {
+        if ($fp = @fopen($path, 'a+')) {
             @fclose($fp);
             $writable = true;
         } else {
@@ -371,4 +482,157 @@ function patchCode($filename, $path)
 
     // 关闭压缩包
     zip_close($resource);
+}
+
+/**
+ * 备份数据库
+ *
+ * @param \main\lib\MyPdo $db
+ * @param $filename
+ * @return bool
+ */
+function backupDatabase(\main\lib\MyPdo $db, $filename) {
+    $sql = 'SHOW TABLES';
+    $rows = $db->getRows($sql);
+
+    $str = "/*\r\nMasterlab database backup\r\n";
+    $str .= "Data:" . date('Y-m-d H:i:s', time()) . "\r\n*/\r\n";
+    $str .= "SET FOREIGN_KEY_CHECKS=0;\r\n";
+
+    foreach ($rows as $row) {
+        $table = current($row);
+        $ddl = getDDL($db, $table);
+        $data = getData($db, $table);
+
+        $str .= "-- ----------------------------\r\n";
+        $str .= "-- Table structure for {$table}\r\n";
+        $str .= "-- ----------------------------\r\n";
+        $str .= "DROP TABLE IF EXISTS `{$table}`;\r\n";
+        $str .= $ddl . "\r\n";
+        $str .= "-- ----------------------------\r\n";
+        $str .= "-- Records of {$table}\r\n";
+        $str .= "-- ----------------------------\r\n";
+        $str .= $data . "\r\n";
+    }
+
+    $str .= "SET FOREIGN_KEY_CHECKS=1;\r\n";
+    $result = file_put_contents($filename, $str);
+
+    return $result !== false;
+}
+
+/**
+ * 恢复数据库
+ *
+ * @param \main\lib\MyPdo $db
+ * @param $filename
+ */
+function restoreDatabase(\main\lib\MyPdo $db, $filename) {
+    $sql = file_get_contents($filename);
+    runSql($sql, $db);
+}
+
+/**
+ * 生成建表DDL
+ *
+ * @param \main\lib\MyPdo $db
+ * @param $table
+ * @return string
+ */
+function getDDL(\main\lib\MyPdo $db, $table) {
+    $sql = "SHOW CREATE TABLE `{$table}`";
+    $ddl = $db->getRows($sql)[0]['Create Table'] . ';';
+
+    return $ddl;
+}
+
+/**
+ * 生成插入数据语句
+ *
+ * @param \main\lib\MyPdo $db
+ * @param $table
+ * @return string
+ */
+function getData(\main\lib\MyPdo $db, $table)
+{
+    $rows = $db->getRows("SHOW COLUMNS FROM `{$table}`");
+    $columns = [];
+    foreach ($rows as $row) {
+        $columns[] = "`{$row['Field']}`";
+    }
+
+    $columns = join(',', $columns);
+
+    $rows = $db->getRows("SELECT * FROM `{$table}`");
+    $queries = [];
+    foreach ($rows as $values) {
+        $dataSqlRows = [];
+        foreach ($values as $value) {
+            $value = addslashes($value);
+            $dataSqlRows[] = "'{$value}'";
+        }
+        $dataSql = join(',', $dataSqlRows);
+        $queries[] = "INSERT INTO `{$table}` ({$columns}) VALUES ({$dataSql});";
+    }
+
+    $query = join("\r\n", $queries);
+    return $query;
+}
+
+/**
+ * 复制文件夹
+ *
+ * @param $sourceDir
+ * @param $destinationDir
+ */
+function copyDir($sourceDir, $destinationDir)
+{
+    if (!file_exists($destinationDir)) {
+        mkdir($destinationDir);
+    };
+
+    $handle = opendir($sourceDir);
+    while (($item = readdir($handle)) !== false) {
+        if ($item == '.' || $item == '..') {
+            continue;
+        };
+
+        $source = $sourceDir . DIRECTORY_SEPARATOR . $item;
+        $destination = $destinationDir . DIRECTORY_SEPARATOR . $item;
+
+        if (is_file($source)) {
+            copy($source, $destination);
+        } elseif (is_dir($source)) {
+            copyDir($source, $destination);
+        }
+    }
+
+    closedir($handle);
+}
+
+/**
+ * 删除文件夹
+ *
+ * @param $path
+ * @return bool
+ */
+function rmDirectory($path)
+{
+    $handle = opendir($path);
+    while (($item = readdir($handle)) !== false) {
+        if ($item == '.' || $item == '..') {
+            continue;
+        };
+
+        $item = $path . DIRECTORY_SEPARATOR . $item;
+        if (is_file($item)) {
+            unlink($item);
+        };
+
+        if (is_dir($item)) {
+            rmDirectory($item);
+        };
+    }
+    closedir($handle);
+    return rmdir($path);
 }

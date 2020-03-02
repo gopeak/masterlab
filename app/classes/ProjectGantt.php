@@ -558,10 +558,11 @@ class ProjectGantt
         $limit = " limit {$start}, " . $pageSize;
 
         $condition =
-            "project_id={$projectId} AND gant_hide=1 AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc " . $limit;
+            "project_id={$projectId} AND gant_hide=1 AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc ";
 
         $count = $issueModel->db->getOne("SELECT count(*) as cc FROM {$issueModel->getTable()} WHERE {$condition}");
 
+        $condition .= $limit;
         $sql = "SELECT * FROM {$issueModel->getTable()} WHERE {$condition}";
         //echo $sql;
         $rows = $issueModel->db->getRows($sql);

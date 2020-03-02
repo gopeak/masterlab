@@ -112,7 +112,7 @@ class Projects extends BaseUserCtrl
         ];
         $searchKey = '';
         if (isset($_GET['name']) && !empty($_GET['name'])) {
-            $searchKey = $_GET['name'];
+            $searchKey = trim($_GET['name']);
         }
         $searchOrderBy = 'issue_update_time';
         $searchSort = 'desc';
