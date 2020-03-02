@@ -342,28 +342,24 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
                 params = {start_date:inp.val().replace(/\//g,'-')};
                 let start_date = inp.val().replace(/\//g,'-');
                 let due_date = timestampToDate(task.end);
-                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row);
+                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row,dates);
             }
             if(leavingField==='end'){
                 params = {due_date:inp.val().replace(/\//g,'-')};
                 let start_date = timestampToDate(task.start);
                 let due_date = inp.val().replace(/\//g,'-');
-                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row);
+                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row,dates);
             }
             window.$_gantAjax.updateIssue(task.id,params);
-
-            self.master.beginTransaction();
+            window.ge.beginTransaction();
             try{
-                self.master.changeTaskDates(task, dates.start, dates.end);
-                self.master.endTransaction();
+                window.ge.changeTaskDates(task, dates.start, dates.end);
+                window.ge.endTransaction();
             }catch (e) {
                 console.log(e.name,e.message);
-                self.master.endTransaction();
+                window.ge.endTransaction();
             }
-
-
-
-          inp.updateOldValue(); //in order to avoid multiple call if nothing changed
+            //inp.updateOldValue(); //in order to avoid multiple call if nothing changed
         }
       }
     });
