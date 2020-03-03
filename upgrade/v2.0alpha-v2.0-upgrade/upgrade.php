@@ -13,7 +13,8 @@
 
 showLine('');
 showLine('This program will upgrade your Masterlab v2.0 alpha to Masterlab v2.0,');
-showLine('Are you sure you want to upgrade now? (Yes, No): ');
+echo 'Are you sure you want to upgrade now? (Yes, No): ';
+flush();
 $input = trim(fgets(STDIN));
 $input = strtolower($input);
 if (!(($input == 'yes') || ($input == 'y'))) {
