@@ -1523,6 +1523,7 @@ class Main extends BaseUserCtrl
 
         // 实例化邮件通知
         $notifyLogic = new NotifyLogic();
+        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_UPDATE;
 
         $info['modifier'] = $uid;
 
