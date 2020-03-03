@@ -47,6 +47,12 @@ class Activity extends BaseUserCtrl
             $data['page'] = $page = max(1, (int)$_GET['page']);
         }
         list($data['activity_list'], $total) = ActivityLogic::filterByUser($userId, $page, $pageSize);
+        foreach ($data['activity_list'] as &$item) {
+            if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
+                $item['title'] = '<span style="text-decoration: line-through;">' . $item['title'] . '</span>';
+            }
+        }
+        unset($item);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

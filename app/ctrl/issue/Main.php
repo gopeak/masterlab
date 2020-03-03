@@ -1770,7 +1770,7 @@ class Main extends BaseUserCtrl
 
                     $change = $fieldLabels[$field] . '：' . $issueOldValue . ' --> ' . $issueNewValue;
                     if ($field == 'summary') {
-                        $change = '标题 变更为 <span style="color:#337ab7">' . $issueNewValue . '</span>';
+                        $change = '标题 变更为 ' . $issueNewValue;
                     }
                     $changes[] = $change;
                 }
