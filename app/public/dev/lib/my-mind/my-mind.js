@@ -5302,6 +5302,7 @@ MM.UI.IO.prototype.fetchIssues = function () {
 			}
 			MM.UI.Backend._loadDone.call(this, json);
 			$('.mind-create').bind('click', function () {
+				//alert($(this));
 				let item_id = $(this).data('id');
 				let issue_id = null;
 				if (item_id.search('issue_') >= 0) {
@@ -6426,8 +6427,10 @@ MM.App = {
 
 	select: function (item) {
 		if (this.current && this.current != item) { this.current.deselect(); }
-		this.current = item;
-		this.current.select();
+		if(!is_empty(item)){
+            this.current = item;
+            this.current.select();
+		}
 	},
 
 	adjustFontSize: function (diff) {

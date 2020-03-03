@@ -807,7 +807,7 @@ var Gantt = (function () {
 
 
 
-    Gantt.prototype.computeTaskRowDuration = function(task, start_date, due_date,rowtr){
+    Gantt.prototype.computeTaskRowDuration = function(task, start_date, due_date,rowtr,dates){
         let project_id = window._cur_project_id;
         if(start_date!=='' && due_date!==''){
             var url = '/issue/main/getDuration/?project'+project_id;
@@ -824,7 +824,9 @@ var Gantt = (function () {
                         for (var i = 0; i < window.ge.tasks.length; i++) {
                             var tsk = window.ge.tasks[i];
                             if (tsk.id == task.id) {
-                                window.ge.tasks[i].duration = resp.data;
+                                window.ge.tasks[i].duration = parseInt(resp.data);
+                                let startTime = (new Date(start_date).getTime());
+                                console.log('startTime:',startTime);
                                 break;
                             }
                         }

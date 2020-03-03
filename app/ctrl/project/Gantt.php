@@ -282,6 +282,7 @@ class Gantt extends BaseUserCtrl
         if ($sourceType == 'active_sprint') {
             $issues = $class->getIssuesGroupByActiveSprint($projectId,  $isDisplayBacklog);
         }
+
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
 
