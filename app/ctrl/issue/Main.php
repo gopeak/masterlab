@@ -1466,8 +1466,6 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $uid = $this->getCurrentUid();
-        $user = $this->auth->getUser();
-        $userDisplayName = $user['display_name'];
 
         $info = [];
 
@@ -1482,33 +1480,6 @@ class Main extends BaseUserCtrl
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-
-        // 生成日志备注详情
-        $moduleNames = [
-            'issue_list' => '事项列表',
-            'issue_detail' => '事项详情',
-            'gantt' => '甘特图',
-            'mind' => '事项分解',
-            'kanban' => '看板',
-            'sprint' => '迭代',
-            'backlog' => '待办事项'
-        ];
-
-        $fromModule = null;
-        if (isset($params['from_module'])) {
-            $fromModule = strtolower(trim($params['from_module']));
-        } elseif (isset($_REQUEST['from_module'])) {
-            $fromModule = strtolower(trim($_REQUEST['from_module']));
-        }
-
-        $actionInfo = "修改事项";
-        if ($fromModule && isset($moduleNames[$fromModule]) && !in_array($fromModule, ['issue_list', 'issue_detail'])) {
-            $moduleName = $moduleNames[$fromModule];
-            $actionInfo = "在 \"{$moduleName}\" 模块中修改事项";
-        }
-
-        $actionContent = $this->makeActionInfo($issue, $info);
-
         $issueType = $issue['issue_type'];
         if (isset($params['issue_type'])) {
             $issueType = $params['issue_type'];
@@ -1668,13 +1639,16 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->updateCustomFieldValue($issueId, $params);
 
+        // 记录活动日志
+        $fromModule = null;
+        if (isset($params['from_module'])) {
+            $fromModule = strtolower(trim($params['from_module']));
+        } elseif (isset($_GET['from_module'])) {
+            $fromModule = strtolower(trim($_GET['from_module']));
+        }
+        $actionInfo = $this->makeActionInfo($fromModule);
+        $actionContent = $this->makeActionContent($issue, $info);
 
-        // 活动记录
-        //$issueLogic = new IssueLogic();
-        //$statusModel = new IssueStatusModel();
-        //$resolveModel = new IssueResolveModel();
-        // 使用新的actionInfo表述方式，此处注释掉
-        //$actionInfo = $issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
@@ -1706,13 +1680,41 @@ class Main extends BaseUserCtrl
     }
 
     /**
-     * 组装事项操作日志备注信息
+     * 生成事项活动日志的活动名称
+     *
+     * @param $fromModule string 来源操作模块
+     * @return string
+     */
+    private function makeActionInfo($fromModule)
+    {
+        // 生成日志备注详情
+        $moduleNames = [
+            'issue_list' => '事项列表',
+            'issue_detail' => '事项详情',
+            'gantt' => '甘特图',
+            'mind' => '事项分解',
+            'kanban' => '看板',
+            'sprint' => '迭代',
+            'backlog' => '待办事项'
+        ];
+
+        $actionInfo = "修改事项";
+        if ($fromModule && isset($moduleNames[$fromModule]) && !in_array($fromModule, ['issue_list', 'issue_detail'])) {
+            $moduleName = $moduleNames[$fromModule];
+            $actionInfo = "在 \"{$moduleName}\" 模块中修改事项";
+        }
+
+        return $actionInfo;
+    }
+
+    /**
+     * 组装事项活动日志的备注信息
      *
      * @param $issueOldValues
      * @param $issueNewValues
      * @return string
      */
-    private function makeActionInfo($issueOldValues, $issueNewValues)
+    private function makeActionContent($issueOldValues, $issueNewValues)
     {
         $fieldLabels = [
             'issue_type' => '事项类型',

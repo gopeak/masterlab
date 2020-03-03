@@ -211,7 +211,7 @@ try {
     showLine('Done!');
     showLine('');
 
-    showLine('Patching code......');
+    showLine('Upgrading code......');
 
     // 解压缩代码补丁
     patchCode($patchFile, $projectDir);
