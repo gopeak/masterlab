@@ -1068,7 +1068,6 @@ class Main extends BaseUserCtrl
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
 
-
         $this->ajaxSuccess('添加成功', $issueId);
     }
 
@@ -1607,11 +1606,6 @@ class Main extends BaseUserCtrl
                     }
                 }
             }
-            if(!empty($issue['start_date']) && !empty($issue['due_date'])){
-                $holidays = (new HolidayModel())->getDays($issue['project_id']);
-                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
-                $info['duration'] = getWorkingDays($issue['start_date'], $issue['due_date'], $holidays, $extraWorkerDays);
-            }
 
             list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
             if (!$ret) {
@@ -1620,6 +1614,16 @@ class Main extends BaseUserCtrl
 
             $projectModel = new ProjectModel();
             $projectModel->updateById(['issue_update_time' => time()], $issue['project_id']);
+
+            // 更新用时
+            if(isset($info['start_date']) || isset($info['due_date'])){
+                $updatedIssue = $issueModel->getById($issueId);
+                $holidays = (new HolidayModel())->getDays($issue['project_id']);
+                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
+                $updateDurationArr = [];
+                $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $holidays, $extraWorkerDays);
+                $issueModel->updateById($issueId, $updateDurationArr);
+            }
         }
 
         //写入操作日志
@@ -1664,10 +1668,6 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->updateCustomFieldValue($issueId, $params);
 
-        // 更新用时
-        if(!empty($issue['start_date']) && !empty($issue['due_date'])){
-
-        }
 
         // 活动记录
         //$issueLogic = new IssueLogic();
