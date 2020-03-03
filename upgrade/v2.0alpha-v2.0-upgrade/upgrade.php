@@ -118,9 +118,9 @@ try {
 
     // 备份
     copy($databaseConfigFile, $databaseConfigBackupFile);
-    showLine('Database config file backup to: ' . $databaseConfigBackupFile);
+    showLine('Database config file backed up to: ' . $databaseConfigBackupFile);
     copy($cacheConfigFile, $cacheConfigBackupFile);
-    showLine('Cache config file backup to: ' . $cacheConfigBackupFile);
+    showLine('Cache config file backed up to: ' . $cacheConfigBackupFile);
 } catch (Exception $e) {
     echo $e->getMessage();
     showLine('');
@@ -177,9 +177,10 @@ try {
     showLine('');
 
     // 移动storage/attachment目录
-    showLine('Copying attachment folder');
+    showLine('Copying attachment folder......');
     if (is_dir($oldAttachmentDir)) {
         rename($oldAttachmentDir, $newAttachmentDir);
+        showLine('Done!');
         showLine('Attachment folder has been copied to ' . $newAttachmentDir);
     }
 } catch (Exception $e) {
