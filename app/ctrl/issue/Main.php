@@ -1521,78 +1521,60 @@ class Main extends BaseUserCtrl
             //$this->ajaxSuccess('success');
         }
 
-        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_UPDATE;
-        // print_r($info);
-        $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
-        $statusResolvedId = IssueStatusModel::getInstance()->getIdByKey('resolved');
-        $statusInprogressId = IssueStatusModel::getInstance()->getIdByKey('in_progress');
+        // 实例化邮件通知
+        $notifyLogic = new NotifyLogic();
 
-        if (!empty($info)) {
-            $info['modifier'] = $uid;
-            // 如果是关闭状态则要检查权限
-            if (isset($info['status']) && $issue['status'] != $info['status']) {
-                //检测当前用户角色权限是否有修改事项状态的权限
-                if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_STATUS)) {
-                    $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项状态权限');
-                }
+        $info['modifier'] = $uid;
 
-                if ($info['status'] == $statusClosedId) {
-                    // todo
-                }
-                switch ($info['status']) {
-                    case $statusClosedId:
-                        // 状态已关闭
-                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_CLOSE;
-                        break;
-                    case $statusResolvedId:
-                        // 状态已解决
-                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_COMPLETE;
-                        break;
-                    case $statusInprogressId:
-                        // 状态进行中
-                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_START;
-                        break;
-                }
-                if ($info['status'] == $statusClosedId) {
-                    $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
-                    if (!$closePerm) {
-                        $this->ajaxFailed('当前项目中您没有权限关闭状态');
-                    }
+        // 状态 如果是关闭状态则要检查权限
+        if (isset($info['status']) && $issue['status'] != $info['status']) {
+            //检测当前用户角色权限是否有修改事项状态的权限
+            if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_STATUS)) {
+                $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项状态权限');
+            }
+            $notifyFlag = $notifyLogic->getEmailNotifyFlag($info['status']);
+            $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+            if ($info['status'] == $statusClosedId) {
+                $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
+                if (!$closePerm) {
+                    $this->ajaxFailed('当前项目中您没有权限关闭状态');
                 }
             }
-            // 如果是关闭状态则要检查权限
-            if (isset($info['resolve']) && $issue['resolve'] != $info['resolve']) {
-                if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_RESOLVE)) {
-                    $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项解决结果权限');
-                }
-
-                $resolve = IssueResolveModel::getInstance()->getByKey('done');
-                $resolveDoneId = $resolve['id'];
-                if ($info['resolve'] == $resolveDoneId) {
-                    $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
-                    if (!$closePerm) {
-                        $this->ajaxFailed('当前项目中您没有权限将解决结果修改为:' . $resolve['name']);
-                    }
-                }
-            }
-
-            list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
-            if (!$ret) {
-                $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
-            }
-            
-
-            // 更新用时
-            if(isset($info['start_date']) || isset($info['due_date'])){
-                $updatedIssue = $issueModel->getById($issueId);
-                $holidays = (new HolidayModel())->getDays($issue['project_id']);
-                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
-                $updateDurationArr = [];
-                $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $holidays, $extraWorkerDays);
-                $issueModel->updateById($issueId, $updateDurationArr);
-            }
-
         }
+
+        // 解决结果 如果是关闭状态则要检查权限
+        if (isset($info['resolve']) && $issue['resolve'] != $info['resolve']) {
+            if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_RESOLVE)) {
+                $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项解决结果权限');
+            }
+
+            $resolve = IssueResolveModel::getInstance()->getByKey('done');
+            $resolveDoneId = $resolve['id'];
+            if ($info['resolve'] == $resolveDoneId) {
+                $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
+                if (!$closePerm) {
+                    $this->ajaxFailed('当前项目中您没有权限将解决结果修改为:' . $resolve['name']);
+                }
+            }
+        }
+
+        list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+        }
+
+
+        // 更新用时
+        if(isset($info['start_date']) || isset($info['due_date'])){
+            $updatedIssue = $issueModel->getById($issueId);
+            $holidays = (new HolidayModel())->getDays($issue['project_id']);
+            $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
+            $updateDurationArr = [];
+            $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $holidays, $extraWorkerDays);
+            $issueModel->updateById($issueId, $updateDurationArr);
+        }
+
+
 
         //写入操作日志
         $curIssue = $issue;
@@ -1670,7 +1652,6 @@ class Main extends BaseUserCtrl
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
         // email
-        $notifyLogic = new NotifyLogic();
         $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
 
         $this->ajaxSuccess('更新成功');
