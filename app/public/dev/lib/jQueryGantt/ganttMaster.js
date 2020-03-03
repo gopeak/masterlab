@@ -1061,7 +1061,7 @@ GanttMaster.prototype.showAddBelowCurrentTask = function () {
     window.$_gantAjax.initEditIssueForm(self.currentTask);
 }
 
-GanttMaster.prototype.addBelowCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id, sprint_name, progress) {
+GanttMaster.prototype.addBelowCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id, sprint_name, progress, assigneeObj) {
   var self = this;
   console.debug("addBelowCurrentTask",self.currentTask)
   var factory = new TaskFactory();
@@ -1085,15 +1085,18 @@ GanttMaster.prototype.addBelowCurrentTask = function (id, name, code, startTime,
     row = self.currentTask.getRow() + 1;
 
     if (row>0) {
-      self.beginTransaction();
-      ch.syncedServer = true;
-      ch.progress = progress;
-      var task = self.addTask(ch, row);
-      if (task) {
-        task.rowElement.click();
-        task.rowElement.find("[name=name]").focus();
-        task.rowElement.find("[name=progress]").val(progress);
-      }
+        self.beginTransaction();
+        ch.syncedServer = true;
+        ch.progress = progress;
+        ch.assigs = [];
+        ch.assigs.push(assigneeObj);
+        var task = self.addTask(ch, row);
+        if (task) {
+            task.rowElement.click();
+            task.rowElement.find("[name=name]").focus();
+            task.rowElement.find("[name=progress]").val(progress);
+            task.rowElement.find(".taskAssigs").html(task.getAssigsString());
+        }
       self.endTransaction();
     }
   }
@@ -1120,7 +1123,7 @@ GanttMaster.prototype.showAddAboveCurrentTask = function () {
     window.$_gantAjax.initEditIssueForm(self.currentTask);
 }
 
-GanttMaster.prototype.addAboveCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress) {
+GanttMaster.prototype.addAboveCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress,assigneeObj) {
   var self = this;
   // console.debug("addAboveCurrentTask",self.currentTask)
 
@@ -1141,16 +1144,20 @@ GanttMaster.prototype.addAboveCurrentTask = function (id, name, code, startTime,
       let collapsed = 1;
       let level = self.currentTask.level;
      ch = factory.build(id, name, code,  level, startTime, endTime, duration, collapsed, sprint_id,sprint_name);
+
      row = self.currentTask.getRow();
      if (row > 0) {
         self.beginTransaction();
         ch.syncedServer = true;
         ch.progress = progress;
+         ch.assigs = [];
+         ch.assigs.push(assigneeObj);
         var task = self.addTask(ch, row);
         if (task) {
-          task.rowElement.click();
-          task.rowElement.find("[name=name]").focus();
-          task.rowElement.find("[name=progress]").val(progress);
+            task.rowElement.click();
+            task.rowElement.find("[name=name]").focus();
+            task.rowElement.find("[name=progress]").val(progress);
+            task.rowElement.find(".taskAssigs").html(task.getAssigsString());
         }
         self.endTransaction();
 

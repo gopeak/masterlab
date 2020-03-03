@@ -405,12 +405,17 @@ var Gantt = (function () {
                     endTime = (new Date(due_date).getTime());
                     let duration = parseInt($('#gantt_duration').val());
                     let progress = parseInt($('#gantt_progress').val());
+                    if(isNaN(progress)){
+                        progress = 0;
+                    }
+                    let assignee_user_id = parseInt($('#gantt_assignee').val());
+                    var assigneeObj = window.ge.getResource(assignee_user_id);
 
                     if(action==='addAboveCurrentTask'){
-                        self.addAboveCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress);
+                        self.addAboveCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress,assigneeObj);
                     }
                     if(action==='addBelowCurrentTask'){
-                        self.addBelowCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress);
+                        self.addBelowCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress,assigneeObj);
                     }
                 }else{
                     notify_error(resp.msg);
@@ -445,6 +450,11 @@ var Gantt = (function () {
         task.relevance = 0;
         task.progressByWorklog=  false;//taskEditor.find("#progressByWorklog").is(":checked");
 
+        let assignee_user_id = parseInt($('#gantt_assignee').val());
+        var assigneeObj = window.ge.getResource(assignee_user_id);
+        task.assig = [];
+        task.assig.push(assigneeObj)
+        task.rowElement.find(".taskAssigs").html(task.getAssigsString());
         //set assignments
         var cnt=0;
 
