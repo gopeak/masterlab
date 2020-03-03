@@ -1083,7 +1083,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['progress'])) {
-            $info['progress'] = (int)$params['progress'];
+            $info['progress'] = max(0,(int)$params['progress']);
         }
 
         if (isset($params['depends'])) {
@@ -1562,7 +1562,6 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
         }
-
 
         // 更新用时
         if(isset($info['start_date']) || isset($info['due_date'])){

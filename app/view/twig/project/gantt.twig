@@ -384,7 +384,7 @@
                     <input type="hidden" name="params[sprint]" id="gantt_sprint" value="0">
                     <input type="hidden" name="params[duration]" id="gantt_duration" value="0">
                     <input type="hidden" name="params[add_gantt_dir]" id="add_gantt_dir" value="">
-                    <input type="hidden"  name="params[description]" id="gantt_description" value="">
+
                     <input type="hidden" name="authenticity_token" value="">
 
                         <div class="form-group">
@@ -464,7 +464,7 @@
                         </div>
                         <div class="col-sm-2">进度:</div>
                         <div class="col-sm-4">
-                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="gantt_progress"  value="1" autocomplete="off">
+                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="gantt_progress"  max="100"  value="1" autocomplete="off">
                             <p id="tip-progress" class="gl-field-error hide"></p>
                         </div>
                     </div>
@@ -494,7 +494,7 @@
                         <div class="col-sm-2">描 述:</div>
                         <div class="col-sm-10">
                             <div id="description_md" style="margin: 0">
-
+                                <textarea class="editormd-html-textarea"  name="params[description]" id="gantt_description"></textarea>
                             </div>
                             <p id="tip-description" class="gl-field-error hide"></p>
                         </div>

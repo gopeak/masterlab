@@ -28,7 +28,7 @@ var Gantt = (function () {
         for (var _key in  issue_types) {
             issue_types_select.options.add(new Option(issue_types[_key].name, issue_types[_key].id));
         }
-        console.log(issue_types_select);
+        // console.log(issue_types_select);
         $('.selectpicker').selectpicker('refresh');
     }
 
@@ -187,7 +187,6 @@ var Gantt = (function () {
                 imageUploadURL: root_url + "issue/detail/editormd_upload",
                 tocm: true,    // Using [TOCM]
                 emoji: true,
-                saveHTMLToTextarea: true,
                 toolbarIcons: "custom"
             });
         }else{
@@ -246,7 +245,25 @@ var Gantt = (function () {
                 }else{
                     $('#sprint_name').html(sprint.name);
                 }
-                _gantt_editor_md.setMarkdown(issue.description);
+                if(typeof(_gantt_editor_md)==='object'){
+                    _gantt_editor_md.setMarkdown(issue.description);
+                }else{
+                    _gantt_editor_md = editormd('description_md', {
+                        width: "640px",
+                        height: 220,
+                        watch: false,
+                        markdown: issue.description,
+                        path: root_url + 'dev/lib/editor.md/lib/',
+                        imageUpload: true,
+                        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                        imageUploadURL: root_url + "issue/detail/editormd_upload",
+                        tocm: true,    // Using [TOCM]
+                        emoji: true,
+                        toolbarIcons: "custom"
+                    });
+                }
+
+
 
 
             },
@@ -351,6 +368,7 @@ var Gantt = (function () {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+
         var url = '/issue/main/add?from_gantt=1&from_module=gantt';
 
         $.ajax({
@@ -386,12 +404,13 @@ var Gantt = (function () {
                     }
                     endTime = (new Date(due_date).getTime());
                     let duration = parseInt($('#gantt_duration').val());
+                    let progress = parseInt($('#gantt_progress').val());
 
                     if(action==='addAboveCurrentTask'){
-                        self.addAboveCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name);
+                        self.addAboveCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress);
                     }
                     if(action==='addBelowCurrentTask'){
-                        self.addBelowCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name);
+                        self.addBelowCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress);
                     }
                 }else{
                     notify_error(resp.msg);
@@ -414,7 +433,7 @@ var Gantt = (function () {
 
         self.beginTransaction();
         task.name = $("#gantt_summary").val();
-        task.description = window._gantt_editor_md.getMarkdown();
+
         task.code = "#"+taskId;
         task.progress = parseInt($("#gantt_progress").val());
         //task.duration = parseInt(taskEditor.find("#duration").val()); //bicch rimosso perchè devono essere ricalcolata dalla start end, altrimenti sbaglia
@@ -446,6 +465,7 @@ var Gantt = (function () {
             //closeBlackPopup();
         }
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+
         var url = '/issue/main/update?from_gantt=1&from_module=gantt';
         $.ajax({
             type: 'post',

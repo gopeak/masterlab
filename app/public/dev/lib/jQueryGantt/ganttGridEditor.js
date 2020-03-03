@@ -335,9 +335,13 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
             console.log(leavingField,inp.val(),task);
 
             var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
+            if(dates.end<dates.start){
+                inp.val(inp.getOldValue());
+                notify_warn('提示' , '截止日期不能小于开始日期');
+                return;
+            }
             //console.log('dates:',dates);
-            // console.debug("resynchDates",new Date(dates.start), new Date(dates.end),dates.duration)
-           //update task from editor
+           //update server
             let params = null
             if(leavingField==='start'){
                 params = {start_date:inp.val().replace(/\//g,'-')};
@@ -345,7 +349,6 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
             if(leavingField==='end'){
                 params = {due_date:inp.val().replace(/\//g,'-')};
             }
-
             window.$_gantAjax.updateDuration(task.id, window._cur_project_id, params, row, dates);
 
             //inp.updateOldValue(); //in order to avoid multiple call if nothing changed
