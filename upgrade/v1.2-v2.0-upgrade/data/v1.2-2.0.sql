@@ -1,4 +1,4 @@
--- MasterLab 1.2 升级到 2.0 数据库结构补丁
+-- MasterLab v1.2 升级到 v2.0 数据库结构补丁
 -- by 杨文杰
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -329,7 +329,7 @@ INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VA
 INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('4', '准备中', '2', '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '0');
 INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('5', '进行中', '2', '{\"status\":[\"in_progress\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '0');
 INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('6', '已完成', '2', '{\"status\":[\"closed\",\"done\"],\"resolve\":[],\"label\":[],\"assignee\":[]}', '0');
-INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('60', '准备中asdasd', '18', '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":null,\"assignee\":null}', '3');
+INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('60', '准备中', '18', '{\"status\":[\"open\",\"reopen\",\"in_review\",\"delay\"],\"resolve\":null,\"label\":null,\"assignee\":null}', '3');
 INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('61', '进行中', '18', '{\"status\":[\"in_progress\"],\"resolve\":null,\"label\":null,\"assignee\":null}', '2');
 INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES ('62', '已解决', '18', '{\"status\":[\"closed\",\"done\"],\"resolve\":null,\"label\":null,\"assignee\":null}', '1');
 

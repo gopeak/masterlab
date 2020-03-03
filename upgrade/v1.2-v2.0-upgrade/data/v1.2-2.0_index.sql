@@ -1,3 +1,6 @@
+-- MasterLab v1.2 升级到 v2.0 数据库表索引补丁
+-- by 杨文杰
+
 ALTER TABLE `issue_main` DROP INDEX `fulltext_summary_description`;
 ALTER TABLE `issue_main` DROP INDEX `fulltext_summary`;
 
