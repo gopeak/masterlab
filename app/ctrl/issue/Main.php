@@ -1018,8 +1018,6 @@ class Main extends BaseUserCtrl
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
-        // 更新项目事项时间
-        $projectModel->updateById(['issue_update_time' => time()], $projectId);
 
         unset($project);
         //写入操作日志
@@ -1591,8 +1589,6 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
             }
 
-            $projectModel = new ProjectModel();
-            $projectModel->updateById(['issue_update_time' => time()], $issue['project_id']);
         }
 
         //写入操作日志

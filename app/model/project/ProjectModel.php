@@ -47,7 +47,7 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array('archived' => 'N'), null, 'issue_update_time', 'desc', null, $primaryKey);
+        return $this->getRows($fields, array('archived' => 'N'), null, 'id', 'desc', null, $primaryKey);
     }
 
     public function filterByType($typeId, $primaryKey = false, $fields = '*')
@@ -56,7 +56,7 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array('type' => $typeId, 'archived' => 'N'), null, 'issue_update_time', 'desc', null, $primaryKey);
+        return $this->getRows($fields, array('type' => $typeId, 'archived' => 'N'), null, 'id', 'desc', null, $primaryKey);
     }
 
     /**
@@ -66,7 +66,7 @@ class ProjectModel extends CacheModel
      * @param string $sort
      * @return array
      */
-    public function filterByNameOrKey($keyword, $orderBy = 'issue_update_time', $sort = 'desc')
+    public function filterByNameOrKey($keyword, $orderBy = 'id', $sort = 'desc')
     {
         $table = $this->getTable();
         $params = array();
@@ -84,7 +84,7 @@ class ProjectModel extends CacheModel
      * @param string $sort
      * @return array
      */
-    public function filterByNameOrKeyAndType($keyword, $typeId, $orderBy = 'issue_update_time', $sort = 'desc')
+    public function filterByNameOrKeyAndType($keyword, $typeId, $orderBy = 'id', $sort = 'desc')
     {
         $table = $this->getTable();
         $params = array();
@@ -109,7 +109,7 @@ class ProjectModel extends CacheModel
 
         $start = $page_size * ($page - 1);
         $limit = wrapBlank("LIMIT {$start}, " . $page_size);
-        $order = wrapBlank("ORDER BY issue_update_time DESC");
+        $order = wrapBlank("ORDER BY id DESC");
         $where = wrapBlank("WHERE archived='N' ");
         $where .= $order . $limit;
         $sql = "SELECT * FROM " . $table . $where;
