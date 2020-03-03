@@ -92,9 +92,9 @@ if (!function_exists('msectime')) {
  * @param $holidays
  * @return float|int
  */
-function getWorkingDays($startDate,$endDate,$holidays=[], $addDays=[])
+function getWorkingDays($startDate, $endDate, $holidays = [], $addDays = [])
 {
-    if($startDate=='000-00-00' || $endDate=='000-00-00'){
+    if ($startDate == '000-00-00' || $endDate == '000-00-00') {
         return 0;
     }
     $startUnixTime = strtotime($startDate);
@@ -112,7 +112,7 @@ function getWorkingDays($startDate,$endDate,$holidays=[], $addDays=[])
         return 0;
     }
     // 截止日期大于10年之后将不会计算,返回0
-    if($endUnixTime> (time()+86400*365*10)){
+    if ($endUnixTime > (time() + 86400 * 365 * 10)) {
         return 0;
     }
     $days = intval(($endUnixTime - $startUnixTime) / 86400) + 1;
@@ -120,13 +120,13 @@ function getWorkingDays($startDate,$endDate,$holidays=[], $addDays=[])
     //var_dump($days);
     $dateArr = [];
     $finalDays = $days;
-    for($i=0;$i<$days;$i++){
-        $time = (int)$startUnixTime + $i*24*3600+1;
+    for ($i = 0; $i < $days; $i++) {
+        $time = (int)$startUnixTime + $i * 24 * 3600 + 1;
         $date = date('Y-m-d', $time);
         $week = date('w', $time);
         $dateArr[] = $date;
-        if(!in_array($date, $addDays)){
-            if(in_array($date, $holidays) || $week==0 || $week==6){
+        if (!in_array($date, $addDays)) {
+            if (in_array($date, $holidays) || $week == 0 || $week == 6) {
                 // echo "非工作日:{$date}\n";
                 $finalDays--;
             }

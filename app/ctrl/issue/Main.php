@@ -1320,7 +1320,6 @@ class Main extends BaseUserCtrl
     private function getUpdateFormInfo($params = [])
     {
         $info = [];
-
         // 标题
         if (isset($params['summary'])) {
             $info['summary'] = $params['summary'];
@@ -1407,7 +1406,7 @@ class Main extends BaseUserCtrl
             $info['milestone'] = (int)$params['milestone'];
         }
 
-        if (array_key_exists('sprint', $params)) {
+        if (isset($params['sprint'])) {
             $info['sprint'] = (int)$params['sprint'];
         }
         //print_r($info);
@@ -1456,7 +1455,7 @@ class Main extends BaseUserCtrl
         }
 
         $issueId = null;
-
+        // @todo 不使用 $_REQUEST 全局变量
         if (isset($_REQUEST['issue_id'])) {
             $issueId = (int)$_REQUEST['issue_id'];
         }
@@ -1566,15 +1565,18 @@ class Main extends BaseUserCtrl
 
         // 更新用时
         if(isset($info['start_date']) || isset($info['due_date'])){
-            $updatedIssue = $issueModel->getById($issueId);
             $holidays = (new HolidayModel())->getDays($issue['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
+            $updatedIssue = $issueModel->getById($issueId);
             $updateDurationArr = [];
             $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $holidays, $extraWorkerDays);
-            $issueModel->updateById($issueId, $updateDurationArr);
+            // print_r($updateDurationArr);
+            list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
+            if($ret){
+                $updatedIssue['duration'] = $updateDurationArr['duration'];
+            }
+
         }
-
-
 
         //写入操作日志
         $curIssue = $issue;
@@ -1651,10 +1653,12 @@ class Main extends BaseUserCtrl
         $logData['cur_data'] = $curIssue;
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
-        // email
-        $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
-
-        $this->ajaxSuccess('更新成功');
+        // email通知
+        if(isset($notifyFlag)){
+            $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
+        }
+        $updatedIssue = $issueModel->getById($issueId);
+        $this->ajaxSuccess('更新成功', $updatedIssue);
     }
 
     /**

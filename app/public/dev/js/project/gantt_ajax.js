@@ -471,13 +471,53 @@ var Gantt = (function () {
         });
     };
 
+    Gantt.prototype.updateDuration = function (issue_id, project_id, params, rowtr, dates) {
+        params['project_id'] = project_id;
+        var url = '/issue/main/update?issue_id='+issue_id+'&project_id='+project_id+'&from_gantt=1&from_module=gantt';
+        if(params!==null){
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                data: {params:params},
+                url: url,
+                success: function (resp) {
+                    auth_check(resp);
+                    if(resp.ret==="200"){
+                        //notify_error(resp.msg , resp.data);
+                        rowtr.find("[name=duration]").val(resp.data.duration)
+                        for (var i = 0; i < window.ge.tasks.length; i++) {
+                            var tsk = window.ge.tasks[i];
+                            if (tsk.id == issue_id) {
+                                window.ge.tasks[i].duration = parseInt(resp.data.duration);
+                                try{
+                                    window.ge.beginTransaction();
+                                    window.ge.changeTaskDates(task, dates.start, dates.end);
+                                    window.ge.endTransaction();
+                                }catch (e) {
+                                    console.log(e.name,e.message);
+                                    window.ge.endTransaction();
+                                }
+
+                                break;
+                            }
+                        }
+                    }else{
+                        notify_error(resp.msg , resp.data);
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        }
+    };
 
     Gantt.prototype.updateIssue = function (issue_id, params) {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
         let project_id = window._cur_project_id;
         params['project_id'] = project_id;
-        var url = '/issue/main/update?issue_id='+issue_id+'project_id='+project_id+'&from_gantt=1&from_module=gantt';
+        var url = '/issue/main/update?issue_id='+issue_id+'&project_id='+project_id+'&from_gantt=1&from_module=gantt';
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -807,7 +847,7 @@ var Gantt = (function () {
 
 
 
-    Gantt.prototype.computeTaskRowDuration = function(task, start_date, due_date,rowtr,dates){
+    Gantt.prototype.computeTaskRowDuration = function(task, start_date, due_date,rowtr){
         let project_id = window._cur_project_id;
         if(start_date!=='' && due_date!==''){
             var url = '/issue/main/getDuration/?project'+project_id;

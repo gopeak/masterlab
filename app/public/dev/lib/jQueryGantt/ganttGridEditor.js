@@ -321,6 +321,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
     el.blur(function (date) {
       var inp = $(this);
       if (inp.isValueChanged()) {
+
         if (!Date.isValid(inp.val())) {
           alert(GanttMaster.messages["INVALID_DATE_FORMAT"]);
           inp.val(inp.getOldValue());
@@ -334,31 +335,19 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
             console.log(leavingField,inp.val(),task);
 
             var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
-            console.log('dates:',dates);
+            //console.log('dates:',dates);
             // console.debug("resynchDates",new Date(dates.start), new Date(dates.end),dates.duration)
            //update task from editor
-            let params ={}
+            let params = null
             if(leavingField==='start'){
                 params = {start_date:inp.val().replace(/\//g,'-')};
-                let start_date = inp.val().replace(/\//g,'-');
-                let due_date = timestampToDate(task.end);
-                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row,dates);
             }
             if(leavingField==='end'){
                 params = {due_date:inp.val().replace(/\//g,'-')};
-                let start_date = timestampToDate(task.start);
-                let due_date = inp.val().replace(/\//g,'-');
-                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row,dates);
             }
-            window.$_gantAjax.updateIssue(task.id,params);
-            window.ge.beginTransaction();
-            try{
-                window.ge.changeTaskDates(task, dates.start, dates.end);
-                window.ge.endTransaction();
-            }catch (e) {
-                console.log(e.name,e.message);
-                window.ge.endTransaction();
-            }
+
+            window.$_gantAjax.updateDuration(task.id, window._cur_project_id, params, row, dates);
+
             //inp.updateOldValue(); //in order to avoid multiple call if nothing changed
         }
       }
@@ -457,7 +446,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
       } else if (field == "progress" ) {
         task[field]=parseFloat(el.val())||0;
         el.val(task[field]);
-
+          window.$_gantAjax.updateIssue(task.id, {progress:task[field], project_id:project_id});
       } else {
         task[field] = el.val();
       }
