@@ -1,6 +1,6 @@
 <?php
 /**
- * 版本 1.2 升级到版本 2.0 升级补丁
+ * Masterlab v1.2 升级到 v2.0 升级补丁
  * 本程序是一个命令行程序，依赖masterlab项目，不能独立运行。
  * 本程序目录应部署在项目目录下，其所在路径应该为masterlab/upgrade/
  *
@@ -13,8 +13,8 @@
  */
 
 showLine('');
-echo 'Are you sure you want to upgrade now? (Yes, No): ';
-flush();
+showLine('This program will upgrade your Masterlab v1.2 to Masterlab v2.0,');
+showLine('Are you sure you want to upgrade now? (Yes, No): ');
 $input = trim(fgets(STDIN));
 $input = strtolower($input);
 if (!(($input == 'yes') || ($input == 'y'))) {
@@ -50,10 +50,14 @@ $config->customRewriteFunction = "orgRoute";
 // 实例化开发框架对象
 $framework = new  framework\HornetEngine($config);
 
+// Masterlab 项目目录
 $projectDir = realpath(APP_PATH . '..' . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 // 数据库补丁文件路径，要求sql格式
 $sqlFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.sql';
+
+// 索引操作语句SQL文件
+$indexSqlFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0_index.sql';
 
 // 代码补丁压缩包路径，要求zip格式
 $patchFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.patch.zip';
@@ -68,9 +72,6 @@ $newAttachmentDir = realpath(APP_PATH) . DIRECTORY_SEPARATOR . 'public' . DIRECT
 // 数据库备份文件
 $databaseBackupFilename = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'masterlab.bak.sql';
 
-// 索引操作语句SQL文件
-$indexSqlFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0_index.sql';
-
 // lock文件
 $lockFile = $currentDir . 'upgrade.lock';
 
@@ -83,6 +84,11 @@ if (!file_exists($sqlFile)) {
 
 if (!file_exists($patchFile)) {
     showLine('Error: Code patch file not exists!');
+    $checkOk = false;
+}
+
+if (!file_exists($vendorFile)) {
+    showLine('Error: Vendor patch file not exists!');
     $checkOk = false;
 }
 
@@ -177,7 +183,6 @@ try {
             $roleId = $projectRole['id'];
             $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
             $db->exec($sql);
-            // showLine('EXECUTE SQL: ' . $sql);
         }
 
         $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Developers', 'is_system' => 1]);
@@ -186,7 +191,6 @@ try {
             $roleId = $projectRole['id'];
             $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016')";
             $db->exec($sql);
-            // showLine('EXECUTE SQL: ' . $sql);
         }
 
         $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Administrators', 'is_system' => 1]);
@@ -195,7 +199,6 @@ try {
             $roleId = $projectRole['id'];
             $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
             $db->exec($sql);
-            // showLine('EXECUTE SQL: ' . $sql);
         }
 
         $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'PO', 'is_system' => 1]);
@@ -204,21 +207,17 @@ try {
             $roleId = $projectRole['id'];
             $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
             $db->exec($sql);
-            // showLine('EXECUTE SQL: ' . $sql);
         }
     }
 
     showLine('Done!');
     showLine('');
-
     showLine('Upgrading code......');
 
     // 解压缩代码补丁
     patchCode($patchFile, $projectDir);
-
     // 解压缩vendor补丁
     patchCode($vendorFile, $projectDir);
-
     showLine('Done!');
     showLine('');
 
@@ -231,7 +230,6 @@ try {
     copy($cacheConfigBackupFile, $cacheConfigFile);
     unlink($cacheConfigBackupFile);
     showLine('Cache config file restored: ' . $cacheConfigFile);
-
     showLine('');
 
     // 移动storage/attachment目录
@@ -255,7 +253,7 @@ showLine('');
 // 清除缓存数据
 try {
     $model->cache->connect();
-    $ret = $model->cache->flush();
+    $model->cache->flush();
     showLine('Cache has been flushed');
 } catch (Exception $e) {
     showLine('Clear cache failed, please do it manually');
@@ -272,7 +270,6 @@ $queries = parseSql($sql);
 foreach ($queries as $query) {
     try {
         $db->exec($query);
-        // showLine($query);
     } catch (Exception $e) {
         echo $e->getMessage();
         showLine('Table index process failed: ' . $query);
@@ -459,7 +456,6 @@ function patchCode($filename, $path)
 
             // 如果路径不存在，则创建一个目录
             if (!is_dir($dir)) {
-                showLine('Creating directory: ' . $dir);
                 mkdir($dir, 0777, true);
             }
 
