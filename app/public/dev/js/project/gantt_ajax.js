@@ -28,7 +28,7 @@ var Gantt = (function () {
         for (var _key in  issue_types) {
             issue_types_select.options.add(new Option(issue_types[_key].name, issue_types[_key].id));
         }
-        console.log(issue_types_select);
+        // console.log(issue_types_select);
         $('.selectpicker').selectpicker('refresh');
     }
 
@@ -187,7 +187,6 @@ var Gantt = (function () {
                 imageUploadURL: root_url + "issue/detail/editormd_upload",
                 tocm: true,    // Using [TOCM]
                 emoji: true,
-                saveHTMLToTextarea: true,
                 toolbarIcons: "custom"
             });
         }else{
@@ -246,7 +245,25 @@ var Gantt = (function () {
                 }else{
                     $('#sprint_name').html(sprint.name);
                 }
-                _gantt_editor_md.setMarkdown(issue.description);
+                if(typeof(_gantt_editor_md)==='object'){
+                    _gantt_editor_md.setMarkdown(issue.description);
+                }else{
+                    _gantt_editor_md = editormd('description_md', {
+                        width: "640px",
+                        height: 220,
+                        watch: false,
+                        markdown: issue.description,
+                        path: root_url + 'dev/lib/editor.md/lib/',
+                        imageUpload: true,
+                        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                        imageUploadURL: root_url + "issue/detail/editormd_upload",
+                        tocm: true,    // Using [TOCM]
+                        emoji: true,
+                        toolbarIcons: "custom"
+                    });
+                }
+
+
 
 
             },
@@ -351,6 +368,7 @@ var Gantt = (function () {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+
         var url = '/issue/main/add?from_gantt=1&from_module=gantt';
 
         $.ajax({
@@ -386,12 +404,18 @@ var Gantt = (function () {
                     }
                     endTime = (new Date(due_date).getTime());
                     let duration = parseInt($('#gantt_duration').val());
+                    let progress = parseInt($('#gantt_progress').val());
+                    if(isNaN(progress)){
+                        progress = 0;
+                    }
+                    let assignee_user_id = parseInt($('#gantt_assignee').val());
+                    var assigneeObj = window.ge.getResource(assignee_user_id);
 
                     if(action==='addAboveCurrentTask'){
-                        self.addAboveCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name);
+                        self.addAboveCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress,assigneeObj);
                     }
                     if(action==='addBelowCurrentTask'){
-                        self.addBelowCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name);
+                        self.addBelowCurrentTask(id, name, code, startTime, endTime, duration, sprint_id,sprint_name, progress,assigneeObj);
                     }
                 }else{
                     notify_error(resp.msg);
@@ -414,7 +438,7 @@ var Gantt = (function () {
 
         self.beginTransaction();
         task.name = $("#gantt_summary").val();
-        task.description = window._gantt_editor_md.getMarkdown();
+
         task.code = "#"+taskId;
         task.progress = parseInt($("#gantt_progress").val());
         //task.duration = parseInt(taskEditor.find("#duration").val()); //bicch rimosso perchè devono essere ricalcolata dalla start end, altrimenti sbaglia
@@ -426,6 +450,11 @@ var Gantt = (function () {
         task.relevance = 0;
         task.progressByWorklog=  false;//taskEditor.find("#progressByWorklog").is(":checked");
 
+        let assignee_user_id = parseInt($('#gantt_assignee').val());
+        var assigneeObj = window.ge.getResource(assignee_user_id);
+        task.assig = [];
+        task.assig.push(assigneeObj)
+        task.rowElement.find(".taskAssigs").html(task.getAssigsString());
         //set assignments
         var cnt=0;
 
@@ -446,6 +475,7 @@ var Gantt = (function () {
             //closeBlackPopup();
         }
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+
         var url = '/issue/main/update?from_gantt=1&from_module=gantt';
         $.ajax({
             type: 'post',
@@ -471,13 +501,53 @@ var Gantt = (function () {
         });
     };
 
+    Gantt.prototype.updateDuration = function (issue_id, project_id, params, rowtr, dates) {
+        params['project_id'] = project_id;
+        var url = '/issue/main/update?issue_id='+issue_id+'&project_id='+project_id+'&from_gantt=1&from_module=gantt';
+        if(params!==null){
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                data: {params:params},
+                url: url,
+                success: function (resp) {
+                    auth_check(resp);
+                    if(resp.ret==="200"){
+                        //notify_error(resp.msg , resp.data);
+                        rowtr.find("[name=duration]").val(resp.data.duration)
+                        for (var i = 0; i < window.ge.tasks.length; i++) {
+                            var tsk = window.ge.tasks[i];
+                            if (tsk.id == issue_id) {
+                                window.ge.tasks[i].duration = parseInt(resp.data.duration);
+                                try{
+                                    window.ge.beginTransaction();
+                                    window.ge.changeTaskDates(task, dates.start, dates.end);
+                                    window.ge.endTransaction();
+                                }catch (e) {
+                                    console.log(e.name,e.message);
+                                    window.ge.endTransaction();
+                                }
+
+                                break;
+                            }
+                        }
+                    }else{
+                        notify_error(resp.msg , resp.data);
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        }
+    };
 
     Gantt.prototype.updateIssue = function (issue_id, params) {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
         let project_id = window._cur_project_id;
         params['project_id'] = project_id;
-        var url = '/issue/main/update?issue_id='+issue_id+'project_id='+project_id+'&from_gantt=1&from_module=gantt';
+        var url = '/issue/main/update?issue_id='+issue_id+'&project_id='+project_id+'&from_gantt=1&from_module=gantt';
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -824,7 +894,9 @@ var Gantt = (function () {
                         for (var i = 0; i < window.ge.tasks.length; i++) {
                             var tsk = window.ge.tasks[i];
                             if (tsk.id == task.id) {
-                                window.ge.tasks[i].duration = resp.data;
+                                window.ge.tasks[i].duration = parseInt(resp.data);
+                                let startTime = (new Date(start_date).getTime());
+                                console.log('startTime:',startTime);
                                 break;
                             }
                         }

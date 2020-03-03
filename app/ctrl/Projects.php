@@ -109,12 +109,13 @@ class Projects extends BaseUserCtrl
             'latest_activity_desc' => ['issue_update_time', 'desc'],
             'created_desc' => ['create_time', 'desc'],
             'name_asc' => ['name', 'asc'],
+            'lead_asc' => ['lead', 'asc'],
         ];
         $searchKey = '';
         if (isset($_GET['name']) && !empty($_GET['name'])) {
-            $searchKey = $_GET['name'];
+            $searchKey = trim($_GET['name']);
         }
-        $searchOrderBy = 'issue_update_time';
+        $searchOrderBy = 'create_time';
         $searchSort = 'desc';
         if (isset($_GET['sort']) && !empty($_GET['sort'])) {
             if (array_key_exists($_GET['sort'], $searchSortArr)) {

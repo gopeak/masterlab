@@ -254,7 +254,12 @@ class Gantt extends BaseUserCtrl
         $resources = [];
         foreach ($projectUsers as &$user) {
             $user = UserLogic::format($user);
-            $resources[] = ['id' => $user['uid'], 'name' => $user['display_name']];
+            $resource = [];
+            $resource['id'] = $user['uid'];
+            $resource['name'] = $user['display_name'];
+            $resource['resourceId'] = $user['uid'];
+            $resource['roleId'] = '';
+            $resources[] = $resource;
         }
         $data['project_users'] = $projectUsers;
 
@@ -282,6 +287,7 @@ class Gantt extends BaseUserCtrl
         if ($sourceType == 'active_sprint') {
             $issues = $class->getIssuesGroupByActiveSprint($projectId,  $isDisplayBacklog);
         }
+
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
 

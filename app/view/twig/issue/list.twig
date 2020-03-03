@@ -2305,19 +2305,7 @@
                 }
 
                 $(function () { 
-                    keyMaster.addKeys([
-                        {
-                            key: 'e',
-                            'item-element': '.tree-item',
-                            'trigger-element': '.issue_edit_href',
-                            trigger: 'click'
-                        }, {
-                            key: 'd',
-                            'item-element': '.tree-item',
-                            'trigger-element': '.issue_delete_href',
-                            trigger: 'click'
-                        }
-                    ])
+                    
 
                     var options = {
                         query_str: window.query_str,
@@ -2365,6 +2353,8 @@
                         IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData,null, adv_data);
                     }
 
+                    
+
 
                     $('#btn-add').bind('click', function () {
                         IssueMain.prototype.add();
@@ -2388,6 +2378,8 @@
                             _cur_form_project_id = "";
                         }
                     });
+
+                    
 
                     $('#modal-adv_query').on('shown.bs.modal', function (e) {
 
@@ -3028,31 +3020,50 @@
                     $('#btn-copy').bind('click', function () {
                         window.$IssueMain.fetchEditUiConfig(_issue_id, 'copy');
                     });
+console.log(keyMaster)
+                    keyMaster.addKeys([
+                        {
+                            key: "e",
+                            'item-element': '.tree-item',
+                            'trigger-element': '.issue_edit_href',
+                            trigger: 'click'
+                        },
+                        {
+                            key: "d",
+                            'item-element': '.tree-item',
+                            'trigger-element': '.issue_delete_href',
+                            trigger: 'click'
+                        }
+                    ])
 
                     $("#modal-create-issue").on('show.bs.modal', function (e) {
+                        keyMaster.addKeys(
+                            [
+                                {
+                                    key: [
+                                        'command+enter', 'ctrl+enter'
+                                    ],
+                                    'trigger-element': '#modal-create-issue .btn-save',
+                                    trigger: 'click'
+                                }, {
+                                    key: 'esc',
+                                    'trigger-element': '#modal-create-issue .close',
+                                    trigger: 'click'
+                                }
+                            ]
+                        )
+                    })
+
+                    $("#modal-edit-issue").on('show.bs.modal', function (e) {
                         keyMaster.addKeys([
                             {
                                 key: [
                                     'command+enter', 'ctrl+enter'
                                 ],
-                                'trigger-element': '#modal-create-issue .btn-save',
-                                trigger: 'click'
-                            }, {
-                                key: 'esc',
-                                'trigger-element': '#modal-create-issue .close',
+                                'trigger-element': '#modal-edit-issue .btn-save',
                                 trigger: 'click'
                             }
                         ])
-                    })
-
-                    $("#modal-edit-issue").on('show.bs.modal', function (e) {
-                        keyMaster.addKeys([{
-                            key: [
-                                'command+enter', 'ctrl+enter'
-                            ],
-                            'trigger-element': '#modal-edit-issue .btn-save',
-                            trigger: 'click'
-                        }])
                     })
 
                     $("#modal-export_excel").on('show.bs.modal', function (e) {

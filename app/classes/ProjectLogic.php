@@ -382,7 +382,7 @@ class ProjectLogic
         $sql = "SELECT {$fields} FROM {$projectTable} p
                 LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
                 LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
-                WHERE p.archived='N' ORDER BY p.issue_update_time DESC";
+                WHERE p.archived='N' ORDER BY p.id DESC";
         //echo $sql;exit;
 
         return $model->db->getRows($sql);
@@ -404,7 +404,7 @@ class ProjectLogic
         $sql = "SELECT {$fields} FROM {$projectTable} p
                 LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
                 LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
-                WHERE p.archived='Y' ORDER BY p.issue_update_time DESC";
+                WHERE p.archived='Y' ORDER BY p.id DESC";
         //echo $sql;exit;
         return $model->db->getRows($sql);
     }
@@ -567,6 +567,28 @@ class ProjectLogic
         $projectUserRoleModel = new ProjectUserRoleModel();
 
         list($ret, $msg) = $projectUserRoleModel->insertRole($userId, $projectId, $projectAdminRoleId);
+        if (!$ret) {
+            return [false, $msg];
+        }
+
+        return [true, $msg];
+    }
+
+    /**
+     * 创建项目,为用户赋予该项目的权限
+     * @param $projectId
+     * @param $userId
+     * @param string $roleName  默认为普通用户角色
+     * @return array
+     * @throws \Exception
+     */
+    public static function assignProjectRoleForUser($projectId, $userId, $roleName = 'Users')
+    {
+        $projectRoleModel = new ProjectRoleModel();
+        $projectRoleId = $projectRoleModel->getProjectRoleIdByProjectIdRoleName($projectId, $roleName);
+        $projectUserRoleModel = new ProjectUserRoleModel();
+
+        list($ret, $msg) = $projectUserRoleModel->insertRole($userId, $projectId, $projectRoleId);
         if (!$ret) {
             return [false, $msg];
         }

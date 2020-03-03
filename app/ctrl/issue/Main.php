@@ -239,7 +239,6 @@ class Main extends BaseUserCtrl
         $duration = getWorkingDays($startDate, $dueDate, $holidays, $extraWorkerDays);
 
         $this->ajaxSuccess('ok', $duration);
-
     }
 
     /**
@@ -1018,8 +1017,6 @@ class Main extends BaseUserCtrl
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
-        // 更新项目事项时间
-        $projectModel->updateById(['issue_update_time' => time()], $projectId);
 
         unset($project);
         //写入操作日志
@@ -1069,7 +1066,6 @@ class Main extends BaseUserCtrl
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
 
-
         $this->ajaxSuccess('添加成功', $issueId);
     }
 
@@ -1086,17 +1082,8 @@ class Main extends BaseUserCtrl
             $info['gant_hide'] = (int)$params['gant_hide'];
         }
 
-        if (isset($params['duration'])) {
-            $info['duration'] = $params['duration'];
-        } else {
-            if (!empty($info['due_date']) && !empty($info['start_date'])) {
-                $holidays = (new HolidayModel())->getDays($params['project_id']);
-                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
-                $info['duration'] = getWorkingDays($info['start_date'], $info['due_date'], $holidays, $extraWorkerDays);
-            }
-        }
         if (isset($params['progress'])) {
-            $info['progress'] = (int)$params['progress'];
+            $info['progress'] = max(0,(int)$params['progress']);
         }
 
         if (isset($params['depends'])) {
@@ -1114,8 +1101,6 @@ class Main extends BaseUserCtrl
             } else {
                 $info['is_end_milestone'] = 0;
             }
-            $projectGanttModel = new ProjectGanttSettingModel();
-            $projectId = $params['project_id'];
             // 如果是在某一事项之下,排序值是两个事项之间二分之一
             if (isset($params['below_id']) && !empty($params['below_id'])) {
                 $belowIssueId = (int)$params['below_id'];
@@ -1156,7 +1141,7 @@ class Main extends BaseUserCtrl
                 $info[$fieldWeight] = max(0, $belowWeight + intval(($prevWeight - $belowWeight) / 2));
                 unset($model, $belowIssue);
             }
-            //print_r($info);
+            // print_r($info);
         }
     }
 
@@ -1321,6 +1306,11 @@ class Main extends BaseUserCtrl
             $info['weight'] = (int)$params['weight'];
         }
         $this->getGanttInfo($params, $info);
+        if(!empty($params['start_date']) && !empty($params['due_date'])){
+            $holidays = (new HolidayModel())->getDays($params['project_id']);
+            $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
+            $info['duration'] = getWorkingDays($params['start_date'], $params['due_date'], $holidays, $extraWorkerDays);
+        }
 
         $this->initAddGanttWeight($params, $info);
         // print_r($info);
@@ -1330,7 +1320,6 @@ class Main extends BaseUserCtrl
     private function getUpdateFormInfo($params = [])
     {
         $info = [];
-
         // 标题
         if (isset($params['summary'])) {
             $info['summary'] = $params['summary'];
@@ -1417,7 +1406,7 @@ class Main extends BaseUserCtrl
             $info['milestone'] = (int)$params['milestone'];
         }
 
-        if (array_key_exists('sprint', $params)) {
+        if (isset($params['sprint'])) {
             $info['sprint'] = (int)$params['sprint'];
         }
         //print_r($info);
@@ -1466,7 +1455,7 @@ class Main extends BaseUserCtrl
         }
 
         $issueId = null;
-
+        // @todo 不使用 $_REQUEST 全局变量
         if (isset($_REQUEST['issue_id'])) {
             $issueId = (int)$_REQUEST['issue_id'];
         }
@@ -1474,8 +1463,6 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $uid = $this->getCurrentUid();
-        $user = $this->auth->getUser();
-        $userDisplayName = $user['display_name'];
 
         $info = [];
 
@@ -1490,33 +1477,6 @@ class Main extends BaseUserCtrl
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-
-        // 生成日志备注详情
-        $moduleNames = [
-            'issue_list' => '事项列表',
-            'issue_detail' => '事项详情',
-            'gantt' => '甘特图',
-            'mind' => '事项分解',
-            'kanban' => '看板',
-            'sprint' => '迭代',
-            'backlog' => '待办事项'
-        ];
-
-        $fromModule = null;
-        if (isset($params['from_module'])) {
-            $fromModule = strtolower(trim($params['from_module']));
-        } elseif (isset($_REQUEST['from_module'])) {
-            $fromModule = strtolower(trim($_REQUEST['from_module']));
-        }
-
-        $actionInfo = "修改事项";
-        if ($fromModule && isset($moduleNames[$fromModule]) && !in_array($fromModule, ['issue_list', 'issue_detail'])) {
-            $moduleName = $moduleNames[$fromModule];
-            $actionInfo = "在 \"{$moduleName}\" 模块中修改事项";
-        }
-
-        $actionContent = $this->makeActionInfo($issue, $info);
-
         $issueType = $issue['issue_type'];
         if (isset($params['issue_type'])) {
             $issueType = $params['issue_type'];
@@ -1560,68 +1520,62 @@ class Main extends BaseUserCtrl
             //$this->ajaxSuccess('success');
         }
 
+        // 实例化邮件通知
+        $notifyLogic = new NotifyLogic();
         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_UPDATE;
-        // print_r($info);
-        $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
-        $statusResolvedId = IssueStatusModel::getInstance()->getIdByKey('resolved');
-        $statusInprogressId = IssueStatusModel::getInstance()->getIdByKey('in_progress');
 
-        if (!empty($info)) {
-            $info['modifier'] = $uid;
-            // 如果是关闭状态则要检查权限
-            if (isset($info['status']) && $issue['status'] != $info['status']) {
-                //检测当前用户角色权限是否有修改事项状态的权限
-                if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_STATUS)) {
-                    $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项状态权限');
-                }
+        $info['modifier'] = $uid;
 
-                if ($info['status'] == $statusClosedId) {
-                    // todo
-                }
-                switch ($info['status']) {
-                    case $statusClosedId:
-                        // 状态已关闭
-                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_CLOSE;
-                        break;
-                    case $statusResolvedId:
-                        // 状态已解决
-                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_COMPLETE;
-                        break;
-                    case $statusInprogressId:
-                        // 状态进行中
-                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_START;
-                        break;
-                }
-                if ($info['status'] == $statusClosedId) {
-                    $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
-                    if (!$closePerm) {
-                        $this->ajaxFailed('当前项目中您没有权限关闭状态');
-                    }
+        // 状态 如果是关闭状态则要检查权限
+        if (isset($info['status']) && $issue['status'] != $info['status']) {
+            //检测当前用户角色权限是否有修改事项状态的权限
+            if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_STATUS)) {
+                $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项状态权限');
+            }
+            $notifyFlag = $notifyLogic->getEmailNotifyFlag($info['status']);
+            $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+            if ($info['status'] == $statusClosedId) {
+                $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
+                if (!$closePerm) {
+                    $this->ajaxFailed('当前项目中您没有权限关闭状态');
                 }
             }
-            // 如果是关闭状态则要检查权限
-            if (isset($info['resolve']) && $issue['resolve'] != $info['resolve']) {
-                if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_RESOLVE)) {
-                    $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项解决结果权限');
-                }
+        }
 
-                $resolve = IssueResolveModel::getInstance()->getByKey('done');
-                $resolveDoneId = $resolve['id'];
-                if ($info['resolve'] == $resolveDoneId) {
-                    $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
-                    if (!$closePerm) {
-                        $this->ajaxFailed('当前项目中您没有权限将解决结果修改为:' . $resolve['name']);
-                    }
-                }
+        // 解决结果 如果是关闭状态则要检查权限
+        if (isset($info['resolve']) && $issue['resolve'] != $info['resolve']) {
+            if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_RESOLVE)) {
+                $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项解决结果权限');
             }
 
-            list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
-            if (!$ret) {
-                $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+            $resolve = IssueResolveModel::getInstance()->getByKey('done');
+            $resolveDoneId = $resolve['id'];
+            if ($info['resolve'] == $resolveDoneId) {
+                $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
+                if (!$closePerm) {
+                    $this->ajaxFailed('当前项目中您没有权限将解决结果修改为:' . $resolve['name']);
+                }
+            }
+        }
+
+        list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+        }
+
+        // 更新用时
+        if(isset($info['start_date']) || isset($info['due_date'])){
+            $holidays = (new HolidayModel())->getDays($issue['project_id']);
+            $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
+            $updatedIssue = $issueModel->getById($issueId);
+            $updateDurationArr = [];
+            $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $holidays, $extraWorkerDays);
+            // print_r($updateDurationArr);
+            list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
+            if($ret){
+                $updatedIssue['duration'] = $updateDurationArr['duration'];
             }
 
-            $projectModel = new ProjectModel();
-            $projectModel->updateById(['issue_update_time' => time()], $issue['project_id']);
         }
 
         //写入操作日志
@@ -1666,12 +1620,16 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->updateCustomFieldValue($issueId, $params);
 
-        // 活动记录
-        $issueLogic = new IssueLogic();
-        $statusModel = new IssueStatusModel();
-        $resolveModel = new IssueResolveModel();
-        // 使用新的actionInfo表述方式，此处注释掉
-        //$actionInfo = $issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
+        // 记录活动日志
+        $fromModule = null;
+        if (isset($params['from_module'])) {
+            $fromModule = strtolower(trim($params['from_module']));
+        } elseif (isset($_GET['from_module'])) {
+            $fromModule = strtolower(trim($_GET['from_module']));
+        }
+        $actionInfo = $this->makeActionInfo($fromModule);
+        $actionContent = $this->makeActionContent($issue, $info);
+
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
@@ -1695,21 +1653,50 @@ class Main extends BaseUserCtrl
         $logData['cur_data'] = $curIssue;
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
-        // email
-        $notifyLogic = new NotifyLogic();
-        $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
-
-        $this->ajaxSuccess('更新成功');
+        // email通知
+        if(isset($notifyFlag)){
+            $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
+        }
+        $updatedIssue = $issueModel->getById($issueId);
+        $this->ajaxSuccess('更新成功', $updatedIssue);
     }
 
     /**
-     * 组装事项操作日志备注信息
+     * 生成事项活动日志的活动名称
+     *
+     * @param $fromModule string 来源操作模块
+     * @return string
+     */
+    private function makeActionInfo($fromModule)
+    {
+        // 生成日志备注详情
+        $moduleNames = [
+            'issue_list' => '事项列表',
+            'issue_detail' => '事项详情',
+            'gantt' => '甘特图',
+            'mind' => '事项分解',
+            'kanban' => '看板',
+            'sprint' => '迭代',
+            'backlog' => '待办事项'
+        ];
+
+        $actionInfo = "修改事项";
+        if ($fromModule && isset($moduleNames[$fromModule]) && !in_array($fromModule, ['issue_list', 'issue_detail'])) {
+            $moduleName = $moduleNames[$fromModule];
+            $actionInfo = "在 \"{$moduleName}\" 模块中修改事项";
+        }
+
+        return $actionInfo;
+    }
+
+    /**
+     * 组装事项活动日志的备注信息
      *
      * @param $issueOldValues
      * @param $issueNewValues
      * @return string
      */
-    private function makeActionInfo($issueOldValues, $issueNewValues)
+    private function makeActionContent($issueOldValues, $issueNewValues)
     {
         $fieldLabels = [
             'issue_type' => '事项类型',

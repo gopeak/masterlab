@@ -321,6 +321,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
     el.blur(function (date) {
       var inp = $(this);
       if (inp.isValueChanged()) {
+
         if (!Date.isValid(inp.val())) {
           alert(GanttMaster.messages["INVALID_DATE_FORMAT"]);
           inp.val(inp.getOldValue());
@@ -334,36 +335,23 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
             console.log(leavingField,inp.val(),task);
 
             var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
-            console.log('dates:',dates);
-            // console.debug("resynchDates",new Date(dates.start), new Date(dates.end),dates.duration)
-           //update task from editor
-            let params ={}
+            if(dates.end<dates.start){
+                inp.val(inp.getOldValue());
+                notify_warn('提示' , '截止日期不能小于开始日期');
+                return;
+            }
+            //console.log('dates:',dates);
+           //update server
+            let params = null
             if(leavingField==='start'){
                 params = {start_date:inp.val().replace(/\//g,'-')};
-                let start_date = inp.val().replace(/\//g,'-');
-                let due_date = timestampToDate(task.end);
-                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row);
             }
             if(leavingField==='end'){
                 params = {due_date:inp.val().replace(/\//g,'-')};
-                let start_date = timestampToDate(task.start);
-                let due_date = inp.val().replace(/\//g,'-');
-                window.$_gantAjax.computeTaskRowDuration(task, start_date,due_date,row);
             }
-            window.$_gantAjax.updateIssue(task.id,params);
+            window.$_gantAjax.updateDuration(task.id, window._cur_project_id, params, row, dates);
 
-            self.master.beginTransaction();
-            try{
-                self.master.changeTaskDates(task, dates.start, dates.end);
-                self.master.endTransaction();
-            }catch (e) {
-                console.log(e.name,e.message);
-                self.master.endTransaction();
-            }
-
-
-
-          inp.updateOldValue(); //in order to avoid multiple call if nothing changed
+            //inp.updateOldValue(); //in order to avoid multiple call if nothing changed
         }
       }
     });
@@ -461,7 +449,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
       } else if (field == "progress" ) {
         task[field]=parseFloat(el.val())||0;
         el.val(task[field]);
-
+          window.$_gantAjax.updateIssue(task.id, {progress:task[field], project_id:project_id});
       } else {
         task[field] = el.val();
       }

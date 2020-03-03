@@ -48,7 +48,7 @@
 
                                 <div class="nav-controls row-fixed-content">
                                     <input type="search" name="name" id="project-filter-form-field" placeholder="通过项目名搜索" class="form-control input-short" spellcheck="false" tabindex="2">
-                                    <input type="hidden" name="sort" id="project-filter-sort" value="{% if (projects_sort) %}{{ projects_sort }}{% else %}latest_activity_desc{% endif %}">
+                                    <input type="hidden" name="sort" id="project-filter-sort" value="{% if (projects_sort) %}{{ projects_sort }}{% else %}created_desc{% endif %}">
                                     <!--form class="project-filter-form qa-project-filter-form" id="project-filter-form" action="/projects" accept-charset="UTF-8" method="get">
                                         <input name="utf8" type="hidden" value="✓">
                                         <input type="search" name="name" id="project-filter-form-field" placeholder="通过项目名搜索" class="form-control input-short" spellcheck="false" tabindex="2">
@@ -57,23 +57,27 @@
                                     </form-->
                                     <div class="dropdown js-project-filter-dropdown-wrap">
                                         <button class="dropdown-menu-toggle " id="sort-projects-dropdown" type="button" data-toggle="dropdown" data-display="static" aria-expanded="false">
-                                            <span class="dropdown-toggle-text" id="js-masterlab-selected-sort">最后更新</span>
+                                            <span class="dropdown-toggle-text" id="js-masterlab-selected-sort">最后创建</span>
                                             <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable">
                                             <li class="dropdown-header">
                                                 排序
                                             </li>
-                                            <li>
-                                                <a class="js-masterlab-filter-selector-sort is-active" style="cursor:pointer;" data-filter_sort="latest_activity_desc">最后更新
+                                            <!--li>
+                                                <a class="js-masterlab-filter-selector-sort" style="cursor:pointer;" data-filter_sort="latest_activity_desc">最后更新
                                                 </a>
-                                            </li>
+                                            </li-->
                                             <li>
-                                                <a class="js-masterlab-filter-selector-sort" style="cursor:pointer;" data-filter_sort="created_desc">最后创建
+                                                <a class="js-masterlab-filter-selector-sort is-active" style="cursor:pointer;" data-filter_sort="created_desc">最后创建
                                                 </a>
                                             </li>
                                             <li>
                                                 <a class="js-masterlab-filter-selector-sort" style="cursor:pointer;" data-filter_sort="name_asc">项目名
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="js-masterlab-filter-selector-sort" style="cursor:pointer;" data-filter_sort="lead_asc">按负责人
                                                 </a>
                                             </li>
                                         </ul>
@@ -251,7 +255,7 @@
 
             $('#js-masterlab-project-type-tab-main').addClass("active").siblings("li").removeClass("active");
 
-            var search_key = $(this).val();
+            var search_key = $('#project-filter-form-field').val();
             var search_sort = $('#project-filter-sort').val();
             var options = {
                 list_render_id: "list_render_id",

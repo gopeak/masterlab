@@ -4,6 +4,7 @@ namespace main\app\classes;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\system\NotifySchemeDataModel;
@@ -74,6 +75,34 @@ class NotifyLogic
 
     public function __construct()
     {
+    }
+
+
+
+    public function getEmailNotifyFlag($issueStatusId)
+    {
+        $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $statusResolvedId = IssueStatusModel::getInstance()->getIdByKey('resolved');
+        $statusInprogressId = IssueStatusModel::getInstance()->getIdByKey('in_progress');
+
+        switch ($issueStatusId) {
+            case $statusClosedId:
+                // 状态已关闭
+                $notifyFlag = self::NOTIFY_FLAG_ISSUE_CLOSE;
+                break;
+            case $statusResolvedId:
+                // 状态已解决
+                $notifyFlag = self::NOTIFY_FLAG_ISSUE_RESOLVE_COMPLETE;
+                break;
+            case $statusInprogressId:
+                // 状态进行中
+                $notifyFlag = self::NOTIFY_FLAG_ISSUE_RESOLVE_START;
+                break;
+            default:
+                $notifyFlag = self::NOTIFY_FLAG_ISSUE_UPDATE;
+        }
+
+        return $notifyFlag;
     }
 
     /**
