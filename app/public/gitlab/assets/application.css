@@ -849,3 +849,9 @@ table.table td.th {
 .filter_nav_span a {
 	padding: 11px 4px 9px !important;
 }
+
+#holidays_list a {
+	margin-bottom: 0px;
+	height: 26px;
+    line-height: 26px;
+}

@@ -239,7 +239,6 @@ class Main extends BaseUserCtrl
         $duration = getWorkingDays($startDate, $dueDate, $holidays, $extraWorkerDays);
 
         $this->ajaxSuccess('ok', $duration);
-
     }
 
     /**
@@ -1067,7 +1066,6 @@ class Main extends BaseUserCtrl
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
 
-
         $this->ajaxSuccess('添加成功', $issueId);
     }
 
@@ -1084,15 +1082,6 @@ class Main extends BaseUserCtrl
             $info['gant_hide'] = (int)$params['gant_hide'];
         }
 
-        if (isset($params['duration'])) {
-            $info['duration'] = $params['duration'];
-        } else {
-            if (!empty($info['due_date']) && !empty($info['start_date'])) {
-                $holidays = (new HolidayModel())->getDays($params['project_id']);
-                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
-                $info['duration'] = getWorkingDays($info['start_date'], $info['due_date'], $holidays, $extraWorkerDays);
-            }
-        }
         if (isset($params['progress'])) {
             $info['progress'] = (int)$params['progress'];
         }
@@ -1112,8 +1101,6 @@ class Main extends BaseUserCtrl
             } else {
                 $info['is_end_milestone'] = 0;
             }
-            $projectGanttModel = new ProjectGanttSettingModel();
-            $projectId = $params['project_id'];
             // 如果是在某一事项之下,排序值是两个事项之间二分之一
             if (isset($params['below_id']) && !empty($params['below_id'])) {
                 $belowIssueId = (int)$params['below_id'];
@@ -1154,7 +1141,7 @@ class Main extends BaseUserCtrl
                 $info[$fieldWeight] = max(0, $belowWeight + intval(($prevWeight - $belowWeight) / 2));
                 unset($model, $belowIssue);
             }
-            //print_r($info);
+            // print_r($info);
         }
     }
 
@@ -1319,6 +1306,11 @@ class Main extends BaseUserCtrl
             $info['weight'] = (int)$params['weight'];
         }
         $this->getGanttInfo($params, $info);
+        if(!empty($params['start_date']) && !empty($params['due_date'])){
+            $holidays = (new HolidayModel())->getDays($params['project_id']);
+            $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
+            $info['duration'] = getWorkingDays($params['start_date'], $params['due_date'], $holidays, $extraWorkerDays);
+        }
 
         $this->initAddGanttWeight($params, $info);
         // print_r($info);
@@ -1589,6 +1581,20 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
             }
 
+
+            $projectModel = new ProjectModel();
+            $projectModel->updateById(['issue_update_time' => time()], $issue['project_id']);
+
+            // 更新用时
+            if(isset($info['start_date']) || isset($info['due_date'])){
+                $updatedIssue = $issueModel->getById($issueId);
+                $holidays = (new HolidayModel())->getDays($issue['project_id']);
+                $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
+                $updateDurationArr = [];
+                $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $holidays, $extraWorkerDays);
+                $issueModel->updateById($issueId, $updateDurationArr);
+            }
+
         }
 
         //写入操作日志
@@ -1640,7 +1646,6 @@ class Main extends BaseUserCtrl
         } elseif (isset($_GET['from_module'])) {
             $fromModule = strtolower(trim($_GET['from_module']));
         }
-
         $actionInfo = $this->makeActionInfo($fromModule);
         $actionContent = $this->makeActionContent($issue, $info);
 

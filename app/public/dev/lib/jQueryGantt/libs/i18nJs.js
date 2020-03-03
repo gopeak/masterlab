@@ -145,7 +145,6 @@ function isHoliday(date) {
 
     let local_date = date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
 
-
     if (typeof(_extra_holidays) === "object" && _extra_holidays.indexOf(local_date) !== -1) {
         console.log('_extra_holidays date:', local_date);
         return false;
@@ -155,7 +154,6 @@ function isHoliday(date) {
         console.log('_holidays date:', local_date);
         return true;
     }
-
 
     return (day == 5 && friIsHoly) || (day == 6 && satIsHoly) || (day == 0 && sunIsHoly) || holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
 }
