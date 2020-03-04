@@ -176,14 +176,6 @@ try {
     unlink($cacheConfigBackupFile);
     showLine('Cache config file restored: ' . $cacheConfigFile);
     showLine('');
-
-    // 移动storage/attachment目录
-    showLine('Copying attachment folder......');
-    if (is_dir($oldAttachmentDir)) {
-        rename($oldAttachmentDir, $newAttachmentDir);
-        showLine('Done!');
-        showLine('Attachment folder has been copied to ' . $newAttachmentDir);
-    }
 } catch (Exception $e) {
     echo $e->getMessage();
     showLine('');

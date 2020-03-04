@@ -236,7 +236,7 @@ try {
     // 移动storage/attachment目录
     showLine('Copying attachment folder......');
     if (is_dir($oldAttachmentDir)) {
-        rename($oldAttachmentDir, $newAttachmentDir);
+        copyDir($oldAttachmentDir, $newAttachmentDir);
         showLine('Done!');
         showLine('Attachment folder has been copied to ' . $newAttachmentDir);
     }
