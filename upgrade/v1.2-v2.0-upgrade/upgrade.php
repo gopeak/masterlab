@@ -59,7 +59,7 @@ $sqlFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.sql';
 $patchFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.patch.zip';
 
 // vendor目录压缩包，要求zip格式
-$vendorFile = $currentDir . 'data'. DIRECTORY_SEPARATOR . 'vendor.zip';
+$vendorFile = APP_PATH . 'vendor.zip';
 
 // storage/attachment目录迁移
 $oldAttachmentDir = realpath(APP_PATH) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'attachment';
