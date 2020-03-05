@@ -627,42 +627,40 @@ class Passport extends BaseCtrl
     }
 
     /**
-     * 检查邮箱是否
+     * 检查邮箱是否存在
      * @param string $email
+     * @throws \Exception
      */
-    public function emailExist($email)
+    public function emailExist($email = '')
     {
         if (empty($email)) {
-            echo 'true';
-            die;
+            $this->ajaxFailed('email地址不能为空', false);
         }
         $userModel = UserModel::getInstance();
         $user = $userModel->getByEmail($email);
-        if (!isset($user['uid'])) {
-            echo 'false';
-            die;
+        if (isset($user['uid'])) {
+            $this->ajaxFailed('email已被使用', false);
+        } else {
+            $this->ajaxSuccess('ok', true);
         }
-        echo 'true';
-        die;
     }
 
     /**
      * 检查用户名你是否存在
      * @param string $username
+     * @throws \Exception
      */
     public function usernameExist($username = '')
     {
         if (empty($username)) {
-            echo 'true';
-            die;
+            $this->ajaxFailed('用户名不能为空', false);
         }
         $userModel = UserModel::getInstance();
         $user = $userModel->getByUsername($username);
-        if (!isset($user['uid'])) {
-            echo 'false';
-            die;
+        if (isset($user['uid'])) {
+            $this->ajaxFailed('用户名已被使用', false);
+        } else {
+            $this->ajaxSuccess('ok', true);
         }
-        echo 'true';
-        die;
     }
 }
