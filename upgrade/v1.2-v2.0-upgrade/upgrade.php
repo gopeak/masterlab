@@ -13,18 +13,21 @@
  */
 
 showLine('');
-showLine('This program will upgrade your Masterlab v1.2 to Masterlab v2.0,');
-echo 'Are you sure you want to upgrade now? (Yes, No): ';
-flush();
-$input = trim(fgets(STDIN));
-$input = strtolower($input);
-if (!(($input == 'yes') || ($input == 'y'))) {
-    showLine('');
-    showLine('Masterlab upgrade aborted!');
-    die;
-}
+$isWindows = strtoupper(substr(PHP_OS, 0, 3)) == 'WIN';
+if (!$isWindows) {
+    showLine('This program will upgrade your Masterlab v1.2 to Masterlab v2.0,');
+    echo 'Are you sure you want to upgrade now? (Yes, No): ';
+    flush();
+    $input = trim(fgets(STDIN));
+    $input = strtolower($input);
+    if (!(($input == 'yes') || ($input == 'y'))) {
+        showLine('');
+        showLine('Masterlab upgrade aborted!');
+        die;
+    }
 
-showLine('');
+    showLine('');
+}
 
 $currentDir = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
 $globals = $currentDir . '../../app' . DIRECTORY_SEPARATOR . 'globals.php';
@@ -273,7 +276,6 @@ foreach ($queries as $query) {
     try {
         $db->exec($query);
     } catch (Exception $e) {
-        echo $e->getMessage();
         showLine('Table index process failed: ' . $query);
         showLine('Ignored');
     }
