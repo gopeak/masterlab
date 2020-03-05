@@ -1467,14 +1467,18 @@
                                                                   dropdownalignright="true" title="操作符">
                                             <option value="LIKE">LIKE</option>
                                             <option value="LIKE %...%">LIKE %...%</option>
-                                            <option value="NOT LIKE">NOT LIKE</option>
+                                            <!--option value="NOT LIKE">NOT LIKE</option-->
                                             <option value="=">=</option>
                                             <option value="!=">!=</option>
+                                            <option value=">">></option>
+                                            <option value=">=">>=</option>
+                                            <option value="<"><</option>
+                                            <option value="<="><=</option>
                                             <option value="REGEXP">REGEXP</option>
                                             <option value="REGEXP ^...$">REGEXP ^...$</option>
-                                            <option value="NOT REGEXP">NOT REGEXP</option>
-                                            <option value="IN (...)">IN (...)</option>
-                                            <option value="NOT IN (...)">NOT IN (...)</option>
+                                            <!--option value="NOT REGEXP">NOT REGEXP</option-->
+                                            <!--option value="IN (...)">IN (...)</option-->
+                                            <!--option value="NOT IN (...)">NOT IN (...)</option-->
                                             <!--option value="BETWEEN">BETWEEN</option>
                                             <option value="NOT BETWEEN">NOT BETWEEN</option>
                                             <option value="IS NULL">IS NULL</option>
@@ -1491,7 +1495,7 @@
                                     {#</div>#}
                                     <div class="col-sm-3 dynamic-form" id="dynamic-form">
                                         <input type="text" class="form-control"
-                                              datatype="text" name="params[text]"
+                                              datatype="text" name="content"
                                               id="adv_content" value=""
                                               placeholder="查询内容"/>
                                     </div>
@@ -2719,8 +2723,7 @@
                         }
 
                         if (typeof value == "undefined" || value == null || value == "") {
-                            notify_error("值不能为空");
-                            return false;
+                            $(".form-control[name='content']").val("");
                         }
 
 
