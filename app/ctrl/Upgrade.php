@@ -77,8 +77,8 @@ class Upgrade extends BaseUserCtrl
 
         $host = isset($_GET['host']) ? trim($_GET['host']) : 'http://www.masterlab.vip/';
         $url = $host . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
+        //$url = 'http://www.masterlab20.cn/upgrade/check_upgrade?current_version=2.0';
 
-        $url = 'http://www.masterlab20.cn/upgrade/check_upgrade?current_version=2.0';
         $curl->get($url);
         $response = $curl->rawResponse;
         $response = json_decode($response);
