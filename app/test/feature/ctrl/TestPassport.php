@@ -222,7 +222,9 @@ class TestPassport extends BaseAppTestCase
         $reqData['data_type'] = 'text';
         $curl->get(ROOT_URL . 'passport/emailExist', $reqData);
         parent::checkPageError($curl);
-        $this->assertEquals('true', $curl->rawResponse);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertEquals(false, $respArr['data']);
+        //$this->assertEquals('true', $curl->rawResponse);
 
 
         $notExistEmail = 'no_exists' . mt_rand(12345678, 92345678) . '@masterlab.org';
@@ -232,7 +234,9 @@ class TestPassport extends BaseAppTestCase
         $reqData['data_type'] = 'text';
         $curl->get(ROOT_URL . 'passport/emailExist', $reqData);
         parent::checkPageError($curl);
-        $this->assertEquals('false', $curl->rawResponse);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertEquals(true, $respArr['data']);
+        //$this->assertEquals('false', $curl->rawResponse);
     }
 
     public function testUsernameExist()
@@ -244,7 +248,9 @@ class TestPassport extends BaseAppTestCase
         $reqData['data_type'] = 'text';
         $curl->get(ROOT_URL . 'passport/usernameExist', $reqData);
         parent::checkPageError($curl);
-        $this->assertEquals('true', $curl->rawResponse);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertEquals(false, $respArr['data']);
+        //$this->assertEquals('true', $curl->rawResponse);
 
 
         $notExistUserName = 'no_exists' . mt_rand(12345678, 92345678);
@@ -254,6 +260,8 @@ class TestPassport extends BaseAppTestCase
         $reqData['data_type'] = 'text';
         $curl->get(ROOT_URL . 'passport/usernameExist', $reqData);
         parent::checkPageError($curl);
-        $this->assertEquals('false', $curl->rawResponse);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertEquals(true, $respArr['data']);
+        //$this->assertEquals('false', $curl->rawResponse);
     }
 }

@@ -127,7 +127,12 @@ class Main extends BaseUserCtrl
                     header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
                     die;
                 } else {
-                    $data['adv_filter_json'] = $fav['filter'];
+                    if($fav['is_adv_query']=='1'){
+                        $data['adv_filter_json'] = $fav['filter'];
+                    }else{
+                        $data['adv_filter_json'] = [];
+                    }
+
                     $data['is_adv_filter'] = '1';
                 }
 
