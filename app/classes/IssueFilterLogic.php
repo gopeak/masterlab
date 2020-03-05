@@ -49,7 +49,7 @@ class IssueFilterLogic
 
     public static $advFields = [
         'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
-        'summary' => ['title' => '标题', 'opt' => '=,!=,like', 'type' => 'text', 'source' => ''],
+        'summary' => ['title' => '标题', 'opt' => '=,!=,like,like %...%,regexp,regexp ^...$', 'type' => 'text', 'source' => ''],
         'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=', 'type' => 'datetime', 'source' => ''],
         'priority' => ['title' => '优先级', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'priority'],
         'module' => ['title' => '模  块', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'module'],
@@ -493,17 +493,7 @@ class IssueFilterLogic
 
             $field = trimStr($item['field']);
             if (!array_key_exists($field, $advFields)) {
-                $sql .= " 1 ";
-                continue;
-            }
-
-            $opt = strtolower(urldecode($item['opt']));
-            $fieldOptArr = explode(',', $advFields[$field]['opt']);
-
-            if (!in_array($opt, $fieldOptArr)) {
-                // 忽略操作符不在配置数组中的查询条件
-                $sql .= " 1 ";
-                continue;
+                return [false, [], 0];
             }
 
             $value = $item['value'] ;
@@ -526,6 +516,16 @@ class IssueFilterLogic
             }
 
             $sql .= " {$logic} {$startBraces} ";
+
+
+            $opt = strtolower(urldecode($item['opt']));
+            $fieldOptArr = explode(',', $advFields[$field]['opt']);
+
+            if (!in_array($opt, $fieldOptArr)) {
+                // 忽略操作符不在配置数组中的查询条件
+                $sql .= " 1=1 ";
+                continue;
+            }
 
             switch ($opt) {
                 case '=':
@@ -580,7 +580,7 @@ class IssueFilterLogic
                     $sql .= "  $field {$opt} '$value' ";
                     break;
                 case 'regexp ^...$':
-                    $sql .= "  $field {$opt}  '^{$value}$' ";
+                    $sql .= "  $field REGEXP  '^{$value}$' ";
                     break;
                 default:
                     if (in_array($field, $paramsField)) {
