@@ -112,7 +112,7 @@
 																								                                                   class="check_all_issues left"/>
 																								                                        </div>-->
 												<div class="issues-other-filters filtered-search-wrapper">
-													<div class="filtered-search-box">
+													<div class="filtered-search-box" title="按回车键提交查询或点击搜索按钮">
 														<div class="dropdown filtered-search-history-dropdown-wrapper">
 															<button class="dropdown-menu-toggle filtered-search-history-dropdown-toggle-button" type="button" data-toggle="dropdown">
 																<span class="dropdown-toggle-text ">
@@ -284,6 +284,11 @@
                                                 <i class="fa fa-search "></i>
                                                 搜 索
                                             </button>
+                                            <button class="dropdown-toggle btn-adv-search" id="save_filter-btn" type="button"
+                                                    title="保存搜索的条件"  >
+                                                <i class="fa fa-save "></i>
+                                                保 存
+                                            </button>
                                             <button class="dropdown-toggle btn-adv-search" id="btn-adv_search" type="button"
                                                     title="高级查询" data-target="#modal-adv_query" data-toggle="modal">
                                                 <i class="fa fa-binoculars "></i>
@@ -294,12 +299,13 @@
                                                     <div class="btn-group" role="group">
                                                         <div class="btn-group" role="group">
                                                             <button id="btn-sort_field"
-                                                                    style="height: 38.5px; width: 130px;"
+                                                                    title="排序字段"
+                                                                    style="height: 38.5px; width: 110px;"
                                                                     data-sort_field="{{ sort_field }}"
                                                                     class="btn btn-default dropdown-menu-toggle"
-                                                                    data-display="static" data-toggle="dropdown"
+                                                                    data-display="static"
+                                                                    data-toggle="dropdown"
                                                                     type="button">
-                                                                <span>排序:</span>
                                                                 {{ avl_sort_fields[sort_field] }}
                                                                 <i aria-hidden="true" data-hidden="true"
                                                                    class="fa fa-chevron-down"></i>
@@ -391,13 +397,6 @@
                                                         <ul class="dropdown-menu settings-list"
                                                             aria-labelledby="dropdownMenuButton" for-id="list_opt"
                                                             id="opt_choice">
-
-                                                            <li class="normal" data-stoppropagation="true"
-                                                                id="save_filter-btn">
-                                                                <a href="#">
-                                                                    <i class="fa fa-save"></i>
-                                                                    保存搜索条件</a>
-                                                            </li>
                                                             <li class="normal" data-stoppropagation="true">
                                                                 <a href="/user/filters">
                                                                     <i class="fa fa-filter"></i>
@@ -440,8 +439,11 @@
                                                     {% if (projectPermArr['CREATE_ISSUES'] is defined) %}
 
                                                         <a class="btn btn-new js-key-create"
-                                                           data-target="#modal-create-issue" data-toggle="modal"
-                                                           id="btn-create-issue" style="height:36px;margin-bottom: 3px"
+                                                           title="快捷键 C 可呼出创建事项表单"
+                                                           data-target="#modal-create-issue"
+                                                           data-toggle="modal"
+                                                           id="btn-create-issue"
+                                                           style="height:36px;margin-bottom: 3px"
                                                            href="#modal-create-issue">
                                                             <i class="fa fa-plus fa-fw"></i>
                                                             创 建
@@ -696,8 +698,7 @@
                                                 <th class="js-pipeline-date pipeline-date">
                                                     <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
                                                        data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
-                                                        限
-                                                        期
+                                                        计划时间
                                                         {% if sort_field == 'due_date' %}
                                                             <i class="fa fa-sort-{{ sort_by }}"></i>
                                                         {% endif %}
@@ -1651,13 +1652,13 @@
 										</div>
 									</td>
 									{{#if_in_array 'issue_type'  ../display_fields}}
-										<td class="width_3_6">
+										<td class="width_3_6"  title="双击可直接修改">
 											{{issue_type_short_html issue_type}}
 										</td>
 									{{/if_in_array}}
 
 									{{#if_in_array 'priority'  ../display_fields}}
-										<td class="width_5">
+										<td class="width_5"  title="双击可直接修改">
                                             <div class="item-list-select priority-select" data-issue_id="{{id}}" id="priority-list-{{id}}">
 												{{priority_html priority }}
 												<ul class="item-data-list priority-list"></ul>
@@ -1680,7 +1681,7 @@
 
 
 									{{#if_in_array 'module'  ../display_fields}}
-										<td class="width_6">
+										<td class="width_6"  title="双击可直接修改">
                                             <div class="item-list-select module-select" data-issue_id="{{id}}" id="module-list-{{id}}">
 												{{module_html module }}
 												<ul class="item-data-list module-list"></ul>
@@ -1689,7 +1690,7 @@
 									{{/if_in_array}}
 
 									{{#if_in_array 'sprint'  ../display_fields}}
-										<td class="width_6">
+										<td class="width_6"  title="双击可直接修改">
                                             <div class="item-list-select sprint-select" data-issue_id="{{id}}" id="sprint-list-{{id}}">
 												{{make_issue_sprint sprint }}
 												<ul class="item-data-list sprint-list"></ul>
@@ -1730,7 +1731,7 @@
 									{{/if_in_array}}
 
 									{{#if_in_array 'assignee'  ../display_fields}}
-										<td class="width_5">
+										<td class="width_5"  title="双击可直接修改">
                                             <div class="item-list-select assignee-select" data-issue_id="{{id}}" id="assignee-list-{{id}}">
 												{{user_html assignee}}
 												<ul class="item-data-list assignee-list"></ul>
@@ -1751,7 +1752,7 @@
 									{{/if_in_array}}
 
 									{{#if_in_array 'status'  ../display_fields}}
-										<td class="width_6_1">
+										<td class="width_6_1" title="双击可直接修改">
 											<div class="item-list-select status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
 												{{status_html status }}
 												<ul class="item-data-list status-list"></ul>
@@ -1760,7 +1761,7 @@
 									{{/if_in_array}}
 
 									{{#if_in_array 'resolve'  ../display_fields}}
-										<td class="width_7_9">
+										<td class="width_7_9"  title="双击可直接修改">
 											<div class="item-list-select resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
 												{{resolve_html resolve }}
 												<ul class="item-data-list resolve-list"></ul>
@@ -1775,7 +1776,7 @@
 									{{/if_in_array}}
 
 									{{#if_in_array 'plan_date'  ../display_fields}}
-										<td class="width_8">
+										<td class="width_8"  title="双击可直接修改">
 											<small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;cursor:pointer;">{{show_date_range}}
 											</small>
 										</td>
@@ -1990,8 +1991,7 @@
 										<div class="issuable-main-info">
 											<div class="checkbox show-tooltip" data-id="{{id}}">
 												<span class="issue-title-text">
-													<a href="/issue/detail/index/{{id}}">{{lightSearch summary '{{search}}
-                                        '}}</a>
+													<a href="/issue/detail/index/{{id}}">{{lightSearch summary '{{search}}'}}</a>
 												</span>
 												{{priority_html priority }}
 											</div>
@@ -1999,8 +1999,7 @@
 												<div data-issue_id="{{id}}" id="status-list-{{id}}">
 													#{{issue_num}}
 													{{created_text_html created created_text created_full}}
-													{{user_name_html
-                                    reporter}}
+													{{user_name_html reporter}}
 													{{issue_type_html issue_type}}
 													<div class="item-list-select status-select" style="display: inline-block;" data-issue_id="{{id}}" id="status-list-{{id}}">
 														{{status_html status }}
@@ -2309,8 +2308,6 @@
                 }
 
                 $(function () { 
-                    
-
                     var options = {
                         query_str: window.query_str,
                         query_param_obj: urls.searchObject,
@@ -2357,9 +2354,6 @@
                         IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData,null, adv_data);
                     }
 
-                    
-
-
                     $('#btn-add').bind('click', function () {
                         IssueMain.prototype.add();
                     });
@@ -2382,8 +2376,6 @@
                             _cur_form_project_id = "";
                         }
                     });
-
-                    
 
                     $('#modal-adv_query').on('shown.bs.modal', function (e) {
 
