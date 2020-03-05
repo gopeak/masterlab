@@ -1491,7 +1491,7 @@
                                     {#</div>#}
                                     <div class="col-sm-3 dynamic-form" id="dynamic-form">
                                         <input type="text" class="form-control"
-                                              datatype="text" name="params[text]"
+                                              datatype="text" name="content"
                                               id="adv_content" value=""
                                               placeholder="查询内容"/>
                                     </div>
@@ -2719,8 +2719,7 @@
                         }
 
                         if (typeof value == "undefined" || value == null || value == "") {
-                            notify_error("值不能为空");
-                            return false;
+                            $(".form-control[name='content']").val("");
                         }
 
 
