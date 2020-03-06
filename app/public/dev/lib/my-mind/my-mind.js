@@ -661,8 +661,7 @@ MM.Item.prototype.syncRenderRightPanel = function () {
 	$('.selectpicker').selectpicker('refresh');
 }
 
-MM.Item.prototype.select = function (item) {
-	console.log(item)
+MM.Item.prototype.select = function (item, evt) {
 	this._dom.node.classList.add("current");
 	this.getMap().ensureItemVisibility(this);
 	MM.Clipboard.focus(); /* going to mode 2c */
@@ -6126,12 +6125,11 @@ MM.Mouse.handleEvent = function (e) {
 				MM.Command.Finish.execute(); /* clicked elsewhere => finalize edit */
 			}
 
-			// if (e.target && e.target.className == "toggle") {
-			// 	if (item == undefined) {
-			// 		MM.App.select(item)
-			// 		console.log('toggle undefined')
-			// 	}
-			// }
+			if (e.target && e.target.className == "toggle") {
+				if (item == undefined) {
+					return
+				}
+			}
 
 			if (e.type == "mousedown") { MM.App.select(item); e.preventDefault(); } /* to prevent blurring the clipboard node */
 
