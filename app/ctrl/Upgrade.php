@@ -284,7 +284,7 @@ class Upgrade extends BaseUserCtrl
 
         $dump = new \main\lib\MySqlDump($dbConfig);
         $dump->onProgress = function ($output) {
-            echo str_repeat("<div class='item' style='font-size: 12px; color:#aaa;'>",1024) . $output . " ✔</div>";
+            echo '<div class="item" style="font-size: 12px; color:#aaa;">' . $output . ' ✔</div>';
             flush();
         };
 
@@ -306,7 +306,7 @@ class Upgrade extends BaseUserCtrl
 
         $import = new \main\lib\MySqlImport($dbConfig);
         $import->onProgress = function ($output) {
-            echo str_repeat("<div class='item' style='font-size: 12px; color:#aaa;'>",1024).$output." ->Complete</div>";
+            echo '<div class="item" style="font-size: 12px; color:#aaa;">' . $output . ' ✔</div>';
             flush();
         };
         $import->load($databaseBackupFilename);
