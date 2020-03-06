@@ -139,7 +139,7 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('升级失败：补丁包下载失败！');
         }
         if (file_exists($filePath . '.pccdownload')) {
-            copy($filePath . '.pccdownload', $filePath);
+            rename($filePath . '.pccdownload', $filePath);
         }
         $this->showLine('下载完成，升级包保存在：' . $filePath);
         $this->showLine('正在解压缩......');
@@ -179,9 +179,8 @@ class Upgrade extends BaseUserCtrl
             }
             $this->showLine('');
         } catch (\Exception $e) {
-            $this->showLine($e->getMessage());
+            $this->showLine('数据库执行错误,已忽略. 错误信息:'.$e->getMessage());
             $this->showLine('');
-            die;
         }
 
         // 清除缓存数据
