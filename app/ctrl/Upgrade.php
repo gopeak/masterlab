@@ -20,58 +20,9 @@ class Upgrade extends BaseUserCtrl
         parent::__construct();
     }
 
-    /**
-     * 检查版本
-     */
-    public function check_version()
-    {
-        $currentVersion = isset($_GET['current_version']) ? trim($_GET['current_version']) : '';
-        $versions = include PUBLIC_PATH . 'versions' . DIRECTORY_SEPARATOR . 'versions.php';
-        $versionsMap = array_flip($versions);
-        $currentVersionIndex = 0;
-        if (isset($versionsMap[$currentVersion])) {
-            $currentVersionIndex = $versionsMap[$currentVersion];
-        }
-
-        $hasNewVersion = false;
-        $newVersion = $currentVersion;
-        $url = '';
-        $newVersionIndex = $currentVersionIndex + 1;
-        if (isset($versions[$newVersionIndex])) {
-            // 有新版本
-            $hasNewVersion = true;
-            $newVersion = $versions[$newVersionIndex];
-            $filename = $currentVersion . '-' . $newVersion . '-upgrade.zip';
-            $url = ROOT_URL . 'versions/packages/' . $filename;
-        }
-
-        $result = ['has_new_version' => $hasNewVersion, 'new_version' => $newVersion, 'url' => $url];
-
-        $this->ajaxSuccess('ok', $result);
-    }
-
-    public function check_upgrade()
-    {
-        $currentVersion = isset($_GET['current_version']) ? trim($_GET['current_version']) : '';
-        if ($currentVersion == '2.0') {
-            $data = [
-                'last_version' => [
-                    'version' => '2.0.1',
-                    'release_url' => 'https://github.com/gopeak/masterlab/releases/tag/v2.0.1'
-                ],
-                'url' => 'http://www.masterlab20.cn/versions/packages/2.0-2.0.1-upgrade.zip'
-            ];
-            $msg = '升级可用';
-            $this->ajaxSuccess($msg, $data);
-        } else {
-            $data = null;
-            $msg = '已经是最新版本,无需升级!';
-            $this->ajaxFailed($msg);
-        }
-    }
-
     public function upgrade()
     {
+        set_time_limit(0);
         $curl = new \Curl\Curl();
         $curl->setTimeout(10);
 
@@ -102,8 +53,8 @@ class Upgrade extends BaseUserCtrl
         $content = $curl->rawResponse;
 
         // Masterlab 项目目录
-        $projectDir = realpath(APP_PATH . '..' . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        $upgradePath = $projectDir . 'upgrade' . DIRECTORY_SEPARATOR;
+        $projectDir = PRE_APP_PATH ;// realpath(APP_PATH . '..' . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $upgradePath = PRE_APP_PATH . 'upgrade' . DIRECTORY_SEPARATOR;
 
         $filename = pathinfo($url, PATHINFO_BASENAME);
         $filePath = $upgradePath . $filename;
