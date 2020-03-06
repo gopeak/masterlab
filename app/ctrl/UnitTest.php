@@ -40,4 +40,13 @@ class UnitTest extends BaseCtrl
 
         $this->ajaxSuccess('mail', $ret);
     }
+
+    public function AjaxSync()
+    {
+            for ($i=0;$i<5;$i++){
+                sleep(1);
+                echo "{$i}<br>\n";
+            }
+
+    }
 }

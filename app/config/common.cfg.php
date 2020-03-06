@@ -3,7 +3,7 @@
 
 $_config['mods'] = array( 'admin','framework' ,'project','issue','module_test');
 
-$_config['noAuthFnc'] = array( 'issue.main.QrMobileUpload','issue.main.mobileUpload','issue.main.uploadDelete');
+$_config['noAuthFnc'] = array( 'issue.main.QrMobileUpload','issue.main.mobileUpload','issue.main.uploadDelete','upgrade.check_upgrade');
 
 $_config['csrf'] = false;
 

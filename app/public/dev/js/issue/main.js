@@ -826,7 +826,6 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.fetchChildren = function (issue_id, display_id) {
-
         loading.show('#' + display_id);
         $.ajax({
             type: 'get',
@@ -850,6 +849,7 @@ var IssueMain = (function () {
 
             },
             error: function (res) {
+                loading.hide('#' + display_id);
                 notify_error("请求数据错误" + res);
             }
         });

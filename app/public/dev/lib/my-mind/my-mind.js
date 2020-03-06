@@ -661,7 +661,7 @@ MM.Item.prototype.syncRenderRightPanel = function () {
 	$('.selectpicker').selectpicker('refresh');
 }
 
-MM.Item.prototype.select = function () {
+MM.Item.prototype.select = function (item, evt) {
 	this._dom.node.classList.add("current");
 	this.getMap().ensureItemVisibility(this);
 	MM.Clipboard.focus(); /* going to mode 2c */
@@ -1018,7 +1018,6 @@ MM.Item.prototype.removeChild = function (child) {
 	node.parentNode.removeChild(node);
 
 	child.setParent(null);
-
 	if (!this._children.length) {
 		this._dom.toggle.parentNode.removeChild(this._dom.toggle);
 		this._dom.children.parentNode.removeChild(this._dom.children);
@@ -1073,7 +1072,12 @@ MM.Item.prototype.handleEvent = function (e) {
 			MM.Command.Finish.execute();
 			break;
 
+		case "mousedown":
+			console.log(this._collapsed)
+			break;
+
 		case "click":
+			// 点击加号
 			if (this._collapsed) { this.expand(); } else { this.collapse(); }
 			MM.App.select(this);
 			break;
@@ -1166,10 +1170,10 @@ MM.Item.prototype._updateIssuePriorityLabel = function () {
 	} else {
 		this._dom.issue_priority_label.style.display = "none";
 	}
-    let setting = MM.App.server_settings;
-    if(setting.is_display_priority!=1){
-        this._dom.issue_priority_label.style.display = 'none';
-    }
+	let setting = MM.App.server_settings;
+	if (setting.is_display_priority != 1) {
+		this._dom.issue_priority_label.style.display = 'none';
+	}
 }
 
 // _updateIssueStatusIcon
@@ -1195,10 +1199,10 @@ MM.Item.prototype._updateIssueStatuslabel = function () {
 		this._computed.issue_status_label = null;
 		this._dom.issue_status_label.style.display = "none";
 	}
-    let setting = MM.App.server_settings;
-    if(setting.is_display_status!=1){
-        this._dom.issue_status_label.style.display = 'none';
-    }
+	let setting = MM.App.server_settings;
+	if (setting.is_display_status != 1) {
+		this._dom.issue_status_label.style.display = 'none';
+	}
 }
 MM.Item.prototype._updateIssueAssigneeImg = function () {
 	// this._dom.issue_assignee_img.className = "avatar";
@@ -1219,10 +1223,10 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
 		this._computed.issue_assignee_img = null;
 		this._dom.issue_assignee_img.style.display = "none";
 	}
-    let setting = MM.App.server_settings;
-    if(setting.is_display_assignee!=1){
-        this._dom.issue_assignee_img.style.display = 'none';
-    }
+	let setting = MM.App.server_settings;
+	if (setting.is_display_assignee != 1) {
+		this._dom.issue_assignee_img.style.display = 'none';
+	}
 }
 
 MM.Item.prototype._updateProjectImg = function () {
@@ -1286,10 +1290,10 @@ MM.Item.prototype._updateIssueProgressImg = function () {
 	} else {
 		this._dom.issue_progress_img.style.display = "none";
 	}
-    let setting = MM.App.server_settings;
-    if(setting.is_display_progress!=1){
-        this._dom.issue_progress_img.style.display = 'none';
-    }
+	let setting = MM.App.server_settings;
+	if (setting.is_display_progress != 1) {
+		this._dom.issue_progress_img.style.display = 'none';
+	}
 }
 
 
@@ -1306,10 +1310,10 @@ MM.Item.prototype._updateIssueTypeIcon = function () {
 		this._computed.issue_type_icon = null;
 		this._dom.issue_type_icon.style.display = "none";
 	}
-    let setting = MM.App.server_settings;
-    if(setting.is_display_type!=1){
-        this._dom.issue_type_icon.style.display = 'none';
-    }
+	let setting = MM.App.server_settings;
+	if (setting.is_display_type != 1) {
+		this._dom.issue_type_icon.style.display = 'none';
+	}
 }
 
 MM.Item.prototype._updateValue = function () {
@@ -1500,11 +1504,12 @@ MM.Map.prototype.hide = function () {
 MM.Map.prototype.center = function () {
 	var node = this._root.getDOM().node;
 	var port = MM.App.portSize;
-	var left = (port[0] - node.offsetWidth) / 2;
-	var top = (port[1] - node.offsetHeight) / 2;
-
-	this._moveTo(Math.round(left), Math.round(top));
-
+	console.log('init center')
+	setTimeout(() => {
+		var left = (port[0] - node.offsetWidth) / 2;
+		var top = (port[1] - node.offsetHeight) / 3;
+		this._moveTo(Math.round(left), Math.round(top));
+	}, 0);
 	return this;
 }
 
@@ -1708,6 +1713,8 @@ MM.Tip = {
 	},
 
 	handleMessage: function () {
+		console.log('toggle')
+
 		this._hide();
 	},
 
@@ -1801,44 +1808,44 @@ MM.Action.MoveItem = function (item, newParent, newIndex, newSide) {
 	this._oldIndex = this._oldParent.getChildren().indexOf(item);
 	this._oldSide = item.getSide();
 
-    if(item._type==='issue'){
-    	let current_issue_id = item._id.replace('issue_','');
-        let targetItem = newParent;
-        if(targetItem._type==='project'){
+	if (item._type === 'issue') {
+		let current_issue_id = item._id.replace('issue_', '');
+		let targetItem = newParent;
+		if (targetItem._type === 'project') {
 
-        }
-        if(targetItem._type==='root_sprint'){
+		}
+		if (targetItem._type === 'root_sprint') {
 
-        }
-        if(targetItem._type==='second'){
-            let arr = targetItem._id.split('_');
-            if(arr.length>1 ){
-                let target_id = arr[1];
-                let post_data = {}
-                post_data[arr[0]] = target_id;
-                post_data['remove_master'] = '1';
-                if(target_id){
-                    var fnc = function(){
-                        window.$mindAjax.removeChild(current_issue_id)
-                    }
-                    window.$mindAjax.update(current_issue_id, post_data, fnc);
-                }
-            }
-        }
-        if(targetItem._type==='issue'){
-            let master_issue_id = targetItem._id.replace('issue_','');
-            if(master_issue_id){
-                let range_type = $("#source_range").val();
-                let second_type = '';
-                if(range_type==='all'){
-                    second_type = $('#all-group_by').val();
-                }else{
-                    second_type = $('#sprint-group_by').val();
-                }
-                window.$mindAjax.convertChild(current_issue_id, master_issue_id, second_type);
-            }
-        }
-    }
+		}
+		if (targetItem._type === 'second') {
+			let arr = targetItem._id.split('_');
+			if (arr.length > 1) {
+				let target_id = arr[1];
+				let post_data = {}
+				post_data[arr[0]] = target_id;
+				post_data['remove_master'] = '1';
+				if (target_id) {
+					var fnc = function () {
+						window.$mindAjax.removeChild(current_issue_id)
+					}
+					window.$mindAjax.update(current_issue_id, post_data, fnc);
+				}
+			}
+		}
+		if (targetItem._type === 'issue') {
+			let master_issue_id = targetItem._id.replace('issue_', '');
+			if (master_issue_id) {
+				let range_type = $("#source_range").val();
+				let second_type = '';
+				if (range_type === 'all') {
+					second_type = $('#all-group_by').val();
+				} else {
+					second_type = $('#sprint-group_by').val();
+				}
+				window.$mindAjax.convertChild(current_issue_id, master_issue_id, second_type);
+			}
+		}
+	}
 
 
 }
@@ -2926,7 +2933,6 @@ MM.Layout._anchorToggle = function (item, x, y, side) {
 			l -= w / 2;
 			break;
 	}
-
 	node.style.left = Math.round(l) + "px";
 	node.style.top = Math.round(t) + "px";
 }
@@ -3079,7 +3085,6 @@ MM.Layout.Graph._layoutChildren = function (children, rankDirection, offset, bbo
 
 		offset[childIndex] += childSize[childIndex] + this.SPACING_CHILD; /* offset for next child */
 	}, this);
-
 	return bbox;
 }
 
@@ -4502,7 +4507,6 @@ MM.UI = function () {
 
 	this._node.addEventListener("click", this);
 	this._node.addEventListener("change", this);
-
 	this.toggle();
 }
 
@@ -4522,7 +4526,6 @@ MM.UI.prototype.handleEvent = function (e) {
 	switch (e.type) {
 		case "click":
 			if (e.target.nodeName.toLowerCase() != "select") { MM.Clipboard.focus(); } /* focus the clipboard (2c) */
-
 			if (e.target == this._toggle) {
 				this.toggle();
 				return;
@@ -5262,19 +5265,19 @@ MM.UI.IO = function () {
 }
 
 MM.UI.IO.prototype.fetchIssues = function () {
-	var parts = {};
-	location.search.substring(1).split("&").forEach(function (item) {
-		var keyvalue = item.split("=");
-		parts[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);
-	});
+	// var parts = {};
+	// location.search.substring(1).split("&").forEach(function (item) {
+	// 	var keyvalue = item.split("=");
+	// 	parts[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);
+	// });
 
-	/* backwards compatibility */
-	if ("map" in parts) { parts.url = parts.map; }
+	// /* backwards compatibility */
+	// if ("map" in parts) { parts.url = parts.map; }
 
-	/* just URL means webdav backend */
-	if ("url" in parts && !("b" in parts)) { parts.b = "webdav"; }
+	// /* just URL means webdav backend */
+	// if ("url" in parts && !("b" in parts)) { parts.b = "webdav"; }
 
-	//console.log(parts.url);
+	// //console.log(parts.url);
 
 	let source_type = $("#source_range").val();
 	let group_by = '';
@@ -5293,14 +5296,14 @@ MM.UI.IO.prototype.fetchIssues = function () {
 		url: '/project/mind/fetchMindIssues/' + project_id,
 		data: params,
 		success: function (data) {
-			MM.App.setThrobber(true);
-			var map = MM.App.map;
+			// var map = MM.App.map;
 			try {
 				var json = MM.Format.JSON.from(data);
+				MM.UI.Backend._loadDone.call(this, json);
 			} catch (e) {
 				this._error(e);
 			}
-			MM.UI.Backend._loadDone.call(this, json);
+			MM.App.setThrobber(true);
 			$('.mind-create').bind('click', function () {
 				//alert($(this));
 				let item_id = $(this).data('id');
@@ -5310,6 +5313,10 @@ MM.UI.IO.prototype.fetchIssues = function () {
 					IssueMain.prototype.fetchEditUiConfig(issue_id, 'update');
 				}
 			});
+			MM.App.adjustFontSize(-1)
+			MM.App.adjustFontSize(-1)
+			MM.App.adjustFontSize(-1)
+			MM.App.adjustFontSize(-1)
 		},
 		error: function (res) {
 			notify_error("请求数据错误" + res);
@@ -6089,8 +6096,8 @@ MM.Mouse.handleEvent = function (e) {
 			e.preventDefault();
 
 			var item = MM.App.map.getItemFor(e.target);
-			if(!item){
-                break;
+			if (!item) {
+				break;
 			}
 			item && MM.App.select(item);
 			if (item._id && item._id.search('issue_') === -1) {
@@ -6118,7 +6125,13 @@ MM.Mouse.handleEvent = function (e) {
 				MM.Command.Finish.execute(); /* clicked elsewhere => finalize edit */
 			}
 
-			if (e.type == "mousedown") { MM.App.select(item);e.preventDefault(); } /* to prevent blurring the clipboard node */
+			if (e.target && e.target.className == "toggle") {
+				if (item == undefined) {
+					return
+				}
+			}
+
+			if (e.type == "mousedown") { MM.App.select(item); e.preventDefault(); } /* to prevent blurring the clipboard node */
 
 			if (e.type == "touchstart") { /* context menu here, after we have the item */
 				this._touchTimeout = setTimeout(function () {
@@ -6383,7 +6396,7 @@ setInterval(function() {
  *
  */
 MM.App = {
-	server_settings:{},
+	server_settings: {},
 	keyboard: null,
 	current: null,
 	editing: false,
@@ -6427,9 +6440,9 @@ MM.App = {
 
 	select: function (item) {
 		if (this.current && this.current != item) { this.current.deselect(); }
-		if(!is_empty(item)){
-            this.current = item;
-            this.current.select();
+		if (!is_empty(item)) {
+			this.current = item;
+			this.current.select();
 		}
 	},
 
@@ -6467,9 +6480,9 @@ MM.App = {
 		}
 	},
 
-    setServerSettings: function (server_settings) {
-        this.server_settings = server_settings;
-    },
+	setServerSettings: function (server_settings) {
+		this.server_settings = server_settings;
+	},
 
 	setThrobber: function (visible) {
 		this._throbber.classList[visible ? "add" : "remove"]("visible");
@@ -6510,7 +6523,7 @@ MM.App = {
 		} else {
 			mindSideBar.style.top = "145px"
 		}
-		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
+		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding - 280, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
 		this._port.style.width = this.portSize[0] + "px";
 		this._port.style.height = this.portSize[1] + "px";
 

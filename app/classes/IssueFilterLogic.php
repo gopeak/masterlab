@@ -48,18 +48,18 @@ class IssueFilterLogic
     ];
 
     public static $advFields = [
-        'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
-        'summary' => ['title' => '标题', 'opt' => '=,!=,like', 'type' => 'text', 'source' => ''],
-        'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'datetime', 'source' => ''],
-        'priority' => ['title' => '优先级', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'priority'],
-        'module' => ['title' => '模  块', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'module'],
-        'issue_type' => ['title' => '类  型', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'issueType'],
-        'sprint' => ['title' => '迭 代', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'sprint'],
-        'weight' => ['title' => '权重', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
-        'assignee' => ['title' => '经办人', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'user'],
-        'status' => ['title' => '状态', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'status'],
-        'resolve' => ['title' => '解决结果', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'status'],
-        'due_date' => ['title' => '截止日期', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'date', 'source' => ''],
+        'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
+        'summary' => ['title' => '标题', 'opt' => '=,!=,like,like %...%,regexp,regexp ^...$', 'type' => 'text', 'source' => ''],
+        'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=', 'type' => 'datetime', 'source' => ''],
+        'priority' => ['title' => '优先级', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'priority'],
+        'module' => ['title' => '模  块', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'module'],
+        'issue_type' => ['title' => '类  型', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'issueType'],
+        'sprint' => ['title' => '迭 代', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'sprint'],
+        'weight' => ['title' => '权重', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
+        'assignee' => ['title' => '经办人', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'user'],
+        'status' => ['title' => '状态', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'status'],
+        'resolve' => ['title' => '解决结果', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'status'],
+        'due_date' => ['title' => '截止日期', 'opt' => '=,!=,<,>,<=,>=', 'type' => 'date', 'source' => ''],
     ];
 
 
@@ -484,9 +484,24 @@ class IssueFilterLogic
         $startBracesNum = 0;
         $endBracesNum = 0;
         $sql .= ' AND ( ';
+
+        $advFields = self::$advFields;
+
         $i = 0;
         foreach ($queryArr as $item) {
             $i++;
+
+            $field = trimStr($item['field']);
+            if (!array_key_exists($field, $advFields)) {
+                return [false, [], 0];
+            }
+
+            $value = $item['value'] ;
+
+            if ($field == 'updated' || $field == 'created') {
+                $value = strtotime($value);
+            }
+
             $logic = strtoupper($item['logic']);
             if ($i == 1) {
                 $logic = '';
@@ -499,15 +514,18 @@ class IssueFilterLogic
             if ($endBraces == ')') {
                 $endBracesNum++;
             }
-            $field = trimStr($item['field']);
-            $opt = strtolower(urldecode($item['opt']));
-            $value = $item['value'] ;
-
-            if ($field == 'updated' || $field == 'created') {
-                $value = strtotime($value);
-            }
 
             $sql .= " {$logic} {$startBraces} ";
+
+
+            $opt = strtolower(urldecode($item['opt']));
+            $fieldOptArr = explode(',', $advFields[$field]['opt']);
+
+            if (!in_array($opt, $fieldOptArr)) {
+                // 忽略操作符不在配置数组中的查询条件
+                $sql .= " 1=1 ";
+                continue;
+            }
 
             switch ($opt) {
                 case '=':
@@ -562,7 +580,7 @@ class IssueFilterLogic
                     $sql .= "  $field {$opt} '$value' ";
                     break;
                 case 'regexp ^...$':
-                    $sql .= "  $field {$opt}  '^{$value}$' ";
+                    $sql .= "  $field REGEXP  '^{$value}$' ";
                     break;
                 default:
                     if (in_array($field, $paramsField)) {
