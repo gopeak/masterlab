@@ -47,13 +47,13 @@ class Upgrade extends BaseUserCtrl
     /**
      * 自动升级脚本
      */
-    public function upgrade()
+    public function run()
     {
         set_time_limit(0);
         $curl = new \Curl\Curl();
         $curl->setTimeout(10);
 
-        $host = isset($_GET['host']) ? trim($_GET['host']) : 'http://www.masterlab.vip/';
+        $host = isset($_GET['source']) ? trim($_GET['source']) : 'http://www.masterlab.vip/';
         $url = $host . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
         //$url = 'http://www.masterlab20.cn/upgrade/check_upgrade?current_version=2.0';
 
@@ -83,34 +83,17 @@ class Upgrade extends BaseUserCtrl
         $filePath = $upgradePath . $filename;
         $folder = pathinfo($url, PATHINFO_FILENAME);
         $path = $upgradePath . $folder . DS;
-
         // 数据库补丁文件路径，要求sql格式
         $sqlFile = $path . 'database.sql';
-
         // 索引操作语句SQL文件
         $indexSqlFile = $path . 'index.sql';
-
         // 代码补丁压缩包路径，要求zip格式
         $patchFile = $path . 'patch.zip';
-
         // vendor目录压缩包，要求zip格式
         $vendorFile = $path . 'vendor.zip';
-
-        // 数据库备份文件
-        $databaseBackupFilename = $path . 'masterlab.bak.sql.gz';
-
         // lock文件
         $lockFile = $path . 'upgrade.lock';
 
-        // 配置文件
-        $databaseConfigPath = APP_PATH . 'config' . DS . 'deploy' . DS;
-        $databaseConfigFile = $databaseConfigPath . 'database.cfg.php';
-        $databaseConfigFile = realpath($databaseConfigFile);
-        $databaseConfigBackupFile = realpath(APP_PATH . 'config' . DS . 'deploy') . DS . 'database.cfg.php.backup';
-
-        $cacheConfigFile = $databaseConfigPath . 'cache.cfg.php';
-        $cacheConfigFile = realpath($cacheConfigFile);
-        $cacheConfigBackupFile = realpath(APP_PATH . 'config' . DS . 'deploy') . DS . 'cache.cfg.php.backup';
 
         // 先检查补丁文件和所需扩展是否存在
         $checkOk = true;
@@ -119,27 +102,23 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('错误：PHP 扩展 zip 未安装！');
             $checkOk = false;
         }
-
         if (!$this->isPathWritable($projectDir)) {
             $this->showLine('错误：Masterlab项目目录 ' . $projectDir . ' 不可写！');
             $checkOk = false;
         }
-
         if (!$this->isPathWritable($upgradePath)) {
             $this->showLine('错误：' . $upgradePath . ' 目录权限不足，无法写入。');
             $checkOk = false;
         }
-
-        if (!$this->isPathWritable($databaseConfigPath)) {
-            $this->showLine('错误：' . $databaseConfigPath . ' 目录权限不足，无法写入。');
+        $appConfigPath = APP_PATH . '/config/'.APP_STATUS.'/app.cfg.php';
+        if (!$this->isPathWritable($appConfigPath)) {
+            $this->showLine('错误：' . $appConfigPath . ' 文件权限不足，无法写入。');
             $checkOk = false;
         }
-
         if (file_exists($lockFile)) {
-            $this->showLine('错误：Masterlab 已经进行过此版本的升级，不能再次进行此操作。');
+            $this->showLine('错误：Masterlab 已经进行过此版本的升级,不能再次进行此操作. 若重新设计请删除文件:'.$lockFile);
             $checkOk = false;
         }
-
         if (!$checkOk) {
             $this->showLine('升级失败！');
             die;
@@ -147,31 +126,24 @@ class Upgrade extends BaseUserCtrl
 
         $this->showLine('您正在升级 Masterlab ' . $latestVersion);
         $this->showLine('正在下载升级包......');
-
-        if (!$curl->download($url, $filePath)) {
+        if(file_exists($filePath . '.pccdownload') && is_file($filePath . '.pccdownload') ){
+            unlink($filePath . '.pccdownload');
+        }
+        if(file_exists($filePath) && is_file($filePath) ){
+            unlink($filePath);
+        }
+        if(file_exists($filePath) && is_dir($filePath) ){
+            rmDirectory($filePath);
+        }
+        if (!@$curl->download($url, $filePath)) {
             $this->showLine('升级失败：补丁包下载失败！');
         }
-
         if (file_exists($filePath . '.pccdownload')) {
-            rename($filePath . '.pccdownload', $filePath);
+            copy($filePath . '.pccdownload', $filePath);
         }
-
         $this->showLine('下载完成，升级包保存在：' . $filePath);
         $this->showLine('正在解压缩......');
         $this->unzip($filePath, $path);
-
-        try {
-            // 备份 database.cfg.php 文件
-            copy($databaseConfigFile, $databaseConfigBackupFile);
-            $this->showLine('数据库配置文件已备份至：' . $databaseConfigBackupFile);
-            copy($cacheConfigFile, $cacheConfigBackupFile);
-            $this->showLine('缓存配置文件已备份至：' . $cacheConfigBackupFile);
-        } catch (\Exception $e) {
-            $this->showLine($e->getMessage());
-            $this->showLine('');
-            $this->showLine('发生错误，放弃升级！');
-            die;
-        }
 
         try {
             $model = new \main\app\model\CacheModel();
@@ -185,19 +157,13 @@ class Upgrade extends BaseUserCtrl
         }
 
         try {
-            // 备份数据库
-            $this->showLine('');
-            $this->showLine('正在备份数据库......');
-            $this->backupDb($databaseBackupFilename);
-
             if (file_exists($sqlFile)) {
                 $this->showLine('');
                 $this->showLine('正在升级数据库......');
                 $sql = file_get_contents($sqlFile);
                 $this->runSql($sql, $db);
+                $this->showLine('数据库升级完成！');
             }
-
-            $this->showLine('数据库升级完成！');
             $this->showLine('');
             $this->showLine('正在升级代码......');
 
@@ -205,35 +171,18 @@ class Upgrade extends BaseUserCtrl
             if (file_exists($patchFile)) {
                 $this->unzip($patchFile, $projectDir);
             }
-
             // 解压缩vendor补丁
             if (file_exists($vendorFile)) {
                 $this->unzip($vendorFile, $projectDir);
                 $this->showLine('代码升级完成！');
                 $this->showLine('');
             }
-
-            // 恢复 database.cfg.php 文件
-            copy($databaseConfigBackupFile, $databaseConfigFile);
-            unlink($databaseConfigBackupFile);
-            $this->showLine('数据库配置文件已恢复：' . $databaseConfigFile);
-
-            // 恢复 cache.cfg.php 文件
-            copy($cacheConfigBackupFile, $cacheConfigFile);
-            unlink($cacheConfigBackupFile);
-            $this->showLine('缓存配置文件已恢复：' . $cacheConfigFile);
             $this->showLine('');
         } catch (\Exception $e) {
             $this->showLine($e->getMessage());
             $this->showLine('');
-            $this->showLine('发生错误, 正在还原数据库......');
-            $this->restoreDb($databaseBackupFilename);
-            $this->showLine('');
-            $this->showLine('数据库已还原！');
             die;
         }
-
-        $this->showLine('');
 
         // 清除缓存数据
         try {
@@ -243,15 +192,12 @@ class Upgrade extends BaseUserCtrl
         } catch (\Exception $e) {
             $this->showLine('清理缓存失败，请手工执行缓存清理。');
         }
-
         if (file_exists($indexSqlFile)) {
             $this->showLine('');
             $this->showLine('正在修改数据库表索引......');
-
             // 操作数据表索引
             $sql = file_get_contents($indexSqlFile);
             $queries = $this->parseSql($sql);
-
             foreach ($queries as $query) {
                 try {
                     $db->exec($query);
@@ -259,57 +205,17 @@ class Upgrade extends BaseUserCtrl
                     $this->showLine('数据库表索引修改失败，已忽略: ' . $query);
                 }
             }
-
             $this->showLine('数据库表索引修改完成！');
             $this->showLine('');
         }
+        // 更新版本号
+        $this->writeVersionConfig($latestVersion);
 
         // 生成锁文件
         touch($lockFile);
 
         $this->showLine('');
         $this->showLine('升级成功！');
-    }
-
-    /**
-     * 备份数据库
-     *
-     * @param $databaseBackupFilename
-     * @throws \Exception
-     */
-    private function backupDb($databaseBackupFilename)
-    {
-        $dbConfig = getConfigVar('database');
-        $dbConfig = $dbConfig['database']['default'];
-
-        $dump = new \main\lib\MySqlDump($dbConfig);
-        $dump->onProgress = function ($output) {
-            echo '<div class="item" style="font-size: 12px; color:#aaa;">' . $output . ' ✔</div>';
-            flush();
-        };
-
-        $dump->save($databaseBackupFilename);
-    }
-
-    /**
-     * 恢复数据库
-     *
-     * @param $databaseBackupFilename
-     * @throws \Exception
-     */
-    private function restoreDb($databaseBackupFilename)
-    {
-        ignore_user_abort(true);
-
-        $dbConfig = getConfigVar('database');
-        $dbConfig = $dbConfig['database']['default'];
-
-        $import = new \main\lib\MySqlImport($dbConfig);
-        $import->onProgress = function ($output) {
-            echo '<div class="item" style="font-size: 12px; color:#aaa;">' . $output . ' ✔</div>';
-            flush();
-        };
-        $import->load($databaseBackupFilename);
     }
 
     /**
@@ -569,5 +475,18 @@ class Upgrade extends BaseUserCtrl
         }
         closedir($handle);
         return rmdir($path);
+    }
+
+    /**
+     * 更改版本号
+     * @param $version
+     */
+    private function writeVersionConfig($version)
+    {
+        $appFile = APP_PATH . '/config/'.APP_STATUS.'/app.cfg.php';
+        $appContent = file_get_contents($appFile);
+        $appContent = preg_replace('/define\s*\(\s*\'MASTERLAB_VERSION\'\s*,\s*\'([^\']*)\'\);/m', "define('MASTERLAB_VERSION', '" . $version . "');", $appContent);
+        $ret = file_put_contents($appFile, $appContent);
+        $this->showLine("主配置文件写入结果:" . $ret);
     }
 }
