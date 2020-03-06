@@ -116,7 +116,7 @@ class Upgrade extends BaseUserCtrl
             $checkOk = false;
         }
         if (file_exists($lockFile)) {
-            $this->showLine('错误：Masterlab 已经进行过此版本的升级,不能再次进行此操作. 若重新设计请删除文件:'.$lockFile);
+            $this->showLine('错误：Masterlab 已经进行过此版本的升级. 若要强制升级请删除文件:'.$lockFile);
             $checkOk = false;
         }
         if (!$checkOk) {
