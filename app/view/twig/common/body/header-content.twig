@@ -114,6 +114,9 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a title="升级" id="menu-upgrade" href="javascript:;">升 级</a>
+                                </li>
+                                <li>
                                     <a target="_blank" class="text-nowrap" href="https://github.com/gopeak/masterlab">点 赞
                                     </a>
                                 </li>
@@ -193,7 +196,11 @@
                     </tr>
                     <tr>
                         <th scope="row">&nbsp;</th>
-                        <td align="left">当前版本:{{ _version }} <a href="https://github.com/gopeak/masterlab/releases">版本说明</a></td>
+                        <td align="left">当前版本：{{ _version }} <a href="https://github.com/gopeak/masterlab/releases">版本说明</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;</th>
+                        <td align="left">版本升级：<a href="javascript:;" id="btn-upgrade">立即升级</a></td>
                     </tr>
                     <tr>
                         <th scope="row">&nbsp;</th>
@@ -232,6 +239,198 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="modal-upgrade">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="close js-key-modal-close1" href="#" id="btn-modal-close">×</a>
+                <h3 class="modal-header-title">在线更新</h3>
+            </div>
+
+            <div class="modal-body overflow-x-hidden" id="modal-upgrade-body">
+                <p>注意事项</p>
+                <ol>
+                    <li>在线更新方式不适合已经二次开发的masterlab。</li>
+                    <li>执行更新前建议请先备份数据库和代码。</li>
+                    <li>升级过程请勿对masterlab进行任何操作。</li>
+                </ol>
+
+                <p></p>
+                <p>当前版本：<span>{{_version}}</span></p>
+                <p>最新版本：<span id="new-version">正在检测...</span>&nbsp;&nbsp;<span id="check-message"></span>&nbsp;&nbsp;<a href="" target="_blank" id="version-description" class="hidden">版本说明</a>&nbsp;&nbsp;<a href="javascript:;" id="btn-check-again" class="hidden">重新检测</a></p>
+
+                <div class="row control-group form-inline hidden" id="upgrade-source-wrap">
+                    <div class="col-lg-12">更 新 源：<input type="text" name="upgrade_source" id="upgrade-source" value="http://www.masterlab.vip/" class="form-control form-control-inline"><span style="margin-left: 10px;">若无特别说明，请勿修改此地址</span></div>
+                </div>
+                <div id="upgrade-message" style="height: 300px; max-height: 300px; overflow: auto; border: solid 1px #cccccc; margin-top: 10px;"></div>
+            </div>
+
+            <div class="modal-footer form-actions">
+                <a class="btn btn-save disabled" href="#" id="btn-do-upgrade">升 级</a>
+                <a class="btn btn-cancel" data-dismiss="modal" href="#" id="btn-cancel-upgrade">关 闭</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% include 'twig/common/announcement.twig' %}
 {% include 'twig/helper/helper.twig' %}
+
+<script>
+    var currentVersion = '{{ _version }}';
+
+    var $versionDescription = $('#version-description');
+    var $btnUpgrade = $('#btn-do-upgrade');
+    var $spanNewVersion = $('#new-version');
+    var $btnCancelUpgrade = $('#btn-cancel-upgrade');
+    var $btnCheckAgain = $('#btn-check-again');
+    var $checkMessage = $('#check-message');
+    var $btnModalClose = $('#btn-modal-close');
+
+    var $upgradeMessageBox = $('#upgrade-message');
+    var $modalUpgrade = $('#modal-upgrade');
+    var $modalAbout = $('#modal-about');
+
+    // 关于对话框显示时，检查是否可升级
+    // $modalAbout.on('shown.bs.modal', function () {
+    // });
+
+    // 点击立即升级链接或升级菜单
+    $(document).on('click', '#btn-upgrade, #menu-upgrade', function () {
+        $modalAbout.modal('hide');
+        $modalUpgrade.modal({backdrop: 'static', keyboard: false});
+    });
+
+    // 升级对话框显示和隐藏
+    $modalUpgrade.on('hide.bs.modal', function () {
+        $upgradeMessageBox.empty();
+    }).on('shown.bs.modal', function () {
+        checkUpgrade();
+    });
+
+    // 开始升级
+    $(document).on('click', '#btn-do-upgrade', function () {
+        var url = '/upgrade/upgrade';
+        var host = $('#upgrade-source').val();
+
+        $btnUpgrade.addClass('disabled');
+        $btnCancelUpgrade.addClass('disabled');
+        $btnCheckAgain.addClass('hidden');
+        $btnModalClose.addClass('disabled');
+
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: url,
+            data: {host: host},
+            cache: false,
+            xhr: function () {
+                var xhr;
+                if (window.XMLHttpRequest) {
+                    xhr = new XMLHttpRequest();
+                } else if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+
+                if (!xhr) {
+
+                    $versionDescription.addClass('hidden');
+                    $btnUpgrade.addClass('disabled');
+                    $spanNewVersion.text('检测失败');
+                    $btnCancelUpgrade.removeClass('disabled');
+                    $btnCheckAgain.removeClass('hidden');
+                    $checkMessage.addClass('hidden');
+                    $btnModalClose.removeClass('disabled');
+
+                    html = '<p style="color: #ff0000; font-weight: bold;">浏览器不支持！请使用谷歌核心的浏览器再试一次</p>';
+                    $upgradeMessageBox.html(html);
+                    return false;
+                }
+
+                xhr.onreadystatechange = function () {
+                    var html = '';
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        $btnCancelUpgrade.removeClass('disabled');
+                        $btnModalClose.removeClass('disabled');
+                        //html = '<p style="color: #ff0000; font-weight: bold;">升级完成！</p>';
+                        //$upgradeMessageBox.append($(html));
+                    } else if(xhr.readyState === 3){
+                        html = xhr.responseText;
+                        $upgradeMessageBox.html(html);
+                    }
+
+                    var scrollHeight = $upgradeMessageBox.prop('scrollHeight');
+                    $upgradeMessageBox.scrollTop(scrollHeight, 200);
+                };
+
+                return xhr;
+            }
+        });
+    });
+
+    // 检测升级
+    var checkUpgrade = function  () {
+
+        $versionDescription.addClass('hidden');
+        $btnUpgrade.addClass('disabled');
+        $spanNewVersion.text('正在检测...');
+        $btnCancelUpgrade.addClass('disabled');
+        $btnCheckAgain.addClass('hidden');
+        $checkMessage.addClass('hidden');
+        $btnModalClose.addClass('disabled');
+
+        loading.show('#modal-upgrade-body');
+
+        var url = 'http://www.masterlab.vip/upgrade.php?action=get_patch_info';
+        //var url = 'http://www.masterlab20.cn/upgrade/check_upgrade';
+        var query = {current_version: currentVersion};
+        $.get(url, query, function (response, status, xhr) {
+            if (xhr.status != 200) {
+                $spanNewVersion.text('版本检测失败，');
+                $btnCancelUpgrade.removeClass('disabled');
+                $btnCheckAgain.removeClass('hidden');
+                $btnModalClose.removeClass('disabled');
+                loading.hide('#modal-upgrade-body');
+                return false;
+            }
+
+            if (response.ret !== '200') {
+                $spanNewVersion.text(currentVersion);
+                $btnCancelUpgrade.removeClass('disabled');
+                $btnCheckAgain.removeClass('hidden');
+                $checkMessage.removeClass('hidden').text(response.msg);
+                $btnModalClose.removeClass('disabled');
+                loading.hide('#modal-upgrade-body');
+                return false;
+            }
+
+            var data = response.data;
+            var latestVersion = data.last_version.version;
+            var releaseUrl = data.last_version.release_url;
+
+            $versionDescription.attr('href', releaseUrl).removeClass('hidden');
+            $btnUpgrade.removeClass('disabled');
+            $spanNewVersion.text(latestVersion);
+            $checkMessage.removeClass('hidden').text(response.msg);
+            $btnModalClose.removeClass('disabled');
+            $btnCancelUpgrade.removeClass('disabled');
+            loading.hide('#modal-upgrade-body');
+        }, 'json');
+    };
+
+    // 重新检测升级
+    $(document).on('click', '#btn-check-again', function () {
+        checkUpgrade();
+    });
+
+    // 点击升级对话框右上角的关闭按钮
+    $(document).on('click', '#btn-modal-close', function () {
+        if ($btnModalClose.hasClass('disabled')) {
+            return false;
+        }
+
+        $modalUpgrade.modal('hide');
+    });
+</script>
 
