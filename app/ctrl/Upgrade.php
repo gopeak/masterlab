@@ -12,7 +12,8 @@ namespace main\app\ctrl;
 class Upgrade extends BaseUserCtrl
 {
     /**
-     * Dashboard constructor.
+     * 构造方法
+     *
      * @throws \Exception
      */
     public function __construct()
@@ -20,6 +21,32 @@ class Upgrade extends BaseUserCtrl
         parent::__construct();
     }
 
+    /**
+     * 检查升级，本地测试用的
+     */
+    public function check_upgrade()
+    {
+        $currentVersion = isset($_GET['current_version']) ? trim($_GET['current_version']) : '';
+        if ($currentVersion == '2.0') {
+            $data = [
+                'last_version' => [
+                    'version' => '2.0.1',
+                    'release_url' => 'https://github.com/gopeak/masterlab/releases/tag/v2.0.1'
+                ],
+                'url' => 'http://www.masterlab20.cn/versions/packages/2.0-2.0.1-upgrade.zip'
+            ];
+            $msg = '升级可用';
+            $this->ajaxSuccess($msg, $data);
+        } else {
+            $data = null;
+            $msg = '已经是最新版本,无需升级!';
+            $this->ajaxFailed($msg);
+        }
+    }
+
+    /**
+     * 自动升级脚本
+     */
     public function upgrade()
     {
         set_time_limit(0);
@@ -43,23 +70,19 @@ class Upgrade extends BaseUserCtrl
             die;
         }
 
+        // 版本和补丁包URL
         $data = $response->data;
         $url = $data->url;
         $latestVersion = $data->last_version->version;
-        $this->showLine('您正在升级 Masterlab ' . $latestVersion);
-        $this->showLine('正在下载升级包......');
-
-        $curl->get($url);
-        $content = $curl->rawResponse;
 
         // Masterlab 项目目录
-        $projectDir = PRE_APP_PATH ;// realpath(APP_PATH . '..' . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        $upgradePath = PRE_APP_PATH . 'upgrade' . DIRECTORY_SEPARATOR;
+        $projectDir = realpath(PRE_APP_PATH) . DS;
+        $upgradePath = $projectDir . 'upgrade' . DS;
 
         $filename = pathinfo($url, PATHINFO_BASENAME);
         $filePath = $upgradePath . $filename;
         $folder = pathinfo($url, PATHINFO_FILENAME);
-        $path = $upgradePath . $folder . DIRECTORY_SEPARATOR;
+        $path = $upgradePath . $folder . DS;
 
         // 数据库补丁文件路径，要求sql格式
         $sqlFile = $path . 'database.sql';
@@ -74,20 +97,20 @@ class Upgrade extends BaseUserCtrl
         $vendorFile = $path . 'vendor.zip';
 
         // 数据库备份文件
-        $databaseBackupFilename = $path . 'masterlab.bak.sql';
+        $databaseBackupFilename = $path . 'masterlab.bak.sql.gz';
 
         // lock文件
         $lockFile = $path . 'upgrade.lock';
 
         // 配置文件
-        $databaseConfigPath = APP_PATH . 'config' . DIRECTORY_SEPARATOR . 'deploy' . DIRECTORY_SEPARATOR;
+        $databaseConfigPath = APP_PATH . 'config' . DS . 'deploy' . DS;
         $databaseConfigFile = $databaseConfigPath . 'database.cfg.php';
         $databaseConfigFile = realpath($databaseConfigFile);
-        $databaseConfigBackupFile = realpath(APP_PATH . 'config' . DIRECTORY_SEPARATOR . 'deploy') . DIRECTORY_SEPARATOR . 'database.cfg.php.backup';
+        $databaseConfigBackupFile = realpath(APP_PATH . 'config' . DS . 'deploy') . DS . 'database.cfg.php.backup';
 
         $cacheConfigFile = $databaseConfigPath . 'cache.cfg.php';
         $cacheConfigFile = realpath($cacheConfigFile);
-        $cacheConfigBackupFile = realpath(APP_PATH . 'config' . DIRECTORY_SEPARATOR . 'deploy') . DIRECTORY_SEPARATOR . 'cache.cfg.php.backup';
+        $cacheConfigBackupFile = realpath(APP_PATH . 'config' . DS . 'deploy') . DS . 'cache.cfg.php.backup';
 
         // 先检查补丁文件和所需扩展是否存在
         $checkOk = true;
@@ -122,9 +145,18 @@ class Upgrade extends BaseUserCtrl
             die;
         }
 
-        file_put_contents($filePath, $content);
-        $this->showLine('下载完成，升级包保存在：' . $filePath);
+        $this->showLine('您正在升级 Masterlab ' . $latestVersion);
+        $this->showLine('正在下载升级包......');
 
+        if (!$curl->download($url, $filePath)) {
+            $this->showLine('升级失败：补丁包下载失败！');
+        }
+
+        if (file_exists($filePath . '.pccdownload')) {
+            rename($filePath . '.pccdownload', $filePath);
+        }
+
+        $this->showLine('下载完成，升级包保存在：' . $filePath);
         $this->showLine('正在解压缩......');
         $this->unzip($filePath, $path);
 
@@ -156,14 +188,7 @@ class Upgrade extends BaseUserCtrl
             // 备份数据库
             $this->showLine('');
             $this->showLine('正在备份数据库......');
-            $result = $this->backupDatabase($db, $databaseBackupFilename);
-            if ($result) {
-                $this->showLine('数据库备份完成！');
-                $this->showLine('数据库已备份到： ' . $databaseBackupFilename);
-            } else {
-                $this->showLine('数据库备份失败，放弃升级！');
-                die;
-            }
+            $this->backupDb($databaseBackupFilename);
 
             if (file_exists($sqlFile)) {
                 $this->showLine('');
@@ -202,7 +227,7 @@ class Upgrade extends BaseUserCtrl
             $this->showLine($e->getMessage());
             $this->showLine('');
             $this->showLine('发生错误, 正在还原数据库......');
-            $this->restoreDatabase($db, $databaseBackupFilename);
+            $this->restoreDb($databaseBackupFilename);
             $this->showLine('');
             $this->showLine('数据库已还原！');
             die;
@@ -246,6 +271,46 @@ class Upgrade extends BaseUserCtrl
         $this->showLine('升级成功！');
     }
 
+    /**
+     * 备份数据库
+     *
+     * @param $databaseBackupFilename
+     * @throws \Exception
+     */
+    private function backupDb($databaseBackupFilename)
+    {
+        $dbConfig = getConfigVar('database');
+        $dbConfig = $dbConfig['database']['default'];
+
+        $dump = new \main\lib\MySqlDump($dbConfig);
+        $dump->onProgress = function ($output) {
+            echo str_repeat("<div class='item' style='font-size: 12px; color:#aaa;'>",1024) . $output . " ✔</div>";
+            flush();
+        };
+
+        $dump->save($databaseBackupFilename);
+    }
+
+    /**
+     * 恢复数据库
+     *
+     * @param $databaseBackupFilename
+     * @throws \Exception
+     */
+    private function restoreDb($databaseBackupFilename)
+    {
+        ignore_user_abort(true);
+
+        $dbConfig = getConfigVar('database');
+        $dbConfig = $dbConfig['database']['default'];
+
+        $import = new \main\lib\MySqlImport($dbConfig);
+        $import->onProgress = function ($output) {
+            echo str_repeat("<div class='item' style='font-size: 12px; color:#aaa;'>",1024).$output." ->Complete</div>";
+            flush();
+        };
+        $import->load($databaseBackupFilename);
+    }
 
     /**
      * 执行SQL
@@ -361,7 +426,7 @@ class Upgrade extends BaseUserCtrl
     {
         if (is_dir($path)) {
             $dir = $path;
-            $template = $dir . DIRECTORY_SEPARATOR . randString(10);
+            $template = $dir . DS . randString(10);
             if ($fp = @fopen($template, 'w')) {
                 @fclose($fp);
                 @unlink($template);
@@ -405,15 +470,15 @@ class Upgrade extends BaseUserCtrl
                 // 获取当前项目的名称, 即压缩包里面当前对应的文件名
                 $zipEntryName = zip_entry_name($dirResource);
                 $zipEntryPath = $path . $zipEntryName;
-                $zipEntryPath = str_replace('/', DIRECTORY_SEPARATOR, $zipEntryPath);
-                $zipEntryPath = str_replace('\\', DIRECTORY_SEPARATOR, $zipEntryPath);
+                $zipEntryPath = str_replace('/', DS, $zipEntryPath);
+                $zipEntryPath = str_replace('\\', DS, $zipEntryPath);
 
-                if (substr($zipEntryPath, -1) == DIRECTORY_SEPARATOR) {
+                if (substr($zipEntryPath, -1) == DS) {
                     // 是一个目录
                     $dir = $zipEntryPath;
                 } else {
                     // 是一个文件，取出路径部分
-                    $dir = substr($zipEntryPath, 0, strrpos($zipEntryPath, DIRECTORY_SEPARATOR));
+                    $dir = substr($zipEntryPath, 0, strrpos($zipEntryPath, DS));
                 }
 
                 // 如果路径不存在，则创建一个目录
@@ -449,134 +514,6 @@ class Upgrade extends BaseUserCtrl
     }
 
     /**
-     * 备份数据库
-     *
-     * @param \main\lib\MyPdo $db
-     * @param $filename
-     * @return bool
-     */
-    private function backupDatabase(\main\lib\MyPdo $db, $filename) {
-        $str = "/*\r\nMasterlab database backup\r\n";
-        $str .= "Data:" . date('Y-m-d H:i:s', time()) . "\r\n*/\r\n";
-        $str .= "SET FOREIGN_KEY_CHECKS=0;\r\n";
-
-        $tables = $this->getTables($db);
-        foreach ($tables as $table) {
-            $ddl = $this->getDDL($db, $table);
-            $data = $this->getData($db, $table);
-
-            $str .= "-- ----------------------------\r\n";
-            $str .= "-- Table structure for {$table}\r\n";
-            $str .= "-- ----------------------------\r\n";
-            $str .= "DROP TABLE IF EXISTS `{$table}`;\r\n";
-            $str .= $ddl . "\r\n";
-            $str .= "-- ----------------------------\r\n";
-            $str .= "-- Records of {$table}\r\n";
-            $str .= "-- ----------------------------\r\n";
-            $str .= $data . "\r\n";
-        }
-
-        $str .= "SET FOREIGN_KEY_CHECKS=1;\r\n";
-        $result = file_put_contents($filename, $str);
-
-        return $result !== false;
-    }
-
-    /**
-     * 恢复数据库
-     *
-     * @param \main\lib\MyPdo $db
-     * @param $filename
-     */
-    private function restoreDatabase(\main\lib\MyPdo $db, $filename) {
-        $this->dropTables($db);
-        $sql = file_get_contents($filename);
-        $this->runSql($sql, $db);
-    }
-
-    /**
-     * 获取数据库所有表名
-     *
-     * @param \main\lib\MyPdo $db
-     * @return array
-     */
-    private function getTables(\main\lib\MyPdo $db) {
-        $sql = 'SHOW TABLES';
-        $rows = $db->getRows($sql);
-
-        $tables = [];
-        foreach ($rows as $row) {
-            $table = current($row);
-            $tables[] = $table;
-        }
-
-        return $tables;
-    }
-
-    /**
-     * 删除表
-     *
-     * @param \main\lib\MyPdo $db
-     * @param array $tables
-     */
-    private function dropTables(\main\lib\MyPdo $db, $tables = []) {
-        if (!$tables) {
-            $tables = $this->getTables($db);
-        }
-
-        foreach ($tables as $table) {
-            $sql = "DROP TABLE IF EXISTS `{$table}`";
-            $db->exec($sql);
-        }
-    }
-
-    /**
-     * 生成建表DDL
-     *
-     * @param \main\lib\MyPdo $db
-     * @param $table
-     * @return string
-     */
-    private function getDDL(\main\lib\MyPdo $db, $table) {
-        $sql = "SHOW CREATE TABLE `{$table}`";
-        $ddl = $db->getRows($sql)[0]['Create Table'] . ';';
-
-        return $ddl;
-    }
-
-    /**
-     * 生成插入数据语句
-     *
-     * @param \main\lib\MyPdo $db
-     * @param $table
-     * @return string
-     */
-    private function getData(\main\lib\MyPdo $db, $table)
-    {
-        $rows = $db->getRows("SHOW COLUMNS FROM `{$table}`");
-        $columns = [];
-        foreach ($rows as $row) {
-            $columns[] = "`{$row['Field']}`";
-        }
-
-        $columns = join(',', $columns);
-
-        $rows = $db->getRows("SELECT * FROM `{$table}`");
-        $queries = [];
-        foreach ($rows as $values) {
-            $dataSqlRows = [];
-            foreach ($values as $value) {
-                $dataSqlRows[] = $db->pdo->quote($value);
-            }
-            $dataSql = join(',', $dataSqlRows);
-            $queries[] = "INSERT INTO `{$table}` ({$columns}) VALUES ({$dataSql});";
-        }
-
-        $query = join("\r\n", $queries);
-        return $query;
-    }
-
-    /**
      * 复制文件夹
      *
      * @param $sourceDir
@@ -594,8 +531,8 @@ class Upgrade extends BaseUserCtrl
                 continue;
             };
 
-            $source = $sourceDir . DIRECTORY_SEPARATOR . $item;
-            $destination = $destinationDir . DIRECTORY_SEPARATOR . $item;
+            $source = $sourceDir . DS . $item;
+            $destination = $destinationDir . DS . $item;
 
             if (is_file($source)) {
                 copy($source, $destination);
@@ -621,7 +558,7 @@ class Upgrade extends BaseUserCtrl
                 continue;
             };
 
-            $item = $path . DIRECTORY_SEPARATOR . $item;
+            $item = $path . DS . $item;
             if (is_file($item)) {
                 unlink($item);
             };
