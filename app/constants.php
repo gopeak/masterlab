@@ -21,6 +21,9 @@ define("APP_NAME", basename(__DIR__));
 // 网站名称
 define('SITE_NAME', 'MasterLab');
 
+// DIRECTORY_SEPARATOR 简写
+define('DS', DIRECTORY_SEPARATOR);
+
 // 项目程序控制器所在根目录（文件系统）
 define('CTRL_PATH', APP_PATH . 'ctrl/');
 
