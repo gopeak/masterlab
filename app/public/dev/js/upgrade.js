@@ -74,28 +74,15 @@ let Upgrade = (function() {
     };
 
     Upgrade.prototype.run = function(sprint_id) {
-        swal({
-                title: "确认要执行升级？",
-                text: "注:请务必手动执行备份数据库或代码",
-                html: true,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确 定",
-                cancelButtonText: "取 消！",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-            function(isConfirm){
-                if (isConfirm) {
-                    Upgrade.prototype.postServer();
-                    swal.close();
-                }else{
-                    swal.close();
-                }
-            }
-        );
 
+        if(window.confirm('确认要执行升级？请务必手动执行备份数据库和代码')){
+            Upgrade.prototype.postServer();
+        }else{
+            $btnUpgrade.removeClass('disabled');
+            $btnCancelUpgrade.removeClass('disabled');
+            $btnCheckAgain.removeClass('hidden');
+            $btnModalClose.removeClass('disabled');
+        }
     };
 
     Upgrade.prototype.postServer = function(sprint_id){
