@@ -102,15 +102,11 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('错误：PHP 扩展 zip 未安装！');
             $checkOk = false;
         }
-        if (!$this->isPathWritable($projectDir)) {
-            $this->showLine('错误：Masterlab项目目录 ' . $projectDir . ' 不可写！');
-            $checkOk = false;
-        }
         if (!$this->isPathWritable($upgradePath)) {
             $this->showLine('错误：' . $upgradePath . ' 目录权限不足，无法写入。');
             $checkOk = false;
         }
-        $appConfigPath = APP_PATH . '/config/'.APP_STATUS.'/app.cfg.php';
+        $appConfigPath = realpath(APP_PATH . 'config' . DS . APP_STATUS . DS . 'app.cfg.php');
         if (!$this->isPathWritable($appConfigPath)) {
             $this->showLine('错误：' . $appConfigPath . ' 文件权限不足，无法写入。');
             $checkOk = false;
