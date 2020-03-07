@@ -67,11 +67,12 @@ http://demo.masterlab.vip
      -  masterlab\app\public\attachment 目录要求写入权限
      -  masterlab\app\public\install 目录要求写入权限
      ```
- 2. 下载代码，可前往官方网站 http://www.masterlab.vip/download.php 下载最新的完整包 
-     或者从 github上克隆代码, 并将根目录`vendor.zip`解压出来
+ 2. 下载代码，可前往官方网站 http://www.masterlab.vip/download.php 下载最新的完整包  
+      或者从 github上克隆代码,github上下载的代码没有包含运行的类库，因此需要使用php的composer工具下载类库 
        ```text
-        # 在masterlab根目录下执行 
-        unzip ./vendor.zip
+        # 在masterlab根目录下执行,如果执行错误请将php加入到环境变量中
+        php composer.phar config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+        php composer.phar update
        ```
  3. 在web服务器添加虚拟主机并映射到masterlab的 app/public 目录  
     如果Web服务器是Apache,首先编辑主配置文件`httpd.conf`将  
