@@ -478,7 +478,7 @@ class Upgrade extends BaseUserCtrl
      */
     private function writeVersionConfig($version)
     {
-        $appFile = APP_PATH . '/config/'.APP_STATUS.'/app.cfg.php';
+        $appFile = APP_PATH . 'config' . DS . APP_STATUS . DS . 'app.cfg.php';
         $appContent = file_get_contents($appFile);
         $appContent = preg_replace('/define\s*\(\s*\'MASTERLAB_VERSION\'\s*,\s*\'([^\']*)\'\);/m', "define('MASTERLAB_VERSION', '" . $version . "');", $appContent);
         $ret = file_put_contents($appFile, $appContent);
