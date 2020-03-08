@@ -1028,16 +1028,16 @@ var IssueForm = (function () {
                 default_value = cur_date;
             }
         } else {
-            if (_is_create_sprint_issue && ui_type === "create") {
+            if (_is_create_sprint_issue && ui_type === "create" && !_is_created_backlog) {
                 var config_sprint = _issueConfig.sprint;
                 var active_sprint = config_sprint.filter(function (n) {
                     return n.active == 1;
                 })[0];
-                if (name === "start_date") {
+                if (name === "start_date" &&  !is_empty(active_sprint)) {
                     default_value = active_sprint.start_date;
                 }
 
-                if (name === "due_date") {
+                if (name === "due_date" &&  !is_empty(active_sprint)) {
                     default_value = active_sprint.end_date;
                 }
             }
