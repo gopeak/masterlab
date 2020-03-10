@@ -148,18 +148,22 @@ try {
     showLine('');
     showLine('Backing up database......');
     backupDatabase($db, $databaseBackupFilename);
-
-
-    showLine('');
-    showLine('Upgrading database......');
-    $sql = file_get_contents($sqlFile);
-    runSql($sql, $db);
     showLine('Done!');
+    showLine('Database was backed up to ' . $databaseBackupFilename);
+
+    // 升级代码
     showLine('');
     showLine('Upgrading code......');
 
     // 解压缩代码补丁
     patchCode($patchFile, $projectDir);
+    showLine('Done!');
+    showLine('');
+
+    // 升级数据库
+    showLine('Upgrading database......');
+    $sql = file_get_contents($sqlFile);
+    runSql($sql, $db);
     showLine('Done!');
     showLine('');
 

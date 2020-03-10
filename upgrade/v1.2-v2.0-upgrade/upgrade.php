@@ -164,52 +164,7 @@ try {
     showLine('Done!');
     showLine('Database was backed up to ' . $databaseBackupFilename);
 
-    showLine('');
-    showLine('Upgrading database......');
-    $sql = file_get_contents($sqlFile);
-    runSql($sql, $db);
-
-    $projectModel = new \main\app\model\project\ProjectModel();
-    $projects = $projectModel->getRows();
-    $projectRoleModel = new \main\app\model\project\ProjectRoleModel();
-
-    foreach ($projects as $project) {
-        $projectId = $project['id'];
-
-        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'QA', 'is_system' => 1]);
-        if ($projectRole) {
-            // 把project_role_relation表中的 QA 角色增加"修改事项状态"，"修改事项解决结果"两条权限项
-            $roleId = $projectRole['id'];
-            $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
-            $db->exec($sql);
-        }
-
-        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Developers', 'is_system' => 1]);
-        if ($projectRole) {
-            // 把project_role_relation表中的Developers角色增加"修改事项状态"，"修改事项解决结果"两条权限项
-            $roleId = $projectRole['id'];
-            $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016')";
-            $db->exec($sql);
-        }
-
-        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Administrators', 'is_system' => 1]);
-        if ($projectRole) {
-            // 把project_role_relation表中的Administrators（10002）角色增加"修改事项状态"，"修改事项解决结果"两条权限项
-            $roleId = $projectRole['id'];
-            $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
-            $db->exec($sql);
-        }
-
-        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'PO', 'is_system' => 1]);
-        if ($projectRole) {
-            // 把project_role_relation表中的PO（10006）角色增加"修改事项状态"，"修改事项解决结果"两条权限项
-            $roleId = $projectRole['id'];
-            $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
-            $db->exec($sql);
-        }
-    }
-
-    showLine('Done!');
+    // 升级代码
     showLine('');
     showLine('Upgrading code......');
 
@@ -217,6 +172,14 @@ try {
     patchCode($patchFile, $projectDir);
     // 解压缩vendor补丁
     patchCode($vendorFile, $projectDir);
+    showLine('Done!');
+    showLine('');
+
+    // 升级数据库
+    showLine('Upgrading database......');
+    $sql = file_get_contents($sqlFile);
+    runSql($sql, $db);
+    upgradePermissions($db);
     showLine('Done!');
     showLine('');
 
@@ -293,6 +256,7 @@ showLine('Upgrade completed successfully!');
 function upgradePermissions(\main\lib\MyPdo $db) {
     $projectModel = new \main\app\model\project\ProjectModel();
     $projects = $projectModel->getRows();
+
     $projectRoleModel = new \main\app\model\project\ProjectRoleModel();
     $projectRoleRelationModel = new \main\app\model\project\ProjectRoleRelationModel();
     $projectUserRoleModel = new \main\app\model\project\ProjectUserRoleModel();
@@ -328,7 +292,10 @@ function upgradePermissions(\main\lib\MyPdo $db) {
 
             foreach ($admins as $admin) {
                 $adminUserId = $admin['user_id'];
-                $projectUserRoleModel->add($projectId, $adminUserId, $roleId);
+                $rowExists = $projectUserRoleModel->checkUniqueItemExist($adminUserId, $projectId, $roleId);
+                if (!$rowExists) {
+                    $projectUserRoleModel->add($projectId, $adminUserId, $roleId);
+                }
             }
         }
 
