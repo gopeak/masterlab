@@ -113,14 +113,16 @@
                                        href="#modal-about">关 于
                                     </a>
                                 </li>
-                                <li>
-                                    <a title="升级"
-                                       aria-label="在线升级Masterlab"
-                                       data-target="#modal-upgrade"
-                                       data-toggle="modal"
-                                       id="menu-upgrade"
-                                       href="#modal-upgrade">升 级</a>
-                                </li>
+                                {% if is_admin %}
+                                    <li>
+                                        <a title="升级"
+                                           aria-label="在线升级Masterlab"
+                                           data-target="#modal-upgrade"
+                                           data-toggle="modal"
+                                           id="menu-upgrade"
+                                           href="#modal-upgrade">升 级</a>
+                                    </li>
+                                {% endif %}
                                 <li>
                                     <a target="_blank" class="text-nowrap" href="https://github.com/gopeak/masterlab">点 赞
                                     </a>
@@ -203,10 +205,12 @@
                         <th scope="row">&nbsp;</th>
                         <td align="left">当前版本：{{ _version }} <a href="https://github.com/gopeak/masterlab/releases">版本说明</a></td>
                     </tr>
-                    <tr>
-                        <th scope="row">&nbsp;</th>
-                        <td align="left">版本升级：<a href="javascript:;" id="btn-upgrade">立即升级</a></td>
-                    </tr>
+                    {% if is_admin %}
+                        <tr>
+                            <th scope="row">&nbsp;</th>
+                            <td align="left">版本升级：<a href="javascript:;" id="btn-upgrade">立即升级</a></td>
+                        </tr>
+                    {% endif %}
                     <tr>
                         <th scope="row">&nbsp;</th>
                         <td align="left"><hr /></td>
@@ -278,6 +282,13 @@
         </div>
     </div>
 </div>
+
+{% if is_admin %}
+    <div class="alert alert-info alert-dismissible hidden" role="alert" id="upgrade-msg">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <div>Masterlab有更新，最新版本：<span id="update-new-version"></span>　<a href="" id="update-release_url" target="_blank">版本说明</a>　<a href="javascript:;" id="btn-do-daily-update" style="color: orange;">立即升级</a></div>
+    </div>
+{% endif %}
 
 {% include 'twig/common/announcement.twig' %}
 {% include 'twig/helper/helper.twig' %}

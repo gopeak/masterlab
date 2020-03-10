@@ -286,6 +286,63 @@ showLine('');
 showLine('Upgrade completed successfully!');
 
 /**
+ * 更新权限
+ *
+ * @param \main\lib\MyPdo $db
+ */
+function upgradePermissions(\main\lib\MyPdo $db) {
+    $projectModel = new \main\app\model\project\ProjectModel();
+    $projects = $projectModel->getRows();
+    $projectRoleModel = new \main\app\model\project\ProjectRoleModel();
+    $projectRoleRelationModel = new \main\app\model\project\ProjectRoleRelationModel();
+    $projectUserRoleModel = new \main\app\model\project\ProjectUserRoleModel();
+
+    $adminRoleId = 1;
+    $userRoleModel = new \main\app\model\permission\PermissionGlobalUserRoleModel();
+    $admins = $userRoleModel->getRows('*', ['role_id' => $adminRoleId]);
+
+    foreach ($projects as $project) {
+        $projectId = $project['id'];
+
+        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'QA', 'is_system' => 1]);
+        if ($projectRole) {
+            // 把project_role_relation表中的 QA 角色增加"修改事项状态"，"修改事项解决结果"两条权限项
+            $roleId = $projectRole['id'];
+            $projectRoleRelationModel->add($projectId, $roleId, 10016);
+            $projectRoleRelationModel->add($projectId, $roleId, 10017);
+        }
+
+        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Developers', 'is_system' => 1]);
+        if ($projectRole) {
+            // 把project_role_relation表中的Developers角色增加"修改事项状态"，"修改事项解决结果"两条权限项
+            $roleId = $projectRole['id'];
+            $projectRoleRelationModel->add($projectId, $roleId, 10016);
+        }
+
+        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Administrators', 'is_system' => 1]);
+        if ($projectRole) {
+            // 把project_role_relation表中的Administrators（10002）角色增加"修改事项状态"，"修改事项解决结果"两条权限项
+            $roleId = $projectRole['id'];
+            $projectRoleRelationModel->add($projectId, $roleId, 10016);
+            $projectRoleRelationModel->add($projectId, $roleId, 10017);
+
+            foreach ($admins as $admin) {
+                $adminUserId = $admin['user_id'];
+                $projectUserRoleModel->add($projectId, $adminUserId, $roleId);
+            }
+        }
+
+        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'PO', 'is_system' => 1]);
+        if ($projectRole) {
+            // 把project_role_relation表中的PO（10006）角色增加"修改事项状态"，"修改事项解决结果"两条权限项
+            $roleId = $projectRole['id'];
+            $projectRoleRelationModel->add($projectId, $roleId, 10016);
+            $projectRoleRelationModel->add($projectId, $roleId, 10017);
+        }
+    }
+}
+
+/**
  * 执行SQL
  *
  * @param $sql
@@ -462,8 +519,8 @@ function patchCode($filename, $path)
             if (!is_dir($zipEntryPath)) {
                 // 读取这个文件
                 $fileSize = zip_entry_filesize($dirResource);
-                //最大读取6M，如果文件过大，跳过解压，继续下一个
-                if ($fileSize < (1024 * 1024 * 6)) {
+                //最大读取100M，如果文件过大，跳过解压，继续下一个
+                if ($fileSize < (1024 * 1024 * 100)) {
                     $content = zip_entry_read($dirResource, $fileSize);
                     // showLine('Unpacking: ' . $zipEntryPath);
                     file_put_contents($zipEntryPath, $content);
