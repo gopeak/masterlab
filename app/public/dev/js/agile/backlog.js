@@ -456,7 +456,10 @@ var Backlog = (function () {
 
         var id = ''
         $(".classification-side").on('click', '.classification-item', function () {
+            /*
+            * 注释该代码，允许打开的迭代重复点击请求数据
             if ($(this).hasClass('open')) return;
+             */
             var children = $(this).siblings()
             Backlog.prototype.fetchSprintIssues($(this).data('id'));
             $(this).addClass('open')
@@ -469,7 +472,9 @@ var Backlog = (function () {
             .on('dragenter', function (event) {
                 event.preventDefault();
                 $(this).addClass("classification-out-line");
-                console.log('enter')
+                _sprint_id = $(this).data('id');
+                _target_type = $(this).data('type');
+                console.log("dragenter-_target_type----:"+_target_type);
             })
             .on('dragover', function (event) {
                 event.preventDefault();
@@ -485,15 +490,16 @@ var Backlog = (function () {
                 event.preventDefault();
                 console.log('dragleave')
                 console.log('sprint_id:' + $(this).data('id'));
-                _sprint_id = $(this).data('id');
-                _target_type = $(this).data('type');
+                //_sprint_id = $(this).data('id');
+                //_target_type = $(this).data('type');
 
                 $(this).removeClass("classification-out-line");
+
+                //$('.classification-item').removeClass("open");
             })
             .on('mouseleave', function (event) {
                 $(this).removeClass("classification-out-line");
             })
-
 
         var items = document.getElementsByClassName('classification-backlog-inner');
 

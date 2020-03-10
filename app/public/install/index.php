@@ -40,7 +40,7 @@ EOF;
 $html_footer = <<<EOF
 <div class="footer">
   <h5>Powered by <span class="blue">Masterlab</span><span class="orange"></span></h5>
-  <h6>版权所有 2017-2019 &copy; <a href="http://www.masterlab.vip" target="_blank">Masterlab Team</a></h6>
+  <h6>版权所有 2017-2020 &copy; <a href="http://www.masterlab.vip" target="_blank">Masterlab Team</a></h6>
 </div>
 EOF;
 $step = 0;

@@ -1699,7 +1699,7 @@
 									{{/if_in_array}}
 
 									{{#if_in_array 'summary'  ../display_fields}}
-										<td class="show-tooltip width_35">
+										<td class="show-tooltip width_35" title="快捷键 E 可呼出当前事项的编辑界面">
 											<a href="/issue/detail/index/{{id}}" class="commit-row-message">
 												{{lightSearch summary '{{search}}'}}
 											</a>
@@ -3015,7 +3015,7 @@
                     $('#btn-copy').bind('click', function () {
                         window.$IssueMain.fetchEditUiConfig(_issue_id, 'copy');
                     });
-console.log(keyMaster)
+
                     keyMaster.addKeys([
                         {
                             key: "e",

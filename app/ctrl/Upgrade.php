@@ -49,6 +49,11 @@ class Upgrade extends BaseUserCtrl
      */
     public function run()
     {
+        if (!$this->isAdmin) {
+            $this->showLine('权限不足，请联系管理员！');
+            die;
+        }
+
         set_time_limit(0);
         $curl = new \Curl\Curl();
         $curl->setTimeout(10);
@@ -102,15 +107,11 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('错误：PHP 扩展 zip 未安装！');
             $checkOk = false;
         }
-        if (!$this->isPathWritable($projectDir)) {
-            $this->showLine('错误：Masterlab项目目录 ' . $projectDir . ' 不可写！');
-            $checkOk = false;
-        }
         if (!$this->isPathWritable($upgradePath)) {
             $this->showLine('错误：' . $upgradePath . ' 目录权限不足，无法写入。');
             $checkOk = false;
         }
-        $appConfigPath = APP_PATH . '/config/'.APP_STATUS.'/app.cfg.php';
+        $appConfigPath = realpath(APP_PATH . 'config' . DS . APP_STATUS . DS . 'app.cfg.php');
         if (!$this->isPathWritable($appConfigPath)) {
             $this->showLine('错误：' . $appConfigPath . ' 文件权限不足，无法写入。');
             $checkOk = false;
@@ -482,7 +483,7 @@ class Upgrade extends BaseUserCtrl
      */
     private function writeVersionConfig($version)
     {
-        $appFile = APP_PATH . '/config/'.APP_STATUS.'/app.cfg.php';
+        $appFile = APP_PATH . 'config' . DS . APP_STATUS . DS . 'app.cfg.php';
         $appContent = file_get_contents($appFile);
         $appContent = preg_replace('/define\s*\(\s*\'MASTERLAB_VERSION\'\s*,\s*\'([^\']*)\'\);/m', "define('MASTERLAB_VERSION', '" . $version . "');", $appContent);
         $ret = file_put_contents($appFile, $appContent);

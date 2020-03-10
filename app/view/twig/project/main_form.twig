@@ -417,7 +417,7 @@
 				$('.js-org-key').text(defaultPath);
 				$(".js-org").on("changed.bs.select", function (ev, v) {
 					var path = $(".js-org").find("option:selected").attr("data-org_path");
-					$(".js-org-key").text(path + '/')
+					$(".js-org-key").text(path);
 				})
 			});
 		</script>

@@ -782,7 +782,16 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $model = new IssueModel();
-        list($ret, $msg) = $model->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE, 'backlog_weight' => 0]);
+        $updateArr = [];
+        $updateArr['sprint'] = AgileLogic::BACKLOG_VALUE;
+        $updateArr['backlog_weight'] = '0';
+        // 判断是否为已关闭事项
+        $issueStatus = $model->getOne('status',['id'=>$issueId]);
+        $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        if($issueStatus==$statusClosedId){
+            $updateArr['status'] = IssueStatusModel::getInstance()->getIdByKey('open');
+        }
+        list($ret, $msg) = $model->updateById($issueId, $updateArr);
         if ($ret) {
             $this->ajaxSuccess('success');
         } else {

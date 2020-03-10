@@ -191,7 +191,7 @@ class UserAuth
     }
 
     /**
-     * 字段登录操作
+     * 自动登录操作
      * @param $user
      */
     public function autoLogin($user)

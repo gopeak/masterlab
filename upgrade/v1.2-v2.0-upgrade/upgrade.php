@@ -160,61 +160,11 @@ try {
     // 备份数据库
     showLine('');
     showLine('Backing up database......');
-    $result = backupDatabase($db, $databaseBackupFilename);
-    if ($result) {
-        showLine('Done!');
-        showLine('Database was backed up to ' . $databaseBackupFilename);
-    } else {
-        showLine('Database backup failed, upgrade aborted!');
-        die;
-    }
-
-    showLine('');
-    showLine('Upgrading database......');
-    $sql = file_get_contents($sqlFile);
-    runSql($sql, $db);
-
-    $projectModel = new \main\app\model\project\ProjectModel();
-    $projects = $projectModel->getRows();
-    $projectRoleModel = new \main\app\model\project\ProjectRoleModel();
-
-    foreach ($projects as $project) {
-        $projectId = $project['id'];
-
-        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'QA', 'is_system' => 1]);
-        if ($projectRole) {
-            // 把project_role_relation表中的 QA 角色增加"修改事项状态"，"修改事项解决结果"两条权限项
-            $roleId = $projectRole['id'];
-            $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
-            $db->exec($sql);
-        }
-
-        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Developers', 'is_system' => 1]);
-        if ($projectRole) {
-            // 把project_role_relation表中的Developers角色增加"修改事项状态"，"修改事项解决结果"两条权限项
-            $roleId = $projectRole['id'];
-            $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016')";
-            $db->exec($sql);
-        }
-
-        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Administrators', 'is_system' => 1]);
-        if ($projectRole) {
-            // 把project_role_relation表中的Administrators（10002）角色增加"修改事项状态"，"修改事项解决结果"两条权限项
-            $roleId = $projectRole['id'];
-            $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
-            $db->exec($sql);
-        }
-
-        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'PO', 'is_system' => 1]);
-        if ($projectRole) {
-            // 把project_role_relation表中的PO（10006）角色增加"修改事项状态"，"修改事项解决结果"两条权限项
-            $roleId = $projectRole['id'];
-            $sql = "INSERT INTO `project_role_relation` (`project_id`, `role_id`, `perm_id`) VALUES ('{$projectId}', '{$roleId}', '10016'), ('{$projectId}', '{$roleId}', '10017')";
-            $db->exec($sql);
-        }
-    }
-
+    backupDatabase($db, $databaseBackupFilename);
     showLine('Done!');
+    showLine('Database was backed up to ' . $databaseBackupFilename);
+
+    // 升级代码
     showLine('');
     showLine('Upgrading code......');
 
@@ -222,6 +172,14 @@ try {
     patchCode($patchFile, $projectDir);
     // 解压缩vendor补丁
     patchCode($vendorFile, $projectDir);
+    showLine('Done!');
+    showLine('');
+
+    // 升级数据库
+    showLine('Upgrading database......');
+    $sql = file_get_contents($sqlFile);
+    runSql($sql, $db);
+    upgradePermissions($db);
     showLine('Done!');
     showLine('');
 
@@ -289,6 +247,67 @@ touch($lockFile);
 
 showLine('');
 showLine('Upgrade completed successfully!');
+
+/**
+ * 更新权限
+ *
+ * @param \main\lib\MyPdo $db
+ */
+function upgradePermissions(\main\lib\MyPdo $db) {
+    $projectModel = new \main\app\model\project\ProjectModel();
+    $projects = $projectModel->getRows();
+
+    $projectRoleModel = new \main\app\model\project\ProjectRoleModel();
+    $projectRoleRelationModel = new \main\app\model\project\ProjectRoleRelationModel();
+    $projectUserRoleModel = new \main\app\model\project\ProjectUserRoleModel();
+
+    $adminRoleId = 1;
+    $userRoleModel = new \main\app\model\permission\PermissionGlobalUserRoleModel();
+    $admins = $userRoleModel->getRows('*', ['role_id' => $adminRoleId]);
+
+    foreach ($projects as $project) {
+        $projectId = $project['id'];
+
+        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'QA', 'is_system' => 1]);
+        if ($projectRole) {
+            // 把project_role_relation表中的 QA 角色增加"修改事项状态"，"修改事项解决结果"两条权限项
+            $roleId = $projectRole['id'];
+            $projectRoleRelationModel->add($projectId, $roleId, 10016);
+            $projectRoleRelationModel->add($projectId, $roleId, 10017);
+        }
+
+        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Developers', 'is_system' => 1]);
+        if ($projectRole) {
+            // 把project_role_relation表中的Developers角色增加"修改事项状态"，"修改事项解决结果"两条权限项
+            $roleId = $projectRole['id'];
+            $projectRoleRelationModel->add($projectId, $roleId, 10016);
+        }
+
+        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'Administrators', 'is_system' => 1]);
+        if ($projectRole) {
+            // 把project_role_relation表中的Administrators（10002）角色增加"修改事项状态"，"修改事项解决结果"两条权限项
+            $roleId = $projectRole['id'];
+            $projectRoleRelationModel->add($projectId, $roleId, 10016);
+            $projectRoleRelationModel->add($projectId, $roleId, 10017);
+
+            foreach ($admins as $admin) {
+                $adminUserId = $admin['user_id'];
+                $rowExists = $projectUserRoleModel->checkUniqueItemExist($adminUserId, $projectId, $roleId);
+                if (!$rowExists) {
+                    $projectUserRoleModel->add($projectId, $adminUserId, $roleId);
+                }
+            }
+        }
+
+        $projectRole = $projectRoleModel->getRow('*', ['project_id' => $projectId, 'name' => 'PO', 'is_system' => 1]);
+        if ($projectRole) {
+            // 把project_role_relation表中的PO（10006）角色增加"修改事项状态"，"修改事项解决结果"两条权限项
+            $roleId = $projectRole['id'];
+            $projectRoleRelationModel->add($projectId, $roleId, 10016);
+            $projectRoleRelationModel->add($projectId, $roleId, 10017);
+        }
+    }
+}
 
 /**
  * 执行SQL
@@ -467,8 +486,8 @@ function patchCode($filename, $path)
             if (!is_dir($zipEntryPath)) {
                 // 读取这个文件
                 $fileSize = zip_entry_filesize($dirResource);
-                //最大读取6M，如果文件过大，跳过解压，继续下一个
-                if ($fileSize < (1024 * 1024 * 6)) {
+                //最大读取100M，如果文件过大，跳过解压，继续下一个
+                if ($fileSize < (1024 * 1024 * 100)) {
                     $content = zip_entry_read($dirResource, $fileSize);
                     // showLine('Unpacking: ' . $zipEntryPath);
                     file_put_contents($zipEntryPath, $content);
@@ -495,33 +514,33 @@ function patchCode($filename, $path)
  *
  * @param \main\lib\MyPdo $db
  * @param $filename
- * @return bool
  */
 function backupDatabase(\main\lib\MyPdo $db, $filename) {
     $str = "/*\r\nMasterlab database backup\r\n";
     $str .= "Data:" . date('Y-m-d H:i:s', time()) . "\r\n*/\r\n";
     $str .= "SET FOREIGN_KEY_CHECKS=0;\r\n";
 
+    $handle = fopen($filename, 'wb');
+    fwrite($handle, $str);
+
     $tables = getTables($db);
     foreach ($tables as $table) {
-        $ddl = getDDL($db, $table);
-        $data = getData($db, $table);
-
-        $str .= "-- ----------------------------\r\n";
+        $str = "-- ----------------------------\r\n";
         $str .= "-- Table structure for {$table}\r\n";
         $str .= "-- ----------------------------\r\n";
         $str .= "DROP TABLE IF EXISTS `{$table}`;\r\n";
-        $str .= $ddl . "\r\n";
-        $str .= "-- ----------------------------\r\n";
+        fwrite($handle, $str);
+        saveDDL($db, $table, $handle);
+        $str = "-- ----------------------------\r\n";
         $str .= "-- Records of {$table}\r\n";
-        $str .= "-- ----------------------------\r\n";
-        $str .= $data . "\r\n";
+        $str .= "-- ----------------------------\r\n\r\n";
+        fwrite($handle, $str);
+        saveData($db, $table, $handle);
     }
 
-    $str .= "SET FOREIGN_KEY_CHECKS=1;\r\n";
-    $result = file_put_contents($filename, $str);
-
-    return $result !== false;
+    $str = "SET FOREIGN_KEY_CHECKS=1;\r\n";
+    fwrite($handle, $str);
+    fclose($handle);
 }
 
 /**
@@ -577,13 +596,14 @@ function dropTables(\main\lib\MyPdo $db, $tables = []) {
  *
  * @param \main\lib\MyPdo $db
  * @param $table
+ * @param $handle
  * @return string
  */
-function getDDL(\main\lib\MyPdo $db, $table) {
+function saveDDL(\main\lib\MyPdo $db, $table, $handle) {
     $sql = "SHOW CREATE TABLE `{$table}`";
-    $ddl = $db->getRows($sql)[0]['Create Table'] . ';';
-
-    return $ddl;
+    $ddl = $db->getRows($sql)[0]['Create Table'] . ";\r\n";
+    fwrite($handle, $ddl);
+    fwrite($handle, "\r\n");
 }
 
 /**
@@ -591,9 +611,10 @@ function getDDL(\main\lib\MyPdo $db, $table) {
  *
  * @param \main\lib\MyPdo $db
  * @param $table
+ * @param $handle
  * @return string
  */
-function getData(\main\lib\MyPdo $db, $table)
+function saveData(\main\lib\MyPdo $db, $table, $handle)
 {
     $rows = $db->getRows("SHOW COLUMNS FROM `{$table}`");
     $columns = [];
@@ -602,20 +623,30 @@ function getData(\main\lib\MyPdo $db, $table)
     }
 
     $columns = join(',', $columns);
-
-    $rows = $db->getRows("SELECT * FROM `{$table}`");
-    $queries = [];
-    foreach ($rows as $values) {
-        $dataSqlRows = [];
+    $dataSqlRows = [];
+    $res = $db->pdo->query("SELECT * FROM `{$table}`", PDO::FETCH_ASSOC);
+    while ($values = $res->fetch()) {
+        $dataSqlValues = [];
         foreach ($values as $value) {
-            $dataSqlRows[] = $db->pdo->quote($value);
+            if ($value === null) {
+                $value = 'null';
+                $dataSqlValues[] = $value;
+            } else {
+                $dataSqlValues[] = $db->pdo->quote($value);
+            }
         }
-        $dataSql = join(',', $dataSqlRows);
-        $queries[] = "INSERT INTO `{$table}` ({$columns}) VALUES ({$dataSql});";
+        $dataSql = join(',', $dataSqlValues);
+        $dataSql = "({$dataSql})";
+        $dataSqlRows[] = $dataSql;
     }
 
-    $query = join("\r\n", $queries);
-    return $query;
+    if ($dataSqlRows) {
+        $dataSqlRows = join(',', $dataSqlRows);
+        $query = "INSERT INTO `{$table}` ({$columns}) VALUES {$dataSqlRows};\r\n";
+        fwrite($handle, $query);
+    }
+
+    fwrite($handle, "\r\n");
 }
 
 /**
