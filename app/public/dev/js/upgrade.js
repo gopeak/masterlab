@@ -1,5 +1,4 @@
-
-let Upgrade = (function() {
+let Upgrade = (function () {
 
     let _current_version = null;
 
@@ -11,12 +10,12 @@ let Upgrade = (function() {
     let $checkMessage = null;
     let $btnModalClose = null;
 
-    let $upgradeMessageBox =null;
+    let $upgradeMessageBox = null;
     let $modalUpgrade = null;
     let $modalAbout = null;
 
     // constructor
-    function Upgrade(  current_version  ) {
+    function Upgrade(current_version) {
         _current_version = current_version;
         $versionDescription = $('#version-description');
         $btnUpgrade = $('#btn-do-upgrade');
@@ -75,15 +74,15 @@ let Upgrade = (function() {
         });
     }
 
-    Upgrade.prototype.getOptions = function() {
+    Upgrade.prototype.getOptions = function () {
         return _options;
     };
 
-    Upgrade.prototype.run = function(sprint_id) {
+    Upgrade.prototype.run = function (sprint_id) {
 
-        if(window.confirm('确认要执行升级？请务必手动执行备份数据库和代码')){
+        if (window.confirm('确认要执行升级？请务必手动执行备份数据库和代码')) {
             Upgrade.prototype.postServer();
-        }else{
+        } else {
             $btnUpgrade.removeClass('disabled');
             $btnCancelUpgrade.removeClass('disabled');
             $btnCheckAgain.removeClass('hidden');
@@ -91,7 +90,7 @@ let Upgrade = (function() {
         }
     };
 
-    Upgrade.prototype.postServer = function(sprint_id){
+    Upgrade.prototype.postServer = function (sprint_id) {
         let url = '/upgrade/run';
         let source = $('#upgrade-source').val();
         $.ajax({
@@ -131,7 +130,7 @@ let Upgrade = (function() {
                         $('#upgrade-msg').alert('close');
                         //html = '<p style="color: #ff0000; font-weight: bold;">升级完成！</p>';
                         //$upgradeMessageBox.append($(html));
-                    } else if(xhr.readyState === 3){
+                    } else if (xhr.readyState === 3) {
                         html = xhr.responseText;
                         $upgradeMessageBox.html(html);
                     }
@@ -146,7 +145,7 @@ let Upgrade = (function() {
     };
 
     // 检测升级
-    Upgrade.prototype.checkUpgrade  = function  () {
+    Upgrade.prototype.checkUpgrade = function () {
         $versionDescription.addClass('hidden');
         $btnUpgrade.addClass('disabled');
         $spanNewVersion.text('正在检测...');
@@ -165,7 +164,7 @@ let Upgrade = (function() {
             url: url,
             success: function (resp) {
                 loading.hide('#modal-upgrade-body');
-                if( resp.ret !== '200' ){
+                if (resp.ret !== '200') {
                     $spanNewVersion.text('');
                     $btnCancelUpgrade.removeClass('disabled');
                     $btnCheckAgain.removeClass('hidden');
@@ -182,7 +181,7 @@ let Upgrade = (function() {
                 $versionDescription.attr('href', releaseUrl).removeClass('hidden');
                 $btnUpgrade.removeClass('disabled');
                 $spanNewVersion.text(latestVersion);
-                $checkMessage.removeClass('hidden').text( resp.msg);
+                $checkMessage.removeClass('hidden').text(resp.msg);
                 $checkMessage.addClass('text-success');
                 $btnModalClose.removeClass('disabled');
                 $btnCancelUpgrade.removeClass('disabled');
@@ -192,14 +191,14 @@ let Upgrade = (function() {
                 $btnCancelUpgrade.removeClass('disabled');
                 $btnCheckAgain.removeClass('hidden');
                 $btnModalClose.removeClass('disabled');
-                $spanNewVersion.text('版本检测失败:'+resp.responseText);
+                $spanNewVersion.text('版本检测失败:' + resp.responseText);
                 return false;
             }
         });
     };
 
     // 每日检测升级
-    Upgrade.prototype.dailyCheck  = function  () {
+    Upgrade.prototype.dailyCheck = function () {
         let checked = cookie('upgrade-checked') == '1';
         if (!checked) {
             let url = 'http://www.masterlab.vip/upgrade.php?action=get_patch_info';
@@ -209,8 +208,8 @@ let Upgrade = (function() {
                 data: {current_version: _current_version},
                 url: url,
                 success: function (resp) {
-                    cookie('upgrade-checked', '1', { expires: 1, path: '/' });
-                    if( resp.ret === '200' ){
+                    cookie('upgrade-checked', '1', {expires: 1, path: '/'});
+                    if (resp.ret === '200') {
                         upgradeMsg = JSON.stringify(resp.data);
                         localStorage.setItem('upgrade-msg', upgradeMsg);
                         showUpgradeMsg(upgradeMsg);
@@ -228,7 +227,7 @@ let Upgrade = (function() {
     };
 
     // 显示更新提示横幅
-    function showUpgradeMsg (upgradeMsg) {
+    function showUpgradeMsg(upgradeMsg) {
         upgradeMsg = JSON.parse(upgradeMsg);
         let latestVersion = upgradeMsg.last_version.version;
         let releaseUrl = upgradeMsg.last_version.release_url;
@@ -238,12 +237,12 @@ let Upgrade = (function() {
     }
 
     // 关闭更新提示横幅
-    function upgradeMsgViewed () {
+    function upgradeMsgViewed() {
         localStorage.removeItem('upgrade-msg');
     }
 
     // 设置和读取cookie
-    function cookie (key, value, options) {
+    function cookie(key, value, options) {
         if (value !== undefined) {
             if (typeof options.expires === 'number') {
                 let days = options.expires, t = options.expires = new Date();
@@ -253,9 +252,9 @@ let Upgrade = (function() {
             return (document.cookie = [
                 encodeURIComponent(key), '=', value,
                 options.expires ? '; expires=' + options.expires.toUTCString() : '',
-                options.path    ? '; path=' + options.path : '',
-                options.domain  ? '; domain=' + options.domain : '',
-                options.secure  ? '; secure' : ''
+                options.path ? '; path=' + options.path : '',
+                options.domain ? '; domain=' + options.domain : '',
+                options.secure ? '; secure' : ''
             ].join(''));
         }
 
@@ -281,12 +280,12 @@ let Upgrade = (function() {
     }
 
     // 删除cookie
-    function removeCookie (key) {
+    function removeCookie(key) {
         if (cookie(key) === undefined) {
             return false;
         }
 
-        cookie(key, '', { expires: -1 });
+        cookie(key, '', {expires: -1});
         return !$.cookie(key);
     }
 
