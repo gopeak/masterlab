@@ -129,7 +129,7 @@
 																	</button>
 																</div>
 																<div class="dropdown-content filtered-search-history-dropdown-content">
-																	<div class="js-filtered-search-history-dropdown"></div>
+																	<ul class="js-filtered-search-history-dropdown"></ul>
 																</div>
 																<div class="dropdown-loading">
 																	<i class="fa fa-spinner fa-spin"></i>
@@ -2332,6 +2332,7 @@
                     }
 
                     window.$IssueMain = new IssueMain(options);
+                    window.$FilteredSearch = new FilteredSearch();
                     if(is_adv_filter==='0' || is_empty(adv_filter_json)){
                         window.$IssueMain.fetchIssueMains(getdata);
                     }else{
@@ -2358,10 +2359,6 @@
                     $('#btn-add').bind('click', function () {
                         IssueMain.prototype.add();
                     });
-
-                    $(".tokens-container").on("click", ".selectable-close", function () {
-                        $(this).parents(".js-visual-token").remove()
-                    })
 
                     $("#btn-create-issue").bind("click", function () {
                         $('#master_issue_id').val('');
