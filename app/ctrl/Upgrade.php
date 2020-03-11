@@ -49,6 +49,11 @@ class Upgrade extends BaseUserCtrl
      */
     public function run()
     {
+        if (!$this->isAdmin) {
+            $this->showLine('权限不足，请联系管理员！');
+            die;
+        }
+
         set_time_limit(0);
         $curl = new \Curl\Curl();
         $curl->setTimeout(10);

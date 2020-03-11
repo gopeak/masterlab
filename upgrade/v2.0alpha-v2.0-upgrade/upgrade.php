@@ -148,18 +148,22 @@ try {
     showLine('');
     showLine('Backing up database......');
     backupDatabase($db, $databaseBackupFilename);
-
-
-    showLine('');
-    showLine('Upgrading database......');
-    $sql = file_get_contents($sqlFile);
-    runSql($sql, $db);
     showLine('Done!');
+    showLine('Database was backed up to ' . $databaseBackupFilename);
+
+    // 升级代码
     showLine('');
     showLine('Upgrading code......');
 
     // 解压缩代码补丁
     patchCode($patchFile, $projectDir);
+    showLine('Done!');
+    showLine('');
+
+    // 升级数据库
+    showLine('Upgrading database......');
+    $sql = file_get_contents($sqlFile);
+    runSql($sql, $db);
     showLine('Done!');
     showLine('');
 
@@ -397,8 +401,8 @@ function patchCode($filename, $path)
             if (!is_dir($zipEntryPath)) {
                 // 读取这个文件
                 $fileSize = zip_entry_filesize($dirResource);
-                //最大读取6M，如果文件过大，跳过解压，继续下一个
-                if ($fileSize < (1024 * 1024 * 6)) {
+                //最大读取100M，如果文件过大，跳过解压，继续下一个
+                if ($fileSize < (1024 * 1024 * 100)) {
                     $content = zip_entry_read($dirResource, $fileSize);
                     // showLine('Unpacking: ' . $zipEntryPath);
                     file_put_contents($zipEntryPath, $content);
