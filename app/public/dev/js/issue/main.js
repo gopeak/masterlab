@@ -114,7 +114,7 @@ var IssueMain = (function () {
     IssueMain.prototype.saveFilter = function (name) {
         window.is_save_filter = '1';
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
-        console.log(searchQuery);
+        return false;
         window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
@@ -307,7 +307,6 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.skipPager = function (page, success) {
-        console.log("Page item clicked, page: " + page);
         $("#filter_page").val(page);
         _options.query_param_obj["page"] = page;
         IssueMain.prototype.fetchIssueMains(function () {
