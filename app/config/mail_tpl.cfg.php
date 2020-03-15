@@ -1,7 +1,5 @@
 <?php
 
-
-
 $_config['tpl']['reset_password'] = '
 <div >
     <p>您好 <a href="mailto:{{email}}" target="_blank">{{email}}</a>!</p>
@@ -35,7 +33,7 @@ $_config['tpl']['invite_email'] = '
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-<title>{{admin}} 邀请你加入到项目 {{org_key}}/{{project_key}}</title>
+<title>{{admin}} 邀请你加入到项目 {{org_path}}/{{project_key}}</title>
 <style data-premailer="ignore" type="text/css">
 body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table,td{mso-table-lspace:0pt;mso-table-rspace:0pt}img{-ms-interpolation-mode:bicubic}.hidden{display:none !important;visibility:hidden !important}a[x-apple-data-detectors]{color:inherit !important;text-decoration:none !important;font-size:inherit !important;font-family:inherit !important;font-weight:inherit !important;line-height:inherit !important}div[style*=\'margin: 16px 0\']{margin:0 !important}@media only screen and (max-width: 639px){body,#body{min-width:320px !important}table.wrapper{width:100% !important;min-width:320px !important}table.wrapper td.wrapper-cell{border-left:0 !important;border-right:0 !important;border-radius:0 !important;padding-left:10px !important;padding-right:10px !important}}
 
@@ -72,13 +70,13 @@ You have been invited
 by
 <a href="{{root_url}}" style="color: #3777b0; text-decoration: none;">{{admin}}</a>
 to join the
-<a class="highlight" href="{{project_url}}" style="color: #3777b0; text-decoration: none; font-weight: 500;">{{org_key}}/{{project_key}}</a>
+<a class="highlight" href="{{project_url}}" style="color: #3777b0; text-decoration: none; font-weight: 500;">{{org_path}}/{{project_key}}</a>
 project as <span class="highlight" style="font-weight: 500;">Developer</span>.
 </p>
 <p>
-<a href="{{root_url}}/passport/invite/accept/{{token}}" style="color: #3777b0; text-decoration: none;">立即加入</a>
+<a href="{{root_url}}passport/invite/accept/{{token}}" style="color: #3777b0; text-decoration: none;">立即加入</a>
 or
-<a href="{{root_url}}/passport/invite/decline/{{token}}" style="color: #3777b0; text-decoration: none;">拒 绝</a>
+<a href="{{root_url}}passport/invite/decline/{{token}}" style="color: #3777b0; text-decoration: none;">拒 绝</a>
 </p>
 </td>
 </tr>
@@ -94,7 +92,7 @@ or
 
 <tr class="footer">
 <td style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #5c5c5c; padding: 25px 0;">
-<img alt="Masterlab" height="33" src="https://gitlab.com/assets/mailers/gitlab_footer_logo-078860f148cc9596195e6bb3fa7db31c30538355576c5c3b569c414902e3d095.gif" width="90" style="display: block; margin: 0 auto 1em;" />
+<img alt="Masterlab" src="{{logo_url}}"   style="display: none; margin: 0 auto 1em;" />
 <div>
 Masterlab--一款基于事项驱动和敏捷开发的项目管理工具 <a class="mng-notif-link" href="http://www.masterlab.vip" style="color: #3777b0; text-decoration: none;">Masterlab官方网站</a> &#183; <a class="help-link" href="http://www.masterlab.vip/help.php" style="color: #3777b0; text-decoration: none;">Help</a>
 </div>
