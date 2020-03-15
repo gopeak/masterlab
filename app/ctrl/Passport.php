@@ -143,8 +143,18 @@ class Passport extends BaseCtrl
         if (!$ret) {
             $this->ajaxFailed('提 示', $tip, $retCode);
         }
-        // 检车登录账号和密码
-        list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
+
+        $schemaType = 'inner';
+        if(isset($_POST['schema_ldap'])){
+            $schemaType = 'ldap';
+        }
+        // 检查登录账号和密码
+        if($schemaType==='inner'){
+            list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
+        }else{
+            // LDAP认证登录
+            list($ret, $user) = $this->auth->checkLdapByUsername($username, $password);
+        }
         // print_r($user);
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
@@ -157,6 +167,7 @@ class Passport extends BaseCtrl
             }
             $this->ajaxFailed('提 示', $tip, $code);
         }
+
         unset($_SESSION['login_captcha'], $_SESSION['login_captcha_time']);
 
         // 更新登录次数
@@ -406,8 +417,7 @@ class Passport extends BaseCtrl
             $args['{{display_name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
             $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verify_code=' . $verifyCode;
-            $mailConfig = getConfigVar('mail');
-            $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['active_email']);
+            $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['active_email']);
             // echo $body;die;
             $systemLogic = new SystemLogic();
             list($ret, $errMsg) = $systemLogic->mail($email, 'Masterlab激活用户通知', $body);
@@ -517,8 +527,7 @@ class Passport extends BaseCtrl
             $args['{{verifyCode}}'] = $verifyCode;
             $url = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verify_code=' . $verifyCode;
             $args['{{url}}'] = $url;
-            $mailConfig = getConfigVar('mail');
-            $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['reset_password']);
+            $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['reset_password']);
             //echo $body;
             //@TODO 异步发送
             $systemLogic = new SystemLogic();

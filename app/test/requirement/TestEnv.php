@@ -341,7 +341,7 @@ class TestEnv extends BaseTestCase
      */
     public function testMailServer()
     {
-        $mailConfig = getConfigVar('mail');
+        $mailConfig = getCommonConfigVar('mail_tpl');
         $host = $mailConfig['host'];
         $port = $mailConfig['port'];
         $timeout = $mailConfig['timeout'];

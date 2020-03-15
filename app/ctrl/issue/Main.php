@@ -900,7 +900,7 @@ class Main extends BaseUserCtrl
         }
         unset($attachmentDataArr);
 
-        // 通过工作流获取可以变更的状态
+        // 通过状态流获取可以变更的状态
         $logic = new WorkflowLogic();
         $issue['allow_update_status'] = $logic->getStatusByIssue($issue);
 

@@ -5,7 +5,7 @@ namespace main\app\model\issue;
 use main\app\model\CacheModel;
 
 /**
- *  工作流方案子项1:M 关系的字段方案模型
+ *  状态流方案子项1:M 关系的字段方案模型
  */
 class WorkflowSchemeDataModel extends CacheModel
 {
