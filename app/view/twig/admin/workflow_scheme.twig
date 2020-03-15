@@ -39,14 +39,14 @@
                         <div class="top-area">
                             <ul class="nav-links">
                                 <li class="active">
-                                    <a href="#">工作流方案</a>
+                                    <a href="#">状态流方案</a>
                                 </li>
                             </ul>
                             <div class="nav-controls">
                                 <div class="btn-group" role="group">
                                     <a class="btn btn-new btn_workflow_scheme_add js-key-create" data-target="#modal-workflow_scheme_add" data-toggle="modal" href="#modal-workflow_scheme_add">
                                         <i class="fa fa-plus"></i>
-                                        新增工作流方案
+                                        新增状态流方案
                                     </a>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
                                         <th class="js-pipeline-stages pipeline-info">项目</th>
-                                        <th class="js-pipeline-date pipeline-info">关联工作流</th>
+                                        <th class="js-pipeline-date pipeline-info">关联状态流</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -88,7 +88,7 @@
             <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">新增工作流方案</h3>
+                    <h3 class="modal-header-title">新增状态流方案</h3>
                 </div>
 
                 <div class="modal-body overflow-x-hidden">
@@ -114,14 +114,14 @@
 
                         <hr>
                         <div class="form-group ">
-                            <label class="control-label" >工作流定义:</label>
+                            <label class="control-label" >状态流定义:</label>
                             <div class="row">
                                 <div class="btn-group">
                                     <div class="btn-group">
                                         <select id="issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   ></select>
                                     </div>
                                     <div class="btn-group">
-                                        <select id="workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择工作流"   ></select>
+                                        <select id="workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择状态流"   ></select>
                                     </div>
                                     <button name="btn-issue_type_workflow_add" type="button" class="btn" id="btn-issue_type_workflow_add" >添加</button>
                                 </div>
@@ -137,7 +137,7 @@
                                         <tr class="commit">
                                             <td  ><strong>未分配的事项类型</strong></td>
                                             <td>--></td>
-                                            <td>默认工作流</td>
+                                            <td>默认状态流</td>
                                             <td  ></td>
                                         </tr>
                                         </tbody>
@@ -167,7 +167,7 @@
             <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">编辑工作流方案</h3>
+                    <h3 class="modal-header-title">编辑状态流方案</h3>
                 </div>
 
                 <div class="modal-body overflow-x-hidden">
@@ -194,7 +194,7 @@
                     </div>
                     <hr>
                     <div class="form-group ">
-                        <label class="control-label" >工作流定义:</label>
+                        <label class="control-label" >状态流定义:</label>
                         <div class="row">
                             <div class="btn-group">
                                 
@@ -205,7 +205,7 @@
                                 </select>
                             </div>
                             <div class="btn-group">
-                                <select   id="edit_workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择工作流"   >
+                                <select   id="edit_workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择状态流"   >
 
                                 </select>
                             </div>

@@ -5,7 +5,7 @@ namespace main\app\model\issue;
 use main\app\model\BaseDictionaryModel;
 
 /**
- *  工作流模型
+ *  状态流模型
  *
  */
 class WorkflowModel extends BaseDictionaryModel

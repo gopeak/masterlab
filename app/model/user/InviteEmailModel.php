@@ -4,15 +4,15 @@ namespace main\app\model\user;
 
 use main\app\model\CacheModel;
 
-class EmailFindPasswordModel extends CacheModel
+class InviteEmailModel extends CacheModel
 {
     public $prefix = 'user_';
 
-    public $table = 'email_find_password';
+    public $table = 'invite';
 
-    public $primaryKey = 'email';
+    public $primaryKey = 'id';
 
-    const   DATA_KEY = 'email_find_password/';
+    const   DATA_KEY = 'user_invite/';
 
     public function __construct($uid = '', $persistent = false)
     {
@@ -35,45 +35,42 @@ class EmailFindPasswordModel extends CacheModel
         return $final;
     }
 
-    /**
-     * @param $email
-     * @param $verifyCode
-     * @return array
-     */
-    public function getByEmailVerifyCode($email, $verifyCode)
+    public function getByToken($token)
     {
         //使用缓存机制
         $fields = '*';
-        $where = ['email' => $email, 'verify_code' => $verifyCode];
-        $key = self::DATA_KEY . $email;
+        $where = ['token' => $token];
+        $key = self::DATA_KEY . $token;
         $final = parent::getRowByKey($fields, $where, $key);
         return $final;
     }
 
+
     /**
      * 插入一条邮箱验证码记录
      * @param $email
-     * @param $verifyCode
+     * @param $token
      * @return array
      * @throws \Exception
      */
-    public function add($email, $verifyCode)
+    public function add($email, $token, $projectId, $projectRoles)
     {
         //执行SQL语句，返回影响行数，如果有错误，则会被捕获并跳转到出错页面
         $table = $this->getTable();
         $params = [];
         $params['email'] = $email;
-        $params['verify_code'] = $verifyCode;
-        $params['time'] = time();
-
-        $sql = "INSERT IGNORE INTO {$table} SET email=:email,verify_code=:verify_code, `time`=:time ";
-        $sql .= " ON DUPLICATE KEY UPDATE verify_code=:verify_code";
-        $ret = $this->db->exec($sql, $params);
-        $insertId = $this->db->getLastInsId();
-
+        $params['token'] = $token;
+        $params['expire_time'] = time()+30*86400;
+        $params['project_id'] = $projectId;
+        if(is_array($projectRoles)){
+            $params['project_roles'] = implode(',',$projectRoles);
+        }else{
+            $params['project_roles'] = strval($projectRoles);
+        }
+        $rets = $this->replace($params);
         // 更新缓存
         $this->cache->delete(self::DATA_KEY . $email);
-        return [$ret, $insertId];
+        return $rets;
     }
 
 
@@ -87,6 +84,14 @@ class EmailFindPasswordModel extends CacheModel
     {
         $key = self::DATA_KEY . $email;
         $condition = ['email' => $email];
+        $flag = parent::deleteBykey($condition, $key);
+        return $flag;
+    }
+
+    public function deleteByToken($token)
+    {
+        $key = self::DATA_KEY . $token;
+        $condition = ['email' => $token];
         $flag = parent::deleteBykey($condition, $key);
         return $flag;
     }

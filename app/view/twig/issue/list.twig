@@ -12,6 +12,7 @@
 		<script src="/dev/js/issue/adv_query.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 		<script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 		<script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+        <script src="/dev/js/issue/filtered_search.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 		<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 		<link href="/dev/lib/video-js/video-js.min.css" rel="stylesheet">
 		<script src="/dev/lib/video-js/video.min.js"></script>
@@ -103,7 +104,7 @@
 
 									<div class="issues-filters">
 										<div class="filtered-search-block issues-details-filters row-content-block second-block" v-pre="false">
-											<form id="filter-form" class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+											<form id="filter-form" class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get" >
 												<input name="utf8" type="hidden" value="&#x2713;"/>
 												<input
 												name="page" id="filter_page" type="hidden" value="1">
@@ -115,7 +116,7 @@
 													<div class="filtered-search-box" title="按回车键提交查询或点击搜索按钮">
 														<div class="dropdown filtered-search-history-dropdown-wrapper">
 															<button class="dropdown-menu-toggle filtered-search-history-dropdown-toggle-button" type="button" data-toggle="dropdown">
-																<span class="dropdown-toggle-text ">
+																<span class="dropdown-toggle-text">
 																	<i class="fa fa-history"></i>
 																</span>
 																<i class="fa fa-chevron-down"></i>
@@ -128,7 +129,7 @@
 																	</button>
 																</div>
 																<div class="dropdown-content filtered-search-history-dropdown-content">
-																	<div class="js-filtered-search-history-dropdown"></div>
+																	<ul class="js-filtered-search-history-dropdown"></ul>
 																</div>
 																<div class="dropdown-loading">
 																	<i class="fa fa-spinner fa-spin"></i>
@@ -2331,6 +2332,7 @@
                     }
 
                     window.$IssueMain = new IssueMain(options);
+                    window.$FilteredSearch = new FilteredSearch(urls.searchObject);
                     if(is_adv_filter==='0' || is_empty(adv_filter_json)){
                         window.$IssueMain.fetchIssueMains(getdata);
                     }else{
@@ -2357,10 +2359,6 @@
                     $('#btn-add').bind('click', function () {
                         IssueMain.prototype.add();
                     });
-
-                    $(".tokens-container").on("click", ".selectable-close", function () {
-                        $(this).parents(".js-visual-token").remove()
-                    })
 
                     $("#btn-create-issue").bind("click", function () {
                         $('#master_issue_id').val('');

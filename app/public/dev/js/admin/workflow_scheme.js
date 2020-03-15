@@ -173,7 +173,7 @@ var WorkflowScheme = (function() {
         var html = '<tr class="commit">\n' +
             '                                        <td  ><strong>未分配的问题类型</strong></td>\n' +
             '                                        <td>--></td>\n' +
-            '                                        <td>默认工作流</td>\n' +
+            '                                        <td>默认状态流</td>\n' +
             '                                        <td  ></td>\n' +
             '                                    </tr>';
         for( var _key in issue_type_workflow ){
