@@ -58,6 +58,27 @@
     <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
+    <style>
+        .resEdit {
+            padding: 15px;
+        }
+        .resLine {
+            width: 95%;
+            padding: 3px;
+            margin: 5px;
+            border: 1px solid #d0d0d0;
+        }
+        body {
+            overflow: hidden;
+        }
+        .ganttButtonBar h1{
+            color: #000000;
+            font-weight: bold;
+            font-size: 28px;
+            margin-left: 10px;
+        }
+
+    </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="hornet" style="background-color: #fff;">
 {% include 'twig/common/body/script.twig' %}
@@ -78,34 +99,10 @@
         </div>
         <div class="content gantt-content" id="content-body">
             <div id="ndo" style="display:none;position:absolute;right:5px;top:5px;width:378px;padding:5px;background-color: #FFF5E6; border:1px solid #F9A22F; font-size:12px" class="noprint">
-                This Gantt editor is free thanks to <a href="http://twproject.com" target="_blank">Twproject</a> where it can be used on a complete and flexible project management solution.<br> Get your projects done! Give <a href="http://twproject.com" target="_blank">Twproject a try now</a>.
+
             </div>
             <div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px 0 0"></div>
 
-            <style>
-                .resEdit {
-                    padding: 15px;
-                }
-
-                .resLine {
-                    width: 95%;
-                    padding: 3px;
-                    margin: 5px;
-                    border: 1px solid #d0d0d0;
-                }
-
-                body {
-                    overflow: hidden;
-                }
-
-                .ganttButtonBar h1{
-                    color: #000000;
-                    font-weight: bold;
-                    font-size: 28px;
-                    margin-left: 10px;
-                }
-
-            </style>
 
             <form id="gimmeBack" style="display:none;" action="../gimmeBack.jsp" method="post" target="_blank"><input type="hidden" name="prj" id="gimBaPrj"></form>
             <div id="gantEditorTemplates" style="display:none;">
@@ -113,6 +110,7 @@
   <div class="ganttButtonBar noprint">
     <div class="buttons">
       <a style="display:none" href="https://gantt.twproject.com/"><img src="res/twGanttLogo.png" alt="Twproject" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
+      {% if (this.isAdmin or projectPermArr['ADMIN_GANTT'] is defined) %}
       <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite " title="undo"><span class="teamworkIcon">&#39;</span></button>
       <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite " title="redo"><span class="teamworkIcon">&middot;</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanAdd hide"></span>
@@ -128,6 +126,7 @@
       <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon delete requireCanWrite" title="隐藏事项(删除事项需到事项列表操作)"><span class="teamworkIcon">&cent;</span></button>
       <button onclick="show_be_hidden_list();" class="button textual icon delete requireCanWrite" title="隐藏的事项列表"><span class="teamworkIcon">q</span></button>
       <span class="ganttButtonSeparator"></span>
+      {% endif %}
       <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;" class="button textual icon " title="展开"><span class="teamworkIcon">6</span></button>
       <button onclick="$('#workSpace').trigger('collapseAll.gantt'); return false;" class="button textual icon " title="折叠"><span class="teamworkIcon">5</span></button>
 
@@ -145,11 +144,14 @@
       <span class="ganttButtonSeparator"></span>
       <button id="toggle_focus_mode"  onclick="$('#workSpace').trigger('fullScreen.gantt');return false;" class="button textual icon" title="全屏模式" id="fullscrbtn"><span class="teamworkIcon">@</span></button>
       <button onclick="ge.element.toggleClass('colorByStatus' );return false;" class="button textual icon"  title="颜色设置"><span class="teamworkIcon">&sect;</span></button>
-      <button onclick="editResources();" class="button textual requireWrite" title="项目成员设置"><span class="teamworkIcon">M</span></button>
-     <button onclick="show_setting();" class="button textual requireWrite" title="数据源设置"><span class="teamworkIcon">g</span></button>
+      {% if (this.isAdmin or projectPermArr['ADMIN_GANTT'] is defined) %}
+       <button onclick="editResources();" class="button textual requireWrite" title="项目成员设置"><span class="teamworkIcon">M</span></button>
+       <button onclick="show_setting();" class="button textual requireWrite" title="数据源设置"><span class="teamworkIcon">g</span></button>
+      {% endif %}
       &nbsp; &nbsp;
      <button onclick="saveGanttOnServer();" class="button first big requireWrite hide"  title="Save">Save</button>
      <button onclick='newProject();' class='button requireWrite newproject hide' ><em>clear project</em></button>
+
      <button class="button login hide" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
      <button class="button opt collab hide" title="Start with Twproject" onclick="collaborate($(this));"  ><em>collaborate</em></button>
      </div>

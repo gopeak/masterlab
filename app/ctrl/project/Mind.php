@@ -295,7 +295,10 @@ class Mind extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
-
+        //print_r($this->projectPermArr);
+        if(!isset($this->projectPermArr[PermissionLogic::MIND_SETTING]) || $this->projectPermArr[PermissionLogic::MIND_SETTING]!=1){
+            $this->ajaxFailed('提示', '您没有此权限进行此操作');
+        }
         $projectGanttModel = new ProjectMindSettingModel();
         $updateInfo = [];
         foreach (ProjectMind::$initSettingArr as $key => $item) {

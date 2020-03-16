@@ -310,6 +310,7 @@ class Gantt extends BaseUserCtrl
                 $assigs[] = $tmp;
             }
             $task['assigs'] = $assigs;
+
             // 只有事项的才进行过滤
             if($task['type']!='sprint'){
                 $issueTypeKey = isset($issueTypeIdArr[$task['type']]) ? $issueTypeIdArr[$task['type']]['_key']:null;
@@ -328,6 +329,9 @@ class Gantt extends BaseUserCtrl
         $data['resources'] = $resources;
         $data['roles'] = $roles;
         $data['canWrite'] = true;
+        if(!isset($this->projectPermArr[PermissionLogic::ADMIN_GANTT]) || $this->projectPermArr[PermissionLogic::ADMIN_GANTT]!=1){
+            $data['canWrite'] = false;
+        }
         $data['canDelete'] = true;
         $data['canWriteOnParent'] = true;
         $data['canAdd'] = true;

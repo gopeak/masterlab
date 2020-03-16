@@ -39,6 +39,8 @@ class PermissionLogic
     const CREATE_ATTACHMENTS = 'CREATE_ATTACHMENTS';
     const IMPORT_EXCEL = 'IMPORT_EXCEL';
     const EXPORT_EXCEL = 'EXPORT_EXCEL';
+    const ADMIN_GANTT = 'ADMIN_GANTT';
+    const MIND_SETTING = 'MIND_SETTING';
 
     public static $errorMsg = '当前角色无此操作权限!';
 
@@ -223,7 +225,6 @@ class PermissionLogic
     {
         $permModel = new ProjectPermissionModel();
         $permissionArr = $permModel->getAll();
-        //print_r($permissionArr);
         $ret = [];
         if ($haveAdminPerm) {
             foreach ($permissionArr as $item) {
@@ -253,6 +254,7 @@ class PermissionLogic
                 }
             }
         }
+
         unset($permissionArr, $roleRelations);
         return $havePermArr;
     }

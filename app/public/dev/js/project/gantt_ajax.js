@@ -1,23 +1,10 @@
 var Gantt = (function () {
 
-    var _options = {};
-
+    var _is_admin_gantt = false;
     // constructor
-    function Gantt(options) {
-        _options = options;
+    function Gantt( is_admin_gantt ) {
+        _is_admin_gantt = is_admin_gantt;
 
-    };
-
-    Gantt.prototype.getOptions = function () {
-        return _options;
-    };
-
-    Gantt.prototype.setOptions = function (options) {
-        for (i in  options) {
-            // if( typeof( _options[options[i]] )=='undefined' ){
-            _options[i] = options[i];
-            // }
-        }
     };
 
      Gantt.prototype.initIssueType = function (issue_types) {
@@ -67,7 +54,10 @@ var Gantt = (function () {
     }
 
     Gantt.prototype.fetchGanttSetting = function (project_id) {
-
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         var url = '/project/gantt/fetchSetting/'+project_id;
         $.ajax({
             type: 'GET',
@@ -128,6 +118,10 @@ var Gantt = (function () {
 
 
     Gantt.prototype.saveGanttSetting = function( ) {
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         let source_type_value = $("input[name='source']:checked").val();
         let method = 'POST';
         let url = '/project/gantt/saveSetting/'+window._cur_project_id;
@@ -197,7 +191,10 @@ var Gantt = (function () {
     };
 
     Gantt.prototype.makeEditIssueForm = function( task, editOnlyAssig ) {
-
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         Gantt.prototype.initEditIssueForm(task);
         $('#modal-create-issue').modal('show');
         loading.show('#modal-body');
@@ -278,7 +275,9 @@ var Gantt = (function () {
         if(task.name===''){
             return;
         }
-
+        if(!_is_admin_gantt){
+            return;
+        }
         let sprint = getObjectValue(_issueConfig.sprint,task.sprint_id);
         let start_date = timestampToDate(task.start,'Y-m-d');
         let due_date = timestampToDate(task.end,'Y-m-d');
@@ -366,6 +365,10 @@ var Gantt = (function () {
 
     Gantt.prototype.addSyncServerTask = function () {
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         var self = window.ge;
         var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
 
@@ -429,6 +432,10 @@ var Gantt = (function () {
 
 
     Gantt.prototype.updateSyncServerTask = function () {
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
         var self = window.ge;
 
@@ -595,7 +602,10 @@ var Gantt = (function () {
     };
 
     Gantt.prototype.fetchResource = function (project_id) {
-
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         var url = '/project/member/fetchAll/'+project_id;
         $.ajax({
             type: 'GET',
@@ -673,6 +683,10 @@ var Gantt = (function () {
     };
 
     Gantt.prototype.saveMemberRole = function (user_id) {
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         let role_id = $("#selectpicker_uid_" + user_id).val();
         let method = 'POST';
         let url = '/project/role/modify_project_user_has_roles';
@@ -698,7 +712,10 @@ var Gantt = (function () {
     };
 
     Gantt.prototype.delMember = function(user_id, displayname,projectname) {
-
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         swal({
                 title: '您确认移除 ' + projectname + ' 的成员 '+ displayname +' 吗?',
                 text: "该用户将不能访问此项目",
@@ -741,7 +758,10 @@ var Gantt = (function () {
     };
 
     Gantt.prototype.fetchGanttBeHiddenIssueList = function (project_id, page) {
-
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         var url = '/project/gantt/fetchGanttBeHiddenIssueList/'+project_id;
         $.ajax({
             type: 'GET',
@@ -830,7 +850,10 @@ var Gantt = (function () {
 
 
     Gantt.prototype.syncMoveUpServer = function (current_id, target_id) {
-
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         var method = 'post';
         var params = {"project_id":window.cur_project_id,"current_id":current_id,"target_id":target_id}
         $.ajax({
@@ -853,7 +876,10 @@ var Gantt = (function () {
     }
 
     Gantt.prototype.syncMoveDownServer = function (current_id, target_id) {
-
+        if(!_is_admin_gantt){
+            notify_error('提示', '您没有权限进行此操作');
+            return;
+        }
         var method = 'post';
         var params = {"project_id":window.cur_project_id,"current_id":current_id,"target_id":target_id}
         $.ajax({
