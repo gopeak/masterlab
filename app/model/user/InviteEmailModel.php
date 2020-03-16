@@ -4,6 +4,11 @@ namespace main\app\model\user;
 
 use main\app\model\CacheModel;
 
+/**
+ * 邀请email模型
+ * Class InviteEmailModel
+ * @package main\app\model\user
+ */
 class InviteEmailModel extends CacheModel
 {
     public $prefix = 'user_';
@@ -14,27 +19,25 @@ class InviteEmailModel extends CacheModel
 
     const   DATA_KEY = 'user_invite/';
 
+    /**
+     * InviteEmailModel constructor.
+     * @param string $uid
+     * @param bool $persistent
+     * @throws \Exception
+     */
     public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);
         $this->uid = $uid;
     }
 
-    /**
-     *  获取邮箱验证码的记录信息,通过Phone
-     * @param $email
-     * @return array
-     */
-    public function getByEmail($email)
-    {
-        //使用缓存机制
-        $fields = '*';
-        $where = ['email' => $email];
-        $key = self::DATA_KEY . $email;
-        $final = parent::getRowByKey($fields, $where, $key);
-        return $final;
-    }
 
+    /**
+     * 通过token获取数据
+     * @param $token
+     * @return array
+     * @throws \Exception
+     */
     public function getByToken($token)
     {
         //使用缓存机制
@@ -88,10 +91,16 @@ class InviteEmailModel extends CacheModel
         return $flag;
     }
 
+    /**
+     * 通过token删除记录
+     * @param $token
+     * @return int
+     * @throws \Exception
+     */
     public function deleteByToken($token)
     {
         $key = self::DATA_KEY . $token;
-        $condition = ['email' => $token];
+        $condition = ['token' => $token];
         $flag = parent::deleteBykey($condition, $key);
         return $flag;
     }

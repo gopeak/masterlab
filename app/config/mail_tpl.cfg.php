@@ -74,9 +74,9 @@ to join the
 project as <span class="highlight" style="font-weight: 500;">Developer</span>.
 </p>
 <p>
-<a href="{{root_url}}passport/invite/accept/{{token}}" style="color: #3777b0; text-decoration: none;">立即加入</a>
+<a href="{{root_url}}invite/accept/{{token}}" style="color: #3777b0; text-decoration: none;">立即加入</a>
 or
-<a href="{{root_url}}passport/invite/decline/{{token}}" style="color: #3777b0; text-decoration: none;">拒 绝</a>
+<a href="{{root_url}}invite/decline/{{token}}" style="color: #3777b0; text-decoration: none;">拒 绝</a>
 </p>
 </td>
 </tr>
