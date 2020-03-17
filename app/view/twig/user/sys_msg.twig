@@ -43,14 +43,15 @@
                         <div class="top-area">
                             <ul class="nav-links">
                                 <li class="active">
+                                    <a href="#">全部</a>
+                                </li>
+                                <li class="">
                                     <a href="#">未读消息</a>
                                 </li>
                                 <li class="">
                                     <a href="#">已读消息</a>
                                 </li>
-                                <li class="">
-                                    <a href="#">全部</a>
-                                </li>
+
                             </ul>
                         </div>
                         <div class="content-list">
@@ -63,13 +64,13 @@
                                         <div class="issuable-main-info">
                                             <div class="issue-title title">
 											<span class="issue-title-text" dir="auto">
-												<a class="responsive_title" href="/issue/detail/index/140">
-													xxxxxxxxxxxxxxxxxxxx
+												<a class="responsive_title" href="{{href}}">
+													{{title}}
 												</a>
 											</span>
                                             </div>
                                             <div class="issuable-info" style="font-size:12px;font-weight: 400;color:#707070;">
-                                                <span style="color:#ff0000;font-size: 10px">升级</span>
+                                                <span style="color:blueviolet;font-size: 10px">{{ type }}通知</span>
                                                 &nbsp;
                                                 <span class="issuable-authored">
 												·
@@ -78,9 +79,10 @@
 
                                                 </span>
 
+                                                <span style="color:#ff0000;font-size: 10px">未读</span>
+
                                             </div>
                                         </div>
-
                                     </li>
 
                                 </ul>
