@@ -586,4 +586,21 @@ class UserLogic
         $avatarMap = array_column($originalRes, 'avatar', 'uid');
         return [$usernameMap, $displayNameMap, $avatarMap];
     }
+
+    /**
+     * 判断两个用户是否在一个团队的
+     * @param $userId1
+     * @param $userId2
+     * @return bool
+     * @throws \Exception
+     */
+    public static function checkUserIsTeam($userId1 ,$userId2)
+    {
+        $model = new ProjectUserRoleModel();
+        $rows1 = $model->getRows('DISTINCT `project_id` as project_id ',['user_id'=>$userId1]);
+        $user1ProjectIdArr = array_column($rows1, 'project_id');
+        $rows2 = $model->getRows('DISTINCT `project_id` as project_id ',['user_id'=>$userId2]);
+        $user2ProjectIdArr = array_column($rows2, 'project_id');
+        return count(array_intersect($user1ProjectIdArr, $user2ProjectIdArr))>0;
+    }
 }

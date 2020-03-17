@@ -2,6 +2,7 @@
 
 namespace main\app\model\user;
 
+use main\app\model\CacheKeyModel;
 use main\app\model\CacheModel;
 use main\app\classes\SettingsLogic;
 /**
@@ -9,7 +10,7 @@ use main\app\classes\SettingsLogic;
  * @author sven
  *
  */
-class MessageModel extends CacheModel
+class UserMessageModel extends CacheModel
 {
     public $prefix = 'user_';
 
@@ -17,7 +18,7 @@ class MessageModel extends CacheModel
 
     public $primaryKey = 'id';
 
-    const DATA_KEY = 'msg/';
+    const DATA_KEY = 'user_message/';
 
     public $module_key = '';
 
@@ -61,6 +62,12 @@ class MessageModel extends CacheModel
      */
     const TYPE_ANNOUS = 2;
 
+    /**
+     * 系统升级
+     * @var int
+     */
+    const TYPE_UPGRADE = 3;
+
 
     const LAST_UNREADED_LIMIT = 5;
 
@@ -76,7 +83,7 @@ class MessageModel extends CacheModel
     public function __construct($uid = 0)
     {
         parent::__construct($uid);
-        $this->module_key = MessageModel::DATA_KEY . 'module/' . $uid;
+        $this->module_key = UserMessageModel::DATA_KEY . 'module/' . $uid;
     }
 
     /**
@@ -125,7 +132,7 @@ class MessageModel extends CacheModel
      */
     public function addMessage($info)
     {
-        $ret = parent::insertByKey($this->getTable(), $info);
+        $ret = parent::insertByKey($info);
         if ($ret) {
             $this->clearModuleCache();
         }
@@ -134,31 +141,24 @@ class MessageModel extends CacheModel
 
     /**
      *
-     * @param int $uid
-     * @param string $where
+     * @param array $conditionArr
      * @param int $page
      * @param int $pagesize
      * @param string $order
      * @param string $orderby
      * @return  mixed[]
      */
-    public function getMessagesByWhere($uid, $where, $page, $pagesize = 20, $orderby = 'id', $sort = 'DESC')
+    public function filter($conditionArr, $page, $pagesize = 20, $orderby = 'id', $sort = 'DESC')
     {
         $start = $pagesize * ($page - 1);
-
-        $table = $this->getTable();
-
-        $total = $this->getCountMessage($uid, $where);
+        $total = $this->getCountMessage($conditionArr);
         $totalPages = ceil($total / $pagesize);
         if (!$total) {
             $totalPages = 0;
         }
-
         $fields = ' id,direction,title, sender_uid,sender_name,receiver_uid,type,readed,create_time ';
-        //$where .= " ORDER BY $order $orderby LIMIT $start,$pagesize ";
         $limit = "$start, $pagesize";
-        $messages = parent::getRowsByKey($table, $fields, $where, null, $orderby, $sort, $limit);
-
+        $messages = parent::getRows($fields, $conditionArr, null, $orderby, $sort,  $limit);
         return [
             $total,
             $totalPages,
@@ -219,7 +219,7 @@ class MessageModel extends CacheModel
     /**
      * 取出总数
      * @param int $uid
-     * @param string $where
+     * @param array $where
      * @return number
      */
     public function getCountMessage($where)
@@ -242,7 +242,7 @@ class MessageModel extends CacheModel
             return $memFlag;
         }
 
-        $readed = MessageModel::READED_NO;
+        $readed = UserMessageModel::READED_NO;
         $where = array('receiver_uid' => $uid);
         //$where = " Where receiver_uid='$uid'  ";
         if ($readed != 2) {
@@ -250,14 +250,14 @@ class MessageModel extends CacheModel
             $where['readed'] = $readed;
         }
         $fields = "COUNT(*) as cc ";
-        $total = parent::getOne($this->getTable(), $fields, $where);
+        $total = parent::getOne($fields, $where);
         // v( $this->db->queryStr  );
         //v( $total );
         if (!$total) {
             $total = 0;
         }
         $module = self::DATA_KEY . 'module/' . $uid;
-        CacheKeyModel::getInstance()->saveCache($module, $key, $total);
+        //CacheKeyModel::getInstance()->saveCache($module, $key, $total);
         return (int)$total;
     }
 
@@ -271,7 +271,7 @@ class MessageModel extends CacheModel
             return $memFlag;
         }
 
-        $readed = MessageModel::READED_NO;
+        $readed = UserMessageModel::READED_NO;
         //$where = " Where receiver_uid='$uid' AND type='$type' ";
         $where = array('receiver_uid' => $uid, 'type' => $type);
         if ($readed != 2) {
@@ -284,7 +284,7 @@ class MessageModel extends CacheModel
             $total = 0;
         }
         $module = self::DATA_KEY . 'module/' . $uid;
-        CacheKeyModel::getInstance()->saveCache($module, $key, $total);
+        CacheKeyModel::getInstance()->clearCache($module);
         return (int)$total;
     }
 
@@ -296,10 +296,9 @@ class MessageModel extends CacheModel
     public function getMessage($id)
     {
         $fields = '*';
-        //$where = "WHERE id=$id";
         $where = array('id' => $id);
         $key = self::DATA_KEY . 'id/' . $id;
-        $result = parent::getRowByKey($fields, $where, false, $key);
+        $result = parent::getRowByKey($fields, $where, $key);
         return $result;
     }
 
@@ -315,7 +314,7 @@ class MessageModel extends CacheModel
         //$where = "WHERE id=$id";
         $where = array('id' => $id);
         $key = self::DATA_KEY . 'id/' . $id;
-        list($ret) = parent::updateByKey($table, $where, $row, $key);
+        list($ret) = parent::updateByKey($where, $row, $key);
         if ($ret) {
             $this->clearModuleCache();
         }
@@ -333,7 +332,7 @@ class MessageModel extends CacheModel
         //$where = "WHERE id=$id";
         $where = array('id' => $id);
         $key = self::DATA_KEY . 'id/' . $id;
-        $ret = parent::deleteByKey($table, $where, $key);
+        $ret = parent::deleteByKey($where, $key);
         if ($ret) {
             $this->clearModuleCache();
         }
@@ -351,7 +350,7 @@ class MessageModel extends CacheModel
         //$where  = "WHERE receiver_uid=$uid";
         $where = array('receiver_uid' => $uid);
         $key = '';
-        $ret = parent::deleteByKey($table, $where, $key);
+        $ret = parent::deleteByKey($where, $key);
         if ($ret) {
             $this->clearModuleCache();
         }

@@ -2,15 +2,15 @@
 <html class="" lang="en">
 <head  >
     {% include 'twig/common/header/include.twig' %}
-
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
+
 <section class="has-sidebar page-layout max-sidebar">
     {% include 'twig/common/body/page-left.twig' %}
 
     <div class="page-layout page-content-body background-white">
-
 <header class="navbar navbar-gitlab">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
     <div class="container-fluid">
@@ -30,15 +30,16 @@
         <div class=" ">
             <div class="content padding-0" id="content-body">
                 <div class="user-profile">
-                    <div class="cover-block user-cover-block">
+                    <div class="cover-block user-cover-block ">
                         <div class="cover-controls">
-                            <a class="btn btn-gray has-tooltip" title="Edit profile" aria-label="Edit profile" href="/user/profile_edit">
+                            <a class="btn btn-gray has-tooltip" title="编辑资料" aria-label="Edit profile" href="/user/profile_edit">
                                 <i class="fa fa-pencil"></i>
                             </a>
                             <!--<a class="btn btn-gray has-tooltip" title="Subscribe" aria-label="Subscribe" href="/sven.atom?private_token=vyxEf937XeWRN9gDqyXk">
                                 <i class="fa fa-rss"></i>
                             </a>-->
                         </div>
+
                         {% include 'twig/user/common-profile-header.twig' %}
 
                         <div class="scrolling-tabs-container">
@@ -49,31 +50,44 @@
                                 <i class="fa fa-angle-right"></i>
                             </div>
 
-                            {% set profile_nav='activity' %}
+                            {% set profile_nav='msg_system' %}
                             {% include  'twig/user/common-profile-nav.twig' %}
                         </div>
                     </div>
                     <div class="container-fluid container-limited">
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="activity">
+                        <div class="content" id="content-body">
+                            <form id="msg_filter_form" action=""  accept-charset="UTF-8" method="get">
 
-                                <div id="user-calendar" class="calendar-container user-calendar">
+                            <input name="page" id="filter_page" type="hidden" value="1">
+                            <input name="range" id="filter_range" type="hidden" value="">
+                            <input name="order_by" id="filter_order_by" type="hidden" value="id">
+                            <input name="sort" id="filter_sort" type="hidden" value="desc">
+                            </form>
+                            <div class="top-area">
+                                <ul class="nav-links">
+                                    <li class="active">
+                                        <a href="#">全部</a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">未读消息</a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">已读消息</a>
+                                    </li>
 
-                                </div>
-                                <div  id="activity_list" data-href="/sven">
+                                </ul>
+                            </div>
+                            <div class="content-list">
+                                <div class="panel panel-default panel-small panel-without-border">
+                                    <ul class="issues-content-list" id="ul_msgs" style="position: relative;">
 
+                                    </ul>
                                 </div>
-                                <div id="more_activity" class="loading hide">
-                                    <a class="text-plain" href="#" style="font-size: 14px">更多</a>
-                                </div>
-                                <div class="loading hide">
-                                    <i class="fa fa-spinner fa-spin"></i>
+                                <div class="gl-pagination" id="pagination">
+
                                 </div>
                             </div>
-                            <div class="tab-pane" id="groups"></div>
-                            <div class="tab-pane" id="projects">
-                            </div>
-                            <div class="tab-pane" id="snippets"></div>
+
                         </div>
                         <div class="loading-status">
                             <div class="loading hide">
@@ -91,39 +105,42 @@
 
     </div>
 </section>
-{% verbatim %}<script id="activity_tpl" type="text/html" >
-    <ul class="projects-list">
-    {{#activity_list}}
-        <li class="project-row">
-            <div class="project-details">
-                <h3 class="prepend-top-0 append-bottom-0"><span class="label btn-success" style="padding: 4px;">{{action}}</span> {{{title}}}</h3>
-                <div class="description prepend-top-5">
-                    <p dir="auto" style="color:#999;">{{{content}}}</p>
-                </div>
+
+{% verbatim %}<script id="msg_tpl" type="text/html" >
+
+    {{#msgs}}
+    <li class="issue-item"  >
+        <div class="issuable-avatar">
+            <span class="list-item-name">
+                <img width="26px" height="26px" class=" float-none" title="Masterlab" src="/gitlab/images/logo.png">
+            </span>
+        </div>
+        <div class="issuable-main-info">
+            <div class="issue-title title">
+        <span class="issue-title-text" dir="auto">
+            <a class="responsive_title" data-id="{{id}}" href="#">
+                {{title}}
+            </a>
+        </span>
             </div>
-            <div class="event-title">
-                <span class="author_name">
-                    <a title="Abby Matthews" href="/amatthews">{{display}}</a>
-                </span>
-                <span class="pushed"></span>
+            <div class="issuable-info" style="font-size:12px;font-weight: 400;color:#707070;">
+                <span style="color:blueviolet;font-size: 10px">{{sender_name}}</span>
+                &nbsp;
+                <span class="issuable-authored">
+            ·
+            <a class="author-link js-user-link  " style="font-size: 10px;color:#707070;"  href="#"><span class="author">{{source}}</span></a>
+            <span style="color:#ad93ac" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{created_text}}">{{created_text}}</span>
+
+            </span>
+            {{#if_eq readed 0 }}
+                <span style="color:#ff0000;font-size: 10px">未读</span>
+            {{/if_eq}}
             </div>
-            <div class="event-body">
-                <div class="commit-row-title">
-                    {{detail}}
-                </div>
-            </div>
-            <div class="controls">
-                <time class="js-timeago js-timeago-render-my" title=""
-                      datetime="{{time_full}}"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      data-container="body"
-                      data-original-title="{{time_full}}"
-                      data-tid="449">{{time_text}}</time>
-            </div>
-        </li>
-    {{/activity_list}}
-    </ul>
+        </div>
+    </li>
+
+    {{/msgs}}
+
 </script>{% endverbatim %}
 <style>
     text.month-name,
@@ -155,33 +172,21 @@
     }
     .calendar-heatmap {
         box-sizing: initial;
-        overflow: visible !important;
     }
 </style>
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/activity.js" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/user/msg_system.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/lib/moment.js" charset="utf-8"></script>
-<script src="/dev/lib/d3-v5/d3.v3.min.js" charset="utf-8"></script>
-<script src="/dev/lib/calendar-heatmap/src/calendar-heatmap.js"></script>
 <script type="text/javascript">
 
-    var $activity = null;
-    var _cur_page = 1;
+    var $msgSystemAjax = null;
     var _user_id = '{{user_id}}';
     $(function() {
+        $msgSystemAjax = new MsgSystem( {} );
+        $msgSystemAjax.filter(  '/user/fetchMsgSystems', 'msg_tpl',  'ul_msgs' );
 
-
-        var options = {
-            user_id:_user_id
-        }
-        window.$activity = new Activity( options );
-        window.$activity.fetchByUser( window._cur_page );
-        window.$activity.fetchCalendarHeatmap( );
-
-        $('#more_activity').bind('click', function(){
-            window.$activity.fetchByUser( window._cur_page +1 );
-        })
     });
 </script>
 
