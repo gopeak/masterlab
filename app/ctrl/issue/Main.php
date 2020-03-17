@@ -241,7 +241,9 @@ class Main extends BaseUserCtrl
         $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
         $startDate = $_GET['start_date'];
         $dueDate = $_GET['due_date'];
-        $duration = getWorkingDays($startDate, $dueDate, $holidays, $extraWorkerDays);
+        $ganttSetting = (new ProjectGanttSettingModel())->getByProject($projectId);
+        $workDates = json_decode($ganttSetting['work_dates'], true);
+        $duration = getWorkingDays($startDate, $dueDate, $workDates, $holidays, $extraWorkerDays);
 
         $this->ajaxSuccess('ok', $duration);
     }
@@ -1314,7 +1316,9 @@ class Main extends BaseUserCtrl
         if(!empty($params['start_date']) && !empty($params['due_date'])){
             $holidays = (new HolidayModel())->getDays($params['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
-            $info['duration'] = getWorkingDays($params['start_date'], $params['due_date'], $holidays, $extraWorkerDays);
+            $ganttSetting = (new ProjectGanttSettingModel())->getByProject($params['project_id']);
+            $workDates = json_decode($ganttSetting['work_dates'], true);
+            $info['duration'] = getWorkingDays($params['start_date'], $params['due_date'], $workDates, $holidays, $extraWorkerDays);
         }
 
         $this->initAddGanttWeight($params, $info);
@@ -1574,7 +1578,9 @@ class Main extends BaseUserCtrl
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
             $updatedIssue = $issueModel->getById($issueId);
             $updateDurationArr = [];
-            $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $holidays, $extraWorkerDays);
+            $ganttSetting = (new ProjectGanttSettingModel())->getByProject($issue['project_id']);
+            $workDates = json_decode($ganttSetting['work_dates'], true);
+            $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $workDates, $holidays, $extraWorkerDays);
             // print_r($updateDurationArr);
             list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
             if($ret){

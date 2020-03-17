@@ -82,6 +82,14 @@ var Gantt = (function () {
                     $('#extra_holidays_list' ).html(result);
                     $('#extra_holiday_dates').val(JSON.stringify(resp.data.extra_holidays));
                     Gantt.prototype.bindRemoveExtraHolidayDate();
+
+                    if(!is_empty(resp.data.work_dates)){
+                        for (var i = 0; i < resp.data.work_dates.length; i++) {
+                            let value = resp.data.work_dates[i];
+                            $("#work_dates"+value).attr("checked",true);
+                        }
+                    }
+
                     $('.selectpicker').selectpicker('refresh');
                     $('#modal-setting').modal('show');
                 }else{
@@ -131,6 +139,11 @@ var Gantt = (function () {
         let post_data = {source_type:source_type_value, holiday_dates:holiday_dates_str,extra_holiday_dates:extra_holiday_dates_str}
         post_data['is_display_backlog'] = is_display_backlog_value;
         post_data['hide_issue_types'] = $('#hide_issue_types').val();
+        let work_dates = [];
+        $("input[name='work_dates']:checked").each(function(){
+            work_dates.push($(this).val());
+        });
+        post_data['work_dates'] = work_dates;
         $.ajax({
             type: method,
             dataType: "json",
@@ -528,7 +541,7 @@ var Gantt = (function () {
                                 window.ge.tasks[i].duration = parseInt(resp.data.duration);
                                 try{
                                     window.ge.beginTransaction();
-                                    window.ge.changeTaskDates(task, dates.start, dates.end);
+                                    window.ge.changeTaskDates(tsk, dates.start, dates.end);
                                     window.ge.endTransaction();
                                 }catch (e) {
                                     console.log(e.name,e.message);

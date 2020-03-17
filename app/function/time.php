@@ -89,13 +89,21 @@ if (!function_exists('msectime')) {
  * var_dump(getWorkingDays($startDate,$endDate,$holidays,$addDays));
  * @param $startDate
  * @param $endDate
+ * @param $workDates
  * @param $holidays
+ * @param $addDays
  * @return float|int
  */
-function getWorkingDays($startDate, $endDate, $holidays = [], $addDays = [])
+function getWorkingDays($startDate, $endDate, $workDates, $holidays = [], $addDays = [])
 {
     if ($startDate == '000-00-00' || $endDate == '000-00-00') {
         return 0;
+    }
+    if(!is_array($workDates)){
+        $workDates = json_decode($workDates, true);
+    }
+    if(is_null($workDates)){
+        $workDates = [1,2,3,4,5];
     }
     $startUnixTime = strtotime($startDate);
     $endUnixTime = strtotime($endDate);
@@ -126,9 +134,13 @@ function getWorkingDays($startDate, $endDate, $holidays = [], $addDays = [])
         $week = date('w', $time);
         $dateArr[] = $date;
         if (!in_array($date, $addDays)) {
-            if (in_array($date, $holidays) || $week == 0 || $week == 6) {
-                // echo "非工作日:{$date}\n";
+            // 节假日不算
+            if (in_array($date, $holidays) ) {
                 $finalDays--;
+            }else{
+                if (!in_array($week, $workDates) ) {
+                    $finalDays--;
+                }
             }
         }
     }

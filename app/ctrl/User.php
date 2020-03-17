@@ -167,6 +167,15 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/user_filters.php', $data);
     }
 
+    public function pageSysMsgs()
+    {
+        $data = [];
+        $data['title'] = '系统消息';
+        $data['nav'] = 'sys_msg';
+        $data['projects'] = ConfigLogic::getAllProjects();
+        $this->render('twig/user/sys_msg.twig', $data);
+    }
+
     public function fetchFollowIssues()
     {
         $userId = UserAuth::getInstance()->getId();
