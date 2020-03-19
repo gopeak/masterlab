@@ -3,6 +3,7 @@
 <head  >
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <link rel="stylesheet" href="/dev/css/issue/msg-list.css?v={{_version}}"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
@@ -97,7 +98,39 @@
                     </div>
                 </div>
 
+                <div class="float-right-side">
+                    <span class="close-float-panel float-right">
+                        <i class="fa fa-times"></i>
+                    </span>
 
+                    <div class="issuable-header clearfix" id="issuable-header">
+                        <h3 class="page-title">
+                            <span>标题</span><a href="/issue/detail/index/415" id="a_issue_key">#erp415</a>
+                        </h3>
+
+                        <div class="issuable-meta">
+                            由
+                            <strong>
+                                <a class="author_link  hidden-xs" href="/sven">
+                                    <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt="" src="http://pm.888zb.com/attachment/avatar/1.png?t=1562341370">
+                                    <span id="author" class="author has-tooltip" title="" data-placement="top" data-original-title="@master">Master</span></a>
+                                <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">
+                                    <span class="author">@master</span></a>
+                            </strong>
+                            于
+                            <time class="js-time" datetime="1584585506" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2020-03-19  10:03:26">7 小时前</time>
+                            创建
+                        </div>
+                    </div>
+
+                    <div class="issue-detail detail-page-description">
+                        <h3 class="issue-detail-title">描述</h3>
+
+                        <div class="description-view">
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -105,6 +138,34 @@
 
     </div>
 </section>
+
+{% verbatim %}<script type="text/html" id="issuable-header_tpl">
+        <h3 class="page-title">
+            <span>{{issue.summary}}</span><a href="/issue/detail/index/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a>
+        </h3>
+
+        <div class="issuable-meta">
+            由
+            <strong>
+                <a class="author_link  hidden-xs" href="/sven">
+                    <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt=""
+                         src="{{issue.creator_info.avatar}}">
+                    <span id="author" class="author has-tooltip"
+                          title="@{{issue.creator_info.username}}" data-placement="top">{{issue.creator_info.display_name}}</span></a>
+                <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">
+                    <span class="author">@{{issue.creator_info.username}}</span></a>
+            </strong>
+            于
+            <time class="js-time"
+                  datetime="{{issue.created}}"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  data-container="body"
+                  data-original-title="{{issue.created_text}}">
+            </time>
+            创建
+        </div>
+    </script>{% endverbatim %}
 
 {% verbatim %}<script id="msg_tpl" type="text/html" >
 
@@ -187,6 +248,13 @@
         $msgSystemAjax = new MsgSystem( {} );
         $msgSystemAjax.filter(  '/user/fetchMsgSystems', 'msg_tpl',  'ul_msgs' );
 
+        $("#ul_msgs").on("click", ".issue-item", function () {
+            $(".float-right-side").show();
+        });
+
+        $("#content-body").on("click", ".close-float-panel", function () {
+            $(".float-right-side").hide();
+        });
     });
 </script>
 

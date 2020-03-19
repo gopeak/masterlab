@@ -262,6 +262,7 @@ var FilteredSearch = (function () {
                    async: true,
                    url: apiUrl,
                    success: function (resp) {
+                       console.log("dd", resp);
                        auth_check(resp);
                        if (resp.ret != '200') {
                            notify_error(resp.msg);

@@ -1,0 +1,130 @@
+html, body, .page-content-body {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#content-body {
+    overflow-x: hidden;
+}
+
+#content-body .float-right-side {
+     display: none;
+     width: 45%;
+     min-width: 350px;
+     max-width: 500px;
+     position: absolute;
+     top: 10%;
+     right: 0;
+     background: #fff;
+     box-shadow: -1px 0 8px rgba(0, 0, 0, 0.5), 0 -1px 4px rgba(0, 0, 0, 0.3);
+     padding: 0 20px 20px;
+     overflow: auto;
+     height: 88%;
+     animation-name: fade-in;
+     animation-duration: 0.75s;
+     min-height: 560px;
+     z-index: 101;
+ }
+
+.close-float-panel {
+    position: absolute;
+    top: 15px;
+    right: 8px;
+    font-size: 16px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.float-right-side .issuable-header {
+    width: 90%;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    float: none;
+}
+
+.float-right-side .issue-detail .issue-detail-title{
+    font-size: 14px;
+    line-height: 32px;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 10px;
+}
+
+.float-right-side .description-view {
+    padding: 20px 0;
+    font-size: 14px;
+    text-align: left;
+    line-height: 1.6;
+}
+
+.float-right-side .description-view img {
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    #content-body .issuable-actions {
+        float: unset;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+        right: -100%;
+    }
+    50% {
+        opacity: 0;
+        right: -50%;
+    }
+    100% {
+        opacity: 1;
+        right: 0;
+    }
+}
+
+@-webkit-keyframes fade-in {
+    0% {
+        opacity: 0;
+        right: -100%;
+    }
+    50% {
+        opacity: 0;
+        right: -50%;
+    }
+    100% {
+        opacity: 1;
+        right: 0;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 0;
+        right: 0;
+    }
+    50% {
+        opacity: 0;
+        right: -50%;
+    }
+    100% {
+        opacity: 1;
+        right: -100%;
+    }
+}
+
+@-webkit-keyframes fade-out {
+    0% {
+        opacity: 0;
+        right: 0;
+    }
+    50% {
+        opacity: 0;
+        right: -50%;
+    }
+    100% {
+        opacity: 1;
+        right: -100%;
+    }
+}
+
+
