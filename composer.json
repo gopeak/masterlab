@@ -1,11 +1,19 @@
 {
+  "name": "gopeak/masterlab",
+  "type": "project",
+  "description": "Masterlab项目管理工具",
+  "keywords": [
+		"masterlab",
+		"项目管理工具"
+	],
+
   "require": {
     "gregwar/captcha": "v1.1.5",
     "phpmailer/phpmailer": "v5.2.27",
     "katzgrau/klogger": "v1.2.1",
     "endroid/qr-code": "3.4.0",
     "php-curl-class/php-curl-class": "v7.3.0",
-    "hornet/framework": "1.0.2",
+    "hornet/framework": "1.0.4",
     "phpoffice/phpspreadsheet": "1.9.0",
     "twig/twig": "v2.12.2",
     "ext-json": "*",
