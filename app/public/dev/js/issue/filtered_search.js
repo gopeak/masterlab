@@ -2,67 +2,88 @@ var FilteredSearch = (function () {
     var _searches =  [
         {
             key: "优先级",
-            type: "string",
+            name: "priority",
+            api: "/config/priority",
             symbol: ""
         },
         {
             key: "状态",
-            type: "string",
+            name: "status",
+            api: "/config/status",
             symbol: ""
         },
         {
             key: "迭代",
-            type: "string",
+            name: "sprint",
+            api: "/config/sprint?project_id=" + _cur_project_id,
             symbol: ""
         },
         {
             key: "类型",
-            type: "string",
+            name: "issue_type",
+            api: "/config/issueType?project_id=" + _cur_project_id,
             symbol: ""
         },
         {
             key: "模块",
-            type: "string",
+            name: "module",
+            api: "/config/module?project_id=" + _cur_project_id,
             symbol: ""
         },
         {
             key: "解决结果",
-            type: "string",
+            name: "resolve",
+            api: "/config/resolve",
             symbol: ""
         },
         {
             key: "报告人",
-            type: "string",
+            name: "author",
+            json: "users",
             symbol: "@"
         },
         {
             key: "经办人",
-            type: "string",
+            name: "assignee",
+            json: "users",
             symbol: "@"
         }];
 
-    var mapping = {
-        '优先级': "#js-dropdown-priority",
-        '状态': "#js-dropdown-status",
-        '迭代': "#js-dropdown-sprint",
-        '类型': "#js-dropdown-issue_type",
-        '模块': "#js-dropdown-module",
-        '解决结果': "#js-dropdown-resolve",
-        '报告人': "#js-dropdown-author",
-        '经办人': "#js-dropdown-assignee",
-        hint: "#js-dropdown-hint"
-    }
+    // var mapping = {
+    //     '优先级': "#js-dropdown-priority",
+    //     '状态': "#js-dropdown-status",
+    //     '迭代': "#js-dropdown-sprint",
+    //     '类型': "#js-dropdown-issue_type",
+    //     '模块': "#js-dropdown-module",
+    //     '解决结果': "#js-dropdown-resolve",
+    //     '报告人': "#js-dropdown-author",
+    //     '经办人': "#js-dropdown-assignee",
+    //     hint: "#js-dropdown-hint"
+    // }
 
     var _currentSearchesArr = [];
     var _currentSearchesParams = [];
     var _currentSearchesStr = "";
     var _urlParams = {};
-    function FilteredSearch(urlParams) {
+    var _dropdownHtml = {};
+    var _cur_project_id = "";
+    var _issueConfig = {};
+
+    function FilteredSearch(urlParams, issueConfig, project_id) {
+        _cur_project_id = project_id;
+        _issueConfig = issueConfig;
         IssueMain.prototype.getCurrentSearches();
         IssueMain.prototype.setRecentStorage();
         IssueMain.prototype.setCurrentSearch(_currentSearchesArr);
         IssueMain.prototype.setRecentSearch();
+        IssueMain.prototype.getHintData();
+        IssueMain.prototype.getDropdownData("状态");
         _urlParams = urlParams;
+
+        _searches.forEach(function (item) {
+            var $download = $("#js-dropdown-" + item.name);
+            _dropdownHtml[item.key] = $.trim($download.find(".filter-dropdown").html());
+        });
 
         $(".tokens-container").on("click.close", ".selectable-close", function () {
             $(this).parents(".js-visual-token").remove();
@@ -193,6 +214,72 @@ var FilteredSearch = (function () {
                 }
             });
             searches[encodeURIComponent(name)] = value;
+        });
+    };
+
+    IssueMain.prototype.getHintData = function () {
+        var hintArr = [];
+        var $search = $(".tokens-container .filtered-search-token");
+        $(".filtered-search-input-dropdown-menu:not(.hint-dropdown)").each(function (e) {
+            var $this = $(this);
+            var isSearched = false;
+
+            $search.each(function (e) {
+               var name = $(this).find(".name").text();
+               if(name === $this.data("hint")) {
+                   isSearched = true;
+               }
+            });
+
+            if (!isSearched) {
+                hintArr.push({
+                    icon: $this.data("icon"),
+                    name: $this.data("hint"),
+                    tag: $this.data("tag")
+                });
+            }
+        });
+        console.log(hintArr);
+    };
+
+    IssueMain.prototype.getDropdownData = function (name) {
+        var html = "";
+        _searches.forEach(function (n) {
+            var apiUrl = "";
+            var json = "";
+
+           if (n.key === name) {
+               apiUrl = n.api || "";
+               json = n.json ? _issueConfig[n.key] : ""
+           }
+
+           console.log(apiUrl, json);
+
+           if (apiUrl) {
+               $.ajax({
+                   type: 'get',
+                   dataType: "json",
+                   async: true,
+                   url: apiUrl,
+                   success: function (resp) {
+                       auth_check(resp);
+                       if (resp.ret != '200') {
+                           notify_error(resp.msg);
+                           return;
+                       }
+
+                       console.log("resp", resp);
+                       notify_success('操作成功');
+                   },
+                   error: function (res) {
+                       notify_error("请求数据错误" + res);
+                   }
+               });
+           } else if (json){
+               for (var [key, value] of Object.entries(json)) {
+                   console.log(value);
+               }
+           }
         });
     };
 

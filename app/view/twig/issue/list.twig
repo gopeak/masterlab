@@ -2332,7 +2332,7 @@
                     }
 
                     window.$IssueMain = new IssueMain(options);
-                    window.$FilteredSearch = new FilteredSearch(urls.searchObject);
+                    window.$FilteredSearch = new FilteredSearch(urls.searchObject, _issueConfig, _cur_project_id);
                     if(is_adv_filter==='0' || is_empty(adv_filter_json)){
                         window.$IssueMain.fetchIssueMains(getdata);
                     }else{
