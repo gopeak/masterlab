@@ -110,7 +110,7 @@ class CacheModel extends DbModel
      *
      * @param string $table 表名
      * @param string $field 字段名
-     * @param string $where 查询条件
+     * @param array $where 查询条件
      * @param string $key 缓存键名
      * @return mixed 返回查询的字段值，失败返回false
      * @throws \Exception

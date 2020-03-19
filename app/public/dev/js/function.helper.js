@@ -33,6 +33,15 @@ function getArrayValue(arr, $key, value ) {
     return null;
 }
 
+function in_array(value, arr ) {
+    for (var i = 0; i < arr.length; i++) {
+        if (value === arr[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function getObjectValue(objs, id) {
     var obj = null;
     for (var i in objs) {

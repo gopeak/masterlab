@@ -408,6 +408,24 @@ class UserAuth
         return array(UserModel::LOGIN_CODE_OK, $user);
     }
 
+    public function checkLdapByUsername($account, $password)
+    {
+        $userModel = UserModel::getInstance('');
+        $user = $userModel->getByUsername($account);
+        $ldapLogic = new LdapLogic();
+        list($ret, $ldapUserInfo) =  $ldapLogic->auth($account, $password);
+        if(!$ret){
+            return array(UserModel::LOGIN_CODE_ERROR, $ldapUserInfo);
+        }
+        if(!empty($ldapUserInfo) && empty($user)){
+            $userModel->addUser($ldapUserInfo);
+            $user = $userModel->getByUsername($account);
+        }
+        return array(UserModel::LOGIN_CODE_OK, $user);
+    }
+
+
+
     /**
      * 只允许用户在一个地方登录,踢掉当前用户的其他登录状态，直接删除session文件
      * @param $uid

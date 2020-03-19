@@ -69,8 +69,12 @@
                             </ul>
                             <div class="nav-controls margin-md-l">
                                 <a class="btn btn-new new-project-item-select-button js-key-create" data-target="#modal-user_add" data-toggle="modal" href="#modal-user_add">
-                                        <i class="fa fa-plus"></i> 新增
+                                        <i class="fa fa-plus"></i> 新 增
                                     </a>
+                                <a class="btn has-tooltip " title="邀请用户加入"   id="btn-invite">
+                                    <i class="fa fa-send-o"></i> 邀 请
+                                </a>
+
                             </div>
                             <div class="nav-controls">
                                 <form id="user_filter_form" action="" onsubmit="return fetchUsers('/admin/user/filter','user_tpl','render_id')" accept-charset="UTF-8" method="get">
@@ -114,9 +118,7 @@
                                     <a class="btn"  href="#"  onclick="userFormReset()" >
                                         <i class="fa fa-undo"></i>
                                     </a>
-                                    <a class="btn has-tooltip hide" title="" href="#" data-original-title="邀请用户">
-                                        <i class="fa fa-rss"></i>
-                                    </a>
+
                                 </div>
                             </div>
                         </div>
@@ -350,6 +352,70 @@
     </form>
 </div>
 
+<div class="modal" id="modal-invite">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          action="/invite/send"
+          accept-charset="UTF-8"
+          method="post"
+          id="form-invite">
+
+        <div class="modal-dialog">
+            <div class="modal-content modal-middle">
+                <div class="modal-header">
+                    <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">邀请用户加入</h3>
+                </div>
+
+                <div class="modal-body" style="min-height: 400px;height: 400px">
+
+                    <div class="form-group">
+                        <div class="col-sm-3">Email（多个以 , 分隔）：</div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <input id="invite_email" style="margin-left: 15px;"  type="text" class="form-control" name="emails"  value="" />
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-3">项目角色：</div>
+                        <div class="col-sm-4">
+                            <select id="invite_project_id" name="project_id" class="selectpicker form-control"
+                                    dropdownAlignRight="true" title="请选择">
+                            </select>
+                        </div>
+                        <div class="col-sm-4"  >
+                            <div id="div_project_roles"  >
+                                <select id="invite_project_roles" name="project_roles" class="selectpicker form-control"  multiple  dropdownAlignRight="true" title="项目角色"></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="invite_title"></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <span id="invite_response" style="margin-left: 15px;color: red"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer  form-actions">
+                    <button name="submit" type="button" class="btn btn-save js-key-modal-enter2" id="btn-invite_send">发送邀请</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="modal" id="modal-user_group">
     <form id="form-update_user_group"
           class="js-quick-submit js-upload-blob-form form-horizontal"
@@ -549,6 +615,84 @@
             userJoinGroup();
         });
 
+        function initRoles(project_id){
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async: true,
+                url: root_url + 'project/role/fetchAll/'+project_id,
+                data: {},
+                success: function (resp) {
+                    var el_select_project_roles = $('#invite_project_roles');
+                    el_select_project_roles.empty();
+                    for (let i = 0; i < resp.data.roles.length; i++) {
+                        var row = resp.data.roles[i];
+                        var id = row.id;
+                        var title = row.name;
+                        let selected = '';
+                        if (i===0) {
+                            selected = 'selected';
+                        }
+                        var opt = "<option  value='" + id + "' " + selected + ">" + title + "</option>";
+                        //console.log(opt)
+                        el_select_project_roles.append(opt);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        }
+        $("#invite_project_id").bind("change", function () {
+            console.log($(this).val())
+            let project_id = $(this).val();
+            initRoles(project_id);
+        });
+
+        $('#btn-invite').bind('click', function () {
+            $('#modal-invite').modal('show');
+            //console.log(sprints, id_arr)
+            var id_arr = [];
+            var el_select_project = $('#invite_project_id');
+            el_select_project.empty();
+            var first_project_id = '';
+            for (let i = 0; i < _issueConfig.projects.length; i++) {
+                var row = _issueConfig.projects[i];
+                var id = row.id;
+                var title = row.name;
+                let selected = '';
+                if (i===0) {
+                    selected = 'selected';
+                    first_project_id = id;
+                }
+                var opt = "<option  value='" + id + "' " + selected + ">" + title + "</option>";
+                //console.log(opt)
+                el_select_project.append(opt);
+            }
+            initRoles(first_project_id);
+            $('.selectpicker').selectpicker('refresh');
+        });
+
+        $('#btn-invite_send').bind('click', function () {
+            //console.log(sprints, id_arr)
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                async: true,
+                url: root_url + 'invite/send',
+                data: $('#form-invite').serialize(),
+                success: function (resp) {
+
+                     notify_success(resp.msg, resp.data);
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        });
+
+
         $("#state-all").click(function(){
             $('.state_li').removeClass('active');
             $(this).addClass('active');
@@ -599,7 +743,6 @@
                     trigger: 'click'
                 }
             ])
-
 
         })
 
