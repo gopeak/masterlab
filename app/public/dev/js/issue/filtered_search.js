@@ -49,17 +49,17 @@ var FilteredSearch = (function () {
             symbol: "@"
         }];
 
-    // var mapping = {
-    //     '优先级': "#js-dropdown-priority",
-    //     '状态': "#js-dropdown-status",
-    //     '迭代': "#js-dropdown-sprint",
-    //     '类型': "#js-dropdown-issue_type",
-    //     '模块': "#js-dropdown-module",
-    //     '解决结果': "#js-dropdown-resolve",
-    //     '报告人': "#js-dropdown-author",
-    //     '经办人': "#js-dropdown-assignee",
-    //     hint: "#js-dropdown-hint"
-    // }
+    var mapping = {
+        '优先级': "#js-dropdown-priority",
+        '状态': "#js-dropdown-status",
+        '迭代': "#js-dropdown-sprint",
+        '类型': "#js-dropdown-issue_type",
+        '模块': "#js-dropdown-module",
+        '解决结果': "#js-dropdown-resolve",
+        '报告人': "#js-dropdown-author",
+        '经办人': "#js-dropdown-assignee",
+        hint: "#js-dropdown-hint"
+    }
 
     var _currentSearchesArr = [];
     var _currentSearchesParams = [];
@@ -68,6 +68,7 @@ var FilteredSearch = (function () {
     var _dropdownHtml = {};
     var _cur_project_id = "";
     var _issueConfig = {};
+    var _searchesObject = {};
 
     function FilteredSearch(urlParams, issueConfig, project_id) {
         _cur_project_id = project_id;
@@ -77,13 +78,17 @@ var FilteredSearch = (function () {
         IssueMain.prototype.setCurrentSearch(_currentSearchesArr);
         IssueMain.prototype.setRecentSearch();
         IssueMain.prototype.getHintData();
-        IssueMain.prototype.getDropdownData("状态");
+        // IssueMain.prototype.getDropdownData("解决结果");
         _urlParams = urlParams;
 
         _searches.forEach(function (item) {
-            var $download = $("#js-dropdown-" + item.name);
-            _dropdownHtml[item.key] = $.trim($download.find(".filter-dropdown").html());
+            var str = "#js-dropdown-" + item.name + " .filter-dropdown";
+            _dropdownHtml[item.key] = $.trim($(str).html());
+            _searchesObject[item.key] = str;
         });
+
+        _dropdownHtml.hint = $.trim($("#js-dropdown-hint .filter-dropdown").html());
+        _searchesObject.hint = "#js-dropdown-hint .filter-dropdown";
 
         $(".tokens-container").on("click.close", ".selectable-close", function () {
             $(this).parents(".js-visual-token").remove();
@@ -93,9 +98,34 @@ var FilteredSearch = (function () {
             $(".tokens-container .filtered-search-token").remove();
         });
 
+        $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-dropdown-item", function (e) {
+            var $item = $(this).find(".filtered-search-history-dropdown-token");
+            var temp = [];
+
+            $item.each(function (e) {
+                var $this = $(this);
+                var name = $this.find(".name").text();
+                var value = $this.find(".value").text();
+                temp.push({
+                    name,
+                    value
+                });
+            });
+
+            // IssueMain.prototype.setCurrentSearch(temp);
+        });
+
+        $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-clear-button", function (e) {
+            sessionStorage.setItem("issue-recent-searches", "");
+        });
+
         $("#filter-form").submit(function () {
             IssueMain.prototype.search(_urlParams);
             return false;
+        });
+
+        $("#filtered-search-issues").on("focus", function (e) {
+            // console.log("dd");
         });
     };
 
@@ -188,7 +218,7 @@ var FilteredSearch = (function () {
         var tempSearches = IssueMain.prototype.getRecentStorage();
         var html = "";
         tempSearches.forEach(function (n) {
-            html += '<li>';
+            html += '<li class="filtered-search-history-dropdown-item">';
             var tempArr = n.split(" ");
             tempArr.forEach(function (val) {
                 var valArr = val.split(":");
@@ -217,6 +247,13 @@ var FilteredSearch = (function () {
         });
     };
 
+    IssueMain.prototype.getSearchLeft = function () {
+        var left1 = $(".filtered-search-box-input-container").offset().left;
+        var left2 = $('.tokens-container .input-token').offset().left;
+
+        var left = left2 - left1;
+    };
+
     IssueMain.prototype.getHintData = function () {
         var hintArr = [];
         var $search = $(".tokens-container .filtered-search-token");
@@ -239,49 +276,65 @@ var FilteredSearch = (function () {
                 });
             }
         });
-        console.log(hintArr);
+
+        var html = "";
+        hintArr.forEach(function (n) {
+            var tempData = _dropdownHtml.hint;
+            var tempHtml = "";
+            tempHtml = tempHtml.replace("{{icon}}", n.icon || "");
+            tempHtml = tempHtml.replace("{{hint}}", n.hint || "");
+            tempHtml = tempHtml.replace("{{tag}}", "<" + n.hint + ">" || "");
+        });
     };
 
     IssueMain.prototype.getDropdownData = function (name) {
         var html = "";
-        _searches.forEach(function (n) {
-            var apiUrl = "";
-            var json = "";
+        var apiUrl = "";
+        var json = "";
 
+        _searches.forEach(function (n) {
            if (n.key === name) {
                apiUrl = n.api || "";
                json = n.json ? _issueConfig[n.key] : ""
            }
-
-           console.log(apiUrl, json);
-
-           if (apiUrl) {
-               $.ajax({
-                   type: 'get',
-                   dataType: "json",
-                   async: true,
-                   url: apiUrl,
-                   success: function (resp) {
-                       console.log("dd", resp);
-                       auth_check(resp);
-                       if (resp.ret != '200') {
-                           notify_error(resp.msg);
-                           return;
-                       }
-
-                       console.log("resp", resp);
-                       notify_success('操作成功');
-                   },
-                   error: function (res) {
-                       notify_error("请求数据错误" + res);
-                   }
-               });
-           } else if (json){
-               for (var [key, value] of Object.entries(json)) {
-                   console.log(value);
-               }
-           }
         });
+
+        if (apiUrl) {
+            $.ajax({
+                type: 'get',
+                dataType: "json",
+                async: true,
+                url: apiUrl,
+                success: function (resp) {
+                    IssueMain.prototype.setDropdownData(resp, name);
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        } else if (json){
+            var tempData = [];
+            for (var [key, value] of Object.entries(json)) {
+                tempData.push(value);
+            }
+
+            IssueMain.prototype.setDropdownData(tempData, name);
+        }
+    };
+
+    IssueMain.prototype.setDropdownData = function (data, name) {
+        var html = ""
+        data.forEach(function (n) {
+            var tempData = _dropdownHtml[name];
+            var tempHtml = "";
+            tempHtml = tempData.replace("{{name}}", n.name || n.display_name || "");
+            tempHtml = tempHtml.replace("{{avatar_url}}", n.avatar || "");
+            tempHtml = tempHtml.replace("{{username}}", n.username || "");
+            tempHtml = tempHtml.replace("{{color}}", n.color || "");
+            html += tempHtml;
+        });
+
+        $(_searchesObject[name]).html(html);
     };
 
     return FilteredSearch;
