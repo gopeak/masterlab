@@ -125,12 +125,11 @@ Number.currencyFormat = "###,##0.00";
 
 var millisInWorkingDay = 28800000;
 var workingDaysPerWeek = 5;
+if (typeof(_work_dates) === "object" ) {
+    workingDaysPerWeek = _work_dates.length;
+}
 
 function isHoliday(date) {
-
-    var friIsHoly = false;
-    var satIsHoly = true;
-    var sunIsHoly = true;
 
     var pad = function (val) {
         val = "0" + val;
@@ -141,7 +140,7 @@ function isHoliday(date) {
 
     var ymd = "#" + date.getFullYear() + "_" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
     var md = "#" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
-    var day = date.getDay();
+    var weekDay = date.getDay();
 
     let local_date = date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
 
@@ -154,8 +153,12 @@ function isHoliday(date) {
         console.log('_holidays date:', local_date);
         return true;
     }
+    if (typeof(_work_dates) === "object" && in_array(weekDay, _work_dates)) {
+        //console.log('_work_dates:', ymd, weekDay, true);
+        return true;
+    }
 
-    return (day == 5 && friIsHoly) || (day == 6 && satIsHoly) || (day == 0 && sunIsHoly) || holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
+    return  holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
 }
 
 

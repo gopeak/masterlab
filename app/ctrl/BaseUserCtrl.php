@@ -109,6 +109,7 @@ class BaseUserCtrl extends BaseCtrl
             if (isset($_GET['project_id'])) {
                 $projectId = (int)$_GET['project_id'];
             }
+
             if (!empty($projectId)) {
                 $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $projectId, false);
             }

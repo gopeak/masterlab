@@ -10,3 +10,6 @@ INSERT INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_ke
 (10907, 0, '管理甘特图', '是否拥有权限操作甘特图中的事项和设置', 'ADMIN_GANTT'),
 (10908, 0, '事项分解设置', '是否拥有权限修改事项分解的设置', 'MIND_SETTING');
 
+# 甘特图设置增加上班日配置
+ALTER TABLE `project_gantt_setting` ADD `work_dates` JSON NOT NULL AFTER `hide_issue_types`;
+
