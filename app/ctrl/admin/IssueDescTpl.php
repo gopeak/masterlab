@@ -40,7 +40,7 @@ class IssueDescTpl extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'issue_type';
         $data['left_nav_active'] = 'type_tpl';
-        $this->render('gitlab/admin/issue_desc_tpl.php', $data);
+        $this->render('twig/admin/issue/issue_desc_tpl.twig', $data);
     }
 
     /**

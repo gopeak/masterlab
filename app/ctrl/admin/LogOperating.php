@@ -45,7 +45,7 @@ class LogOperating extends BaseAdminCtrl
         $data['sub_nav_active'] = 'log';
         $data['left_nav_active'] = 'log_operating';
         $data['actions'] = LogOperatingModel::getActions();
-        $this->render('gitlab/admin/log_operating_list.php', $data);
+        $this->render('twig/admin/system/log_operating_list.twig', $data);
     }
 
     /**
@@ -140,7 +140,7 @@ class LogOperating extends BaseAdminCtrl
         arsort($filesNameArr);
         $data['log_files'] = $filesNameArr;
 
-        $this->render('gitlab/admin/log_slow_sql_list.php', $data);
+        $this->render('twig/admin/system/log_slow_sql_list.twig', $data);
     }
 
     /**

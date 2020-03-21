@@ -20,7 +20,7 @@ class Permission extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'security';
         $data['left_nav_active'] = 'permission';
-        $this->render('gitlab/admin/default_role.php', $data);
+        $this->render('twig/admin/system/default_role.twig', $data);
     }
 
     /**

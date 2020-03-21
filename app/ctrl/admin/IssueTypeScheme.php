@@ -41,7 +41,7 @@ class IssueTypeScheme extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'issue_type';
         $data['left_nav_active'] = 'type_scheme';
-        $this->render('gitlab/admin/issue_type_scheme.php', $data);
+        $this->render('twig/admin/issue/issue_type_scheme.twig', $data);
     }
 
     /**
