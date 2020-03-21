@@ -41,15 +41,9 @@ var MsgSystem = (function() {
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#' + container_id).html(result);
-
-                    /*$(".user_for_delete").click(function(){
-                        userDelete( $(this).attr("data-uid") );
-                    });*/
-
-                    $(".for_readed").click(function () {
-                        //setRead($(this).data("id"));
-                    });
-
+                    if(resp.data.unread_count>0){
+                        $('#unread_count').html('('+resp.data.unread_count+')');
+                    }
                     var options = {
                         currentPage: resp.data.page,
                         totalPages: resp.data.pages,
@@ -78,62 +72,34 @@ var MsgSystem = (function() {
 
     }
 
-    MsgSystem.prototype.update = function(  ) {
+    MsgSystem.prototype.fetch = function( id ) {
 
-        var url = _options.update_url;
         var method = 'post';
-        /*
-        var img = document.getElementById('avatar_display');
-        var image = MsgSystem.prototype.getBase64Image(img);
-        $('#image').val(image);
-        */
-        // jugg fix 图片裁剪大小与预期显示不一致的问题
-        var avatar_display_src = $('#avatar_display').attr('src');
-        $('#image').val(avatar_display_src);
-
-
+        loading.show('#setting-modal-body');
         $.ajax({
             type: method,
             dataType: "json",
             async: true,
-            url: url,
-            data: $("#edit_user").serialize(),
+            url: '/user/fetchMsg?id='+id,
             success: function (resp) {
 
                 auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
-                    notify_success('保存成功');
-                    //window.location.reload();
-                }else {
-                    notify_error(resp.msg);
-                }
+                    let sender_url = '/user/profile/'+resp.data.sender_uid;
+                    let sender_avatar = '/public/attachment/avatar/'+resp.data.sender_uid+'.png';
+                    if(resp.data.sender_uid=='0'){
+                        sender_avatar = '/gitlab/images/logo.png';
+                        sender_url = '#';
+                    }
+                    resp.data['sender_avatar'] = sender_avatar;
+                    resp.data['sender_avatar'] = sender_avatar;
+                    var source = $('#right_content_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#right_content').html(result);
+                    $('#msg_content').html(resp.data.content);
 
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    }
-
-    MsgSystem.prototype.updatePassword = function(  ) {
-
-        var url = _options.update_password_url;
-        var method = 'post';
-
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: true,
-            url: url,
-            data: $("#edit_password").serialize(),
-            success: function (resp) {
-
-                auth_check(resp);
-                //alert(resp.msg);
-                if( resp.ret=='200'){
-                    //window.location.reload();
-                    notify_success(resp.msg);
                 }else {
                     notify_error(resp.msg, resp.data);
                 }

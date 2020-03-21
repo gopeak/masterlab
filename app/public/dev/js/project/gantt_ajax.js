@@ -614,11 +614,30 @@ var Gantt = (function () {
         });
     };
 
+    Gantt.prototype.initUserSelect = function (not_project_users) {
+        console.log(not_project_users)
+        let el_select = $('#input_member_user_id');
+        el_select.empty();
+        for (let i=0; i< not_project_users.length;i++) {
+            let row = not_project_users[i];
+            let uid = row.id;
+            let title = row.name;
+            let selected = '';
+            let content = "<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='"+row.avatar_url+"' > " + title;
+            let opt = '<option value="' + uid + '"  data-content="' + content + '"  ' + selected + '>' + title + '</option>';
+            console.log(opt)
+            el_select.append(opt);
+        }
+        $('.selectpicker').selectpicker('refresh');
+
+    };
+
     Gantt.prototype.fetchResource = function (project_id) {
         if(!_is_admin_gantt){
             notify_error('提示', '您没有权限进行此操作');
             return;
         }
+
         var url = '/project/member/fetchAll/'+project_id;
         $.ajax({
             type: 'GET',
@@ -627,11 +646,13 @@ var Gantt = (function () {
             url: url,
             success: function (resp) {
                 auth_check(resp);
+                Gantt.prototype.initUserSelect(resp.data.not_project_users);
+                $('.selectpicker').selectpicker('refresh');
                 if (resp.data.project_users.length) {
                     let source = $('#member_list_tpl').html();
                     let template = Handlebars.compile(source);
                     let result = template(resp.data);
-                    console.log(result);
+                    //console.log(result);
                     $('#ul_member_content' ).html(result);
                     $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
 
@@ -667,24 +688,25 @@ var Gantt = (function () {
 
     Gantt.prototype.addResource = function( ) {
 
-        let user_id = $('#issue_assignee_id').val();
-        let user_name = user_id;
+        let userId = $('#input_member_user_id').val();
         let role_id = $('#role_select').val();
-
+        if(is_empty(role_id)){
+            notify_warn('提示','请给选择用户所属角色');
+            return;
+        }
         let method = 'POST';
         let url = '/project/role/add_project_member_roles';
         $.ajax({
             type: method,
             dataType: "json",
-            data: {project_id: window._cur_project_id, user_id:user_id, role_id:role_id},
+            data: {project_id: window._cur_project_id, user_id:userId, role_id:role_id},
             url: url,
             success: function (resp) {
                 auth_check(resp);
                 if( resp.ret === "200" ){
                     //window.location.reload();
                     Gantt.prototype.fetchResource(window._cur_project_id);
-                    notify_success(resp.msg);
-
+                    //notify_success(resp.msg);
                 } else {
                     notify_error(resp.msg);
                 }

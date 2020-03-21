@@ -144,7 +144,6 @@ function editResources(){
 
     var ndo = createModalPopup(400, 500).append(resourceEditor);
 
-    new UsersSelect();
 }
 
 function showBaselineInfo (event,element){

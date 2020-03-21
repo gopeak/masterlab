@@ -174,7 +174,7 @@ class User extends BaseUserCtrl
         if(isset($_GET['range'])){
             $range = $_GET['range'];
         }
-        if($range=='unreaded'){
+        if($range=='unread'){
             $conditionArr['readed'] = '0';
         }
         if($range=='readed'){
@@ -192,15 +192,36 @@ class User extends BaseUserCtrl
         $ret = $model->filter($conditionArr, $page, $pageSize,  $orderBy, $sort);
         list($total, $totalPages, $msgs) = $ret;
         $data['msgs'] = $msgs;
+        $conditionArr['readed'] = '0';
+        $data['unread_count'] = $model->getUnreadCountByfilter($conditionArr);
         $data['total'] = $total;
         $data['pages'] = $totalPages;
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
         $data['cur_range'] = $range;
         $this->ajaxSuccess('ok', $data);
+    }
 
+    public function fetchMsg()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $msgId = null;
+        if(isset($_GET['id'])){
+            $msgId = (int)$_GET['id'];
+        }
+        $model = new UserMessageModel();
+        $msgArr = $model->getMessage($msgId);
+        if($msgArr['receiver_uid']!=$userId){
+            $this->ajaxFailed('提示', '当前消息不属于当前用户');
+        }
+        if($msgArr['readed']=='0'){
+            $model->updateMessage($msgId, ['readed'=>'1']);
+            $msgArr['readed']='1';
 
-        $this->ajaxSuccess('ok', $data);
+        }
+        $msgArr['create_time_text'] = format_unix_time($msgArr['create_time']);
+
+        $this->ajaxSuccess('ok', $msgArr);
     }
 
     public function fetchFollowIssues()

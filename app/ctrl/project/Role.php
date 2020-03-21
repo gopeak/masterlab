@@ -761,6 +761,6 @@ class Role extends BaseUserCtrl
         $logData['cur_data'] = ['user_id' => $userId, 'project_id' => $projectId, 'role_id' => implode(",", $roleIds)];
         LogOperatingLogic::add($uid, $role['project_id'], $logData);
 
-        $this->ajaxSuccess('ok', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 }

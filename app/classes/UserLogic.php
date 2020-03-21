@@ -326,7 +326,7 @@ class UserLogic
             $limit = intval($limit);
             $sql .= " limit $limit ";
         }
-        //echo $sql;
+        // echo $sql;
         $rows = $userModel->db->getRows($sql, $params);
         unset($userModel);
         return $rows;
@@ -464,6 +464,28 @@ class UserLogic
             $projectUserIdArr[$projectId][] = $userId;
         }
         return $projectUserIdArr;
+    }
+
+    /**
+     * 获取非当前项目的用户
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function getNotProjectUser($projectId)
+    {
+        $inProjectUserIds = $this->fetchProjectRoleUserIds($projectId);
+        if (!empty($inProjectUserIds)) {
+            $skip_users = $inProjectUserIds;
+        } else {
+            $skip_users = null;
+        }
+        $users = $this->selectUserFilter(null, 200, true, null, null, $skip_users);
+        foreach ($users as $k => &$row) {
+            $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
+        }
+        sort($users);
+        return $users;
     }
 
     /**

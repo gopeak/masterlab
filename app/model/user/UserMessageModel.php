@@ -159,11 +159,21 @@ class UserMessageModel extends CacheModel
         $fields = ' id,direction,title, sender_uid,sender_name,receiver_uid,type,readed,create_time ';
         $limit = "$start, $pagesize";
         $messages = parent::getRows($fields, $conditionArr, null, $orderby, $sort,  $limit);
+        foreach ($messages as &$message) {
+            $message['create_time_text'] = format_unix_time($message['create_time']);
+        }
         return [
             $total,
             $totalPages,
             $messages
         ];
+    }
+
+    public function getUnreadCountByfilter($conditionArr)
+    {
+        $count = parent::getCount( $conditionArr);
+
+        return $count;
     }
 
     /**
@@ -261,33 +271,6 @@ class UserMessageModel extends CacheModel
         return (int)$total;
     }
 
-    public function getUnreadedCountByType($type)
-    {
-        $uid = $this->uid;
-        $type = (int)$type;
-        $key = self::DATA_KEY . 'unreaded_TYPE_count/' . $type . '/' . $uid;
-        $memFlag = $this->cache->get($key);
-        if ($memFlag !== false) {
-            return $memFlag;
-        }
-
-        $readed = UserMessageModel::READED_NO;
-        //$where = " Where receiver_uid='$uid' AND type='$type' ";
-        $where = array('receiver_uid' => $uid, 'type' => $type);
-        if ($readed != 2) {
-            //$where .= " AND readed='$readed'  ";
-            $where['readed'] = $readed;
-        }
-        $fields = "COUNT(*) as cc ";
-        $total = parent::getOneByKey($fields, $where);
-        if (!$total) {
-            $total = 0;
-        }
-        $module = self::DATA_KEY . 'module/' . $uid;
-        CacheKeyModel::getInstance()->clearCache($module);
-        return (int)$total;
-    }
-
     /**
      * 读取一条消息
      * @param int $id
@@ -302,16 +285,16 @@ class UserMessageModel extends CacheModel
         return $result;
     }
 
+
     /**
      * 更新一条记录
-     * @param int $id
-     * @param [] $row
-     * @return bool
+     * @param $id
+     * @param $row
+     * @return mixed
+     * @throws \Exception
      */
     public function updateMessage($id, $row)
     {
-        $table = $this->getTable();
-        //$where = "WHERE id=$id";
         $where = array('id' => $id);
         $key = self::DATA_KEY . 'id/' . $id;
         list($ret) = parent::updateByKey($where, $row, $key);
