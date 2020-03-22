@@ -180,7 +180,7 @@ class Main extends BaseUserCtrl
             $data['issue_view'] = $userIssueView;
         }
         if (empty($data['issue_view'])) {
-            $data['issue_view'] = 'responsive';
+            $data['issue_view'] = 'list';
         }
 
         $data['is_all_issues'] = false;
