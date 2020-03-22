@@ -73,6 +73,7 @@ class IssueLogic
         'issue_type',
         'priority',
         'module',
+        'sprint',
         'summary',
         'assignee',
         'status',
