@@ -13,3 +13,13 @@ INSERT INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_ke
 # 甘特图设置增加上班日配置
 ALTER TABLE `project_gantt_setting` ADD `work_dates` JSON NOT NULL AFTER `hide_issue_types`;
 
+# 是否在事项列表显示分类
+ALTER TABLE `project_main` ADD `is_display_issue_catalog` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否在事项列表显示分类' AFTER `issue_update_time`;
+
+# 修改设置标题长度
+ALTER TABLE `main_setting` CHANGE `title` `title` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题';
+
+
+
+
+

@@ -25,6 +25,7 @@ use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\ExtraWorkerDayModel;
 use main\app\model\issue\HolidayModel;
+use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -199,7 +200,8 @@ class Main extends BaseUserCtrl
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
-        //print_r($data);
+
+        $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
         $this->render('gitlab/issue/list.php', $data);
     }
 

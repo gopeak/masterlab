@@ -5,18 +5,17 @@ namespace main\app\model\project;
 use main\app\model\BaseDictionaryModel;
 
 /**
- *  标签模型
+ *  项目分类
  */
-class ProjectLabelModel extends BaseDictionaryModel
+class ProjectCatalogLabelModel extends BaseDictionaryModel
 {
     public $prefix = 'project_';
 
-    public $table = 'label';
+    public $table = 'catalog_label';
 
-    const  DATA_KEY = 'project_label/';
+    const  DATA_KEY = 'project_catalog_label/';
 
     public $fields = '*';
-
 
     /**
      * 用于实现单例模式
@@ -53,15 +52,8 @@ class ProjectLabelModel extends BaseDictionaryModel
 
     public function getByProject($projectId = null, $primaryKey = false)
     {
-        $table = $this->getTable();
-        $params = [];
-        $appendSql = '';
-        if (!empty($projectId)) {
-            $params['project_id'] = $projectId;
-            $appendSql = ' OR project_id=:project_id ';
-        }
-        $sql = "Select *  From {$table}  Where project_id=0 {$appendSql}  Order by  id  ASC ";
-        $rows = $this->db->getRows($sql, $params, $primaryKey);
+        $condition = ['project_id' => $projectId];
+        $rows = $this->getRows('*', $condition, null, 'order_weight', 'desc', $primaryKey);
         return $rows;
     }
 

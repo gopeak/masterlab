@@ -11,12 +11,14 @@ namespace main\app\classes;
 
 use main\app\async\email;
 use main\app\model\agile\SprintModel;
+use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueTypeModel;
+use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
@@ -279,10 +281,26 @@ class IssueFilterLogic
         if (isset($_GET['type_id'])) {
             $typeId = (int)$_GET['type_id'];
         }
-
         if ($typeId !== null) {
             $sql .= " AND issue_type=:issue_type";
             $params['issue_type'] = $typeId;
+        }
+
+        // 所属分类
+        if (strpos($sysFilter, 'label_') === 0) {
+            list(, $catalogId) = explode('label_', $sysFilter);
+            $projectCatalogLabel = (new ProjectCatalogLabelModel())->getById((int)$catalogId);
+            if (isset($projectCatalogLabel['label_id_json'])) {
+                $labelIdArr = json_decode($projectCatalogLabel['label_id_json']);
+                if ($labelIdArr) {
+                    $issueIdArr = IssueLabelDataModel::getInstance()->getIssueIdArrByIds($labelIdArr);
+                    if ($issueIdArr) {
+                        $issueIdStr = implode(',', $issueIdArr);
+                        unset($issueIdArr);
+                        $sql .= " AND id in ({$issueIdStr})";
+                    }
+                }
+            }
         }
 
         // 我未解决的
@@ -310,7 +328,7 @@ class IssueFilterLogic
                     $issueIdStr = implode(',', $followIssueIdArr);
                     $sql .= "  AND id in ({$issueIdStr})";
                 }
-            }else{
+            } else {
                 $sql .= " AND  id in (0) ";
             }
             unset($issueFollowModel, $issueFollows, $followIssueIdArr);
@@ -410,7 +428,7 @@ class IssueFilterLogic
             $field = '*';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
-           // echo $sqlCount;
+            // echo $sqlCount;
             // print_r($params);
             $count = $model->db->getOne($sqlCount, $params);
 
@@ -496,7 +514,7 @@ class IssueFilterLogic
                 return [false, [], 0];
             }
 
-            $value = $item['value'] ;
+            $value = $item['value'];
 
             if ($field == 'updated' || $field == 'created') {
                 $value = strtotime($value);
@@ -555,10 +573,10 @@ class IssueFilterLogic
                 case 'like':
                     if (in_array($field, $paramsField)) {
                         $sql .= sprintf(" %s %s :%s_%s ", $field, $opt, $field, $i);
-                        $params[$field . '_' . $i] = '%'.$value.'%';
+                        $params[$field . '_' . $i] = '%' . $value . '%';
                     } else {
                         $sql .= " $field  {$opt} :$field ";
-                        $params[$field] = '%'.$value.'%';
+                        $params[$field] = '%' . $value . '%';
                     }
                     break;
                 case 'like %...%':
@@ -724,7 +742,7 @@ class IssueFilterLogic
         $params['project_id'] = $projectId;
         $model = new IssueModel();
         $table = $model->getTable();
-        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND project_id=:project_id AND  " . self::getUnDoneSql() ;
+        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND project_id=:project_id AND  " . self::getUnDoneSql();
         $count = $model->db->getOne($sql, $params);
         return intval($count);
     }

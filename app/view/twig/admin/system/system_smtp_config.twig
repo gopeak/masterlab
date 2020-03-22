@@ -202,12 +202,12 @@ Host User Name:  </textarea>
                 <input type="text" class="form-control" name="params[{{_key}}]" id="id_{{_key}}"  value="{{_value}}" />
                 {{/if_eq}}
                 {{#if_eq form_input_type 'radio'}}
-                {{#each form_optional_value }}
-                <label style=" font-weight: 200;  ">
-                    <input type="radio" value="{{@index}}" {{#if_eq ../_value @key}}checked="checked"{{/if_eq}} name="params[{{../_key}}]" id="id_{{../_key}}">
-                    {{this}}
-                </label>
-                {{/each}}
+                    {{#each form_optional_value }}
+                        <label style=" font-weight: 200;  ">
+                            <input type="radio" value="{{@index}}" {{#if_eq ../_value @key}}checked="checked"{{/if_eq}} name="params[{{../_key}}]" id="id_{{../_key}}">
+                            {{this}}
+                        </label>
+                    {{/each}}
                 {{/if_eq}}
             </div>
         </div>

@@ -168,7 +168,7 @@ class Setting extends BaseUserCtrl
         // @todo 判断权限:全局权限和项目角色
         $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel($uid);
-        $this->param_valid($projectModel, $name, $key, $type);
+        //$this->param_valid($projectModel, $name, $key, $type);
 
 
         $project_id = intval($project_id);

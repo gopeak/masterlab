@@ -9,6 +9,7 @@ use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\model\project\ProjectModel;
 use main\app\classes\ProjectLogic;
+use main\app\model\user\UserMessageModel;
 use main\app\model\user\UserSettingModel;
 
 /**
@@ -145,6 +146,10 @@ class BaseUserCtrl extends BaseCtrl
             if (!isset($this->projectPermArr)) {
                 $this->projectPermArr = [];
             }
+
+            $model = new UserMessageModel();
+            $conditionArr['readed'] = '0';
+            $this->addGVar('_unread_count', $model->getUnreadCountByfilter($conditionArr));
 
             $this->addGVar('projectPermArr', $this->projectPermArr);
             $this->addGVar('_projectPermArrJson', json_encode(array_keys($this->projectPermArr)));

@@ -781,6 +781,19 @@ class System extends BaseAdminCtrl
     }
 
     /**
+     * @throws \Exception
+     */
+    public function pageLdap()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'setting';
+        $data['left_nav_active'] = 'ldap';
+        $this->render('twig/admin/system/system_ldap.twig', $data);
+    }
+
+    /**
      * 缓存配置：获取redis缓存连接配置
      * @throws \Exception
      */
