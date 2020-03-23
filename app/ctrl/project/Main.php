@@ -15,8 +15,11 @@ use main\app\ctrl\Agile;
 use main\app\ctrl\project\Mind;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
+use main\app\model\issue\IssueTypeSchemeModel;
+use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
+use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
@@ -315,6 +318,18 @@ class Main extends Base
         $data['full_type'] = ProjectLogic::faceMap();
 
         $data['root_domain'] = ROOT_URL;
+
+        // 事项类型方案
+        $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+        $data['issue_type_scheme_id'] = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        // 事项类型方案列表
+        $issueTypeSchemeModel = new IssueTypeSchemeModel();
+        $data['issue_type_schemes'] = $issueTypeSchemeModel->getAll();
+
+        // 状态流方案列表
+        $workflowSchemeModel = new WorkflowSchemeModel();
+        $data['workflow_schemes'] = $workflowSchemeModel->getAll();
 
         $data = RewriteUrl::setProjectData($data);
 
