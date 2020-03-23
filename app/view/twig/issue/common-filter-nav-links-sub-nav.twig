@@ -43,8 +43,8 @@
                     分 类：
                 </li>
                 {% for catalog in project_catalog %}
-                    <li class="filter_nav_li  {% if (sys_filter == 'label_'~catalog.id) %} {{ 'active_underline' }}{% endif %}">
-                        <a title="{{catalog.description}}" href="{{ issue_main_url}}?sys_filter=label_{{catalog.id}}" style="color:{{catalog.font_color}}; font-size: 12px;"><span>{{catalog.name}}</span>
+                    <li class="filter_nav_li  {% if (sys_filter == 'catalog_'~catalog.id) %} {{ 'active_underline' }}{% endif %}">
+                        <a title="{{catalog.description}}" href="{{ issue_main_url}}?sys_filter=catalog_{{catalog.id}}" style="color:{{catalog.font_color}}; font-size: 12px;"><span>{{catalog.name}}</span>
                         </a>
                     </li>
                 {% endfor %}

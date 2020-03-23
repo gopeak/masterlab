@@ -50,6 +50,7 @@ class IssueLogic
         'module' => '模块',
         'sprint' => '迭代',
         'summary' => '标题',
+        'label' => '标签',
         'weight' => '权重',
         'assignee' => '经办人',
         'reporter' => '报告人',

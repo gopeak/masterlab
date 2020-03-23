@@ -19,6 +19,7 @@ use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\project\ProjectCatalogLabelModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
@@ -286,9 +287,20 @@ class IssueFilterLogic
             $params['issue_type'] = $typeId;
         }
 
-        // 所属分类
+        // 所属标签
         if (strpos($sysFilter, 'label_') === 0) {
-            list(, $catalogId) = explode('label_', $sysFilter);
+            list(, $labelId) = explode('label_', $sysFilter);
+            $labelIssueIdArr = IssueLabelDataModel::getInstance()->getIssueIdArrById($labelId);
+            if ($labelIssueIdArr) {
+                $issueIdStr = implode(',', $labelIssueIdArr);
+                unset($issueIdArr);
+                $sql .= " AND id in ({$issueIdStr})";
+            }
+        }
+        
+        // 所属分类
+        if (strpos($sysFilter, 'catalog_') === 0) {
+            list(, $catalogId) = explode('catalog_', $sysFilter);
             $projectCatalogLabel = (new ProjectCatalogLabelModel())->getById((int)$catalogId);
             if (isset($projectCatalogLabel['label_id_json'])) {
                 $labelIdArr = json_decode($projectCatalogLabel['label_id_json']);

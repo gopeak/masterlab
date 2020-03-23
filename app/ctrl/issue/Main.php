@@ -611,9 +611,18 @@ class Main extends BaseUserCtrl
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
-            foreach ($data['issues'] as &$issue) {
-                IssueFilterLogic::formatIssue($issue);
+            $issueIdArr = array_column($data['issues'],'id');
+            $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
+            $labelDataArr = [];
+            foreach ($labelDataRows as $labelData) {
+                $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
             }
+            foreach ($data['issues'] as &$issue) {
+                $issueId = $issue['id'];
+                IssueFilterLogic::formatIssue($issue);
+                $issue['label_id_arr'] = isset($labelDataArr[$issueId]) ? $labelDataArr[$issueId]:[];
+            }
+
             $data['total'] = (int)$total;
             $data['pages'] = ceil($total / $pageSize);
             $data['page_size'] = $pageSize;
