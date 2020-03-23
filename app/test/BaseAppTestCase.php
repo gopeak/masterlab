@@ -12,6 +12,7 @@ namespace main\app\test;
 
 use main\app\classes\PermissionGlobal;
 use main\app\model\OrgModel;
+use main\app\model\permission\PermissionGlobalUserRoleModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectUserRoleModel;
 use \main\app\model\user\UserModel;
@@ -85,6 +86,7 @@ class BaseAppTestCase extends BaseTestCase
 
         self::$logger = new Logger(TEST_LOG);
         self::$user = self::initLoginUser();
+        // var_dump(self::$user);
         self::initAppData();
     }
 
@@ -124,12 +126,15 @@ class BaseAppTestCase extends BaseTestCase
         $model = new UserGroupModel();
         $model->add($user['uid'], 1);
 
+        // 加入全局的管理角色
+        (new PermissionGlobalUserRoleModel())->insertRole($user['uid'], '1');
+
         // 登录成为授权用户
         $loginData = [];
         $loginData['username'] = $username;
         $loginData['password'] = $originPassword;
-
         self::$userCurl->post(ROOT_URL . 'passport/do_login?data_type=json', $loginData);
+        // echo self::$userCurl->rawResponse;
         $respData = json_decode(self::$userCurl->rawResponse, true);
         // var_dump(self::$userCurl->requestHeaders);
         if (!$respData) {

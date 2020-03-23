@@ -60,6 +60,7 @@ class TestUser extends BaseAppTestCase
         parent::tearDownAfterClass();
     }
 
+
     public function testProfile()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -68,6 +69,7 @@ class TestUser extends BaseAppTestCase
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
         $this->assertRegExp('/<div\s+class="cover-title">[^<]+<\/div>/', $resp);
+
     }
 
     public function testProfileEdit()
