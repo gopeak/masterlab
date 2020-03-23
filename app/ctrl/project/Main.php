@@ -456,6 +456,29 @@ class Main extends Base
     /**
      * @throws \Exception
      */
+    public function pageSettingsCatalog()
+    {
+        if (!PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
+            if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
+                $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
+                die;
+            }
+        }
+
+        $data = [];
+        $data['title'] = '分 类';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'catalog';
+        $data['query_str'] = http_build_query($_GET);
+
+        $data = RewriteUrl::setProjectData($data);
+        $data['project_labels'] = ProjectLabelModel::getInstance()->getByProject($data['project_id']);
+        $this->render('twig/project/setting_catalog.twig', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsLabelNew()
     {
         if (!PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {

@@ -45,6 +45,8 @@ class BaseUserCtrl extends BaseCtrl
      */
     public $projectPermArr = [];
 
+    public $projectId = null;
+
     /**
      * @todo 构造函数重复调用
      * BaseUserCtrl constructor.
@@ -106,11 +108,13 @@ class BaseUserCtrl extends BaseCtrl
             if (isset($_POST['params']['project_id'])) {
                 $projectId = (int)$_POST['params']['project_id'];
             }
-            $data['project_id'] = $projectId;
             if (isset($_GET['project_id'])) {
                 $projectId = (int)$_GET['project_id'];
             }
-
+            if (isset($_POST['project_id'])) {
+                $projectId = (int)$_POST['project_id'];
+            }
+            $data['project_id'] = $this->projectId = $projectId;
             if (!empty($projectId)) {
                 $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $projectId, false);
             }
@@ -124,6 +128,7 @@ class BaseUserCtrl extends BaseCtrl
                     $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
                 }
             }
+            $this->addGVar('_project_id', $this->projectId);
             $this->addGVar('G_project', $project);
             //print_r($project);
             //print_r($this->projectPermArr);

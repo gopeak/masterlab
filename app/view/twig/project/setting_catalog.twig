@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+    <!--script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script-->
+    <script src="/dev/lib/jquery.form.js"></script>
+    <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/catalog.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"   charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
+
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body">
+{% include 'twig/common/body/header-content.twig' %}
+
+<script>
+    var findFileURL = "";
+</script>
+        <div class="page-with-sidebar">
+            {% include 'twig/project/common-page-nav-project.twig' %}
+            {% include 'twig/project/common-setting-nav-links-sub-nav.twig' %}
+
+            <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+                <div class="alert-wrapper">
+
+                    <div class="flash-container flash-container-page">
+                    </div>
+
+                </div>
+                <div class="container-fluid container-limited">
+                    <div class="content" id="content-body">
+
+                        <div class="row prepend-top-default">
+                            <div class="col-lg-3 settings-sidebar">
+                                <h4 class="prepend-top-0">
+                                    分类
+                                </h4>
+                                <p>
+                                    分类是多个标签的集合，通过分类进行更高级的查询
+                                    <strong></strong>
+                                </p>
+                            </div>
+                            <div class="col-lg-9">
+                                <div class="top-area adjust setting-form">
+                                    <div class="nav-text">
+                                        一个分类包含多个标签
+                                    </div>
+                                    <div class="nav-controls">
+                                        <a class="btn btn-new label_create_link" data-toggle="modal" href="#modal-form-catalog"  href="javascript:void(0)">添加分类
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default margin-t">
+                                    <div class="panel-heading">
+                                        <strong>分类</strong>
+                                    </div>
+
+                                    <ul class="flex-list content-list " id="list_render_id">
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="modal-form-catalog">
+            <form class="form-horizontal label-form" id="form-catalog" action="/project/catalog/add?project_id={{project_id}}" accept-charset="UTF-8" method="post">
+                <input type="hidden" name="project_id" value="{{_project_id}}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modal-catalog_title" class="modal-header-title">添加分类</h3>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label" for="input-name">名称</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" required="required" type="text" id="input-name" name="name" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="select-label_id_arr">包含标签</label>
+                                <div class="col-sm-10">
+                                    <select id="select-label_id_arr" name="label_id_arr" class="form-control selectpicker"  multiple  title="请选择"  ></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="label_color">字体颜色</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <div class="input-group-addon js-label-color-preview" style="background-color: #428BCA">&nbsp;</div>
+                                        <input class="form-control" type="text" value="#428BCA"  id="input-font_color" name="font_color">
+                                    </div>
+                                    <div class="help-block">
+                                        可选择下面推荐的颜色之一
+                                    </div>
+                                    <div class="suggest-colors">
+                                        <a style="background-color: #0033CC" data-color="#0033CC" href="#">&nbsp;
+                                        </a><a style="background-color: #428BCA" data-color="#428BCA" href="#">&nbsp;
+                                        </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="#">&nbsp;
+                                        </a><a style="background-color: #A8D695" data-color="#A8D695" href="#">&nbsp;
+                                        </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="#">&nbsp;
+                                        </a><a style="background-color: #69D100" data-color="#69D100" href="#">&nbsp;
+                                        </a><a style="background-color: #004E00" data-color="#004E00" href="#">&nbsp;
+                                        </a><a style="background-color: #34495E" data-color="#34495E" href="#">&nbsp;
+                                        </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="#">&nbsp;
+                                        </a><a style="background-color: #A295D6" data-color="#A295D6" href="#">&nbsp;
+                                        </a><a style="background-color: #5843AD" data-color="#5843AD" href="#">&nbsp;
+                                        </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="#">&nbsp;
+                                        </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="#">&nbsp;
+                                        </a><a style="background-color: #AD4363" data-color="#AD4363" href="#">&nbsp;
+                                        </a><a style="background-color: #D10069" data-color="#D10069" href="#">&nbsp;
+                                        </a><a style="background-color: #CC0033" data-color="#CC0033" href="#">&nbsp;
+                                        </a><a style="background-color: #FF0000" data-color="#FF0000" href="#">&nbsp;
+                                        </a><a style="background-color: #D9534F" data-color="#D9534F" href="#">&nbsp;
+                                        </a><a style="background-color: #D1D100" data-color="#D1D100" href="#">&nbsp;
+                                        </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="#">&nbsp;
+                                        </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="#">&nbsp;
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="textarea-description">描述</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="textarea-description" name="description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-save" id="btn_create_save">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+
+    </div>
+</section>
+
+
+{% verbatim %}<script type="text/html" id="list_tpl">
+    {{#catalogs}}
+    <li data-id="{{id}}" id="project_label_{{id}}">
+        <span class="label-row">
+            <span class="label-name">
+                <a href="#">
+                    <span class="" style="color: {{font_color}}" title="" data-container="body">{{name}}</span>
+                </a>
+            </span>
+            <span class="label-type">
+                {{description}}
+            </span>
+        </span>
+
+        <div class="pull-right hidden-xs hidden-sm hidden-md">
+            <a title="编辑" class="btn btn-transparent btn-action label_edit_link"  href="#modal-edit-label-href" data-toggle="modal" data-id="{{id}}" href="javascript:void(0)">
+                <i class="fa fa-pencil-square-o"></i>
+            </a>
+
+            <a title="删除" class="btn btn-transparent btn-action remove-row label_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
+                <i class="fa fa-trash-o"></i>
+            </a>
+        </div>
+
+    </li>
+    {{/catalogs}}
+</script>{% endverbatim %}
+
+<script>
+    var query_str = '{{query_str}}';
+    var urls = parseURL(window.location.href);
+    var project_root_url = '{{project_root_url}}';
+    var _project_id = '{{project_id}}';
+
+    var _issueConfig = {
+        "issue_labels": {{ project_labels|json_encode()|raw }},
+    };
+
+    $(function() {
+        let options = {
+            query_str: window.query_str,
+            query_param_obj: urls.searchObject,
+            list_render_id:"list_render_id",
+            list_tpl_id:"list_tpl",
+            filter_url:"/project/catalog/fetchAll?project_id={{project_id}}"
+        };
+        window.$catalogAjax= new Catalog(options);
+        window.$catalogAjax.fetchAll();
+        window.$catalogAjax.initProjectLabel([]);
+        $('#btn_create_save').click(function () {
+            window.$catalogAjax.add({{project_id}});
+        });
+
+        $('#btn_edit_save').click(function () {
+            window.$catalogAjax.update({{project_id}});
+        });
+
+        $('#form_create_action .suggest-colors a').click(function () {
+            $('#create_form_bg_color').val($(this).data("color"));
+            $('#form_create_action .js-label-color-preview').css("background-color", $(this).data("color"));
+        });
+
+        $('#form-catalog .suggest-colors a').click(function () {
+            $('#input-font_color').val($(this).data("color"));
+            $('#form-catalog .js-label-color-preview').css("background-color", $(this).data("color"));
+        });
+
+    });
+
+</script>
+
+
+</body>
+</html>
