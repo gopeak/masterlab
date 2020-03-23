@@ -248,7 +248,9 @@
                 <span>{{description}}</span>
             </td>
             <td>
-
+            {{#each project_arr}}
+                 <a class=" " style="color: #1b69b6" href="/{{org_path}}/{{key}}">{{name}}</a>
+            {{/each}}
             </td>
             <td>
                 {{make_relation relation}}

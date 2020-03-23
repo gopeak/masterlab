@@ -229,7 +229,7 @@ class ProjectModel extends CacheModel
     {
         $idInString = implode(",", $projectIdArr);
 
-        $table = $this->prefix . $this->table;
+        $table = $this->getTable();
         $params = array();
 
         $where = wrapBlank("WHERE id IN (");

@@ -255,6 +255,26 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
+    Handlebars.registerHelper('make_label_html', function (label_id_arr) {
+        //console.log(uid_arr);
+        var html = '';
+        if(label_id_arr){
+            for (i = 0; i < label_id_arr.length; i++) {
+                var id = parseInt(label_id_arr[i]);
+                var row = getValueByKey(_issueConfig.issue_labels, id);
+                //console.log(row);
+                if (row == null) {
+                    return '';
+                }
+                html += '<a href="'+cur_path_key +'?sys_filter=label_'+id+'">';
+                html += '<span class="label color-label " style="background-color:'+row.bg_color+'; color: '+row.color+'" title="'+row.title+'" data-container="body">'+row.title+'</span>';
+                html += '</a>';
+            }
+        }
+
+        return new Handlebars.SafeString(html);
+    });
+
     Handlebars.registerHelper('priority_html', function (priority_id) {
         var html = '';
         if (is_empty(priority_id)) {
