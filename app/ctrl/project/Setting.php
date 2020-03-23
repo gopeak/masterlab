@@ -58,6 +58,8 @@ class Setting extends BaseUserCtrl
             $info['url'] = $params['url'];
             $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
             //$info['detail'] = $params['detail'];
+            $info['workflow_scheme_id'] = $params['workflow_scheme_id'];
+            $issueTypeSchemeId = $params['issue_type_scheme_id'];
 
             // 管理员可以变更项目所属的组织
             if (isset($params['org_id']) && $preData['org_id'] != $params['org_id'] && $this->isAdmin) {
@@ -100,6 +102,20 @@ class Setting extends BaseUserCtrl
                 || !in_array($info['type'], ProjectLogic::$type_all)
             ) {
                 $this->ajaxFailed('参数错误', '项目类型错误');
+            }
+
+            // 保存项目事项类型方案
+            $projectId = $_GET[ProjectLogic::PROJECT_GET_PARAM_ID];
+            $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+            $projectIssueTypeSchemeData = $projectIssueTypeSchemeDataModel->getRow('*', ['project_id' => $projectId]);
+
+            if ($projectIssueTypeSchemeData) {
+                $rowId = $projectIssueTypeSchemeData['id'];
+                $updates = ['issue_type_scheme_id' => $issueTypeSchemeId];
+                $projectIssueTypeSchemeDataModel->update($updates, ['id' => $rowId]);
+            } else {
+                $new = ['issue_type_scheme_id' => $issueTypeSchemeId, 'project_id' => $projectId];
+                $projectIssueTypeSchemeDataModel->insert($new);
             }
 
             if ($ret1[0]) {
