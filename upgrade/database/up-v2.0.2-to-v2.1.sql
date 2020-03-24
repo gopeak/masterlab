@@ -19,7 +19,24 @@ ALTER TABLE `project_main` ADD `is_display_issue_catalog` TINYINT(1) UNSIGNED NO
 # 修改设置标题长度
 ALTER TABLE `main_setting` CHANGE `title` `title` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题';
 
+# 创建项目分类表
+CREATE TABLE `project_catalog_label` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `name` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `label_id_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `font_color` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'blueviolet' COMMENT '字体颜色',
+  `description` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `order_weight` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='项目的分类定义';
+ALTER TABLE `project_catalog_label`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `project_id_2` (`project_id`,`order_weight`);
 
+ALTER TABLE `project_catalog_label`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+COMMIT;
 
 
 
