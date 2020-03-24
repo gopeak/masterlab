@@ -16,19 +16,18 @@ let Catalog = (function () {
     };
 
 
-    Catalog.prototype.add = function (project_id) {
-
+    Catalog.prototype.add = function () {
         let el_form = $('#form-catalog');
         $.ajax({
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/catalog/add?project_id="+project_id,
+            url: "/project/catalog/add",
             data: el_form.serialize(),
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret === "200") {
-                    notify_success(resp.msg);
+                    notify_success(resp.msg, resp.data);
                     Catalog.prototype.fetchAll();
                     $('#modal-form-catalog').modal('hide');
                 } else {
@@ -42,18 +41,22 @@ let Catalog = (function () {
     };
 
     Catalog.prototype.delete = function (project_id, id) {
-        $.post(root_url+"project/catalog/delete",{project_id: project_id, label_id:id},function (result) {
+        $.post(root_url+"project/catalog/delete",{project_id: project_id, id:id},function (result) {
             if (result.ret == '200') {
-                notify_success('删除成功');
+                notify_success(result.msg, result.data);
                 $('#project_label_'+id).remove();
-                window.location.reload();
+
             } else {
-                notify_error('删除失败');
+                notify_error(result.msg, result.data);
             }
         });
     };
 
     Catalog.prototype.edit = function (id) {
+        $('#modal-form-catalog').modal('show');
+        $('#action').val('update');
+        $('#catalog_id').val(id);
+        loading.show('#modal-body');
         $.ajax({
             type: 'GET',
             dataType: "json",
@@ -62,11 +65,13 @@ let Catalog = (function () {
             data: {id: id},
             success: function (resp) {
                 auth_check(resp);
-                if (resp.ret == 200) {
+                loading.closeAll();
+                if (resp.ret == '200') {
                     $('#input-name').val(resp.data.name);
                     Catalog.prototype.initProjectLabel(resp.data.label_id_json);
                     $('#input-font_color').val(resp.data.font_color);
                     $('#textarea-description').text(resp.data.description);
+                    $('#input-order_weight').val(resp.data.order_weight);
                 } else {
                     notify_error(resp.msg, resp.data);
                 }
@@ -77,22 +82,22 @@ let Catalog = (function () {
         });
     };
 
-    Catalog.prototype.update = function (project_id) {
+    Catalog.prototype.update = function () {
         let el_form = $('#form-catalog');
         $.ajax({
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/catalog/update?project_id="+project_id,
-            data: $('#form_edit_action').serialize(),
+            url: "/project/catalog/update",
+            data: el_form.serialize(),
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret === "200") {
                     notify_success(resp.msg, resp.data);
                     Catalog.prototype.fetchAll();
-                    el_form.modal('hide');
+                    $('#modal-form-catalog').modal('hide');
                 } else {
-                    notify_error(resp.msg);
+                    notify_error(resp.msg, resp.data);
                 }
             },
             error: function (res) {
@@ -103,7 +108,7 @@ let Catalog = (function () {
 
 
     Catalog.prototype.initProjectLabel = function (label_id_arr) {
-        console.log(label_id_arr)
+        // console.log(label_id_arr)
         let el_select = $('#select-label_id_arr');
         el_select.empty();
         for (let i=0; i< _issueConfig.issue_labels.length;i++) {
@@ -114,8 +119,8 @@ let Catalog = (function () {
             if(in_array(id, label_id_arr)){
                 selected = 'selected';
             }
-            let opt = '<option value="' + id + '"   ' + selected + '>' + title + '</option>';
-            console.log(opt)
+            let opt = '<option value="' + id + '"  ' + selected + '>' + title + '</option>';
+            // console.log(opt)
             el_select.append(opt);
         }
         $('.selectpicker').selectpicker('refresh');

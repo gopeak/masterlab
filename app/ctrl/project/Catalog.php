@@ -39,7 +39,7 @@ class Catalog extends BaseUserCtrl
     public function fetch($id)
     {
         if (!isset($id)) {
-            $this->ajaxFailed('提示','缺少参数');
+            $this->ajaxFailed('提示', '缺少参数');
         }
         $model = new ProjectCatalogLabelModel();
         $arr = $model->getById($id);
@@ -68,72 +68,73 @@ class Catalog extends BaseUserCtrl
      */
     public function add()
     {
-        if (isPost()) {
-            $uid = $this->getCurrentUid();
-            $projectId = null;
-            if (isset($_POST['project_id'])) {
-                $projectId = (int)$_POST['project_id'];
-            }
-            if (empty($projectId)) {
-                $this->ajaxFailed('参数错误', '项目id不能为空');
-            }
-
-            $errorMsg = [];
-            if (!isset($_POST['name']) || empty($_POST['name'])) {
-                $errorMsg['name'] = '名称不能为空';
-            }
-            if (!isset($_POST['label_id_arr']) || empty($_POST['label_id_arr'])) {
-                $errorMsg['label_id_arr'] = '包含标签不能为空';
-            }
-
-            if (!isset($_POST['font_color']) || empty($_POST['font_color'])) {
-                $_POST['font_color'] = 'blueviolet';
-            }
-            if (!empty($errorMsg)) {
-                $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
-            }
-            $projectCatalogLabelModel = new ProjectCatalogLabelModel();
-
-            if ($projectCatalogLabelModel->checkNameExist($projectId, $_POST['name'])) {
-                $this->ajaxFailed('分类名称已存在.', array(), 500);
-            }
-            $insertArr = [];
-            $insertArr['projectId'] = $projectId;
-            $insertArr['name'] = $_POST['name'];
-            $insertArr['font_color'] = $_POST['font_color'];
-            if(isset($_POST['description'])){
-                $insertArr['description'] = $_POST['description'];
-            }
-
-            $ret = $projectCatalogLabelModel->insert($insertArr);
-            if ($ret[0]) {
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '创建了分类';
-                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-                $activityInfo['obj_id'] = $ret[1];
-                $activityInfo['title'] = $insertArr['name'] ;
-                $activityModel->insertItem($uid, $projectId, $activityInfo);
-
-                //写入操作日志
-                $logData = [];
-                $logData['user_name'] = $this->auth->getUser()['username'];
-                $logData['real_name'] = $this->auth->getUser()['display_name'];
-                $logData['obj_id'] = 0;
-                $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
-                $logData['page'] = $_SERVER['REQUEST_URI'];
-                $logData['action'] = LogOperatingLogic::ACT_ADD;
-                $logData['remark'] = '添加分类';
-                $logData['pre_data'] = [];
-                $logData['cur_data'] = $insertArr;
-                LogOperatingLogic::add($uid, $projectId, $logData);
-
-                $this->ajaxSuccess('新分类添加成功');
-            } else {
-                $this->ajaxFailed('操作失败', array(), 500);
-            }
+        $uid = $this->getCurrentUid();
+        $projectId = null;
+        if (isset($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
         }
-        $this->ajaxFailed('操作失败.', array(), 500);
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $errorMsg = [];
+        if (!isset($_POST['name']) || empty($_POST['name'])) {
+            $errorMsg['name'] = '名称不能为空';
+        }
+        if (!isset($_POST['label_id_arr']) || empty($_POST['label_id_arr'])) {
+            $errorMsg['label_id_arr'] = '包含标签不能为空';
+        }
+
+        if (!isset($_POST['font_color']) || empty($_POST['font_color'])) {
+            $_POST['font_color'] = 'blueviolet';
+        }
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+        $projectCatalogLabelModel = new ProjectCatalogLabelModel();
+
+        if ($projectCatalogLabelModel->checkNameExist($projectId, $_POST['name'])) {
+            $this->ajaxFailed('分类名称已存在.', array(), 500);
+        }
+        $insertArr = [];
+        $insertArr['project_id'] = $projectId;
+        $insertArr['name'] = $_POST['name'];
+        $insertArr['font_color'] = $_POST['font_color'];
+        $insertArr['label_id_json'] = json_encode($_POST['label_id_arr']);
+        if (isset($_POST['description'])) {
+            $insertArr['description'] = $_POST['description'];
+        }
+        if (isset($_POST['order_weight'])) {
+            $insertArr['order_weight'] = (int)$_POST['order_weight'];
+        }
+
+        list($ret, $errMsg) = $projectCatalogLabelModel->insert($insertArr);
+        if ($ret) {
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '创建了分类';
+            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+            $activityInfo['obj_id'] = $errMsg;
+            $activityInfo['title'] = $insertArr['name'];
+            $activityModel->insertItem($uid, $projectId, $activityInfo);
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = $errMsg;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_ADD;
+            $logData['remark'] = '添加分类';
+            $logData['pre_data'] = [];
+            $logData['cur_data'] = $insertArr;
+            LogOperatingLogic::add($uid, $projectId, $logData);
+
+            $this->ajaxSuccess('提示', '分类添加成功');
+        } else {
+            $this->ajaxFailed('提示', '服务器执行失败:'.$errMsg);
+        }
     }
 
 
@@ -179,22 +180,24 @@ class Catalog extends BaseUserCtrl
         if (isset($_POST['description'])) {
             $updateArr['description'] = $_POST['description'];
         }
+        if (isset($_POST['order_weight'])) {
+            $updateArr['order_weight'] = (int)$_POST['order_weight'];
+        }
 
         $model = new ProjectCatalogLabelModel();
         $catalog = $model->getById($id);
         if (empty($catalog)) {
-            $this->ajaxFailed('提示','参数错误, 数据为空');
+            $this->ajaxFailed('提示', '参数错误, 数据为空');
         }
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
-            $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
-            die;
+            $this->ajaxFailed('提示', '您没有权限访问该页面,需要项目管理权限');
         }
-        if ($catalog['project_id']!=$this->projectId) {
-            $this->ajaxFailed('提示','参数错误, 非当前项目的数据');
+        if ($catalog['project_id'] != $this->projectId) {
+            $this->ajaxFailed('提示', '参数错误, 非当前项目的数据');
         }
         if ($catalog['name'] != $updateArr['name']) {
             if ($model->checkNameExist($catalog['project_id'], $updateArr['name'])) {
-                $this->ajaxFailed('分类名已存在', array(), 500);
+                $this->ajaxFailed('提示', '分类名已存在');
             }
         }
         $ret = $model->updateById($id, $updateArr);
@@ -220,12 +223,11 @@ class Catalog extends BaseUserCtrl
             $logData['cur_data'] = $updateArr;
             LogOperatingLogic::add($currentUserId, $catalog['project_id'], $logData);
 
-            $this->ajaxSuccess('修改成功');
+            $this->ajaxSuccess('提示','修改成功');
         } else {
-            $this->ajaxFailed('更新失败');
+            $this->ajaxFailed('提示','更新失败');
         }
     }
-
 
 
     /**
@@ -246,7 +248,7 @@ class Catalog extends BaseUserCtrl
         $model = new ProjectCatalogLabelModel();
         $info = $model->getById($id);
         if ($info['project_id'] != $this->projectId) {
-            $this->ajaxFailed('提示','参数错误,非当前项目的分类无法删除');
+            $this->ajaxFailed('提示', '参数错误,非当前项目的分类无法删除');
         }
         $model->deleteItem($id);
         $currentUid = $this->getCurrentUid();
@@ -276,6 +278,6 @@ class Catalog extends BaseUserCtrl
         $logData['cur_data'] = $info2;
         LogOperatingLogic::add($currentUid, $project_id, $logData);
 
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('提示','操作成功');
     }
 }

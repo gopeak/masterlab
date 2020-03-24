@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
 </head>
-<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+<body class="" data-group=""  >
 {% include 'twig/common/body/script.twig' %}
 
 <section class="has-sidebar page-layout max-sidebar">
@@ -60,7 +60,7 @@
                                         一个分类包含多个标签
                                     </div>
                                     <div class="nav-controls">
-                                        <a class="btn btn-new label_create_link" data-toggle="modal" href="#modal-form-catalog"  href="javascript:void(0)">添加分类
+                                        <a class="btn btn-new label_create_link"  id="btn-create" href="javascript:void(0)">添加分类
                                         </a>
                                     </div>
                                 </div>
@@ -84,13 +84,16 @@
         <div class="modal" id="modal-form-catalog">
             <form class="form-horizontal label-form" id="form-catalog" action="/project/catalog/add?project_id={{project_id}}" accept-charset="UTF-8" method="post">
                 <input type="hidden" name="project_id" value="{{_project_id}}">
+                <input type="hidden" id="action" name="action" value="">
+                <input type="hidden" id="catalog_id" name="id" value="">
+
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 id="modal-catalog_title" class="modal-header-title">添加分类</h3>
                         </div>
 
-                        <div class="modal-body">
+                        <div class="modal-body" id="modal-body">
                             <div class="form-group">
                                 <label class="control-label" for="input-name">名称</label>
                                 <div class="col-sm-10">
@@ -100,11 +103,11 @@
                             <div class="form-group">
                                 <label class="control-label" for="select-label_id_arr">包含标签</label>
                                 <div class="col-sm-10">
-                                    <select id="select-label_id_arr" name="label_id_arr" class="form-control selectpicker"  multiple  title="请选择"  ></select>
+                                    <select id="select-label_id_arr" name="label_id_arr[]" class="form-control selectpicker"  multiple  title="请选择"  ></select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="label_color">字体颜色</label>
+                                <label class="control-label" for="input-font_color">字体颜色</label>
                                 <div class="col-sm-10">
                                     <div class="input-group">
                                         <div class="input-group-addon js-label-color-preview" style="background-color: #428BCA">&nbsp;</div>
@@ -146,6 +149,14 @@
                                     <textarea class="form-control" id="textarea-description" name="description"></textarea>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label class="control-label" for="input-order_weight">排序权重</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control"  type="number" id="input-order_weight" name="order_weight" value="">
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="modal-footer">
@@ -164,7 +175,8 @@
 </section>
 
 
-{% verbatim %}<script type="text/html" id="list_tpl">
+{% verbatim %}
+<script type="text/html" id="list_tpl">
     {{#catalogs}}
     <li data-id="{{id}}" id="project_label_{{id}}">
         <span class="label-row">
@@ -190,7 +202,8 @@
 
     </li>
     {{/catalogs}}
-</script>{% endverbatim %}
+</script>
+{% endverbatim %}
 
 <script>
     var query_str = '{{query_str}}';
@@ -212,18 +225,22 @@
         };
         window.$catalogAjax= new Catalog(options);
         window.$catalogAjax.fetchAll();
-        window.$catalogAjax.initProjectLabel([]);
+
+        $('#btn-create').click(function () {
+            $('#form-catalog').resetForm();
+            $('#action').val('add');
+            $('#project_id').val('{{project_id}}');
+            window.$catalogAjax.initProjectLabel([]);
+            $('#modal-form-catalog').modal('show');
+        });
+
         $('#btn_create_save').click(function () {
-            window.$catalogAjax.add({{project_id}});
-        });
-
-        $('#btn_edit_save').click(function () {
-            window.$catalogAjax.update({{project_id}});
-        });
-
-        $('#form_create_action .suggest-colors a').click(function () {
-            $('#create_form_bg_color').val($(this).data("color"));
-            $('#form_create_action .js-label-color-preview').css("background-color", $(this).data("color"));
+            let action = $('#action').val();
+            if(action==='add'){
+                window.$catalogAjax.add();
+            }else{
+                window.$catalogAjax.update();
+            }
         });
 
         $('#form-catalog .suggest-colors a').click(function () {
