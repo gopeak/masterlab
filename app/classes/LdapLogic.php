@@ -38,10 +38,12 @@ class LdapLogic
      */
     private $config = [];
 
+    private $setting = [];
+
     public function __construct()
     {
         $ldapRowsArr = SettingModel::getInstance()->getSettingByModule('ldap');
-        $ldapSettingArr = array_column($ldapRowsArr, '_value', '_key');
+        $this->setting = $ldapSettingArr = array_column($ldapRowsArr, '_value', '_key');
         $this->config = [
             'hosts' => [$ldapSettingArr['ldap_hosts']],
             'port' => $ldapSettingArr['ldap_port'],
@@ -93,11 +95,21 @@ class LdapLogic
             return [false, $this->err];
         }
         try {
-            $ldapUser = $this->provider->search()->where('cn', '=', $username)->first();
-            if (!isset($ldapUser->distinguishedname[0])) {
-                return [false, '通过 cn=' . $username . ' 查找失败'];
+            $queryBuilder = $this->provider->search();
+            $matchField = 'cn';
+            if(!empty($this->setting['ldap_match_attr'])){
+                $matchField = $this->setting['ldap_match_attr'];
             }
-            $ret = $this->provider->auth()->attempt($ldapUser->distinguishedname[0], $password);
+            if($this->setting['ldap_match_attr']=='dn'){
+                $ldapUser = $queryBuilder->findByDn($username);
+            }else{
+                $ldapUser = $queryBuilder->where($matchField, '=', $username)->first();
+            }
+            if(!$ldapUser){
+                return [false, 'ldap用户名查找失败'];
+            }
+            $dn = $ldapUser->getDn();
+            $ret = $this->provider->auth()->attempt($dn, $password);
             if (!$ret) {
                 return [false, 'ldap用户名或密码认证失败'];
             }
@@ -110,7 +122,7 @@ class LdapLogic
                 }
                 return [true, $this->formatInfo($username, $ldapUser)];
             } else {
-                return [false, '认证失败,但获取用户信息失败'];
+                return [false, '认证失败,获取用户信息失败'];
             }
 
         } catch (\Exception $e) {
@@ -130,9 +142,12 @@ class LdapLogic
             return [];
         }
         $mailHost = '@ldap.com';
-        if (preg_match('/,DC=([^,]+),DC=([^,]+)$/sU', $ldapUser->distinguishedname[0], $result)) {
-            $mailHost = '@' . $result[1] . '.' . $result[2];
+        if (method_exists($ldapUser, 'getDn')) {
+            if (preg_match('/,DC=([^,]+),DC=([^,]+)$/sU', $ldapUser->getDn(), $result)) {
+                $mailHost = '@' . $result[1] . '.' . $result[2];
+            }
         }
+
         $email = $username . $mailHost;
         if (isset($ldapUser->mail[0])) {
             $email = $ldapUser->mail[0];
@@ -142,12 +157,13 @@ class LdapLogic
         }
 
         $title = '';
-        if (method_exists($ldapUser, 'getTitle')) {
-            $title = $ldapUser->getTitle();
-        }
         if (isset($ldapUser->description[0]) && empty($title)) {
             $title = $ldapUser->description[0];
         }
+        if (method_exists($ldapUser, 'getTitle')) {
+            $title = $ldapUser->getTitle();
+        }
+
 
         $displayName = '';
         if (isset($ldapUser->name[0])) {
@@ -164,13 +180,25 @@ class LdapLogic
         if (method_exists($ldapUser, 'getTelephoneNumber')) {
             $phone = $ldapUser->getTelephoneNumber();
         }
+        $avatar = '';
+        if (method_exists($ldapUser, 'getJpegPhotoEncoded')) {
+            $jpegPhoto =  $ldapUser->getJpegPhotoEncoded();
+            if($jpegPhoto){
+                if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $jpegPhoto, $result)){
+                    $type = $result[2];
+                    $avatar = 'avatar/'.$username.'.'.$type;
+                    file_put_contents(PUBLIC_PATH.'/attachment/'.$avatar, base64_decode(str_replace($result[1], '', $jpegPhoto)));
+                }
+            }
+        }
+
 
         $arr = [];
         $arr['username'] = $username;
         $arr['email'] = $email;
         $arr['phone'] = $phone;
         $arr['display_name'] = $displayName;
-        $arr['avatar'] = '';
+        $arr['avatar'] = $avatar;
         $arr['schema_source'] = 'ldap';
         $arr['title'] = $title;
         $arr['status'] = UserModel::STATUS_NORMAL;
