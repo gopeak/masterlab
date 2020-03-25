@@ -1,0 +1,17 @@
+{% verbatim %}
+<script type="text/html"  id="setting_content_tpl">
+    {{#settings}}
+    <tr class="commit">
+        <td>
+            <div class="branch-commit">
+                <strong>
+                    {{title}}:
+                </strong>
+            </div>
+        </td>
+        <td> {{text}} </td>
+        <td><span style="font-size: 10px">{{description}}</span></td>
+    </tr>
+    {{/settings}}
+</script>
+{% endverbatim %}

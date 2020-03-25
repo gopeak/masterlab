@@ -3,8 +3,9 @@
 <head  >
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/admin/setting.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/setting2.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -71,30 +72,27 @@
     </div>
 </section>
 
-{% verbatim %}<script type="text/html"  id="settings_tpl">
-    {{#settings}}
-    <tr class="commit">
-        <td>
-            <div class="branch-commit">
-                <strong>
-                    {{title}}:
-                </strong>
-            </div>
-        </td>
-        <td> {{text}}</td>
-        <td> </td>
-    </tr>
-    {{/settings}}
 
-</script>{% endverbatim %}
-
+{% include 'twig/admin/common-setting-content.twig' %}
+{% include 'twig/admin/common-setting-form.twig' %}
 <script type="text/javascript">
 
+    var setting_module = 'basic';
+    var options = {
+        fetch_url:"/admin/system/setting_fetch",
+        list_render_id:"tbody_id",
+        list_tpl_id:"setting_content_tpl",
+        form_tpl:"setting_form_tpl",
+        form_render_id:"form_id",
+        update_url:"/admin/system/basic_setting_update",
+    };
+    var $setting = null;
     $(function() {
-        fetchSetting('/admin/system/setting_fetch','basic','settings_tpl','tbody_id');
+        $setting = new SettingV2(setting_module,  options);
     });
 
 </script>
+
 
 </body>
 </html>
