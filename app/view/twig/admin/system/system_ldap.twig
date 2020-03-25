@@ -38,7 +38,7 @@
                         <div class="top-area">
                             <ul class="nav-links">
                                 <li class="active">
-                                    <a href="#">Ldap认证</a>
+                                    <a href="#">Ldap认证</a> {% if ldap_extension_loaded is empty %}<span style="color: red">(需要PHP启用ldap扩展,详看官网文档FAQ)</span>{% endif %}
                                 </li>
                             </ul>
                             <div class="nav-controls">

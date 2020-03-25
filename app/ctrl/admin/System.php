@@ -790,6 +790,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'setting';
         $data['left_nav_active'] = 'ldap';
+        $data['ldap_extension_loaded'] = extension_loaded('ldap');
         $this->render('twig/admin/system/system_ldap.twig', $data);
     }
 
