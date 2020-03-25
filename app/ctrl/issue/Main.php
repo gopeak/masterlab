@@ -25,6 +25,7 @@ use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\ExtraWorkerDayModel;
 use main\app\model\issue\HolidayModel;
+use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -180,7 +181,7 @@ class Main extends BaseUserCtrl
             $data['issue_view'] = $userIssueView;
         }
         if (empty($data['issue_view'])) {
-            $data['issue_view'] = 'responsive';
+            $data['issue_view'] = 'list';
         }
 
         $data['is_all_issues'] = false;
@@ -199,7 +200,8 @@ class Main extends BaseUserCtrl
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
-        //print_r($data);
+
+        $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
         $this->render('gitlab/issue/list.php', $data);
     }
 
@@ -241,7 +243,9 @@ class Main extends BaseUserCtrl
         $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
         $startDate = $_GET['start_date'];
         $dueDate = $_GET['due_date'];
-        $duration = getWorkingDays($startDate, $dueDate, $holidays, $extraWorkerDays);
+        $ganttSetting = (new ProjectGanttSettingModel())->getByProject($projectId);
+        $workDates = json_decode($ganttSetting['work_dates'], true);
+        $duration = getWorkingDays($startDate, $dueDate, $workDates, $holidays, $extraWorkerDays);
 
         $this->ajaxSuccess('ok', $duration);
     }
@@ -607,9 +611,18 @@ class Main extends BaseUserCtrl
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
-            foreach ($data['issues'] as &$issue) {
-                IssueFilterLogic::formatIssue($issue);
+            $issueIdArr = array_column($data['issues'],'id');
+            $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
+            $labelDataArr = [];
+            foreach ($labelDataRows as $labelData) {
+                $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
             }
+            foreach ($data['issues'] as &$issue) {
+                $issueId = $issue['id'];
+                IssueFilterLogic::formatIssue($issue);
+                $issue['label_id_arr'] = isset($labelDataArr[$issueId]) ? $labelDataArr[$issueId]:[];
+            }
+
             $data['total'] = (int)$total;
             $data['pages'] = ceil($total / $pageSize);
             $data['page_size'] = $pageSize;
@@ -900,7 +913,7 @@ class Main extends BaseUserCtrl
         }
         unset($attachmentDataArr);
 
-        // 通过工作流获取可以变更的状态
+        // 通过状态流获取可以变更的状态
         $logic = new WorkflowLogic();
         $issue['allow_update_status'] = $logic->getStatusByIssue($issue);
 
@@ -1314,7 +1327,9 @@ class Main extends BaseUserCtrl
         if(!empty($params['start_date']) && !empty($params['due_date'])){
             $holidays = (new HolidayModel())->getDays($params['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
-            $info['duration'] = getWorkingDays($params['start_date'], $params['due_date'], $holidays, $extraWorkerDays);
+            $ganttSetting = (new ProjectGanttSettingModel())->getByProject($params['project_id']);
+            $workDates = json_decode($ganttSetting['work_dates'], true);
+            $info['duration'] = getWorkingDays($params['start_date'], $params['due_date'], $workDates, $holidays, $extraWorkerDays);
         }
 
         $this->initAddGanttWeight($params, $info);
@@ -1574,7 +1589,9 @@ class Main extends BaseUserCtrl
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
             $updatedIssue = $issueModel->getById($issueId);
             $updateDurationArr = [];
-            $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $holidays, $extraWorkerDays);
+            $ganttSetting = (new ProjectGanttSettingModel())->getByProject($issue['project_id']);
+            $workDates = json_decode($ganttSetting['work_dates'], true);
+            $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $workDates, $holidays, $extraWorkerDays);
             // print_r($updateDurationArr);
             list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
             if($ret){
@@ -1761,8 +1778,11 @@ class Main extends BaseUserCtrl
                         $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $resolves[$issueOldValue]['color'] . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
                     } elseif ($field == 'start_date' || $field == 'due_date') {
                         $issueNewValue = trim($issueNewValue);
-                        $issueNewValue = $issueNewValue ? '<span style="color:#337ab7">' . $issueNewValue . '</span>' : '<span>无</span>';
+                        if (!$issueNewValue && !$issueOldValue) {
+                            continue;
+                        }
 
+                        $issueNewValue = $issueNewValue ? '<span style="color:#337ab7">' . $issueNewValue . '</span>' : '<span>无</span>';
                         if ($issueOldValue && ($issueOldValue != '0000-00-00')) {
                             $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
                         } else {

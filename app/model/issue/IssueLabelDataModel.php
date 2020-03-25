@@ -44,6 +44,17 @@ class IssueLabelDataModel extends BaseIssueItemsModel
         }
         return self::$instance[$index];
     }
+    /**
+     * 通过标签获取事项的id数组
+     * @param $id
+     * @return array
+     */
+    public function getIssueIdArrById($id)
+    {
+        $rows = $this->getRows('issue_id',['label_id'=>$id]);
+        $issueIdArr = array_column($rows,'issue_id');
+        return $issueIdArr;
+    }
 
     /**
      * 通过多个标签id获取事项id数组
@@ -58,10 +69,29 @@ class IssueLabelDataModel extends BaseIssueItemsModel
         $idStr = implode(',', $idArr);
         $sql = "select issue_id from " . $this->getTable() . " where label_id in({$idStr})";
         $rows = $this->db->getRows($sql);
-        $issueIdArr = [];
-        foreach ( $rows as $item) {
-            $issueIdArr[] = $item['issue_id'];
+        $issueIdArr = array_column($rows,'issue_id');
+        if(!$issueIdArr){
+            $issueIdArr = [];
         }
         return $issueIdArr;
     }
+
+    /**
+     * @param array $issueIdArr
+     * @return array
+     */
+    public function getsByIssueIdArr($issueIdArr)
+    {
+        if(empty($issueIdArr)){
+            return [];
+        }
+        $idsStr = implode(",", $issueIdArr);
+        $table = $this->getTable();
+        $where = "WHERE issue_id IN ({$idsStr}) ";
+        $sql = "SELECT * FROM " . $table . $where;
+        $rows = $this->db->getRows($sql);
+        return $rows;
+    }
+
+
 }

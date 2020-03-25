@@ -88,12 +88,13 @@
                     </li>
 
                     <li>
-                        <a title="开启的问题" aria-label="Open issue" class="shortcuts-todos" data-toggle="tooltip"
+                        <a title="系统消息" aria-label="Open issue" class="shortcuts-todos" data-toggle="tooltip"
                            data-placement="bottom"
-                           data-container="body" href="/issue/main?sys_filter=open">
-                            <i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count">  </span>
+                           data-container="body" href="/user/msg_system">
+                            <i class="fa fa-envelope-o fa-fw"></i> {% if ( _unread_count>0 ) %}<span class="badge merge-requests-count">{{_unread_count}}</span>{% endif %}
                         </a>
                     </li>
+
                     <li class="nav-item header-help dropdown">
                         <a class="header-help-dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
                             <i class="fa fa-info-circle "></i>

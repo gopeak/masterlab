@@ -7107,7 +7107,9 @@ THE SOFTWARE.
                                  e[t] = function(e) {
                                      var t, a;
                                      return e || (e = this),
-                                     e[ye] || (Ve = !0, t = Ce[Ee.get(e.constructor)], a = _e && 1 === t.create.length, e = a ? Reflect.construct(i, fe, t.constructor) : k.createElement.apply(k, t.create), e[ye] = !0, Ve = !1, a || _(e)),
+                                     e[ye] || (
+                                         Ve = !0,
+                                             t = Ce[Ee.get(e.constructor)], a = _e && 1 === t.create.length,  e = a ? Reflect.construct(i, fe, t.constructor) : k.createElement.apply(k, t.create), e[ye] = !0, Ve = !1, a || _(e)),
                                          e
                                  },
                                      e[t].prototype = i.prototype;

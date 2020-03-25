@@ -64,7 +64,7 @@ $sqlFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.sql';
 $indexSqlFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0_index.sql';
 
 // 代码补丁压缩包路径，要求zip格式
-$patchFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'v1.2-2.0.patch.zip';
+$patchFile = $currentDir . 'data' . DIRECTORY_SEPARATOR . 'patch.zip';
 
 // vendor目录压缩包，要求zip格式
 $vendorFile = $currentDir . 'data'. DIRECTORY_SEPARATOR . 'vendor.zip';

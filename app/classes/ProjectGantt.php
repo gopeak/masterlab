@@ -53,6 +53,8 @@ class ProjectGantt
             }
             $addArr['is_display_backlog'] = '0';
             $addArr['hide_issue_types'] = '';
+            $addArr['work_dates'] = '[1,2,3,4,5]';
+
             $projectGanttModel->insertByProjectId($addArr, $projectId);
         }
     }
@@ -299,6 +301,9 @@ class ProjectGantt
             $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
         }
 
+        $ganttSetting = (new ProjectGanttSettingModel())->getByProject($projectId);
+        $workDates = json_decode($ganttSetting['work_dates'], true);
+
         $finalArr = [];
         $sprintRows = [];
         foreach ($sprints as $sprint) {
@@ -320,7 +325,7 @@ class ProjectGantt
             // 计算迭代的用时
             $holidays = (new HolidayModel())->getDays($projectId);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
-            $sprintDuration = getWorkingDays($sprint['start_date'], $sprint['end_date'], $holidays, $extraWorkerDays);
+            $sprintDuration = getWorkingDays($sprint['start_date'], $sprint['end_date'], $workDates, $holidays, $extraWorkerDays);
             $treeArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
@@ -424,6 +429,9 @@ class ProjectGantt
             $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
         }
 
+        $ganttSetting = (new ProjectGanttSettingModel())->getByProject($projectId);
+        $workDates = json_decode($ganttSetting['work_dates'], true);
+
         $finalArr = [];
         $sprintRows = [];
         foreach ($sprints as $sprint) {
@@ -445,7 +453,7 @@ class ProjectGantt
             // 计算迭代的用时
             $holidays = (new HolidayModel())->getDays($projectId);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
-            $sprintDuration = getWorkingDays($sprint['start_date'], $sprint['end_date'], $holidays, $extraWorkerDays);
+            $sprintDuration = getWorkingDays($sprint['start_date'], $sprint['end_date'], $workDates, $holidays, $extraWorkerDays);
 
             if (!empty($sprintRows[$sprint['id']])) {
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {

@@ -80,12 +80,21 @@ class Member extends BaseUserCtrl
         $userLogic = new UserLogic();
         $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
         $resources = [];
+        $skipUserIdArr = [];
         foreach ($projectUsers as &$user) {
             $user = UserLogic::format($user);
             $resources[] = ['id' => $user['uid'], 'name' => $user['display_name']];
+            $skipUserIdArr[] = $user['uid'];
         }
         $data['resources'] = $resources;
         $data['project_users'] = $projectUsers;
+        // 非当前项目的用户
+        $notProjectUsers = $userLogic->selectUserFilter(null, 200, true, null, null, $skipUserIdArr);
+        foreach ($notProjectUsers as $k => &$row) {
+            $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
+        }
+        $data['not_project_users'] = $notProjectUsers;
+
         $this->ajaxSuccess('ok', $data);
     }
 }

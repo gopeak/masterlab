@@ -174,7 +174,9 @@ GridEditor.prototype.refreshTaskRow = function (task) {
   //var profiler = new Profiler("editorRefreshTaskRow");
 
   var canWrite=this.master.permissions.canWrite || task.canWrite;
-
+  if ( typeof(_projectPermArr)!=='undefined' && !isInArray(_projectPermArr, 'ADMIN_GANTT')) {
+    canWrite = false;
+  }
   var row = task.rowElement;
   //console.log(task,'task.start:',task.start,new Date(task.start).format());
   row.find(".taskRowIndex").html(task.getRow() + 1);
@@ -192,6 +194,12 @@ GridEditor.prototype.refreshTaskRow = function (task) {
   row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent).updateOldValue();
   row.find("[name=depends]").val(task.depends);
   row.find(".taskAssigs").html(task.getAssigsString());
+
+  if(!canWrite){
+    row.find(".teamworkIcon").css('display','none');
+  }
+
+
 
   //manage collapsed
   if (task.collapsed)

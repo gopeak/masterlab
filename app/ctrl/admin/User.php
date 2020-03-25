@@ -60,7 +60,7 @@ class User extends BaseAdminCtrl
         $data['status_normal'] = UserModel::STATUS_NORMAL;
         $data['status_disabled'] = UserModel::STATUS_DISABLED;
         $data['status_approval'] = UserModel::STATUS_PENDING_APPROVAL;
-        $this->render('gitlab/admin/users.php', $data);
+        $this->render('twig/admin/user/users.twig', $data);
     }
 
     /**

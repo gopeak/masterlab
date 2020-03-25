@@ -119,9 +119,7 @@ $(function () {
         if ( is_empty(sprint_id) ) {
             return '';
         }
-        console.log(_issueConfig.sprint);
         var sprint = getArrayValue(_issueConfig.sprint, 'id', sprint_id  );
-        console.log(sprint);
         if (sprint == null) {
             return '';
         }

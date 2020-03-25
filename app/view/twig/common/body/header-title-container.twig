@@ -24,6 +24,10 @@
             {% set header_title = org_name %}
             {% set header_title_link = project_root_url %}
         {% endif %}
+        {% if  _GET._target[0] == 'user'%}
+            {% set header_title = '用户中心' %}
+            {% set header_title_link = site_url~'user/profile' %}
+        {% endif %}
         {% if  _GET._target[0] == 'projects'%}
             {% set header_title = '项目列表' %}
             {% set header_title_link = site_url~'projects' %}

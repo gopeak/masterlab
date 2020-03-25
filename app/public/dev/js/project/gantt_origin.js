@@ -1,7 +1,13 @@
 $(function() {
     let options = {};
     $("#role_select").selectpicker({title: "请选择角色",  showTick: true, iconBase: "fa", tickIcon: "fa-check"});
-    var canWrite=true; //this is the default for test purposes
+
+    var canWrite= true ; //this is the default for test purposes
+
+    if ( typeof(_projectPermArr)!=='undefined' && isInArray(_projectPermArr, 'ADMIN_GANTT')) {
+        canWrite = false;
+    }
+
     // here starts gantt initialization
     ge = new GanttMaster();
     ge.set100OnClose=true;
@@ -29,7 +35,7 @@ function fetGanttIssues(project_id, callback){
     loading.show('#TWGanttArea');
     ret= {};
     var method = 'get';
-    var url = '/project/gantt/fetchProjectIssues/' + project_id;
+    var url = '/project/gantt/fetchProjectIssues/' + project_id+'&project_id='+project_id;
     $.ajax({
         type: method,
         dataType: "json",
@@ -138,7 +144,6 @@ function editResources(){
 
     var ndo = createModalPopup(400, 500).append(resourceEditor);
 
-    new UsersSelect();
 }
 
 function showBaselineInfo (event,element){

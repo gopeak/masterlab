@@ -191,27 +191,27 @@ if (!function_exists('price')) {
         return $price;
     }
 }
+if (!function_exists('dump')) {
+    /**
+     * @param $vars
+     * @param bool $output
+     * @param bool $show_trace
+     * @return string
+     */
+    function dump($vars, $output = false, $show_trace = false)
+    {
 
-/**
- * @param $vars
- * @param bool $output
- * @param bool $show_trace
- * @return string
- */
-function dump($vars, $output = false, $show_trace = false)
-{
-
-    if (true == $show_trace) {
-        $content = htmlspecialchars(print_r($vars, true));
-    } else {
-        $content = "<div align=left><pre>\n" . htmlspecialchars(print_r($vars, true)) . "\n</pre></div>\n";
+        if (true == $show_trace) {
+            $content = htmlspecialchars(print_r($vars, true));
+        } else {
+            $content = "<div align=left><pre>\n" . htmlspecialchars(print_r($vars, true)) . "\n</pre></div>\n";
+        }
+        if (true != $output) {
+            return $content;
+        } // 直接返回，不输出。
+        echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";
     }
-    if (true != $output) {
-        return $content;
-    } // 直接返回，不输出。
-    echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";
 }
-
 if (!function_exists('closeResources')) {
     /**
      * close resources

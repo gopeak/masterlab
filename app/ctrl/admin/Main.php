@@ -56,9 +56,8 @@ class Main extends BaseAdminCtrl
 
         $dbConf = getConfigVar('database');
 
-
         $data['sys_domain'] = ROOT_URL;//ServerInfo::getDomain();
-        $data['sys_datetime'] = date('l, d F Y   H:i:s', time());
+        $data['sys_datetime'] = date('Y-m-d  H:i:s', time());
         $data['sys_timezone'] = date_default_timezone_get();
         $data['sys_workpath'] = PRE_APP_PATH;
         $data['sys_php_version'] = PHP_VERSION;
@@ -77,11 +76,20 @@ class Main extends BaseAdminCtrl
         $data['ip'] = ServerInfo::getLocalIp();
         $data['port'] = ServerInfo::getLocalPort();
 
+        $settingMailArr = $settingModel->getSettingByModule('mail');
+        $data['setting_mail'] = array_column($settingMailArr,'_value', '_key');
+
+        $socketServerConnectMsg = '<span style="color:green">连接成功</span>';
+        $fp = @fsockopen($data['setting_mail']['socket_server_host'], (int)$data['setting_mail']['socket_server_port'], $errno, $errstr, 5);
+        if (!$fp) {
+            $socketServerConnectMsg = '<span style="color:red">连接失败</span>';
+        }
+        $data['setting_mail']['socket_server_connect_msg'] = $socketServerConnectMsg;
 
         // $data['lang'] = ServerInfo::getLocalLang();
         $data['extListFormat'] = $extListFormat;
 
-        $this->render('gitlab/admin/index.php', $data);
+        $this->render('twig/admin/main/index.twig', $data);
     }
 
 }

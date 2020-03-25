@@ -28,7 +28,7 @@ try{
         $ret = $model->db->exec($sql);
         //var_dump($ret);
     }
-    $demoSqlFile = realpath(APP_PATH . 'public/install/data/demo.sql');
+    $demoSqlFile = realpath(APP_PATH . 'public/install/data/main.sql');
     $sql = file_get_contents($demoSqlFile);
     runSql($sql, $model->db);
     showLine('OK');

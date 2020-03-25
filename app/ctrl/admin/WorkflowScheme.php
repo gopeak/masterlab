@@ -11,6 +11,7 @@ use main\app\model\issue\WorkflowSchemeDataModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\WorkflowModel;
 use main\app\classes\WorkflowLogic;
+use main\app\model\project\ProjectModel;
 
 /**
  * WorkflowScheme
@@ -42,7 +43,7 @@ class WorkflowScheme extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'issue_type';
         $data['left_nav_active'] = 'workflow_scheme';
-        $this->render('gitlab/admin/workflow_scheme.php', $data);
+        $this->render('twig/admin/issue/workflow_scheme.twig', $data);
     }
 
     /**
@@ -59,6 +60,15 @@ class WorkflowScheme extends BaseAdminCtrl
 
         $issueTypeModel = new IssueTypeModel();
         $issueTypes = $issueTypeModel->getAll();
+        $arr = (new ProjectModel())->getAllByFields('id,org_path,`key`,name,workflow_scheme_id');
+        $projectWorkflowSchemeArr = [];
+        foreach ($arr as $item) {
+            $id = $item['workflow_scheme_id'];
+            if($id=='0'){
+                $id = '1';
+            }
+            $projectWorkflowSchemeArr[$id][] = $item;
+        }
 
         $wfSchemeDataModel = new WorkflowSchemeDataModel();
         $workflowSchemeData = $wfSchemeDataModel->getAllItems();
@@ -68,14 +78,16 @@ class WorkflowScheme extends BaseAdminCtrl
             $workflowId = $row['workflow_id'];
             $issueTypeId = empty($issueTypeId) ? 1 : $issueTypeId;
             $workflowId  = empty($workflowId)  ? 1 : $workflowId;
-
             $row['workflow_name'] = isset($workflow[$workflowId]['name']) ? $workflow[$workflowId]['name'] : '';
             $row['issue_name'] = isset($issueTypes[$issueTypeId]['name']) ? $issueTypes[$issueTypeId]['name'] : '';
+
             $tmp[$row['scheme_id']][] = $row;
         }
         $workflowSchemeData = $tmp;
 
         foreach ($workflowScheme as &$s) {
+            $schemeId = $s['id'];
+            $s['project_arr'] = isset($projectWorkflowSchemeArr[$schemeId]) ? $projectWorkflowSchemeArr[$schemeId]:[];
             $s['relation'] = isset($workflowSchemeData[$s['id']]) ? $workflowSchemeData[$s['id']] : [];
         }
 
@@ -83,6 +95,10 @@ class WorkflowScheme extends BaseAdminCtrl
         $data['workflow_scheme'] = $workflowScheme;
         $data['issue_types'] = array_values($issueTypes);
         $data['workflow'] = array_values($workflow);
+
+
+        $data['project_workflow_scheme_id_arr'] =  $projectWorkflowSchemeArr;
+
 
         $this->ajaxSuccess('操作成功', $data);
     }

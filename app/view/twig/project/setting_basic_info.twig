@@ -98,6 +98,7 @@
                                                 <input value="{{info['key']}}" placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"required="required" type="text" name="params[key]" id="project_key" disabled>
                                             </div>
                                         </div>
+
                                         <div class="form-group clearfix">
                                             <label class="control-label" for="project_visibility_level">
                                                 项目类型 <i class="required">*</i>
@@ -114,6 +115,36 @@
                                                         </label>
                                                     </div>
                                                 {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="issue_type_scheme_id">
+                                                <span>事项类型方案 <i class="required">*</i></span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="selectpicker" data-live-search="true" name="params[issue_type_scheme_id]" id="issue_type_scheme_id">
+                                                        {% for scheme in issue_type_schemes %}
+                                                            <option value="{{scheme['id']}}">{{scheme['name']}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="workflow_scheme_id">
+                                                <span>事项状态流方案 <i class="required">*</i></span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="selectpicker" data-live-search="true" name="params[workflow_scheme_id]" id="workflow_scheme_id">
+                                                        {% for scheme in workflow_schemes %}
+                                                            <option value="{{scheme['id']}}">{{scheme['name']}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -339,6 +370,10 @@
 <script>
     // 初始化组织值
     $(".selectpicker").selectpicker('val', {{project['org_id']}});
+    // 初始化事项类型方案
+    $("#issue_type_scheme_id").selectpicker('val', {{ issue_type_scheme_id }});
+    // 初始化状态刘方案
+    $("#workflow_scheme_id").selectpicker('val', {{ project['workflow_scheme_id'] }});
 
     var editor = editormd({
         id   : "editor_md",

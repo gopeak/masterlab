@@ -4669,7 +4669,7 @@ webpackJsonp([6], {
                                         function (e) {
                                             return e.classList.contains("input-token")
                                         });
-                                    n.splice(o + 1)
+                                    n.splice(o + 1);
                                 }
                                 return n.forEach(function (e) {
                                     if (e.classList.contains("js-visual-token")) {

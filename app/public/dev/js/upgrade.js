@@ -31,6 +31,7 @@ let Upgrade = (function () {
 
         // 弹出层事件
         $modalUpgrade.on('shown.bs.modal', function () {
+            $('.modal-backdrop').hide();
             Upgrade.prototype.checkUpgrade();
         });
         $modalUpgrade.on('hide.bs.modal', function () {

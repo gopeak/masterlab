@@ -98,7 +98,17 @@ class Gantt extends BaseUserCtrl
         $extraHolidays = (new ExtraWorkerDayModel())->getDays($projectId);
         $data['extra_holidays'] = $extraHolidays;
 
+        $workDates = null;
+        if (isset($ganttSetting['work_dates'])) {
+
+        }
+        if (is_null($workDates)) {
+            $workDates = [1, 2, 3, 4, 5];
+        }
+        $data['work_dates'] = $workDates;
+
         ConfigLogic::getAllConfigs($data);
+
         $this->render('gitlab/project/gantt.php', $data);
     }
 
@@ -119,8 +129,12 @@ class Gantt extends BaseUserCtrl
         $ganttSetting = $projectGanttModel->getByProject($projectId);
         $class = new ProjectGantt();
         if (empty($ganttSetting)) {
-            $class->initGanttSetting($projectId);
+            // 再次获取一次
             $ganttSetting = $projectGanttModel->getByProject($projectId);
+            if (empty($ganttSetting)) {
+                $class->initGanttSetting($projectId);
+                $ganttSetting = $projectGanttModel->getByProject($projectId);
+            }
         }
         $sourceType = 'project';
         $sourceArr = ['project', 'active_sprint', 'module'];
@@ -136,11 +150,19 @@ class Gantt extends BaseUserCtrl
         if (isset($ganttSetting['hide_issue_types'])) {
             $hideIssueTypes = explode(',', $ganttSetting['hide_issue_types']);
         }
+        $workDates = [];
+        if (isset($ganttSetting['work_dates'])) {
+            $workDates = json_decode($ganttSetting['work_dates'], true);
+            if (is_null($workDates)) {
+                $workDates = [1, 2, 3, 4, 5];
+            }
+        }
 
         $data = [];
         $data['source_type'] = $sourceType;
         $data['is_display_backlog'] = $isDisplayBacklog;
         $data['hide_issue_types'] = $hideIssueTypes;
+        $data['work_dates'] = $workDates;
 
         $holidays = (new HolidayModel())->getDays($projectId);
         $data['holidays'] = $holidays;
@@ -179,7 +201,7 @@ class Gantt extends BaseUserCtrl
         $updateInfo['source_type'] = $sourceType;
 
         $isDisplayBacklog = '0';
-        if (isset($_POST['is_display_backlog']) && $_POST['is_display_backlog']=='1') {
+        if (isset($_POST['is_display_backlog']) && $_POST['is_display_backlog'] == '1') {
             $isDisplayBacklog = '1';
         }
         $updateInfo['is_display_backlog'] = $isDisplayBacklog;
@@ -187,12 +209,22 @@ class Gantt extends BaseUserCtrl
         // hide_issue_types
         if (isset($_POST['hide_issue_types'])) {
             $hideIssueTypes = $_POST['hide_issue_types'];
-            if(is_array($hideIssueTypes)){
-                $hideIssueTypes = implode(',',$hideIssueTypes);
-            }else{
+            if (is_array($hideIssueTypes)) {
+                $hideIssueTypes = implode(',', $hideIssueTypes);
+            } else {
                 $hideIssueTypes = strval($hideIssueTypes);
             }
             $updateInfo['hide_issue_types'] = $hideIssueTypes;
+        }
+        if (isset($_POST['work_dates'])) {
+            $workDates = $_POST['work_dates'];
+            if (is_array($workDates)) {
+                $workDates = array_map('intval', $workDates);
+                $workDatesJson = json_encode($workDates);
+            } else {
+                $this->ajaxFailed('提示', '参数错误, 参数"上班日"应该为数组类型');
+            }
+            $updateInfo['work_dates'] = $workDatesJson;
         }
 
         list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
@@ -282,17 +314,17 @@ class Gantt extends BaseUserCtrl
 
         $issues = [];
         if ($sourceType == 'project') {
-            $issues = $class->getIssuesGroupBySprint($projectId,  $isDisplayBacklog);
+            $issues = $class->getIssuesGroupBySprint($projectId, $isDisplayBacklog);
         }
         if ($sourceType == 'active_sprint') {
-            $issues = $class->getIssuesGroupByActiveSprint($projectId,  $isDisplayBacklog);
+            $issues = $class->getIssuesGroupByActiveSprint($projectId, $isDisplayBacklog);
         }
 
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
 
         $hideIssueTypeKeyArr = [];
-        if(!empty($ganttSetting['hide_issue_types'])){
+        if (!empty($ganttSetting['hide_issue_types'])) {
             $hideIssueTypeKeyArr = explode(',', $ganttSetting['hide_issue_types']);
         }
         $issueTypeModel = new IssueTypeModel();
@@ -310,13 +342,14 @@ class Gantt extends BaseUserCtrl
                 $assigs[] = $tmp;
             }
             $task['assigs'] = $assigs;
+
             // 只有事项的才进行过滤
-            if($task['type']!='sprint'){
-                $issueTypeKey = isset($issueTypeIdArr[$task['type']]) ? $issueTypeIdArr[$task['type']]['_key']:null;
-                if( empty($task['gant_hide']) && !in_array($issueTypeKey, $hideIssueTypeKeyArr)){
+            if ($task['type'] != 'sprint') {
+                $issueTypeKey = isset($issueTypeIdArr[$task['type']]) ? $issueTypeIdArr[$task['type']]['_key'] : null;
+                if (empty($task['gant_hide']) && !in_array($issueTypeKey, $hideIssueTypeKeyArr)) {
                     $filteredArr[] = $task;
                 }
-            }else{
+            } else {
                 $filteredArr[] = $task;
             }
 
@@ -328,6 +361,9 @@ class Gantt extends BaseUserCtrl
         $data['resources'] = $resources;
         $data['roles'] = $roles;
         $data['canWrite'] = true;
+        if (!isset($this->projectPermArr[PermissionLogic::ADMIN_GANTT]) || $this->projectPermArr[PermissionLogic::ADMIN_GANTT] != 1) {
+            $data['canWrite'] = false;
+        }
         $data['canDelete'] = true;
         $data['canWriteOnParent'] = true;
         $data['canAdd'] = true;
@@ -425,8 +461,8 @@ class Gantt extends BaseUserCtrl
         $fieldWeight = 'gant_sprint_weight';
         $fields = "id,sprint,summary ,{$fieldWeight},have_children";
         $issueModel = new IssueModel();
-        $currentIsuse = $issueModel->getRow($fields,['id'=>$currentId]);
-        $targetIssue = $issueModel->getRow($fields,['id'=>$targetId]);
+        $currentIsuse = $issueModel->getRow($fields, ['id' => $currentId]);
+        $targetIssue = $issueModel->getRow($fields, ['id' => $targetId]);
 
         if (!isset($currentIsuse[$fieldWeight]) || !isset($targetIssue[$fieldWeight])) {
             $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
@@ -436,9 +472,9 @@ class Gantt extends BaseUserCtrl
         $currentIsuse['have_children'] = (int)$currentIsuse['have_children'];
         $targetIssue['have_children'] = (int)$targetIssue['have_children'];
         // 如果两个事项都没有子任务，则交换排序权重值
-        if($currentIsuse['have_children']==0 && $targetIssue['have_children']==0){
+        if ($currentIsuse['have_children'] == 0 && $targetIssue['have_children'] == 0) {
             if ($currentWeight == $targetWeight) {
-                $targetWeight = max(0,$targetWeight-ProjectGantt::$offset);
+                $targetWeight = max(0, $targetWeight - ProjectGantt::$offset);
             }
             $tmp = $targetWeight;
             $currentWeight = $tmp;
@@ -448,7 +484,7 @@ class Gantt extends BaseUserCtrl
             $issueModel->updateItemById($currentId, $currentArr);
             $targetArr = [$fieldWeight => $targetWeight];
             $issueModel->updateItemById($targetId, $targetArr);
-        }else{
+        } else {
             //  否则，先取出当前事项及子任务，再取出目标事项及子任务，最后这两个数组合并在重新计算排序值
             $sortArr = [];
             $sortArr[] = $currentIsuse;
@@ -457,8 +493,8 @@ class Gantt extends BaseUserCtrl
             $sprintId = $currentIsuse['sprint'];
             $currentId = $currentIsuse['id'];
             $sql = "Select {$fields} From {$table} Where  master_id={$currentId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ,start_date asc";
-            $currentChildrenArr =  $issueModel->db->getRows( $sql );
-            if($currentChildrenArr && is_array($currentChildrenArr)){
+            $currentChildrenArr = $issueModel->db->getRows($sql);
+            if ($currentChildrenArr && is_array($currentChildrenArr)) {
                 foreach ($currentChildrenArr as $item) {
                     $sortArr[] = $item;
                 }
@@ -467,8 +503,8 @@ class Gantt extends BaseUserCtrl
             $sortArr[] = $targetIssue;
             $sprintId = $targetIssue['sprint'];
             $sql = "Select {$fields} From {$table} Where `$fieldWeight` >$currentWeight AND `$fieldWeight`<$targetWeight   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ";
-            $targetChildrenArr =  $issueModel->db->getRows( $sql );
-            if($targetChildrenArr && is_array($targetChildrenArr)){
+            $targetChildrenArr = $issueModel->db->getRows($sql);
+            if ($targetChildrenArr && is_array($targetChildrenArr)) {
                 foreach ($targetChildrenArr as $item) {
                     $sortArr[] = $item;
                 }
@@ -478,17 +514,17 @@ class Gantt extends BaseUserCtrl
 
             $count = count($sortArr);
             $maxWeight = $targetWeight;
-            $decWeight = intval(($targetWeight-$minWeight)/$count);
+            $decWeight = intval(($targetWeight - $minWeight) / $count);
             // 重新更新权重值
             foreach ($sortArr as &$midRow) {
-                $updateArr = [$fieldWeight=>$maxWeight];
+                $updateArr = [$fieldWeight => $maxWeight];
                 $midRow[$fieldWeight] = $maxWeight;
                 $issueModel->updateItemById($midRow['id'], $updateArr);
-                $maxWeight = intval($maxWeight-$decWeight);
+                $maxWeight = intval($maxWeight - $decWeight);
             }
             //print_r($sortArr);
         }
-        $this->ajaxSuccess('上移成功' );
+        $this->ajaxSuccess('上移成功');
     }
 
     /**
@@ -511,8 +547,8 @@ class Gantt extends BaseUserCtrl
         $fieldWeight = 'gant_sprint_weight';
         $fields = "id,sprint,summary ,{$fieldWeight},have_children";
         $issueModel = new IssueModel();
-        $currentIsuse = $issueModel->getRow($fields,['id'=>$currentId]);
-        $targetIssue = $issueModel->getRow($fields,['id'=>$targetId]);
+        $currentIsuse = $issueModel->getRow($fields, ['id' => $currentId]);
+        $targetIssue = $issueModel->getRow($fields, ['id' => $targetId]);
 
         if (!isset($currentIsuse[$fieldWeight]) || !isset($targetIssue[$fieldWeight])) {
             $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
@@ -522,9 +558,9 @@ class Gantt extends BaseUserCtrl
         $currentIsuse['have_children'] = (int)$currentIsuse['have_children'];
         $targetIssue['have_children'] = (int)$targetIssue['have_children'];
         // 如果两个事项都没有子任务，则交换排序权重值
-        if($currentIsuse['have_children']==0 && $targetIssue['have_children']==0){
+        if ($currentIsuse['have_children'] == 0 && $targetIssue['have_children'] == 0) {
             if ($currentWeight == $targetWeight) {
-                $currentWeight = max(0,$currentWeight-ProjectGantt::$offset);
+                $currentWeight = max(0, $currentWeight - ProjectGantt::$offset);
             }
             $tmp = $currentWeight;
             $currentWeight = $targetWeight;
@@ -534,7 +570,7 @@ class Gantt extends BaseUserCtrl
             $issueModel->updateItemById($currentId, $currentArr);
             $targetArr = [$fieldWeight => $targetWeight];
             $issueModel->updateItemById($targetId, $targetArr);
-        }else{
+        } else {
             //  否则，先取出目标事项及子任务，再取出当前事项及子任务，最后这两个数组合并在重新计算排序值
             $sortArr = [];
             $sortArr[] = $targetIssue;
@@ -543,8 +579,8 @@ class Gantt extends BaseUserCtrl
             $sprintId = $targetIssue['sprint'];
             $targetId = $targetIssue['id'];
             $sql = "Select {$fields} From {$table} Where  master_id={$targetId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ,start_date asc";
-            $targetChildrenArr =  $issueModel->db->getRows( $sql );
-            if($targetChildrenArr && is_array($targetChildrenArr)){
+            $targetChildrenArr = $issueModel->db->getRows($sql);
+            if ($targetChildrenArr && is_array($targetChildrenArr)) {
                 foreach ($targetChildrenArr as $item) {
                     $sortArr[] = $item;
                 }
@@ -554,8 +590,8 @@ class Gantt extends BaseUserCtrl
             $sortArr[] = $currentIsuse;
             $sprintId = $currentIsuse['sprint'];
             $sql = "Select {$fields} From {$table} Where `$fieldWeight` >$targetWeight AND `$fieldWeight`<$currentWeight   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ";
-            $currentChildrenArr =  $issueModel->db->getRows( $sql );
-            if($currentChildrenArr && is_array($currentChildrenArr)){
+            $currentChildrenArr = $issueModel->db->getRows($sql);
+            if ($currentChildrenArr && is_array($currentChildrenArr)) {
                 foreach ($currentChildrenArr as $item) {
                     $sortArr[] = $item;
                 }
@@ -566,19 +602,19 @@ class Gantt extends BaseUserCtrl
             $minWeight = max(0, (int)$issueModel->db->getOne($sql));
             $count = count($sortArr);
             $maxWeight = $currentWeight;
-            $decWeight = intval(($currentWeight-$minWeight)/$count);
+            $decWeight = intval(($currentWeight - $minWeight) / $count);
             // print_r($decWeight);
             // print_r($sortArr);
             // 重新更新权重值
             foreach ($sortArr as &$midRow) {
-                $updateArr = [$fieldWeight=>$maxWeight];
+                $updateArr = [$fieldWeight => $maxWeight];
                 $midRow[$fieldWeight] = $maxWeight;
                 $issueModel->updateItemById($midRow['id'], $updateArr);
-                $maxWeight = intval($maxWeight-$decWeight);
+                $maxWeight = intval($maxWeight - $decWeight);
             }
             //print_r($sortArr);
         }
-        $this->ajaxSuccess('下移成功' );
+        $this->ajaxSuccess('下移成功');
     }
 
 
@@ -621,17 +657,17 @@ class Gantt extends BaseUserCtrl
         $currentInfo['level'] = $level;
         $currentInfo['master_id'] = $masterId;
         list($ret, $msg) = $issueModel->updateItemById($issueId, $currentInfo);
-        if(!$ret){
-            $this->ajaxFailed('操作失败,数据库执行失败：'.$msg);
+        if (!$ret) {
+            $this->ajaxFailed('操作失败,数据库执行失败：' . $msg);
         }
-        if($masterId!='0'){
+        if ($masterId != '0') {
             $issueModel->inc('have_children', $masterId, 'id');
         }
 
         if (!empty($children)) {
             foreach ($children as $childId) {
-                $childLevel = max(1,intval($level-1));
-                $issueModel->updateItemById($childId, ['level' => $childLevel,'master_id'=>$issueId]);
+                $childLevel = max(1, intval($level - 1));
+                $issueModel->updateItemById($childId, ['level' => $childLevel, 'master_id' => $issueId]);
                 $issueModel->inc('have_children', $issueId, 'id');
             }
         }

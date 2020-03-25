@@ -1,5 +1,10 @@
 $(function(){
-    window.$_gantAjax = new Gantt({});
+
+    var is_admin_gantt = false ;
+    if (isInArray(window._projectPermArr, 'ADMIN_GANTT')) {
+        is_admin_gantt = true;
+    }
+    window.$_gantAjax = new Gantt( is_admin_gantt );
     // 聚焦模式切换
     $('#toggle_focus_mode').bind('click',function(){
         $('.main-sidebar').toggleClass('hidden');

@@ -321,7 +321,11 @@ let MindAjax = (function () {
             success: function (resp) {
                 auth_check(resp);
                 loading.closeAll();
-                notify_success('操作成功');
+                if (resp.ret !== '200') {
+                    notify_error( resp.msg , resp.data);
+                    return;
+                }
+                notify_success('提示','操作成功');
                 setTimeout("window.location.reload();", 1000)
             },
             error: function (res) {

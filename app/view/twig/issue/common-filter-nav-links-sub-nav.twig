@@ -20,7 +20,7 @@
             </li>
             <li class="filter_nav_li  {% if (sys_filter == 'my_unsolved') %} {{ 'active_underline' }}{% endif %}">
                 <a title="分配我未解决的事项" href="{{ issue_main_url}}?sys_filter=my_unsolved">
-                    <span>我未解决的</span>
+                    <span>我未解决</span>
                     {% if ( unResolveCount) %}
                     <span style="color: #d41716;"> ({{ unResolveCount }})</span>
                     {% endif %}
@@ -34,10 +34,21 @@
                 <a title="我报告的事项" href="{{ issue_main_url}}?sys_filter=my_report"><span>我报告的</span>
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'active_sprint_unsolved') %} {{ 'active_underline' }}{% endif %}">
+            <!--<li class="filter_nav_li  {% if (sys_filter == 'active_sprint_unsolved') %} {{ 'active_underline' }}{% endif %}">
                 <a title="当前活跃迭代的未解决事项" href="{{ issue_main_url}}?sys_filter=active_sprint_unsolved"><span>当前迭代未解决的</span>
                 </a>
-            </li>
+            </li>-->
+            {% if ( project.is_display_issue_catalog and project_catalog) %}
+                <li class="filter_nav_li" style="border-left: 1px solid #ddd; padding-left: 12px;" title="通过标签进行分类">
+                    分 类：
+                </li>
+                {% for catalog in project_catalog %}
+                    <li class="filter_nav_li  {% if (sys_filter == 'catalog_'~catalog.id) %} {{ 'active_underline' }}{% endif %}">
+                        <a title="{{catalog.description}}" href="{{ issue_main_url}}?sys_filter=catalog_{{catalog.id}}" style="color:{{catalog.font_color}}; font-size: 12px;"><span>{{catalog.name}}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
 
             <li class="filter_nav_li" style="border-left: 1px solid #ddd; padding-left: 12px;">
                 过滤器：
