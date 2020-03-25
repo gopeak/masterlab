@@ -151,7 +151,7 @@ var IssueMain = (function () {
     IssueMain.prototype.initCreateIssueType = function (issue_types, on_change) {
 
         var issue_types_select = $('#create_issue_types_select');
-        $('#create_issue_types_select').empty();
+        issue_types_select.empty();
 
         var first_issue_type = {};
         for (var i = 0; i < issue_types.length; i++) {
