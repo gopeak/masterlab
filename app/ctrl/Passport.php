@@ -47,12 +47,13 @@ class Passport extends BaseCtrl
         $data = [];
         $data['title'] = '登录';
         $data['is_login_page'] = true;
-        $data['captcha_login_switch'] = (new SettingsLogic())->loginRequireCaptcha();
-        $data['captcha_reg_switch'] = (new SettingsLogic())->regRequireCaptcha();
-
-        // 是否开启用户注册
-        $isAllowReg = (new SettingsLogic())->allowUserReg();
-        $data['is_allow_user_reg'] = $isAllowReg;
+        // 获取设置
+        $settingModel = new SettingModel();
+        $basicSettingArr = array_column($settingModel->getSettingByModule('basic'),'_value','_key');
+        $data['login_require_captcha'] = $basicSettingArr['login_require_captcha'];
+        $data['reg_require_captcha'] = $basicSettingArr['reg_require_captcha'];
+        $data['allow_user_reg'] = $basicSettingArr['allow_user_reg'];
+        $data['ldap_enable'] = (bool)$settingModel->getSettingValue('ldap_enable');
 
         $this->render('gitlab/passport/login.php', $data);
     }

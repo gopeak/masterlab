@@ -865,7 +865,7 @@ class System extends BaseAdminCtrl
         $issueModel = new IssueModel();
         try {
             if (!$issueModel->cache->use) {
-                $this->ajaxFailed('操作失败', 'redis缓存没有启动,请检查配置文件:cache.cfg.twig');
+                $this->ajaxFailed('操作失败', 'redis缓存没有启动,请检查配置文件:cache.cfg.php');
             }
             $issueModel->cache->connect();
             $ret = $issueModel->cache->flush();
