@@ -102,7 +102,7 @@ class UserTokenModel extends CacheModel
 
         $dataConfig = getConfigVar('data');
 
-        if ((time() - intval($row['token_time'])) > intval($dataConfig['token']['expire'])) {
+        if ((time() - intval($row['token_time'])) > intval($dataConfig['token']['expire_time'])) {
             return array(self::VALID_TOKEN_RET_EXPIRE, 'token值过期了!');
         }
         return array(self::VALID_TOKEN_RET_OK, 'ok');
@@ -119,15 +119,41 @@ class UserTokenModel extends CacheModel
         $row = $this->getUserTokenByToken($token);
 
         if (!isset($row['token'])) {
-            return array(self::VALID_TOKEN_RET_NOT_EXIST, 'token值错误!');
+            return array(self::VALID_TOKEN_RET_NOT_EXIST, 'token值错误!', []);
         }
 
         $dataConfig = getConfigVar('data');
 
-        if ((time() - intval($row['token_time'])) > intval($dataConfig['token']['expire'])) {
-            return array(self::VALID_TOKEN_RET_EXPIRE, 'token值过期了!');
+        if ((time() - intval($row['token_time'])) > intval($dataConfig['token']['expire_time'])) {
+            return array(self::VALID_TOKEN_RET_EXPIRE, 'token值过期了!', []);
         }
-        return array(self::VALID_TOKEN_RET_OK, 'ok');
+        return array(self::VALID_TOKEN_RET_OK, 'ok', $row);
+    }
+
+    /**
+     * 校验refresh_token是否有效
+     * @param $refreshToken
+     * @return array
+     * @throws \Exception
+     */
+    public function validRefreshToken($refreshToken)
+    {
+        $row = $this->getUserTokenByRefreshToken($refreshToken);
+
+        if (empty($row)) {
+            return array(self::VALID_TOKEN_RET_NOT_EXIST, 'refresh值错误!', []);
+        }
+
+        if (!isset($row['token'])) {
+            return array(self::VALID_TOKEN_RET_NOT_EXIST, 'refresh值错误!', []);
+        }
+
+        $dataConfig = getConfigVar('data');
+
+        if ((time() - intval($row['refresh_token_time'])) > intval($dataConfig['token']['refresh_expire_time'])) {
+            return array(self::VALID_TOKEN_RET_EXPIRE, 'refresh值过期了!', []);
+        }
+        return array(self::VALID_TOKEN_RET_OK, 'ok', $row);
     }
 
     /**
@@ -184,6 +210,22 @@ class UserTokenModel extends CacheModel
         //使用缓存机制
         $fields = '* ';
         $where = ['token' => $token];
+        $key = "";
+        $final = parent::getRowByKey($fields, $where, $key);
+        return $final;
+    }
+
+    /**
+     * 通过refresh_token获取用户token的记录信息
+     * @param $refreshToken
+     * @return array
+     * @throws \Exception
+     */
+    public function getUserTokenByRefreshToken($refreshToken)
+    {
+        //使用缓存机制
+        $fields = '* ';
+        $where = ['refresh_token' => $refreshToken];
         $key = "";
         $final = parent::getRowByKey($fields, $where, $key);
         return $final;

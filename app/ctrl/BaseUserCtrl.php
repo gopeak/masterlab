@@ -10,7 +10,9 @@ use main\app\classes\PermissionLogic;
 use main\app\model\project\ProjectModel;
 use main\app\classes\ProjectLogic;
 use main\app\model\user\UserMessageModel;
+use main\app\model\user\UserModel;
 use main\app\model\user\UserSettingModel;
+use main\app\model\user\UserTokenModel;
 
 /**
  *  网站前端的控制器基类
@@ -63,6 +65,12 @@ class BaseUserCtrl extends BaseCtrl
         }
 
         $this->auth = UserAuth::getInstance();
+
+        /**
+         * 处理app请求的token
+         */
+        $this->processApiToken();
+
         $noAuth = false;
         if (isset($_GET['_target'][0]) && isset($_GET['_target'][1])) {
             $fnc = $_GET['_target'][0] . '.' . $_GET['_target'][1];
@@ -186,4 +194,40 @@ class BaseUserCtrl extends BaseCtrl
         return $this->auth->getId();
     }
 
+    /**
+     * 处理app的请求token
+     * @throws \Exception
+     */
+    public function processApiToken()
+    {
+        $headersArr = @getallheaders();
+        if (array_key_exists('Master-Token', $headersArr)) {
+            if (empty($headersArr['Master-Token'])) {
+                $this->ajaxFailed('无效的请求');
+            }
+
+            $userTokenModel = new UserTokenModel();
+
+            list(
+                $validTokenRetCode,
+                $validTokenRetMsg,
+                $userToken
+                ) = $userTokenModel->validToken($headersArr['Master-Token']);
+
+            if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_EXPIRE) {
+                $this->ajaxFailed($validTokenRetMsg, [], 422);
+            }
+            if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_NOT_EXIST) {
+                $this->ajaxFailed($validTokenRetMsg, [], 0);
+            }
+
+            if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_OK) {
+                $userModel = UserModel::getInstance($userToken['uid']);
+                $user = $userModel->getByUid($userToken['uid']);
+                $userAuth = UserAuth::getInstance();
+                $userAuth->login($user);
+            }
+
+        }
+    }
 }
