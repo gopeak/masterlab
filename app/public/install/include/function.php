@@ -1,11 +1,14 @@
 <?php
 
 
+/**
+ * @param $data
+ */
 function input(&$data)
 {
     foreach ((array)$data as $key => $value) {
         if (is_string($value)) {
-            if (!get_magic_quotes_gpc()) {
+            if ( !function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc()) {
                 $value = htmlentities($value, ENT_NOQUOTES);
                 $value = addslashes(trim($value));
             }
@@ -15,7 +18,10 @@ function input(&$data)
     }
 }
 
-
+/**
+ * @param $install_error
+ * @param $install_recover
+ */
 function importSql(&$install_error, &$install_recover)
 {
     global $html_title, $html_header, $html_footer;
@@ -289,25 +295,29 @@ function writeSocketConfig()
  */
 function env_check(&$env_items)
 {
+    $masterlabRootDir = realpath(ROOT_PATH . '/../../').'/';
     $env_items[] = array('name' => '操作系统', 'min' => '无限制', 'good' => 'linux', 'cur' => PHP_OS, 'status' => 1);
-    $env_items[] = array('name' => 'PHP版本', 'min' => '5.6', 'good' => '7.1', 'cur' => PHP_VERSION, 'status' => (PHP_VERSION < 5.6 ? 0 : 1));
+    $env_items[] = array('name' => 'PHP版本', 'min' => '5.6', 'good' => '7.2', 'cur' => PHP_VERSION, 'status' => (PHP_VERSION < 5.6 ? 0 : 1));
     $tmp = function_exists('gd_info') ? gd_info() : array();
     preg_match("/[\d.]+/", $tmp['GD Version'], $match);
     unset($tmp);
     $env_items[] = array('name' => 'GD库', 'min' => '2.0', 'good' => '2.0', 'cur' => $match[0], 'status' => ($match[0] < 2 ? 0 : 1));
     $env_items[] = array('name' => '附件上传', 'min' => '未限制', 'good' => '8M', 'cur' => ini_get('upload_max_filesize'), 'status' => 1);
-    /*
-    $short_open_tag = strtolower(ini_get('short_open_tag'));
-    if ($short_open_tag == '1' || $short_open_tag == 'on') {
-        $short_open_tag = 'on';
-    } else {
-        $short_open_tag = 'off';
+    $disk_place = function_exists('disk_free_space') ? floor(disk_free_space($masterlabRootDir) / (1024 * 1024)) : 0;
+    $env_items[] = array('name' => '磁盘空间', 'min' => '300M', 'good' => '>1024M', 'cur' => empty($disk_place) ? '未知' : $disk_place . 'M', 'status' => $disk_place < 200 ? 0 : 1);
+
+    $vendorExist = 0;
+    $composerCur = '请解压跟目录的./vendor.zip文件';
+    if(file_exists($masterlabRootDir . 'vendor/autoload.php')
+        && file_exists($masterlabRootDir . 'vendor/twig')
+        && file_exists($masterlabRootDir . 'vendor/phpoffice')
+        && file_exists($masterlabRootDir . 'vendor/hornet')
+    ){
+        $vendorExist = 1;
+        $composerCur = 'vendor目录和文件存在';
     }
-    $short_open_tag_status = $short_open_tag == 'on' ? 1 : 0;
-    $env_items[] = array('name' => '短标记 short_open_tag', 'min' => 'on', 'good' => 'on', 'cur' => $short_open_tag, 'status' => $short_open_tag_status);
-    */
-    $disk_place = function_exists('disk_free_space') ? floor(disk_free_space(ROOT_PATH) / (1024 * 1024)) : 0;
-    $env_items[] = array('name' => '磁盘空间', 'min' => '200M', 'good' => '>500M', 'cur' => empty($disk_place) ? '未知' : $disk_place . 'M', 'status' => $disk_place < 200 ? 0 : 1);
+
+    $env_items[] = array('name' => 'composer类库', 'min' => '依赖', 'good' => '类库存在', 'cur' => $composerCur, 'status' => $vendorExist);
 }
 
 /**
