@@ -44,7 +44,8 @@ class UserTokenModel extends CacheModel
      * 创建一个自身的单例对象
      * @param string $uid
      * @param bool $persistent
-     * @return self
+     * @return mixed
+     * @throws \Exception
      */
     public static function getInstance($uid = '', $persistent = false)
     {
@@ -61,7 +62,7 @@ class UserTokenModel extends CacheModel
      * @param string $pass
      * @return string
      */
-    static function makeUserToken($uid, $pass)
+    public static function makeUserToken($uid, $pass)
     {
         $token_cfg = getConfigVar('data');
         $publicKey = $token_cfg['token']['public_key'];
@@ -76,7 +77,7 @@ class UserTokenModel extends CacheModel
      * @param string $password
      * @return string
      */
-    static function makeUserRefreshToken($uid, $password)
+    public static function makeUserRefreshToken($uid, $password)
     {
         $tokenCfg = getConfigVar('data');
         $publicKey = $tokenCfg['token']['public_key'];
@@ -86,10 +87,10 @@ class UserTokenModel extends CacheModel
     }
 
     /**
-     * 校验token是否有效
-     * @param string $uid
-     * @param string $token
-     * @return array string
+     * @param $uid
+     * @param $token
+     * @return array
+     * @throws \Exception
      */
     public function validUidToken($uid, $token)
     {
@@ -109,8 +110,9 @@ class UserTokenModel extends CacheModel
 
     /**
      * 校验token是否有效
-     * @param string $token
-     * @return array string
+     * @param $token
+     * @return array
+     * @throws \Exception
      */
     public function validToken($token)
     {
@@ -130,8 +132,9 @@ class UserTokenModel extends CacheModel
 
     /**
      * 生成和刷新token
-     * @param array $user
+     * @param $user
      * @return array
+     * @throws \Exception
      */
     public function makeToken($user)
     {
@@ -155,9 +158,10 @@ class UserTokenModel extends CacheModel
     }
 
     /**
-     *  获取用户token的记录信息
+     * 获取用户token的记录信息
      * @param $uid
      * @return array
+     * @throws \Exception
      */
     public function getUserToken($uid)
     {
@@ -170,9 +174,10 @@ class UserTokenModel extends CacheModel
     }
 
     /**
-     *  获取用户token的记录信息
+     * 获取用户token的记录信息
      * @param $token
      * @return array
+     * @throws \Exception
      */
     public function getUserTokenByToken($token)
     {
@@ -187,7 +192,8 @@ class UserTokenModel extends CacheModel
     /**
      * 插入一条用户token记录
      * @param $insertInfo
-     * @return int
+     * @return mixed
+     * @throws \Exception
      */
     public function insertUserToken($insertInfo)
     {
@@ -197,10 +203,10 @@ class UserTokenModel extends CacheModel
     }
 
     /**
-     *
-     * @param string $uid
-     * @param array $update_info
-     * @return boolean
+     * @param $uid
+     * @param $update_info
+     * @return bool
+     * @throws \Exception
      */
     public function updateUserToken($uid, $update_info)
     {

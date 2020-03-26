@@ -80,7 +80,8 @@ class BaseUserCtrl extends BaseCtrl
                     header('location:' . ROOT_URL . 'passport/login');
                     die;
                 }
-                $this->error('提示',
+                $this->error(
+                    '提示',
                     '您尚未登录,或登录状态已经失效!',
                     ['type' => 'link', 'link' => ROOT_URL . 'passport/login', 'title' => '跳转至登录页面']
                 );
@@ -110,14 +111,18 @@ class BaseUserCtrl extends BaseCtrl
                 $projectId = (int)$_GET['project_id'];
             }
             if (!empty($projectId)) {
-                $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $projectId, $haveAdminPerm);
+                $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(
+                    UserAuth::getId(),
+                    $projectId,
+                    $haveAdminPerm
+                );
             }
             $project = [];
             // print_r($this->projectPermArr);
             if ($projectId) {
                 $projModel = new ProjectModel();
                 $project = $projModel->getById($projectId);
-                if($project){
+                if ($project) {
                     list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
                     $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
                 }
@@ -147,7 +152,10 @@ class BaseUserCtrl extends BaseCtrl
 
             $this->addGVar('projectPermArr', $this->projectPermArr);
             $this->addGVar('_projectPermArrJson', json_encode(array_keys($this->projectPermArr)));
-            $this->addGVar('_permCreateIssue', isset($this->projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? true : false);
+            $this->addGVar(
+                '_permCreateIssue',
+                isset($this->projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? true : false
+            );
 
             $this->addGVar('_is_admin ', $this->isAdmin ? 'true' : 'false');
 
