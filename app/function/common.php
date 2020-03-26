@@ -154,7 +154,7 @@ if (!function_exists('safeFilter')) {
                         continue;
                     }
                     //不对magic_quotes_gpc转义过的字符使用addslashes(),避免双重转义。
-                    if (!get_magic_quotes_gpc()) {
+                    if (!@get_magic_quotes_gpc()) {
                         //给单引号（'）、双引号（"）、反斜线（\）与 NUL（NULL 字符）加上反斜线转义
                         $value = addslashes($value);
                     }

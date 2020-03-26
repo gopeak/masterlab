@@ -1,11 +1,10 @@
 <?php
 /**
  * @author  lijia168
- * 安装程序代码参考自 https://www.cnblogs.com/lijia168/p/6704079.html
  */
 
 set_time_limit(0);   //设置运行时间
-error_reporting(E_ALL & ~E_NOTICE);  //显示全部错误
+error_reporting(E_ERROR );  //显示全部错误
 define('ROOT_PATH', dirname(dirname(__FILE__)));  //定义根目录
 define('DBCHARSET', 'UTF8');   //设置数据库默认编码
 require_once('./include/function.php');
