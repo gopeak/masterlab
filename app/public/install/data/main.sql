@@ -2412,7 +2412,7 @@ CREATE TABLE `project_gantt_setting` (
   `source_from` varchar(20) DEFAULT NULL,
   `is_display_backlog` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在甘特图中显示待办事项',
   `hide_issue_types` varchar(100) NOT NULL DEFAULT '' COMMENT '要隐藏的事项类型key以逗号分隔',
-  `work_dates` json NOT NULL
+  `work_dates` varchar(100)  NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
