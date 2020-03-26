@@ -136,8 +136,9 @@ class Upgrade extends BaseUserCtrl
         if(file_exists($filePath) && is_dir($filePath) ){
             rmDirectory($filePath);
         }
-        if (!@$curl->download($url, $filePath)) {
-            $this->showLine('升级失败：补丁包下载失败！');
+        if (!$curl->download($url, $filePath)) {
+            $this->showLine('升级失败：补丁包下载失败！' . $curl->errorMessage . ', ' . $curl->curlErrorMessage);
+            die;
         }
         if (file_exists($filePath . '.pccdownload')) {
             rename($filePath . '.pccdownload', $filePath);
