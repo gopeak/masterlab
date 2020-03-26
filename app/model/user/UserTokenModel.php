@@ -25,6 +25,10 @@ class UserTokenModel extends CacheModel
 
     const   VALID_TOKEN_RET_EXPIRE = 3;
 
+    const HTTP_RESPONSE_OK = 2000;
+    const HTTP_RESPONSE_EXPIRE = 4220;
+    const HTTP_RESPONSE_INVALID = 4000;
+
     public $uid = '';
 
     /**

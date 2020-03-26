@@ -57,10 +57,10 @@ class Passport extends BaseCtrl
             ) = $userTokenModel->validRefreshToken($refresh_token);
 
         if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_EXPIRE) {
-            $this->ajaxFailed($validTokenRetMsg, [], 422);
+            $this->ajaxFailed($validTokenRetMsg, [], UserTokenModel::HTTP_RESPONSE_EXPIRE);
         }
         if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_NOT_EXIST) {
-            $this->ajaxFailed($validTokenRetMsg, [], 0);
+            $this->ajaxFailed($validTokenRetMsg, [], UserTokenModel::HTTP_RESPONSE_INVALID);
         }
 
         if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_OK) {
@@ -77,7 +77,7 @@ class Passport extends BaseCtrl
             $tokenCfg = getConfigVar('data');
             $final['token_expire'] = intval($tokenCfg['token']['expire_time']);
 
-            $this->ajaxSuccess('ok', $final);
+            $this->ajaxSuccess('ok', $final, UserTokenModel::HTTP_RESPONSE_OK);
         }
 
         $this->ajaxFailed('refresh fail.');
