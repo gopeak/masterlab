@@ -40,6 +40,50 @@ class Passport extends BaseCtrl
     }
 
     /**
+     * 刷新token
+     * @param $refresh_token
+     * @throws \Exception
+     */
+    public function refreshToken($refresh_token)
+    {
+        if (empty($refresh_token)) {
+            $this->ajaxFailed('错误', '参数错误,必要参数不能为空');
+        }
+        $userTokenModel = new UserTokenModel();
+        list(
+            $validTokenRetCode,
+            $validTokenRetMsg,
+            $userToken
+            ) = $userTokenModel->validRefreshToken($refresh_token);
+
+        if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_EXPIRE) {
+            $this->ajaxFailed($validTokenRetMsg, [], UserTokenModel::HTTP_RESPONSE_EXPIRE);
+        }
+        if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_NOT_EXIST) {
+            $this->ajaxFailed($validTokenRetMsg, [], UserTokenModel::HTTP_RESPONSE_INVALID);
+        }
+
+        if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_OK) {
+            $userModel = UserModel::getInstance($userToken['uid']);
+            $user = $userModel->getByUid($userToken['uid']);
+
+            list($ret, $token, $refresh_token) = $userTokenModel->makeToken($user);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', '刷新token失败');
+            }
+
+            $final['token'] = $token;
+            $final['refresh_token'] = $refresh_token;
+            $tokenCfg = getConfigVar('data');
+            $final['token_expire'] = intval($tokenCfg['token']['expire_time']);
+
+            $this->ajaxSuccess('ok', $final, UserTokenModel::HTTP_RESPONSE_OK);
+        }
+
+        $this->ajaxFailed('refresh fail.');
+    }
+
+    /**
      * 登录页面
      */
     public function pageLogin()
@@ -146,13 +190,13 @@ class Passport extends BaseCtrl
         }
 
         $schemaType = 'inner';
-        if(isset($_POST['schema_ldap'])){
+        if (isset($_POST['schema_ldap'])) {
             $schemaType = 'ldap';
         }
         // 检查登录账号和密码
-        if($schemaType==='inner'){
+        if ($schemaType==='inner') {
             list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
-        }else{
+        } else {
             // LDAP认证登录
             list($ret, $user) = $this->auth->checkLdapByUsername($username, $password);
         }
@@ -224,6 +268,7 @@ class Passport extends BaseCtrl
      * 处理登录返回值
      * @param $final
      * @param $user
+     * @throws \Exception
      */
     private function processLoginReturn(&$final, $user)
     {
@@ -256,6 +301,7 @@ class Passport extends BaseCtrl
     /**
      * 更新登录信息
      * @param $uid
+     * @throws \Exception
      */
     private function updateLoginInfo($uid)
     {
@@ -393,10 +439,12 @@ class Passport extends BaseCtrl
     }
 
     /**
-     * 发送邮箱待激活的emaiil
-     * @param array $user
+     * 发送邮箱待激活的email
+     * @param $user
      * @param string $email
+     * @param string $username
      * @return array
+     * @throws \Exception
      */
     private function sendActiveEmail($user, $email = '', $username = '')
     {

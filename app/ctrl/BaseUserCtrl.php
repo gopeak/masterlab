@@ -10,7 +10,9 @@ use main\app\classes\PermissionLogic;
 use main\app\model\project\ProjectModel;
 use main\app\classes\ProjectLogic;
 use main\app\model\user\UserMessageModel;
+use main\app\model\user\UserModel;
 use main\app\model\user\UserSettingModel;
+use main\app\model\user\UserTokenModel;
 
 /**
  *  网站前端的控制器基类
@@ -63,6 +65,12 @@ class BaseUserCtrl extends BaseCtrl
         }
 
         $this->auth = UserAuth::getInstance();
+
+        /**
+         * 处理app请求的token
+         */
+        $this->processApiToken();
+
         $noAuth = false;
         if (isset($_GET['_target'][0]) && isset($_GET['_target'][1])) {
             $fnc = $_GET['_target'][0] . '.' . $_GET['_target'][1];
@@ -83,7 +91,8 @@ class BaseUserCtrl extends BaseCtrl
                     header('location:' . ROOT_URL . 'passport/login');
                     die;
                 }
-                $this->error('提示',
+                $this->error(
+                    '提示',
                     '您尚未登录,或登录状态已经失效!',
                     ['type' => 'link', 'link' => ROOT_URL . 'passport/login', 'title' => '跳转至登录页面']
                 );
@@ -116,14 +125,18 @@ class BaseUserCtrl extends BaseCtrl
             }
             $data['project_id'] = $this->projectId = $projectId;
             if (!empty($projectId)) {
-                $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $projectId, false);
+                $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(
+                    UserAuth::getId(),
+                    $projectId,
+                    false
+                );
             }
             $project = [];
             // print_r($this->projectPermArr);
             if ($projectId) {
                 $projModel = new ProjectModel();
                 $project = $projModel->getById($projectId);
-                if($project){
+                if ($project) {
                     list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
                     $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
                 }
@@ -158,7 +171,10 @@ class BaseUserCtrl extends BaseCtrl
 
             $this->addGVar('projectPermArr', $this->projectPermArr);
             $this->addGVar('_projectPermArrJson', json_encode(array_keys($this->projectPermArr)));
-            $this->addGVar('_permCreateIssue', isset($this->projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? true : false);
+            $this->addGVar(
+                '_permCreateIssue',
+                isset($this->projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? true : false
+            );
 
             $this->addGVar('_is_admin ', $this->isAdmin ? 'true' : 'false');
 
@@ -178,4 +194,41 @@ class BaseUserCtrl extends BaseCtrl
         return $this->auth->getId();
     }
 
+    /**
+     * 处理app的请求token
+     * @throws \Exception
+     */
+    public function processApiToken()
+    {
+        $headersArr = getallheaders();
+        //print_r($headersArr);exit;
+        if (array_key_exists('Master-Token', $headersArr)) {
+            if (empty($headersArr['Master-Token'])) {
+                $this->ajaxFailed('无效的请求');
+            }
+
+            $userTokenModel = new UserTokenModel();
+
+            list(
+                $validTokenRetCode,
+                $validTokenRetMsg,
+                $userToken
+                ) = $userTokenModel->validToken($headersArr['Master-Token']);
+
+            if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_EXPIRE) {
+                $this->ajaxFailed($validTokenRetMsg, [], UserTokenModel::HTTP_RESPONSE_EXPIRE);
+            }
+            if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_NOT_EXIST) {
+                $this->ajaxFailed($validTokenRetMsg, [], UserTokenModel::HTTP_RESPONSE_INVALID);
+            }
+
+            if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_OK) {
+                $userModel = UserModel::getInstance($userToken['uid']);
+                $user = $userModel->getByUid($userToken['uid']);
+                $userAuth = UserAuth::getInstance();
+                $userAuth->login($user);
+            }
+
+        }
+    }
 }

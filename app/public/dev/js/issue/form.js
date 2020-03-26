@@ -419,32 +419,42 @@ var IssueForm = (function () {
         if (required) {
             required_html = '<span class="required"> *</span>';
         }
+        console.log(_issueConfig);
         var html = '';
         //html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'"  />';
         var edit_data = [];
 
         if (default_value !== null) {
             for (var i = 0; i < default_value.length; i++) {
-                edit_data.push();
+                var item_value = getValueByKey(_issueConfig.issue_labels, default_value[i]);
+                item_value['id'] = default_value[i];
+                if (item_value) {
+                    edit_data.push(item_value);
+                }
             }
         }
 
         var value_title = '';
-        if (edit_data.length > 0) {
-            if (edit_data.length == 1) {
+        if ( edit_data.length > 0) {
+            let data_legth = edit_data.length;
+            if (data_legth === 1) {
                 value_title = edit_data[0].title;
             }
-            if (edit_data.length == 2) {
-                value_title = edit_data[0].title + ',' + edit_data[1].title;
+            if (data_legth === 2) {
+                value_title = edit_data[0].title + '，' + edit_data[1].title;
             }
-            if (edit_data.length > 2) {
-                value_title = value_title + '+';
+            if (data_legth === 3) {
+                value_title = edit_data[0].title + '，' + edit_data[1].title+ '，' + edit_data[2].title;
+            }
+            if (data_legth > 3) {
+                value_title = edit_data[0].title + '，' + edit_data[1].title+ '，' + edit_data[2].title+ ' +';
             }
         }
         var is_default = 'is-default';
         if (edit_data.length > 0) {
             is_default = '';
         }
+        console.log(edit_data);
         var data = {
             project_id: _cur_form_project_id,
             project_key: _cur_project_key,

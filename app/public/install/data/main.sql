@@ -1,11 +1,9 @@
--- phpMyAdmin SQL Dump
--- version 4.8.3
--- https://www.phpmyadmin.net/
+
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2020-03-25 10:47:41
+-- 生成日期： 2020-03-26 08:07:35
 -- 服务器版本： 5.7.24
--- PHP 版本： 7.2.11
+-- PHP 版本： 7.2.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -18,6 +16,9 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+--
+-- 数据库： `masterlab`
+--
 
 -- --------------------------------------------------------
 
@@ -371,6 +372,14 @@ CREATE TABLE `issue_assistant` (
   `join_time` int(11) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `issue_assistant`
+--
+
+INSERT INTO `issue_assistant` (`id`, `issue_id`, `user_id`, `join_time`) VALUES
+(3, 116, 12165, 0),
+(4, 116, 12166, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -472,7 +481,9 @@ INSERT INTO `issue_file_attachment` (`id`, `uuid`, `issue_id`, `tmp_issue_id`, `
 (10, '73098924-de30-4cdc-ab2e-80461a5ba4e4', 0, '', 'image/jpeg', 'crm.jpg', 'project_image/20200224/20200224192240_65716.jpg', 1582543360, 11071, 1, 'jpg'),
 (11, '404573ab-fc00-424c-9fd4-8a7462db654b', 0, '', 'image/jpeg', 'crm2.jpg', 'project_image/20200224/20200224193705_78861.jpg', 1582544225, 6161, 1, 'jpg'),
 (12, '1582716044429', 0, '', 'image/jpeg', 'crm.jpg', 'image/20200226/20200226192049_23688.jpg', 1582716049, 11071, 1, 'jpg'),
-(14, 'b8b0a108-3dd6-46af-b29a-35a4786d71da', 139, '', 'video/mp4', 'oceans.mp4', 'all/20200316/20200316185134_68519.mp4', 1584355894, 23014356, 1, 'mp4');
+(14, 'b8b0a108-3dd6-46af-b29a-35a4786d71da', 139, '', 'video/mp4', 'oceans.mp4', 'all/20200316/20200316185134_68519.mp4', 1584355894, 23014356, 1, 'mp4'),
+(15, 'eac8b4c0-94ad-4df3-b6e1-2fbae65caa9b', 0, '', 'image/jpeg', 'diamond.jpg', 'project_image/20200325/20200325192336_53659.jpg', 1585135416, 30748, 1, 'jpg'),
+(16, 'adf7f914-1a6f-46fd-8781-5659ddc330a0', 0, '', 'image/jpeg', 'vb.jpg', 'project_image/20200325/20200325192343_71836.jpg', 1585135423, 55443, 1, 'jpg');
 
 -- --------------------------------------------------------
 
@@ -628,7 +639,15 @@ INSERT INTO `issue_label_data` (`id`, `issue_id`, `label_id`) VALUES
 (5, 116, 8),
 (6, 116, 10),
 (7, 116, 12),
-(8, 116, 6);
+(8, 116, 6),
+(9, 116, 8),
+(10, 116, 10),
+(11, 116, 12),
+(12, 116, 6),
+(13, 116, 1),
+(14, 120, 4),
+(15, 120, 5),
+(16, 120, 1);
 
 -- --------------------------------------------------------
 
@@ -701,7 +720,7 @@ INSERT INTO `issue_main` (`id`, `pkey`, `issue_num`, `project_id`, `issue_type`,
 (106, 'example', '106', 1, 3, 1, 0, 1, 1, '架构设计', '', '', 3, 2, 3, 1583041489, 1583041489, '2020-03-02', '2020-03-27', 20, NULL, 3, NULL, 1, 0, 0, 900000, '', 0, 0, 2, 0, 0, 0, '', 998700000, 0, 0, 0),
 (107, 'example', '107', 1, 3, 1, 1, 1, 1, '用户模块开发编码1', '', '', 3, 2, 1, 1583041630, 1583041630, '2020-03-02', '2020-03-09', 11, NULL, 3, NULL, 1, 0, 0, 1000000, '', 0, 3, 0, 0, 0, 0, '', 999300000, 0, 0, 0),
 (108, 'example', '108', 1, 3, 1, 1, 1, 1, '产品模块开发编码1', '', '', 3, 2, 3, 1583043244, 1583043244, '2020-03-03', '2020-03-10', 6, NULL, 3, NULL, 1, 0, 0, 1100000, '', 0, 3, 0, 0, 0, 0, '', 999400000, 0, 0, 0),
-(116, 'example', '116', 1, 3, 1, 1, 1, 1, '日志模块开发x', '', '', 3, 2, 1, 1583044099, 1583079970, '2020-03-02', '2020-03-27', 20, NULL, 3, NULL, 1, 0, 0, 1200000, '', 0, 0, 0, 1, 0, 0, '', 998400000, 0, 0, 0),
+(116, 'example', '116', 1, 3, 1, 1, 1, 1, '日志模块开发x', '', '', 3, 2, 1, 1583044099, 1583079970, '2020-03-02', '2020-03-27', 20, NULL, 3, NULL, 1, 0, 0, 1200000, '12165,12166', 0, 0, 0, 1, 0, 0, '', 998400000, 0, 0, 0),
 (120, 'example', '120', 1, 3, 1, 1, 1, 1, '优化改进事项2', '', '', 3, 2, 1, 1583232765, 1583232765, '2020-03-03', '2020-03-11', 7, NULL, 0, NULL, 2, 0, 0, 200000, '', 0, 0, 0, 0, 0, 0, '', 999900000, 0, 0, 0),
 (139, 'example', '139', 1, 3, 1, 1, 1, 12167, '商城模块编码1', '', '', 3, 2, 1, 1583242645, 1583242645, '2020-03-03', '2020-03-11', 7, NULL, 3, NULL, 1, 0, 0, 200000, '', 0, 3, 0, 0, 0, 1, '', 999250000, 0, 0, 0);
 
@@ -1185,39 +1204,6 @@ INSERT INTO `issue_ui` (`id`, `issue_type_id`, `ui_type`, `field_id`, `order_wei
 (1527, 1, 'edit', 21, 2, 85, 0),
 (1528, 1, 'edit', 8, 1, 85, 0),
 (1529, 1, 'edit', 9, 0, 85, 0),
-(1530, 3, 'create', 1, 13, 0, 1),
-(1531, 3, 'create', 6, 12, 0, 0),
-(1532, 3, 'create', 2, 11, 0, 0),
-(1533, 3, 'create', 7, 10, 0, 0),
-(1534, 3, 'create', 8, 9, 0, 0),
-(1535, 3, 'create', 3, 8, 0, 0),
-(1536, 3, 'create', 4, 7, 0, 0),
-(1537, 3, 'create', 19, 6, 0, 0),
-(1538, 3, 'create', 10, 5, 0, 0),
-(1539, 3, 'create', 11, 4, 0, 0),
-(1540, 3, 'create', 12, 3, 0, 0),
-(1541, 3, 'create', 13, 2, 0, 0),
-(1542, 3, 'create', 20, 1, 0, 0),
-(1543, 3, 'create', 15, 0, 0, 0),
-(1544, 3, 'edit', 1, 15, 0, 1),
-(1545, 3, 'edit', 6, 14, 0, 0),
-(1546, 3, 'edit', 2, 13, 0, 0),
-(1547, 3, 'edit', 7, 12, 0, 0),
-(1548, 3, 'edit', 9, 11, 0, 0),
-(1549, 3, 'edit', 8, 10, 0, 0),
-(1550, 3, 'edit', 3, 9, 0, 0),
-(1551, 3, 'edit', 4, 8, 0, 0),
-(1552, 3, 'edit', 19, 7, 0, 0),
-(1553, 3, 'edit', 10, 6, 0, 0),
-(1554, 3, 'edit', 11, 5, 0, 0),
-(1555, 3, 'edit', 12, 4, 0, 0),
-(1556, 3, 'edit', 13, 3, 0, 0),
-(1557, 3, 'edit', 20, 2, 0, 0),
-(1558, 3, 'edit', 26, 1, 0, 0),
-(1559, 3, 'edit', 15, 0, 0, 0),
-(1560, 3, 'edit', 20, 2, 86, 0),
-(1561, 3, 'edit', 9, 1, 86, 0),
-(1562, 3, 'edit', 3, 0, 86, 0),
 (1563, 1, 'create', 1, 8, 0, 1),
 (1564, 1, 'create', 6, 7, 0, 0),
 (1565, 1, 'create', 2, 6, 0, 1),
@@ -1234,7 +1220,43 @@ INSERT INTO `issue_ui` (`id`, `issue_type_id`, `ui_type`, `field_id`, `order_wei
 (1576, 1, 'create', 3, 3, 87, 0),
 (1577, 1, 'create', 21, 2, 87, 0),
 (1578, 1, 'create', 8, 1, 87, 0),
-(1579, 1, 'create', 9, 0, 87, 0);
+(1579, 1, 'create', 9, 0, 87, 0),
+(1625, 3, 'create', 1, 12, 0, 1),
+(1626, 3, 'create', 6, 11, 0, 0),
+(1627, 3, 'create', 2, 10, 0, 0),
+(1628, 3, 'create', 7, 9, 0, 0),
+(1629, 3, 'create', 8, 8, 0, 0),
+(1630, 3, 'create', 4, 7, 0, 0),
+(1631, 3, 'create', 20, 6, 0, 0),
+(1632, 3, 'create', 19, 5, 0, 0),
+(1633, 3, 'create', 10, 4, 0, 0),
+(1634, 3, 'create', 11, 3, 0, 0),
+(1635, 3, 'create', 12, 2, 0, 0),
+(1636, 3, 'create', 13, 1, 0, 0),
+(1637, 3, 'create', 15, 0, 0, 0),
+(1638, 3, 'create', 3, 4, 90, 0),
+(1639, 3, 'create', 9, 3, 90, 0),
+(1640, 3, 'create', 21, 2, 90, 0),
+(1641, 3, 'create', 23, 1, 90, 0),
+(1642, 3, 'create', 26, 0, 90, 0),
+(1643, 3, 'edit', 1, 13, 0, 1),
+(1644, 3, 'edit', 6, 12, 0, 0),
+(1645, 3, 'edit', 2, 11, 0, 0),
+(1646, 3, 'edit', 7, 10, 0, 0),
+(1647, 3, 'edit', 8, 9, 0, 0),
+(1648, 3, 'edit', 4, 8, 0, 0),
+(1649, 3, 'edit', 20, 7, 0, 0),
+(1650, 3, 'edit', 19, 6, 0, 0),
+(1651, 3, 'edit', 10, 5, 0, 0),
+(1652, 3, 'edit', 11, 4, 0, 0),
+(1653, 3, 'edit', 12, 3, 0, 0),
+(1654, 3, 'edit', 13, 2, 0, 0),
+(1655, 3, 'edit', 26, 1, 0, 0),
+(1656, 3, 'edit', 15, 0, 0, 0),
+(1657, 3, 'edit', 9, 3, 91, 0),
+(1658, 3, 'edit', 3, 2, 91, 0),
+(1659, 3, 'edit', 23, 1, 91, 0),
+(1660, 3, 'edit', 21, 0, 91, 0);
 
 -- --------------------------------------------------------
 
@@ -1265,8 +1287,9 @@ INSERT INTO `issue_ui_tab` (`id`, `issue_type_id`, `name`, `order_weight`, `ui_t
 (81, 2, '更 多', 0, 'create'),
 (82, 2, '\n            \n            \n            \n            \n            \n            \n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             ', 0, 'edit'),
 (85, 1, '\n            \n            \n            \n            \n            \n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            ', 0, 'edit'),
-(86, 3, '\n            \n            \n            \n            \n            其他\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        ', 0, 'edit'),
-(87, 1, '更 多', 0, 'create');
+(87, 1, '更 多', 0, 'create'),
+(90, 3, '其他', 0, 'create'),
+(91, 3, '\n            \n            \n            \n            \n            \n            \n            \n            其他\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        \n    ', 0, 'edit');
 
 -- --------------------------------------------------------
 
@@ -1323,7 +1346,13 @@ CREATE TABLE `log_operating` (
 --
 
 INSERT INTO `log_operating` (`id`, `project_id`, `module`, `obj_id`, `uid`, `user_name`, `real_name`, `page`, `pre_status`, `cur_status`, `action`, `remark`, `pre_data`, `cur_data`, `ip`, `time`) VALUES
-(1, 0, '项目', 0, 1, 'master', 'Master', '/project/main/create', NULL, NULL, '新增', '新建项目', '[]', '{\"name\":\"\\u793a\\u4f8b\\u9879\\u76ee2\",\"org_id\":\"1\",\"key\":\"ex\",\"lead\":\"12164\",\"description\":\"good luck!\",\"type\":10,\"category\":0,\"url\":\"\",\"create_time\":1585132124,\"create_uid\":\"1\",\"avatar\":\"\",\"detail\":\":tw-1f41f: :tw-1f40b: :tw-1f40b: :tw-1f40e: :tw-1f40e: :tw-1f40e: :tw-1f42c: :tw-1f42c:\",\"org_path\":\"default\"}', '127.0.0.1', 1585132125);
+(1, 0, '项目', 0, 1, 'master', 'Master', '/project/main/create', NULL, NULL, '新增', '新建项目', '[]', '{\"name\":\"\\u793a\\u4f8b\\u9879\\u76ee2\",\"org_id\":\"1\",\"key\":\"ex\",\"lead\":\"12164\",\"description\":\"good luck!\",\"type\":10,\"category\":0,\"url\":\"\",\"create_time\":1585132124,\"create_uid\":\"1\",\"avatar\":\"\",\"detail\":\":tw-1f41f: :tw-1f40b: :tw-1f40b: :tw-1f40e: :tw-1f40e: :tw-1f40e: :tw-1f42c: :tw-1f42c:\",\"org_path\":\"default\"}', '127.0.0.1', 1585132125),
+(2, 1, '项目', 0, 1, 'master', 'Master', '/project/setting/save_settings_profile?project_id=1', NULL, NULL, '编辑', '修改项目信息', '{\"id\":\"1\",\"org_id\":\"1\",\"org_path\":\"default\",\"name\":\"\\u793a\\u4f8b\\u9879\\u76ee\",\"url\":\"\",\"lead\":\"1\",\"description\":\"Masterlab\\u7684\\u793a\\u4f8b\\u9879\\u76ee\",\"key\":\"example\",\"pcounter\":null,\"default_assignee\":\"1\",\"assignee_type\":null,\"avatar\":\"project\\/avatar\\/1.jpg\",\"category\":\"0\",\"type\":\"10\",\"type_child\":\"0\",\"permission_scheme_id\":\"0\",\"workflow_scheme_id\":\"0\",\"create_uid\":\"1\",\"create_time\":\"1579247230\",\"un_done_count\":\"16\",\"done_count\":\"6\",\"closed_count\":\"4\",\"archived\":\"N\",\"issue_update_time\":\"1583220515\",\"is_display_issue_catalog\":\"1\"}', '{\"lead\":\"1\",\"description\":\"Masterlab\\u7684\\u793a\\u4f8b\\u9879\\u76ee\",\"type\":10,\"category\":0,\"url\":\"\",\"avatar\":\"project_image\\/20200325\\/20200325192343_71836.jpg\",\"workflow_scheme_id\":\"1\"}', '127.0.0.1', 1585135425),
+(3, 1, '事项', 116, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"116\",\"pkey\":\"example\",\"issue_num\":\"116\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"\\u65e5\\u5fd7\\u6a21\\u5757\\u5f00\\u53d1x\",\"description\":\"\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1583044099\",\"updated\":\"1583079970\",\"start_date\":\"2020-03-02\",\"due_date\":\"2020-03-27\",\"duration\":\"20\",\"resolve_date\":null,\"module\":\"3\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"1200000\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"1\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"998400000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '{\"id\":\"116\",\"pkey\":\"example\",\"issue_num\":\"116\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"\\u65e5\\u5fd7\\u6a21\\u5757\\u5f00\\u53d1x\",\"description\":\"\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1583044099\",\"updated\":\"1583079970\",\"start_date\":\"2020-03-02\",\"due_date\":\"2020-03-27\",\"duration\":\"20\",\"resolve_date\":null,\"module\":\"3\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"1200000\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"1\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"998400000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '127.0.0.1', 1585179816),
+(4, 1, '项目', 0, 1, 'master', 'Master', '/project/label/add?project_id=1', NULL, NULL, '新增', '添加标签', '[]', '{\"project_id\":1,\"title\":\"WWWW\",\"color\":\"#FFFFFF\",\"bg_color\":\"#D10069\",\"description\":null}', '127.0.0.1', 1585187293),
+(5, 1, '项目', 0, 1, 'master', 'Master', '/project/label/delete', NULL, NULL, '删除', '删除标签', '{\"id\":\"46\",\"project_id\":\"1\",\"title\":\"WWWW\",\"color\":\"#FFFFFF\",\"bg_color\":\"#D10069\",\"description\":null}', '{\"id\":\"\\u5df2\\u5220\\u9664\",\"project_id\":\"\\u5df2\\u5220\\u9664\",\"title\":\"\\u5df2\\u5220\\u9664\",\"color\":\"\\u5df2\\u5220\\u9664\",\"bg_color\":\"\\u5df2\\u5220\\u9664\",\"description\":\"\\u5df2\\u5220\\u9664\"}', '127.0.0.1', 1585187313),
+(6, 1, '事项', 116, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"116\",\"pkey\":\"example\",\"issue_num\":\"116\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"\\u65e5\\u5fd7\\u6a21\\u5757\\u5f00\\u53d1x\",\"description\":\"\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1583044099\",\"updated\":\"1583079970\",\"start_date\":\"2020-03-02\",\"due_date\":\"2020-03-27\",\"duration\":\"20\",\"resolve_date\":null,\"module\":\"3\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"1200000\",\"assistants\":\"12165,12166\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"1\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"998400000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '{\"id\":\"116\",\"pkey\":\"example\",\"issue_num\":\"116\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"\\u65e5\\u5fd7\\u6a21\\u5757\\u5f00\\u53d1x\",\"description\":\"\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1583044099\",\"updated\":\"1583079970\",\"start_date\":\"2020-03-02\",\"due_date\":\"2020-03-27\",\"duration\":\"20\",\"resolve_date\":null,\"module\":\"3\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"1200000\",\"assistants\":\"12165,12166\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"1\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"998400000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '127.0.0.1', 1585188890),
+(7, 1, '事项', 120, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"120\",\"pkey\":\"example\",\"issue_num\":\"120\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"\\u4f18\\u5316\\u6539\\u8fdb\\u4e8b\\u98792\",\"description\":\"\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1583232765\",\"updated\":\"1583232765\",\"start_date\":\"2020-03-03\",\"due_date\":\"2020-03-11\",\"duration\":\"7\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"2\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"200000\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999900000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '{\"id\":\"120\",\"pkey\":\"example\",\"issue_num\":\"120\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"\\u4f18\\u5316\\u6539\\u8fdb\\u4e8b\\u98792\",\"description\":\"\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1583232765\",\"updated\":\"1583232765\",\"start_date\":\"2020-03-03\",\"due_date\":\"2020-03-11\",\"duration\":\"7\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"2\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"200000\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999900000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '127.0.0.1', 1585189795);
 
 -- --------------------------------------------------------
 
@@ -1470,7 +1499,12 @@ INSERT INTO `main_activity` (`id`, `user_id`, `project_id`, `action`, `content`,
 (82, 1, 6, '删除了项目', '', 'project', 6, 'Ai城市', '2020-03-25', 1585124621),
 (83, 1, 2, '删除了项目', '', 'project', 2, 'CRM示例项目', '2020-03-25', 1585124627),
 (84, 1, 1, '更新了迭代', '', 'agile', 1, '1.0迭代', '2020-03-25', 1585124813),
-(85, 1, 36, '创建了项目', '', 'project', 36, '示例项目2', '2020-03-25', 1585132125);
+(85, 1, 36, '创建了项目', '', 'project', 36, '示例项目2', '2020-03-25', 1585132125),
+(86, 1, 1, '修改事项', '', 'issue', 116, '日志模块开发x', '2020-03-26', 1585179815),
+(87, 1, 1, '创建了标签', '', 'project', 46, 'WWWW', '2020-03-26', 1585187293),
+(88, 1, 1, '删除了标签', '', 'project', 46, 'WWWW', '2020-03-26', 1585187313),
+(89, 1, 1, '修改事项', '', 'issue', 116, '日志模块开发x', '2020-03-26', 1585188890),
+(90, 1, 1, '修改事项', '', 'issue', 120, '优化改进事项2', '2020-03-26', 1585189795);
 
 -- --------------------------------------------------------
 
@@ -1513,23 +1547,21 @@ CREATE TABLE `main_cache_key` (
 INSERT INTO `main_cache_key` (`key`, `module`, `datetime`, `expire`) VALUES
 ('dict/default_role/getAll/0,*', 'dict/default_role', '2020-03-30 00:27:46', 1585499266),
 ('dict/default_role_relation/getAll/0,*', 'dict/default_role_relation', '2020-03-30 00:27:46', 1585499266),
-('dict/description_template/getAll/0,*', 'dict/description_template', '2020-03-29 18:28:27', 1585477707),
-('dict/label/getAll/0,*', 'dict/label', '2020-03-30 21:48:53', 1585576133),
-('dict/label/getAll/1,*', 'dict/label', '2020-03-30 21:49:02', 1585576142),
+('dict/description_template/getAll/0,*', 'dict/description_template', '2020-04-02 00:24:30', 1585758270),
 ('dict/main/getAll/0,*', 'dict/main', '2020-03-30 00:52:14', 1585500734),
 ('dict/main/getAll/1,*', 'dict/main', '2020-03-30 23:11:17', 1585581077),
 ('dict/priority/getAll/0,*', 'dict/priority', '2020-03-29 01:03:48', 1585415028),
 ('dict/priority/getAll/1,*', 'dict/priority', '2020-03-30 21:49:02', 1585576142),
-('dict/project_permission/getAll/1,*', 'dict/project_permission', '2020-03-29 18:28:25', 1585477705),
+('dict/project_permission/getAll/1,*', 'dict/project_permission', '2020-04-02 00:05:25', 1585757125),
 ('dict/resolve/getAll/0,*', 'dict/resolve', '2020-03-29 18:30:11', 1585477811),
 ('dict/resolve/getAll/1,*', 'dict/resolve', '2020-03-30 21:49:01', 1585576141),
 ('dict/status/getAll/0,*', 'dict/status', '2020-03-29 18:30:11', 1585477811),
 ('dict/status/getAll/1,*', 'dict/status', '2020-03-30 21:49:02', 1585576142),
 ('dict/type/getAll/0,*', 'dict/type', '2020-03-30 00:52:14', 1585500734),
-('dict/type/getAll/1,*', 'dict/type', '2020-03-29 18:28:23', 1585477703),
-('dict/type_scheme/getAll/1,*', 'dict/type_scheme', '2020-03-30 00:51:04', 1585500664),
+('dict/type/getAll/1,*', 'dict/type', '2020-04-02 00:05:22', 1585757122),
+('dict/type_scheme/getAll/1,*', 'dict/type_scheme', '2020-04-02 00:26:17', 1585758377),
 ('dict/workflow/getAll/1,*', 'dict/workflow', '2020-03-30 20:44:17', 1585572257),
-('dict/workflow_scheme/getAll/1,*', 'dict/workflow_scheme', '2020-03-31 20:29:04', 1585657744);
+('dict/workflow_scheme/getAll/1,*', 'dict/workflow_scheme', '2020-04-02 00:26:17', 1585758377);
 
 -- --------------------------------------------------------
 
@@ -1720,14 +1752,14 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (5, 'reg_require_captcha', '注册时需要验证码', 'basic', 0, '0', '0', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (6, 'sender_format', '邮件发件人显示格式', 'basic', 0, '${fullname} (Masterlab)', '${fullname} (Hornet)', 'string', 'text', NULL, ''),
 (7, 'description', '说明', 'basic', 0, '', '', 'string', 'text', NULL, ''),
-(8, 'date_timezone', '默认用户时区', 'basic', 0, 'Asia/Shanghai', 'Asia/Shanghai', 'string', 'text', '[\"Asia/Shanghai\":\"\"]', ''),
+(8, 'date_timezone', '默认用户时区', 'basic', 0, 'Asia/Shanghai', 'Asia/Shanghai', 'string', 'text', '', ''),
 (11, 'allow_share_public', '允许用户分享过滤器或面部', 'basic', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (12, 'max_project_name', '项目名称最大长度', 'basic', 0, '80', '80', 'int', 'text', NULL, ''),
 (13, 'max_project_key', '项目键值最大长度', 'basic', 0, '20', '20', 'int', 'text', NULL, ''),
 (15, 'email_public', '邮件地址可见性', 'basic', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (20, 'allow_gravatars', '允许使用Gravatars用户头像', 'basic', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (21, 'gravatar_server', 'Gravatar服务器', 'basic', 0, '', '', 'string', 'text', NULL, ''),
-(24, 'send_mail_format', '默认发送个邮件的格式', 'user_default', 0, 'html', 'text', 'string', 'radio', '{\"text\":\"text\",\"html\":\"html\"}', ''),
+(24, 'send_mail_format', '默认发送个邮件的格式', 'user_default', 0, 'text', 'text', 'string', 'radio', '{\"text\":\"text\",\"html\":\"html\"}', ''),
 (25, 'issue_page_size', '问题导航每页显示的问题数量', 'user_default', 0, '100', '100', 'int', 'text', NULL, ''),
 (39, 'time_format', '时间格式', 'datetime', 0, 'H:i:s', 'HH:mm:ss', 'string', 'text', NULL, '例如 11:55:47'),
 (40, 'week_format', '星期格式', 'datetime', 0, 'l H:i:s', 'EEEE HH:mm:ss', 'string', 'text', NULL, '例如 Wednesday 11:55:47'),
@@ -1766,7 +1798,7 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (79, 'ldap_timeout', '连接超时时间', 'ldap', 88, '10', '10', 'string', 'text', NULL, ''),
 (80, 'ldap_version', '版本', 'ldap', 80, '3', '3', 'string', 'text', NULL, ''),
 (81, 'ldap_security protocol', '安全协议', 'ldap', 84, '', '', 'string', 'select', '{\"\":\"普通\",\"ssl\":\"SSL\",\"tls\":\"TLS\"}', ''),
-(82, 'ldap_enable', '启用', 'ldap', 99, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
+(82, 'ldap_enable', '启用', 'ldap', 99, '0', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (83, 'ldap_match_attr', '匹配属性', 'ldap', 74, 'cn', 'cn', 'string', 'text', '', '设置什么属性作为匹配用户名，建议使用 cn 或 dn ');
 
 -- --------------------------------------------------------
@@ -2551,8 +2583,8 @@ CREATE TABLE `project_main` (
 --
 
 INSERT INTO `project_main` (`id`, `org_id`, `org_path`, `name`, `url`, `lead`, `description`, `key`, `pcounter`, `default_assignee`, `assignee_type`, `avatar`, `category`, `type`, `type_child`, `permission_scheme_id`, `workflow_scheme_id`, `create_uid`, `create_time`, `un_done_count`, `done_count`, `closed_count`, `archived`, `issue_update_time`, `is_display_issue_catalog`) VALUES
-(1, 1, 'default', '示例项目', '', 1, 'Masterlab的示例项目', 'example', NULL, 1, NULL, 'project/avatar/1.jpg', 0, 10, 0, 0, 0, 1, 1579247230, 16, 6, 4, 'N', 1583220515, 1),
-(36, 1, 'default', '示例项目2', '', 12164, 'good luck!', 'ex', NULL, 1, NULL, '', 0, 10, 0, 0, 0, 1, 1585132124, 0, 0, 0, 'N', 1585132124, 1);
+(1, 1, 'default', '示例项目', '', 1, 'Masterlab的示例项目', 'example', NULL, 1, NULL, 'project/avatar/1.png', 0, 10, 0, 0, 1, 1, 1579247230, 16, 6, 4, 'N', 1583220515, 1),
+(36, 1, 'default', '空项目', '', 12164, 'good luck!', 'ex', NULL, 1, NULL, 'project/avatar/2.png', 0, 10, 0, 0, 0, 1, 1585132124, 0, 0, 0, 'N', 1585132124, 1);
 
 -- --------------------------------------------------------
 
@@ -3152,7 +3184,56 @@ INSERT INTO `user_login_log` (`id`, `session_id`, `token`, `uid`, `time`, `ip`) 
 (2, '7d1fc180cf5ca0b740db94f7f1c204a5', '', 1, 1585132183, '113.116.24.170'),
 (3, '7d1fc180cf5ca0b740db94f7f1c204a5', '', 1, 1585132193, '113.116.24.170'),
 (4, '49a9930b1fd0dde2cfb631a43aab7cc0', '', 1, 1585132206, '113.116.24.170'),
-(5, 'b44e6a85b3b2438835afdcfcafdd09a4', '', 1, 1585132236, '113.116.24.170');
+(5, 'b44e6a85b3b2438835afdcfcafdd09a4', '', 1, 1585132236, '113.116.24.170'),
+(6, '162e402cc722277abc914bcab0d67c5b', '', 1, 1585133565, '113.116.24.170'),
+(7, '585e7081619150455de9dc162d9fe09b', '', 1, 1585133565, '113.116.24.170'),
+(8, 'eb5bc1b4895031c20f548cf5c6893da9', '', 1, 1585133654, '113.116.24.170'),
+(9, 'b44e6a85b3b2438835afdcfcafdd09a4', '', 1, 1585134376, '113.116.24.170'),
+(10, 'b44e6a85b3b2438835afdcfcafdd09a4', '', 1, 1585134422, '113.116.24.170'),
+(11, '25d9503f53e19f0201e295565a1ee267', '', 1, 1585134431, '113.116.24.170'),
+(12, '25d9503f53e19f0201e295565a1ee267', '', 1, 1585134448, '113.116.24.170'),
+(13, 'bf10ae6bdf4cc30e18c39f13c38a9aef', '', 1, 1585134636, '113.116.24.170'),
+(14, 'bf10ae6bdf4cc30e18c39f13c38a9aef', '', 1, 1585134649, '113.116.24.170'),
+(15, 'bf10ae6bdf4cc30e18c39f13c38a9aef', '', 1, 1585134899, '113.116.24.170'),
+(16, 'bf10ae6bdf4cc30e18c39f13c38a9aef', '', 1, 1585134966, '113.116.24.170'),
+(17, 'bf10ae6bdf4cc30e18c39f13c38a9aef', '', 1, 1585135017, '113.116.24.170'),
+(18, 'f4c97a0684c433aa927b82adba1a6f18', '', 1, 1585135231, '113.116.24.170'),
+(19, 'f4c97a0684c433aa927b82adba1a6f18', '', 1, 1585136870, '113.116.24.170'),
+(20, 'f4c97a0684c433aa927b82adba1a6f18', '', 1, 1585136959, '113.116.24.170'),
+(21, 'f4c97a0684c433aa927b82adba1a6f18', '', 1, 1585136992, '113.116.24.170'),
+(22, 'e0c425e0e0ea158d47cd995548d46836', '', 1, 1585137137, '119.123.40.35'),
+(23, 'e0c425e0e0ea158d47cd995548d46836', '', 1, 1585137155, '119.123.40.35'),
+(24, 'e0c425e0e0ea158d47cd995548d46836', '', 1, 1585137201, '119.123.40.35'),
+(25, 'e0c425e0e0ea158d47cd995548d46836', '', 1, 1585137213, '119.123.40.35'),
+(26, 'e0c425e0e0ea158d47cd995548d46836', '', 1, 1585137219, '119.123.40.35'),
+(27, 'utulrvqftdnekkghq1tb6dmbnl', '', 1, 1585144651, '127.0.0.1'),
+(28, '79af4751dd86b1b114a49ff9befe5606', '', 1, 1585147563, '119.123.40.35'),
+(29, '79af4751dd86b1b114a49ff9befe5606', '', 1, 1585147756, '119.123.40.35'),
+(30, '79af4751dd86b1b114a49ff9befe5606', '', 1, 1585147761, '119.123.40.35'),
+(31, 'f18e9a84e73478fa69e6cc4bbf5f468e', '', 1, 1585195811, '113.104.245.26'),
+(32, 'p7juu4f8r9oci79lrvh3naanuc', '', 1, 1585178828, '127.0.0.1'),
+(33, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585202476, '218.18.78.96'),
+(34, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585202646, '218.18.78.96'),
+(35, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585203266, '218.18.78.96'),
+(36, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585203319, '218.18.78.96'),
+(37, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585203390, '218.18.78.96'),
+(38, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585203505, '218.18.78.96'),
+(39, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585203573, '218.18.78.96'),
+(40, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585203681, '218.18.78.96'),
+(41, '1a21a8b2387a91b6a10ee099db9a05a8', '', 1, 1585203750, '218.18.78.96'),
+(42, 'f18e9a84e73478fa69e6cc4bbf5f468e', '', 1, 1585206051, '113.104.245.26'),
+(43, 'f18e9a84e73478fa69e6cc4bbf5f468e', '', 1, 1585206133, '113.104.245.26'),
+(44, 'f18e9a84e73478fa69e6cc4bbf5f468e', '', 1, 1585206479, '113.104.245.26'),
+(45, 'f5172cb24c9e0b2ec2525370efec24fb', '', 1, 1585208044, '218.18.78.96'),
+(46, 'd7436ee7224ebcc0c871ee4b6b09b519', '', 1, 1585208653, '218.18.78.96'),
+(47, '032f210b1703946015821947fc2b74d6', '', 1, 1585208715, '218.18.78.96'),
+(48, '744f195d45a6e409161c4bc86b34de93', '', 1, 1585208745, '218.18.78.96'),
+(49, '4c6a10af8d6c5c12793a69b83735e3bc', '', 1, 1585209606, '218.18.78.96'),
+(50, '39db0f888c524eb5cf15de7b3904ee3d', '', 1, 1585209660, '218.18.78.96'),
+(51, 'p7juu4f8r9oci79lrvh3naanuc', '', 1, 1585190298, '127.0.0.1'),
+(52, '39db0f888c524eb5cf15de7b3904ee3d', '', 1, 1585209805, '218.18.78.96'),
+(53, '39db0f888c524eb5cf15de7b3904ee3d', '', 1, 1585209875, '218.18.78.96'),
+(54, 'cee31c9ee5821c5d67a3b6aaf141ebb4', '', 1, 1585210002, '218.18.78.96');
 
 -- --------------------------------------------------------
 
@@ -3195,7 +3276,7 @@ CREATE TABLE `user_main` (
 --
 
 INSERT INTO `user_main` (`uid`, `schema_source`, `directory_id`, `phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`, `update_time`, `avatar`, `source`, `ios_token`, `android_token`, `version`, `token`, `last_login_time`, `is_system`, `login_counter`, `title`, `sign`) VALUES
-(1, 'inner', 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', 'master@masterlab.vip', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 1, '2019-01-13', 0, 0, 'avatar/1.png?t=1579249493', '', NULL, NULL, NULL, NULL, 1585132236, 0, 0, '管理员', '简化项目管理，保障结果，快乐团队！'),
+(1, 'inner', 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', 'master@masterlab.vip', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 1, '2019-01-13', 0, 0, 'avatar/1.png?t=1579249493', '', NULL, NULL, NULL, NULL, 1585210002, 0, 0, '管理员', '简化项目管理，保障结果，快乐团队！'),
 (12164, 'inner', NULL, NULL, 'json', '87655dd189dc13a7eb36f62a3a8eed4c', 1, NULL, NULL, 'Json', 'json@masterlab.vip', '$2y$10$hW2HeFe4kUO/IDxGW5A68e7r.sERM6.VtP3VrYLXeyHVb0ZjXo2Sm', 0, NULL, 1579247721, 0, 'avatar/12164.png?t=1579247721', '', NULL, NULL, NULL, '', 0, 0, 0, 'Java开发工程师', NULL),
 (12165, 'inner', NULL, NULL, 'shelly', '74eb77b447ad46f0ba76dba8de3e8489', 1, NULL, NULL, 'Shelly', 'shelly@masterlab.vip', '$2y$10$RXindYr74f9I1GyaGtovE.KgD6pgcjE6Z9SZyqLO9UykzImG6n2kS', 0, NULL, 1579247769, 0, 'avatar/12165.png?t=1579247769', '', NULL, NULL, NULL, '', 1583827161, 0, 0, '软件测试工程师', NULL),
 (12166, 'inner', NULL, NULL, 'alex', '22778739b6553330c4f9e8a29d0e1d5f', 1, NULL, NULL, 'Alex', 'Alex@masterlab.vip', '$2y$10$ENToGF7kfUrXm0i6DISJ6utmjq076tSCaVuEyeqQRdQocgUwxZKZ6', 0, NULL, 1579247886, 0, 'avatar/12166.png?t=1579247886', '', NULL, NULL, NULL, '', 0, 0, 0, '产品经理', NULL),
@@ -3284,6 +3365,16 @@ CREATE TABLE `user_posted_flag` (
   `ip` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `user_posted_flag`
+--
+
+INSERT INTO `user_posted_flag` (`id`, `user_id`, `_date`, `ip`) VALUES
+(2, 0, '2020-03-25', '127.0.0.1'),
+(6, 0, '2020-03-26', '218.18.78.96'),
+(3, 1, '2020-03-25', '127.0.0.1'),
+(8, 1, '2020-03-26', '127.0.0.1');
+
 -- --------------------------------------------------------
 
 --
@@ -3348,7 +3439,7 @@ CREATE TABLE `user_token` (
 --
 
 INSERT INTO `user_token` (`id`, `uid`, `token`, `token_time`, `refresh_token`, `refresh_token_time`) VALUES
-(1, 1, '807ed5328b4a7cf21bbb73f17370032cd1f8bf99e5cffb2f067192bc1d0f08d1', 1585132236, '20cdbce3664fd931ff0f7f9f2c390ff15b3eb0f3d2246b922f5b1a7759aa70a4', 1585132236),
+(1, 1, '8142ac93ba29beb410ed89cb505a8898a91aa2f41d8fb8a9e0cfcba3ddc326d4', 1585210002, '505e1da4480a32c857a8fa8a1d96c4235b3eb0f3d2246b922f5b1a7759aa70a4', 1585210002),
 (2, 12165, '289782df047c0639a1de60ec30df81be53d3aa23f5e7cee5ef5aa4b20f672467', 1583827161, 'f2e9f12ee857d126d36df54e03e4f0cf98a48d68c05a484f1469710b20a19d3b', 1583827161),
 (3, 12170, '091ec9b5343b945a2a879dbfdfc6dcae84ba0e8eafae9c81d63f741f94164677', 1585123124, 'de5f7da9538959dd325522b5526e9ad6bd2aaef4485b9bc5c66971bc6c3c3e01', 1585123124);
 
@@ -4421,7 +4512,7 @@ ALTER TABLE `hornet_user`
 -- 使用表AUTO_INCREMENT `issue_assistant`
 --
 ALTER TABLE `issue_assistant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- 使用表AUTO_INCREMENT `issue_description_template`
@@ -4445,7 +4536,7 @@ ALTER TABLE `issue_extra_worker_day`
 -- 使用表AUTO_INCREMENT `issue_file_attachment`
 --
 ALTER TABLE `issue_file_attachment`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- 使用表AUTO_INCREMENT `issue_filter`
@@ -4481,7 +4572,7 @@ ALTER TABLE `issue_label`
 -- 使用表AUTO_INCREMENT `issue_label_data`
 --
 ALTER TABLE `issue_label_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- 使用表AUTO_INCREMENT `issue_main`
@@ -4535,13 +4626,13 @@ ALTER TABLE `issue_type_scheme_data`
 -- 使用表AUTO_INCREMENT `issue_ui`
 --
 ALTER TABLE `issue_ui`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1580;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1661;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- 使用表AUTO_INCREMENT `log_base`
@@ -4553,7 +4644,7 @@ ALTER TABLE `log_base`
 -- 使用表AUTO_INCREMENT `log_operating`
 --
 ALTER TABLE `log_operating`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用表AUTO_INCREMENT `log_runtime_error`
@@ -4565,7 +4656,7 @@ ALTER TABLE `log_runtime_error`
 -- 使用表AUTO_INCREMENT `main_activity`
 --
 ALTER TABLE `main_activity`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- 使用表AUTO_INCREMENT `main_group`
@@ -4721,7 +4812,7 @@ ALTER TABLE `project_issue_type_scheme_data`
 -- 使用表AUTO_INCREMENT `project_label`
 --
 ALTER TABLE `project_label`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- 使用表AUTO_INCREMENT `project_list_count`
@@ -4835,7 +4926,7 @@ ALTER TABLE `user_issue_display_fields`
 -- 使用表AUTO_INCREMENT `user_login_log`
 --
 ALTER TABLE `user_login_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- 使用表AUTO_INCREMENT `user_main`
@@ -4859,7 +4950,7 @@ ALTER TABLE `user_phone_find_password`
 -- 使用表AUTO_INCREMENT `user_posted_flag`
 --
 ALTER TABLE `user_posted_flag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- 使用表AUTO_INCREMENT `user_refresh_token`
