@@ -272,11 +272,19 @@ class Passport extends BaseCtrl
      */
     private function processLoginReturn(&$final, $user)
     {
-        // 生成和刷新token
         $userTokenModel = new UserTokenModel($user['uid']);
-        list($ret, $token, $refresh_token) = $userTokenModel->makeToken($user);
-        if (!$ret) {
-            $this->ajaxFailed('服务器错误', '刷新token失败');
+        $userTokenInfo = $userTokenModel->getUserToken($user['uid']);
+
+        // 允许同一账户同时登陆(pc、app同时在线)，不再签发新的token
+        if ($userTokenModel->isTokenExpire($userTokenInfo['token_time'])) {
+            // 生成和刷新token
+            list($ret, $token, $refresh_token) = $userTokenModel->makeToken($user);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', '刷新token失败');
+            }
+        } else {
+            $token = $userTokenInfo['token'];
+            $refresh_token = $userTokenInfo['refresh_token'];
         }
 
         $final['token'] = $token;

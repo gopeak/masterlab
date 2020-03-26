@@ -126,11 +126,10 @@ class UserTokenModel extends CacheModel
             return array(self::VALID_TOKEN_RET_NOT_EXIST, 'token值错误!', []);
         }
 
-        $dataConfig = getConfigVar('data');
-
-        if ((time() - intval($row['token_time'])) > intval($dataConfig['token']['expire_time'])) {
+        if ($this->isTokenExpire($row['token_time'])) {
             return array(self::VALID_TOKEN_RET_EXPIRE, 'token值过期了!', []);
         }
+
         return array(self::VALID_TOKEN_RET_OK, 'ok', $row);
     }
 
@@ -152,11 +151,10 @@ class UserTokenModel extends CacheModel
             return array(self::VALID_TOKEN_RET_NOT_EXIST, 'refresh值错误!', []);
         }
 
-        $dataConfig = getConfigVar('data');
-
-        if ((time() - intval($row['refresh_token_time'])) > intval($dataConfig['token']['refresh_expire_time'])) {
+        if ($this->isRefreshTokenExpire($row['refresh_token_time'])) {
             return array(self::VALID_TOKEN_RET_EXPIRE, 'refresh值过期了!', []);
         }
+
         return array(self::VALID_TOKEN_RET_OK, 'ok', $row);
     }
 
@@ -280,5 +278,35 @@ class UserTokenModel extends CacheModel
 
         $flag = parent::deleteBykey($where, $key);
         return $flag;
+    }
+
+    /**
+     * 判断token是否过期
+     * @param $tokenTime
+     * @return bool 已过期为true
+     */
+    public function isTokenExpire($tokenTime)
+    {
+        $dataConfig = getConfigVar('data');
+        if ((time() - intval($tokenTime)) > intval($dataConfig['token']['expire_time'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 判断refresh_token是否过期
+     * @param $refreshTokenTime
+     * @return bool 已过期为true
+     */
+    public function isRefreshTokenExpire($refreshTokenTime)
+    {
+        $dataConfig = getConfigVar('data');
+        if ((time() - intval($refreshTokenTime)) > intval($dataConfig['token']['refresh_expire_time'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
