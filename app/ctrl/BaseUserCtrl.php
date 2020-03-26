@@ -200,7 +200,8 @@ class BaseUserCtrl extends BaseCtrl
      */
     public function processApiToken()
     {
-        $headersArr = @getallheaders();
+        $headersArr = getallheaders();
+        //print_r($headersArr);exit;
         if (array_key_exists('Master-Token', $headersArr)) {
             if (empty($headersArr['Master-Token'])) {
                 $this->ajaxFailed('无效的请求');
