@@ -78,80 +78,73 @@ if (!function_exists('msectime')) {
 
 
 /**
- *  计算两个时间的工作日,手工设置假期的日期和额外的工作日
- * @example $holidays=array("2008-12-25","2008-12-26","2009-01-01");getWorkingDays("2008-11-22","2009-01-02",$holidays);
- *
+ *  计算两个时间的工作日, 同时计算手工设置假期的日期和额外的工作日
+ * @example
+ * $startDate = '2020-03-03';
+ * $endDate = '2020-03-22';
+ * $holidays = ['2020-03-12','2020-03-13'];
+ * $addDays = ['2020-03-08','2020-03-13'];
+ * var_dump(getWorkingDays($startDate,$endDate));
+ * var_dump(getWorkingDays($startDate,$endDate,$holidays));
+ * var_dump(getWorkingDays($startDate,$endDate,$holidays,$addDays));
  * @param $startDate
  * @param $endDate
+ * @param $workDates
  * @param $holidays
+ * @param $addDays
  * @return float|int
  */
-function getWorkingDays($startDate,$endDate,$holidays, $addDays=[]){
-    // do strtotime calculations just once
-    $endUnixTime = strtotime($endDate);
-    $startUnixTime = strtotime($startDate);
-
-    //The total number of days between the two dates. We compute the no. of seconds and divide it to 60*60*24
-    //We add one to inlude both dates in the interval.
-    $days = ($endUnixTime - $startUnixTime) / 86400 + 1;
-
-    $no_full_weeks = floor($days / 7);
-    $no_remaining_days = fmod($days, 7);
-
-    //It will return 1 if it's Monday,.. ,7 for Sunday
-    $the_first_day_of_week = date("N", $startUnixTime);
-    $the_last_day_of_week = date("N", $endUnixTime);
-
-    //---->The two can be equal in leap years when february has 29 days, the equal sign is added here
-    //In the first case the whole interval is within a week, in the second case the interval falls in two weeks.
-    if ($the_first_day_of_week <= $the_last_day_of_week) {
-        if ($the_first_day_of_week <= 6 && 6 <= $the_last_day_of_week) $no_remaining_days--;
-        if ($the_first_day_of_week <= 7 && 7 <= $the_last_day_of_week) $no_remaining_days--;
+function getWorkingDays($startDate, $endDate, $workDates, $holidays = [], $addDays = [])
+{
+    if ($startDate == '000-00-00' || $endDate == '000-00-00') {
+        return 0;
     }
-    else {
-        // (edit by Tokes to fix an edge case where the start day was a Sunday
-        // and the end day was NOT a Saturday)
+    if(!is_array($workDates)){
+        $workDates = json_decode($workDates, true);
+    }
+    if(is_null($workDates)){
+        $workDates = [1,2,3,4,5];
+    }
+    $startUnixTime = strtotime($startDate);
+    $endUnixTime = strtotime($endDate);
 
-        // the day of the week for start is later than the day of the week for end
-        if ($the_first_day_of_week == 7) {
-            // if the start date is a Sunday, then we definitely subtract 1 day
-            $no_remaining_days--;
+    if ($startUnixTime <= strtotime('1970-01-01')) {
+        return 0;
+    }
+    if ($endUnixTime <= strtotime('1970-01-01')) {
+        return 0;
+    }
 
-            if ($the_last_day_of_week == 6) {
-                // if the end date is a Saturday, then we subtract another day
-                $no_remaining_days--;
+    // 截止时间大于起始时间则返回0
+    if ($startUnixTime > $endUnixTime) {
+        return 0;
+    }
+    // 截止日期大于10年之后将不会计算,返回0
+    if ($endUnixTime > (time() + 86400 * 365 * 10)) {
+        return 0;
+    }
+    $days = intval(($endUnixTime - $startUnixTime) / 86400) + 1;
+    //echo "intval(( {$endUnixTime} - {$startUnixTime}) / 86400) + 1\n";
+    //var_dump($days);
+    $dateArr = [];
+    $finalDays = $days;
+    for ($i = 0; $i < $days; $i++) {
+        $time = (int)$startUnixTime + $i * 24 * 3600 + 1;
+        $date = date('Y-m-d', $time);
+        $week = date('w', $time);
+        $dateArr[] = $date;
+        if (!in_array($date, $addDays)) {
+            // 节假日不算
+            if (in_array($date, $holidays) ) {
+                $finalDays--;
+            }else{
+                if (!in_array($week, $workDates) ) {
+                    $finalDays--;
+                }
             }
         }
-        else {
-            // the start date was a Saturday (or earlier), and the end date was (Mon..Fri)
-            // so we skip an entire weekend and subtract 2 days
-            $no_remaining_days -= 2;
-        }
     }
-
-    //The no. of business days is: (number of weeks between the two dates) * (5 working days) + the remainder
-//---->february in none leap years gave a remainder of 0 but still calculated weekends between first and last day, this is one way to fix it
-    $workingDays = $no_full_weeks * 5;
-    if ($no_remaining_days > 0 )
-    {
-        $workingDays += $no_remaining_days;
-    }
-
-    //We subtract the holidays
-    foreach($holidays as $holiday){
-        $time_stamp=strtotime($holiday);
-        //If the holiday doesn't fall in weekend
-        if ($startUnixTime <= $time_stamp && $time_stamp <= $endUnixTime && date("N",$time_stamp) != 6 && date("N",$time_stamp) != 7)
-            $workingDays--;
-    }
-    foreach($addDays as $dayDay){
-        $time_stamp=strtotime($dayDay);
-        //If the holiday doesn't fall in weekend
-        if ($startUnixTime <= $time_stamp && $time_stamp <= $endUnixTime )
-            $workingDays++;
-    }
-
-    return $workingDays;
+    return $finalDays;
 }
 
 

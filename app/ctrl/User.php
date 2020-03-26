@@ -17,6 +17,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\user\UserMessageModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\user\UserSettingModel;
@@ -33,10 +34,30 @@ class User extends BaseUserCtrl
 
     public $allowSettingFields = ['scheme_style' => 'left', 'layout' => 'aa','page_layout' => 'fixed', 'project_view' => 'issues', 'issue_view' => 'list'];
 
+    /**
+     *
+     * @var bool
+     */
+    public $isInSameTeam = true;
+
+    public $isCurrentUser = true;
+
     public function __construct()
     {
         parent::__construct();
         parent::addGVar('top_menu_active', 'user');
+        if (isset($_GET['_target'][2])) {
+            $userId = $_GET['_target'][2];
+            if($userId==UserAuth::getId()){
+                $this->isCurrentUser = true;
+            }else{
+                $this->isCurrentUser = false;
+                // 判断指定的用户是否在同一项目中
+                $this->isInSameTeam = UserLogic::checkUserIsTeam(UserAuth::getId(),$userId);
+            }
+        }
+        parent::addGVar('is_in_same_team', $this->isInSameTeam);
+        parent::addGVar('is_current_user', $this->isCurrentUser);
     }
 
     /**
@@ -47,27 +68,8 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = '个人资料';
         $data['nav'] = 'profile';
-        $userId = '';
-        if (isset($_GET['_target'][2])) {
-            $userId = $_GET['_target'][2];
-        }
-        $data['other_user'] = [];
-
-        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
-            $user = UserModel::getInstance($userId)->getUser();
-            if (isset($user['create_time'])) {
-                $user['create_time_text'] = format_unix_time($user['create_time']);
-            }
-            if (isset($user['password'])) {
-                unset($user['password']);
-            }
-            $user = UserLogic::format($user);
-            $data['other_user'] = $user;
-        }
-        if (empty($userId)) {
-            $userId = UserAuth::getInstance()->getId();
-        }
-        $data['user_id'] = $userId;
+        $this->getUserInfoByArg($data);
+        //print_r($data);
         $this->render('gitlab/user/profile.php', $data);
     }
 
@@ -76,25 +78,7 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = '操作日志';
         $data['nav'] = 'log_operation';
-        $userId = '';
-        if (isset($_GET['_target'][2])) {
-            $userId = $_GET['_target'][2];
-        }
-
-        $data['other_user'] = [];
-        $data['user_id'] = $userId;
-        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
-            $user = UserModel::getInstance($userId)->getUser();
-            if (isset($user['create_time'])) {
-                $user['create_time_text'] = format_unix_time($user['create_time']);
-            }
-            if (isset($user['password'])) {
-                unset($user['password']);
-            }
-            $user = UserLogic::format($user);
-            $data['other_user'] = $user;
-        }
-        $data['user_id'] = $userId;
+        $this->getCurrentUserInfo($data);
         $this->render('gitlab/user/log_operation.php', $data);
     }
 
@@ -103,23 +87,7 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = '参与的项目';
         $data['nav'] = 'profile';
-        $userId = '';
-        if (isset($_GET['_target'][2])) {
-            $userId = $_GET['_target'][2];
-        }
-        $data['other_user'] = [];
-        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
-            $user = UserModel::getInstance($userId)->getUser();
-            if (isset($user['create_time'])) {
-                $user['create_time_text'] = format_unix_time($user['create_time']);
-            }
-            if (isset($user['password'])) {
-                unset($user['password']);
-            }
-            $user = UserLogic::format($user);
-            $data['other_user'] = $user;
-        }
-        $data['user_id'] = $userId;
+        $this->getCurrentUserInfo($data);
         $this->render('gitlab/user/have_join_projects.php', $data);
     }
 
@@ -128,12 +96,20 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = '关注的事项';
         $data['nav'] = 'followed_issues';
+        $this->getCurrentUserInfo($data);
+
+        ConfigLogic::getAllConfigs($data);
+        $this->render('gitlab/user/follow_issues.php', $data);
+    }
+
+    private function getUserInfoByArg(&$data){
         $userId = '';
         if (isset($_GET['_target'][2])) {
             $userId = $_GET['_target'][2];
         }
-        $data['other_user'] = [];
-        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
+        $data['profile'] = [];
+        $data['user_id'] = $userId;
+        if ($userId != '' && $userId != UserAuth::getId()) {
             $user = UserModel::getInstance($userId)->getUser();
             if (isset($user['create_time'])) {
                 $user['create_time_text'] = format_unix_time($user['create_time']);
@@ -142,12 +118,25 @@ class User extends BaseUserCtrl
                 unset($user['password']);
             }
             $user = UserLogic::format($user);
-            $data['other_user'] = $user;
+            $data['profile'] = $user;
         }
         $data['user_id'] = $userId;
+    }
 
-        ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/user/follow_issues.php', $data);
+    private function getCurrentUserInfo(&$data){
+
+        $userId = UserAuth::getId();
+        $data['profile'] = [];
+        $user = UserModel::getInstance($userId)->getUser();
+        if (isset($user['create_time'])) {
+            $user['create_time_text'] = format_unix_time($user['create_time']);
+        }
+        if (isset($user['password'])) {
+            unset($user['password']);
+        }
+        $user = UserLogic::format($user);
+        $data['profile'] = $user;
+        $data['user_id'] = $userId;
     }
 
     public function pagePreferences()
@@ -165,6 +154,74 @@ class User extends BaseUserCtrl
         $data['nav'] = 'profile';
         $data['projects'] = ConfigLogic::getAllProjects();
         $this->render('gitlab/user/user_filters.php', $data);
+    }
+
+    public function pageMsgSystem()
+    {
+        $data = [];
+        $data['title'] = '系统消息';
+        $data['nav'] = 'msg_system';
+        $this->getCurrentUserInfo($data);
+        $this->render('twig/user/msg_system.twig', $data);
+    }
+
+    public function fetchMsgSystems()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $conditionArr = [];
+        $conditionArr['receiver_uid'] = $userId;
+        $range = 'all';
+        if(isset($_GET['range'])){
+            $range = $_GET['range'];
+        }
+        if($range=='unread'){
+            $conditionArr['readed'] = '0';
+        }
+        if($range=='readed'){
+            $conditionArr['readed'] = '1';
+        }
+        $orderBy = 'id';
+        $sort = 'desc';
+        $pageSize = 20;
+        $page = 1;
+        if(isset($_GET['page'])){
+            $page = (int)$_GET['page'];
+        }
+
+        $model = new UserMessageModel();
+        $ret = $model->filter($conditionArr, $page, $pageSize,  $orderBy, $sort);
+        list($total, $totalPages, $msgs) = $ret;
+        $data['msgs'] = $msgs;
+        $conditionArr['readed'] = '0';
+        $data['unread_count'] = $model->getUnreadCountByfilter($conditionArr);
+        $data['total'] = $total;
+        $data['pages'] = $totalPages;
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $data['cur_range'] = $range;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    public function fetchMsg()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $msgId = null;
+        if(isset($_GET['id'])){
+            $msgId = (int)$_GET['id'];
+        }
+        $model = new UserMessageModel();
+        $msgArr = $model->getMessage($msgId);
+        if($msgArr['receiver_uid']!=$userId){
+            $this->ajaxFailed('提示', '当前消息不属于当前用户');
+        }
+        if($msgArr['readed']=='0'){
+            $model->updateMessage($msgId, ['readed'=>'1']);
+            $msgArr['readed']='1';
+
+        }
+        $msgArr['create_time_text'] = format_unix_time($msgArr['create_time']);
+
+        $this->ajaxSuccess('ok', $msgArr);
     }
 
     public function fetchFollowIssues()
@@ -189,7 +246,6 @@ class User extends BaseUserCtrl
     {
         $userId = UserAuth::getInstance()->getId();
         $model = new IssueFilterModel();
-
         $data['filters'] = $model->getCurUserFilter($userId);
         $this->ajaxSuccess('ok', $data);
     }

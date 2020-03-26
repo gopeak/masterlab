@@ -881,7 +881,7 @@
     var $board_setting = null;
     var _current_columns = [];
     $(function () {
-window.$projects = new Project({})
+        window.$projects = new Project({})
         if (gl.FilteredSearchManager) {
             window.filteredSearchManager = new gl.FilteredSearchManager();
         }
@@ -980,6 +980,14 @@ window.$projects = new Project({})
                 text.html(input.find(".board-item-title-input").val()).show()
                 input.hide()
             }
+        })
+
+        dom_board_setting_line.on("blur", ".js-board-item-title-input", function(){
+            var caption = $(this).closest(".board-setting-line-item").find(".board-item-caption")
+            var input = caption.find(".js-board-item-title-input")
+            var text = caption.find(".js-board-item-title")
+            text.html(input.find(".board-item-title-input").val()).show()
+            input.hide()
         })
 
         dom_board_setting_line.on("mouseover", ".board-setting-line-item", function(){

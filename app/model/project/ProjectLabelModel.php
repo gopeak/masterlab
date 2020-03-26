@@ -17,6 +17,7 @@ class ProjectLabelModel extends BaseDictionaryModel
 
     public $fields = '*';
 
+
     /**
      * 用于实现单例模式
      * @var self
@@ -26,8 +27,8 @@ class ProjectLabelModel extends BaseDictionaryModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws \PDOException
      * @return self
+     * @throws \PDOException
      */
     public static function getInstance($persistent = false)
     {

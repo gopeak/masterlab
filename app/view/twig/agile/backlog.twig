@@ -56,9 +56,19 @@
 {% include 'twig/common/body/header-content.twig' %}
 
 
-<script>
+<script >
     var findFileURL = "";
 </script>
+
+<style type="text/css">
+    .left_div_active{
+        border-bottom: 1px solid #1f78d1;
+    }
+    .left_a_active{
+        color: black;
+    }
+</style>
+
 
 <div class="page-with-sidebar">
     {% include 'twig/project/common-page-nav-project.twig' %}
@@ -85,7 +95,7 @@
                                 <div class="classification-side">
                                     <div class="classification-side-item">
                                         <div class="classification-title drag_to_backlog_closed" data-id="0" data-type="backlog">
-                                            <a id="btn-backlog_issues" href="#" title="Backlog's issues"> 待办事项 </a>
+                                            <a id="btn-backlog_issues" href="#" title="待办事项列表"> 待办事项 </a>
                                         </div>
                                     </div>
                                     <div class="classification-side-item">
@@ -94,7 +104,7 @@
                                         </div>
                                     </div>
                                     <div class="classification-side-item">
-                                        <div class="classification-title" data-type="sprint">
+                                        <div class="classification-title"  id="div_left_sprints" data-type="sprint">
                                             迭 代
                                             {% if (is_admin or projectPermArr['ADMINISTER_PROJECTS'] is defined or projectPermArr['MANAGE_SPRINT'] is defined ) %}
                                                 <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
@@ -275,7 +285,7 @@
                         <label class="control-label" for="id_name">开始日期:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="laydate_input_date form-control" name="params[start_date]"
+                                <input type="text" autocomplete="off" class="laydate_input_date form-control" name="params[start_date]"
                                        id="id_start_date" value="" autocomplete="off"/>
                             </div>
                         </div>
@@ -285,7 +295,7 @@
                         <label class="control-label" for="id_name">结束日期:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="laydate_input_date form-control" name="params[end_date]"
+                                <input type="text" autocomplete="off" class="laydate_input_date form-control" name="params[end_date]"
                                        id="id_end_date" value="" autocomplete="off"/>
                             </div>
                         </div>
@@ -339,7 +349,7 @@
                         <label class="control-label" for="sprint_edit_start_date">开始时间:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="laydate_input_date form-control" name="params[start_date]"
+                                <input type="text" autocomplete="off" class="laydate_input_date form-control" name="params[start_date]"
                                        id="sprint_edit_start_date" value=""/>
                             </div>
                         </div>
@@ -349,7 +359,7 @@
                         <label class="control-label" for="sprint_edit_end_date">结束时间:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="laydate_input_date form-control" name="params[end_date]"
+                                <input type="text" autocomplete="off" class="laydate_input_date form-control" name="params[end_date]"
                                        id="sprint_edit_end_date" value=""/>
                             </div>
                         </div>
@@ -623,7 +633,15 @@
         new LabelsSelect();
         new MilestoneSelect();
         new IssueStatusSelect();
-
+        if(_page=='backlog'){
+            $('#btn-backlog_issues').css('color','black');
+            $('.classification-side-item classification-title').removeClass('left_div_active');
+            $('#btn-backlog_issues').parent().addClass('left_div_active');
+        }
+        if(_page=='sprint'){
+            $('.classification-side-item classification-title').removeClass('left_div_active');
+            $('#div_left_sprints').addClass('left_div_active');
+        }
 
         $("#btn-create_subtask").bind("click", function () {
             $('#master_issue_id').val(_issue_id);

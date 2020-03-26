@@ -282,7 +282,8 @@ class BaseCtrl
             $this->validReturnJson($reflectMethod, $ajaxProtocol, $returnObj, $result);
         }
 
-        @header('Content-Type:application/json');
+        //@header('Content-Type:application/json');
+        $this->_ajaxResponseHeader();
         echo $result;
         exit;
     }
@@ -357,11 +358,20 @@ class BaseCtrl
      */
     public function ajaxFailed($msg, $data = [], $code = 0)
     {
-        header('Content-Type:application/json');
+        //header('Content-Type:application/json');
+        $this->_ajaxResponseHeader();
         $ajaxProtocol = new ajax();
         $ajaxProtocol->builder($code, $data, $msg);
         echo $ajaxProtocol->getResponse();
         exit;
+    }
+
+    private function _ajaxResponseHeader()
+    {
+        header('Access-Control-Allow-Origin:*');
+        header('Access-Control-Allow-Methods:*');
+        header('Access-Control-Allow-Headers:*');
+        header('Content-Type:application/json');
     }
 
     public function jump($url, $info = null, $sec = 3)

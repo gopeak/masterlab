@@ -5,7 +5,9 @@ namespace main\app\classes;
 
 use main\app\model\permission\DefaultRoleModel;
 use main\app\model\permission\DefaultRoleRelationModel;
+use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectMainExtra;
 use main\app\model\project\ProjectMainExtraModel;
@@ -82,6 +84,28 @@ class ProjectLogic
     const PROJECT_FLOW_MANAGE_ISSUE_TYPE_SCHEME_ID = 4;     // 流程管理事项方案
     const PROJECT_TASK_MANAGE_ISSUE_TYPE_SCHEME_ID = 5;     // 任务管理事项解决方案
 
+    public static $initLabel = array(
+        ['title' => '产 品', 'catalog' => 1,'color' => '#FFFFFF', 'bg_color' => '#428BCA', 'description' => ''],
+        ['title' => '交互文档', 'catalog' => 1,'color' => '#FFFFFF', 'bg_color' => '#CC0033', 'description' => ''],
+        ['title' => '运 营', 'catalog' => 2,'color' => '#FFFFFF', 'bg_color' => '#44AD8E', 'description' => ''],
+        ['title' => '推 广', 'catalog' => 2,'color' => '#FFFFFF', 'bg_color' => '#A8D695', 'description' => ''],
+        ['title' => '编码规范', 'catalog' => 3,'color' => '#FFFFFF', 'bg_color' => '#69D100', 'description' => ''],
+        ['title' => '架构设计', 'catalog' => 3,'color' => '#FFFFFF', 'bg_color' => '#A295D6', 'description' => ''],
+        ['title' => '数据协议', 'catalog' => 3,'color' => '#FFFFFF', 'bg_color' => '#AD4363', 'description' => ''],
+        ['title' => '测试用例', 'catalog' => 4,'color' => '#FFFFFF', 'bg_color' => '#69D100', 'description' => ''],
+        ['title' => '测试规范', 'catalog' => 4,'color' => '#FFFFFF', 'bg_color' => '#69D100', 'description' => ''],
+        ['title' => 'UI设计', 'catalog' => 5,'color' => '#FFFFFF', 'bg_color' => '#D10069', 'description' => ''],
+        ['title' => '运 维', 'catalog' => 6,'color' => '#FFFFFF', 'bg_color' => '#D1D100', 'description' => ''],
+    );
+
+    public static $initCatalogLabel = array(
+        1=>['name' => '产 品', 'font_color' => 'blueviolet', 'description' => ''],
+        2=>['name' => '运 营', 'font_color' => 'blueviolet', 'description' => ''],
+        3=>['name' => '开发', 'font_color' => 'blueviolet', 'description' => ''],
+        4=>['name' => '测 试', 'font_color' => 'blueviolet', 'description' => ''],
+        5=>['name' => 'UI设计', 'font_color' => 'blueviolet', 'description' => ''],
+        6=>['name' => '运 维', 'font_color' => 'blueviolet', 'description' => '']
+    );
 
     public static function getIssueTypeSchemeId($projectTypeId)
     {
@@ -111,6 +135,8 @@ class ProjectLogic
 
         return $schemeId;
     }
+
+
 
     /**
      * 带图标的项目map
@@ -217,6 +243,7 @@ class ProjectLogic
             'create_uid' => $createUid,
             'create_time' => time(),
             //'detail' => $projectInfo['detail'],
+            'issue_update_time' => time(),
         );
 
         $projectModel = new ProjectModel();
@@ -366,7 +393,7 @@ class ProjectLogic
     }
 
     /**
-     * 项目左连接用户表
+     * 未归档项目左连接用户表
      * @return array
      * @throws \Exception
      */
@@ -381,14 +408,37 @@ class ProjectLogic
         $sql = "SELECT {$fields} FROM {$projectTable} p
                 LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
                 LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
-                ORDER BY p.id ASC";
+                WHERE p.archived='N' ORDER BY p.id DESC";
+        //echo $sql;exit;
 
+        return $model->db->getRows($sql);
+    }
+
+    /**
+     * 已归档项目左连接用户表
+     * @return array
+     * @throws \Exception
+     */
+    public function projectListJoinUserArchived()
+    {
+        $model = new ProjectModel();
+        $projectTable = $model->getTable();
+        $userTable = 'user_main';
+
+        $fields = " p.*, u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display ";
+
+        $sql = "SELECT {$fields} FROM {$projectTable} p
+                LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
+                LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
+                WHERE p.archived='Y' ORDER BY p.id DESC";
+        //echo $sql;exit;
         return $model->db->getRows($sql);
     }
 
     /**
      * 获取所有项目的简单信息
      * @return array
+     * @throws \Exception
      */
     public function getAllShortProjects()
     {
@@ -415,11 +465,11 @@ class ProjectLogic
         return $model->db->getRows($sql);
     }
 
-
     /**
      * 格式化项目项的内容
-     * @param array $item
+     * @param $item
      * @return mixed
+     * @throws \Exception
      */
     public static function formatProject($item)
     {
@@ -530,6 +580,50 @@ class ProjectLogic
     }
 
     /**
+     * 初始化项目的标签和分类
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public static function initLabelAndCatalog($projectId)
+    {
+        try {
+            $labelModel = new ProjectLabelModel();
+            $catalogLabelModel = new ProjectCatalogLabelModel();
+            $orderWeight = count(self::$initCatalogLabel)+100;
+            foreach (self::$initCatalogLabel as $catalogKey => $catalogLabel) {
+                $catalogLabelIdArr = [];
+                foreach (self::$initLabel as $label) {
+                    if($label['catalog']==$catalogKey){
+                        $insertArr = [];
+                        $insertArr['project_id'] = $projectId;
+                        $insertArr['title'] = $label['title'];
+                        $insertArr['color'] = $label['color'];
+                        $insertArr['bg_color'] = $label['bg_color'];
+                        $insertArr['description'] = $label['description'];
+                        list($ret, $insertId) = $labelModel->insert($insertArr);
+                        if($ret){
+                            $catalogLabelIdArr[] = $insertId;
+                        }
+                    }
+                }
+                $insertCatalogArr = [];
+                $insertCatalogArr['project_id'] = $projectId;
+                $insertCatalogArr['name'] = $catalogLabel['name'];
+                $insertCatalogArr['font_color'] = $catalogLabel['font_color'];
+                $insertCatalogArr['description'] = $catalogLabel['description'];
+                $insertCatalogArr['label_id_json'] = json_encode($catalogLabelIdArr);
+                $insertCatalogArr['order_weight'] =  $orderWeight - (int)$catalogKey;
+                $catalogLabelModel->insert($insertCatalogArr);
+            }
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return [false, $e->getMessage()];
+        }
+        return [true, 'ok'];
+    }
+
+    /**
      * 创建项目,把项目负责人赋予该项目的Administrators权限
      * @param $projectId
      * @param $userId
@@ -543,6 +637,28 @@ class ProjectLogic
         $projectUserRoleModel = new ProjectUserRoleModel();
 
         list($ret, $msg) = $projectUserRoleModel->insertRole($userId, $projectId, $projectAdminRoleId);
+        if (!$ret) {
+            return [false, $msg];
+        }
+
+        return [true, $msg];
+    }
+
+    /**
+     * 创建项目,为用户赋予该项目的权限
+     * @param $projectId
+     * @param $userId
+     * @param string $roleName  默认为普通用户角色
+     * @return array
+     * @throws \Exception
+     */
+    public static function assignProjectRoleForUser($projectId, $userId, $roleName = 'Users')
+    {
+        $projectRoleModel = new ProjectRoleModel();
+        $projectRoleId = $projectRoleModel->getProjectRoleIdByProjectIdRoleName($projectId, $roleName);
+        $projectUserRoleModel = new ProjectUserRoleModel();
+
+        list($ret, $msg) = $projectUserRoleModel->insertRole($userId, $projectId, $projectRoleId);
         if (!$ret) {
             return [false, $msg];
         }

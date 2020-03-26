@@ -11,7 +11,16 @@ function fetchUsers(url, tpl_id, parent_id) {
         data: $('#user_filter_form').serialize(),
         success: function (resp) {
             auth_check(resp);
-            console.log(resp.data.users);
+            //console.log(resp.data.users);
+
+            if ("undefined" != typeof resp.data.groups) {
+                if (resp.data.cur_group_id <= 0) {
+                    $('#select_group_view').html("所属用户组");
+                } else {
+                    $('#select_group_view').html(resp.data.groups[resp.data.cur_group_id - 1].name);
+                }
+            }
+
             if (resp.data.users.length) {
                 var source = $('#' + tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -23,7 +32,7 @@ function fetchUsers(url, tpl_id, parent_id) {
                 result = template(resp.data);
                 $('#select_group').html(result);
 
-                $(".user_for_edit ").click(function () {
+                $(".user_for_edit").click(function () {
                     userEdit($(this).attr("data-uid"));
                 });
 
@@ -35,7 +44,7 @@ function fetchUsers(url, tpl_id, parent_id) {
                     userActive($(this).attr("data-uid"));
                 });
 
-                $(".user_for_group ").click(function () {
+                $(".user_for_group").click(function () {
                     userGroup($(this).attr("data-uid"));
                 });
 
@@ -45,7 +54,7 @@ function fetchUsers(url, tpl_id, parent_id) {
                 });
                 $(".order_by_li").click(function () {
                     $('#filter_order_by').val($(this).attr('data-order-by'));
-                    $('#filter_sort').html($(this).attr('data-sort'));
+                    $('#filter_sort').val($(this).attr('data-sort'));
                     $('#order_view').html($(this).attr('data-title'));
                 });
 
@@ -156,6 +165,27 @@ function createCropper(img) {
 
 $(function () {
 
+    function zipBase64(base64, callback) {
+        var _img = new Image();
+        _img.src = base64;
+        _img.onload = function () {
+            var _canvas = document.createElement("canvas");
+            var w = this.width / 1.5;
+            var h = this.height / 1.5;
+            _canvas.setAttribute("width", w);
+            _canvas.setAttribute("height", h);
+            _canvas.getContext("2d").drawImage(this, 0, 0, w, h);
+            var base64 = _canvas.toDataURL("image/jpeg");
+            _canvas.toBlob(function (blob) {
+                if (blob.size > 1024 * 1024) {
+                    zipBase64(base64, 1.5);
+                } else {
+                    callback(base64)
+                }
+            }, "image/jpeg");
+        }
+    }
+
     // 新增
     $(".js-choose-user-avatar-button-create").on("click", function () {
         $(".js-user-avatar-file-create").trigger("click")
@@ -184,8 +214,11 @@ $(function () {
 
     $(".js-avatar-create-save").on("click", function () {
         var base64 = cropper.getCroppedCanvas().toDataURL('image/jpg', 1)
-        $("#js-user-avatar-create").attr("src", base64)
-        $("#id_avatar").val(base64)
+        zipBase64(base64, function (newBase64) {
+            $("#js-user-avatar-create").attr("src", newBase64)
+            $("#id_avatar").val(newBase64)
+        })
+
     })
 
     $("#modal-user_add").on('hidden.bs.modal', function () {
@@ -194,6 +227,12 @@ $(function () {
         cropper.destroy();
         $(".js-user-avatar-file-create").val("")
         $("#id_avatar").val("")
+        $("#id_email").val("")
+        $("#id_display_name").val("")
+        $("#id_title").val("")
+        $("#id_username").val("")
+        $("#id_password").val("")
+        $("#id_notify_email").attr("checked", false)
         $("#js-user-avatar-create").attr("src", "")
     })
 
@@ -208,8 +247,8 @@ $(function () {
         cropBoxData = cropper.getCropBoxData();
         canvasData = cropper.getCanvasData();
         cropper.destroy();
-        $(".js-avatar-file-edit").val("")
-        $("#edit_avatar").val("")
+        // $(".js-avatar-file-edit").val("")
+        // $("#edit_avatar").val("")
     });
 
     $(".select-avatar").on("click", function () {
@@ -228,8 +267,11 @@ $(function () {
 
     $(".js-edit-avatar-save").on("click", function () {
         var base64 = cropper.getCroppedCanvas().toDataURL('image/jpg', 1)
-        $("#js-user-avatar-edit").attr("src", base64)
-        $("#edit_avatar").val(base64)
+        zipBase64(base64, function (newBase64) {
+            $("#js-user-avatar-edit").attr("src", newBase64)
+            $("#edit_avatar").val(newBase64)
+            console.log(newBase64)
+        })
     })
 
 
@@ -287,8 +329,16 @@ function userAdd() {
                 return;
             }
             if (resp.ret === '200') {
+                fetchUsers('/admin/user/filter', 'user_tpl', 'render_id');
                 notify_success(resp.msg, resp.data);
                 //setTimeout("window.location.reload();", 2000)
+
+                // 清空form表单
+                $("#form-user_add input").each(function(){
+                    $(this).val('');
+                });
+
+                $('#modal-user_add').modal('hide');
             } else {
                 notify_error('添加失败,' + resp.msg);
             }
@@ -316,8 +366,10 @@ function userUpdate() {
                 return;
             }
             if (resp.ret === '200') {
+                fetchUsers('/admin/user/filter', 'user_tpl', 'render_id');
                 notify_success(resp.msg, resp.data);
-                setTimeout("window.location.reload();", 2000)
+                //setTimeout("window.location.reload();", 2000)
+                $('#modal-user_edit').modal('hide');
             } else {
                 notify_error('更新失败,' + resp.msg);
             }
@@ -392,7 +444,7 @@ function userActive(id) {
         url: url,
         success: function (resp) {
             auth_check(resp);
-            if (resp.ret == 200) {
+            if (resp.ret === '200') {
                 notify_success(resp.msg, resp.data);
                 setTimeout("window.location.reload();", 2000)
             } else {

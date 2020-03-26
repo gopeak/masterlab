@@ -261,6 +261,12 @@
                         </div>
                     </div>
 
+                    <div class="form-group hide" id="create_master_div">
+                        <label class="control-label" for="issue_type">父任务:</label>
+                        <div class="col-sm-10" id="create_master_title" style="padding-top: 7px;">
+                        </div>
+                    </div>
+
                     <hr id="create_header_hr">
 
                     <ul class="nav nav-tabs hide" id="create_tabs">
@@ -587,7 +593,7 @@
                             <li>
                                 <a class="dropdown-toggle-page" href="#">创建新标签</a></li>
                             <li>
-                                <a data-is-link="true" href="/default/{{project_key}}/settings_label"">管理标签</a></li>
+                                <a data-is-link="true" href="{{project_root_url}}/settings_label">管理标签</a></li>
                         </ul>
                     </div>
                     <div class="dropdown-loading">

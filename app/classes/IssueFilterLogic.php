@@ -9,12 +9,17 @@
 
 namespace main\app\classes;
 
+use main\app\async\email;
 use main\app\model\agile\SprintModel;
+use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueFollowModel;
+use main\app\model\issue\IssueTypeModel;
+use main\app\model\project\ProjectCatalogLabelModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
@@ -46,18 +51,18 @@ class IssueFilterLogic
     ];
 
     public static $advFields = [
-        'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
-        'summary' => ['title' => '标题', 'opt' => '=,!=,like', 'type' => 'text', 'source' => ''],
-        'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'datetime', 'source' => ''],
-        'priority' => ['title' => '优先级', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'priority'],
-        'module' => ['title' => '模  块', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'module'],
-        'issue_type' => ['title' => '类  型', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'issueType'],
-        'sprint' => ['title' => '迭 代', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'sprint'],
-        'weight' => ['title' => '权重', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
-        'assignee' => ['title' => '经办人', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'user'],
-        'status' => ['title' => '状态', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'status'],
-        'resolve' => ['title' => '解决结果', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'status'],
-        'due_date' => ['title' => '截止日期', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'date', 'source' => ''],
+        'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
+        'summary' => ['title' => '标题', 'opt' => '=,!=,like,like %...%,regexp,regexp ^...$', 'type' => 'text', 'source' => ''],
+        'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=', 'type' => 'datetime', 'source' => ''],
+        'priority' => ['title' => '优先级', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'priority'],
+        'module' => ['title' => '模  块', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'module'],
+        'issue_type' => ['title' => '类  型', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'issueType'],
+        'sprint' => ['title' => '迭 代', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'sprint'],
+        'weight' => ['title' => '权重', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
+        'assignee' => ['title' => '经办人', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'user'],
+        'status' => ['title' => '状态', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'status'],
+        'resolve' => ['title' => '解决结果', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'status'],
+        'due_date' => ['title' => '截止日期', 'opt' => '=,!=,<,>,<=,>=', 'type' => 'date', 'source' => ''],
     ];
 
 
@@ -160,21 +165,17 @@ class IssueFilterLogic
                 if (strpos($versionStr, 'MariaDB') !== false) {
                     $versionNum = 0;
                 }
-                if ($versionNum < 5.70) {
-                    // 使用LOCATE模糊搜索
-                    if (strlen($search) < 10) {
-                        $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
-                        $params['pkey'] = $search;
-                        $params['summary'] = $search;
-                    } else {
-                        $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
-                        $params['summary'] = $search;
-                    }
+
+                // 使用LOCATE模糊搜索
+                if (strlen($search) < 10) {
+                    $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
+                    $params['pkey'] = $search;
+                    $params['summary'] = $search;
                 } else {
-                    // 使用全文索引
-                    $sql .= " AND MATCH (`summary`) AGAINST (:summary IN NATURAL LANGUAGE MODE) ";
+                    $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
                     $params['summary'] = $search;
                 }
+
             }
         }
 
@@ -267,6 +268,53 @@ class IssueFilterLogic
             $sql .= " AND status=:status";
             $params['status'] = $statusId;
         }
+
+        // 事项类型
+        $typeId = null;
+        if (isset($_GET[urlencode('类型')])) {
+            $model = new IssueTypeModel();
+            $row = $model->getByName(urldecode($_GET[urlencode('类型')]));
+            if (isset($row['id'])) {
+                $typeId = $row['id'];
+            }
+            unset($row);
+        }
+        if (isset($_GET['type_id'])) {
+            $typeId = (int)$_GET['type_id'];
+        }
+        if ($typeId !== null) {
+            $sql .= " AND issue_type=:issue_type";
+            $params['issue_type'] = $typeId;
+        }
+
+        // 所属标签
+        if (strpos($sysFilter, 'label_') === 0) {
+            list(, $labelId) = explode('label_', $sysFilter);
+            $labelIssueIdArr = IssueLabelDataModel::getInstance()->getIssueIdArrById($labelId);
+            if ($labelIssueIdArr) {
+                $issueIdStr = implode(',', $labelIssueIdArr);
+                unset($issueIdArr);
+                $sql .= " AND id in ({$issueIdStr})";
+            }
+        }
+        
+        // 所属分类
+        if (strpos($sysFilter, 'catalog_') === 0) {
+            list(, $catalogId) = explode('catalog_', $sysFilter);
+            $projectCatalogLabel = (new ProjectCatalogLabelModel())->getById((int)$catalogId);
+            if (isset($projectCatalogLabel['label_id_json'])) {
+                $labelIdArr = json_decode($projectCatalogLabel['label_id_json']);
+                if ($labelIdArr) {
+                    $issueIdArr = IssueLabelDataModel::getInstance()->getIssueIdArrByIds($labelIdArr);
+                    if ($issueIdArr) {
+                        $issueIdStr = implode(',', $issueIdArr);
+                        unset($issueIdArr);
+                        $sql .= " AND id in ({$issueIdStr})";
+                    }
+                }
+            }
+        }
+
         // 我未解决的
         if ($sysFilter == 'my_unsolved') {
             $params['assignee'] = UserAuth::getInstance()->getId();
@@ -281,6 +329,7 @@ class IssueFilterLogic
             $curUserId = UserAuth::getInstance()->getId();
             $issueFollowModel = new IssueFollowModel();
             $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
+
             $followIssueIdArr = [];
             if (!empty($issueFollows)) {
                 foreach ($issueFollows as $issueFollow) {
@@ -291,6 +340,8 @@ class IssueFilterLogic
                     $issueIdStr = implode(',', $followIssueIdArr);
                     $sql .= "  AND id in ({$issueIdStr})";
                 }
+            } else {
+                $sql .= " AND  id in (0) ";
             }
             unset($issueFollowModel, $issueFollows, $followIssueIdArr);
         }
@@ -351,12 +402,13 @@ class IssueFilterLogic
 
         $orderBy = 'id';
         if (isset($_GET['sort_field'])) {
-            $orderBy = $_GET['sort_field'];
+            $orderBy = trimStr($_GET['sort_field']);
         }
         $sortBy = 'DESC';
         if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
-            $sortBy = $_GET['sort_by'];
+            $sortBy = trimStr($_GET['sort_by']);
         }
+
         if ($sysFilter == 'recently_create') {
             $orderBy = 'created';
             $sortBy = 'DESC';
@@ -396,7 +448,7 @@ class IssueFilterLogic
 
             $sql .= ' ' . $order . $limit;
             //print_r($params);
-            //echo $sql;die;
+            // echo $sql;die;
 
             $arr = $model->db->getRows($sql, $params);
             $idArr = [];
@@ -419,18 +471,19 @@ class IssueFilterLogic
      * @return array
      * @throws \Exception
      */
-    public function getAdvQueryList($page = 1, $pageSize = 50)
+    public function getAdvQueryList($page = 1, $pageSize = 20)
     {
         // sys_filter=1&fav_filter=2&project=2&reporter=2&title=fdsfdsfsd&assignee=2&created_start=232131&update_start=43432&sort_by=&32323&mod=123&reporter=12&priority=2&status=23&resolution=2
+        $paramsField = [];
         $params = [];
         $sql = " WHERE 1";
 
         // 项目筛选
         $projectId = null;
-        if (isset($_GET['project']) && !empty($_GET['project'])) {
-            $projectId = (int)$_GET['project'];
-            $sql .= " AND project_id=:project";
-            $params['project'] = $projectId;
+        if (isset($_GET['project_id']) && !empty($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+            $sql .= " AND project_id=:project_id ";
+            $params['project_id'] = $projectId;
         } else {
             // 如果没有指定某一项目，则获取用户参与的项目
             $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr(UserAuth::getId());
@@ -460,10 +513,25 @@ class IssueFilterLogic
         }
         $startBracesNum = 0;
         $endBracesNum = 0;
-        $sql .= 'AND ( ';
+        $sql .= ' AND ( ';
+
+        $advFields = self::$advFields;
+
         $i = 0;
         foreach ($queryArr as $item) {
             $i++;
+
+            $field = trimStr($item['field']);
+            if (!array_key_exists($field, $advFields)) {
+                return [false, [], 0];
+            }
+
+            $value = $item['value'];
+
+            if ($field == 'updated' || $field == 'created') {
+                $value = strtotime($value);
+            }
+
             $logic = strtoupper($item['logic']);
             if ($i == 1) {
                 $logic = '';
@@ -476,15 +544,18 @@ class IssueFilterLogic
             if ($endBraces == ')') {
                 $endBracesNum++;
             }
-            $field = trimStr($item['field']);
-            $opt = strtolower(urldecode($item['opt']));
-            $value = $item['value'] ;
-
-            if ($field == 'updated' || $field == 'created') {
-                $value = strtotime($value);
-            }
 
             $sql .= " {$logic} {$startBraces} ";
+
+
+            $opt = strtolower(urldecode($item['opt']));
+            $fieldOptArr = explode(',', $advFields[$field]['opt']);
+
+            if (!in_array($opt, $fieldOptArr)) {
+                // 忽略操作符不在配置数组中的查询条件
+                $sql .= " 1=1 ";
+                continue;
+            }
 
             switch ($opt) {
                 case '=':
@@ -493,27 +564,36 @@ class IssueFilterLogic
                 case '>=':
                 case '<=':
                 case '<':
-                    $sql .= " $field {$opt}:$field ";
-                    $params[$field] = $value;
+                    if (in_array($field, $paramsField)) {
+                        $sql .= sprintf(" %s %s :%s_%s ", $field, $opt, $field, $i);
+                        $params[$field . '_' . $i] = $value;
+                    } else {
+                        $sql .= " $field {$opt}:$field ";
+                        $params[$field] = $value;
+                    }
                     break;
                 case 'in':
                 case 'not in':
-                    $sql .= " $field  {$opt} ( :$field ) ";
-                    $params[$field] = $value;
-                    break;
-                case 'like':
-                    $sql .= " $field  {$opt} ':$field' ";
-                    $params[$field] = $value;
-                    break;
-                case 'like %...%':
-                    if ($versionNum < 5.70) {
-                        $sql .= "   LOCATE(:$field,$field)>0  ";
-                        $params[$field] = $value;
+                    if (in_array($field, $paramsField)) {
+                        $sql .= sprintf(" %s %s ( :%s_%s ) ", $field, $opt, $field, $i);
+                        $params[$field . '_' . $i] = $value;
                     } else {
-                        // 使用全文索引
-                        $sql .= "  MATCH ($field) AGAINST (:$field IN NATURAL LANGUAGE MODE) ";
+                        $sql .= " $field  {$opt} ( :$field ) ";
                         $params[$field] = $value;
                     }
+                    break;
+                case 'like':
+                    if (in_array($field, $paramsField)) {
+                        $sql .= sprintf(" %s %s :%s_%s ", $field, $opt, $field, $i);
+                        $params[$field . '_' . $i] = '%' . $value . '%';
+                    } else {
+                        $sql .= " $field  {$opt} :$field ";
+                        $params[$field] = '%' . $value . '%';
+                    }
+                    break;
+                case 'like %...%':
+                    $sql .= "   LOCATE(:$field,$field)>0  ";
+                    $params[$field] = $value;
                     break;
                 case 'is null':
                 case 'is not null':
@@ -530,13 +610,20 @@ class IssueFilterLogic
                     $sql .= "  $field {$opt} '$value' ";
                     break;
                 case 'regexp ^...$':
-                    $sql .= "  $field {$opt}  '^{$value}$' ";
+                    $sql .= "  $field REGEXP  '^{$value}$' ";
                     break;
                 default:
-                    $sql .= " $field  {$opt} :$field ";
-                    $params[$field] = $value;
+                    if (in_array($field, $paramsField)) {
+                        $sql .= sprintf(" %s %s :%s_%s ", $field, $opt, $field, $i);
+                        $params[$field . '_' . $i] = $value;
+                    } else {
+                        $sql .= " $field  {$opt} :$field ";
+                        $params[$field] = $value;
+                    }
             }
             $sql .= " {$endBraces} ";
+
+            $paramsField[] = $field;
         }
         $sql .= ' ) ';
         if ($startBracesNum != $endBracesNum) {
@@ -544,7 +631,7 @@ class IssueFilterLogic
         }
 
         $orderBy = 'id';
-        if (isset($_GET['sort_field'])) {
+        if (isset($_GET['sort_field']) && !empty($_GET['sort_field'])) {
             $orderBy = $_GET['sort_field'];
         }
         $sortBy = 'DESC';
@@ -563,13 +650,13 @@ class IssueFilterLogic
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             // echo $sqlCount;
-           //  print_r($params);
+            // print_r($params);
             $count = $model->db->getOne($sqlCount, $params);
             $fields = '*';
             $sql = "SELECT {$fields} FROM  {$table} " . $sql;
             $sql .= ' ' . $order . $limit;
             //print_r($params);
-            //echo $sql;die;
+            //echo $sql;print_r($params);die;
             $arr = $model->db->getRows($sql, $params);
             // var_dump( $arr, $count);
             return [true, $arr, $count];
@@ -647,6 +734,28 @@ class IssueFilterLogic
         $conditions['assignee'] = $userId;
         $model = new IssueModel();
         $count = $model->getOne('count(*) as cc', $conditions);
+        return intval($count);
+    }
+
+    /**
+     * 获取未解决的数量
+     * @param $userId
+     * @param $projectId
+     * @return int
+     * @throws \Exception
+     */
+    public static function getUnResolveCountByAssigneeProject($userId, $projectId)
+    {
+        if (empty($userId)) {
+            return 0;
+        }
+        $params = [];
+        $params['assignee'] = $userId;
+        $params['project_id'] = $projectId;
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND project_id=:project_id AND  " . self::getUnDoneSql();
+        $count = $model->db->getOne($sql, $params);
         return intval($count);
     }
 

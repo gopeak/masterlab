@@ -307,7 +307,7 @@ MM.Item = function () {
 	this._shape = null;
 	this._autoShape = true;
 	this._color = null;
-	this._font_size= null;
+	this._font_size = null;
 	this._font_family = null;
 	this._text_color = null;
 	this._font_bold = null;
@@ -318,8 +318,8 @@ MM.Item = function () {
 	this._status = null;
 	this._side = null; /* side preference */
 	this._icon = null;
-    this._issue_status = null;
-    this._issue_progress = null;
+	this._issue_status = null;
+	this._issue_progress = null;
 	this._project_img = null;
 	this._id = MM.generateId();
 	this._oldText = "";
@@ -330,7 +330,7 @@ MM.Item = function () {
 	}
 	this.dict = {
 		issue_type: window._issueConfig.issue_type,
-        issue_status:window._issueConfig.issue_status
+		issue_status: window._issueConfig.issue_status
 	}
 
 	this._dom = {
@@ -339,11 +339,11 @@ MM.Item = function () {
 		create: document.createElement("span"),
 		status: document.createElement("span"),
 		icon: document.createElement("span"),
-		project_img:document.createElement("img"),
-        issue_priority_label: document.createElement("span"),
-        issue_status_label: document.createElement("span"),
-        issue_assignee_img:document.createElement("img"),
-        issue_progress_img:document.createElement("img"),
+		project_img: document.createElement("img"),
+		issue_priority_label: document.createElement("span"),
+		issue_status_label: document.createElement("span"),
+		issue_assignee_img: document.createElement("img"),
+		issue_progress_img: document.createElement("img"),
 		value: document.createElement("span"),
 		text: document.createElement("div"),
 		children: document.createElement("ul"),
@@ -355,10 +355,10 @@ MM.Item = function () {
 	this._dom.status.classList.add("status");
 	this._dom.icon.classList.add("icon");
 	this._dom.project_img.classList.add("_project_img");
-    this._dom.issue_priority_label.classList.add("_issue_priority");
-    this._dom.issue_status_label.classList.add("_issue_status");
-    this._dom.issue_assignee_img.classList.add("_issue_assignee");
-    this._dom.issue_progress_img.classList.add("_issue_progress");
+	this._dom.issue_priority_label.classList.add("_issue_priority");
+	this._dom.issue_status_label.classList.add("_issue_status");
+	this._dom.issue_assignee_img.classList.add("_issue_assignee");
+	this._dom.issue_progress_img.classList.add("_issue_progress");
 	this._dom.value.classList.add("value");
 	this._dom.text.classList.add("text");
 	this._dom.toggle.classList.add("toggle");
@@ -367,11 +367,13 @@ MM.Item = function () {
 	this._dom.create.classList.add("fa");
 	this._dom.create.classList.add("fa-pencil");
 
+
+
 	this._dom.content.appendChild(this._dom.project_img);
-    this._dom.content.appendChild(this._dom.issue_assignee_img);
-    this._dom.content.appendChild(this._dom.issue_priority_label);
-    this._dom.content.appendChild(this._dom.issue_status_label);
-    this._dom.content.appendChild(this._dom.issue_progress_img);
+	this._dom.content.appendChild(this._dom.issue_assignee_img);
+	this._dom.content.appendChild(this._dom.issue_priority_label);
+	this._dom.content.appendChild(this._dom.issue_status_label);
+	this._dom.content.appendChild(this._dom.issue_progress_img);
 	this._dom.content.appendChild(this._dom.text); /* status+value are appended in layout */
 	this._dom.node.appendChild(this._dom.canvas);
 	this._dom.node.appendChild(this._dom.content);
@@ -405,7 +407,7 @@ MM.Item.prototype.toJSON = function () {
 		id: this._id,
 		text: this.getText()
 	}
-	this._font_size= null;
+	this._font_size = null;
 	this._font_family = null;
 	this._text_color = null;
 	this._font_bold = null;
@@ -427,10 +429,10 @@ MM.Item.prototype.toJSON = function () {
 
 	if (this._value) { data.value = this._value; }
 	if (this._status) { data.status = this._status; }
-    if (this._issue_priority) { data.issue_priority = this._issue_priority; }
-    if (this._issue_status) { data.issue_status = this._issue_status; }
-    if (this._issue_assignee) { data.issue_assignee = this._issue_assignee; }
-    if (this._issue_progress) { data.issue_progress = this._issue_progress; }
+	if (this._issue_priority) { data.issue_priority = this._issue_priority; }
+	if (this._issue_status) { data.issue_status = this._issue_status; }
+	if (this._issue_assignee) { data.issue_assignee = this._issue_assignee; }
+	if (this._issue_progress) { data.issue_progress = this._issue_progress; }
 	if (this._layout) { data.layout = this._layout.id; }
 	if (!this._autoShape) { data.shape = this._shape.id; }
 	if (this._collapsed) { data.collapsed = 1; }
@@ -447,9 +449,9 @@ MM.Item.prototype.toJSON = function () {
 // 初始化属性
 MM.Item.prototype.fromJSON = function (data) {
 
-	if(data.type && (data.type==='project' || data.type==='root_sprint')){
+	if (data.type && (data.type === 'project' || data.type === 'root_sprint')) {
 		this._project_img = data.avatar;
-		if(data.avatar_exist){
+		if (data.avatar_exist) {
 			this._updateProjectImg();
 		}
 	}
@@ -459,8 +461,8 @@ MM.Item.prototype.fromJSON = function (data) {
 	if (data.side) { this._side = data.side; }
 	if (data.color) {
 		this._color = data.color;
-	}else{
-		this._color ='#EE3333';
+	} else {
+		this._color = '#EE3333';
 	}
 
 	if (data.font_size) {
@@ -471,17 +473,17 @@ MM.Item.prototype.fromJSON = function (data) {
 	}
 	if (data.text_color) {
 		this._text_color = data.text_color;
-	}else{
-		this._text_color ='#000000';
+	} else {
+		this._text_color = '#000000';
 	}
 	if (data.font_bold) {
 		this._font_bold = data.font_bold;
-	}else{
+	} else {
 		this._font_bold = '0';
 	}
 	if (data.font_italic) {
 		this._font_italic = data.font_italic;
-	}else{
+	} else {
 		this._font_italic = '0';
 	}
 	if (data.bg_color) {
@@ -492,10 +494,10 @@ MM.Item.prototype.fromJSON = function (data) {
 
 	// if (data.icon) { this._icon = data.icon; }
 	if (data.issue_type_fa) { this._icon = data.issue_type_fa; }
-    if (data.issue_priority) { this._issue_priority =  data.issue_priority; }
-    if (data.issue_status) { this._issue_status =  data.issue_status; }
-    if (data.issue_assignee) { this._issue_assignee =  data.issue_assignee; }
-    if (data.issue_progress) { this._issue_progress =  data.issue_progress; }
+	if (data.issue_priority) { this._issue_priority = data.issue_priority; }
+	if (data.issue_status) { this._issue_status = data.issue_status; }
+	if (data.issue_assignee) { this._issue_assignee = data.issue_assignee; }
+	if (data.issue_progress) { this._issue_progress = data.issue_progress; }
 
 	if (data.value) { this._value = data.value; }
 	if (data.status) {
@@ -589,77 +591,77 @@ MM.Item.prototype.clone = function () {
 
 MM.Item.prototype.setPriorityActive = function (issue_priority) {
 	$('#format_issue_priority label').removeClass('active');
-	$("#format_issue_priority label[data-value='"+issue_priority+"']").addClass('active');
+	$("#format_issue_priority label[data-value='" + issue_priority + "']").addClass('active');
 }
 
 MM.Item.prototype.setStatusActive = function (issue_status) {
 	$('#format_issue_status label').removeClass('active');
-	$("#format_issue_status label[data-status_value='"+issue_status+"']").addClass('active');
+	$("#format_issue_status label[data-status_value='" + issue_status + "']").addClass('active');
 }
 MM.Item.prototype.setProgressActive = function (issue_progress) {
 	$("#format_issue_progress img").removeClass('img-thumbnail');
-	let active_img = $("#format_issue_progress img[src='/dev/img/mind/"+this.getProgressImgName(issue_progress)+"']");
+	let active_img = $("#format_issue_progress img[src='/dev/img/mind/" + this.getProgressImgName(issue_progress) + "']");
 	active_img.addClass('img-thumbnail');
 }
 
 
 MM.Item.prototype.syncRenderRightPanel = function () {
-    // 格式渲染
-    if(this._id.search('project_')===-1){
+	// 格式渲染
+	if (this._id.search('project_') === -1) {
 		// 事项
-        let issue_id = null;
-        if(this._id.search('issue_')>=0){
-            $('#btn-delete').removeClass('disabled');
-        	$('#right-issue').show();
-            $('#format_issue_type').val(this._icon);
-            $('#format_issue_assignee').val(this._issue_assignee);
+		let issue_id = null;
+		if (this._id.search('issue_') >= 0) {
+			$('#btn-delete').removeClass('disabled');
+			$('#right-issue').show();
+			$('#format_issue_type').val(this._icon);
+			$('#format_issue_assignee').val(this._issue_assignee);
 			this.setStatusActive(this._issue_status);
 			this.setPriorityActive(this._issue_priority);
 			this.setProgressActive(this._issue_progress);
-        }else{
-            $('#right-issue').hide();
+		} else {
+			$('#right-issue').hide();
 		}
-    }
+	}
 
 
-    if(this._shape && this._shape.id){
+	if (this._shape && this._shape.id) {
 		$('#format_shape').val(this._shape.id);
 	}
-	if(this._layout && this._layout.id){
+	if (this._layout && this._layout.id) {
 		$('#layout').val(this._layout.id);
 	}
-    if(this._font_size){
-        $('#format_font_size').val(this._font_size);
-    }
-    if(this._font_family){
-        $('#format_font_family').val(this._font_family);
-    }
-    if(this._font_bold && this._font_bold=='1'){
-    	$('#format_font_bold').addClass('active');
-	}else{
+	if (this._font_size) {
+		$('#format_font_size').val(this._font_size);
+	}
+	if (this._font_family) {
+		$('#format_font_family').val(this._font_family);
+	}
+	if (this._font_bold && this._font_bold == '1') {
+		$('#format_font_bold').addClass('active');
+	} else {
 		$('#format_font_bold').removeClass('active');
 	}
-    if(this._font_italic && this._font_italic=='1'){
-        $('#format_font_italic').addClass('active');
-	}else{
+	if (this._font_italic && this._font_italic == '1') {
+		$('#format_font_italic').addClass('active');
+	} else {
 		$('#format_font_italic').removeClass('active');
 	}
 
-	if(this._text_color){
+	if (this._text_color) {
 		window.format_text_color.setColor(this._text_color);
-	}else{
+	} else {
 		//window.format_text_color.setColor('#000000');
 	}
-	if(this._color){
+	if (this._color) {
 		window.format_border_color.setColor(this._color);
-	}else{
+	} else {
 		//window.format_border_color.setColor('#EE3333');
 	}
 
-    $('.selectpicker').selectpicker('refresh');
+	$('.selectpicker').selectpicker('refresh');
 }
 
-MM.Item.prototype.select = function () {
+MM.Item.prototype.select = function (item, evt) {
 	this._dom.node.classList.add("current");
 	this.getMap().ensureItemVisibility(this);
 	MM.Clipboard.focus(); /* going to mode 2c */
@@ -691,44 +693,44 @@ MM.Item.prototype.update = function (doNotRecurse) {
 		}
 	}
 
-    this.getLayout().update(this);
-    this.getShape().update(this);
-    if(this.isRoot()){
-    }
+	this.getLayout().update(this);
+	this.getShape().update(this);
+	if (this.isRoot()) {
+	}
 
 	this._updateStatus();
 	this._updateIcon();
-    this._updateIssuePriorityLabel();
-    this._updateIssueStatuslabel();
-    this._updateIssueAssigneeImg();
-    this._updateIssueProgressImg();
+	this._updateIssuePriorityLabel();
+	this._updateIssueStatuslabel();
+	this._updateIssueAssigneeImg();
+	this._updateIssueProgressImg();
 	this._updateValue();
 
-	if (this._font_bold   &&  this._font_bold=='1') {
+	if (this._font_bold && this._font_bold == '1') {
 		this._dom.text.style.fontWeight = 'bold';
-	}else{
+	} else {
 		this._dom.text.style.fontWeight = '';
 	}
-    if (this._font_italic &&  this._font_italic=='1') {
-        this._dom.text.style.fontStyle = "italic";
-    }else{
-        this._dom.text.style.fontStyle = "";
-    }
-    if (this._font_size ) {
-        this._dom.text.style.fontSize = this._font_size + "em";
-    }
-    if (this._font_family ) {
-        this._dom.text.style.fontFamily = this._font_family;
-    }
-    if (this._text_color ) {
-        this._dom.text.style.color = this._text_color;
-    }
+	if (this._font_italic && this._font_italic == '1') {
+		this._dom.text.style.fontStyle = "italic";
+	} else {
+		this._dom.text.style.fontStyle = "";
+	}
+	if (this._font_size) {
+		this._dom.text.style.fontSize = this._font_size + "em";
+	}
+	if (this._font_family) {
+		this._dom.text.style.fontFamily = this._font_family;
+	}
+	if (this._text_color) {
+		this._dom.text.style.color = this._text_color;
+	}
 
 	this._dom.node.classList[this._collapsed ? "add" : "remove"]("collapsed");
 
 	if (!this.isRoot() && !doNotRecurse) { this._parent.update(); }
-    this._dom.create.setAttribute("data-id", this._id);
-	this._dom.text.setAttribute('id', this._id+'_text');
+	this._dom.create.setAttribute("data-id", this._id);
+	this._dom.text.setAttribute('id', this._id + '_text');
 	return this;
 }
 
@@ -746,14 +748,14 @@ MM.Item.prototype.setText = function (text) {
 }
 
 MM.Item.prototype.setProjectImg = function (img) {
-    this._updateProjectImg();
+	this._updateProjectImg();
 }
 
 MM.Item.prototype.getId = function () {
 	return this._id;
 }
 MM.Item.prototype.setId = function (value) {
-	 this._id = value;
+	this._id = value;
 }
 
 MM.Item.prototype.getText = function () {
@@ -809,42 +811,42 @@ MM.Item.prototype.getIcon = function () {
 
 
 MM.Item.prototype.setIssueType = function (icon) {
-    this._issue_type = icon;
-    return this.update();
+	this._issue_type = icon;
+	return this.update();
 }
 MM.Item.prototype.getIssueType = function () {
 	return this._issue_type;
 }
 
 MM.Item.prototype.setIssuePriority = function (id) {
-    this._issue_priority = id;
-    return this.update();
+	this._issue_priority = id;
+	return this.update();
 }
 MM.Item.prototype.getIssuePriority = function () {
 	return this._issue_status;
 }
 MM.Item.prototype.setIssueStatus = function (id) {
-    this._issue_status = id;
-    return this.update();
+	this._issue_status = id;
+	return this.update();
 }
 MM.Item.prototype.getIssueStatus = function () {
 	return this._issue_status;
 }
 
 MM.Item.prototype.setIssueAssignee = function (id) {
-    this._issue_assignee = id;
-    return this.update();
+	this._issue_assignee = id;
+	return this.update();
 }
 MM.Item.prototype.getIssueAssignee = function () {
 	return this._issue_assignee;
 }
 MM.Item.prototype.setIssueProgress = function (value) {
-    this._issue_progress = value;
-    return this.update();
+	this._issue_progress = value;
+	return this.update();
 }
 
 MM.Item.prototype.getIssueProgress = function () {
-    return this._issue_progress;
+	return this._issue_progress;
 }
 
 MM.Item.prototype.getComputedStatus = function () {
@@ -874,48 +876,48 @@ MM.Item.prototype.getColor = function () {
 }
 
 MM.Item.prototype.setFontFamily = function (value) {
-    this._font_family = value;
-    return this.update();
+	this._font_family = value;
+	return this.update();
 }
 
 MM.Item.prototype.getFontFamily = function () {
-    return this._font_family;
+	return this._font_family;
 }
 
 MM.Item.prototype.setFontBold = function (value) {
-    this._font_bold = value;
-    return this.update();
+	this._font_bold = value;
+	return this.update();
 }
 
 MM.Item.prototype.getFontBold = function () {
-    return this._font_bold;
+	return this._font_bold;
 }
 
 MM.Item.prototype.getFontSize = function () {
-    return this._font_size;
+	return this._font_size;
 }
 
 MM.Item.prototype.setFontSize = function (value) {
-    this._font_size = value;
-    return this.update();
+	this._font_size = value;
+	return this.update();
 }
 
 MM.Item.prototype.getFontItalic = function () {
-    return this._font_italic;
+	return this._font_italic;
 }
 
-MM.Item.prototype.setFontItalic= function (value) {
-    this._font_italic = value;
-    return this.update();
+MM.Item.prototype.setFontItalic = function (value) {
+	this._font_italic = value;
+	return this.update();
 }
 
 MM.Item.prototype.getTextColor = function () {
-    return this._text_color;
+	return this._text_color;
 }
 
-MM.Item.prototype.setTextColor= function (value) {
-    this._text_color = value;
-    return this.update();
+MM.Item.prototype.setTextColor = function (value) {
+	this._text_color = value;
+	return this.update();
 }
 
 MM.Item.prototype.getOwnColor = function () {
@@ -1016,7 +1018,6 @@ MM.Item.prototype.removeChild = function (child) {
 	node.parentNode.removeChild(node);
 
 	child.setParent(null);
-
 	if (!this._children.length) {
 		this._dom.toggle.parentNode.removeChild(this._dom.toggle);
 		this._dom.children.parentNode.removeChild(this._dom.children);
@@ -1071,7 +1072,12 @@ MM.Item.prototype.handleEvent = function (e) {
 			MM.Command.Finish.execute();
 			break;
 
+		case "mousedown":
+			console.log(this._collapsed)
+			break;
+
 		case "click":
+			// 点击加号
 			if (this._collapsed) { this.expand(); } else { this.collapse(); }
 			MM.App.select(this);
 			break;
@@ -1145,70 +1151,82 @@ MM.Item.prototype._updateIcon = function () {
 }
 // _updateIssuePrioritylabel
 MM.Item.prototype._updateIssuePriorityLabel = function () {
-    this._dom.issue_priority_label.className = "";
-    this._dom.issue_priority_label.style.display = "";
+	this._dom.issue_priority_label.className = "";
+	this._dom.issue_priority_label.style.display = "";
 
-    var issue_priority_id = this._issue_priority;
-    if (issue_priority_id) {
-        var issue_priority_row = window._issueConfig.issue_priority[issue_priority_id];
-        // console.log(issue_status_row);
-        if(issue_priority_row){
-            this._dom.issue_priority_label.innerHTML = issue_priority_row.name.replace(/\s*/g,"");
-            //this._dom.issue_status_label.classList.add('label-info');
-            this._dom.issue_priority_label.style.color = issue_priority_row.status_color;
-            this._dom.issue_priority_label.style.fontSize = '0.8em';
-            this._dom.issue_priority_label.title = '事项的优先级';
-            this._dom.issue_priority_label.classList.add('prepend-right-5');
-        }
+	var issue_priority_id = this._issue_priority;
+	if (issue_priority_id) {
+		var issue_priority_row = window._issueConfig.issue_priority[issue_priority_id];
+		// console.log(issue_status_row);
+		if (issue_priority_row) {
+			this._dom.issue_priority_label.innerHTML = issue_priority_row.name.replace(/\s*/g, "");
+			//this._dom.issue_status_label.classList.add('label-info');
+			this._dom.issue_priority_label.style.color = issue_priority_row.status_color;
+			this._dom.issue_priority_label.style.fontSize = '0.8em';
+			this._dom.issue_priority_label.title = '事项的优先级';
+			this._dom.issue_priority_label.classList.add('prepend-right-5');
+		}
 
-    } else {
-        this._dom.issue_priority_label.style.display = "none";
-    }
+	} else {
+		this._dom.issue_priority_label.style.display = "none";
+	}
+	let setting = MM.App.server_settings;
+	if (setting.is_display_priority != 1) {
+		this._dom.issue_priority_label.style.display = 'none';
+	}
 }
 
 // _updateIssueStatusIcon
 MM.Item.prototype._updateIssueStatuslabel = function () {
-    this._dom.issue_status_label.className = "label";
-    this._dom.issue_status_label.style.display = "";
+	this._dom.issue_status_label.className = "label";
+	this._dom.issue_status_label.style.display = "";
 
-    var issue_status_id = this._issue_status;
-    if (issue_status_id) {
-    	var issue_status_row = window._issueConfig.issue_status[issue_status_id];
-        // console.log(issue_status_row);
-    	if(issue_status_row){
-            this._dom.issue_status_label.innerHTML = issue_status_row.name.replace(/\s*/g,"");
-            //this._dom.issue_status_label.classList.add('label-info');
-            this._dom.issue_status_label.style.color = issue_status_row.text_color;
-            this._dom.issue_status_label.style.fontSize = '0.8em';
-            this._dom.issue_status_label.title = '事项的状态';
-            this._dom.issue_status_label.classList.add('prepend-right-5');
-            this._computed.issue_status_label = true;
+	var issue_status_id = this._issue_status;
+	if (issue_status_id) {
+		var issue_status_row = window._issueConfig.issue_status[issue_status_id];
+		// console.log(issue_status_row);
+		if (issue_status_row) {
+			this._dom.issue_status_label.innerHTML = issue_status_row.name.replace(/\s*/g, "");
+			//this._dom.issue_status_label.classList.add('label-info');
+			this._dom.issue_status_label.style.color = issue_status_row.text_color;
+			this._dom.issue_status_label.style.fontSize = '0.8em';
+			this._dom.issue_status_label.title = '事项的状态';
+			this._dom.issue_status_label.classList.add('prepend-right-5');
+			this._computed.issue_status_label = true;
 		}
 
-    } else {
-        this._computed.issue_status_label = null;
-        this._dom.issue_status_label.style.display = "none";
-    }
+	} else {
+		this._computed.issue_status_label = null;
+		this._dom.issue_status_label.style.display = "none";
+	}
+	let setting = MM.App.server_settings;
+	if (setting.is_display_status != 1) {
+		this._dom.issue_status_label.style.display = 'none';
+	}
 }
 MM.Item.prototype._updateIssueAssigneeImg = function () {
-    // this._dom.issue_assignee_img.className = "avatar";
-    this._dom.issue_assignee_img.style.display = "";
+	// this._dom.issue_assignee_img.className = "avatar";
+	this._dom.issue_assignee_img.style.display = "";
 
-    var issue_assignee_id = this._issue_assignee;
-    if (issue_assignee_id) {
-        var user_row = window._issueConfig.users[issue_assignee_id];
-        // console.log(user_row);
-        if(user_row) {
-            this._dom.issue_assignee_img.src = user_row.avatar;
-        }
-        this._dom.issue_assignee_img.classList.add('mind-avatar');
-        this._dom.issue_assignee_img.title = '经办人';
-        this._dom.issue_assignee_img.style.width = "1em";
-        this._dom.issue_assignee_img.style.height = "1em";
-    } else {
-        this._computed.issue_assignee_img = null;
-        this._dom.issue_assignee_img.style.display = "none";
-    }
+	var issue_assignee_id = this._issue_assignee;
+	if (issue_assignee_id) {
+		var user_row = window._issueConfig.users[issue_assignee_id];
+		// console.log(user_row);
+		if (user_row) {
+			this._dom.issue_assignee_img.src = user_row.avatar;
+		}
+		this._dom.issue_assignee_img.classList.add('mind-avatar');
+		this._dom.issue_assignee_img.title = '经办人';
+		this._dom.issue_assignee_img.style.width = "1em";
+		this._dom.issue_assignee_img.style.height = "1em";
+	} else {
+		this._computed.issue_assignee_img = null;
+		this._dom.issue_assignee_img.style.display = "none";
+	}
+	let setting = MM.App.server_settings;
+	if (setting.is_display_assignee != 1) {
+		this._dom.issue_assignee_img.style.display = 'none';
+	}
 }
 
 MM.Item.prototype._updateProjectImg = function () {
@@ -1217,7 +1235,7 @@ MM.Item.prototype._updateProjectImg = function () {
 
 	var project_img = this._project_img;
 	if (project_img) {
-	    this._dom.project_img.src = project_img;
+		this._dom.project_img.src = project_img;
 		this._dom.project_img.classList.add('mind-avatar');
 		this._dom.project_img.title = '项目icon';
 		this._dom.project_img.style.width = "32px";
@@ -1229,65 +1247,73 @@ MM.Item.prototype._updateProjectImg = function () {
 
 MM.Item.prototype.getProgressImgName = function (issue_progress) {
 
-        let progress_img_name = '';
-        if(issue_progress<=0){
-            progress_img_name = 'progress_start.png';
-        }
-        if(issue_progress>0 && issue_progress<=10){
-            progress_img_name = 'progress_1.png';
-        }
-        if(issue_progress>10 && issue_progress<=30){
-            progress_img_name = 'progress_2.png';
-        }
-        if(issue_progress>30 && issue_progress<=45){
-            progress_img_name = 'progress_3.png';
-        }
-        if(issue_progress>45 && issue_progress<=60){
-            progress_img_name = 'progress_4.png';
-        }
-        if(issue_progress>60 && issue_progress<=75){
-            progress_img_name = 'progress_5.png';
-        }
-        if(issue_progress>75 && issue_progress<=90){
-            progress_img_name = 'progress_6.png';
-        }
-        if(issue_progress>90 && issue_progress<=99){
-            progress_img_name = 'progress_7.png';
-        }
-        if(issue_progress>=100){
-            progress_img_name = 'progress_done.png';
-        }
- 		return progress_img_name;
+	let progress_img_name = '';
+	if (issue_progress <= 0) {
+		progress_img_name = 'progress_start.png';
+	}
+	if (issue_progress > 0 && issue_progress <= 10) {
+		progress_img_name = 'progress_1.png';
+	}
+	if (issue_progress > 10 && issue_progress <= 30) {
+		progress_img_name = 'progress_2.png';
+	}
+	if (issue_progress > 30 && issue_progress <= 45) {
+		progress_img_name = 'progress_3.png';
+	}
+	if (issue_progress > 45 && issue_progress <= 60) {
+		progress_img_name = 'progress_4.png';
+	}
+	if (issue_progress > 60 && issue_progress <= 75) {
+		progress_img_name = 'progress_5.png';
+	}
+	if (issue_progress > 75 && issue_progress <= 90) {
+		progress_img_name = 'progress_6.png';
+	}
+	if (issue_progress > 90 && issue_progress <= 99) {
+		progress_img_name = 'progress_7.png';
+	}
+	if (issue_progress >= 100) {
+		progress_img_name = 'progress_done.png';
+	}
+	return progress_img_name;
 }
 
 MM.Item.prototype._updateIssueProgressImg = function () {
-    this._dom.issue_progress_img.className = "img-circle";
-    this._dom.issue_progress_img.style.display = "";
-    let issue_progress = this._issue_progress;
-    if (issue_progress) {
-    	this._dom.issue_progress_img.src = '/dev/img/mind/'+this.getProgressImgName(issue_progress);
-        this._dom.issue_progress_img.title = '事项的进度';
-        this._dom.issue_progress_img.style.width = "1em";
-        this._dom.issue_progress_img.style.height = "1em";
-    } else {
-        this._dom.issue_progress_img.style.display = "none";
-    }
+	this._dom.issue_progress_img.className = "img-circle";
+	this._dom.issue_progress_img.style.display = "";
+	let issue_progress = this._issue_progress;
+	if (issue_progress) {
+		this._dom.issue_progress_img.src = '/dev/img/mind/' + this.getProgressImgName(issue_progress);
+		this._dom.issue_progress_img.title = '事项的进度';
+		this._dom.issue_progress_img.style.width = "1em";
+		this._dom.issue_progress_img.style.height = "1em";
+	} else {
+		this._dom.issue_progress_img.style.display = "none";
+	}
+	let setting = MM.App.server_settings;
+	if (setting.is_display_progress != 1) {
+		this._dom.issue_progress_img.style.display = 'none';
+	}
 }
 
 
 MM.Item.prototype._updateIssueTypeIcon = function () {
-    this._dom.issue_type_icon.className = "icon";
-    this._dom.issue_type_icon.style.display = "";
+	this._dom.issue_type_icon.className = "icon";
+	this._dom.issue_type_icon.style.display = "";
 
-    var icon = this._issue_type;
-    if (icon) {
-        this._dom.issue_type_icon.classList.add('fa');
-        this._dom.issue_type_icon.classList.add(icon);
-        this._computed.issue_type_icon = true;
-    } else {
-        this._computed.issue_type_icon = null;
-        this._dom.issue_type_icon.style.display = "none";
-    }
+	var icon = this._issue_type;
+	if (icon) {
+		this._dom.issue_type_icon.classList.add('fa');
+		this._dom.issue_type_icon.classList.add(icon);
+		this._computed.issue_type_icon = true;
+	} else {
+		this._computed.issue_type_icon = null;
+		this._dom.issue_type_icon.style.display = "none";
+	}
+	let setting = MM.App.server_settings;
+	if (setting.is_display_type != 1) {
+		this._dom.issue_type_icon.style.display = 'none';
+	}
 }
 
 MM.Item.prototype._updateValue = function () {
@@ -1478,11 +1504,12 @@ MM.Map.prototype.hide = function () {
 MM.Map.prototype.center = function () {
 	var node = this._root.getDOM().node;
 	var port = MM.App.portSize;
-	var left = (port[0] - node.offsetWidth) / 2;
-	var top = (port[1] - node.offsetHeight) / 2;
-
-	this._moveTo(Math.round(left), Math.round(top));
-
+	console.log('init center')
+	setTimeout(() => {
+		var left = (port[0] - node.offsetWidth) / 2;
+		var top = (port[1] - node.offsetHeight) / 3;
+		this._moveTo(Math.round(left), Math.round(top));
+	}, 0);
 	return this;
 }
 
@@ -1686,6 +1713,8 @@ MM.Tip = {
 	},
 
 	handleMessage: function () {
+		console.log('toggle')
+
 		this._hide();
 	},
 
@@ -1778,6 +1807,47 @@ MM.Action.MoveItem = function (item, newParent, newIndex, newSide) {
 	this._oldParent = item.getParent();
 	this._oldIndex = this._oldParent.getChildren().indexOf(item);
 	this._oldSide = item.getSide();
+
+	if (item._type === 'issue') {
+		let current_issue_id = item._id.replace('issue_', '');
+		let targetItem = newParent;
+		if (targetItem._type === 'project') {
+
+		}
+		if (targetItem._type === 'root_sprint') {
+
+		}
+		if (targetItem._type === 'second') {
+			let arr = targetItem._id.split('_');
+			if (arr.length > 1) {
+				let target_id = arr[1];
+				let post_data = {}
+				post_data[arr[0]] = target_id;
+				post_data['remove_master'] = '1';
+				if (target_id) {
+					var fnc = function () {
+						window.$mindAjax.removeChild(current_issue_id)
+					}
+					window.$mindAjax.update(current_issue_id, post_data, fnc);
+				}
+			}
+		}
+		if (targetItem._type === 'issue') {
+			let master_issue_id = targetItem._id.replace('issue_', '');
+			if (master_issue_id) {
+				let range_type = $("#source_range").val();
+				let second_type = '';
+				if (range_type === 'all') {
+					second_type = $('#all-group_by').val();
+				} else {
+					second_type = $('#sprint-group_by').val();
+				}
+				window.$mindAjax.convertChild(current_issue_id, master_issue_id, second_type);
+			}
+		}
+	}
+
+
 }
 MM.Action.MoveItem.prototype = Object.create(MM.Action.prototype);
 MM.Action.MoveItem.prototype.perform = function () {
@@ -1854,70 +1924,70 @@ MM.Action.SetColor.prototype.undo = function () {
 
 //SetFontFamily
 MM.Action.SetFontFamily = function (item, value) {
-    this._item = item;
-    this._font_bold = value;
-    this._oldFontFamily = item.getFontBold();
+	this._item = item;
+	this._font_bold = value;
+	this._oldFontFamily = item.getFontBold();
 }
 MM.Action.SetFontFamily.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetFontFamily.prototype.perform = function () {
-    this._item.setFontFamily(this._font_bold);
+	this._item.setFontFamily(this._font_bold);
 }
 MM.Action.SetFontFamily.prototype.undo = function () {
-    this._item.setFontFamily(this._oldFontFamily);
+	this._item.setFontFamily(this._oldFontFamily);
 }
 
 // SetFontSize
 MM.Action.SetFontSize = function (item, value) {
-    this._item = item;
-    this._font_size = value;
-    this._oldFontSize = item.getFontBold();
+	this._item = item;
+	this._font_size = value;
+	this._oldFontSize = item.getFontBold();
 }
 MM.Action.SetFontSize.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetFontSize.prototype.perform = function () {
-    this._item.setFontSize(this._font_size);
+	this._item.setFontSize(this._font_size);
 }
 MM.Action.SetFontSize.prototype.undo = function () {
-    this._item.setFontSize(this._oldFontSize);
+	this._item.setFontSize(this._oldFontSize);
 }
 
 
 MM.Action.SetFontBold = function (item, is_active) {
-    this._item = item;
-    this._font_bold = is_active;
-    this._oldFontBold = item.getFontBold();
+	this._item = item;
+	this._font_bold = is_active;
+	this._oldFontBold = item.getFontBold();
 }
 MM.Action.SetFontBold.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetFontBold.prototype.perform = function () {
-    this._item.setFontBold(this._font_bold);
+	this._item.setFontBold(this._font_bold);
 }
 MM.Action.SetFontBold.prototype.undo = function () {
-    this._item.setFontBold(this._oldFontBold);
+	this._item.setFontBold(this._oldFontBold);
 }
 
 MM.Action.SetFontItalic = function (item, is_active) {
-    this._item = item;
-    this._font_italic= is_active;
-    this._oldFontitalic = item.getFontItalic();
+	this._item = item;
+	this._font_italic = is_active;
+	this._oldFontitalic = item.getFontItalic();
 }
 MM.Action.SetFontItalic.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetFontItalic.prototype.perform = function () {
-    this._item.setFontItalic(this._font_italic);
+	this._item.setFontItalic(this._font_italic);
 }
 MM.Action.SetFontItalic.prototype.undo = function () {
-    this._item.setFontItalic(this._oldFontitalic);
+	this._item.setFontItalic(this._oldFontitalic);
 }
 
 MM.Action.SetTextColor = function (item, value) {
-    this._item = item;
-    this._text_color = value;
-    this._oldtextColor = item.getTextColor();
+	this._item = item;
+	this._text_color = value;
+	this._oldtextColor = item.getTextColor();
 }
 MM.Action.SetTextColor.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetTextColor.prototype.perform = function () {
-    this._item.setTextColor(this._text_color);
+	this._item.setTextColor(this._text_color);
 }
 MM.Action.SetTextColor.prototype.undo = function () {
-    this._item.setTextColor(this._oldtextColor);
+	this._item.setTextColor(this._oldtextColor);
 }
 
 MM.Action.SetText = function (item, text) {
@@ -1977,71 +2047,71 @@ MM.Action.SetIcon.prototype.undo = function () {
 }
 
 MM.Action.SetIssueType = function (item, issue_type) {
-    this._item = item;
-    this._issue_type = issue_type;
-    this._oldIssueType = item.getIssueType();
+	this._item = item;
+	this._issue_type = issue_type;
+	this._oldIssueType = item.getIssueType();
 }
 MM.Action.SetIssueType.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetIssueType.prototype.perform = function () {
-    this._item.setIcon(this._issue_type);
+	this._item.setIcon(this._issue_type);
 }
 MM.Action.SetIssueType.prototype.undo = function () {
-    this._item.setIssueType(this._oldIssueType);
+	this._item.setIssueType(this._oldIssueType);
 }
 // SetIssuePriority
 MM.Action.SetIssuePriority = function (item, issue_priority_id) {
-    this._item = item;
-    this._issue_priority = issue_priority_id;
-    this._oldIssuePriority = item.getIssuePriority();
+	this._item = item;
+	this._issue_priority = issue_priority_id;
+	this._oldIssuePriority = item.getIssuePriority();
 	item.setPriorityActive(issue_priority_id);
 }
 MM.Action.SetIssuePriority.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetIssuePriority.prototype.perform = function () {
-    this._item.setIssuePriority(this._issue_priority);
+	this._item.setIssuePriority(this._issue_priority);
 }
 MM.Action.SetIssuePriority.prototype.undo = function () {
-    this._item.setIssuePriority(this._oldIssuePriority);
+	this._item.setIssuePriority(this._oldIssuePriority);
 }
 //SetIssueProgress
 MM.Action.SetIssueProgress = function (item, issue_progress) {
-    this._item = item;
-    this._issue_progress = issue_progress;
-    this._oldIssueProgress = item.getIssueProgress();
+	this._item = item;
+	this._issue_progress = issue_progress;
+	this._oldIssueProgress = item.getIssueProgress();
 	item.setProgressActive(issue_progress);
 }
 MM.Action.SetIssueProgress.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetIssueProgress.prototype.perform = function () {
-    this._item.setIssueProgress(this._issue_progress);
+	this._item.setIssueProgress(this._issue_progress);
 }
 MM.Action.SetIssueProgress.prototype.undo = function () {
-    this._item.setIssueProgress(this._oldIssueProgress);
+	this._item.setIssueProgress(this._oldIssueProgress);
 }
 
 MM.Action.SetIssueStatus = function (item, issue_status_id) {
-    this._item = item;
-    this._issue_status = issue_status_id;
-    this._oldIssueStatus = item.getIssueStatus();
+	this._item = item;
+	this._issue_status = issue_status_id;
+	this._oldIssueStatus = item.getIssueStatus();
 	item.setStatusActive(issue_status_id);
 }
 MM.Action.SetIssueStatus.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetIssueStatus.prototype.perform = function () {
-    this._item.setIssueStatus(this._issue_status);
+	this._item.setIssueStatus(this._issue_status);
 }
 MM.Action.SetIssueStatus.prototype.undo = function () {
-    this._item.setIssueStatus(this._oldIssueStatus);
+	this._item.setIssueStatus(this._oldIssueStatus);
 }
 
 MM.Action.SetIssueAssignee = function (item, assignee) {
-    this._item = item;
-    this._issue_assignee = assignee;
-    this._oldIssueAssignee = item.getIssueAssignee();
+	this._item = item;
+	this._issue_assignee = assignee;
+	this._oldIssueAssignee = item.getIssueAssignee();
 }
 MM.Action.SetIssueAssignee.prototype = Object.create(MM.Action.prototype);
 MM.Action.SetIssueAssignee.prototype.perform = function () {
-    this._item.setIssueAssignee(this._issue_assignee);
+	this._item.setIssueAssignee(this._issue_assignee);
 }
 MM.Action.SetIssueAssignee.prototype.undo = function () {
-    this._item.setIssueAssignee(this._oldIssueAssignee);
+	this._item.setIssueAssignee(this._oldIssueAssignee);
 }
 
 
@@ -2574,19 +2644,19 @@ MM.Command.Finish.execute = function () {
 	if (text) {
 		action = new MM.Action.SetText(item, text);
 		let issue_id = null;
-		if(item._id.search('issue_')>=0){
-			issue_id = item._id.replace('issue_','');
+		if (item._id.search('issue_') >= 0) {
+			issue_id = item._id.replace('issue_', '');
 		}
-		if(!issue_id){
+		if (!issue_id) {
 			window.$mindAjax.add(item, text);
-		}else{
+		} else {
 			// 如果有改变才会提交服务器
-			if(old_text!=text){
-				let post_data = {summary:text}
+			if (old_text != text) {
+				let post_data = { summary: text }
 				window.$mindAjax.update(issue_id, post_data);
 			}
 
-        }
+		}
 
 	} else {
 		action = new MM.Action.RemoveItem(MM.App.current);
@@ -2863,7 +2933,6 @@ MM.Layout._anchorToggle = function (item, x, y, side) {
 			l -= w / 2;
 			break;
 	}
-
 	node.style.left = Math.round(l) + "px";
 	node.style.top = Math.round(t) + "px";
 }
@@ -3016,7 +3085,6 @@ MM.Layout.Graph._layoutChildren = function (children, rankDirection, offset, bbo
 
 		offset[childIndex] += childSize[childIndex] + this.SPACING_CHILD; /* offset for next child */
 	}, this);
-
 	return bbox;
 }
 
@@ -4423,23 +4491,22 @@ MM.UI = function () {
 	this._value = new MM.UI.Value();
 	this._status = new MM.UI.Status();
 	this._issue_type = new MM.UI.IssueType();
-    this._issue_status = new MM.UI.IssueStatus();
-    this._issue_priority = new MM.UI.IssuePriority();
-    this._issue_assignee = new MM.UI.IssueAssignee();
-    this._issue_progress = new MM.UI.IssueProgress();
+	this._issue_status = new MM.UI.IssueStatus();
+	this._issue_priority = new MM.UI.IssuePriority();
+	this._issue_assignee = new MM.UI.IssueAssignee();
+	this._issue_progress = new MM.UI.IssueProgress();
 
-    this._font_family = new MM.UI.FontFamily();
+	this._font_family = new MM.UI.FontFamily();
 	this._font_bold = new MM.UI.FontBold();
-    this._font_size = new MM.UI.FontSize();
-    this._font_italic = new MM.UI.FontItalic();
-    this._text_color = new MM.UI.TextColor();
+	this._font_size = new MM.UI.FontSize();
+	this._font_italic = new MM.UI.FontItalic();
+	this._text_color = new MM.UI.TextColor();
 
 	MM.subscribe("item-select", this);
 	MM.subscribe("item-change", this);
 
 	this._node.addEventListener("click", this);
 	this._node.addEventListener("change", this);
-
 	this.toggle();
 }
 
@@ -4459,7 +4526,6 @@ MM.UI.prototype.handleEvent = function (e) {
 	switch (e.type) {
 		case "click":
 			if (e.target.nodeName.toLowerCase() != "select") { MM.Clipboard.focus(); } /* focus the clipboard (2c) */
-
 			if (e.target == this._toggle) {
 				this.toggle();
 				return;
@@ -4503,17 +4569,17 @@ MM.UI.Layout = function () {
 	this._select = document.querySelector("#layout");
 
 	this._select.appendChild(MM.Layout.Map.buildOption());
-/*
-	var label = this._buildGroup("Graph");
-	label.appendChild(MM.Layout.Graph.Right.buildOption());
-	label.appendChild(MM.Layout.Graph.Left.buildOption());
-	label.appendChild(MM.Layout.Graph.Down.buildOption());
-	label.appendChild(MM.Layout.Graph.Up.buildOption());
-
-	var label = this._buildGroup("Tree");
-	label.appendChild(MM.Layout.Tree.Right.buildOption());
-	label.appendChild(MM.Layout.Tree.Left.buildOption());
-*/
+	/*
+		var label = this._buildGroup("Graph");
+		label.appendChild(MM.Layout.Graph.Right.buildOption());
+		label.appendChild(MM.Layout.Graph.Left.buildOption());
+		label.appendChild(MM.Layout.Graph.Down.buildOption());
+		label.appendChild(MM.Layout.Graph.Up.buildOption());
+	
+		var label = this._buildGroup("Tree");
+		label.appendChild(MM.Layout.Tree.Right.buildOption());
+		label.appendChild(MM.Layout.Tree.Left.buildOption());
+	*/
 	this._select.addEventListener("change", this);
 }
 
@@ -4531,32 +4597,32 @@ MM.UI.Layout.prototype.handleEvent = function (e) {
 	var layout = MM.Layout.getById(this._select.value);
 
 	let item = MM.App.current;
-	if(item._type==='project'){
-		let project_id = item._id.replace('project_','');
-		if(project_id && item._layout!=layout){
-			let format_data = {layout:layout.id}
+	if (item._type === 'project') {
+		let project_id = item._id.replace('project_', '');
+		if (project_id && item._layout != layout) {
+			let format_data = { layout: layout.id }
 			window.$mindAjax.updateProjectFormat(project_id, format_data);
 		}
 	}
-	if(item._type==='root_sprint'){
-		let sprint_id = item._id.replace('sprint_','');
-		if(sprint_id && item._layout!=layout){
-			let format_data = {layout:layout.id}
+	if (item._type === 'root_sprint') {
+		let sprint_id = item._id.replace('sprint_', '');
+		if (sprint_id && item._layout != layout) {
+			let format_data = { layout: layout.id }
 			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
 		}
 	}
-	if(item._type==='second'){
+	if (item._type === 'second') {
 		let arr = item._id.split('_');
-		if(arr.length>1 && item._layout!=layout){
-			let format_data = {layout:layout.id}
+		if (arr.length > 1 && item._layout != layout) {
+			let format_data = { layout: layout.id }
 			let group_by_id = arr[1];
 			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
 		}
 	}
-	if(item._type==='issue'){
-		let issue_id = item._id.replace('issue_','');
-		if(issue_id && item._layout!=layout){
-			let format_data = {layout:layout.id}
+	if (item._type === 'issue') {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && item._layout != layout) {
+			let format_data = { layout: layout.id }
 			window.$mindAjax.updateIssueFormat(issue_id, format_data);
 		}
 	}
@@ -4595,33 +4661,33 @@ MM.UI.Shape.prototype.update = function () {
 
 MM.UI.Shape.prototype.handleEvent = function (e) {
 	var shape = MM.Shape.getById(this._select.value);
-    let item = MM.App.current;
-	if(item._type==='project'){
-		let project_id = item._id.replace('project_','');
-		if(project_id && item._shape!=shape){
-			let format_data = {shape:shape.id}
+	let item = MM.App.current;
+	if (item._type === 'project') {
+		let project_id = item._id.replace('project_', '');
+		if (project_id && item._shape != shape) {
+			let format_data = { shape: shape.id }
 			window.$mindAjax.updateProjectFormat(project_id, format_data);
 		}
 	}
-	if(item._type==='root_sprint'){
-		let sprint_id = item._id.replace('sprint_','');
-		if(sprint_id && item._shape!=shape){
-			let format_data = {shape:shape.id}
+	if (item._type === 'root_sprint') {
+		let sprint_id = item._id.replace('sprint_', '');
+		if (sprint_id && item._shape != shape) {
+			let format_data = { shape: shape.id }
 			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
 		}
 	}
-	if(item._type==='second'){
+	if (item._type === 'second') {
 		let arr = item._id.split('_');
-		if(arr.length>1 && item._shape!=shape){
-			let format_data = {shape:shape.id}
+		if (arr.length > 1 && item._shape != shape) {
+			let format_data = { shape: shape.id }
 			let group_by_id = arr[1];
 			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
 		}
 	}
-	if(item._type==='issue'){
-		let issue_id = item._id.replace('issue_','');
-		if(issue_id && item._shape!=shape){
-			let format_data = {shape:shape.id}
+	if (item._type === 'issue') {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && item._shape != shape) {
+			let format_data = { shape: shape.id }
 			window.$mindAjax.updateIssueFormat(issue_id, format_data);
 		}
 	}
@@ -4681,38 +4747,38 @@ MM.UI.Color.prototype.handleEvent = function (e) {
 	if (!e.target.hasAttribute("data-color")) { return; }
 
 	var color = e.target.getAttribute("data-color") || null;
-    let item = MM.App.current;
+	let item = MM.App.current;
 
-    if(item._type==='project'){
-        let id = item._id.replace('project_','');
-        if(id && item._color!=color){
-            let format_data = {color:color}
-            window.$mindAjax.updateProjectFormat(id, format_data);
-        }
-    }
-    if(item._type==='root_sprint'){
-        let sprint_id = item._id.replace('sprint_','');
-        if(sprint_id  && item._color!=color){
-            let format_data = {color:color}
-            window.$mindAjax.updateSprintFormat(sprint_id, format_data);
-        }
-    }
-    if(item._type==='second'){
-        let arr = item._id.split('_');
-        if(arr.length>1){
-            let group_by_id = arr[1];
-            let format_data = {color:color}
-            window.$mindAjax.updateSecondFormat(group_by_id, format_data);
-        }
-    }
+	if (item._type === 'project') {
+		let id = item._id.replace('project_', '');
+		if (id && item._color != color) {
+			let format_data = { color: color }
+			window.$mindAjax.updateProjectFormat(id, format_data);
+		}
+	}
+	if (item._type === 'root_sprint') {
+		let sprint_id = item._id.replace('sprint_', '');
+		if (sprint_id && item._color != color) {
+			let format_data = { color: color }
+			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+		}
+	}
+	if (item._type === 'second') {
+		let arr = item._id.split('_');
+		if (arr.length > 1) {
+			let group_by_id = arr[1];
+			let format_data = { color: color }
+			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+		}
+	}
 
-    if(item._type==='issue'){
-        let issue_id = item._id.replace('issue_','');
-        if(issue_id  && item._color!=color){
-            let format_data = {color:color}
-            window.$mindAjax.updateIssueFormat(issue_id, format_data);
-        }
-    }
+	if (item._type === 'issue') {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && item._color != color) {
+			let format_data = { color: color }
+			window.$mindAjax.updateIssueFormat(issue_id, format_data);
+		}
+	}
 
 	var action = new MM.Action.SetColor(MM.App.current, color);
 	MM.App.action(action);
@@ -4726,204 +4792,204 @@ MM.UI.BorderColor = function () {
 
 //FontFamily
 MM.UI.FontFamily = function () {
-    this._select = document.querySelector("#format_font_family");
-    this._select.addEventListener("change", this);
+	this._select = document.querySelector("#format_font_family");
+	this._select.addEventListener("change", this);
 }
 
 MM.UI.FontFamily.prototype.update = function () {
-    this._select.value = MM.App.current.getFontFamily() || "";
+	this._select.value = MM.App.current.getFontFamily() || "";
 }
 
 MM.UI.FontFamily.prototype.handleEvent = function (e) {
-    console.log(MM.App.current)
-    let font_value = this._select.value;
-    let item = MM.App.current;
+	console.log(MM.App.current)
+	let font_value = this._select.value;
+	let item = MM.App.current;
 
-    if(item._type==='project'){
-        let id = item._id.replace('project_','');
-        if(id && item.font_family!=font_value){
-            let format_data = {font_family:font_value}
-            window.$mindAjax.updateProjectFormat(id, format_data);
-        }
-    }
-    if(item._type==='root_sprint'){
-        let sprint_id = item._id.replace('sprint_','');
-        if(sprint_id && item.font_family!=font_value){
-            let format_data = {font_family:font_value}
-            window.$mindAjax.updateSprintFormat(sprint_id, format_data);
-        }
-    }
-    if(item._type==='second'){
-        let arr = item._id.split('_');
-        if(arr.length>1){
-            let group_by_id = arr[1];
-            let format_data = {font_family:font_value}
-            window.$mindAjax.updateSecondFormat(group_by_id, format_data);
-        }
-    }
+	if (item._type === 'project') {
+		let id = item._id.replace('project_', '');
+		if (id && item.font_family != font_value) {
+			let format_data = { font_family: font_value }
+			window.$mindAjax.updateProjectFormat(id, format_data);
+		}
+	}
+	if (item._type === 'root_sprint') {
+		let sprint_id = item._id.replace('sprint_', '');
+		if (sprint_id && item.font_family != font_value) {
+			let format_data = { font_family: font_value }
+			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+		}
+	}
+	if (item._type === 'second') {
+		let arr = item._id.split('_');
+		if (arr.length > 1) {
+			let group_by_id = arr[1];
+			let format_data = { font_family: font_value }
+			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+		}
+	}
 
-    if(font_value && item._type==='issue'){
-        let issue_id = item._id.replace('issue_','');
-        if(issue_id && item.font_family!=font_value){
-            let format_data = {font_family:font_value}
-            window.$mindAjax.updateIssueFormat(issue_id, format_data);
-        }
-    }
+	if (font_value && item._type === 'issue') {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && item.font_family != font_value) {
+			let format_data = { font_family: font_value }
+			window.$mindAjax.updateIssueFormat(issue_id, format_data);
+		}
+	}
 
-    var action = new MM.Action.SetFontFamily(MM.App.current, this._select.value || null);
-    MM.App.action(action);
+	var action = new MM.Action.SetFontFamily(MM.App.current, this._select.value || null);
+	MM.App.action(action);
 }
 //FontSize
 MM.UI.FontSize = function () {
-    this._select = document.querySelector("#format_font_size");
-    this._select.addEventListener("change", this);
+	this._select = document.querySelector("#format_font_size");
+	this._select.addEventListener("change", this);
 }
 
 MM.UI.FontSize.prototype.update = function () {
-    this._select.value = MM.App.current.getFontSize() || "";
+	this._select.value = MM.App.current.getFontSize() || "";
 }
 
 MM.UI.FontSize.prototype.handleEvent = function (e) {
-    console.log(MM.App.current)
-    let item = MM.App.current;
-    let font_value = this._select.value;
+	console.log(MM.App.current)
+	let item = MM.App.current;
+	let font_value = this._select.value;
 
-    if(item._type==='project'){
-        let id = item._id.replace('project_','');
-        if(id && item._font_size!=font_value){
-            let format_data = {font_size:font_value}
-            window.$mindAjax.updateProjectFormat(id, format_data);
-        }
-    }
-    if(item._type==='root_sprint'){
-        let sprint_id = item._id.replace('sprint_','');
-        if(sprint_id && item._font_size!=font_value){
-            let format_data = {font_size:font_value}
-            window.$mindAjax.updateSprintFormat(sprint_id, format_data);
-        }
-    }
-    if(item._type==='second'){
-        let arr = item._id.split('_');
-        if(arr.length>1){
-            let group_by_id = arr[1];
-            let format_data = {font_size:font_value}
-            window.$mindAjax.updateSecondFormat(group_by_id, format_data);
-        }
-    }
+	if (item._type === 'project') {
+		let id = item._id.replace('project_', '');
+		if (id && item._font_size != font_value) {
+			let format_data = { font_size: font_value }
+			window.$mindAjax.updateProjectFormat(id, format_data);
+		}
+	}
+	if (item._type === 'root_sprint') {
+		let sprint_id = item._id.replace('sprint_', '');
+		if (sprint_id && item._font_size != font_value) {
+			let format_data = { font_size: font_value }
+			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+		}
+	}
+	if (item._type === 'second') {
+		let arr = item._id.split('_');
+		if (arr.length > 1) {
+			let group_by_id = arr[1];
+			let format_data = { font_size: font_value }
+			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+		}
+	}
 
-    if(font_value && item._type==='issue'){
-        let issue_id = item._id.replace('issue_','');
-        if(issue_id && item._font_size!=font_value){
-            let format_data = {font_size:font_value}
-            window.$mindAjax.updateIssueFormat(issue_id, format_data);
-        }
-    }
+	if (font_value && item._type === 'issue') {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && item._font_size != font_value) {
+			let format_data = { font_size: font_value }
+			window.$mindAjax.updateIssueFormat(issue_id, format_data);
+		}
+	}
 
 
-    var action = new MM.Action.SetFontSize(MM.App.current, this._select.value || null);
-    MM.App.action(action);
+	var action = new MM.Action.SetFontSize(MM.App.current, this._select.value || null);
+	MM.App.action(action);
 }
 
 MM.UI.FontBold = function () {
-    this._node = document.querySelector("#format_font_bold");
-    this._node.addEventListener("click", this);
+	this._node = document.querySelector("#format_font_bold");
+	this._node.addEventListener("click", this);
 }
 
 MM.UI.FontBold.prototype.handleEvent = function (e) {
-    e.preventDefault();
-    let format_font_bold_obj = $('#format_font_bold');
-    let font_value = parseInt(format_font_bold_obj.data("value"));
+	e.preventDefault();
+	let format_font_bold_obj = $('#format_font_bold');
+	let font_value = parseInt(format_font_bold_obj.data("value"));
 
-    if(font_value==0){
-        format_font_bold_obj.data('value','1');
-	}else{
-        format_font_bold_obj.data('value','0');
+	if (font_value == 0) {
+		format_font_bold_obj.data('value', '1');
+	} else {
+		format_font_bold_obj.data('value', '0');
 	}
 
-    let item = MM.App.current;
-    if(item._type==='project'){
-        let id = item._id.replace('project_','');
-        if(id && item._font_bold!=font_value){
-            let format_data = {font_bold:font_value}
-            window.$mindAjax.updateProjectFormat(id, format_data);
-        }
-    }
-    if(item._type==='root_sprint'){
-        let sprint_id = item._id.replace('sprint_','');
-        if(sprint_id && item._font_bold!=font_value){
-            let format_data = {font_bold:font_value}
-            window.$mindAjax.updateSprintFormat(sprint_id, format_data);
-        }
-    }
-    if(item._type==='second'){
-        let arr = item._id.split('_');
-        if(arr.length>1){
-            let group_by_id = arr[1];
-            let format_data = {font_bold:font_value}
-            window.$mindAjax.updateSecondFormat(group_by_id, format_data);
-        }
-    }
+	let item = MM.App.current;
+	if (item._type === 'project') {
+		let id = item._id.replace('project_', '');
+		if (id && item._font_bold != font_value) {
+			let format_data = { font_bold: font_value }
+			window.$mindAjax.updateProjectFormat(id, format_data);
+		}
+	}
+	if (item._type === 'root_sprint') {
+		let sprint_id = item._id.replace('sprint_', '');
+		if (sprint_id && item._font_bold != font_value) {
+			let format_data = { font_bold: font_value }
+			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+		}
+	}
+	if (item._type === 'second') {
+		let arr = item._id.split('_');
+		if (arr.length > 1) {
+			let group_by_id = arr[1];
+			let format_data = { font_bold: font_value }
+			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+		}
+	}
 
-    if(item._type==='issue'){
-        let issue_id = item._id.replace('issue_','');
-        if(issue_id && item._font_bold!=font_value){
-            let format_data = {font_bold:font_value}
-            window.$mindAjax.updateIssueFormat(issue_id, format_data);
-        }
-    }
+	if (item._type === 'issue') {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && item._font_bold != font_value) {
+			let format_data = { font_bold: font_value }
+			window.$mindAjax.updateIssueFormat(issue_id, format_data);
+		}
+	}
 
-    var action = new MM.Action.SetFontBold(MM.App.current, font_value===0);
-    MM.App.action(action);
+	var action = new MM.Action.SetFontBold(MM.App.current, font_value === 0);
+	MM.App.action(action);
 }
 // FontItalic
 MM.UI.FontItalic = function () {
-    this._node = document.querySelector("#format_font_italic");
-    this._node.addEventListener("click", this);
+	this._node = document.querySelector("#format_font_italic");
+	this._node.addEventListener("click", this);
 }
 
 MM.UI.FontItalic.prototype.handleEvent = function (e) {
-    e.preventDefault();
-    let format_font_italic_obj = $('#format_font_italic');
-    let font_value = parseInt(format_font_italic_obj.data("value"));
-    if(font_value==0){
-        format_font_italic_obj.data('value','1');
-    }else{
-        format_font_italic_obj.data('value','0');
-    }
-    let item = MM.App.current;
+	e.preventDefault();
+	let format_font_italic_obj = $('#format_font_italic');
+	let font_value = parseInt(format_font_italic_obj.data("value"));
+	if (font_value == 0) {
+		format_font_italic_obj.data('value', '1');
+	} else {
+		format_font_italic_obj.data('value', '0');
+	}
+	let item = MM.App.current;
 
-    if(item._type==='project'){
-        let id = item._id.replace('project_','');
-        if(id && item._font_italic!=font_value){
-            let format_data = {font_italic:font_value}
-            window.$mindAjax.updateProjectFormat(id, format_data);
-        }
-    }
-    if(item._type==='root_sprint'){
-        let sprint_id = item._id.replace('sprint_','');
-        if(sprint_id && item._font_italic!=font_value){
-            let format_data = {font_italic:font_value}
-            window.$mindAjax.updateSprintFormat(sprint_id, format_data);
-        }
-    }
-    if(item._type==='second'){
-        let arr = item._id.split('_');
-        if(arr.length>1){
-            let group_by_id = arr[1];
-            let format_data = {font_italic:font_value}
-            window.$mindAjax.updateSecondFormat(group_by_id, format_data);
-        }
-    }
+	if (item._type === 'project') {
+		let id = item._id.replace('project_', '');
+		if (id && item._font_italic != font_value) {
+			let format_data = { font_italic: font_value }
+			window.$mindAjax.updateProjectFormat(id, format_data);
+		}
+	}
+	if (item._type === 'root_sprint') {
+		let sprint_id = item._id.replace('sprint_', '');
+		if (sprint_id && item._font_italic != font_value) {
+			let format_data = { font_italic: font_value }
+			window.$mindAjax.updateSprintFormat(sprint_id, format_data);
+		}
+	}
+	if (item._type === 'second') {
+		let arr = item._id.split('_');
+		if (arr.length > 1) {
+			let group_by_id = arr[1];
+			let format_data = { font_italic: font_value }
+			window.$mindAjax.updateSecondFormat(group_by_id, format_data);
+		}
+	}
 
-    if(item._type==='issue'){
-        let issue_id = item._id.replace('issue_','');
-        if(issue_id && item._font_italic!=font_value){
-            let format_data = {font_italic:font_value}
-            window.$mindAjax.updateIssueFormat(issue_id, format_data);
-        }
-    }
-    var action = new MM.Action.SetFontItalic(MM.App.current, font_value===0);
-    MM.App.action(action);
+	if (item._type === 'issue') {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && item._font_italic != font_value) {
+			let format_data = { font_italic: font_value }
+			window.$mindAjax.updateIssueFormat(issue_id, format_data);
+		}
+	}
+	var action = new MM.Action.SetFontItalic(MM.App.current, font_value === 0);
+	MM.App.action(action);
 }
 
 // TextColor
@@ -4931,7 +4997,7 @@ MM.UI.TextColor = function () {
 
 }
 MM.UI.TextColor.prototype.update = function () {
-    this.value = MM.App.current.getTextColor() || "";
+	this.value = MM.App.current.getTextColor() || "";
 }
 
 
@@ -4950,119 +5016,119 @@ MM.UI.Icon.prototype.handleEvent = function (e) {
 	MM.App.action(action);
 }
 MM.UI.IssueType = function () {
-    this._select = document.querySelector("#format_issue_type");
-    this._select.addEventListener("change", this);
+	this._select = document.querySelector("#format_issue_type");
+	this._select.addEventListener("change", this);
 }
 
 MM.UI.IssueType.prototype.update = function () {
-    this._select.value = MM.App.current.getIcon() || "";
+	this._select.value = MM.App.current.getIcon() || "";
 }
 
 MM.UI.IssueType.prototype.handleEvent = function (e) {
-    console.log(this._select.value)
-    var action = new MM.Action.SetIcon(MM.App.current, this._select.value || null);
-    MM.App.action(action);
-    let item = MM.App.current;
-    if(item._id.search('issue_')>=0){
-        let issue_id = item._id.replace('issue_','');
-        let issue_type_id = $(this._select).find("option:selected").attr("origin-id");
-        if(issue_id && issue_type_id){
-            let post_data = {issue_type:issue_type_id}
-              window.$mindAjax.update(issue_id, post_data);
-        }
-    }
+	console.log(this._select.value)
+	var action = new MM.Action.SetIcon(MM.App.current, this._select.value || null);
+	MM.App.action(action);
+	let item = MM.App.current;
+	if (item._id.search('issue_') >= 0) {
+		let issue_id = item._id.replace('issue_', '');
+		let issue_type_id = $(this._select).find("option:selected").attr("origin-id");
+		if (issue_id && issue_type_id) {
+			let post_data = { issue_type: issue_type_id }
+			window.$mindAjax.update(issue_id, post_data);
+		}
+	}
 }
 // IssuePriority
 MM.UI.IssuePriority = function () {
-    this._node = document.querySelector("#format_issue_priority");
-    this._node.addEventListener("click", this);
+	this._node = document.querySelector("#format_issue_priority");
+	this._node.addEventListener("click", this);
 }
 
 MM.UI.IssuePriority.prototype.handleEvent = function (e) {
-    e.preventDefault();
-    if (!e.target.hasAttribute("data-value")) { return; }
+	e.preventDefault();
+	if (!e.target.hasAttribute("data-value")) { return; }
 
-    var issue_priority_id = e.target.getAttribute("data-value") || null;
-    var action = new MM.Action.SetIssuePriority(MM.App.current, issue_priority_id);
-    MM.App.action(action);
-    let item = MM.App.current;
-    if(item._id.search('issue_')>=0){
-        let issue_id = item._id.replace('issue_','');
-        if(issue_id && issue_priority_id){
-            let post_data = {priority:issue_priority_id}
-            window.$mindAjax.update(issue_id, post_data);
-        }
-    }
+	var issue_priority_id = e.target.getAttribute("data-value") || null;
+	var action = new MM.Action.SetIssuePriority(MM.App.current, issue_priority_id);
+	MM.App.action(action);
+	let item = MM.App.current;
+	if (item._id.search('issue_') >= 0) {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && issue_priority_id) {
+			let post_data = { priority: issue_priority_id }
+			window.$mindAjax.update(issue_id, post_data);
+		}
+	}
 }
 
 MM.UI.IssueStatus = function () {
-    this._node = document.querySelector("#format_issue_status");
-    this._node.addEventListener("click", this);
+	this._node = document.querySelector("#format_issue_status");
+	this._node.addEventListener("click", this);
 }
 
 MM.UI.IssueStatus.prototype.handleEvent = function (e) {
-    e.preventDefault();
-    if (!e.target.hasAttribute("data-status_value")) { return; }
+	e.preventDefault();
+	if (!e.target.hasAttribute("data-status_value")) { return; }
 
-    var issue_status_id = e.target.getAttribute("data-status_value") || null;
-    var action = new MM.Action.SetIssueStatus(MM.App.current, issue_status_id);
-    MM.App.action(action);
-    let item = MM.App.current;
-    if(item._id.search('issue_')>=0){
-        let issue_id = item._id.replace('issue_','');
-        if(issue_id && issue_status_id){
-            let post_data = {status:issue_status_id}
-            window.$mindAjax.update(issue_id, post_data);
-        }
-    }
+	var issue_status_id = e.target.getAttribute("data-status_value") || null;
+	var action = new MM.Action.SetIssueStatus(MM.App.current, issue_status_id);
+	MM.App.action(action);
+	let item = MM.App.current;
+	if (item._id.search('issue_') >= 0) {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && issue_status_id) {
+			let post_data = { status: issue_status_id }
+			window.$mindAjax.update(issue_id, post_data);
+		}
+	}
 }
 
 //IssueAssignee
 MM.UI.IssueAssignee = function () {
-    this._select = document.querySelector("#format_issue_assignee");
-    this._select.addEventListener("change", this);
+	this._select = document.querySelector("#format_issue_assignee");
+	this._select.addEventListener("change", this);
 }
 
 MM.UI.IssueAssignee.prototype.update = function () {
-    this._select.value = MM.App.current.getIcon() || "";
+	this._select.value = MM.App.current.getIcon() || "";
 }
 
 MM.UI.IssueAssignee.prototype.handleEvent = function (e) {
-    console.log(MM.App.current)
-    var action = new MM.Action.SetIssueAssignee(MM.App.current, this._select.value || null);
-    MM.App.action(action);
-    let item = MM.App.current;
-    if(item._id.search('issue_')>=0){
-        let issue_id = item._id.replace('issue_','');
-        let user_id = this._select.value;
-        if(issue_id && user_id){
-            let post_data = {assignee:user_id}
-            window.$mindAjax.update(issue_id, post_data);
-        }
-    }
+	console.log(MM.App.current)
+	var action = new MM.Action.SetIssueAssignee(MM.App.current, this._select.value || null);
+	MM.App.action(action);
+	let item = MM.App.current;
+	if (item._id.search('issue_') >= 0) {
+		let issue_id = item._id.replace('issue_', '');
+		let user_id = this._select.value;
+		if (issue_id && user_id) {
+			let post_data = { assignee: user_id }
+			window.$mindAjax.update(issue_id, post_data);
+		}
+	}
 }
 //IssueProgress
 MM.UI.IssueProgress = function () {
-    this._node = document.querySelector("#format_issue_progress");
-    this._node.addEventListener("click", this);
+	this._node = document.querySelector("#format_issue_progress");
+	this._node.addEventListener("click", this);
 }
 
 MM.UI.IssueProgress.prototype.handleEvent = function (e) {
-    e.preventDefault();
-    console.log($(e.target));
-    if (!e.target.hasAttribute("data-value")) { return; }
+	e.preventDefault();
+	console.log($(e.target));
+	if (!e.target.hasAttribute("data-value")) { return; }
 
-    var issue_progress = e.target.getAttribute("data-value") || null;
-    var action = new MM.Action.SetIssueProgress(MM.App.current, issue_progress);
-    MM.App.action(action);
-    let item = MM.App.current;
-    if(item._id.search('issue_')>=0){
-        let issue_id = item._id.replace('issue_','');
-        if(issue_id && issue_progress){
-            let post_data = {progress:issue_progress}
-            window.$mindAjax.update(issue_id, post_data);
-        }
-    }
+	var issue_progress = e.target.getAttribute("data-value") || null;
+	var action = new MM.Action.SetIssueProgress(MM.App.current, issue_progress);
+	MM.App.action(action);
+	let item = MM.App.current;
+	if (item._id.search('issue_') >= 0) {
+		let issue_id = item._id.replace('issue_', '');
+		if (issue_id && issue_progress) {
+			let post_data = { progress: issue_progress }
+			window.$mindAjax.update(issue_id, post_data);
+		}
+	}
 }
 MM.UI.Help = function () {
 	this._node = document.querySelector("#help");
@@ -5199,25 +5265,25 @@ MM.UI.IO = function () {
 }
 
 MM.UI.IO.prototype.fetchIssues = function () {
-	var parts = {};
-	location.search.substring(1).split("&").forEach(function (item) {
-		var keyvalue = item.split("=");
-		parts[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);
-	});
+	// var parts = {};
+	// location.search.substring(1).split("&").forEach(function (item) {
+	// 	var keyvalue = item.split("=");
+	// 	parts[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);
+	// });
 
-	/* backwards compatibility */
-	if ("map" in parts) { parts.url = parts.map; }
+	// /* backwards compatibility */
+	// if ("map" in parts) { parts.url = parts.map; }
 
-	/* just URL means webdav backend */
-	if ("url" in parts && !("b" in parts)) { parts.b = "webdav"; }
+	// /* just URL means webdav backend */
+	// if ("url" in parts && !("b" in parts)) { parts.b = "webdav"; }
 
-	//console.log(parts.url);
+	// //console.log(parts.url);
 
 	let source_type = $("#source_range").val();
 	let group_by = '';
-	if(source_type==='all'){
+	if (source_type === 'all') {
 		group_by = $('#all-group_by').val();
-	}else{
+	} else {
 		group_by = $('#sprint-group_by').val();
 	}
 
@@ -5230,23 +5296,28 @@ MM.UI.IO.prototype.fetchIssues = function () {
 		url: '/project/mind/fetchMindIssues/' + project_id,
 		data: params,
 		success: function (data) {
-			MM.App.setThrobber(true);
-			var map = MM.App.map;
+			// var map = MM.App.map;
 			try {
 				var json = MM.Format.JSON.from(data);
+				MM.UI.Backend._loadDone.call(this, json);
 			} catch (e) {
 				this._error(e);
 			}
-			MM.UI.Backend._loadDone.call(this, json);
-            $('.mind-create').bind('click',function(){
-            	let item_id = $(this).data('id');
-                let issue_id = null;
-                if(item_id.search('issue_')>=0){
-                    issue_id = item_id.replace('issue_','');
-                    IssueMain.prototype.fetchEditUiConfig(issue_id, 'update');
-                }
-            });
-        },
+			MM.App.setThrobber(true);
+			$('.mind-create').bind('click', function () {
+				//alert($(this));
+				let item_id = $(this).data('id');
+				let issue_id = null;
+				if (item_id.search('issue_') >= 0) {
+					issue_id = item_id.replace('issue_', '');
+					IssueMain.prototype.fetchEditUiConfig(issue_id, 'update');
+				}
+			});
+			MM.App.adjustFontSize(-1)
+			MM.App.adjustFontSize(-1)
+			MM.App.adjustFontSize(-1)
+			MM.App.adjustFontSize(-1)
+		},
 		error: function (res) {
 			notify_error("请求数据错误" + res);
 		}
@@ -5519,7 +5590,7 @@ MM.UI.Backend.File._action = function () {
 }
 
 MM.UI.Backend.File.save = function () {
-    var format = MM.Format.getById($('#export_format').val());
+	var format = MM.Format.getById($('#export_format').val());
 	var json = MM.App.map.toJSON();
 	var data = format.to(json);
 
@@ -6025,17 +6096,20 @@ MM.Mouse.handleEvent = function (e) {
 			e.preventDefault();
 
 			var item = MM.App.map.getItemFor(e.target);
-			item && MM.App.select(item);
-            if(item._id && item._id.search('issue_')===-1){
-				$("button[data-command='InsertSibling']").hide();
-            }else{
-                $("button[data-command='InsertSibling']").show();
+			if (!item) {
+				break;
 			}
-            let parent_item = item.getParent();
-			if(parent_item._root && parent_item._root._id===item._id){
+			item && MM.App.select(item);
+			if (item._id && item._id.search('issue_') === -1) {
+				$("button[data-command='InsertSibling']").hide();
+			} else {
+				$("button[data-command='InsertSibling']").show();
+			}
+			let parent_item = item.getParent();
+			if (parent_item._root && parent_item._root._id === item._id) {
 				$('#menu').hide();
-            	return;
-            	console.log(item.getParent());
+				return;
+				console.log(item.getParent());
 			}
 			MM.Menu.open(e.clientX, e.clientY);
 			break;
@@ -6051,7 +6125,13 @@ MM.Mouse.handleEvent = function (e) {
 				MM.Command.Finish.execute(); /* clicked elsewhere => finalize edit */
 			}
 
-			if (e.type == "mousedown") { e.preventDefault(); } /* to prevent blurring the clipboard node */
+			if (e.target && e.target.className == "toggle") {
+				if (item == undefined) {
+					return
+				}
+			}
+
+			if (e.type == "mousedown") { MM.App.select(item); e.preventDefault(); } /* to prevent blurring the clipboard node */
 
 			if (e.type == "touchstart") { /* context menu here, after we have the item */
 				this._touchTimeout = setTimeout(function () {
@@ -6103,7 +6183,6 @@ MM.Mouse.handleEvent = function (e) {
 }
 
 MM.Mouse._startDrag = function (e, item) {
-
 	if (e.type == "mousedown") {
 		e.preventDefault(); /* no selections allowed. only for mouse; preventing touchstart would prevent Safari from emulating clicks */
 		this._port.addEventListener("mousemove", this);
@@ -6138,9 +6217,9 @@ MM.Mouse._processDrag = function (e) {
 				this._port.style.cursor = "move";
 				this._buildGhost(dx, dy);
 			}
-			this._moveGhost(dx, dy);
-			var state = this._computeDragState();
-			this._visualizeDragState(state);
+			// this._moveGhost(dx, dy);
+			// var state = this._computeDragState();
+			// this._visualizeDragState(state);
 			break;
 
 		case "pan":
@@ -6317,6 +6396,7 @@ setInterval(function() {
  *
  */
 MM.App = {
+	server_settings: {},
 	keyboard: null,
 	current: null,
 	editing: false,
@@ -6360,8 +6440,10 @@ MM.App = {
 
 	select: function (item) {
 		if (this.current && this.current != item) { this.current.deselect(); }
-		this.current = item;
-		this.current.select();
+		if (!is_empty(item)) {
+			this.current = item;
+			this.current.select();
+		}
 	},
 
 	adjustFontSize: function (diff) {
@@ -6398,6 +6480,10 @@ MM.App = {
 		}
 	},
 
+	setServerSettings: function (server_settings) {
+		this.server_settings = server_settings;
+	},
+
 	setThrobber: function (visible) {
 		this._throbber.classList[visible ? "add" : "remove"]("visible");
 	},
@@ -6432,15 +6518,15 @@ MM.App = {
 		var mindTools = document.querySelector(".js-mind-tools");
 		var mindSideBar = document.querySelector(".mind-side")
 		var padding = 32;
-		if(zoomMode == "0"){
+		if (zoomMode == "0") {
 			mindSideBar.style.top = "56px"
-		}else{
+		} else {
 			mindSideBar.style.top = "145px"
 		}
-		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
+		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding - 280, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
 		this._port.style.width = this.portSize[0] + "px";
 		this._port.style.height = this.portSize[1] + "px";
-		
+
 		this._throbber.style.right = (20 + this.ui.getWidth()) + "px";
 		if (this.map) { this.map.ensureItemVisibility(this.current); }
 	}

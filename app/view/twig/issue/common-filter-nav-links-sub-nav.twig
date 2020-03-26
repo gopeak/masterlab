@@ -9,59 +9,59 @@
 
     <div class="nav-links sub-nav scrolling-tabs is-initialized">
         <ul class="container-fluid">
-            <li class="filter_nav_li  {% if (sys_filter == '' and active_id is empty) %} {{ 'active' }}{% endif %}">
+            <li class="filter_nav_li  {% if (sys_filter == '' and active_id is empty) %} {{ 'active_underline' }}{% endif %}">
                 <a title="所有事项" href="{{ issue_main_url}}"><span>所有事项</span>
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'assignee_mine') %} {{ 'active' }}{% endif %}">
+            <li class="filter_nav_li  {% if (sys_filter == 'assignee_mine') %} {{ 'active_underline' }}{% endif %}">
                 <a title="分配我的事项" href="{{ issue_main_url}}?sys_filter=assignee_mine">
                     <span>分配我的</span>
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'my_unsolved') %} {{ 'active' }}{% endif %}">
+            <li class="filter_nav_li  {% if (sys_filter == 'my_unsolved') %} {{ 'active_underline' }}{% endif %}">
                 <a title="分配我未解决的事项" href="{{ issue_main_url}}?sys_filter=my_unsolved">
-                    <span>我未解决的</span>
+                    <span>我未解决</span>
+                    {% if ( unResolveCount) %}
+                    <span style="color: #d41716;"> ({{ unResolveCount }})</span>
+                    {% endif %}
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'my_followed') %} {{ 'active' }}{% endif %}">
+            <li class="filter_nav_li  {% if (sys_filter == 'my_followed') %} {{ 'active_underline' }}{% endif %}">
                 <a title="我关注的事项" href="{{ issue_main_url}}?sys_filter=my_followed"><span>我关注的</span>
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'my_report') %} {{ 'active' }}{% endif %}">
+            <li class="filter_nav_li  {% if (sys_filter == 'my_report') %} {{ 'active_underline' }}{% endif %}">
                 <a title="我报告的事项" href="{{ issue_main_url}}?sys_filter=my_report"><span>我报告的</span>
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'open') %} {{ 'active' }}{% endif %}">
-                <a title="打开的事项" href="{{ issue_main_url}}?sys_filter=open"><span>打开的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'unsolved') %} {{ 'active' }}{% endif %}">
-                <a title="非'已经解决'状态的事项" href="{{ issue_main_url}}?sys_filter=unsolved"><span>未解决的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'active_sprint_unsolved') %} {{ 'active' }}{% endif %}">
+            <!--<li class="filter_nav_li  {% if (sys_filter == 'active_sprint_unsolved') %} {{ 'active_underline' }}{% endif %}">
                 <a title="当前活跃迭代的未解决事项" href="{{ issue_main_url}}?sys_filter=active_sprint_unsolved"><span>当前迭代未解决的</span>
                 </a>
+            </li>-->
+            {% if ( project.is_display_issue_catalog and project_catalog) %}
+                <li class="filter_nav_li" style="border-left: 1px solid #ddd; padding-left: 12px;" title="通过标签进行分类">
+                    分 类：
+                </li>
+                {% for catalog in project_catalog %}
+                    <li class="filter_nav_li  {% if (sys_filter == 'catalog_'~catalog.id) %} {{ 'active_underline' }}{% endif %}">
+                        <a title="{{catalog.description}}" href="{{ issue_main_url}}?sys_filter=catalog_{{catalog.id}}" style="color:{{catalog.font_color}}; font-size: 12px;"><span>{{catalog.name}}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+
+            <li class="filter_nav_li" style="border-left: 1px solid #ddd; padding-left: 12px;">
+                过滤器：
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'done') %} {{ 'active' }}{% endif %}">
-                <a title="'已经解决'状态的事项" href="{{ issue_main_url}}?sys_filter=done"><span>完成的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'recently_create') %} {{ 'active' }}{% endif %}">
-                <a title="按最近创建时间排序" href="{{ issue_main_url}}?sys_filter=recently_create"><span>最近创建的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'recently_resolve') %} {{ 'active' }}{% endif %}">
-                <a title="最近解决的" href="{{ issue_main_url}}?sys_filter=recently_resolve"><span>最近解决的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'recently_update') %} {{ 'active' }}{% endif %}">
-                <a title="最近更新的" href="{{ issue_main_url}}?sys_filter=recently_update"><span>最近更新的</span>
-                </a>
-            </li>
-            {% if ( favFilters) %}
+            {% for favFilter in showFavFilters %}
+                <li class="filter_nav_li  {% if (active_id ==  favFilter.id  or fav_filter==favFilter.id ) %} {{ 'active_underline filter_active_underline' }}{% endif %}">
+                    <a title="{{ favFilter.name }}" href="{{ issue_main_url}}?fav_filter={{ favFilter.id }}" style="color:#fc9403; font-size: 12px; padding: 11px 4px 9px;"><span>{{ favFilter.name }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+            {% if ( otherFavFilters) %}
                 <li class="filter_nav_li  ">
-                    <a id="custom-filter-more" title="您收藏的过滤器 <a>管理</a>" href="#"><span>自定义过滤器</span><i class="fa fa-caret-down"></i>
+                    <a  style="color:#fc9403; font-size: 12px; padding: 11px 4px 9px;" id="custom-filter-more" title="更多的过滤器 <a>管理</a>" href="#"><span>更 多</span><i class="fa fa-caret-down"></i>
                     </a>
                 </li>
             {% endif %}

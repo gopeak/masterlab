@@ -67,12 +67,27 @@ GridEditor.prototype.fillEmptyLines = function () {
         start = master.tasks[0].start;
         level = master.tasks[0].level + 1;
       }
+      let end = start + 3600*24*1000;
+     // let parent = this.master.currentTask.getParent();
+        let last_task = null;
+        if(master.tasks.length>0){
+            last_task=master.tasks[master.tasks.length-1];
+        }else{
+          // alert();
+        }
+        console.log(last_task);
+        let sprint_id = '0';
+        let sprint_name = '待办事项';
+        if(last_task!==null){
+            sprint_id = last_task .sprint_id;
+            sprint_name = last_task .sprint_name;
+        }
 
       //fill all empty previouses
       var cnt=0;
       emptyRow.prevAll(".emptyRow").addBack().each(function () {
         cnt++;
-        var ch = factory.build("tmp_fk" + new Date().getTime()+"_"+cnt, "", "", level, start, Date.workingPeriodResolution);
+        var ch = factory.build("tmp_fk" + new Date().getTime()+"_"+cnt, "", "", level, start,end, Date.workingPeriodResolution,'',sprint_id,sprint_name);
         var task = master.addTask(ch);
         lastTask = ch;
       });
@@ -81,6 +96,7 @@ GridEditor.prototype.fillEmptyLines = function () {
         lastTask.rowElement.find("[name=name]").focus();//focus to "name" input
       }
     });
+
     this.element.append(emptyRow);
   }
 };
@@ -94,7 +110,7 @@ GridEditor.prototype.addTask = function (task, row, hideIfParentCollapsed) {
   this.element.find("#tid_" + task.id).remove();
 
   var taskRow = $.JST.createFromTemplate(task, "TASKROW");
-  console.log(task);
+  //console.log(task);
   if (!this.master.permissions.canSeeDep)
     taskRow.find(".requireCanSeeDep").hide();
 
@@ -158,16 +174,19 @@ GridEditor.prototype.refreshTaskRow = function (task) {
   //var profiler = new Profiler("editorRefreshTaskRow");
 
   var canWrite=this.master.permissions.canWrite || task.canWrite;
-
+  if ( typeof(_projectPermArr)!=='undefined' && !isInArray(_projectPermArr, 'ADMIN_GANTT')) {
+    canWrite = false;
+  }
   var row = task.rowElement;
   //console.log(task,'task.start:',task.start,new Date(task.start).format());
   row.find(".taskRowIndex").html(task.getRow() + 1);
-  row.find(".indentCell").css("padding-left", task.level * 10 + 18);
+  row.find(".indentCell").css("padding-left", task.level * 20 + 18);
   row.find("[name=name]").val(task.name);
   row.find("[name=code]").val(task.code);
   row.find("[status]").attr("status", task.status);
 
   row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
+  row.find("[name=duration]").attr('readonly',true);
   row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true);
   row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
   row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) ); // called on dates only because for other field is called on focus event
@@ -175,6 +194,12 @@ GridEditor.prototype.refreshTaskRow = function (task) {
   row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent).updateOldValue();
   row.find("[name=depends]").val(task.depends);
   row.find(".taskAssigs").html(task.getAssigsString());
+
+  if(!canWrite){
+    row.find(".teamworkIcon").css('display','none');
+  }
+
+
 
   //manage collapsed
   if (task.collapsed)
@@ -233,7 +258,6 @@ GridEditor.prototype.bindRowEvents = function (task, taskRow) {
       row.offsetParent().scrollTop(row.offsetParent().scrollTop() - 40 + top);
     }
   });
-
 
   if (this.master.permissions.canWrite || task.canWrite) {
     self.bindRowInputEvents(task, taskRow);
@@ -305,23 +329,37 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
     el.blur(function (date) {
       var inp = $(this);
       if (inp.isValueChanged()) {
+
         if (!Date.isValid(inp.val())) {
           alert(GanttMaster.messages["INVALID_DATE_FORMAT"]);
           inp.val(inp.getOldValue());
 
         } else {
-          var row = inp.closest("tr");
-          var taskId = row.attr("taskId");
-          var task = self.master.getTask(taskId);
+            var row = inp.closest("tr");
+            var taskId = row.attr("taskId");
+            var task = self.master.getTask(taskId);
 
-          var leavingField = inp.prop("name");
-          var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
-          //console.debug("resynchDates",new Date(dates.start), new Date(dates.end),dates.duration)
-          //update task from editor
-          self.master.beginTransaction();
-          self.master.changeTaskDates(task, dates.start, dates.end);
-          self.master.endTransaction();
-          inp.updateOldValue(); //in order to avoid multiple call if nothing changed
+            var leavingField = inp.prop("name");
+            console.log(leavingField,inp.val(),task);
+
+            var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
+            if(dates.end<dates.start){
+                inp.val(inp.getOldValue());
+                notify_warn('提示' , '截止日期不能小于开始日期');
+                return;
+            }
+            //console.log('dates:',dates);
+           //update server
+            let params = null
+            if(leavingField==='start'){
+                params = {start_date:inp.val().replace(/\//g,'-')};
+            }
+            if(leavingField==='end'){
+                params = {due_date:inp.val().replace(/\//g,'-')};
+            }
+            window.$_gantAjax.updateDuration(task.id, window._cur_project_id, params, row, dates);
+
+            //inp.updateOldValue(); //in order to avoid multiple call if nothing changed
         }
       }
     });
@@ -359,6 +397,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
     var row = el.closest("tr");
     var taskId = row.attr("taskId");
     var task = self.master.getTask(taskId);
+    var taskOriginName = task.name;
     //update task from editor
     var field = el.prop("name");
     if (el.isValueChanged()) {
@@ -388,28 +427,28 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           }
 
           if (oneFailed){
-            task.changeStatus("STATUS_FAILED")
+            // task.changeStatus("STATUS_FAILED")
           } else if (oneUndefined){
-            task.changeStatus("STATUS_UNDEFINED")
+            // task.changeStatus("STATUS_UNDEFINED")
           } else if (oneActive){
-            //task.changeStatus("STATUS_SUSPENDED")
-            task.changeStatus("STATUS_WAITING")
+            // task.changeStatus("STATUS_WAITING")
           } else  if (oneSuspended){
-            task.changeStatus("STATUS_SUSPENDED")
+            // task.changeStatus("STATUS_SUSPENDED")
           } else  if (oneWaiting){
-            task.changeStatus("STATUS_WAITING")
+            // task.changeStatus("STATUS_WAITING")
           } else {
-            task.changeStatus("STATUS_ACTIVE")
+            // task.changeStatus("STATUS_ACTIVE")
           }
             self.master.changeTaskDeps(task); //dates recomputation from dependencies
             var params = {depends:task.depends};
-            self.master.updateIssue(task.id, params)
+            window.$_gantAjax.updateIssue(task.id, params)
 
         }
 
       } else if (field == "duration") {
-        var dates = resynchDates(el, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
-        self.master.changeTaskDates(task, dates.start, dates.end);
+        //var dates = resynchDates(el, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
+       // self.master.changeTaskDates(task, dates.start, dates.end);
+          alert('不能修改duration');
 
       } else if (field == "name" && el.val() == "") { // remove unfilled task
         self.master.deleteCurrentTask(taskId);
@@ -418,7 +457,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
       } else if (field == "progress" ) {
         task[field]=parseFloat(el.val())||0;
         el.val(task[field]);
-
+          window.$_gantAjax.updateIssue(task.id, {progress:task[field], project_id:project_id});
       } else {
         task[field] = el.val();
       }
@@ -432,8 +471,18 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           event.preventDefault();
           //return false;
       }
-
     }
+    // 在最下方新增一个事项
+    if (field == "name" && trimStr(el.val()) != "" && task.syncedServer===false){
+        window.$_gantAjax.syncAddLastTask(task);
+     }
+
+     // 更新事项标题
+      if (field == "name" && trimStr(el.val()) != "" && task.name!=taskOriginName && task.syncedServer===true){
+          let project_id = window._cur_project_id;
+          window.$_gantAjax.updateIssue(task.id, {summary:el.val(), project_id:project_id});
+      }
+
   });
 
   //cursor key movement
@@ -498,6 +547,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 
   //change status
   taskRow.find(".taskStatus").click(function () {
+    return;
     var el = $(this);
     var tr = el.closest("[taskid]");
     var taskId = tr.attr("taskid");
@@ -523,77 +573,13 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 };
 
 GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
-
-    $('#modal-create-issue').modal('show');
-    loading.show('#modal-body');
-    $('#issue_id').val(task.id);
-    $('#action').val('update');
-    $('#gantt_description').text('');
-    $.ajax({
-        type: 'get',
-        dataType: "json",
-        async: true,
-        url: root_url + "issue/detail/get/" + task.id,
-        data: {},
-        success: function (resp) {
-            loading.hide('#modal-body');
-            auth_check(resp);
-            var issue = resp.data.issue;
-            $('#summary').val(issue.summary);
-            $('#create_issue_types_select').val(issue.issue_type);
-            $('#priority').val(issue.priority);
-            $('#gantt_status').val(issue.gantt_status);
-            $('#assignee').val(issue.assignee);
-            $('#sprint').val(issue.sprint);
-            $('#start_date').val(issue.start_date);
-            $('#due_date').val(issue.due_date);
-            $('#duration').val(issue.duration);
-            $('#progress').val(issue.progress);
-            if(issue.is_start_milestone!='0'){
-                $('#is_start_milestone').attr("checked", true);
-            }
-            if(issue.is_end_milestone!='0'){
-                $('#is_end_milestone').attr("checked", true);
-            }
-            $('.selectpicker').selectpicker('refresh');
-
-            let user = getUser(window._issueConfig.users, issue.assignee);
-            $('#user_dropdown-toggle-text').html(user.display_name);
-
-            let sprint = getObjectValue(window._issueConfig.sprint, issue.sprint);
-            $('#sprint_name').html(sprint.name);
-         // if(!window._editor_md){
-          $('#gantt_description').text(issue.description);
-            window._editor_md = editormd({
-              id   : "description_md",
-              placeholder : "",
-              width: "600px",
-              readOnly:false,
-              styleActiveLine:true,
-              lineNumbers:true,
-              height: 240,
-              markdown: issue.description,
-              path: '/dev/lib/editor.md/lib/',
-              imageUpload: true,
-              imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-              imageUploadURL: "/issue/detail/editormd_upload",
-              saveHTMLToTextarea: true,
-              emoji: true,
-              toolbarIcons      : "custom",
-            })
-         // }
-
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
+     window.$_gantAjax.makeEditIssueForm(task, editOnlyAssig);
 }
 
 
 GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
   var self = this;
-
+  return;
 
   if (!self.master.permissions.canSeePopEdit)
     return;

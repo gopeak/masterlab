@@ -1,6 +1,7 @@
 <script type="text/javascript">
 
     var root_url = "/";
+    var current_version = '{{ _version }}';
     var current_uid = "{{G_uid}}";
     var cur_project_id = '{{project_id}}';
     var cur_path_key = '{{project_root_url}}';
@@ -8,7 +9,7 @@
     var _is_admin = {{ is_admin ? 'true':'false'}};
 
     <!-- {% if _permCreateIssue is defined %} -->
-        var _permCreateIssue =  {{ _permCreateIssue ? 'true':'false'}};
+        var _permCreateIssue = {{ _permCreateIssue ? 'true':'false'}};
     <!-- {% else %} -->
         var _permCreateIssue = false;
     <!-- {% endif %} -->

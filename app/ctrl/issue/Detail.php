@@ -6,6 +6,7 @@
 namespace main\app\ctrl\issue;
 
 use main\app\classes\NotifyLogic;
+use main\app\classes\ProjectGantt;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
@@ -210,6 +211,14 @@ class Detail extends BaseUserCtrl
         $model = new SprintModel();
         $sprint = $model->getById($issue['sprint']);
         $issue['sprint_info'] = isset($sprint['name']) ? $sprint : new \stdClass();
+        if(isset($_GET['from']) && $_GET['from']=='gantt'){
+            if(isset($sprint['start_date']) && !empty($sprint['start_date']) && empty($issue['start_date'])){
+                $issue['start_date'] = $sprint['start_date'];
+            }
+            if(isset($sprint['end_date']) && !empty($sprint['end_date']) && empty($issue['due_date'])){
+                $issue['due_date'] = $sprint['end_date'];
+            }
+        }
         unset($sprint);
 
         $model = new ProjectVersionModel();

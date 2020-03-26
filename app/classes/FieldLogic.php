@@ -9,7 +9,9 @@
 
 namespace main\app\classes;
 
+use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueTypeSchemeItemsModel;
+use main\app\model\project\ProjectModuleModel;
 
 class FieldLogic
 {
@@ -40,5 +42,44 @@ class FieldLogic
             return [false, $e->getMessage()];
         }
         return [true,'ok'];
+    }
+
+    /**
+     * 返回ID和name的映射
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function getSprintMapByProjectID($projectId)
+    {
+        $sprintMap = [];
+        $sprintModel = new SprintModel();
+        $rows = $sprintModel->getItemsByProject($projectId, true);
+        if (!empty($rows)) {
+            foreach ($rows as $key => $row) {
+                $sprintMap[$key] = $row['name'];
+            }
+        }
+        return $sprintMap;
+    }
+
+    /**
+     * 返回ID和name的映射
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function getModuleMapByProjectID($projectId)
+    {
+        $moduleMap = [];
+        $projectModuleModel = new ProjectModuleModel();
+        $rows = $projectModuleModel->getByProject($projectId, true);
+        if (!empty($rows)) {
+            foreach ($rows as $key => $row) {
+                $moduleMap[$key] = $row['name'];
+            }
+        }
+
+        return $moduleMap;
     }
 }

@@ -43,12 +43,19 @@ class Project extends BaseAdminCtrl
     public function pageIndex()
     {
         $data = [];
-
-        // $data['list'] = $list;
         $data['title'] = 'Projects';
         $data['nav_links_active'] = 'project';
         $data['left_nav_active'] = 'list';
-        $this->render('gitlab/admin/project_list.php', $data);
+        $this->render('twig/admin/project/project_list.twig', $data);
+    }
+
+    public function pageArchived()
+    {
+        $data = [];
+        $data['title'] = 'Projects';
+        $data['nav_links_active'] = 'project';
+        $data['left_nav_active'] = 'archived';
+        $this->render('twig/admin/project/project_list_archived.twig', $data);
     }
 
     /**
@@ -65,19 +72,29 @@ class Project extends BaseAdminCtrl
     /**
      * 项目查询
      * @param int $page
+     * @param int $is_archived
      * @throws \Exception
      */
-    public function filterData($page = 1)
+    public function filterData($page = 1, $is_archived = 0)
     {
+        $is_archived = intval($is_archived);
         $pageLength = 30;
 
         $projectLogic = new ProjectLogic();
-        $projects = $projectLogic->projectListJoinUser();
+
+        if ($is_archived) {
+            $projects = $projectLogic->projectListJoinUserArchived();
+        } else {
+            $projects = $projectLogic->projectListJoinUser();
+        }
 
         foreach ($projects as &$item) {
             $item = ProjectLogic::formatProject($item);
+            if ($item['archived'] == 'Y') {
+                $item['name'] = $item['name'] . ' [已归档]';
+            }
         }
-       // unset($item);
+        unset($item);
 
         $data['total'] = count($projects);
         $data['page'] = $page;
@@ -116,6 +133,29 @@ class Project extends BaseAdminCtrl
         }
     }
 
+    /**
+     * 项目归档
+     * @throws \Exception
+     */
+    public function doArchived()
+    {
+        $projectId = null;
+        if (isset($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '参数错误');
+        }
+
+        $model = new ProjectModel();
+        $ret = $model->updateById(['archived' => 'Y'], $projectId);
+
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '更新数据失败');
+        } else {
+            $this->ajaxSuccess('归档成功');
+        }
+    }
 
     /**
      * 删除项目

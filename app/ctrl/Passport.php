@@ -47,12 +47,13 @@ class Passport extends BaseCtrl
         $data = [];
         $data['title'] = '登录';
         $data['is_login_page'] = true;
-        $data['captcha_login_switch'] = (new SettingsLogic())->loginRequireCaptcha();
-        $data['captcha_reg_switch'] = (new SettingsLogic())->regRequireCaptcha();
-
-        // 是否开启用户注册
-        $isAllowReg = (new SettingsLogic())->allowUserReg();
-        $data['is_allow_user_reg'] = $isAllowReg;
+        // 获取设置
+        $settingModel = new SettingModel();
+        $basicSettingArr = array_column($settingModel->getSettingByModule('basic'),'_value','_key');
+        $data['login_require_captcha'] = $basicSettingArr['login_require_captcha'];
+        $data['reg_require_captcha'] = $basicSettingArr['reg_require_captcha'];
+        $data['allow_user_reg'] = $basicSettingArr['allow_user_reg'];
+        $data['ldap_enable'] = (bool)$settingModel->getSettingValue('ldap_enable');
 
         $this->render('gitlab/passport/login.php', $data);
     }
@@ -143,8 +144,18 @@ class Passport extends BaseCtrl
         if (!$ret) {
             $this->ajaxFailed('提 示', $tip, $retCode);
         }
-        // 检车登录账号和密码
-        list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
+
+        $schemaType = 'inner';
+        if(isset($_POST['schema_ldap'])){
+            $schemaType = 'ldap';
+        }
+        // 检查登录账号和密码
+        if($schemaType==='inner'){
+            list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
+        }else{
+            // LDAP认证登录
+            list($ret, $user) = $this->auth->checkLdapByUsername($username, $password);
+        }
         // print_r($user);
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
@@ -157,6 +168,7 @@ class Passport extends BaseCtrl
             }
             $this->ajaxFailed('提 示', $tip, $code);
         }
+
         unset($_SESSION['login_captcha'], $_SESSION['login_captcha_time']);
 
         // 更新登录次数
@@ -406,8 +418,7 @@ class Passport extends BaseCtrl
             $args['{{display_name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
             $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verify_code=' . $verifyCode;
-            $mailConfig = getConfigVar('mail');
-            $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['active_email']);
+            $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['active_email']);
             // echo $body;die;
             $systemLogic = new SystemLogic();
             list($ret, $errMsg) = $systemLogic->mail($email, 'Masterlab激活用户通知', $body);
@@ -517,8 +528,7 @@ class Passport extends BaseCtrl
             $args['{{verifyCode}}'] = $verifyCode;
             $url = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verify_code=' . $verifyCode;
             $args['{{url}}'] = $url;
-            $mailConfig = getConfigVar('mail');
-            $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['reset_password']);
+            $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['reset_password']);
             //echo $body;
             //@TODO 异步发送
             $systemLogic = new SystemLogic();
@@ -530,7 +540,7 @@ class Passport extends BaseCtrl
             //'很抱歉,服务器繁忙，请重试!!';
             $this->ajaxFailed('服务器错误', '插入失败,详情:' . $insertId);
         }
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('邮件已发送');
     }
 
 
@@ -627,42 +637,40 @@ class Passport extends BaseCtrl
     }
 
     /**
-     * 检查邮箱是否
+     * 检查邮箱是否存在
      * @param string $email
+     * @throws \Exception
      */
-    public function emailExist($email)
+    public function emailExist($email = '')
     {
         if (empty($email)) {
-            echo 'true';
-            die;
+            $this->ajaxFailed('email地址不能为空', false);
         }
         $userModel = UserModel::getInstance();
         $user = $userModel->getByEmail($email);
-        if (!isset($user['uid'])) {
-            echo 'false';
-            die;
+        if (isset($user['uid'])) {
+            $this->ajaxFailed('email已被使用', false);
+        } else {
+            $this->ajaxSuccess('ok', true);
         }
-        echo 'true';
-        die;
     }
 
     /**
      * 检查用户名你是否存在
      * @param string $username
+     * @throws \Exception
      */
     public function usernameExist($username = '')
     {
         if (empty($username)) {
-            echo 'true';
-            die;
+            $this->ajaxFailed('用户名不能为空', false);
         }
         $userModel = UserModel::getInstance();
         $user = $userModel->getByUsername($username);
-        if (!isset($user['uid'])) {
-            echo 'false';
-            die;
+        if (isset($user['uid'])) {
+            $this->ajaxFailed('用户名已被使用', false);
+        } else {
+            $this->ajaxSuccess('ok', true);
         }
-        echo 'true';
-        die;
     }
 }

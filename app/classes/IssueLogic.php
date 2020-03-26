@@ -38,6 +38,10 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 class IssueLogic
 {
 
+    /**
+     * 定义事项列表的显示字段
+     * @var array
+     */
     public static $uiDisplayFields = [
         'issue_num' => '编号',
         'issue_type' => '类型',
@@ -46,6 +50,7 @@ class IssueLogic
         'module' => '模块',
         'sprint' => '迭代',
         'summary' => '标题',
+        'label' => '标签',
         'weight' => '权重',
         'assignee' => '经办人',
         'reporter' => '报告人',
@@ -60,11 +65,16 @@ class IssueLogic
         'created' => '创建时间',
         'updated' => '最后修改时间',
     ];
+    /**
+     * 默认显示的字段
+     * @var array
+     */
     public static $defaultDisplayFields = [
         'issue_num',
         'issue_type',
         'priority',
         'module',
+        'sprint',
         'summary',
         'assignee',
         'status',
@@ -239,7 +249,7 @@ class IssueLogic
      * @return array
      * @throws \Exception
      */
-    public function convertChild($currentId, $masterId)
+    public function convertChild($currentId, $masterId, $secondType=null)
     {
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($currentId);
@@ -247,7 +257,12 @@ class IssueLogic
             return [false, 'data_is_empty'];
         }
         $master = $issueModel->getById($masterId);
-        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => $masterId,'module'=>$master['module']]);
+        $updateInfo = ['master_id' => $masterId,'module'=>$master['module']];
+        if(isset($master[$secondType])){
+            $updateInfo[$secondType] = $master[$secondType];
+        }
+        //print_r($updateInfo);
+        list($ret, $msg) = $issueModel->updateById($currentId, $updateInfo);
         if (!$ret) {
             return [false, 'server_error:' . $msg];
         } else {
@@ -1116,6 +1131,7 @@ class IssueLogic
 
         return [true, $successRows, $errorRows];
     }
+
 
     public static $importFields = [
         'issue_num' => '编号',

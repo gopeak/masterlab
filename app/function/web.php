@@ -105,12 +105,12 @@ if (!function_exists('currentHttpDomain')) {
      */
     function currentHttpDomain()
     {
-        if($_SERVER["SERVER_PORT"]=='80'){
+        if(@$_SERVER["SERVER_PORT"]=='80'){
             $port = '';
         }else{
-            $port = ':'.$_SERVER["SERVER_PORT"];
+            $port = ':'.@$_SERVER["SERVER_PORT"];
         }
-        $uri = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].$port.'/';
+        $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['SERVER_NAME'].$port.'/';
         return $uri;
     }
 }

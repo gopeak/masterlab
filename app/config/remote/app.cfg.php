@@ -4,13 +4,16 @@
 error_reporting(E_ALL);
 
 // URL手动设置
-define('ROOT_URL', 'http://masterlab.ink/');
+define('ROOT_URL', currentHttpDomain());
 
 //
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 当前版本号
-define('MASTERLAB_VERSION', '1.0.2');
+define('MASTERLAB_VERSION', '2.1');
+
+// 使用twig模板引擎
+define('TPL_ENGINE', 'twig');
 
 // 设置缓存的存储引擎,由3个值可选：Membase,Redis,APC
 define('CACHE_HANDLER', 'Redis');

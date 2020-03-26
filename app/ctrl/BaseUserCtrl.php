@@ -9,6 +9,7 @@ use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\model\project\ProjectModel;
 use main\app\classes\ProjectLogic;
+use main\app\model\user\UserMessageModel;
 use main\app\model\user\UserSettingModel;
 
 /**
@@ -43,6 +44,8 @@ class BaseUserCtrl extends BaseCtrl
      * @var array
      */
     public $projectPermArr = [];
+
+    public $projectId = null;
 
     /**
      * @todo 构造函数重复调用
@@ -106,15 +109,18 @@ class BaseUserCtrl extends BaseCtrl
             if (isset($_POST['params']['project_id'])) {
                 $projectId = (int)$_POST['params']['project_id'];
             }
-            $data['project_id'] = $projectId;
             if (isset($_GET['project_id'])) {
                 $projectId = (int)$_GET['project_id'];
             }
+            if (isset($_POST['project_id'])) {
+                $projectId = (int)$_POST['project_id'];
+            }
+            $data['project_id'] = $this->projectId = $projectId;
             if (!empty($projectId)) {
                 $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(
                     UserAuth::getId(),
                     $projectId,
-                    $haveAdminPerm
+                    false
                 );
             }
             $project = [];
@@ -127,6 +133,7 @@ class BaseUserCtrl extends BaseCtrl
                     $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
                 }
             }
+            $this->addGVar('_project_id', $this->projectId);
             $this->addGVar('G_project', $project);
             //print_r($project);
             //print_r($this->projectPermArr);
@@ -149,6 +156,10 @@ class BaseUserCtrl extends BaseCtrl
             if (!isset($this->projectPermArr)) {
                 $this->projectPermArr = [];
             }
+
+            $model = new UserMessageModel();
+            $conditionArr['readed'] = '0';
+            $this->addGVar('_unread_count', $model->getUnreadCountByfilter($conditionArr));
 
             $this->addGVar('projectPermArr', $this->projectPermArr);
             $this->addGVar('_projectPermArrJson', json_encode(array_keys($this->projectPermArr)));

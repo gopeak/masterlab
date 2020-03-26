@@ -21,101 +21,101 @@
  */
 
 
-function dateToRelative(localTime){
+function dateToRelative(localTime) {
 
-  var diff=new Date().getTime()-localTime;
-  var ret="";
+    var diff = new Date().getTime() - localTime;
+    var ret = "";
 
-  var min=60000;
-  var hour=3600000;
-  var day=86400000;
-  var wee=604800000;
-  var mon=2629800000;
-  var yea=31557600000;
+    var min = 60000;
+    var hour = 3600000;
+    var day = 86400000;
+    var wee = 604800000;
+    var mon = 2629800000;
+    var yea = 31557600000;
 
-  if (diff<-yea*2)
-    ret ="in ## years".replace("##",(-diff/yea).toFixed(0));
+    if (diff < -yea * 2)
+        ret = "in ## years".replace("##", (-diff / yea).toFixed(0));
 
-  else if (diff<-mon*9)
-    ret ="in ## months".replace("##",(-diff/mon).toFixed(0));
+    else if (diff < -mon * 9)
+        ret = "in ## months".replace("##", (-diff / mon).toFixed(0));
 
-  else if (diff<-wee*5)
-    ret ="in ## weeks".replace("##",(-diff/wee).toFixed(0));
+    else if (diff < -wee * 5)
+        ret = "in ## weeks".replace("##", (-diff / wee).toFixed(0));
 
-  else if (diff<-day*2)
-    ret ="in ## days".replace("##",(-diff/day).toFixed(0));
+    else if (diff < -day * 2)
+        ret = "in ## days".replace("##", (-diff / day).toFixed(0));
 
-  else if (diff<-hour)
-    ret ="in ## hours".replace("##",(-diff/hour).toFixed(0));
+    else if (diff < -hour)
+        ret = "in ## hours".replace("##", (-diff / hour).toFixed(0));
 
-  else if (diff<-min*35)
-    ret ="in about one hour";
+    else if (diff < -min * 35)
+        ret = "in about one hour";
 
-  else if (diff<-min*25)
-    ret ="in about half hour";
+    else if (diff < -min * 25)
+        ret = "in about half hour";
 
-  else if (diff<-min*10)
-    ret ="in some minutes";
+    else if (diff < -min * 10)
+        ret = "in some minutes";
 
-  else if (diff<-min*2)
-    ret ="in few minutes";
+    else if (diff < -min * 2)
+        ret = "in few minutes";
 
-  else if (diff<=min)
-    ret ="刚刚";
+    else if (diff <= min)
+        ret = "刚刚";
 
-  else if (diff<=min*5)
-    ret ="few minutes ago";
+    else if (diff <= min * 5)
+        ret = "few minutes ago";
 
-  else if (diff<=min*15)
-    ret ="some minutes ago";
+    else if (diff <= min * 15)
+        ret = "some minutes ago";
 
-  else if (diff<=min*35)
-    ret ="about half hour ago";
+    else if (diff <= min * 35)
+        ret = "about half hour ago";
 
-  else if (diff<=min*75)
-    ret ="about an hour ago";
+    else if (diff <= min * 75)
+        ret = "about an hour ago";
 
-  else if (diff<=hour*5)
-    ret ="few hours ago";
+    else if (diff <= hour * 5)
+        ret = "few hours ago";
 
-  else if (diff<=hour*24)
-    ret ="## hours ago".replace("##",(diff/hour).toFixed(0));
+    else if (diff <= hour * 24)
+        ret = "## hours ago".replace("##", (diff / hour).toFixed(0));
 
-  else if (diff<=day*7)
-    ret ="## days ago".replace("##",(diff/day).toFixed(0));
+    else if (diff <= day * 7)
+        ret = "## days ago".replace("##", (diff / day).toFixed(0));
 
-  else if (diff<=wee*5)
-    ret ="## weeks ago".replace("##",(diff/wee).toFixed(0));
+    else if (diff <= wee * 5)
+        ret = "## weeks ago".replace("##", (diff / wee).toFixed(0));
 
-  else if (diff<=mon*12)
-    ret ="## months ago".replace("##",(diff/mon).toFixed(0));
+    else if (diff <= mon * 12)
+        ret = "## months ago".replace("##", (diff / mon).toFixed(0));
 
-  else
-    ret ="## years ago".replace("##",(diff/yea).toFixed(0));
+    else
+        ret = "## years ago".replace("##", (diff / yea).toFixed(0));
 
-  return ret;
+    return ret;
 }
 
 //override date format i18n
 
-Date.monthNames = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+Date.monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
 // Month abbreviations. Change this for local month names
-Date.monthAbbreviations = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+Date.monthAbbreviations = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
 // Full day names. Change this for local month names
-Date.dayNames =["日","一","二","三","四","五","六"];
+Date.dayNames = ["日", "一", "二", "三", "四", "五", "六"];
 // Day abbreviations. Change this for local month names
-Date.dayAbbreviations = ["日","一","二","三","四","五","六"];
+Date.dayAbbreviations = ["日", "一", "二", "三", "四", "五", "六"];
 // Used for parsing ambiguous dates like 1/2/2000 - default to preferring 'American' format meaning Jan 2.
 // Set to false to prefer 'European' format meaning Feb 1
 Date.preferAmericanFormat = false;
 
-Date.firstDayOfWeek =0;
+Date.firstDayOfWeek = 0;
 Date.defaultFormat = "yyyy/MM/d";
 Date.masks = {
-  fullDate:       "yyyy/MM/d",
-  shortTime:      "h:mm a"
+    fullDate: "yyyy/MM/d",
+    shortTime: "h:mm a"
 };
-Date.today="今日";
+Date.today = "今日";
 
 Number.decimalSeparator = ".";
 Number.groupingSeparator = ",";
@@ -123,72 +123,86 @@ Number.minusSign = "-";
 Number.currencyFormat = "###,##0.00";
 
 
-
-var millisInWorkingDay =28800000;
-var workingDaysPerWeek =5;
+var millisInWorkingDay = 28800000;
+var workingDaysPerWeek = 5;
+if (typeof(_work_dates) === "object" ) {
+    workingDaysPerWeek = _work_dates.length;
+}
 
 function isHoliday(date) {
-  var friIsHoly =false;
-  var satIsHoly =true;
-  var sunIsHoly =true;
 
-  var pad = function (val) {
-    val = "0" + val;
-    return val.substr(val.length - 2);
-  };
+    var pad = function (val) {
+        val = "0" + val;
+        return val.substr(val.length - 2);
+    };
 
-  var holidays = "##";
+    var holidays = "##";
 
-  var ymd = "#" + date.getFullYear() + "_" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
-  var md = "#" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
-  var day = date.getDay();
+    var ymd = "#" + date.getFullYear() + "_" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
+    var md = "#" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
+    var weekDay = date.getDay();
 
-  return  (day == 5 && friIsHoly) || (day == 6 && satIsHoly) || (day == 0 && sunIsHoly) || holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
+    let local_date = date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+
+    if (typeof(_extra_holidays) === "object" && _extra_holidays.indexOf(local_date) !== -1) {
+        console.log('_extra_holidays date:', local_date);
+        return false;
+    }
+
+    if (typeof(_holidays) === "object" && _holidays.indexOf(local_date) !== -1) {
+        console.log('_holidays date:', local_date);
+        return true;
+    }
+    if (typeof(_work_dates) === "object" && in_array(weekDay, _work_dates)) {
+        //console.log('_work_dates:', ymd, weekDay, true);
+        return true;
+    }
+
+    return  holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
 }
 
 
-
 var i18n = {
-  YES:                 "Yes",
-  NO:                  "No",
-  FLD_CONFIRM_DELETE:  "confirm the deletion?",
-  INVALID_DATA:        "The data inserted are invalid for the field format.",
-  ERROR_ON_FIELD:      "Error on field",
-  OUT_OF_BOUDARIES:      "Out of field admitted values:",
-  CLOSE_ALL_CONTAINERS:"close all?",
-  DO_YOU_CONFIRM:      "Do you confirm?",
-  ERR_FIELD_MAX_SIZE_EXCEEDED:      "Field max size exceeded",
-  WEEK_SHORT:      "W.",
+    YES: "是",
+    NO: "否",
+    FLD_CONFIRM_DELETE: "确认删除?",
+    INVALID_DATA: "无效的数据格式.",
+    ERROR_ON_FIELD: "错误的字段数据",
+    OUT_OF_BOUDARIES: "Out of field admitted values:",
+    CLOSE_ALL_CONTAINERS: "全部关闭?",
+    DO_YOU_CONFIRM: "确认此操作?",
+    ERR_FIELD_MAX_SIZE_EXCEEDED: "超过最大范围",
+    WEEK_SHORT: "W.",
 
-  FILE_TYPE_NOT_ALLOWED:"File type not allowed.",
-  FILE_UPLOAD_COMPLETED:"File upload completed.",
-  UPLOAD_MAX_SIZE_EXCEEDED:"Max file size exceeded",
-  ERROR_UPLOADING:"Error uploading",
-  UPLOAD_ABORTED:"Upload aborted",
-  DROP_HERE:"Drop files here",
+    FILE_TYPE_NOT_ALLOWED: "文件类型不允许.",
+    FILE_UPLOAD_COMPLETED: "文件上传成功.",
+    UPLOAD_MAX_SIZE_EXCEEDED: "已经超出最大文件大小",
+    ERROR_UPLOADING: "上传错误",
+    UPLOAD_ABORTED: "上传被终止",
+    DROP_HERE: "Drop files here",
 
-  FORM_IS_CHANGED:     "You have some unsaved data on the page!",
+    FORM_IS_CHANGED: "You have some unsaved data on the page!",
 
-  PIN_THIS_MENU: "PIN_THIS_MENU",
-  UNPIN_THIS_MENU: "UNPIN_THIS_MENU",
-  OPEN_THIS_MENU: "OPEN_THIS_MENU",
-  CLOSE_THIS_MENU: "CLOSE_THIS_MENU",
-  PROCEED: "Proceed?",
+    PIN_THIS_MENU: "PIN_THIS_MENU",
+    UNPIN_THIS_MENU: "UNPIN_THIS_MENU",
+    OPEN_THIS_MENU: "OPEN_THIS_MENU",
+    CLOSE_THIS_MENU: "CLOSE_THIS_MENU",
+    PROCEED: "Proceed?",
 
-  PREV: "Previous",
-  NEXT: "Next",
-  HINT_SKIP: "Got it, close this hint.",
+    PREV: "Previous",
+    NEXT: "Next",
+    HINT_SKIP: "Got it, close this hint.",
 
-  WANT_TO_SAVE_FILTER: "save this filter",
-  NEW_FILTER_NAME: "name of the new filter",
-  SAVE: "Save",
-  DELETE: "Delete",
-  HINT_SKIP: "Got it, close this hint.",
+    WANT_TO_SAVE_FILTER: "save this filter",
+    NEW_FILTER_NAME: "name of the new filter",
+    SAVE: "Save",
+    DELETE: "Delete",
+    HINT_SKIP: "Got it, close this hint.",
 
-  COMBO_NO_VALUES: "no values available...?",
+    COMBO_NO_VALUES: "no values available...?",
 
-  FILTER_UPDATED:"Filter updated.",
-  FILTER_SAVED:"Filter correctly saved."
+    FILTER_UPDATED: "Filter updated.",
+    FILTER_SAVED: "Filter correctly saved."
 
 };
 

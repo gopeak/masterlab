@@ -150,12 +150,14 @@
                                         <a title="清除筛选" href="javascript:;" style="color: grey;display: none"><i class="fa fa-close"></i></a>
                                     </div>
                                     <div>
+                                        {% if (projectPermArr['MIND_SETTING'] is defined) %}
                                         <button class="btn btn-default" type="button" id="toolbar-export" title="导出"  data-placement="left"  >
                                             <img  src="/dev/img/mind/export.png"  style="width: 16px;height:16px"/>
                                         </button>
                                         <button class="btn btn-default " type="button" title="设置"  id="btn-setting" data-dismiss="modal" onclick="$('#modal-setting').modal('show');" >
                                             <i class="fa fa-cog"></i>
                                         </button>
+                                        {% endif %}
                                         <button id="toggle_focus_mode"  href="#" role="button" aria-label="" title="切换聚焦模式" class="btn btn-default" data-mode="0">
                                             <span>
                                                 <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
@@ -187,7 +189,7 @@
                         </div>
 
                         <div style="background-color: #fff;">
-                            <div class="issues-holder">
+                            <div class="issues-holder" style="margin-right: 300px">
                                 <ul id="port">
                                     <div id="tip"  class="hide">  <a target="_blank" href="http://my-mind.github.io/?url=examples%2Ffeatures.mymind">@my_mind_app</a>.</div>
                                 </ul>
@@ -546,7 +548,7 @@
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
 
-                    <h3 class="modal-header-title">思维导图设置</h3>
+                    <h3 class="modal-header-title">事项分解设置</h3>
 
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
@@ -589,18 +591,72 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label"  >是否显示标签：</label>
+                        <label class="control-label"  >显示经办人：</label>
                         <div class="col-sm-10">
                             <div class="form-group col-md-6">
                                 <label class="radio-inline">
-                                    <input type="hidden" name="is_display_label" id="is_display_label" value="0">
-                                    <input type="checkbox" name="checkbox-is_display_label" id="checkbox-is_display_label" value="1">
+                                    <input type="hidden" name="is_display_assignee" id="is_display_assignee" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_assignee" id="checkbox-is_display_assignee" value="1">
                                 </label>
                             </div>
                             <div class="col-md-4">
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label"  >显示优先级：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_priority" id="is_display_priority" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_priority" id="checkbox-is_display_priority" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  >显示状态：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_status" id="is_display_status" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_status" id="checkbox-is_display_status" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  >显示类型：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_type" id="is_display_type" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_type" id="checkbox-is_display_type" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label"  >显示进度：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-6">
+                                <label class="radio-inline">
+                                    <input type="hidden" name="is_display_progress" id="is_display_progress" value="0">
+                                    <input type="checkbox" name="checkbox-is_display_progress" id="checkbox-is_display_progress" value="1">
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="control-label"  ></label>
                         <div class="col-sm-10">
@@ -701,11 +757,13 @@
         "users":{{ users|json_encode()|raw }},
         "project_users":{{ project_users|json_encode()|raw }},
         "project_sprints":{{ sprints|json_encode()|raw }},
-        "projects":{{ projects|json_encode()|raw }}
+        "projects":{{ projects|json_encode()|raw }},
+        "sprint":{{sprints|json_encode()|raw}}
     };
     window.onload = function() {
         MM.App.init();
         MM.App.io.fetchIssues();
+        MM.App.setServerSettings(window.mind_setting);
     }
     $(function () {
         window.$projects = new Project({})

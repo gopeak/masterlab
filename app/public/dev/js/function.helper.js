@@ -33,6 +33,15 @@ function getArrayValue(arr, $key, value ) {
     return null;
 }
 
+function in_array(value, arr ) {
+    for (var i = 0; i < arr.length; i++) {
+        if (value === arr[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function getObjectValue(objs, id) {
     var obj = null;
     for (var i in objs) {
@@ -83,6 +92,10 @@ function objIsEmpty(obj) {
 }
 
 function is_empty(a) {
+
+    if (typeof(a)==='undefined') { // 只能用 === 运算来测试某个值是否是未定义的
+        return true;
+    }
     if (a === undefined) { // 只能用 === 运算来测试某个值是否是未定义的
         return true;
     }
@@ -101,9 +114,6 @@ function is_empty(a) {
     }
     // Array
     if (a.length == 0) { // "",[]
-        return true;
-    }
-    if (!a.length) { // "",[]
         return true;
     }
     // Object {}
@@ -255,4 +265,78 @@ function form_check(resp) {
 
 function sleep (time) {
     return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+/**
+ * 1. Y-m-d
+ * 2. Y-m-d H:i:s
+ * 3. Y年m月d日
+ * 4. Y年m月d日 H时i分
+ * @param timestamp
+ * @param formats
+ * @returns {string}
+ */
+function timestampToDate(timestamp, formats) {
+    formats = formats || 'Y-m-d';
+
+    var zero = function (value) {
+        if (value < 10) {
+            return '0' + value;
+        }
+        return value;
+    };
+    var myDate = timestamp? new Date(timestamp): new Date();
+
+    var year = myDate.getFullYear();
+    var month = zero(myDate.getMonth() + 1);
+    var day = zero(myDate.getDate());
+
+    var hour = zero(myDate.getHours());
+    var minite = zero(myDate.getMinutes());
+    var second = zero(myDate.getSeconds());
+
+    return formats.replace(/Y|m|d|H|i|s/ig, function (matches) {
+        return ({
+            Y: year,
+            m: month,
+            d: day,
+            H: hour,
+            i: minite,
+            s: second
+        })[matches];
+    });
+};
+
+/**
+ * 去除空格
+ * @param str
+ * @returns {*}
+ */
+function trimStr(str){
+    //console.log('str:',str)
+    return  str.replace(/\s+/g,"");
+}
+
+/**
+ * 判断是否定义变量
+ * @param val
+ * @returns {boolean}
+ */
+function isUndefined(val){
+    if (typeof(val)==='undefined') { // 只能用 === 运算来测试某个值是否是未定义的
+        return true;
+    }
+    return false;
+}
+
+function timestampToDate (timestamp) {
+    const dateObj = new Date(+timestamp) // ps, 必须是数字类型，不能是字符串, +运算符把字符串转化为数字，更兼容
+    const year = dateObj.getFullYear() // 获取年，
+    const month = dateObj.getMonth() + 1 // 获取月，必须要加1，因为月份是从0开始计算的
+    const date = dateObj.getDate() // 获取日，记得区分getDay()方法是获取星期几的。
+    return year + '-' + month + '-' + date ;
+}
+
+function pad(str) {
+    return +str >= 10 ? str : '0' + str
 }

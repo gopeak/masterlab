@@ -21,20 +21,24 @@ var IssueAdvQuery = (function () {
         opts: [
                 { value: "LIKE" },
                 { value: "LIKE %...%" },
-                { value: "NOT LIKE" },
+                //{ value: "NOT LIKE" },
                 { value: "=" },
                 { value: "!=" },
+                { value: ">" },
+                { value: ">=" },
+                { value: "<" },
+                { value: "<=" },
                 { value: "REGEXP" },
-                { value: "REGEXP ^...$" },
-                { value: "NOT REGEXP" },
-                { value: "= ''" },
-                { value: "!= ''" },
-                { value: "IN (...)" },
-                { value: "NOT IN (...)" },
-                { value: "BETWEEN" },
-                { value: "NOT BETWEEN" },
-                { value: "IS NULL" },
-                { value: "IS NOT NULL" }
+                { value: "REGEXP ^...$" }
+                //{ value: "NOT REGEXP" },
+                //{ value: "= ''" },
+                //{ value: "!= ''" },
+                //{ value: "IN (...)" },
+                //{ value: "NOT IN (...)" },
+                //{ value: "BETWEEN" },
+                //{ value: "NOT BETWEEN" },
+                //{ value: "IS NULL" },
+                //{ value: "IS NOT NULL" }
             ],
         braces: [
             { value: ""},
@@ -48,7 +52,7 @@ var IssueAdvQuery = (function () {
 
     function IssueAdvQuery(options) {
         var tempOptions = JSON.parse(JSON.stringify(options));
-        console.log(options);
+        console.log("options", options);
         for (var value of Object.values(advFields)) {
             adv_options.fields.push({
                 value: value.title,
@@ -93,7 +97,7 @@ var IssueAdvQuery = (function () {
             });
         }
 
-        adv_options.sprint = tempOptions.sprint;
+        adv_options.sprints = tempOptions.sprint;
 
         for (var [key, value] of Object.entries(tempOptions.users)) {
             adv_options.users.push({
@@ -102,8 +106,6 @@ var IssueAdvQuery = (function () {
                 avatar: value.avatar
             });
         }
-
-        console.log(adv_options);
     };
 
     IssueAdvQuery.prototype.renderAdvQuery = function (details) {
@@ -151,7 +153,8 @@ var IssueAdvQuery = (function () {
                 auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
-                    window.qtipApi.hide()
+                    $('#modal-adv_query').modal('hide');
+                    window.qtipApi.hide();
                     $('#btn-save_adv_filter').qtip('api').toggle(false);
                 } else {
                     notify_error('保存失败,错误信息:' + resp.msg);

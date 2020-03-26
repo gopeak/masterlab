@@ -2,7 +2,9 @@
 
 namespace main\app\model;
 
+use Exception;
 use \main\lib\MyPdo;
+use PDOException;
 
 /**
  *  数据库操作模型基类
@@ -83,11 +85,13 @@ class DbModel extends BaseModel
 
     /**
      * DbModel构造函数，读取系统配置的分库设置，确定要连接的数据库，然后进行DB和db数据库预连接，创建缓存预连接
-     * @throws \Exception
+     * @throws Exception
      * @param bool $persistent 是否使用持久连接，子类继承时在构造函数中传入
      */
     public function __construct($persistent = false)
     {
+        parent::__construct();
+
         $this->dbConfig = getConfigVar('database');
 
         if (defined('XPHP_DEBUG')) {
@@ -122,7 +126,7 @@ class DbModel extends BaseModel
         ) {
             $db_name = $dbConfig['db_name'];
             $table = str_replace("`", "", $this->getTable());
-            $cacheFile = STORAGE_PATH . '/cache/tables/' . $db_name . '-' . $table . '-field_info.php';
+            $cacheFile = STORAGE_PATH . 'cache/tables/' . $db_name . '-' . $table . '-field_info.php';
             if (file_exists($cacheFile)) {
                 $field_info = [];
                 include $cacheFile;
@@ -164,7 +168,7 @@ class DbModel extends BaseModel
     /**
      * 预连接数据库,并没有真正的进行连接
      * @return MyPdo
-     * @throws \Exception
+     * @throws Exception
      */
     public function prepareConnect()
     {
@@ -173,7 +177,7 @@ class DbModel extends BaseModel
             $dbConfig = $this->dbConfig['database'][$this->configName];
             if (!$dbConfig) {
                 $msg = '[CORE] 数据库配置错误';
-                throw new \Exception($msg, 500);
+                throw new Exception($msg, 500);
             }
             self::$pdoDriverInstances[$index] = new  MyPdo($dbConfig, $this->persistent, $this->enableSqlLog);
         }
@@ -183,7 +187,7 @@ class DbModel extends BaseModel
 
     /**
      * 真正的连接数据库
-     * @throws \Exception
+     * @throws Exception
      * @return MyPdo
      */
     public function realConnect()
@@ -275,7 +279,7 @@ class DbModel extends BaseModel
      * @param $id
      * @param $row
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateById($id, $row)
     {
@@ -375,7 +379,7 @@ class DbModel extends BaseModel
      * 参数化插入数据
      * @param $row
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function insert($row)
     {
@@ -386,7 +390,7 @@ class DbModel extends BaseModel
     /**
      * 检查字段是否正确
      * @param $arr
-     * @throws \Exception
+     * @throws Exception
      */
     protected function checkField($arr)
     {
@@ -399,7 +403,7 @@ class DbModel extends BaseModel
             }
         }
         if ($err_field != '') {
-            throw new  \PDOException($err_field . ' insert data field incorrect', 500);
+            throw new  PDOException($err_field . ' insert data field incorrect', 500);
         }
     }
 
@@ -407,7 +411,7 @@ class DbModel extends BaseModel
      * 插入一行数据（重复则忽略）
      * @param $row array 插入数据的键值对数组
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function insertIgnore($row)
     {
@@ -433,7 +437,7 @@ class DbModel extends BaseModel
      * 构造插入的SQL语句目的利于缓存,能够同步缓存的数据,该函数用于缓存中数据是一维数组的情况
      * @param $info
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function replace($info)
     {
@@ -460,7 +464,7 @@ class DbModel extends BaseModel
      * @param $row
      * @param $conditions
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function update($row, $conditions)
     {
@@ -506,7 +510,7 @@ class DbModel extends BaseModel
      * @param $str
      * @param int $type
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function quote($str, $type = \PDO::PARAM_STR)
     {

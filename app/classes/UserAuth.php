@@ -191,7 +191,7 @@ class UserAuth
     }
 
     /**
-     * 字段登录操作
+     * 自动登录操作
      * @param $user
      */
     public function autoLogin($user)
@@ -407,6 +407,43 @@ class UserAuth
 
         return array(UserModel::LOGIN_CODE_OK, $user);
     }
+
+    public function checkLdapByUsername($account, $password)
+    {
+        $userModel = UserModel::getInstance('');
+        $user = $originUser = $userModel->getByUsername($account);
+        $ldapLogic = new LdapLogic();
+        list($ret, $ldapUserInfo) =  $ldapLogic->auth($account, $password);
+        if(!$ret){
+            return array(UserModel::LOGIN_CODE_ERROR, $ldapUserInfo);
+        }
+        if(!empty($ldapUserInfo) && empty($originUser)){
+            $userModel->addUser($ldapUserInfo);
+            $user = $userModel->getByUsername($account);
+        }
+        if(!empty($ldapUserInfo) && !empty($originUser)){
+            $updateArr = [];
+            if($ldapUserInfo['avatar']!=''){
+                $source = PUBLIC_PATH.'/attachment/'.$ldapUserInfo['avatar'];
+                $dest = PUBLIC_PATH.'/attachment/avatar/'.$originUser['uid'].'.jpeg';
+                if(@copy($source,$dest)){
+                    $ldapUserInfo['avatar'] = 'avatar/'.$originUser['uid'].'.jpeg';
+                    @unlink($source);
+                }
+                $updateArr['avatar'] = $ldapUserInfo['avatar'];
+            }
+            if($originUser['display_name']!=$ldapUserInfo['display_name']){
+                $updateArr['display_name'] = $ldapUserInfo['display_name'];
+            }
+            if(!empty($updateArr)){
+                $userModel->updateById($originUser['uid'], $updateArr);
+            }
+        }
+
+        return array(UserModel::LOGIN_CODE_OK, $user);
+    }
+
+
 
     /**
      * 只允许用户在一个地方登录,踢掉当前用户的其他登录状态，直接删除session文件

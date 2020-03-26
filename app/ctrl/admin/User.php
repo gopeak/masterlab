@@ -60,7 +60,7 @@ class User extends BaseAdminCtrl
         $data['status_normal'] = UserModel::STATUS_NORMAL;
         $data['status_disabled'] = UserModel::STATUS_DISABLED;
         $data['status_approval'] = UserModel::STATUS_PENDING_APPROVAL;
-        $this->render('gitlab/admin/users.php', $data);
+        $this->render('twig/admin/user/users.twig', $data);
     }
 
     /**
@@ -125,6 +125,7 @@ class User extends BaseAdminCtrl
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
         $data['users'] = array_values($users);
+        $data['cur_group_id'] = $groupId;
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -156,7 +157,7 @@ class User extends BaseAdminCtrl
         $userInfo['status'] = UserModel::STATUS_NORMAL;
         $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
-        $this->ajaxSuccess('操作成功');
+        $this->ajaxSuccess('提示','操作成功');
     }
 
     /**

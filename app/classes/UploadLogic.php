@@ -65,7 +65,16 @@ class UploadLogic
         if (!isset($extArr[$fileType])) {
             $fileType = 'all';
         }
-        $extArr['all'] = $extArr['image'] + $extArr['media'] + $extArr['file'];
+        $extArr['all'] = [];
+        foreach ($extArr['image'] as $item) {
+            $extArr['all'][] = $item;
+        }
+        foreach ($extArr['media'] as $item) {
+            $extArr['all'][] = $item;
+        }
+        foreach ($extArr['file'] as $item) {
+            $extArr['all'][] = $item;
+        }
 
         //PHP上传失败
         if ($_FILES[$fieldName]['error'] != UPLOAD_ERR_OK) {

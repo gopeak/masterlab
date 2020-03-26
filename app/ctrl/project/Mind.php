@@ -90,7 +90,7 @@ class Mind extends BaseUserCtrl
         $projectMindModel = new ProjectMindSettingModel();
         $dbSettingsArr = $projectMindModel->getByProject($projectId);
         $settingArr = ProjectMind::$initSettingArr;
-        if (!empty($settingsArr)) {
+        if (!empty($dbSettingsArr)) {
             foreach ($dbSettingsArr as $item) {
                 $settingArr[$item['setting_key']] = $item['setting_value'];
             }
@@ -151,7 +151,6 @@ class Mind extends BaseUserCtrl
         }
         $data['project_users'] = $projectUsers;
 
-        $projectGanttModel = new ProjectMindSettingModel();
         $class = new ProjectMind();
 
         $filterArr = [];
@@ -296,7 +295,10 @@ class Mind extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
-
+        //print_r($this->projectPermArr);
+        if(!isset($this->projectPermArr[PermissionLogic::MIND_SETTING]) || $this->projectPermArr[PermissionLogic::MIND_SETTING]!=1){
+            $this->ajaxFailed('提示', '您没有此权限进行此操作');
+        }
         $projectGanttModel = new ProjectMindSettingModel();
         $updateInfo = [];
         foreach (ProjectMind::$initSettingArr as $key => $item) {

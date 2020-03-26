@@ -15,8 +15,11 @@ use main\app\ctrl\Agile;
 use main\app\ctrl\project\Mind;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
+use main\app\model\issue\IssueTypeSchemeModel;
+use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
+use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
@@ -316,6 +319,18 @@ class Main extends Base
 
         $data['root_domain'] = ROOT_URL;
 
+        // 事项类型方案
+        $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+        $data['issue_type_scheme_id'] = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        // 事项类型方案列表
+        $issueTypeSchemeModel = new IssueTypeSchemeModel();
+        $data['issue_type_schemes'] = $issueTypeSchemeModel->getAll();
+
+        // 状态流方案列表
+        $workflowSchemeModel = new WorkflowSchemeModel();
+        $data['workflow_schemes'] = $workflowSchemeModel->getAll();
+
         $data = RewriteUrl::setProjectData($data);
 
         $this->render('gitlab/project/setting_basic_info.php', $data);
@@ -451,6 +466,29 @@ class Main extends Base
 
         $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_label.php', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function pageSettingsCatalog()
+    {
+        if (!PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
+            if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
+                $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
+                die;
+            }
+        }
+
+        $data = [];
+        $data['title'] = '分 类';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'catalog';
+        $data['query_str'] = http_build_query($_GET);
+
+        $data = RewriteUrl::setProjectData($data);
+        $data['project_labels'] = ProjectLabelModel::getInstance()->getByProject($data['project_id']);
+        $this->render('twig/project/setting_catalog.twig', $data);
     }
 
     /**
@@ -762,8 +800,15 @@ class Main extends Base
         if (!$ret['errorCode']) {
             // 初始化项目角色
             list($flagInitRole, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
+            ProjectLogic::initLabelAndCatalog($ret['data']['project_id']);
+
             // 把项目负责人赋予该项目的管理员权限
             list($flagAssignAdminRole) = ProjectLogic::assignAdminRoleForProjectLeader($ret['data']['project_id'], $info['lead']);
+            // 把项目创建人添加到该项目，并赋予项目角色-普通用户
+            if ($uid != $info['lead']) {
+                ProjectLogic::assignProjectRoleForUser($ret['data']['project_id'], $uid, 'Users');
+            }
+
 
             //写入操作日志
             $logData = [];

@@ -11,8 +11,9 @@
   <link rel=stylesheet href="gantt.css" type="text/css">
   <link rel=stylesheet href="ganttPrint.css" type="text/css" media="print">
 
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="/dev/js/function.helper.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+  <script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
 
   <script src="libs/jquery/jquery.livequery.1.1.1.min.js"></script>
   <script src="libs/jquery/jquery.timers.js"></script>
@@ -106,7 +107,7 @@ $(function() {
 
 
 function getDemoProject(){
-  //console.debug("getDemoProject")
+ console.debug("getDemoProject")
 ret= {"tasks":
         [
       {"id": -1, "name": "Gantt editor", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 0, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 20, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},

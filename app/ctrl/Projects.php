@@ -6,6 +6,7 @@ use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
+use main\app\model\issue\IssueModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;
@@ -14,6 +15,7 @@ use main\app\classes\ConfigLogic;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
 use main\app\classes\UploadLogic;
+use main\app\model\user\UserSettingModel;
 use main\lib\MySqlDump;
 
 /**
@@ -39,6 +41,8 @@ class Projects extends BaseUserCtrl
      */
     public function pageIndex()
     {
+        $userId = UserAuth::getId();
+
         $data = [];
         $data['title'] = '项目';
         $data['sub_nav_active'] = 'project';
@@ -78,6 +82,14 @@ class Projects extends BaseUserCtrl
             $data['is_admin'] = true;
         }
 
+        // 获取用户搜索排序的个性化设置
+        $data['project_sort'] = '';
+        $userSettingModel = new UserSettingModel();
+        $projectsSort = $userSettingModel->getSettingByKey($userId, 'projects_sort');
+        if ($projectsSort) {
+            $data['projects_sort'] = $projectsSort;
+        }
+
         ConfigLogic::getAllConfigs($data);
 
         $this->render('gitlab/project/main.php', $data);
@@ -93,6 +105,34 @@ class Projects extends BaseUserCtrl
         $typeId = intval($typeId);
         $isAdmin = false;
 
+        $searchSortArr = [
+            'latest_activity_desc' => ['issue_update_time', 'desc'],
+            'created_desc' => ['create_time', 'desc'],
+            'name_asc' => ['name', 'asc'],
+            'lead_asc' => ['lead', 'asc'],
+        ];
+        $searchKey = '';
+        if (isset($_GET['name']) && !empty($_GET['name'])) {
+            $searchKey = trim($_GET['name']);
+        }
+        $searchOrderBy = 'create_time';
+        $searchSort = 'desc';
+        if (isset($_GET['sort']) && !empty($_GET['sort'])) {
+            if (array_key_exists($_GET['sort'], $searchSortArr)) {
+                $searchOrderBy = $searchSortArr[$_GET['sort']][0];
+                $searchSort = $searchSortArr[$_GET['sort']][1];
+
+                $userSettingModel = new UserSettingModel();
+                $projectsSort = $userSettingModel->getSettingByKey($userId, 'projects_sort');
+                if ($projectsSort) {
+                    $userSettingModel->updateSetting($userId, 'projects_sort', $_GET['sort']);
+                } else {
+                    $userSettingModel->insertSetting($userId, 'projects_sort', $_GET['sort']);
+                }
+            }
+        }
+        
+
         // 至少获取20个项目用户
         $fetchProjectUserNum = 20;
         if (isset($_GET['fetch_project_user_num'])) {
@@ -102,11 +142,15 @@ class Projects extends BaseUserCtrl
         $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
         $projectModel = new ProjectModel();
+
         if ($typeId) {
-            $projects = $projectModel->filterByType($typeId, false);
+            //$projects = $projectModel->filterByType($typeId, false);
+            $projects = $projectModel->filterByNameOrKeyAndType($searchKey, $typeId, $searchOrderBy, $searchSort);
         } else {
-            $projects = $projectModel->getAll(false);
+            //$projects = $projectModel->getAll(false);
+            $projects = $projectModel->filterByNameOrKey($searchKey, $searchOrderBy, $searchSort);
         }
+
 
         if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $isAdmin = true;

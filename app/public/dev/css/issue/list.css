@@ -384,11 +384,15 @@ table tbody tr td.width_7_9 {
     margin-bottom: 8px;
 }
 
-.status-select {
+.item-list-select {
     position: relative;
+    -moz-user-select:none; /*火狐*/
+    -webkit-user-select:none; /*webkit浏览器*/
+    -ms-user-select:none; /*IE10*/
+    user-select:none;
 }
 
-.status-select .status-list {
+.item-list-select .item-data-list {
     display: none;
     position: absolute;
     top: 100%;
@@ -405,16 +409,37 @@ table tbody tr td.width_7_9 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     width: 160px;
     min-width: 140px;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
-.status-select .status-list li {
+.item-list-select > span,
+.item-list-select a {
+    display: inline-block;
+    content: "";
+    min-width: 20px;
+    min-height: 20px;
+}
+
+.item-list-select .item-data-list li {
     line-height: 30px;
     padding: 0 20px;
     border-radius: 2px;
     cursor: pointer;
 }
 
-.status-select .status-list li:hover{
+.item-list-select .item-data-list li img.assignee-img {
+    display: inline-block;
+    overflow: hidden;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.item-list-select .item-data-list li:hover{
     background: #f6fafd;
 }
 
@@ -540,4 +565,8 @@ table tbody tr td.width_7_9 {
 .btn-adv-search {
     margin-left: -1px;
     outline: none;
+}
+
+.filtered-search-token {
+    cursor: pointer;
 }

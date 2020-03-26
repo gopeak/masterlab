@@ -139,7 +139,7 @@
                                                    title="This field is required."
                                                    type="password" name="password" id="user_password" value=""/>
                                         </div>
-                                        {% if captcha_login_switch %}
+                                        {% if login_require_captcha %}
                                             <div class="form-group">
                                                 <label for="user_password">验证码</label>
                                                 <input class="form-control bottom" required="required"
@@ -151,6 +151,15 @@
                                                      src="/passport/output_captcha?mode=login&n={{ random(100, 999) }}">
                                                 <a id="refresh_login_vcode" href="javascript:void(0);">换一张</a>
                                             </div>
+                                        {% endif %}
+                                        {% if ldap_enable %}
+                                        <div class="remember-me checkbox">
+                                            <label for="checkbox_schema_ldap">
+                                                <input class="remember-me-checkbox" type="checkbox" value="1"
+                                                       name="schema_ldap" id="checkbox_schema_ldap"/>
+                                                <span>通过LDAP登录</span>
+                                            </label>
+                                        </div>
                                         {% endif %}
                                         <div class="remember-me checkbox">
                                             <label for="user_remember_me">
@@ -174,7 +183,7 @@
 
                             <div class="tab-pane login-box" id="register-pane" role="tabpanel">
                                 <div class="login-body">
-                                    {% if is_allow_user_reg %}
+                                    {% if allow_user_reg %}
                                     <form class="new_new_user gl-show-field-errors" aria-live="assertive"
                                           id="new_new_user" action="/passport/register" accept-charset="UTF-8" method="post">
 
@@ -223,7 +232,7 @@
                                                    type="password" name="password" id="new_user_password"/>
                                             <p id="tip_error_password" class="gl-field-error hide"></p>
                                         </div>
-                                        {% if captcha_reg_switch %}
+                                        {% if reg_require_captcha %}
                                             <div class="form-group">
                                                 <label for="reg_vcode">验证码</label>
                                                 <input class="form-control middle" required="required"

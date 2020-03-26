@@ -38,7 +38,7 @@ class ProjectModel extends CacheModel
     public function getAllCount()
     {
         $field = "count(*) as cc ";
-        return (int)$this->getOne($field, []);
+        return (int)$this->getOne($field, ['archived' => 'N']);
     }
 
     public function getAll($primaryKey = true, $fields = '*')
@@ -47,7 +47,7 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array(), null, 'id', 'asc', null, $primaryKey);
+        return $this->getRows($fields, array('archived' => 'N'), null, 'id', 'desc', null, $primaryKey);
     }
 
     public function filterByType($typeId, $primaryKey = false, $fields = '*')
@@ -56,15 +56,41 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array('type' => $typeId), null, 'id', 'asc', null, $primaryKey);
+        return $this->getRows($fields, array('type' => $typeId, 'archived' => 'N'), null, 'id', 'desc', null, $primaryKey);
     }
 
-    public function filterByNameOrKey($keyword)
+    /**
+     * 通过名字搜索
+     * @param $keyword
+     * @param string $orderBy
+     * @param string $sort
+     * @return array
+     */
+    public function filterByNameOrKey($keyword, $orderBy = 'id', $sort = 'desc')
     {
         $table = $this->getTable();
         $params = array();
-        $where = wrapBlank("WHERE `name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%'");
-        $sql = "SELECT * FROM " . $table . $where;
+        $where = wrapBlank("WHERE (`name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%') AND archived='N' ");
+        $orderBy = " ORDER BY $orderBy $sort";
+        $sql = "SELECT * FROM " . $table . $where . $orderBy;
+        return $this->db->getRows($sql, $params, false);
+    }
+
+    /**
+     * 通过名字搜索(带类型)
+     * @param $keyword
+     * @param $typeId
+     * @param string $orderBy
+     * @param string $sort
+     * @return array
+     */
+    public function filterByNameOrKeyAndType($keyword, $typeId, $orderBy = 'id', $sort = 'desc')
+    {
+        $table = $this->getTable();
+        $params = array();
+        $where = wrapBlank("WHERE `type`=$typeId AND (`name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%') AND archived='N' ");
+        $orderBy = " ORDER BY $orderBy $sort";
+        $sql = "SELECT * FROM " . $table . $where . $orderBy;
         return $this->db->getRows($sql, $params, false);
     }
 
@@ -83,8 +109,8 @@ class ProjectModel extends CacheModel
 
         $start = $page_size * ($page - 1);
         $limit = wrapBlank("LIMIT {$start}, " . $page_size);
-        $order = wrapBlank("ORDER BY id ASC");
-        $where = wrapBlank("WHERE 1");
+        $order = wrapBlank("ORDER BY id DESC");
+        $where = wrapBlank("WHERE archived='N' ");
         $where .= $order . $limit;
         $sql = "SELECT * FROM " . $table . $where;
         $rows = $this->db->getRows($sql, $params, false);
@@ -203,7 +229,7 @@ class ProjectModel extends CacheModel
     {
         $idInString = implode(",", $projectIdArr);
 
-        $table = $this->prefix . $this->table;
+        $table = $this->getTable();
         $params = array();
 
         $where = wrapBlank("WHERE id IN (");

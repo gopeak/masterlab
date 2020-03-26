@@ -19,6 +19,7 @@
 <script src="/gitlab/assets/webpack/common.bundle.js"></script>
 <script src="/gitlab/assets/webpack/main.bundle.js?v={{_version}}"></script>
 <script src="/dev/js/browser_info.js?v={{_version}}"></script>
+<script src="/dev/js/upgrade.js?v={{_version}}"></script>
 <script src="/dev/lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
 <!-- recoding -->
 
@@ -40,6 +41,9 @@
 <!--script src="/dev/js/csrf.js?v={{_version}}"></script-->
 <script>
     $(function () {
+
+        var upgradeObj = new Upgrade(current_version);
+
         function csrfSafeMethod(method) {
             // 匹配method的请求模式
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -57,7 +61,6 @@
         /*ajax预处理缓存*/
         var ajaxRequestList = {};
 
-
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
             if (Object.prototype.toString.call(options.data) == "[object FormData]") {
                 options.data.append("_csrftoken", "{{csrf_token}}");
@@ -71,7 +74,6 @@
                 }
             }
             //console.log(options.headers);
-
             /*
                  判断唯一标识,同一个ajax只能同时存在一次
                  single(string): 唯一标识
@@ -98,7 +100,6 @@
                     }
                 }
             }
-
 
         });
     })

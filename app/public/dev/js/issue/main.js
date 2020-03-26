@@ -114,7 +114,7 @@ var IssueMain = (function () {
     IssueMain.prototype.saveFilter = function (name) {
         window.is_save_filter = '1';
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
-        console.log(searchQuery);
+        return false;
         window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
@@ -129,6 +129,7 @@ var IssueMain = (function () {
                     auth_check(resp);
                     if (resp.ret == '200') {
                         notify_success('保存成功');
+                        setTimeout('window.location.reload()', 1000);
                         //window.qtipApi.hide()
                         $('#custom-filter-more').qtip('api').toggle(false);
                     } else {
@@ -149,26 +150,15 @@ var IssueMain = (function () {
 
     IssueMain.prototype.initCreateIssueType = function (issue_types, on_change) {
 
-        var icons = {
-            "1": "fa-bug",
-            "2": "fa-plus",
-            "3": "fa-tasks",
-            "4": "fa-arrow-circle-o-up",
-            "5": "fa-arrow-circle-o-up",
-            "6": "fa-users",
-            "7": "fa-cogs",
-            "8": "fa-address-book-o"
-        }
-
         var issue_types_select = $('#create_issue_types_select');
-        $('#create_issue_types_select').empty();
+        issue_types_select.empty();
 
         var first_issue_type = {};
         for (var i = 0; i < issue_types.length; i++) {
             if (i == 0) {
                 first_issue_type = issue_types[i];
             }
-            var content = "<div class=issue-types-icon><i class=" + icons[issue_types[i].id] + "></i> " + issue_types[i].name + "</div>"
+            var content = "<div class=issue-types-icon><i class=" + issue_types[i].font_awesome + "></i> " + issue_types[i].name + "</div>"
             issue_types_select.append("<option data-content='" + content + "' value='" + issue_types[i].id + "'>" + issue_types[i].name + "</option>")
         }
         console.log(issue_types_select)
@@ -317,7 +307,6 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.skipPager = function (page, success) {
-        console.log("Page item clicked, page: " + page);
         $("#filter_page").val(page);
         _options.query_param_obj["page"] = page;
         IssueMain.prototype.fetchIssueMains(function () {
@@ -362,12 +351,15 @@ var IssueMain = (function () {
         //     {"logic":"and", "start_braces":"",  "field":"summary",     "opt":"regexp",    "value":encodeURIComponent("^标题[^>]+\\d+"),                  "end_braces":""}
         // ];
         let btn_adv_sumit = $('#btn-adv_submit');
+        let sort_by = $('#adv_sort_by').val();
+        let sort_field = $('#adv_sort_field').val();
+
         btn_adv_sumit.addClass('disabled');
         $.ajax({
             type: 'get',
             dataType: "json",
             url: "/issue/main/adv_filter",
-            data: { project_id: window.cur_project_id, adv_query_json: jsonData },
+            data: { project_id: window.cur_project_id, adv_query_json: jsonData, sort_field: sort_field, sort_by: sort_by },
             success: function (resp) {
                 btn_adv_sumit.removeClass('disabled');
                 $('#modal-adv_query').modal('hide');
@@ -382,7 +374,6 @@ var IssueMain = (function () {
         });
     };
     IssueMain.prototype.handleRenderIssues = function (resp, success) {
-
         auth_check(resp);
         let _issues_list = resp.data.issues;
         let _issue_length = 0;
@@ -446,7 +437,7 @@ var IssueMain = (function () {
                 }
             };
             $('#ampagination-bootstrap').bootstrapPaginator(options);
-            console.log(success);
+            //console.log(success);
             if (typeof (success) != 'undefined' && typeof (success) === "function") {
                 success(resp.data);
             }
@@ -461,6 +452,8 @@ var IssueMain = (function () {
             $(".issue_create_child").bind("click", function () {
                 $("#btn-create-issue").click();
                 $('#master_issue_id').val($(this).data('issue_id'));
+                $('#create_master_div').show();
+                $('#create_master_title').html($(this).data('title'));
             });
 
 
@@ -484,27 +477,172 @@ var IssueMain = (function () {
                 $(el).html(t)
             });
 
+            $(".sprint-select > a").on("click", function(e){
+                if(e.preventDefault){
+                    e.preventDefault();
+                 }else{
+                    e.returnValue = false;
+                 }
+            });
+
+            $(".module-select > a").on("click", function(e){
+                if(e.preventDefault){
+                    e.preventDefault();
+                 }else{
+                    e.returnValue = false;
+                 }
+            });
+
+            $(".assignee-select > span > a").on("click", function(e){
+                if(e.preventDefault){
+                    e.preventDefault();
+                 }else{
+                    e.returnValue = false;
+                 }
+            });
+
+            $(".priority-select > span").bind("dblclick", function () {
+                var $self = $(this);
+                var issue_id = $self.parent().data('issue_id');
+                var list_box = $self.siblings(".priority-list");
+                
+                if (list_box.is(":visible")) {
+                    return false;
+                }
+                list_box.slideDown(100);
+
+                var priority_list = _issueConfig.priority;
+                var html = "";
+                for (let i in priority_list) {
+                    html += `<li data-color="${priority_list[i].status_color}" data-value="${priority_list[i].id}"><span style="color:${priority_list[i].status_color}" class="prepend-left-5">${priority_list[i].name}</span></li>`;
+                }
+                list_box.html(html);
+
+                $(".priority-list li").on("click", function () {
+                    var id = $(this).data("value");
+                    var color = $(this).data("color")
+                    var text = $(this).text()
+                    IssueMain.prototype.updateIssuePriority(issue_id, id, $self, text, color);
+                });
+
+                $(document).on("click", function () {
+                    list_box.slideUp(100);
+                })
+            });
+
+            $(".module-select > a").bind("dblclick", function () {
+                var $self = $(this);
+                var issue_id = $self.parent().data('issue_id');
+                var list_box = $self.siblings(".module-list");
+                
+                if (list_box.is(":visible")) {
+                    return false;
+                }
+                list_box.slideDown(100);
+
+                var module_list = _issueConfig.issue_module;
+                //console.log(module_list);
+                var html = "";
+                for (var value of Object.values(module_list)) {
+                    html += `<li data-name="${value.name}" data-value="${value.k}"><span class="prepend-left-5">${value.name}</span></li>`;
+                }
+                list_box.html(html);
+
+                $(".module-list li").on("click", function () {
+                    var id = $(this).data("value");
+                    var name = $(this).data("name")
+                    var text = $(this).text()
+                    IssueMain.prototype.updateIssueModule(issue_id, id, $self, text, name);
+                });
+
+                $(document).on("click", function () {
+                    list_box.slideUp(100);
+                });
+                return false;
+            });
+            
+
+            $(".sprint-select > a").bind("dblclick", function (e) {
+                var $self = $(this);
+                var issue_id = $self.parent().data('issue_id');
+                var list_box = $self.siblings(".sprint-list");
+                
+                if (list_box.is(":visible")) {
+                    return false;
+                }
+                list_box.slideDown(100);
+
+                var sprint_list = _issueConfig.sprint;
+                var html = "";
+                for (var i = 0; i < sprint_list.length; i++) {
+                    html += `<li data-name="${sprint_list[i].name}" data-value="${sprint_list[i].id}"><span class="prepend-left-5">${sprint_list[i].name}</span></li>`;
+                }
+                list_box.html(html);
+
+                $(".sprint-list li").on("click", function () {
+                    var id = $(this).data("value");
+                    var name = $(this).data("name")
+                    IssueMain.prototype.updateIssueSprint(issue_id, id, $self, name);
+                });
+
+                $(document).on("click", function () {
+                    list_box.slideUp(100);
+                });
+                return false;
+            });
+
+            $(".assignee-select > span > a").bind("dblclick", function () {
+                var $self = $(this);
+                var issue_id = $self.parent().parent().data('issue_id');
+                var list_box = $self.parent().siblings(".assignee-list");
+                
+                if (list_box.is(":visible")) {
+                    return false;
+                }
+                list_box.slideDown(100);
+
+                var assignee_list = _issueConfig.project_users;
+                var html = "";
+                for (var i = 0; i < assignee_list.length; i++) {
+                    html += `<li data-img="${assignee_list[i].avatar}" data-name="${assignee_list[i].display_name}" data-value="${assignee_list[i].uid}"><img class="assignee-img" src="${assignee_list[i].avatar}" /><span>${assignee_list[i].display_name}</span></li>`;
+                }
+                list_box.html(html);
+
+                $(".assignee-list li").on("click", function () {
+                    var id = $(this).data("value");
+                    var img = $(this).data("img");
+                    var text = $(this).data("name");
+                    IssueMain.prototype.updateIssueAssignee(issue_id, id, $self, name, img);
+                });
+
+                $(document).on("click", function () {
+                    list_box.slideUp(100);
+                });                
+            });
+
             $(".resolve-select").bind("dblclick", function () {
-                let $self = $(this);
-                let issue_id = $self.data('issue_id');
-                let list_box = $self.children(".resolve-list");
+                var $self = $(this);
+                var issue_id = $self.data('issue_id');
+                var list_box = $self.children(".resolve-list");
 
                 if (list_box.is(":visible")) {
                     return false;
                 }
                 list_box.slideDown(100);
 
-                let resolve_list = _issueConfig.issue_resolve;
-                let html = "";
+                var resolve_list = _issueConfig.issue_resolve;
+                var html = "";
                 for (let i in resolve_list) {
                     //console.log(resolve_list[i]);
-                    html += `<li data-value="${resolve_list[i].id}"><span style="color:${resolve_list[i].color}" class="prepend-left-5">${resolve_list[i].name}</span></li>`;
+                    html += `<li data-color="${resolve_list[i].color}" data-value="${resolve_list[i].id}"><span style="color:${resolve_list[i].color}" class="prepend-left-5">${resolve_list[i].name}</span></li>`;
                 }
                 list_box.html(html);
 
                 $(".resolve-list li").on("click", function () {
-                    let id = $(this).data("value");
-                    IssueDetail.prototype.updateIssueResolve(issue_id, id);
+                    var id = $(this).data("value");
+                    var color = $(this).data("color")
+                    var text = $(this).text()
+                    IssueDetail.prototype.updateIssueResolve(issue_id, id, $self, text, color);
                 });
 
                 $(document).on("click", function () {
@@ -541,14 +679,15 @@ var IssueMain = (function () {
                         let html = "";
 
                         for (var status of status_list) {
-                            html += `<li data-value="${status.id}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
+                            html += `<li data-value="${status.id}" data-color="${status.color}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
                         }
                         list_box.html(html);
 
                         $(".status-list li").on("click", function () {
                             let id = $(this).data("value");
-
-                            IssueDetail.prototype.updateIssueStatus(issue_id, id);
+                            let text = $(this).text();
+                            let color = $(this).data("color")
+                            IssueDetail.prototype.updateIssueStatus(issue_id, id, $self, text, color)
                         });
 
                         $(document).on("click", function () {
@@ -598,9 +737,11 @@ var IssueMain = (function () {
 
 
             $(".have_children").bind("click", function () {
-                var issue_id = $(this).data('issue_id');
-                $('#tr_subtask_' + issue_id).toggleClass('hide');
-                IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                if (isFloatPart) {
+                    var issue_id = $(this).data('issue_id');
+                    $('#tr_subtask_' + issue_id).removeClass('hide');
+                    IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                }
             });
 
             $("#btn-join_sprint").bind("click", function () {
@@ -684,6 +825,7 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.fetchChildren = function (issue_id, display_id) {
+        loading.show('#' + display_id);
         $.ajax({
             type: 'get',
             dataType: "json",
@@ -702,9 +844,11 @@ var IssueMain = (function () {
                 var result = template(resp.data);
                 console.log(resp.data);
                 $('#' + display_id).html(result);
+                loading.hide('#' + display_id);
 
             },
             error: function (res) {
+                loading.hide('#' + display_id);
                 notify_error("请求数据错误" + res);
             }
         });
@@ -1097,6 +1241,8 @@ var IssueMain = (function () {
                     $(id).html(html);
                 }
 
+
+
                 if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
                     $('#create_tabs').show();
@@ -1112,20 +1258,26 @@ var IssueMain = (function () {
 
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
+
+
+                /*
+                 * websocket广州宣讲添加
                 if (typeof (_is_ai_cmd_create) != "undefined") {
-                    $('#create_issue_text_summary').val(_ws_summary);
+                    if (_ws_summary) {
+                        $('#create_issue_text_summary').val(_ws_summary);
+                    }
                     $('#create_issue_priority').val('3');
                     $('.selectpicker').selectpicker('refresh');
                     $('.assign-to-me-link ').click();
                 }
-
+                */
 
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    };
 
     IssueMain.prototype.getFormData = function () {
         var _temp = $('#create_issue').serializeObject();
@@ -1329,17 +1481,6 @@ var IssueMain = (function () {
 
         $(".simplemde_text").each(function (i) {
             var id = $(this).attr('id');
-            // if (typeof(_simplemde[id]) == 'undefined') {
-            //     // var mk = new SimpleMDE({
-            //     //     element: document.getElementById(id),
-            //     //     autoDownloadFontAwesome: false,
-            //     //     toolbar:toolbars,
-            //     //     initialValue:desc_tpl_value
-            //     // });
-            //
-            //     // _simplemde[id] = mk;
-            // }
-
             _editor_md = editormd(id, {
                 width: "100%",
                 height: 220,
@@ -1365,6 +1506,7 @@ var IssueMain = (function () {
         }
         $(".fine_uploader_img").each(function (i) {
             var id = $(this).attr('id');
+            console.log("id", id);
             //if( typeof(window._fineUploader[id])=='undefined' ){
             var uploader = new qq.FineUploader({
                 element: document.getElementById(id),
@@ -1462,7 +1604,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type, updatedIssueTypeId) {
-        if(typeof MM !='undefined'){
+        if (typeof MM != 'undefined') {
             MM.App.editing = true;
         }
 
@@ -1604,6 +1746,103 @@ var IssueMain = (function () {
             xhr.open('POST', '/issue/main/pasteUpload', true);
             xhr.setRequestHeader('FILENAME', encodeURIComponent(file.name));
             xhr.send(file);
+        });
+    }
+
+    IssueMain.prototype.updateIssuePriority = function (issue_id, priority_id, target, text, color) {
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/update/",
+            data: { issue_id: issue_id, params: { priority: priority_id } },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret === '200') {
+                    target.text(text)
+                    target.css('color', color)
+                    notify_success('操作成功');
+                } else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.updateIssueModule = function (issue_id, module_id, target, name) {
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/update/",
+            data: { issue_id: issue_id, params: { module: module_id } },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret === '200') {
+                    target.text(name)
+                    target.attr('href', "?state=opened&模块=" + name);
+                    notify_success('操作成功');
+                } else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.updateIssueSprint = function (issue_id, sprint_id, target, name) {
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/update/",
+            data: { issue_id: issue_id, params: { sprint: sprint_id } },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret === '200') {
+                    target.text(name)
+                    target.attr('href', "?state=opened&迭代=" + name);
+                    notify_success('操作成功');
+                } else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.updateIssueAssignee = function (issue_id, assignee_id, target, name, img) {
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/update/",
+            data: { issue_id: issue_id, params: { assignee: assignee_id } },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret === '200') {
+                    target.attr("href", "/user/profile/" + assignee_id);
+                    target.find("img").attr("data-original-title", name);
+                    target.find("img").attr('src', img);
+                    notify_success('操作成功');
+                } else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
         });
     }
 

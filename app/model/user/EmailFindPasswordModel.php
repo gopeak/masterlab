@@ -22,7 +22,7 @@ class EmailFindPasswordModel extends CacheModel
 
     /**
      *  获取邮箱验证码的记录信息,通过Phone
-     * @param user_
+     * @param $email
      * @return array
      */
     public function getByEmail($email)

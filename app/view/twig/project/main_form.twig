@@ -70,7 +70,7 @@
 										<label class="control-label" for="">项目名称
 											<i class="required">*</i>
 										</label>
-										<div class="col-sm-4">
+										<div class="col-sm-6">
 											<input placeholder="请输入名称,最多{{project_name_max_length}}字符" class="form-control" type="text" name="params[name]" id="project_name" maxlength="{{project_name_max_length}}">
 											<p id="tip-project_name" class="gl-field-error hide"></p>
 										</div>
@@ -83,7 +83,7 @@
 												<i class="required">*</i>
 											</span>
 										</label>
-										<div class="col-sm-4">
+										<div class="col-sm-6">
 											<div class="select2-container">
 												<select class="selectpicker js-org" data-live-search="true" name="params[org_id]">
 													{% for org in org_list %}
@@ -100,11 +100,11 @@
 											<span>项目Key <i class="required">*</i>
 											</span>
 										</label>
-										<div class="col-sm-4">
+										<div class="col-sm-6">
 											<div class="input-group">
 												<span class="input-group-addon" id="basic-addon3">{{root_domain}}<span class="js-org-key"></span>/
 												</span>
-												<input placeholder="" class="form-control" type="text" name="params[key]" id="project_key" maxlength="{{project_key_max_length}}">
+												<input placeholder="请输入项目Key,最大长度{{project_key_max_length}}" class="form-control" type="text" name="params[key]" id="project_key" maxlength="{{project_key_max_length}}">
 											</div>
 
 											<p id="tip-project_key" class="gl-field-error hide"></p>
@@ -130,7 +130,7 @@
 											项目类型
 											<i class="required">*</i>
 										</label>
-										<div class="col-sm-4 radio-with">
+										<div class="col-sm-6 radio-with">
 											{% for type_id,type_item in full_type %}
 												<div class="radio">
 													<label>
@@ -204,7 +204,7 @@
 												<textarea style="display:none;" name="params[detail]" id="project_detail"></textarea>
 											</div>
 											<div class="help-block">
-												<a href="https://zh.wikipedia.org/wiki/Markdown" target="_blank">Markdown写作帮助</a>
+												<a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank">Markdown写作帮助</a>
 											</div>
 										</div>
 									</div>
@@ -417,7 +417,7 @@
 				$('.js-org-key').text(defaultPath);
 				$(".js-org").on("changed.bs.select", function (ev, v) {
 					var path = $(".js-org").find("option:selected").attr("data-org_path");
-					$(".js-org-key").text(path + '/')
+					$(".js-org-key").text(path);
 				})
 			});
 		</script>

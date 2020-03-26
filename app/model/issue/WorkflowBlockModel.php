@@ -5,7 +5,7 @@ namespace main\app\model\issue;
 use main\app\model\CacheModel;
 
 /**
- *  工作流数据
+ *  状态流数据
  */
 class WorkflowBlockModel extends CacheModel
 {

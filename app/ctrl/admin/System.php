@@ -63,7 +63,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'setting';
         $data['left_nav_active'] = 'setting';
-        $this->render('gitlab/admin/system_basic_setting.php', $data);
+        $this->render('twig/admin/system/system_basic_setting.twig', $data);
     }
 
     /**
@@ -76,7 +76,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'setting';
         $data['left_nav_active'] = 'setting';
-        $this->render('gitlab/admin/system_basic_setting_form.php', $data);
+        $this->render('twig/admin/system/system_basic_setting_form.twig', $data);
     }
 
     /**
@@ -154,7 +154,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'security';
         $data['left_nav_active'] = 'global_permission_bak';
-        $this->render('gitlab/admin/system_global_permission_bak.php', $data);
+        $this->render('twig/admin/system/system_global_permission_bak.twig', $data);
     }
 
     /**
@@ -175,7 +175,7 @@ class System extends BaseAdminCtrl
         }
         $data['users'] = $users;
 
-        $this->render('gitlab/admin/system_global_permission.php', $data);
+        $this->render('twig/admin/system/system_global_permission.twig', $data);
     }
 
 
@@ -697,7 +697,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'security';
         $data['left_nav_active'] = 'password_strategy';
-        $this->render('gitlab/admin/system_password_strategy.php', $data);
+        $this->render('twig/admin/system/system_password_strategy.twig', $data);
     }
 
     /**
@@ -710,7 +710,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'security';
         $data['left_nav_active'] = 'user_session';
-        $this->render('gitlab/admin/system_user_session.php', $data);
+        $this->render('twig/admin/system/system_user_session.twig', $data);
     }
 
     /**
@@ -723,7 +723,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'setting';
         $data['left_nav_active'] = 'datetime_setting';
-        $this->render('gitlab/admin/system_datetime_setting.php', $data);
+        $this->render('twig/admin/system/system_datetime_setting.twig', $data);
     }
 
     /**
@@ -736,7 +736,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'setting';
         $data['left_nav_active'] = 'attachment_setting';
-        $this->render('gitlab/admin/system_attachment_setting.php', $data);
+        $this->render('twig/admin/system/system_attachment_setting.twig', $data);
     }
 
     /**
@@ -749,7 +749,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'setting';
         $data['left_nav_active'] = 'ui_setting';
-        $this->render('gitlab/admin/system_ui_setting.php', $data);
+        $this->render('twig/admin/system/system_ui_setting.twig', $data);
     }
 
     /**
@@ -762,7 +762,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'ui';
         $data['left_nav_active'] = 'user_default_setting';
-        $this->render('gitlab/admin/system_user_default_setting.php', $data);
+        $this->render('twig/admin/system/system_user_default_setting.twig', $data);
     }
 
     public function pageCache()
@@ -775,8 +775,86 @@ class System extends BaseAdminCtrl
 
         $issueModel = new IssueModel();
         $data['redis_configs'] = $issueModel->cache->config;
+        $data['redis_is_used'] = $issueModel->cache->use ? '开启':'未开启';
 
-        $this->render('gitlab/admin/system_cache.php', $data);
+        $this->render('twig/admin/system/system_cache.twig', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function pageLdap()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'setting';
+        $data['left_nav_active'] = 'ldap';
+        $data['ldap_extension_loaded'] = extension_loaded('ldap');
+        $this->render('twig/admin/system/system_ldap.twig', $data);
+    }
+
+    /**
+     * 缓存配置：获取redis缓存连接配置
+     * @throws \Exception
+     */
+    public function fetchCacheConfig()
+    {
+        $issueModel = new IssueModel();
+        $data['redis_configs'] = $issueModel->cache->config;
+        $data['redis_configs_length'] = sizeof($issueModel->cache->config);
+        $data['redis_is_used'] = $issueModel->cache->use ? 1:0;
+        // 是否分组显示
+        $data['show_cache_group'] = $data['redis_configs_length'] > 1 ? 1:0;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 更新缓存配置文件
+     * @param $params
+     * @throws \Exception
+     */
+    public function settingCacheConfig($params)
+    {
+        if (!isset($params['redis']) || !isset($params['enable'])) {
+            $this->ajaxFailed('请求失败', '缺少参数');
+        }
+
+        if (!is_array($params['redis'])) {
+            $this->ajaxFailed('请求失败', '缺少错误');
+        }
+
+        $cacheConfigFile = APP_PATH."config/".APP_STATUS."/cache.cfg.php";
+        if (file_exists($cacheConfigFile)) {
+            if ((int)$params['enable'] && !empty($params['redis'])) {
+                try {
+                    $redis = new \Redis();
+                    foreach ($params['redis'] as $linkConfig) {
+                        $redis->connect($linkConfig[0], $linkConfig[1], 5);
+                    }
+                } catch (\RedisException $e) {
+                    $this->ajaxFailed('连接失败', 'Redis连接测试失败，请检查配置');
+                    //throw new \Exception('\Redis connect failed:' . $e->getMessage(), 500);
+                }
+            }
+
+            $cacheConfig = getConfigVar('cache');
+
+            if ((int)$params['enable']) {
+                $cacheConfig['redis']['data'] = $params['redis'];
+            }
+            $cacheConfig['enable'] = (int)$params['enable'] ? true : false;
+
+            $contents = "<?php \n" . '$_config = ' . var_export($cacheConfig, true) . ';' . "\n\n" . 'return $_config;';
+
+            if (file_put_contents($cacheConfigFile, $contents) === false) {
+                $this->ajaxFailed('操作失败', '请检查缓存配置文件写入权限');
+            }
+        } else {
+            $this->ajaxFailed('操作失败', '请检查缓存配置文件是否存在');
+        }
+
+        $this->ajaxSuccess('缓存配置已生效');
     }
 
     /**
@@ -842,7 +920,7 @@ class System extends BaseAdminCtrl
 
         $data['info'] = $row;
 
-        $this->render('gitlab/admin/system_announcement.php', $data);
+        $this->render('twig/admin/system/system_announcement.twig', $data);
     }
 
     /**
@@ -895,7 +973,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'email';
         $data['left_nav_active'] = 'smtp_config';
-        $this->render('gitlab/admin/system_smtp_config.php', $data);
+        $this->render('twig/admin/system/system_smtp_config.twig', $data);
     }
 
     /**
@@ -938,7 +1016,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'email';
         $data['left_nav_active'] = 'email_queue';
-        $this->render('gitlab/admin/system_email_queue.php', $data);
+        $this->render('twig/admin/system/system_email_queue.twig', $data);
     }
 
     /**
@@ -1012,7 +1090,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'email';
         $data['left_nav_active'] = 'send_mail';
-        $this->render('gitlab/admin/system_send_mail.php', $data);
+        $this->render('twig/admin/system/system_send_mail.twig', $data);
     }
 
     /**
@@ -1068,7 +1146,10 @@ class System extends BaseAdminCtrl
         }
         if ($params['send_to'] == 'group') {
             $tmp = $systemLogic->getUserEmailByGroup($params['to_group']);
-            $emails = $emails + $tmp;
+            //$emails = $emails + $tmp;
+            foreach ($tmp as $item) {
+                $emails[] = $item;
+            }
             unset($tmp);
         }
         if (empty($emails)) {
@@ -1103,7 +1184,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'email';
         $data['left_nav_active'] = 'email_notify_setting';
-        $this->render('gitlab/admin/system_email_notify_setting.php', $data);
+        $this->render('twig/admin/system/system_email_notify_setting.twig', $data);
     }
 
     /**
@@ -1172,7 +1253,7 @@ class System extends BaseAdminCtrl
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'email';
         $data['left_nav_active'] = 'backup_data';
-        $this->render('gitlab/admin/system_backup_data.php', $data);
+        $this->render('twig/admin/system/system_backup_data.twig', $data);
     }
 
     /**
@@ -1205,6 +1286,6 @@ class System extends BaseAdminCtrl
         }
 
         $data['file_list'] = $fileList;
-        $this->render('gitlab/admin/system_restore_data.php', $data);
+        $this->render('twig/admin/system/system_restore_data.twig', $data);
     }
 }

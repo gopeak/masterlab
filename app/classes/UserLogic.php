@@ -326,7 +326,7 @@ class UserLogic
             $limit = intval($limit);
             $sql .= " limit $limit ";
         }
-        //echo $sql;
+        // echo $sql;
         $rows = $userModel->db->getRows($sql, $params);
         unset($userModel);
         return $rows;
@@ -467,6 +467,28 @@ class UserLogic
     }
 
     /**
+     * 获取非当前项目的用户
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function getNotProjectUser($projectId)
+    {
+        $inProjectUserIds = $this->fetchProjectRoleUserIds($projectId);
+        if (!empty($inProjectUserIds)) {
+            $skip_users = $inProjectUserIds;
+        } else {
+            $skip_users = null;
+        }
+        $users = $this->selectUserFilter(null, 200, true, null, null, $skip_users);
+        foreach ($users as $k => &$row) {
+            $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
+        }
+        sort($users);
+        return $users;
+    }
+
+    /**
      * 获取用户通过项目和角色
      * @param $projectIds
      * @param $roleIds
@@ -585,5 +607,22 @@ class UserLogic
         $displayNameMap = array_column($originalRes, 'display_name', 'uid');
         $avatarMap = array_column($originalRes, 'avatar', 'uid');
         return [$usernameMap, $displayNameMap, $avatarMap];
+    }
+
+    /**
+     * 判断两个用户是否在一个团队的
+     * @param $userId1
+     * @param $userId2
+     * @return bool
+     * @throws \Exception
+     */
+    public static function checkUserIsTeam($userId1 ,$userId2)
+    {
+        $model = new ProjectUserRoleModel();
+        $rows1 = $model->getRows('DISTINCT `project_id` as project_id ',['user_id'=>$userId1]);
+        $user1ProjectIdArr = array_column($rows1, 'project_id');
+        $rows2 = $model->getRows('DISTINCT `project_id` as project_id ',['user_id'=>$userId2]);
+        $user2ProjectIdArr = array_column($rows2, 'project_id');
+        return count(array_intersect($user1ProjectIdArr, $user2ProjectIdArr))>0;
     }
 }
