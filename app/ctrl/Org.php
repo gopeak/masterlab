@@ -433,8 +433,13 @@ class Org extends BaseUserCtrl
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
         }
+
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+
+        if ($id == 1) {
+            $this->ajaxFailed('参数错误', '默认组织不能编辑');
         }
 
         $model = new OrgModel();
@@ -535,6 +540,10 @@ class Org extends BaseUserCtrl
         }
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+
+        if ($id == 1) {
+            $this->ajaxFailed('参数错误', '默认组织不能删除');
         }
 
         $model = new OrgModel();
