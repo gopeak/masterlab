@@ -311,6 +311,11 @@ class Gantt extends BaseUserCtrl
         if (isset($ganttSetting['is_display_backlog'])) {
             $isDisplayBacklog = $ganttSetting['is_display_backlog'];
         }
+        $sprintModel = new SprintModel();
+        if ($sprintModel->getCountByProject($projectId) <= 0) {
+            $isDisplayBacklog = '1';
+        }
+
 
         $issues = [];
         if ($sourceType == 'project') {
