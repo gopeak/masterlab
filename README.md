@@ -46,7 +46,7 @@ http://demo.masterlab.vip
 [Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
 [Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
 
-本质上的安装步骤如下:  
+通用安装步骤如下:  
 
  1. 搭建php的运行环境 
      ```
@@ -168,13 +168,13 @@ http://demo.masterlab.vip
      Windows操作系统的
      ```text
     # 在masterlab目录直接运行
-    bin/masterlab_socket.exe
+    bin/masterlab_socket.exe start -d 
     ```
      Linux操作系统的
      ```text
     # 在masterlab目录直接运行
-    chmod +x bin/masterlab_socket
-    ./bin/masterlab_socket
+    chmod +x bin/masterlab_socket 
+    ./bin/masterlab_socket start -d
     ```
      其他操作系统 参考 https://github.com/gopeak/masterlab_socket 的文档自行编译  
      
