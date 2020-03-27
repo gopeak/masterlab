@@ -163,7 +163,7 @@ http://demo.masterlab.vip
  4. 重启web服务器  
 
  5. 运行 masterlab_socket  
-    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,该步骤可省略, 下载地址 https://github.com/gopeak/masterlab_socket/releases  
+    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,下载地址 https://github.com/gopeak/masterlab_socket/releases  
     
      Windows操作系统的
      ```text
