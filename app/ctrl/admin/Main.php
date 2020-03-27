@@ -64,7 +64,7 @@ class Main extends BaseAdminCtrl
         $data['sys_os'] = ServerInfo::getSysOS();
         $data['sys_web_engine'] = ServerInfo::getWebEngine();
         $data['sys_hostname'] = ServerInfo::getLocalHostName();
-        $data['sys_php_user'] = ServerInfo::getLocalServerUser();
+        $data['sys_php_user'] = isset($_SERVER['USER']) ? $_SERVER['USER'] : ServerInfo::getLocalServerUser();
         $data['sys_mysql_version'] = $mysqlVersionStr;
         $data['sys_mysql_host'] = $dbConf['database']['default']['host'];
         $data['sys_mysql_port'] = $dbConf['database']['default']['port'];
