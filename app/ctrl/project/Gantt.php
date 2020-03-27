@@ -307,7 +307,7 @@ class Gantt extends BaseUserCtrl
         if (in_array($ganttSetting['source_type'], $sourceArr)) {
             $sourceType = $sourceType = $ganttSetting['source_type'];
         }
-        $isDisplayBacklog = '0';
+        $isDisplayBacklog = '1';
         if (isset($ganttSetting['is_display_backlog'])) {
             $isDisplayBacklog = $ganttSetting['is_display_backlog'];
         }
