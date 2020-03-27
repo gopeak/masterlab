@@ -336,7 +336,7 @@ var Gantt = (function () {
         if(window.ge.tasks.length>1){
             prev_task = window.ge.tasks[window.ge.tasks.length-2];
         }
-        if(!is_empty(prev_task.id)){
+        if(!is_empty(prev_task)){
             params['below_id'] = prev_task.id;
         }
 

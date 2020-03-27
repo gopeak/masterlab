@@ -483,8 +483,10 @@ class Role extends BaseUserCtrl
         $userId = UserAuth::getId();
         $model = new ProjectRoleModel();
         $role = $model->getById($roleId);
-        if (!PermissionLogic::check($role['project_id'], $userId, PermissionLogic::ADMINISTER_PROJECTS)) {
-            $this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
+        if(!$this->isAdmin){
+            if (!PermissionLogic::check($role['project_id'], $userId, PermissionLogic::ADMINISTER_PROJECTS)) {
+                $this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
+            }
         }
 
         $model = new ProjectRoleRelationModel();
