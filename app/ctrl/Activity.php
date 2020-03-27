@@ -4,6 +4,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\ActivityLogic;
 use main\app\classes\UserAuth;
+use main\app\classes\UserLogic;
 use main\app\model\project\ProjectModel;
 
 /**
@@ -38,21 +39,28 @@ class Activity extends BaseUserCtrl
     public function fetchByUser()
     {
         $userId = UserAuth::getId();
-        if (isset($_REQUEST['user_id'])) {
-            $userId = $_REQUEST['user_id'];
+        if (isset($_REQUEST['user_id'])&&!empty($_REQUEST['user_id'])) {
+            $userId = intval($_REQUEST['user_id']);
         }
         $page = 1;
         $pageSize = 20;
         if (isset($_GET['page'])) {
             $data['page'] = $page = max(1, (int)$_GET['page']);
         }
+
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
+
         list($data['activity_list'], $total) = ActivityLogic::filterByUser($userId, $page, $pageSize);
         foreach ($data['activity_list'] as &$item) {
+            $item['title_original'] = $item['title'];
             if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['title'] = '<span style="text-decoration: line-through;">' . $item['title'] . '</span>';
             }
+            $item['user'] = $users[$item['user_id']];
         }
         unset($item);
+
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

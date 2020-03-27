@@ -40,6 +40,7 @@ class UserLogic
     /**
      * @param $user
      * @return object|\stdClass
+     * @throws \Exception
      */
     public static function formatUserInfo($user)
     {
