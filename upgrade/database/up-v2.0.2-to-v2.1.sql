@@ -18,6 +18,7 @@ INDEX `project_id_2` (`project_id`, `order_weight`) USING BTREE
 
 # 增加上班日选项
 ALTER TABLE `project_gantt_setting` ADD COLUMN `work_dates`  varchar(100) NULL DEFAULT NULL AFTER `hide_issue_types`;
+
 # 增加是否在事项列表显示分类
 ALTER TABLE `project_main` ADD COLUMN `is_display_issue_catalog`  tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否在事项列表显示分类' AFTER `issue_update_time`;
 
