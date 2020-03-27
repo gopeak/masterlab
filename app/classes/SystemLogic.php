@@ -104,7 +104,7 @@ class SystemLogic
             $replyTo = explode(';', $replyTo);
         }
 
-        $enableAsyncMail = $settingModel->getValue('enable_async_mail');
+        $enableAsyncMail = (int)$settingModel->getValue('enable_async_mail');
         if ($enableAsyncMail != 1) {
             return $this->directMail($title, $content, $recipients, $replyTo, $others);
         } else {
@@ -167,11 +167,30 @@ class SystemLogic
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
             $mail->From = trimStr($config['send_mailer']);
             $mail->FromName = isset($others['from_name']) ? $others['from_name'] : 'Masterlab';
+            if (isset($config['is_exchange_server']) && $config['is_exchange_server'] == '1') {
+                $mail->setFrom($mail->From, $mail->FromName);
+            }
+            // 保留原代码，兼容已有的配置
             if (in_array($mail->Port, [465, 994, 995, 993])) {
                 $mail->SMTPSecure = 'ssl';
             } else {
                 $mail->SMTPSecure = 'tls';
             }
+            // 是否启用ssl
+            if (isset($config['is_ssl'])) {
+                if ($config['is_ssl'] == '1') {
+                    $mail->SMTPSecure = 'ssl';
+                } else {
+                    $mail->SMTPSecure = 'tls';
+                }
+            }
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
 
             foreach ($recipients as $addr) {
                 $addr = trimStr($addr);
@@ -201,6 +220,8 @@ class SystemLogic
                 return [false, $msg];
             }
         } catch (\phpmailerException $e) {
+           // print_r($e->getCode());
+            //print_r($e->getTrace());
             $msg = "邮件发送失败：" . $e->errorMessage();
             return [false, $msg];
         } catch (\Exception $e) {
