@@ -39,6 +39,15 @@ http://demo.masterlab.vip
 
 
 ## **安装**
+
+详细的安装示例  
+
+[Windows安装教程](http://www.masterlab.vip/help.php?md=install-windows "Windows安装教程")  
+[Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
+[Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
+
+本质上的安装步骤如下:  
+
  1. 搭建php的运行环境 
      ```
      - Web Server : Nginx 或 Apache
@@ -58,15 +67,29 @@ http://demo.masterlab.vip
      -  masterlab\app\public\attachment 目录要求写入权限
      -  masterlab\app\public\install 目录要求写入权限
      ```
- 2. 下载代码，可前往官方网站 http://www.masterlab.vip/download.php 下载最新的完整包 
-     或者从 github上克隆代码,github上下载的代码没有包含运行的类库，因此需要使用php的composer工具下载类库 
+ 2. 下载代码，将根目录的运行依赖库`vendor.zip`解压出来  
        ```text
-        # 在masterlab根目录下执行,如果执行错误请将php加入到环境变量中
-        php composer.phar config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-        php composer.phar update
+         - masterlab
+           - vendor
+               - autoload.php 
        ```
  3. 在web服务器添加虚拟主机并映射到masterlab的 app/public 目录  
-    如果Web服务器是Apache
+    如果Web服务器是Apache,首先编辑主配置文件`httpd.conf`将  
+      ```
+      <Directory />
+          AllowOverride none
+          Require all denied
+      </Directory>
+      ```
+      替换为  
+      ```
+      <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+        #Allow from All
+      </Directory>
+      ```
+      找到 `httpd-vhosts.conf` 文件，添加：  
       ```text
       <VirtualHost *:80>
         # 请更改为实际的masterlab目录
@@ -140,6 +163,8 @@ http://demo.masterlab.vip
  4. 重启web服务器  
 
  5. 运行 masterlab_socket  
+    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,该步骤可省略, 下载地址 https://github.com/gopeak/masterlab_socket/releases  
+    
      Windows操作系统的
      ```text
     # 在masterlab目录直接运行
@@ -151,6 +176,8 @@ http://demo.masterlab.vip
     chmod +x bin/masterlab_socket
     ./bin/masterlab_socket
     ```
+     其他操作系统 参考 https://github.com/gopeak/masterlab_socket 的文档自行编译  
+     
  6. 在浏览器访问 /install ,根据提示进行安装  
  
  
@@ -162,7 +189,7 @@ http://www.masterlab.vip/help.php
 ![首页](http://www.masterlab.vip/fireshot/index2.png "首页")
 ![事项列表](http://www.masterlab.vip/fireshot/issue.png "事项列表")
 ![看板](http://www.masterlab.vip/fireshot/kanban.png "看板")
-![WBS](http://www.masterlab.vip/fireshot/wbs.jpg "看板")
+![WBS](http://www.masterlab.vip/fireshot/wbs.jpg "思维导图与事项整合")
 
 
 在使用中有任何问题，请使用以下联系方式联系我们
