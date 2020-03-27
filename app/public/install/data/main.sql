@@ -2593,7 +2593,7 @@ CREATE TABLE `project_main` (
 
 INSERT INTO `project_main` (`id`, `org_id`, `org_path`, `name`, `url`, `lead`, `description`, `key`, `pcounter`, `default_assignee`, `assignee_type`, `avatar`, `category`, `type`, `type_child`, `permission_scheme_id`, `workflow_scheme_id`, `create_uid`, `create_time`, `un_done_count`, `done_count`, `closed_count`, `archived`, `issue_update_time`, `is_display_issue_catalog`) VALUES
 (1, 1, 'default', '示例项目', '', 1, 'Masterlab的示例项目', 'example', NULL, 1, NULL, 'project/avatar/1.png', 0, 10, 0, 0, 1, 1, 1579247230, 16, 6, 4, 'N', 1583220515, 1),
-(36, 1, 'default', '空项目', '', 12164, 'good luck!', 'ex', NULL, 1, NULL, 'project/avatar/2.png', 0, 10, 0, 0, 0, 1, 1585132124, 0, 0, 0, 'N', 1585132124, 1);
+(36, 1, 'default', '空项目', '', 1, 'good luck!', 'ex', NULL, 1, NULL, 'project/avatar/2.png', 0, 10, 0, 0, 0, 1, 1585132124, 0, 0, 0, 'N', 1585132124, 1);
 
 -- --------------------------------------------------------
 
@@ -2891,7 +2891,7 @@ INSERT INTO `project_user_role` (`id`, `user_id`, `project_id`, `role_id`) VALUE
 (4, 1, 1, 3),
 (150, 1, 36, 177),
 (5, 12164, 1, 2),
-(149, 12164, 36, 179),
+(149, 1, 36, 179),
 (6, 12165, 1, 2),
 (8, 12166, 1, 5),
 (7, 12167, 1, 2),
