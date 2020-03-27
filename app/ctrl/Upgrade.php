@@ -59,8 +59,10 @@ class Upgrade extends BaseUserCtrl
         $curl->setTimeout(10);
 
         $host = isset($_GET['source']) ? trim($_GET['source']) : 'http://www.masterlab.vip/';
+        if (!preg_match('/\/$/', $host)) {
+            $host .= '/';
+        }
         $url = $host . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
-        //$url = 'http://www.masterlab20.cn/upgrade/check_upgrade?current_version=2.0';
 
         $curl->get($url);
         $response = $curl->rawResponse;
