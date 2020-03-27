@@ -157,7 +157,14 @@ let Upgrade = (function () {
 
         loading.show('#modal-upgrade-body');
 
-        let url = 'http://www.masterlab.vip/upgrade.php?action=get_patch_info';
+        let host = $('#upgrade-source').val();
+        host = host ? host : 'http://www.masterlab.vip/';
+        // 如果源不是以/结尾，则补上/
+        let pattern = /\/$/;
+        if (!pattern.test(host)) {
+            host = host + '/';
+        }
+        let url = host + 'upgrade.php?action=get_patch_info';
         $.ajax({
             type: 'get',
             dataType: "json",

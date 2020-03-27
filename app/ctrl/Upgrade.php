@@ -59,8 +59,10 @@ class Upgrade extends BaseUserCtrl
         $curl->setTimeout(10);
 
         $host = isset($_GET['source']) ? trim($_GET['source']) : 'http://www.masterlab.vip/';
+        if (!preg_match('/\/$/', $host)) {
+            $host .= '/';
+        }
         $url = $host . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
-        //$url = 'http://www.masterlab20.cn/upgrade/check_upgrade?current_version=2.0';
 
         $curl->get($url);
         $response = $curl->rawResponse;
@@ -90,6 +92,9 @@ class Upgrade extends BaseUserCtrl
         $path = $upgradePath . $folder . DS;
         // 数据库补丁文件路径，要求sql格式
         $sqlFile = $path . 'database.sql';
+        $ddlFile = $path . 'ddl.sql';
+        $dataFile = $path . 'data.sql';
+
         // 索引操作语句SQL文件
         $indexSqlFile = $path . 'index.sql';
         // 代码补丁压缩包路径，要求zip格式
@@ -136,8 +141,9 @@ class Upgrade extends BaseUserCtrl
         if(file_exists($filePath) && is_dir($filePath) ){
             rmDirectory($filePath);
         }
-        if (!@$curl->download($url, $filePath)) {
-            $this->showLine('升级失败：补丁包下载失败！');
+        if (!$curl->download($url, $filePath)) {
+            $this->showLine('升级失败：补丁包下载失败！' . $curl->errorMessage . ', ' . $curl->curlErrorMessage);
+            die;
         }
         if (file_exists($filePath . '.pccdownload')) {
             rename($filePath . '.pccdownload', $filePath);
@@ -158,6 +164,22 @@ class Upgrade extends BaseUserCtrl
         }
 
         try {
+            if (file_exists($ddlFile)) {
+                $this->showLine('');
+                $this->showLine('正在升级数据库结构......');
+                $sql = file_get_contents($ddlFile);
+                $this->runSql($sql, $db);
+                $this->showLine('数据库结构升级完成！');
+            }
+
+            if (file_exists($dataFile)) {
+                $this->showLine('');
+                $this->showLine('正在升级数据......');
+                $sql = file_get_contents($dataFile);
+                $this->runSql($sql, $db);
+                $this->showLine('数据升级完成！');
+            }
+
             if (file_exists($sqlFile)) {
                 $this->showLine('');
                 $this->showLine('正在升级数据库......');
@@ -165,6 +187,12 @@ class Upgrade extends BaseUserCtrl
                 $this->runSql($sql, $db);
                 $this->showLine('数据库升级完成！');
             }
+        } catch (\Exception $e) {
+            $this->showLine('数据库升级失败，已忽略，请手动升级。错误信息:' . $e->getMessage());
+            $this->showLine('');
+        }
+
+        try {
             $this->showLine('');
             $this->showLine('正在升级代码......');
 
@@ -172,6 +200,7 @@ class Upgrade extends BaseUserCtrl
             if (file_exists($patchFile)) {
                 $this->unzip($patchFile, $projectDir);
             }
+
             // 解压缩vendor补丁
             if (file_exists($vendorFile)) {
                 $this->unzip($vendorFile, $projectDir);
@@ -180,7 +209,7 @@ class Upgrade extends BaseUserCtrl
             }
             $this->showLine('');
         } catch (\Exception $e) {
-            $this->showLine('数据库执行错误,已忽略. 错误信息:'.$e->getMessage());
+            $this->showLine('代码升级失败，放弃升级。错误信息：' . $e->getMessage());
             $this->showLine('');
         }
 
@@ -487,6 +516,7 @@ class Upgrade extends BaseUserCtrl
         $appContent = file_get_contents($appFile);
         $appContent = preg_replace('/define\s*\(\s*\'MASTERLAB_VERSION\'\s*,\s*\'([^\']*)\'\);/m', "define('MASTERLAB_VERSION', '" . $version . "');", $appContent);
         $ret = file_put_contents($appFile, $appContent);
-        $this->showLine("主配置文件写入结果:" . $ret);
+        $result = $ret === false ? '失败' : '成功';
+        $this->showLine("主配置文件写入" . $result);
     }
 }

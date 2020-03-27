@@ -551,9 +551,11 @@
 
         </div>
     </div>
-</script>{% endverbatim %}
+</script>
+{% endverbatim %}
 
-{% verbatim %}<script type="text/html" id="labels_tpl">
+{% verbatim %}
+<script type="text/html" id="labels_tpl">
     <div class="issuable-form-select-holder">
         {{#edit_data}}
         <input type="hidden" name="{{../field_name}}[]" value="{{id}}"/>
@@ -654,7 +656,8 @@
     </div>
 </script>{% endverbatim %}
 
-{% verbatim %}<script type="text/html" id="version_tpl">
+{% verbatim %}
+<script type="text/html" id="version_tpl">
     <div class="issuable-form-select-holder">
         {{#edit_data}}
         <input type="hidden" name="{{../field_name}}[]" value="{{id}}"/>
@@ -684,7 +687,7 @@
                         </button>
                     </div>
                     <div class="dropdown-input">
-                        <input type="search" id="search-version-dropdown" class="dropdown-input-field" placeholder="Search"
+                        <input type="search" id="search-version-dropdown-{{id}}" class="dropdown-input-field" placeholder="Search"
                                autocomplete="off"/>
                         <i class="fa fa-search dropdown-input-search"></i>
                         <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
@@ -703,31 +706,7 @@
                     </div>
                 </div>
                 <div class="dropdown-page-two dropdown-new-label">
-                    <div class="dropdown-title">
-                        <button class="dropdown-title-button dropdown-menu-back" aria-label="Go back" type="button">
-                            <i class="fa fa-arrow-left"></i>
-                        </button>
-                        <span>创建新版本</span>
-                        <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                            <i class="fa fa-times dropdown-menu-close-icon"></i>
-                        </button>
-                    </div>
-                    <div class="dropdown-content">
-                        <div class="dropdown-labels-error js-label-error"></div>
-                        <input class="default-dropdown-input" id="new_version_name" placeholder="Name new version"
-                               type="text">
-                        <div class="suggest-colors suggest-colors-dropdown">
 
-                        </div>
-                        <div class="dropdown-label-color-input">
-                            <div class="dropdown-label-color-preview js-dropdown-label-color-preview"></div>
-                            <input class="default-dropdown-input" id="new_version_color"
-                                   placeholder="Assign description" type="text"></div>
-                        <div class="clearfix">
-                            <button class="btn btn-primary pull-left js-new-label-btn" type="button">创建</button>
-                            <button class="btn btn-default pull-right js-cancel-label-btn" type="button">取消</button>
-                        </div>
-                    </div>
                 </div>
                 <div class="dropdown-loading">
                     <i class="fa fa-spinner fa-spin"></i>

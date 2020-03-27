@@ -620,7 +620,13 @@ class Main extends BaseUserCtrl
             foreach ($data['issues'] as &$issue) {
                 $issueId = $issue['id'];
                 IssueFilterLogic::formatIssue($issue);
-                $issue['label_id_arr'] = isset($labelDataArr[$issueId]) ? $labelDataArr[$issueId]:[];
+                if(isset($labelDataArr[$issueId])){
+                    $arr = array_unique($labelDataArr[$issueId]);
+                    sort($arr);
+                    $issue['label_id_arr'] = $arr;
+                }else{
+                    $issue['label_id_arr'] = [];
+                }
             }
 
             $data['total'] = (int)$total;
@@ -873,6 +879,8 @@ class Main extends BaseUserCtrl
             $labelId = $label['label_id'];
             $issueLabelDataIds[] = $labelId;
         }
+        $issueLabelDataIds = array_unique($issueLabelDataIds);
+        sort($issueLabelDataIds);
         $issue['labels'] = $issueLabelDataIds;
 
         // 当前事项解决版本

@@ -57,10 +57,10 @@ class Passport extends BaseCtrl
             ) = $userTokenModel->validRefreshToken($refresh_token);
 
         if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_EXPIRE) {
-            $this->ajaxFailed($validTokenRetMsg, [], 422);
+            $this->ajaxFailed($validTokenRetMsg, [], UserTokenModel::HTTP_RESPONSE_EXPIRE);
         }
         if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_NOT_EXIST) {
-            $this->ajaxFailed($validTokenRetMsg, [], 0);
+            $this->ajaxFailed($validTokenRetMsg, [], UserTokenModel::HTTP_RESPONSE_INVALID);
         }
 
         if ($validTokenRetCode == UserTokenModel::VALID_TOKEN_RET_OK) {
@@ -77,7 +77,7 @@ class Passport extends BaseCtrl
             $tokenCfg = getConfigVar('data');
             $final['token_expire'] = intval($tokenCfg['token']['expire_time']);
 
-            $this->ajaxSuccess('ok', $final);
+            $this->ajaxSuccess('ok', $final, UserTokenModel::HTTP_RESPONSE_OK);
         }
 
         $this->ajaxFailed('refresh fail.');
@@ -272,11 +272,19 @@ class Passport extends BaseCtrl
      */
     private function processLoginReturn(&$final, $user)
     {
-        // 生成和刷新token
         $userTokenModel = new UserTokenModel($user['uid']);
-        list($ret, $token, $refresh_token) = $userTokenModel->makeToken($user);
-        if (!$ret) {
-            $this->ajaxFailed('服务器错误', '刷新token失败');
+        $userTokenInfo = $userTokenModel->getUserToken($user['uid']);
+
+        // 允许同一账户同时登陆(pc、app同时在线)，不再签发新的token
+        if ($userTokenModel->isTokenExpire($userTokenInfo['token_time'])) {
+            // 生成和刷新token
+            list($ret, $token, $refresh_token) = $userTokenModel->makeToken($user);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', '刷新token失败');
+            }
+        } else {
+            $token = $userTokenInfo['token'];
+            $refresh_token = $userTokenInfo['refresh_token'];
         }
 
         $final['token'] = $token;

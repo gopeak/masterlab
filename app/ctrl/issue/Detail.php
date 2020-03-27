@@ -286,8 +286,9 @@ class Detail extends BaseUserCtrl
         $issue['labels_names'] = [];
         foreach ($issueLabelData as $label) {
             $labelId = $label['label_id'];
-            $issue['labels_names'][] = isset($issueLabels[$labelId]) ? $issueLabels[$labelId] : null;
+            $issue['labels_names'][$labelId] = isset($issueLabels[$labelId]) ? $issueLabels[$labelId] : null;
         }
+        sort($issue['labels_names']);
         $issue['labels'] = $issueLabelData;
         unset($issueLabels);
 
