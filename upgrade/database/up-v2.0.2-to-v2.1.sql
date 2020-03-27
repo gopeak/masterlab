@@ -3,7 +3,7 @@
 ALTER TABLE `main_setting` MODIFY COLUMN `title`  varchar(64) NOT NULL COMMENT '标题' AFTER `_key`;
 
 # 创建项目分类表
-CREATE TABLE `project_catalog_label` (
+CREATE TABLE  IF NOT EXISTS  `project_catalog_label` (
 `id`  int(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
 `project_id`  int(11) NOT NULL ,
 `name`  varchar(24) NOT NULL ,
@@ -22,7 +22,7 @@ ALTER TABLE `project_gantt_setting` ADD COLUMN `work_dates`  varchar(100) NULL D
 ALTER TABLE `project_main` ADD COLUMN `is_display_issue_catalog`  tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否在事项列表显示分类' AFTER `issue_update_time`;
 
 # 用户邀请表
-CREATE TABLE `user_invite` (
+CREATE TABLE  IF NOT EXISTS  `user_invite` (
 `id`  int(11) NOT NULL AUTO_INCREMENT ,
 `email`  varchar(128) NOT NULL ,
 `project_id`  int(11) UNSIGNED NOT NULL ,
