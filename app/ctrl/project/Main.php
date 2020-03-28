@@ -677,6 +677,24 @@ class Main extends Base
         $sprintModel = new SprintModel();
         $project['sprint_count'] = $sprintModel->getCountByProject($id);
         $project = ProjectLogic::formatProject($project);
+
+
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
+        $userIdArr = $userLogic->getUserIdArrByProject($id);
+
+        $userArr = [];
+        foreach ($userIdArr as $userId => $hasRoles) {
+            if (isset($users[$userId])) {
+                $user = $users[$userId];
+                $user['is_leader'] = false;
+                if ($userId == $project['lead']) {
+                    $user['is_leader'] = true;
+                }
+                $userArr[] = $user;
+            }
+        }
+        $project['join_users'] = $userArr;
         $this->ajaxSuccess('ok', $project);
     }
 
