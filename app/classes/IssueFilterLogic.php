@@ -1377,18 +1377,19 @@ class IssueFilterLogic
         $statusSql = '';
         switch ($statusType) {
             case GlobalConstant::ISSUE_STATUS_TYPE_UNDONE:
-                $statusSql = " AND " . self::getUnDoneSql();
+                $statusSql = " AND i." . self::getUnDoneSql();
                 break;
             case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
-                $statusSql = " AND " . self::getDoneSql();
+                $statusSql = " AND i." . self::getDoneSql();
                 break;
             default:
         }
 
         $model = new IssueModel();
         $table = $model->getTable();
-        $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} {$statusSql}  GROUP BY assignee ";
+        $sql = "SELECT i.assignee as user_id,count(*) as count, u.display_name FROM {$table} i LEFT JOIN user_main u ON i.assignee=u.uid
+                          WHERE i.project_id ={$projectId} {$statusSql}  GROUP BY i.assignee ";
+        //$sql = "SELECT assignee as user_id,count(*) as count FROM {$table} WHERE project_id ={$projectId} {$statusSql}  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         foreach ($rows as $k => $row) {
