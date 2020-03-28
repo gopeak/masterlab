@@ -953,8 +953,21 @@ class Main extends BaseUserCtrl
         if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
             $err['issue_type'] = '事项类型不能为空';
         }
-        if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
-            $err['issue_type'] = '事项类型不能为空';
+
+        // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
+        $getDefaultPriorityId = function(){
+            return (new IssuePriorityModel())->getIdByKey('normal');
+        };
+        $priorityId = null;
+        if (isset($params['priority'])) {
+            $priorityId = (int)$params['priority'];
+            $model = new IssuePriorityModel();
+            $issuePriority = $model->getById($priorityId);
+            if (!$issuePriority) {
+                $priorityId = $getDefaultPriorityId();
+            }
+        } else {
+            $priorityId = $getDefaultPriorityId();
         }
 
         // 事项UI配置判断输入是否为空
@@ -964,7 +977,7 @@ class Main extends BaseUserCtrl
         $uiConfigs = $issueUiModel->getsByUiType($params['issue_type'], 'create');
         //print_r($uiConfigs);
         // 迭代字段不会判断输入
-        $excludeFieldArr = ['sprint'];
+        $excludeFieldArr = ['sprint','priority'];
         foreach ($uiConfigs as $uiConfig) {
             if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
                 $field = $fieldsArr[$uiConfig['field_id']];
@@ -1013,7 +1026,7 @@ class Main extends BaseUserCtrl
         unset($issueTypes);
 
         $info['issue_type'] = $issueTypeId;
-
+        $info['priority'] = $priorityId;
         $info = $info + $this->getAddFormInfo($params);
 
         $model = new IssueModel();
@@ -1246,25 +1259,6 @@ class Main extends BaseUserCtrl
         } else {
             $statusId = (new IssueStatusModel())->getIdByKey('open');
             $info['status'] = $statusId;
-        }
-
-        // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
-        $getDefaultPriorityId = function(){
-            $priorityId = (new IssuePriorityModel())->getIdByKey('normal');
-            $info['priority'] = $priorityId;
-            return $priorityId;
-        };
-        if (isset($params['priority'])) {
-            $priorityId = (int)$params['priority'];
-            $model = new IssuePriorityModel();
-            $issuePriority = $model->getAll();
-            if (!isset($issuePriority[$priorityId])) {
-                $priorityId = $getDefaultPriorityId();
-            }
-            unset($issuePriority);
-            $info['priority'] = $priorityId;
-        } else {
-            $info['priority'] = $getDefaultPriorityId();
         }
 
         // 解决结果, @todo 数据库字段增加一个默认值，管理页面可以修改

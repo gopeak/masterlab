@@ -51,6 +51,9 @@ REPLACE INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_k
 (10907, 0, '管理甘特图', '是否拥有权限操作甘特图中的事项和设置', 'ADMIN_GANTT'),
 (10908, 0, '事项分解设置', '是否拥有权限修改事项分解的设置', 'MIND_SETTING');
 
+REPLACE INTO `permission_default_role_relation` (`id`, `role_id`, `perm_id`) VALUES (NULL, '10002', '10907'), (NULL, '10002', '10908');
+REPLACE INTO `permission_default_role_relation` (`id`, `role_id`, `perm_id`) VALUES (NULL, '10006', '10907'), (NULL, '10006', '10908')
+
 # 增加ldap设置项
 REPLACE INTO `main_setting` ( `_key`, `title`, `module`, `order_weight`, `_value`, `default_value`, `format`, `form_input_type`, `form_optional_value`, `description`) VALUES
 ( 'ldap_enable', '启用', 'ldap', 99, '0', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),

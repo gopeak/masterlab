@@ -102,7 +102,7 @@ $(document).ready(function(){
 
     </table>
   </div>
-    <div class="btn-box" style="text-align:left">提示:赋予的是当前运行的php用户写入权限， Linux赋予权限命令举例： chown -R <?php echo $currenPhpUser?>:<?php echo $currenPhpUser?> /var/lib/php/session </div>
+    <div class="btn-box" style="text-align:left">提示:是当前运行的php用户要求写入权限， Linux赋予权限命令举例： chown -R <?php echo $currenPhpUser?>:<?php echo $currenPhpUser?> /var/lib/php/session </div>
 
   <div class="btn-box"><a href="index.php" class="btn btn-primary">上一步</a><a href='##' id="next" class="btn btn-primary">下一步</a></div>
 </div>

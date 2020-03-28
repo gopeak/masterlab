@@ -35,13 +35,13 @@ function fetGanttIssues(project_id, callback){
     loading.show('#TWGanttArea');
     ret= {};
     var method = 'get';
-    var url = '/project/gantt/fetchProjectIssues/' + project_id+'&project_id='+project_id;
+    var url = '/project/gantt/fetchProjectIssues/' + project_id;
     $.ajax({
         type: method,
         dataType: "json",
         async: false,
         url: url,
-        data: {} ,
+        data: {project_id:project_id} ,
         success: function (resp) {
             ret = resp.data;
             loading.hide('#TWGanttArea');
