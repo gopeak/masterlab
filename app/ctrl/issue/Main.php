@@ -948,12 +948,11 @@ class Main extends BaseUserCtrl
         }
         $err = [];
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
+            //$this->ajaxFailed('param_error:summary_is_null');
             $err['summary'] = '标题不能为空';
         }
         if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
-            $err['issue_type'] = '事项类型不能为空';
-        }
-        if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
+            //$this->ajaxFailed('param_error:issue_type_id_is_null');
             $err['issue_type'] = '事项类型不能为空';
         }
 
@@ -1248,42 +1247,34 @@ class Main extends BaseUserCtrl
             $info['status'] = $statusId;
         }
 
-        // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
-        $getDefaultPriorityId = function(){
-            $priorityId = (new IssuePriorityModel())->getIdByKey('normal');
-            $info['priority'] = $priorityId;
-            return $priorityId;
-        };
+        // 优先级
         if (isset($params['priority'])) {
             $priorityId = (int)$params['priority'];
             $model = new IssuePriorityModel();
             $issuePriority = $model->getAll();
             if (!isset($issuePriority[$priorityId])) {
-                $priorityId = $getDefaultPriorityId();
+                $this->ajaxFailed('param_error:priority_not_found');
             }
             unset($issuePriority);
             $info['priority'] = $priorityId;
         } else {
-            $info['priority'] = $getDefaultPriorityId();
+            $priorityId = (new IssuePriorityModel())->getIdByKey('normal');
+            $info['priority'] = $priorityId;
         }
 
-        // 解决结果, @todo 数据库字段增加一个默认值，管理页面可以修改
-        $getDefaultResolveId = function(){
-            $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
-            $info['resolve'] = $resolveId;
-            return $resolveId;
-        };
+        // 解决结果
         if (isset($params['resolve']) && !empty($params['resolve'])) {
             $resolveId = (int)$params['resolve'];
             $model = new IssueResolveModel();
             $issueResolves = $model->getAll();
             if (!isset($issueResolves[$resolveId])) {
-                $resolveId = $getDefaultResolveId();
+                $this->ajaxFailed('param_error:resolve_not_found');
             }
             unset($issueResolves);
             $info['resolve'] = $resolveId;
         } else {
-            $info['resolve'] = $getDefaultResolveId();
+            $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
+            $info['resolve'] = $resolveId;
         }
 
         // 负责人
@@ -1795,7 +1786,7 @@ class Main extends BaseUserCtrl
                         $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $resolves[$issueOldValue]['color'] . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
                     } elseif ($field == 'start_date' || $field == 'due_date') {
                         $issueNewValue = trim($issueNewValue);
-                        if (!$issueNewValue && !$issueOldValue) {
+                        if (!$issueNewValue && (!$issueOldValue || ($issueOldValue == '0000-00-00'))) {
                             continue;
                         }
 
