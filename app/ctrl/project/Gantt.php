@@ -99,8 +99,8 @@ class Gantt extends BaseUserCtrl
         $data['extra_holidays'] = $extraHolidays;
 
         $workDates = null;
-        if (isset($ganttSetting['work_dates'])) {
-
+        if (isset($setting['work_dates'])) {
+            $workDates = json_decode($setting['work_dates'], true);
         }
         if (is_null($workDates)) {
             $workDates = [1, 2, 3, 4, 5];
@@ -366,6 +366,7 @@ class Gantt extends BaseUserCtrl
         $data['resources'] = $resources;
         $data['roles'] = $roles;
         $data['canWrite'] = true;
+        //print_r($this->projectPermArr);
         if (!isset($this->projectPermArr[PermissionLogic::ADMIN_GANTT]) || $this->projectPermArr[PermissionLogic::ADMIN_GANTT] != 1) {
             $data['canWrite'] = false;
         }

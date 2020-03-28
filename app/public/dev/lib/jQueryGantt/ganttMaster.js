@@ -77,8 +77,7 @@ function GanttMaster() {
   this.serverClientTimeOffset = 0;
 
   this.currentTask; // task currently selected;
-
-  this.resourceUrl = "res/"; // URL to resources (images etc.)
+  this.resourceUrl = "/dev/lib/jQueryGantt/res/"; // URL to resources (images etc.)
   this.__currentTransaction;  // a transaction object holds previous state during changes
   this.__undoStack = [];
   this.__redoStack = [];
