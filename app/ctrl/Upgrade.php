@@ -240,6 +240,7 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('');
         }
         // 更新版本号
+        $this->showLine('写入新版本号......');
         $this->writeVersionConfig($latestVersion);
 
         // 生成锁文件
