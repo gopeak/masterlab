@@ -56,7 +56,6 @@ class Upgrade extends BaseUserCtrl
 
         set_time_limit(0);
         $curl = new \Curl\Curl();
-        $curl->setTimeout(10);
 
         $host = isset($_GET['source']) ? trim($_GET['source']) : 'http://www.masterlab.vip/';
         if (!preg_match('/\/$/', $host)) {
