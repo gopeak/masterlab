@@ -99,8 +99,8 @@ class Gantt extends BaseUserCtrl
         $data['extra_holidays'] = $extraHolidays;
 
         $workDates = null;
-        if (isset($ganttSetting['work_dates'])) {
-
+        if (isset($setting['work_dates'])) {
+            $workDates = json_decode($setting['work_dates'], true);
         }
         if (is_null($workDates)) {
             $workDates = [1, 2, 3, 4, 5];
@@ -307,10 +307,15 @@ class Gantt extends BaseUserCtrl
         if (in_array($ganttSetting['source_type'], $sourceArr)) {
             $sourceType = $sourceType = $ganttSetting['source_type'];
         }
-        $isDisplayBacklog = '0';
+        $isDisplayBacklog = '1';
         if (isset($ganttSetting['is_display_backlog'])) {
             $isDisplayBacklog = $ganttSetting['is_display_backlog'];
         }
+        $sprintModel = new SprintModel();
+        if ($sprintModel->getCountByProject($projectId) <= 0) {
+            $isDisplayBacklog = '1';
+        }
+
 
         $issues = [];
         if ($sourceType == 'project') {
@@ -361,6 +366,7 @@ class Gantt extends BaseUserCtrl
         $data['resources'] = $resources;
         $data['roles'] = $roles;
         $data['canWrite'] = true;
+        //print_r($this->projectPermArr);
         if (!isset($this->projectPermArr[PermissionLogic::ADMIN_GANTT]) || $this->projectPermArr[PermissionLogic::ADMIN_GANTT] != 1) {
             $data['canWrite'] = false;
         }

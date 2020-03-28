@@ -51,7 +51,7 @@ $(document).ready(function(){
     </table>
     <table width="100%" border="0" cellspacing="2" cellpadding="0">
       <caption>
-      目录、文件权限检查
+      目录、文件权限检查(php运行用户:<?php echo $currenPhpUser?>)
       </caption>
       <tr>
         <th scope="col">目录文件</th>
@@ -102,7 +102,7 @@ $(document).ready(function(){
 
     </table>
   </div>
-    <div class="btn-box" style="text-align:left">提示:赋予的是当前运行的php用户写入权限， Linux赋予权限命令举例： chown -R www:www /var/lib/php/session </div>
+    <div class="btn-box" style="text-align:left">提示:是当前运行的php用户要求写入权限， Linux赋予权限命令举例： chown -R <?php echo $currenPhpUser?>:<?php echo $currenPhpUser?> /var/lib/php/session </div>
 
   <div class="btn-box"><a href="index.php" class="btn btn-primary">上一步</a><a href='##' id="next" class="btn btn-primary">下一步</a></div>
 </div>

@@ -51,7 +51,7 @@ class ProjectGantt
             if (!empty($activeSprint)) {
                 $addArr['source_type'] = 'active_sprint';
             }
-            $addArr['is_display_backlog'] = '0';
+            $addArr['is_display_backlog'] = '1';
             $addArr['hide_issue_types'] = '';
             $addArr['work_dates'] = '[1,2,3,4,5]';
 
@@ -318,7 +318,7 @@ class ProjectGantt
             $sprintId = $sprint['id'];
             $condition = "project_id={$projectId} AND sprint={$sprintId}   {$orderBy}";
             $sql = "select * from {$table} where {$condition}";
-            //echo $sql;
+            // echo $sql;
             $sprintRows[$sprint['id']]  = $issueModel->db->getRows($sql);
             $sprintIssueArr = [];
             //print_r($sprintRows[$sprint['id']]);

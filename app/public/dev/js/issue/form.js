@@ -60,7 +60,7 @@ var IssueForm = (function () {
 
             html += IssueForm.prototype.createField(config, field, 'create');
         }
-        console.log(html);
+        //console.log(html);
         return html;
     }
 
@@ -738,40 +738,6 @@ var IssueForm = (function () {
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
-    IssueForm.prototype.makeFieldPriorityV1 = function (config, field, ui_type) {
-
-        var display_name = field.title;
-        var name = field.name;
-        var required = config.required;
-        var type = config.type;
-        var field_name = 'params[' + name + ']';
-        var default_value = field.default_value
-        var required_html = '';
-        if (required) {
-            required_html = '<span class="required"> *</span>';
-        }
-        var id = ui_type + '_issue_' + name;
-
-        var html = '';
-        html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"    title=""   >';
-        //html +='   <option value="btn-create-issue">请选择类型</option>';
-        var priority = _issueConfig.priority;
-        for (var i in priority) {
-            var priority_id = priority[i].id;
-            var priority_title = priority[i].name;
-            var color = priority[i].status_color;
-            var selected = '';
-            if (priority_id == default_value) {
-                selected = 'selected';
-            }
-            html += '   <option data-content="<span style=\'color:' + color + '\'>' + priority_title + '</span>" value="' + priority_id + '" ' + selected + '>' + priority_title + '</option>';
-
-        }
-        html += '</select>';
-
-        return IssueForm.prototype.wrapField(config, field, html);
-    }
-
     IssueForm.prototype.makeFieldPriority = function (config, field, ui_type) {
         var display_name = field.title;
         var name = field.name;
@@ -784,15 +750,16 @@ var IssueForm = (function () {
             required_html = '<span class="required"> *</span>';
         }
         var html = '';
-        if (default_value == null || default_value == 'null') {
-            default_value = '';
+        if (default_value == null || default_value == 'null' || default_value == '' ) {
+            // 默认优先级为`中`的id
+            default_value = '4';
         }
         var project_id = '';
         if (is_empty(_cur_form_project_id)) {
             _cur_form_project_id = _cur_project_id;
         }
         project_id = _cur_form_project_id;
-
+        //console.log(_issueConfig.priority)
         var data = {
             project_id: project_id,
             project_key: _cur_project_key,
@@ -803,7 +770,7 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_" + name
         };
-        // console.log(data);
+        //console.log(data);
         var source = $('#priority_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -941,8 +908,8 @@ var IssueForm = (function () {
             required_html = '<span class="required"> *</span>';
         }
         var html = '';
-        if (default_value == null || default_value == 'null') {
-            default_value = '';
+        if (default_value == null || default_value == 'null' || default_value == '') {
+            default_value = '2';
         }
         var project_id = '';
         if (is_empty(_cur_form_project_id)) {
