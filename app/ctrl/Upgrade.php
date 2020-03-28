@@ -49,13 +49,15 @@ class Upgrade extends BaseUserCtrl
      */
     public function run()
     {
+        set_time_limit(0);
+        ob_end_clean(); // 清空并关闭缓冲区
+        ob_implicit_flush(1); // 立即输出
+        header('X-Accel-Buffering: no');
+
         if (!$this->isAdmin) {
             $this->showLine('权限不足，请联系管理员！');
             die;
         }
-
-        set_time_limit(0);
-        $curl = new \Curl\Curl();
 
         $host = isset($_GET['source']) ? trim($_GET['source']) : 'http://www.masterlab.vip/';
         if (!preg_match('/\/$/', $host)) {
@@ -63,6 +65,7 @@ class Upgrade extends BaseUserCtrl
         }
         $url = $host . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
 
+        $curl = new \Curl\Curl();
         $curl->get($url);
         $response = $curl->rawResponse;
         $response = json_decode($response);
@@ -346,8 +349,9 @@ class Upgrade extends BaseUserCtrl
     private function showLine($message)
     {
         echo $message . '<br>';
-        ob_flush();
-        //flush();
+        // ob_end_flush();
+        // ob_flush();
+        // flush();
     }
 
     /**
