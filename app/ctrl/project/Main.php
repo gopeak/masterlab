@@ -683,6 +683,7 @@ class Main extends Base
         $users = $userLogic->getAllNormalUser();
         $userIdArr = $userLogic->getUserIdArrByProject($id);
 
+        $leadInfo = [];
         $userArr = [];
         foreach ($userIdArr as $userId => $hasRoles) {
             if (isset($users[$userId])) {
@@ -690,11 +691,15 @@ class Main extends Base
                 $user['is_leader'] = false;
                 if ($userId == $project['lead']) {
                     $user['is_leader'] = true;
+                    $leadInfo = $user;
                 }
                 $userArr[] = $user;
             }
         }
+
+        $project['lead_user_info'] = $leadInfo;
         $project['join_users'] = $userArr;
+
         $this->ajaxSuccess('ok', $project);
     }
 
@@ -868,10 +873,12 @@ class Main extends Base
      * 更新
      * 注意：该方法未使用,可以删除该方法
      * @param $project_id
-     * @throws \Exception
+     *
      */
     public function update($project_id)
     {
+        return $this->ajaxFailed('非预期调用');
+
         // 判断权限:全局权限和项目角色
         if (!isset($this->projectPermArr[PermissionLogic::BROWSE_ISSUES])) {
             $this->ajaxFailed('您没有权限进行此操作,需要项目管理权限');
