@@ -28,9 +28,6 @@
   },
   "require-dev": {
     "phpunit/phpunit": "7.0",
-    "ext-json": "*",
-    "ext-pdo": "*",
-    "ext-curl": "*",
     "ext-redis": "*"
   },
   "minimum-stability": "beta"
