@@ -741,6 +741,13 @@
                                                 </th>
                                             {% endif %}
 
+
+                                            {% for item in displayCustomFieldArr %}
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    {{item.title}}
+                                                </th>
+                                            {% endfor %}
+
                                             <th class="js-pipeline-actions pipeline-actions">操 作
 
                                             </th>

@@ -23,6 +23,7 @@ use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
+use main\app\model\field\FieldCustomValueModel;
 use main\app\model\issue\ExtraWorkerDayModel;
 use main\app\model\issue\HolidayModel;
 use main\app\model\project\ProjectCatalogLabelModel;
@@ -169,7 +170,22 @@ class Main extends BaseUserCtrl
         // 表格视图的显示字段
         $issueLogic = new IssueLogic();
         $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
-        $data['uiDisplayFields'] = IssueLogic::$uiDisplayFields;
+        $uiDisplayFields = IssueLogic::$uiDisplayFields;
+        $fieldsArr = FieldModel::getInstance()->getCustomFields();
+        $fieldsIdArr = array_column($fieldsArr, 'title', 'name');
+        $data['uiDisplayFields'] = array_merge($uiDisplayFields, $fieldsIdArr);
+
+        $displayCustomFieldArr = [];
+        foreach ($fieldsArr as $field) {
+            if (in_array($field['name'], $data['display_fields'])) {
+                $displayCustomFieldArr[] = $field;
+            }
+        }
+
+        $data['displayCustomFieldArr'] = $displayCustomFieldArr;
+
+
+        // 高级查询字段
         $data['advFields'] = IssueFilterLogic::$advFields;
 
         // 事项展示的视图方式
@@ -611,12 +627,33 @@ class Main extends BaseUserCtrl
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
+            // 获取标签的关联数据
             $issueIdArr = array_column($data['issues'], 'id');
             $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
             $labelDataArr = [];
             foreach ($labelDataRows as $labelData) {
                 $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
             }
+            // 获取自定义字段值
+            $fieldsArr = (new FieldModel())->getCustomFields();
+            if ($fieldsArr) {
+                $fieldsArr = array_column($fieldsArr, null, 'id');
+                $customFieldIdArr = array_column($fieldsArr, 'id');
+                $customValuesArr = (new FieldCustomValueModel())->getsByIssueIdArr($issueIdArr, $customFieldIdArr);
+                $customValuesIssueArr = [];
+                foreach ($customValuesArr as $customValue) {
+                    $key = $customValue['value_type'] . '_value';
+                    $issueId = $customValue['issue_id'];
+                    $fieldId = $customValue['custom_field_id'];
+                    $fieldArr = $fieldsArr[$fieldId];
+                    if (isset($fieldArr['name'])) {
+                        $fieldValue = !isset($customValue[$key]) ? $customValue['string_value'] : $customValue[$key];
+                        $fieldName = $fieldArr['name'];
+                        $customValuesIssueArr[$issueId][$fieldName] = $fieldValue;
+                    }
+                }
+            }
+
             foreach ($data['issues'] as &$issue) {
                 $issueId = $issue['id'];
                 IssueFilterLogic::formatIssue($issue);
@@ -626,6 +663,10 @@ class Main extends BaseUserCtrl
                     $issue['label_id_arr'] = $arr;
                 } else {
                     $issue['label_id_arr'] = [];
+                }
+                if (isset($customValuesIssueArr[$issueId])) {
+                    $customValueArr = $customValuesIssueArr[$issueId];
+                    $issue = array_merge($customValueArr, $issue);
                 }
             }
 
