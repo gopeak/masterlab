@@ -203,7 +203,7 @@ var IssueDetail = (function () {
                     template = Handlebars.compile(source);
                     result = template(resp.data.issue);
                     $('#custom_field_values_div').html(result);
-                    $('#custom_field_values_block').removeClass('hide');
+                    $('#issue_custom_fields').removeClass('hide');
                 }
 
                 $('.allow_update_status').bind('click', function () {

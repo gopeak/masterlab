@@ -128,9 +128,9 @@ class Main extends BaseUserCtrl
                     header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
                     die;
                 } else {
-                    if($fav['is_adv_query']=='1'){
+                    if ($fav['is_adv_query'] == '1') {
                         $data['adv_filter_json'] = $fav['filter'];
-                    }else{
+                    } else {
                         $data['adv_filter_json'] = [];
                     }
 
@@ -611,7 +611,7 @@ class Main extends BaseUserCtrl
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
-            $issueIdArr = array_column($data['issues'],'id');
+            $issueIdArr = array_column($data['issues'], 'id');
             $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
             $labelDataArr = [];
             foreach ($labelDataRows as $labelData) {
@@ -620,11 +620,11 @@ class Main extends BaseUserCtrl
             foreach ($data['issues'] as &$issue) {
                 $issueId = $issue['id'];
                 IssueFilterLogic::formatIssue($issue);
-                if(isset($labelDataArr[$issueId])){
+                if (isset($labelDataArr[$issueId])) {
                     $arr = array_unique($labelDataArr[$issueId]);
                     sort($arr);
                     $issue['label_id_arr'] = $arr;
-                }else{
+                } else {
                     $issue['label_id_arr'] = [];
                 }
             }
@@ -925,6 +925,17 @@ class Main extends BaseUserCtrl
         $logic = new WorkflowLogic();
         $issue['allow_update_status'] = $logic->getStatusByIssue($issue);
 
+        // 自定义字段
+        $issueLogic = new IssueLogic();
+        $customFieldValues = $issueLogic->getCustomFieldValue($issueId);
+        if ($customFieldValues) {
+            $customFieldValuesArr = array_column($customFieldValues, 'value', 'field_name');
+            if ($customFieldValuesArr) {
+                $issue = array_merge($customFieldValuesArr, $issue);
+            }
+        }
+
+
         // tab页面
         $model = new IssueUiTabModel($issueId);
         $data['tabs'] = $model->getItemsByIssueTypeIdType($issueTypeId, $uiType);
@@ -955,7 +966,7 @@ class Main extends BaseUserCtrl
         }
 
         // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
-        $getDefaultPriorityId = function(){
+        $getDefaultPriorityId = function () {
             return (new IssuePriorityModel())->getIdByKey('normal');
         };
         $priorityId = null;
@@ -977,7 +988,7 @@ class Main extends BaseUserCtrl
         $uiConfigs = $issueUiModel->getsByUiType($params['issue_type'], 'create');
         //print_r($uiConfigs);
         // 迭代字段不会判断输入
-        $excludeFieldArr = ['sprint','priority'];
+        $excludeFieldArr = ['sprint', 'priority'];
         foreach ($uiConfigs as $uiConfig) {
             if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
                 $field = $fieldsArr[$uiConfig['field_id']];
@@ -1123,7 +1134,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['progress'])) {
-            $info['progress'] = max(0,(int)$params['progress']);
+            $info['progress'] = max(0, (int)$params['progress']);
         }
 
         if (isset($params['depends'])) {
@@ -1157,7 +1168,7 @@ class Main extends BaseUserCtrl
                 }
                 $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
 
-                if(!empty($belowIssue['master_id'])){
+                if (!empty($belowIssue['master_id'])) {
                     $params['master_issue_id'] = $belowIssue['master_id'];
                 }
                 // print_r($params);
@@ -1208,7 +1219,7 @@ class Main extends BaseUserCtrl
                 if (($prevWeight - $nextWeight) > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $prevWeight - ProjectGantt::$offset;
                 } else {
-                    $info[$fieldWeight] = max(0, intval($prevWeight-($prevWeight - $nextWeight) / 2));
+                    $info[$fieldWeight] = max(0, intval($prevWeight - ($prevWeight - $nextWeight) / 2));
                 }
             } else {
                 // 如果是普通任务
@@ -1262,7 +1273,7 @@ class Main extends BaseUserCtrl
         }
 
         // 解决结果, @todo 数据库字段增加一个默认值，管理页面可以修改
-        $getDefaultResolveId = function(){
+        $getDefaultResolveId = function () {
             $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
             $info['resolve'] = $resolveId;
             return $resolveId;
@@ -1335,7 +1346,7 @@ class Main extends BaseUserCtrl
             $info['weight'] = (int)$params['weight'];
         }
         $this->getGanttInfo($params, $info);
-        if(!empty($params['start_date']) && !empty($params['due_date'])){
+        if (!empty($params['start_date']) && !empty($params['due_date'])) {
             $holidays = (new HolidayModel())->getDays($params['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
             $ganttSetting = (new ProjectGanttSettingModel())->getByProject($params['project_id']);
@@ -1595,7 +1606,7 @@ class Main extends BaseUserCtrl
         }
 
         // 更新用时
-        if(isset($info['start_date']) || isset($info['due_date'])){
+        if (isset($info['start_date']) || isset($info['due_date'])) {
             $holidays = (new HolidayModel())->getDays($issue['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
             $updatedIssue = $issueModel->getById($issueId);
@@ -1605,7 +1616,7 @@ class Main extends BaseUserCtrl
             $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $workDates, $holidays, $extraWorkerDays);
             // print_r($updateDurationArr);
             list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
-            if($ret){
+            if ($ret) {
                 $updatedIssue['duration'] = $updateDurationArr['duration'];
             }
 
@@ -1651,7 +1662,7 @@ class Main extends BaseUserCtrl
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
-        $issueLogic->updateCustomFieldValue($issueId, $params);
+        $issueLogic->updateCustomFieldValue($issueId, $params, $issue['project_id']);
 
         // 记录活动日志
         $fromModule = null;
@@ -1687,7 +1698,7 @@ class Main extends BaseUserCtrl
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
         // email通知
-        if(isset($notifyFlag)){
+        if (isset($notifyFlag)) {
             $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
         }
         $updatedIssue = $issueModel->getById($issueId);

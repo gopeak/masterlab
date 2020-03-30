@@ -9,25 +9,25 @@
             </div>
             <ul class="nav-links scrolling-tabs">
                 <li class=" {% if (nav_links_active == 'index') %} {{ 'active' }}{% endif %}">
-                    <a title="首页" href="/admin/main">
-                        <i class="fa fa-home"></i> <span>首页</span>
+                    <a title="显示主程序信息，MasterlabSocket信息，PHP信息，Web服务器信息，数据库信息" href="/admin/main">
+                        <i class="fa fa-home"></i> <span>服务信息</span>
                     </a>
                 </li>
                 <li class=" {% if (nav_links_active == 'system') %} {{ 'active' }}{% endif %}">
-                    <a title="系统" href="/admin/system"><i class="fa fa-cogs"></i> <span>系统</span>
+                    <a title="包含基础设置，时间设置，附件设置，安全设置，邮件配置，LDAP设置，缓存设置，操作日志，慢SQL查询" href="/admin/system"><i class="fa fa-cogs"></i> <span>系统设置</span>
                     </a>
                 </li>
                 <li class=" {% if (nav_links_active == 'user') %} {{ 'active' }}{% endif %}">
-                    <a title="用户管理" href="/admin/user"><i class="fa fa-user"></i> <span>用户管理</span>
+                    <a title="所有的用户管理，包括添加、删除、修改、邀请" href="/admin/user"><i class="fa fa-user"></i> <span>用户管理</span>
                     </a>
                 </li>
                 <li class=" {% if (nav_links_active == 'project') %} {{ 'active' }}{% endif %}">
-                    <a title="项目" href="/admin/project">
-                        <i class="fa fa-product-hunt"></i> <span>项目</span>
+                    <a title="项目的归档和删除" href="/admin/project">
+                        <i class="fa fa-product-hunt"></i> <span>项目管理</span>
                     </a>
                 </li>
                 <li class=" {% if (nav_links_active == 'issue') %} {{ 'active' }}{% endif %}">
-                    <a title="事项" href="/admin/issue_type"><i class="fa fa-tasks"></i> <span>事项</span>
+                    <a title="事项的默认配置，包含：事项类型，事项类型方案，状态，状态流，状态流方案，解决结果，字段管理，界面自定义等" href="/admin/issue_type"><i class="fa fa-tasks"></i> <span>事项配置</span>
                     </a>
                 </li>
 

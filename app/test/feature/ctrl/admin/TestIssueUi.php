@@ -133,7 +133,7 @@ class TestIssueUi extends BaseAppTestCase
         $reqInfo['type'] = $type;
         $reqInfo['data'] = json_encode([$tabId => ['fields' => [1, 2, 3], 'display' => $tabName]]);
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/issue_ui/saveCreateConfig', $reqInfo);
+        $curl->post(ROOT_URL . 'admin/issue_ui/saveConfig', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

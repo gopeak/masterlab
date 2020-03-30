@@ -108,6 +108,9 @@ class Field extends BaseAdminCtrl
         if (isset($params['options'])) {
             $info['options'] = $params['options'];
         }
+        if (isset($params['options_default'])) {
+            $info['default_value'] = $params['options_default'];
+        }
         $model = new FieldModel();
         if (isset($model->getByName($info['name'])['id'])) {
             $this->ajaxFailed('提示', '字段名称已经存在', BaseCtrl::AJAX_FAILED_TYPE_TIP);
@@ -115,7 +118,7 @@ class Field extends BaseAdminCtrl
 
         list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('提示','操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '插入数据失败,详情:' . $msg);
         }
@@ -166,6 +169,9 @@ class Field extends BaseAdminCtrl
         if (isset($params['options'])) {
             $info['options'] = $params['options'];
         }
+        if (isset($params['options_default'])) {
+            $info['default_value'] = $params['options_default'];
+        }
 
         $model = new FieldModel();
         $group = $model->getByName($info['name']);
@@ -175,7 +181,7 @@ class Field extends BaseAdminCtrl
 
         list($ret, $msg) = $model->updateItem($id, $info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('提示','操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败:'.$msg);
         }
@@ -202,7 +208,7 @@ class Field extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('提示','操作成功');
         }
     }
 }

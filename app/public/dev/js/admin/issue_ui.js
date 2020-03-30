@@ -106,6 +106,11 @@ var IssueUi = (function () {
                 _create_configs = resp.data.configs;
                 _create_tabs = resp.data.tabs;
                 _field_types = resp.data.field_types;
+                let header_title = '创建界面配置';
+                if(type=='edit'){
+                    header_title = '编辑界面配置';
+                }
+                $('#'+type+'_header_title').html(resp.data.issue_type.name+'-'+header_title);
 
                 // create default tab
                 var default_tab_id = 0;
@@ -173,6 +178,7 @@ var IssueUi = (function () {
 
     IssueUi.prototype.getEditConfigs = function (issue_type_id, type) {
 
+
         var method = 'get';
         $.ajax({
             type: method,
@@ -192,6 +198,11 @@ var IssueUi = (function () {
                 _edit_configs = resp.data.configs;
                 _edit_tabs = resp.data.tabs;
                 _field_types = resp.data.fieldtypes;
+                let header_title = '创建界面配置';
+                if(type=='edit'){
+                    header_title = '编辑界面配置';
+                }
+                $('#'+type+'_header_title').html(resp.data.issue_type.name+'-'+header_title);
 
                 // create default tab
                 var default_tab_id = 0;
@@ -273,7 +284,7 @@ var IssueUi = (function () {
         $.ajax({
             type: 'post',
             dataType: "json",
-            url: root_url+'admin/issue_ui/saveCreateConfig',
+            url: root_url+'admin/issue_ui/saveConfig',
             data: post_data,
             success: function (resp) {
 
@@ -323,7 +334,7 @@ var IssueUi = (function () {
         $.ajax({
             type: 'post',
             dataType: "json",
-            url: root_url+'admin/issue_ui/saveCreateConfig',
+            url: root_url+'admin/issue_ui/saveConfig',
             data: post_data,
             success: function (resp) {
 
@@ -663,7 +674,7 @@ var IssueUi = (function () {
 
     IssueUi.prototype.wrapField = function (config, field, field_html) {
 
-        var display_name = field.name;
+        var display_name = field.title;
         var required_html = '';
         if (config.order_weight == "" || config.order_weight == null) {
             config.order_weight = 0;
@@ -773,7 +784,7 @@ var IssueUi = (function () {
                 if (Key == default_value) {
                     selected = 'checked=true';
                 }
-                html += '<div class="radio"><label><input ' + selected + '  type="radio" name="' + name + '" id="' + name + Key + '"  value="' + Key + '" disabled >' + field.options[Key] + '</label></div>';
+                html += '<div class="radio-inline"><label><input ' + selected + '  type="radio" name="' + name + '" id="' + name + Key + '"  value="' + Key + '" disabled >' + field.options[Key] + '</label></div>';
             }
         }
         //<div class="radio"> <label><input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Option two  </label></div>
@@ -798,7 +809,7 @@ var IssueUi = (function () {
                 if (Key == default_value) {
                     selected = 'checked=true';
                 }
-                html += '<input ' + selected + '  type="checkbox" class="form-control" name="' + name + '" id="' + name + Key + '"  value="' + Key + '" readonly="readonly" />' + field.options[Key];
+                html += '<label class="checkbox-inline"><input ' + selected + '  type="checkbox" name="' + name + '" id="' + name + Key + '"  value="' + Key + '" readonly="readonly" disabled />' + field.options[Key]+'</label>';
             }
         }
         return IssueUi.prototype.wrapField(config, field, html);
@@ -820,14 +831,14 @@ var IssueUi = (function () {
             multi = 'multiple ';
         }
         var html = '';
-        html += '<select ' + multi + ' class="form-control" name="' + name + '" id="' + name + '"   readonly="readonly" />';
+        html += '<select ' + multi + ' class="selectpicker" name="' + name + '" id="' + name + '"   readonly="readonly" >';
         if (field.options) {
             for (var Key in field.options) {
                 var selected = '';
                 if (Key == default_value) {
                     selected = 'selected';
                 }
-                html += '<option value="' + Key + '">' + field.options[Key] + '</option>';
+                html += '<option value="' + Key + ' ' +selected+'">' + field.options[Key] + '</option>';
             }
         }
         html += '</select>';

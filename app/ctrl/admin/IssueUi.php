@@ -100,6 +100,7 @@ class IssueUi extends BaseAdminCtrl
         $issueTypeId = (int)$issueTypeId;
         $model = new IssueUiModel();
         $data['configs'] = $model->getsByUiType($issueTypeId, $type);
+        $data['issue_type'] = (new IssueTypeModel())->getById($issueTypeId);
 
         $model = new FieldModel();
         $fields = $model->getAllItems(false);
@@ -121,7 +122,7 @@ class IssueUi extends BaseAdminCtrl
      * 保存界面数据
      * @throws \Exception
      */
-    public function saveCreateConfig()
+    public function saveConfig()
     {
         $issueTypeId = null;
         $data = null;
@@ -192,6 +193,9 @@ class IssueUi extends BaseAdminCtrl
                 if ($fields) {
                     $countFields = count($fields);
                     foreach ($fields as $fieldId) {
+                        if(empty($fieldId)){
+                            continue;
+                        }
                         $countFields--;
                         $required = in_array($fieldId,$requireArr) ? '1':'0';
                         $model->addField(

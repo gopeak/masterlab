@@ -70,10 +70,15 @@ class IssueUiModel extends CacheModel
     {
         $conditions = ['issue_type_id' => $issueTypeId, 'ui_type' => $type];
         $rows = $this->getRows('*', $conditions, null, 'order_weight', 'desc');
+        $arr = [];
         foreach ($rows as &$row) {
+            if(empty($row['field_id']) || $row['field_id']=='0'){
+                continue;
+            }
             $row['required'] = $row['required'] === '0' ? false : true;
+            $arr[] =$row;
         }
-        return $rows;
+        return $arr;
     }
 
     /**
