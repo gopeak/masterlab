@@ -123,6 +123,8 @@ class BaseCtrl
             $this->addGVar('_title', $title);
             $this->getSystemInfo();
         }
+        $this->addGVar('_currenPhpUser', isset($_SERVER['USER'])? $_SERVER['USER']:@get_current_user());
+        $this->addGVar('_root_path', PRE_APP_PATH);
     }
 
     /**

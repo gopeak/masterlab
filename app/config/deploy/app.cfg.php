@@ -3,7 +3,7 @@
 // 设置错误报告
 error_reporting(E_ERROR);
 
-// URL手动设置
+// 主程序URL地址，可手动设置
 define('ROOT_URL', currentHttpDomain());
 
 //
