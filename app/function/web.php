@@ -97,10 +97,6 @@ if (!function_exists('currentUrl')) {
 if (!function_exists('currentHttpDomain')) {
     /**
      * 获取当前url地址
-     *
-     * @param array $parameters 请求参数，为空，则只返回当前不带参数的uri地址
-     * @param boolean $host 是否带域名，true则放回当前完整的url地址
-     *
      * @return string
      */
     function currentHttpDomain()

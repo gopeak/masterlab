@@ -318,11 +318,7 @@ class IssueFilterLogic
         // 我未解决的
         if ($sysFilter == 'my_unsolved') {
             $params['assignee'] = UserAuth::getInstance()->getId();
-            $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
-            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
-            $statusKeyStr = implode(',', $statusIdArr);
-            unset($statusKeyArr, $statusIdArr);
-            $sql .= " AND assignee=:assignee AND status in ({$statusKeyStr})";
+            $sql .= " AND assignee=:assignee AND " . self::getUnDoneSql();
         }
         // 我关注的
         if ($sysFilter == 'my_followed') {
@@ -738,7 +734,7 @@ class IssueFilterLogic
     }
 
     /**
-     * 获取未解决的数量
+     * 获取未解决的事项数量
      * @param $userId
      * @param $projectId
      * @return int
@@ -755,6 +751,27 @@ class IssueFilterLogic
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND project_id=:project_id AND  " . self::getUnDoneSql();
+        $count = $model->db->getOne($sql, $params);
+        return intval($count);
+    }
+
+    /**
+     * 所有项目未解决的事项数量
+     * @param $userId
+     * @param $projectId
+     * @return int
+     * @throws \Exception
+     */
+    public static function getUnResolveCountByAssignee($userId)
+    {
+        if (empty($userId)) {
+            return 0;
+        }
+        $params = [];
+        $params['assignee'] = $userId;
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND   " . self::getUnDoneSql();
         $count = $model->db->getOne($sql, $params);
         return intval($count);
     }

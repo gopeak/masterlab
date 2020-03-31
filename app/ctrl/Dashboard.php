@@ -57,7 +57,6 @@ class Dashboard extends BaseUserCtrl
 
         $model = new UserModel();
         $data['user_count'] = $model->getNormalCount();
-
         $data['un_done_issue_count'] = IssueFilterLogic::getAllNoDoneCount();
 
         $userId = UserAuth::getId();
