@@ -67,16 +67,17 @@ class BaseAdminCtrl extends BaseCtrl
                 exit;
             }
         }
-        $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
-        if ($assigneeCount <= 0) {
-            $assigneeCount = '';
-        }
+
 
         // 是否也有系统管理员权限
         //$haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
         $haveAdminPerm = PermissionGlobal::isGlobalUser(UserAuth::getId());
         $this->addGVar('is_admin', $haveAdminPerm);
 
+        $assigneeCount = IssueFilterLogic::getUnResolveCountByAssignee(UserAuth::getId());
+        if ($assigneeCount <= 0) {
+            $assigneeCount = '';
+        }
         $this->addGVar('assignee_count', $assigneeCount);
 
         $this->addGVar('G_uid', UserAuth::getId());

@@ -81,9 +81,9 @@
                     </li>
 
                     <li>
-                        <a title="分配给我的问题" aria-label="分配给我的问题" data-toggle="tooltip" data-placement="bottom"
-                           data-container="body" href="/issue/main?sys_filter=assignee_mine">
-                            <i class="fa fa-hashtag fa-fw"></i><!--  <span class="badge issues-count"> {{assignee_count}}</span> -->
+                        <a title="我未解决的问题" aria-label="我未解决的问题" data-toggle="tooltip" data-placement="bottom"
+                           data-container="body" href="/issue/main?sys_filter=my_unsolved">
+                            <i class="fa fa-hashtag fa-fw"></i><span style="background-color: #1f78d1" class="badge issues-count" >{% if assignee_count %} {{assignee_count}}{% endif %}</span>
                         </a>
                     </li>
 
@@ -263,6 +263,8 @@
                 <ol class="text-warning">
                     <li>在线更新方式不适合已经二次开发的masterlab。</li>
                     <li class="danger">执行更新前建议请先备份数据库和代码。</li>
+                    <li>需要给masterlab所有目录赋予php用户的写入权限，Linux赋予权限示例：<br>
+                        chown -R {{_currenPhpUser}}:{{_currenPhpUser}} {{_root_path}} </li>
                     <li>升级过程请勿对masterlab进行任何操作。</li>
                 </ol>
 
