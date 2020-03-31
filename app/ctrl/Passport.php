@@ -8,6 +8,7 @@ namespace main\app\ctrl;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\SystemLogic;
+use main\app\model\Setting2Model;
 use main\app\model\user\EmailFindPasswordModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
@@ -101,6 +102,29 @@ class Passport extends BaseCtrl
 
         $this->render('gitlab/passport/login.php', $data);
     }
+
+    public function pageTest()
+    {
+        $data = [];
+        $data['title'] = '测试Dbal';
+
+        $id = 10;
+        $dbalModel = new Setting2Model();
+        $sql = "SELECT * FROM main_setting WHERE id > ?";
+        $stmt = $dbalModel->db->prepare($sql);
+        $stmt->bindValue(1, $id);
+        $stmt->execute();
+        // $settings = $stmt->fetchAll();
+
+        $paramArr = [];
+        $paramArr = ['username'=>'master'];
+        $user =  $dbalModel->db->fetchAssoc('SELECT * FROM user_main WHERE username =:username', $paramArr);
+        print_r($user);
+
+        $queryBuilder = $dbalModel->db->createQueryBuilder();
+
+    }
+
 
     /**
      * 输出验证码
