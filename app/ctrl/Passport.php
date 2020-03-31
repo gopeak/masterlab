@@ -380,6 +380,24 @@ class Passport extends BaseCtrl
                 unset($_SESSION['reg_captcha_time']);
             }
         }
+
+        $passwordStrategy = $settingModel->getSettingValue('password_strategy');
+        if ($passwordStrategy == 2) {
+            // 密码需要6位及以上，并且包含大写字母、小写字母、数字至少两种
+            // $pattern = '/^(?=.{6,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$/';
+            // 密码需要6位及以上
+            $pattern = '/(?=.{6,}).*/';
+            if (!preg_match($pattern, $_POST['password'])) {
+                $err['password'] = '密码需要6位及以上';
+            }
+        } elseif ($passwordStrategy == 3) {
+            // 密码要求8位及以上，并且包含大写字母、小写字母、数字和特殊字符
+            $pattern = '/^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).*$/';
+            if (!preg_match($pattern, $_POST['password'])) {
+                $err['password'] = '密码要求8位及以上，并且包含大写字母、小写字母、数字和特殊字符';
+            }
+        }
+
         if (!isset($_POST['email']) || empty($_POST['email'])) {
             $err['email'] = 'email不能为空';
         }
