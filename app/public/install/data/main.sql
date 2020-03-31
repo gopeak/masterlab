@@ -143,7 +143,7 @@ CREATE TABLE `field_custom_value` (
   `number_value` decimal(18,6) DEFAULT NULL,
   `text_value` longtext,
   `date_value` datetime DEFAULT NULL,
-  `valuet_ype` varchar(255) DEFAULT NULL
+  `value_type` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
