@@ -683,7 +683,6 @@ class Main extends Base
         $users = $userLogic->getAllNormalUser();
         $userIdArr = $userLogic->getUserIdArrByProject($id);
 
-        $leadInfo = [];
         $userArr = [];
         foreach ($userIdArr as $userId => $hasRoles) {
             if (isset($users[$userId])) {
@@ -691,13 +690,12 @@ class Main extends Base
                 $user['is_leader'] = false;
                 if ($userId == $project['lead']) {
                     $user['is_leader'] = true;
-                    $leadInfo = $user;
                 }
                 $userArr[] = $user;
             }
         }
 
-        $project['lead_user_info'] = $leadInfo;
+        $project['lead_user_info'] = isset($users[$project['lead']])?$users[$project['lead']]:[];
         $project['join_users'] = $userArr;
 
         $this->ajaxSuccess('ok', $project);
