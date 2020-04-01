@@ -115,7 +115,7 @@ class Upgrade extends BaseUserCtrl
             $checkOk = false;
         }
         if (!isPathWritable($projectDir)) {
-            showLine('错误：' . $projectDir . ' 目录权限不足，无法写入。');
+            $this->showLine('错误：' . $projectDir . ' 目录权限不足，无法写入。');
             $checkOk = false;
         }
         if (!$this->isPathWritable($upgradePath)) {
