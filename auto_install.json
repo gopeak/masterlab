@@ -4,7 +4,7 @@
 		{"mode":777,"path":"app/public/attachment"},
         {"mode":777,"path":"/bin"}
 	],	
-	"success_url":"/install",				
+	"success_url":"/",
 	"php_versions":"56,70,71,72,73",
 	"db_config":"/app/config/deploy/database.cfg.php",	
 	"admin_username":"",
