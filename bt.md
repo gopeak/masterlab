@@ -8,3 +8,13 @@
 6. 选择全部文件，右键，压缩成`zip`文件
 7. 上传到宝塔
 8. 测试
+
+### 宝塔用到的相关文件
+```
+/auto_install.json      自动安装脚本
+/.htaccess              Apache重写规则
+/.nginx.rewrite         Nginx重写规则
+/database.cfg.php       含有变量的数据库配置文件
+/import.sql             数据库安装SQL脚本，拷贝自/app/public/install/data/main.sql
+/composer.json          如果没有composer.lock，将使用composer.json安装composer包
+```
