@@ -179,6 +179,40 @@ class DbalModel extends BaseModel
 
 
     /**
+     * 开始一个事务
+     *
+     * @access public
+     */
+    public function beginTransaction()
+    {
+        $this->connect();
+        return $this->db->beginTransaction();
+    }
+
+    /**
+     * 回滚一个事务
+     *
+     * @access public
+     */
+    public function rollBack()
+    {
+        $this->connect();
+        return $this->db->rollBack();
+    }
+
+    /**
+     * 提交一个事务
+     *
+     * @access public
+     */
+    public function commit()
+    {
+        $this->connect();
+        return $this->db->commit();
+    }
+
+
+    /**
      * 执行更新性的SQL语句 ,返回受修改或删除 SQL语句影响的行数。如果没有受影响的行，则返回 0。失败返回false
      * @param string $sql
      * @param array $params
@@ -467,7 +501,7 @@ class DbalModel extends BaseModel
         try {
             $this->db->executeUpdate($sql, $row);
             return [true, $this->lastInsertId()];
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             //echo $e->getMessage();
             return [false, 'db insertIgnore err:'.$e->getMessage()];
         }
@@ -510,7 +544,7 @@ class DbalModel extends BaseModel
         try {
             $this->db->executeUpdate($sql, $info);
             return [true, $this->lastInsertId()];
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             //echo $e->getMessage();
             return [false, 'db replace err:'.$sql. print_r($info, true).$e->getMessage()];
         }
@@ -595,7 +629,7 @@ class DbalModel extends BaseModel
         $sql = " UPDATE {$table} SET ";
         $sql .= $this->parsePrepareSql($row, true);
         $sql .= ' ' . $conditions["_where"];
-        $ret =  $this->db->update($sql, $conditions['_bindParams']);
+        $ret =  $this->db->executeUpdate($sql, $conditions['_bindParams']);
         if (!$ret) {
             return [false, 'db insertIgnore err:' . $sql . print_r($row, true)];
         }
