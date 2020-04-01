@@ -26,6 +26,7 @@ class Org extends BaseUserCtrl
 
     /**
      * index
+     * @throws \Exception
      */
     public function pageIndex()
     {
@@ -33,6 +34,12 @@ class Org extends BaseUserCtrl
         $data['title'] = '组织';
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
+
+        $data['is_admin'] = false;
+        if (PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_ORG_PERM_ID)) {
+            $data['is_admin'] = true;
+        }
+
         $this->render('gitlab/org/main.php', $data);
     }
 
@@ -342,14 +349,21 @@ class Org extends BaseUserCtrl
     public function add($params = [])
     {
         if (!$this->isAdmin) {
-            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+            $this->ajaxFailed('您没有权限进行此操作');
         }
 
         if (empty($params)) {
             $this->ajaxFailed('错误', '无表单数据提交');
         }
-        $currentUid = $this->getCurrentUid();
         //print_r($params);
+
+        $currentUid = $this->getCurrentUid();
+
+        $data['is_admin'] = false;
+        if (!PermissionGlobal::check($currentUid, PermissionGlobal::MANAGER_ORG_PERM_ID)) {
+            $this->ajaxFailed('您没有权限进行此操作.');
+        }
+
         $err = [];
         $this->checkParam($err, $params);
         if (!empty($err)) {
