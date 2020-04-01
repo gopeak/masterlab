@@ -1,14 +1,16 @@
 {
-	"php_ext":"pathinfo,redis",			
+	"php_ext":"pathinfo,redis,ldap",
 	"chmod":[
-		{"mode":777,"path":"app/public/attachment"},
+		{"mode":666,"path":"/app/upgrade"},
+		{"mode":666,"path":"/app/storage"},
+		{"mode":666,"path":"/app/public/attachment"},
         {"mode":777,"path":"/bin"}
 	],	
 	"success_url":"/",
-	"php_versions":"56,70,71,72,73",
+	"php_versions":"71,72,73",
 	"db_config":"/app/config/deploy/database.cfg.php",	
-	"admin_username":"",
-	"admin_password":"",
+	"admin_username":"master",
+	"admin_password":"testtest",
 	"run_path":"/app/public",
 	"remove_file":[],
 	"enable_functions":[]
