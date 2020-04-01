@@ -32,6 +32,7 @@ class Setting extends BaseUserCtrl
      */
     public function saveSettingsProfile()
     {
+        $isUpdateLeader = false;
         $projectParamkey = ProjectLogic::PROJECT_GET_PARAM_ID;
         if (isPost()) {
             $params = $_POST['params'];
@@ -51,7 +52,11 @@ class Setting extends BaseUserCtrl
             }
 
             $info = [];
-            $info['lead'] = $params['lead'];
+            // 修改项目leader
+            if ($preData['lead'] != $params['lead']) {
+                $info['lead'] = $params['lead'];
+                $isUpdateLeader = true;
+            }
             $info['description'] = $params['description'];
             $info['type'] = $params['type'];
             $info['category'] = 0;
@@ -72,6 +77,15 @@ class Setting extends BaseUserCtrl
             $projectModel->db->beginTransaction();
 
             $ret1 = $projectModel->update($info, array('id' => $_GET[$projectParamkey]));
+
+            if ($isUpdateLeader) {
+                $retModifyLeader = ProjectLogic::assignAdminRoleForProjectLeader($_GET[$projectParamkey], $info['lead']);
+                if (!$retModifyLeader[0]) {
+                    $projectModel->db->rollBack();
+                    $this->ajaxFailed('错误', '更新项目负责人失败');
+                }
+            }
+
             $projectMainExtra = new ProjectMainExtraModel();
             if ($projectMainExtra->getByProjectId($_GET[$projectParamkey])) {
                 $ret3 = $projectMainExtra->updateByProjectId(array('detail' => $params['detail']), $_GET[$projectParamkey]);
