@@ -74,11 +74,9 @@ class ProjectLabelModel extends BaseDictionaryModel
 
     public function checkNameExist($projectId, $name)
     {
-        $table = $this->getTable();
         $conditions['project_id'] = $projectId;
         $conditions['title'] = $name;
-        $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND title=:title  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getCount($conditions);
         return $count > 0;
     }
 
