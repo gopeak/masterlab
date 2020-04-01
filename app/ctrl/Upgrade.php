@@ -114,7 +114,7 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('错误：PHP 扩展 zip 未安装！');
             $checkOk = false;
         }
-        if (!isPathWritable($projectDir)) {
+        if (!$this->isPathWritable($projectDir)) {
             $this->showLine('错误：' . $projectDir . ' 目录权限不足，无法写入。');
             $checkOk = false;
         }
