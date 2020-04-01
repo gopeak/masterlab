@@ -43,8 +43,7 @@
 													</a>
 												</li>
 											</ul>
-											<div
-													class="nav-controls" style="">
+											<div class="nav-controls" style="">
 												<!--a class="btn has-tooltip" title="" href="#" data-original-title="邀请用户">
                                                                             <i class="fa fa-rss"></i>
                                                                         </a-->
@@ -144,13 +143,22 @@
                 } else { // 取消
                 }
             }
+			function randomNumber(min, max) {
+				return parseInt(Math.random() * (max - min) + min);
+			}
             function admindDoDelete(projectId, projectTypeId, projectName) {
-                var message = "确认是否删除项目: " + projectName;
-
-                if (window.confirm(message + "？")) {
-                    projectRemove(projectId, projectTypeId);
-                    fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, false);
-                } else { // 取消
+                let message = "确认是否删除项目: " + projectName+"? 删除操作将不可逆转，请谨慎操作!";
+                if (window.confirm(message)) {
+                	let a = randomNumber(10, 20);
+					let b = randomNumber(2, 20);
+                	let question = a + " + " + b +" = ?"
+                	let ret = window.prompt(question);
+                	if(parseInt(ret)===(a+b)){
+						projectRemove(projectId, projectTypeId);
+						fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, false);
+					}else{
+                		alert('回答错误');
+					}
                 }
             }
 		</script>
