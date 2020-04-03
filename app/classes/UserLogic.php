@@ -81,6 +81,28 @@ class UserLogic
 
     /**
      * @param int $limit
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public function getAllUser($limit = 10000, $primaryKey = true)
+    {
+        $userModel = new UserModel();
+        $conditions = [];
+        $orderBy = 'uid';
+        $sort = "desc ";
+        $append_sql = "";
+        $field = "uid as k,uid,phone,username,display_name,avatar,email,status";
+        $users = $userModel->getRows($field, $conditions, $append_sql, $orderBy, $sort, $limit, $primaryKey);
+        foreach ($users as &$user) {
+            self::formatAvatarUser($user);
+        }
+        unset($user);
+        return $users;
+    }
+
+    /**
+     * @param int $limit
      * @return array
      * @throws \Exception
      */
