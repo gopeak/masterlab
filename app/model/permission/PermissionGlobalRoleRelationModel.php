@@ -74,7 +74,7 @@ class PermissionGlobalRoleRelationModel extends BaseDictionaryModel
         $roleIds_str = implode(',', $roleIds);
         $sql .= " AND  role_id IN ({$roleIds_str}) GROUP BY perm_global_id";
 
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->fetchALLForGroup($sql, $params, true);
 
         if (empty($rows)) {
             return [];
@@ -110,7 +110,7 @@ class PermissionGlobalRoleRelationModel extends BaseDictionaryModel
 
         $roleIds_str = implode(',', $idArr);
         $sql .= " AND  role_id IN ({$roleIds_str}) GROUP BY perm_global_id";
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->fetchALLForGroup($sql, $params, true);
 
         if (empty($rows)) {
             return [];

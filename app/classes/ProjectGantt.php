@@ -319,7 +319,7 @@ class ProjectGantt
             $condition = "project_id={$projectId} AND sprint={$sprintId}   {$orderBy}";
             $sql = "select * from {$table} where {$condition}";
             // echo $sql;
-            $sprintRows[$sprint['id']]  = $issueModel->db->getRows($sql);
+            $sprintRows[$sprint['id']]  = $issueModel->db->fetchAll($sql);
             $sprintIssueArr = [];
             //print_r($sprintRows[$sprint['id']]);
             // 计算迭代的用时
@@ -447,7 +447,7 @@ class ProjectGantt
             $condition = "project_id={$projectId} AND sprint={$sprintId}   {$orderBy}";
             $fields = "id,issue_num,issue_type,status,summary,assignee,have_children,master_id,level,depends,start_date,due_date,duration,progress,weight,gant_sprint_weight";
             $sql = "select {$fields} from {$table} where {$condition}";
-            $sprintRows[$sprint['id']] = $rows = $issueModel->db->getRows($sql);
+            $sprintRows[$sprint['id']] = $rows = $issueModel->db->fetchAll($sql);
             $sprintIssueArr = [];
             $otherArr = [];
             // 计算迭代的用时
@@ -517,7 +517,7 @@ class ProjectGantt
         $issueModel = new IssueModel();
 
         $sql = "select id from {$issueModel->getTable()} where master_id=0 AND have_children!=0";
-        $level1Rows = $issueModel->db->getRows($sql);
+        $level1Rows = $issueModel->db->fetchAll($sql);
         $idArr = [];
         foreach ($level1Rows as $level1Row) {
             $idArr[] = $level1Row['id'];
@@ -526,7 +526,7 @@ class ProjectGantt
         if (!empty($idArr)) {
             $idArrStr = implode(',', $idArr);
             $sql = "update  {$issueModel->getTable()} set level=1 where id in( $idArrStr)";
-            $issueModel->db->query($sql);
+            $issueModel->db->exec($sql);
         }
         $this->batchUpdateGanttLevel2(1);
         $this->batchUpdateGanttLevel2(2);
@@ -538,7 +538,7 @@ class ProjectGantt
         $issueModel = new IssueModel();
 
         $sql = "select id from {$issueModel->getTable()} where  level={$level} AND have_children!=0";
-        $level1Rows = $issueModel->db->getRows($sql);
+        $level1Rows = $issueModel->db->fetchAll($sql);
         $idArr = [];
         foreach ($level1Rows as $level1Row) {
             $idArr[] = $level1Row['id'];
@@ -548,7 +548,7 @@ class ProjectGantt
             $idArrStr = implode(',', $idArr);
             $newLevel = $level + 1;
             $sql = "update  {$issueModel->getTable()} set level={$newLevel} where master_id in( $idArrStr)";
-            $issueModel->db->query($sql);
+            $issueModel->db->exec($sql);
         }
     }
 
@@ -568,12 +568,12 @@ class ProjectGantt
         $condition =
             "project_id={$projectId} AND gant_hide=1 AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc ";
 
-        $count = $issueModel->db->getOne("SELECT count(*) as cc FROM {$issueModel->getTable()} WHERE {$condition}");
+        $count = $issueModel->getFieldBySql("SELECT count(*) as cc FROM {$issueModel->getTable()} WHERE {$condition}");
 
         $condition .= $limit;
         $sql = "SELECT * FROM {$issueModel->getTable()} WHERE {$condition}";
         //echo $sql;
-        $rows = $issueModel->db->getRows($sql);
+        $rows = $issueModel->db->fetchAll($sql);
 
         if (!empty($rows)) {
             $fieldLogic = new FieldLogic();

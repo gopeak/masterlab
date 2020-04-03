@@ -102,7 +102,7 @@ class IssueLogic
         } else {
             $sqlPreNextSql = "SELECT  * FROM  {$table} WHERE  project_id=$projectId  AND id < $issueId limit 2";
         }
-        $rows = $issueModel->db->getRows($sqlPreNextSql, $params);
+        $rows = $issueModel->db->fetchAll($sqlPreNextSql, $params);
         return $rows;
     }
 
@@ -136,7 +136,7 @@ class IssueLogic
                     $start = $pageSize * ($currentPage);
                     $limit = " limit $start , 1 ";
                     $sqlPreNextSql = "SELECT  id FROM  {$table}  {$filterWhere}  $filterOrder  $limit";
-                    $nextId = $issueModel->db->getOne($sqlPreNextSql, $params);
+                    $nextId = $issueModel->getFieldBySql($sqlPreNextSql, $params);
                     return [true, $nextId];
                 }
             }
@@ -178,7 +178,7 @@ class IssueLogic
                     $start = $pageSize * ($filterCurrentPage - 1);
                     $limit = " limit $start , $pageSize ";
                     $sqlPreNextSql = "SELECT  id FROM  {$table}  {$filterWhere}  $filterOrder  $limit";
-                    $rows = $issueModel->db->getRows($sqlPreNextSql, $params);
+                    $rows = $issueModel->db->fetchAll($sqlPreNextSql, $params);
                     $prevRow = end($rows);
                     return [true, $prevRow['id']];
                 }
@@ -728,7 +728,7 @@ class IssueLogic
         $issueModel = new IssueModel();
         $issueTable = $issueModel->getTable();
         $sql = "Select group_concat(summary) as names  From {$issueTable}  Where id in ({$issueIds})";
-        $issueNames = $issueModel->db->getRows($sql);
+        $issueNames = $issueModel->db->fetchAll($sql);
         if (empty($issueNames)) {
             return $issueIds;
         } else {
@@ -813,7 +813,7 @@ class IssueLogic
     {
         $issueModel = new IssueModel();
         $sql = "SELECT i.id,i.issue_num ,count(f.id) as cc FROM `issue_main` i LEFT JOIN issue_follow f ON i.id=f.issue_id GROUP BY i.id";
-        $issueDataArr = $issueModel->db->getRows($sql);
+        $issueDataArr = $issueModel->db->fetchAll($sql);
         foreach ($issueDataArr as $item) {
             $updateCount = intval($item['cc']);
             if ($updateCount > 0) {
@@ -826,7 +826,7 @@ class IssueLogic
     {
         $issueModel = new IssueModel();
         $sql = "SELECT i.id,i.issue_num ,count(f.id) as cc FROM `issue_main` i LEFT JOIN main_timeline f ON i.id=f.issue_id GROUP BY i.id";
-        $issueDataArr = $issueModel->db->getRows($sql);
+        $issueDataArr = $issueModel->db->fetchAll($sql);
         foreach ($issueDataArr as $item) {
             $updateCount = intval($item['cc']);
             if ($updateCount > 0) {
@@ -1138,7 +1138,7 @@ class IssueLogic
                 // 更新数据
                 if (!empty($item['update']) && isset($item['update']['issue_num']) && !empty($item['update']['issue_num'])) {
                     $opt = true;
-                    $issueId = $issueModel->getOne('id', ['issue_num' => $item['update']['issue_num']]);
+                    $issueId = $issueModel->getField('id', ['issue_num' => $item['update']['issue_num']]);
                     //var_dump($issueId);
                     if ($issueId) {
                         list($ret, $insertIssueId) = $issueModel->updateItemById($issueId, $item['update']);

@@ -160,12 +160,12 @@ class UserLogic
         // 获取总数
         $sqlCount = "SELECT count(U.uid) as cc FROM  {$table} " . $sql;
         //var_dump($sqlCount,$params);
-        $count = $userModel->db->getOne($sqlCount, $params);
+        $count = $userModel->getFieldBySql($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$table} " . $sql;
         $sql .= ' ' . $order . $limit;
         //var_dump($sql);
-        $rows = $userModel->db->getRows($sql, $params, true);
+        $rows = $userModel->fetchALLForGroup($sql, $params, true);
         $userIds = array_keys($rows);
 
         $userGroups = $userGroupModel->getsByUserIds($userIds);
@@ -328,7 +328,7 @@ class UserLogic
             $sql .= " limit $limit ";
         }
         // echo $sql;
-        $rows = $userModel->db->getRows($sql, $params);
+        $rows = $userModel->db->fetchAll($sql, $params);
         unset($userModel);
         return $rows;
     }
@@ -409,12 +409,12 @@ class UserLogic
         $sql .= " group by G.id ";
 
         // 获取总数
-        $count = $groupModel->db->getOne($sqlCount, $params);
+        $count = $groupModel->getFieldBySql($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$joinTable} " . $sql;
         $sql .= ' ' . $order . $limit;
         //echo $sql;
-        $rows = $groupModel->db->getRows($sql, $params);
+        $rows = $groupModel->db->fetchAll($sql, $params);
         unset($userGroupModel, $groupModel);
 
         return [$rows, $count];

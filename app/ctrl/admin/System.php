@@ -903,7 +903,7 @@ class System extends BaseAdminCtrl
         $row = $model->getRow('*', []);
 
         if (empty($row)) {
-            $fields = $model->db->getFullFields($model->getTable());
+            $fields = $model->getFullFields($model->getTable());
             foreach ($fields as &$field) {
                 $field = '';
             }

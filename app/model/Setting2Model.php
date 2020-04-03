@@ -7,7 +7,7 @@ namespace main\app\model;
  * @author sven
  *
  */
-class Setting2Model extends DbalModel
+class Setting2Model extends DbModel
 {
 
     /**

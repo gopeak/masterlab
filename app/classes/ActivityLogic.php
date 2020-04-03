@@ -49,7 +49,7 @@ class ActivityLogic
     {
         $model = new ActivityModel();
         $sql = " select `date`, count(*) as count from  main_activity where user_id=:user_id AND `date`>=(curdate()-365)  GROUP BY date  ";
-        $rows = $model->db->getRows($sql, ['user_id' => $userId]);
+        $rows = $model->db->fetchAll($sql, ['user_id' => $userId]);
         return $rows;
     }
 
@@ -81,12 +81,12 @@ class ActivityLogic
         $conditions = [];
         $start = $pageSize * ($page - 1);
         $sqlRows .= " ORDER BY id DESC  limit $start, " . $pageSize;
-        $rows = $model->db->getRows($sqlRows, $conditions);
+        $rows = $model->db->fetchAll($sqlRows, $conditions);
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
         $sqlCount = "select count(*) as cc from " . $model->getTable() . "  " . $filterProjectSql;
-        $count = $model->db->getOne($sqlCount, $conditions);
+        $count = $model->getFieldBySql($sqlCount, $conditions);
         return [$rows, $count];
     }
 
@@ -112,7 +112,7 @@ class ActivityLogic
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
-        $count = $model->getOne('count(*) as cc', $conditions);
+        $count = $model->getField('count(*) as cc', $conditions);
         return [$rows, $count];
     }
 
@@ -138,7 +138,7 @@ class ActivityLogic
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
-        $count = $model->getOne('count(*) as cc', $conditions);
+        $count = $model->getField('count(*) as cc', $conditions);
         return [$rows, $count];
     }
 
@@ -160,12 +160,12 @@ class ActivityLogic
         $start = $pageSize * ($page - 1);
         $model = new ActivityModel();
         $sql = "SELECT  *  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND `type` =:type  Order by id desc  limit $start, " . $pageSize;
-        $rows = $model->db->getRows($sql, $conditions);
+        $rows = $model->db->fetchAll($sql, $conditions);
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
         $sqlCount = "SELECT  count(*) as cc  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND `type` =:type ";
-        $count = $model->db->getOne($sqlCount, $conditions);
+        $count = $model->getFieldBySql($sqlCount, $conditions);
         return [$rows, $count];
     }
 

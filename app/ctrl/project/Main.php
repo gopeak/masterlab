@@ -307,7 +307,7 @@ class Main extends Base
         $orgList = $orgModel->getAllItems();
         $data['org_list'] = $orgList;
 
-        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
+        $orgName = $orgModel->getField('name', array('id' => $info['org_id']));
         $data['title'] = '设置';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'basic_info';

@@ -68,12 +68,12 @@ class LogLogic
         // 获取总数
         $sqlCount = "SELECT count(id) as cc FROM  {$table} " . $sql;
         //var_dump($sqlCount,$params);
-        $count = $logModel->db->getOne($sqlCount, $params);
+        $count = $logModel->getFieldBySql($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$table} " . $sql;
         $sql .= ' ' . $order . $limit;
 
-        $logs = $logModel->db->getRows($sql, $params);
+        $logs = $logModel->db->fetchAll($sql, $params);
 
 
         unset($logModel);

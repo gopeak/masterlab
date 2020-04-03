@@ -38,7 +38,7 @@ class ProjectModel extends CacheModel
     public function getAllCount()
     {
         $field = "count(*) as cc ";
-        return (int)$this->getOne($field, ['archived' => 'N']);
+        return (int)$this->getField($field, ['archived' => 'N']);
     }
 
     public function getAll($primaryKey = true, $fields = '*')
@@ -73,7 +73,7 @@ class ProjectModel extends CacheModel
         $where = wrapBlank("WHERE (`name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%') AND archived='N' ");
         $orderBy = " ORDER BY $orderBy $sort";
         $sql = "SELECT * FROM " . $table . $where . $orderBy;
-        return $this->db->getRows($sql, $params, false);
+        return $this->db->fetchAll($sql, $params);
     }
 
     /**
@@ -91,7 +91,7 @@ class ProjectModel extends CacheModel
         $where = wrapBlank("WHERE `type`=$typeId AND (`name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%') AND archived='N' ");
         $orderBy = " ORDER BY $orderBy $sort";
         $sql = "SELECT * FROM " . $table . $where . $orderBy;
-        return $this->db->getRows($sql, $params, false);
+        return $this->db->fetchAll($sql, $params);
     }
 
     /**
@@ -105,7 +105,7 @@ class ProjectModel extends CacheModel
         $params = array();
 
         $sqlCount = "SELECT count(id) as cc FROM {$table} ";
-        $total = $this->db->getOne($sqlCount, $params);
+        $total = $this->getFieldBySql($sqlCount, $params);
 
         $start = $page_size * ($page - 1);
         $limit = wrapBlank("LIMIT {$start}, " . $page_size);
@@ -113,7 +113,7 @@ class ProjectModel extends CacheModel
         $where = wrapBlank("WHERE archived='N' ");
         $where .= $order . $limit;
         $sql = "SELECT * FROM " . $table . $where;
-        $rows = $this->db->getRows($sql, $params, false);
+        $rows = $this->db->fetchAll($sql, $params);
 
         return array($rows, $total);
     }
@@ -131,7 +131,7 @@ class ProjectModel extends CacheModel
         $fields = "`key`";
 
         $sql = "SELECT {$fields}  FROM {$table} Where id= {$projectId} ";
-        $key = $this->db->getOne($sql);
+        $key = $this->getFieldBySql($sql);
         return $key;
     }
 
@@ -155,7 +155,7 @@ class ProjectModel extends CacheModel
     {
         $field = "name";
         $where = ['id' => $projectId];
-        $row = $this->getOne($field, $where);
+        $row = $this->getField($field, $where);
         return $row;
     }
 
@@ -188,7 +188,7 @@ class ProjectModel extends CacheModel
 
         $fields = "count(*) as cc";
         $where = ['name' => $name];
-        $count = $this->getOne($fields, $where);
+        $count = $this->getField($fields, $where);
         return $count > 0;
     }
 
@@ -198,7 +198,7 @@ class ProjectModel extends CacheModel
         $conditions['id'] = $id;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND name=:name  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getFieldBySql($sql, $conditions);
         return $count > 0;
     }
 
@@ -206,7 +206,7 @@ class ProjectModel extends CacheModel
     {
         $fields = "count(*) as cc";
         $where = ['key' => $key];
-        $count = $this->getOne($fields, $where);
+        $count = $this->getField($fields, $where);
         return $count > 0;
     }
 
@@ -216,7 +216,7 @@ class ProjectModel extends CacheModel
         $conditions['id'] = $id;
         $conditions['key'] = $key;
         $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND `key`=:key  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getFieldBySql($sql, $conditions);
         return $count > 0;
     }
 
@@ -235,7 +235,7 @@ class ProjectModel extends CacheModel
         $where = wrapBlank("WHERE id IN (");
         $where .= $idInString.wrapBlank(")");
         $sql = "SELECT * FROM " . $table . $where;
-        $rows = $this->db->getRows($sql, $params, false);
+        $rows = $this->db->fetchAll($sql, $params);
 
         return $rows;
     }

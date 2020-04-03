@@ -100,8 +100,7 @@ class Framework extends BaseCtrl
     {
         $dbModel = new FrameworkUserModel();
         $dbModel->getTable();
-        $dbModel->db->pdo;
-        $this->ajaxSuccess('pdo', $dbModel->db->pdo);
+        $this->ajaxSuccess('db', $dbModel->db);
     }
 
     public function dbQuery()
@@ -125,28 +124,28 @@ class Framework extends BaseCtrl
         try {
             $sql = "INSERT INTO {$table} ( `name`, `phone`, `password`, `email`, `status`, `reg_time`, `last_login_time`) 
                 VALUES ( '帅哥', '13002510000', '{$pwd}', 'fun@163.com', 1, 0, {$time}) ;";
-            $ret = $dbModel->db->exec($sql);
+            $ret = $dbModel->db->executeUpdate($sql);
         } catch (\Exception $e) {
-            $insertId = $dbModel->db->getLastInsId();
+            $insertId = $dbModel->getLastInsId();
             if (!empty($insertId)) {
                 $sql = "Delete From {$table} Where id = $insertId  ";
                 echo $sql;
-                $dbModel->db->exec($sql);
+                $dbModel->db->executeUpdate($sql);
             }
             $this->ajaxSuccess($user, $e->getMessage());
             return;
         }
 
         if ($ret) {
-            $insertId = $dbModel->db->getLastInsId();
+            $insertId = $dbModel->getLastInsId();
             $phone = $_POST['phone'];
             $pwd = $_POST['pwd'];
             $sql = "Select * From {$table} Where phone='$phone' AND password='$pwd'";
-            $user = $dbModel->db->getRow($sql);
+            $user = $dbModel->db->fetchAssoc($sql);
             if (!empty($insertId)) {
                 $sql = "Delete From {$table} Where phone = '13002510000'  ";
                 //echo $sql;
-                $dbModel->db->exec($sql);
+                $dbModel->db->executeUpdate($sql);
             }
         }
         $this->ajaxSuccess($user, 'ok');
@@ -165,18 +164,18 @@ class Framework extends BaseCtrl
 
         $sql = "INSERT INTO {$table} ( `name`, `phone`, `password`, `email`, `status`, `reg_time`, `last_login_time`) 
             VALUES ( '帅哥', '13002510000', '{$pwd}', 'fun@163.com', 1, 0, {$time}) ;";
-        $dbModel->db->exec($sql);
+        $dbModel->db->executeUpdate($sql);
 
-        $insert_id = $dbModel->db->getLastInsId();
+        $insert_id = $dbModel->getLastInsId();
         $phone = $_POST['phone'];
         $sql = "Select * From {$table} Where phone='$phone'  limit 1";
         //echo $sql;
-        $dbModel->db->getRow($sql);
+        $dbModel->db->fetchAssoc($sql);
         $sql = "Select * From {$table}    limit 1";
-        $user = $dbModel->db->getRow($sql);
+        $user = $dbModel->db->fetchAssoc($sql);
         if (!empty($insert_id)) {
             $sql = "Delete From {$table} Where id = '$insert_id'  ";
-            $dbModel->db->exec($sql);
+            $dbModel->db->executeUpdate($sql);
         }
 
         $this->ajaxSuccess($user, 'ok');

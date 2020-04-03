@@ -499,7 +499,7 @@ class Gantt extends BaseUserCtrl
             $sprintId = $currentIsuse['sprint'];
             $currentId = $currentIsuse['id'];
             $sql = "Select {$fields} From {$table} Where  master_id={$currentId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ,start_date asc";
-            $currentChildrenArr = $issueModel->db->getRows($sql);
+            $currentChildrenArr = $issueModel->db->fetchAll($sql);
             if ($currentChildrenArr && is_array($currentChildrenArr)) {
                 foreach ($currentChildrenArr as $item) {
                     $sortArr[] = $item;
@@ -509,14 +509,14 @@ class Gantt extends BaseUserCtrl
             $sortArr[] = $targetIssue;
             $sprintId = $targetIssue['sprint'];
             $sql = "Select {$fields} From {$table} Where `$fieldWeight` >$currentWeight AND `$fieldWeight`<$targetWeight   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ";
-            $targetChildrenArr = $issueModel->db->getRows($sql);
+            $targetChildrenArr = $issueModel->db->fetchAll($sql);
             if ($targetChildrenArr && is_array($targetChildrenArr)) {
                 foreach ($targetChildrenArr as $item) {
                     $sortArr[] = $item;
                 }
             }
             $sql = "Select {$fields} From {$table} Where  master_id={$currentId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} ASC    limit 1";
-            $minWeight = max(0, (int)$issueModel->db->getOne($sql));
+            $minWeight = max(0, (int)$issueModel->getFieldBySql($sql));
 
             $count = count($sortArr);
             $maxWeight = $targetWeight;
@@ -585,7 +585,7 @@ class Gantt extends BaseUserCtrl
             $sprintId = $targetIssue['sprint'];
             $targetId = $targetIssue['id'];
             $sql = "Select {$fields} From {$table} Where  master_id={$targetId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ,start_date asc";
-            $targetChildrenArr = $issueModel->db->getRows($sql);
+            $targetChildrenArr = $issueModel->db->fetchAll($sql);
             if ($targetChildrenArr && is_array($targetChildrenArr)) {
                 foreach ($targetChildrenArr as $item) {
                     $sortArr[] = $item;
@@ -596,7 +596,7 @@ class Gantt extends BaseUserCtrl
             $sortArr[] = $currentIsuse;
             $sprintId = $currentIsuse['sprint'];
             $sql = "Select {$fields} From {$table} Where `$fieldWeight` >$targetWeight AND `$fieldWeight`<$currentWeight   AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC ";
-            $currentChildrenArr = $issueModel->db->getRows($sql);
+            $currentChildrenArr = $issueModel->db->fetchAll($sql);
             if ($currentChildrenArr && is_array($currentChildrenArr)) {
                 foreach ($currentChildrenArr as $item) {
                     $sortArr[] = $item;
@@ -605,7 +605,7 @@ class Gantt extends BaseUserCtrl
             // print_r($currentChildrenArr);
             // 获取最小的权重值
             $sql = "Select {$fields} From {$table} Where  master_id={$targetId}   AND `sprint` = {$sprintId} Order by {$fieldWeight} ASC    limit 1";
-            $minWeight = max(0, (int)$issueModel->db->getOne($sql));
+            $minWeight = max(0, (int)$issueModel->getFieldBySql($sql));
             $count = count($sortArr);
             $maxWeight = $currentWeight;
             $decWeight = intval(($currentWeight - $minWeight) / $count);

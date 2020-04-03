@@ -164,7 +164,7 @@ class BaseUserCtrl extends BaseCtrl
             if (!isset($this->projectPermArr)) {
                 $this->projectPermArr = [];
             }
-
+            // var_dump($this->projectPermArr);
             $this->addGVar('projectPermArr', $this->projectPermArr);
             $this->addGVar('_projectPermArrJson', json_encode(array_keys($this->projectPermArr)));
             $this->addGVar(

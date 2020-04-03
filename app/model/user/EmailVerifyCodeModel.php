@@ -73,8 +73,8 @@ class EmailVerifyCodeModel extends CacheModel
 
         $sql = "INSERT IGNORE INTO {$table} SET email=:email, uid=:uid, username=:username,verify_code=:verify_code, `time`=:time ";
         $sql .= " ON DUPLICATE KEY UPDATE verify_code=:verify_code";
-        $ret = $this->db->exec($sql, $params);
-        $insertId = $this->db->getLastInsId();
+        $ret = $this->db->executeUpdate($sql, $params);
+        $insertId = $this->getLastInsId();
         return [$ret, $insertId];
     }
 

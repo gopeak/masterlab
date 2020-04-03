@@ -28,7 +28,7 @@ class IssueFavFilterLogic
         }
         $sql = "SELECT * FROM  {$table}  WHERE author=:currentUid {$addSql} Order By id desc ";
 
-        $arr = $filterModel->db->getRows($sql, $params);
+        $arr = $filterModel->db->fetchAll($sql, $params);
         foreach ($arr as &$f) {
             $f['md5'] = md5($f['filter']);
         }
@@ -46,7 +46,7 @@ class IssueFavFilterLogic
         $params['currentUid'] = UserAuth::getInstance()->getId();
         $sql = "SELECT * FROM  {$table}  WHERE author=:currentUid OR share_scope='all' Order By id desc ";
 
-        $arr = $filterModel->db->getRows($sql, $params);
+        $arr = $filterModel->db->fetchAll($sql, $params);
         $i = 0;
         $firstFilters = [];
         $hideFilters = [];

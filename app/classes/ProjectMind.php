@@ -412,7 +412,7 @@ class ProjectMind
         $field = '`id`,`pkey`,`issue_num`,`project_id`,`issue_type`,`assignee`,`summary`,`priority`,`resolve`,`status`,
         `created`,`updated`,`module`,`sprint`,`assistants`,`master_id`,have_children,`progress`,weight,start_date, due_date';
         $sql = "select {$field} from {$issueModel->getTable()} where {$condition}";
-        $issues = $issueModel->db->getRows($sql);
+        $issues = $issueModel->db->fetchAll($sql);
         // print_r($issues);
         $finalArr = $this->getSecondArr($projectId, $source, $groupByField);
         // print_r($finalArr);

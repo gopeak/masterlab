@@ -167,7 +167,7 @@ class IssueUi extends BaseAdminCtrl
         $model = new IssueUiModel();
         $model->db->connect();
         try {
-            $model->db->pdo->beginTransaction();
+            $model->db->beginTransaction();
             $model->deleteByIssueType($issueTypeId, $uiType);
 
             $issueUiTabModel = new IssueUiTabModel();
@@ -209,10 +209,10 @@ class IssueUi extends BaseAdminCtrl
                     }
                 }
             }
-            $model->db->pdo->commit();
+            $model->db->commit();
             $this->ajaxSuccess('ok');
         } catch (\PDOException $e) {
-            $model->db->pdo->rollBack();
+            $model->db->rollBack();
             $this->ajaxFailed('服务器错误', '数据更新失败' . $e->getMessage());
         }
     }

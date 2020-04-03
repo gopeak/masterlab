@@ -115,6 +115,11 @@ class Passport extends BaseCtrl
         $stmt->bindValue(1, $id);
         $stmt->execute();
         // $settings = $stmt->fetchAll();
+        $table = str_replace("`",'',$dbalModel->getTable());
+        $sql = "SHOW TABLES LIKE  '" . $table. "'";
+        echo $sql;
+        $tableName = $dbalModel->db->fetchColumn($sql);
+        var_dump($tableName);
 
         $paramArr = [];
         $paramArr = ['username'=>'master'];
@@ -180,6 +185,8 @@ class Passport extends BaseCtrl
         $source = 0
     )
     {
+        //print_r($GLOBALS['framework']);
+        // var_dump(func_get_args());
         if (empty($username)) {
             $this->ajaxFailed('错误', '参数错误,username 不能为空');
         }

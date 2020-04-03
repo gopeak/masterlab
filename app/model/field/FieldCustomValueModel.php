@@ -50,7 +50,7 @@ class FieldCustomValueModel extends BaseIssueItemsModel
         $table = $this->getTable();
         $where = "WHERE issue_id IN ({$issueIdsStr})  AND custom_field_id IN ({$fieldIdStr})";
         $sql = "SELECT * FROM " . $table . $where;
-        $rows = $this->db->getRows($sql);
+        $rows = $this->db->fetchAll($sql);
         return $rows;
     }
 

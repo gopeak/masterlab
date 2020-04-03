@@ -489,7 +489,7 @@ class BaseCtrl
 
             $issueModel = new SettingModel();
             $versionSql = 'select version() as vv';
-            $versionStr = $issueModel->db->getOne($versionSql);
+            $versionStr = $issueModel->getFieldBySql($versionSql);
             $basicSettingArr = $issueModel->getSettingByModule();
             $companyInfo = [];
             $fetchKeyArr = ['title', 'company', 'company_linkman', 'company_phone'];

@@ -98,7 +98,7 @@ class ProjectModuleModel extends CacheModel
         $conditions['project_id'] = $projectId;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND name=:name  ";
-        $count = (int)$this->db->getOne($sql, $conditions);
+        $count = (int)$this->getFieldBySql($sql, $conditions);
         return $count > 0;
     }
 
@@ -116,7 +116,7 @@ class ProjectModuleModel extends CacheModel
         $conditions['project_id'] = $projectId;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND  project_id=:project_id AND name=:name  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getFieldBySql($sql, $conditions);
         return $count > 0;
     }
 

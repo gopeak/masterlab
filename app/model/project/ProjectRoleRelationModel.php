@@ -73,8 +73,7 @@ class ProjectRoleRelationModel extends BaseDictionaryModel
 
         $roleIds_str = implode(',', $roleIds);
         $sql .= " AND  role_id IN ({$roleIds_str}) GROUP BY perm_id";
-
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->fetchALLForGroup($sql, $params, true);
 
         if (empty($rows)) {
             return [];

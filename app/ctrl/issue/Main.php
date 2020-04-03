@@ -1203,7 +1203,7 @@ class Main extends BaseUserCtrl
                 $aboveWeight = (int)$belowIssue[$fieldWeight];
                 $sprintId = $belowIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
-                $nextWeight = (int)$model->db->getOne($sql);
+                $nextWeight = (int)$model->getFieldBySql($sql);
                 if (empty($nextWeight)) {
                     $nextWeight = 0;
                 }
@@ -1226,7 +1226,7 @@ class Main extends BaseUserCtrl
                 $sprintId = $aboveIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where $fieldWeight>$belowWeight  AND sprint=$sprintId Order by {$fieldWeight} DESC limit 1";
                 // echo $sql;
-                $prevWeight = (int)$model->db->getOne($sql);
+                $prevWeight = (int)$model->getFieldBySql($sql);
                 if (empty($prevWeight)) {
                     $prevWeight = 0;
                 }
@@ -1253,10 +1253,10 @@ class Main extends BaseUserCtrl
                 // 如果是子任务
                 $masterId = (int)$params['master_issue_id'];
                 $sql = "Select {$fieldWeight} From {$table} Where master_id={$masterId}  AND sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
-                $prevWeight = (int)$model->db->getOne($sql);
+                $prevWeight = (int)$model->getFieldBySql($sql);
                 $sql = "Select {$fieldWeight} From {$table} Where $prevWeight>{$fieldWeight} AND sprint={$sprintId} Order by {$fieldWeight} DESC limit 1";
                 //echo $sql;
-                $nextWeight = (int)$model->db->getOne($sql);
+                $nextWeight = (int)$model->getFieldBySql($sql);
                 if (($prevWeight - $nextWeight) > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $prevWeight - ProjectGantt::$offset;
                 } else {
@@ -1265,7 +1265,7 @@ class Main extends BaseUserCtrl
             } else {
                 // 如果是普通任务
                 $sql = "Select {$fieldWeight} From {$table} Where   sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
-                $minWeight = (int)$model->db->getOne($sql);
+                $minWeight = (int)$model->getFieldBySql($sql);
                 if ($minWeight > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $minWeight - ProjectGantt::$offset;
                 } else {

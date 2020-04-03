@@ -179,11 +179,11 @@ class CacheKeyModel extends CacheModel
 
         $curRate = mt_rand(0, 1000);
         $_config = getConfigVar('cache');
-        if (!isset($_config['cache_gc_rate'])) {
-            $_config['cache_gc_rate'] = 1;
+        if (!isset($_config['gc_rate'])) {
+            $_config['gc_rate'] = 1;
         }
 
-        if (intval($_config['cache_gc_rate']) < $curRate) {
+        if (intval($_config['gc_rate']) < $curRate) {
             return false;
         }
 
@@ -195,20 +195,17 @@ class CacheKeyModel extends CacheModel
          */
         $now = time();
         $sql = "SELECT  *  FROM {$this->getTable()} Where `expire` < $now limit 500";
-        $this->db->connect();
-        $pdo = $this->db->pdo;
+        $pdo = $this->db;
         try {
-            $stmt = $pdo->prepare($sql, array(
-                \PDO::ATTR_CURSOR => \PDO::CURSOR_SCROLL
-            ));
-            $stmt->execute();
+
             $modules = [];
-            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC, \PDO::FETCH_ORI_NEXT)) {
+            $rows = $this->db->fetchAll($sql);
+            foreach ($rows as $row) {
                 $key = safeStr($row['key']);
                 $modules[$row['module']][] = $key;
             }
             if (!empty($modules)) {
-                $pdo->query("Delete from {$this->getTable()} Where  $now>expire  ");
+                $pdo->exec("Delete from {$this->getTable()} Where  $now>expire  ");
                 $this->cache->delete(array_keys($modules));
                 foreach ($modules as $keys) {
                     if (!empty($modules)) {

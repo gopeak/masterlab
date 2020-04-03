@@ -45,8 +45,8 @@ class Feature extends BaseCtrl
     public function getPhpIni()
     {
         $ret = new \stdClass();
-        if (isset($_REQUEST['inis'])) {
-            $inis = json_decode($_REQUEST['inis']);
+        if (isset($_POST['ini_arr'])) {
+            $inis = json_decode($_POST['ini_arr']);
             foreach ($inis as $key) {
                 $v = ini_get($key);
                 $key = str_replace('.', '_', $key);
@@ -90,9 +90,12 @@ class Feature extends BaseCtrl
         $dirs = [
             PRE_APP_PATH.'env.ini',
             PRE_APP_PATH.'bin',
+            PRE_APP_PATH.'upgrade',
             APP_PATH.'config/deploy',
             APP_PATH.'config/travis',
             APP_PATH.'config/development',
+            APP_PATH.'public/install',
+            APP_PATH.'public/attachment',
             STORAGE_PATH,
             STORAGE_PATH . 'upload',
             STORAGE_PATH . 'cache',
@@ -149,8 +152,8 @@ class Feature extends BaseCtrl
     {
         $dbModel = new FrameworkUserModel();
         $dbModel->getTable();
-        $dbModel->db->pdo;
-        $this->ajaxSuccess('pdo', $dbModel->db->pdo);
+        $dbModel->db;
+        $this->ajaxSuccess('db', $dbModel->db);
     }
 
     public function dbQuery()
@@ -174,28 +177,28 @@ class Feature extends BaseCtrl
         try {
             $sql = "INSERT INTO {$table} ( `name`, `phone`, `password`, `email`, `status`, `reg_time`, `last_login_time`) 
                 VALUES ( '帅哥', '13002510000', '{$pwd}', 'fun@163.com', 1, 0, {$time}) ;";
-            $ret = $dbModel->db->exec($sql);
+            $ret = $dbModel->db->executeUpdate($sql);
         } catch (\Exception $e) {
-            $insertId = $dbModel->db->getLastInsId();
+            $insertId = $dbModel->getLastInsId();
             if (!empty($insertId)) {
                 $sql = "Delete From {$table} Where id = $insertId  ";
                 echo $sql;
-                $dbModel->db->exec($sql);
+                $dbModel->db->executeUpdate($sql);
             }
             $this->ajaxSuccess($user, $e->getMessage());
             return;
         }
 
         if ($ret) {
-            $insertId = $dbModel->db->getLastInsId();
+            $insertId = $dbModel->getLastInsId();
             $phone = $_POST['phone'];
             $pwd = $_POST['pwd'];
             $sql = "Select * From {$table} Where phone='$phone' AND password='$pwd'";
-            $user = $dbModel->db->getRow($sql);
+            $user = $dbModel->db->fetchAssoc($sql);
             if (!empty($insertId)) {
                 $sql = "Delete From {$table} Where phone = '13002510000'  ";
                 //echo $sql;
-                $dbModel->db->exec($sql);
+                $dbModel->db->executeUpdate($sql);
             }
         }
         $this->ajaxSuccess($user, 'ok');
@@ -214,18 +217,18 @@ class Feature extends BaseCtrl
 
         $sql = "INSERT INTO {$table} ( `name`, `phone`, `password`, `email`, `status`, `reg_time`, `last_login_time`) 
             VALUES ( '帅哥', '13002510000', '{$pwd}', 'fun@163.com', 1, 0, {$time}) ;";
-        $dbModel->db->exec($sql);
+        $dbModel->db->executeUpdate($sql);
 
-        $insert_id = $dbModel->db->getLastInsId();
+        $insert_id = $dbModel->getLastInsId();
         $phone = $_POST['phone'];
         $sql = "Select * From {$table} Where phone='$phone'  limit 1";
         //echo $sql;
-        $dbModel->db->getRow($sql);
+        $dbModel->db->fetchAssoc($sql);
         $sql = "Select * From {$table}    limit 1";
-        $user = $dbModel->db->getRow($sql);
+        $user = $dbModel->db->fetchAssoc($sql);
         if (!empty($insert_id)) {
             $sql = "Delete From {$table} Where id = '$insert_id'  ";
-            $dbModel->db->exec($sql);
+            $dbModel->db->executeUpdate($sql);
         }
 
         $this->ajaxSuccess($user, 'ok');

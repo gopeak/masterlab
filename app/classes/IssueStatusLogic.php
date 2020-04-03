@@ -26,7 +26,7 @@ class IssueStatusLogic
                 Left join {$workflowBlockTable} b on b.status_id=t.id 
                 Group by t.id 
                 Order by t.id ASC ";
-        return  $issueStatusModel->db->getRows($sql);
+        return  $issueStatusModel->db->fetchAll($sql);
     }
 
     public function getStatus()
@@ -34,7 +34,7 @@ class IssueStatusLogic
         $issueStatusModel = new IssueStatusModel();
         $issueStatusTable = $issueStatusModel->getTable();
         $sql = "Select *  From {$issueStatusTable}   Order by sequence DESC, id ASC ";
-        return  $issueStatusModel->db->getRows($sql);
+        return  $issueStatusModel->db->fetchAll($sql);
     }
 
     /**

@@ -35,7 +35,7 @@ class WorkflowLogic
                 Group by w.id 
                 Order by w.id ASC ";
         //var_dump($sql);
-        $rows = $workflowModel->db->getRows($sql);
+        $rows = $workflowModel->db->fetchAll($sql);
         if (!empty($rows)) {
             foreach ($rows as &$row) {
                 $row['update_time_text'] = format_unix_time($row['update_time']);

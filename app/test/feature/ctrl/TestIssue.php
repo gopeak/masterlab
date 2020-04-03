@@ -170,18 +170,18 @@ class TestIssue extends BaseAppTestCase
         }
 
         $table = $issueModel->getTable();
-        $issues = $issueModel->db->getRows("select * from  {$table} where  summary LIKE '%测试事项%'");
+        $issues = $issueModel->db->fetchAll("select * from  {$table} where  summary LIKE '%测试事项%'");
         foreach ($issues as $issue) {
             $issueModel->deleteItemById($issue['id']);
         }
-        $issues = $issueModel->db->getRows("select * from  {$table} where summary LIKE  '%test%'");
+        $issues = $issueModel->db->fetchAll("select * from  {$table} where summary LIKE  '%test%'");
         foreach ($issues as $issue) {
             $issueModel->deleteItemById($issue['id']);
         }
 
         $issueFilterModel = new IssueFilterModel();
         $table = $issueFilterModel->getTable();
-        $filters = $issueFilterModel->db->getRows("select * from  {$table} where name LIKE '%testSaveFilterName%'");
+        $filters = $issueFilterModel->db->fetchAll("select * from  {$table} where name LIKE '%testSaveFilterName%'");
         foreach ($filters as $filter) {
             $issueFilterModel->deleteItemById($filter['id']);
         }

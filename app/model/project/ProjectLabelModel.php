@@ -61,7 +61,7 @@ class ProjectLabelModel extends BaseDictionaryModel
             $appendSql = ' OR project_id=:project_id ';
         }
         $sql = "Select *  From {$table}  Where project_id=0 {$appendSql}  Order by  id  ASC ";
-        $rows = $this->db->getRows($sql, $params, $primaryKey);
+        $rows = $this->fetchALLForGroup($sql, $params, $primaryKey);
         return $rows;
     }
 

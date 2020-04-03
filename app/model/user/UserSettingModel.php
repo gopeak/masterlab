@@ -24,7 +24,7 @@ class UserSettingModel extends BaseUserItemsModel
 
     public function getSettingByKey($userId, $key)
     {
-        return $this->getOne('_value', ['user_id' => $userId, '_key' => $key]);
+        return $this->getField('_value', ['user_id' => $userId, '_key' => $key]);
     }
 
     public function getSetting($userId)

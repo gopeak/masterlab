@@ -101,12 +101,23 @@ if (!function_exists('currentHttpDomain')) {
      */
     function currentHttpDomain()
     {
+        $uri = 'http://localhost/';
         if(@$_SERVER["SERVER_PORT"]=='80'){
             $port = '';
         }else{
             $port = ':'.@$_SERVER["SERVER_PORT"];
         }
-        $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['SERVER_NAME'].$port.'/';
+        if(preg_match("/cli/i", php_sapi_name()) ){
+            if(in_array(APP_STATUS, ['development','deploy','test'])){
+                $uri = 'http://masterlab.ink/';
+            }
+            if(APP_STATUS=='travis'){
+                $uri = 'http://masterlab.ci:8888/';
+            }
+        }else{
+            $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['SERVER_NAME'].$port.'/';
+        }
+
         return $uri;
     }
 }

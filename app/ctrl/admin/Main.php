@@ -52,9 +52,9 @@ class Main extends BaseAdminCtrl
         // 获取mysql版本
         $versionSql = 'select version() as vv';
         $settingModel = new SettingModel();
-        $mysqlVersionStr = $settingModel->db->getOne($versionSql);
+        $mysqlVersionStr = $settingModel->getFieldBySql($versionSql);
 
-        $dbConf = getConfigVar('database');
+        $dbConf = getCommonConfigVar('database');
 
         $data['sys_domain'] = ROOT_URL;//ServerInfo::getDomain();
         $data['sys_datetime'] = date('Y-m-d  H:i:s', time());
@@ -66,10 +66,10 @@ class Main extends BaseAdminCtrl
         $data['sys_hostname'] = ServerInfo::getLocalHostName();
         $data['sys_php_user'] = isset($_SERVER['USER']) ? $_SERVER['USER'] : ServerInfo::getLocalServerUser();
         $data['sys_mysql_version'] = $mysqlVersionStr;
-        $data['sys_mysql_host'] = $dbConf['database']['default']['host'];
-        $data['sys_mysql_port'] = $dbConf['database']['default']['port'];
-        $data['sys_mysql_dbname'] = $dbConf['database']['default']['db_name'];
-        $data['sys_mysql_use_user'] = $dbConf['database']['default']['user'];
+        $data['sys_mysql_host'] = $dbConf['default']['host'];
+        $data['sys_mysql_port'] = $dbConf['default']['port'];
+        $data['sys_mysql_dbname'] = $dbConf['default']['db_name'];
+        $data['sys_mysql_use_user'] = $dbConf['default']['user'];
 
 
         $data['masterlab_version'] = MASTERLAB_VERSION;

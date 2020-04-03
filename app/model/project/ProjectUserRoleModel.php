@@ -65,7 +65,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
      */
     public function getCountUserRolesByProject($userId, $projectId)
     {
-        $count = $this->getOne('count(*) as cc', ['user_id' => $userId, 'project_id' => $projectId]);
+        $count = $this->getField('count(*) as cc', ['user_id' => $userId, 'project_id' => $projectId]);
         return intval($count);
     }
 
@@ -283,7 +283,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         $roleIds_str = implode(',', $roleIds);
         $sql .= " AND  role_id in ({$roleIds_str})";
 
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->fetchALLForGroup($sql, $params, true);
 
         if (!empty($rows)) {
             return array_keys($rows);
@@ -305,7 +305,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         $table = $this->getTable();
         $sql = "select user_id from {$table}   where  project_id in({$projectIds_str}) ";
 
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->fetchALLForGroup($sql, $params, true);
 
         if (!empty($rows)) {
             return array_keys($rows);
@@ -326,7 +326,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         $conditions['project_id'] = $projectId;
         $conditions['role_id'] = $roleId;
         $sql = "SELECT count(*) as cc  FROM {$table} Where user_id=:user_id AND project_id=:project_id AND role_id=:role_id  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getFieldBySql($sql, $conditions);
         return $count > 0;
     }
 
@@ -338,7 +338,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     {
         $table = $this->getTable();
         $sql = "SELECT DISTINCT project_id FROM {$table} WHERE user_id={$userId}";
-        $rows = $this->db->getRows($sql);
+        $rows = $this->db->fetchAll($sql);
         return $rows;
     }
 }

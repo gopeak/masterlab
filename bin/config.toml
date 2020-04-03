@@ -1,6 +1,6 @@
-####################
-# Masterlab Socket 配置文件 #
-####################
+################################
+# Masterlab Socket 配置文件    #
+################################
 
 name 		=	"Masterlab Socket Server"
 enable 		= 	true

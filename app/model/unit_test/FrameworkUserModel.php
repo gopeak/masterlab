@@ -9,7 +9,7 @@ use main\app\model\DbModel;
  *  框架用户表模型
  *
  */
-class FrameworkUserModel extends DbalModel
+class FrameworkUserModel extends DbModel
 {
     public $prefix = 'xphp_';
 

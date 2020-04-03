@@ -49,7 +49,7 @@ class ChartLogic
                     WHERE sprint_id =:sprint_id  GROUP BY {$field} ";
         }
         // echo $sql;
-        $rows = $model->db->getRows($sql, $params);
+        $rows = $model->db->fetchAll($sql, $params);
         return $rows;
     }
 
@@ -257,7 +257,7 @@ class ChartLogic
         $params['sprint_id'] = $sprintId;
         $sql = "SELECT due_date, count(*) as cc FROM {$table}  WHERE `sprint` =:sprint_id  GROUP BY due_date ORDER BY due_date ASC ";
         // echo $sql;
-        $rows = $model->db->getRows($sql, $params);
+        $rows = $model->db->fetchAll($sql, $params);
         return $rows;
     }
 }
