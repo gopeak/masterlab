@@ -654,6 +654,8 @@ class Main extends BaseUserCtrl
                 }
             }
 
+            $userLogic = new UserLogic();
+            $users = $userLogic->getAllUser();
             foreach ($data['issues'] as &$issue) {
                 $issueId = $issue['id'];
                 IssueFilterLogic::formatIssue($issue);
@@ -668,6 +670,11 @@ class Main extends BaseUserCtrl
                     $customValueArr = $customValuesIssueArr[$issueId];
                     $issue = array_merge($customValueArr, $issue);
                 }
+
+                $issue['creator_info'] = $users[$issue['creator']];
+                $issue['modifier_info'] = $users[$issue['modifier']];
+                $issue['reporter_info'] = $users[$issue['reporter']];
+                $issue['assignee_info'] = $users[$issue['assignee']];
             }
 
             $data['total'] = (int)$total;
