@@ -211,10 +211,12 @@ class Main extends BaseUserCtrl
         // 迭代数据
         $data['sprints'] = [];
         $data['active_sprint'] = [];
+        $sprintModel = new SprintModel();
         if (!empty($data['project_id'])) {
-            $sprintModel = new SprintModel();
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
+        }else{
+            $data['sprints'] = $sprintModel->getAllItems(false);
         }
 
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
@@ -670,11 +672,11 @@ class Main extends BaseUserCtrl
                     $customValueArr = $customValuesIssueArr[$issueId];
                     $issue = array_merge($customValueArr, $issue);
                 }
-
-                $issue['creator_info'] = $users[$issue['creator']];
-                $issue['modifier_info'] = $users[$issue['modifier']];
-                $issue['reporter_info'] = $users[$issue['reporter']];
-                $issue['assignee_info'] = $users[$issue['assignee']];
+                $emptyObj = new \stdClass();
+                $issue['creator_info'] = isset($users[$issue['creator']])?$users[$issue['creator']]:$emptyObj;
+                $issue['modifier_info'] = isset($users[$issue['modifier']])?$users[$issue['modifier']]:$emptyObj;
+                $issue['reporter_info'] = isset($users[$issue['reporter']])?$users[$issue['reporter']]:$emptyObj;
+                $issue['assignee_info'] = isset($users[$issue['assignee']])?$users[$issue['assignee']]:$emptyObj;
             }
 
             $data['total'] = (int)$total;

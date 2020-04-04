@@ -125,11 +125,11 @@ class CacheModel extends DbModel
             }
         }
         // 从数据库中获取,@todo 判断字段如果为boolean类型时的处理
-        $one = parent::$field($field, $where);
-        if ($one && !empty($key) && !empty($this->cache)) {
-            $this->cache->set($key, $one, $this->expire);
+        $value = parent::getField($field, $where);
+        if ($value && !empty($key) && !empty($this->cache)) {
+            $this->cache->set($key, $value, $this->expire);
         }
-        return $one;
+        return $value;
     }
 
     /**

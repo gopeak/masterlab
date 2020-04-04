@@ -103,11 +103,13 @@ class ConfigLogic
      */
     public static function getModules($projectId, $primaryKey = false)
     {
-        if (empty($projectId)) {
-            return [];
-        }
         $model = new ProjectModuleModel();
-        $rows = $model->getByProject($projectId, $primaryKey);
+        if (empty($projectId)) {
+            $rows = $model->getAll($primaryKey);
+        }else{
+            $rows = $model->getByProject($projectId, $primaryKey);
+        }
+
         foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];
