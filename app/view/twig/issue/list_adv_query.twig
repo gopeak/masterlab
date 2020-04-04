@@ -10,9 +10,8 @@ function deleteAdvQuery(index) {
     IssueAdvQuery.prototype.renderAdvQuery(adv_details);
 }
 
-window.$IssueAdvQuery = new IssueAdvQuery(_issueConfig);
-
 $(function () {
+    window.$IssueAdvQuery = new IssueAdvQuery(_issueConfig);
     // 高级搜索字段修改
     $(document).on("change", "#adv_field", function () {
         var $selected = $('#adv_field option:selected');
