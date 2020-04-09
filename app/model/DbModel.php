@@ -71,6 +71,12 @@ class DbModel extends BaseModel
     public $sql = '';
 
     /**
+     * 请求生命周期的sql数组
+     * @var array
+     */
+    public static $sqlLogs = [];
+
+    /**
      * 当前表的字段信息
      * @var array
      */

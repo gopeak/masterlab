@@ -20,6 +20,9 @@ define('CTRL_PATH', APP_PATH . 'ctrl/');
 // 项目程序模型文件所在根目录（文件系统）
 define('MODEL_PATH', APP_PATH . 'model/');
 
+// 插件目录
+define('PLUGIN_PATH', APP_PATH . 'plugin/');
+
 // 项目程序服务文件所在根目录（文件系统）
 define('API_PATH', APP_PATH . 'api/');
 
