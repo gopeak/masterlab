@@ -124,7 +124,7 @@ class SprintModel extends BaseDictionaryModel
         $projectIdStr = implode(',', $projectIdArr);
         $table = $this->getTable();
         $sql = " SELECT {$fields} FROM {$table}  WHERE project_id in ({$projectIdStr}) ORDER BY `active` DESC,`order_weight` DESC ";
-        return $this->db->getRows($sql, [], $primaryKey);
+        return $this->fetchALLForGroup($sql, [], $primaryKey);
     }
 
     /**
@@ -137,7 +137,7 @@ class SprintModel extends BaseDictionaryModel
         $fields = "count(*) as cc";
         $conditions = [];
         $conditions['project_id'] = intval($projectId);
-        return (int)$this->getOne($fields, $conditions);
+        return (int)$this->getField($fields, $conditions);
     }
 
     public function deleteByProjectId($projectId)

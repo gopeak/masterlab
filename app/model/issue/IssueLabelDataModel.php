@@ -68,7 +68,7 @@ class IssueLabelDataModel extends BaseIssueItemsModel
         }
         $idStr = implode(',', $idArr);
         $sql = "select issue_id from " . $this->getTable() . " where label_id in({$idStr})";
-        $rows = $this->db->getRows($sql);
+        $rows = $this->db->fetchAll($sql);
         $issueIdArr = array_column($rows,'issue_id');
         if(!$issueIdArr){
             $issueIdArr = [];
@@ -89,7 +89,7 @@ class IssueLabelDataModel extends BaseIssueItemsModel
         $table = $this->getTable();
         $where = "WHERE issue_id IN ({$idsStr}) ";
         $sql = "SELECT * FROM " . $table . $where;
-        $rows = $this->db->getRows($sql);
+        $rows = $this->db->fetchAll($sql);
         return $rows;
     }
 

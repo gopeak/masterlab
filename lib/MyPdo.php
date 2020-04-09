@@ -138,6 +138,7 @@ class MyPdo
         return $this->pdo;
     }
 
+
     /**
      *  执行查询性的SQL查询，准备pdoStatement
      * @param string $sql
@@ -704,91 +705,6 @@ class MyPdo
     }
 
 
-    public function safeReplace($string)
-    {
-        $string = str_replace('%20', '', $string);
-        $string = str_replace('%27', '', $string);
-        $string = str_replace('%2527', '', $string);
-        $string = str_replace('*', '', $string);
-        $string = str_replace('"', '&quot;', $string);
-        $string = str_replace("'", '', $string);
-        $string = str_replace('"', '', $string);
-        $string = str_replace(';', '', $string);
-        $string = str_replace('<', '&lt;', $string);
-        $string = str_replace('>', '&gt;', $string);
-        $string = str_replace("{", '', $string);
-        $string = str_replace('}', '', $string);
-        return $string;
-    }
-
-    public function unSafeReplace($string)
-    {
-        $string = str_replace('&quot;', '"', $string);
-        $string = str_replace('&lt;', '<', $string);
-        $string = str_replace('&gt;', '>', $string);
-        return $string;
-    }
-
-    /**
-     * 创建IN子句.
-     * @param $list
-     * @param int $data_type
-     * @return string
-     */
-    public function createIn($list, $data_type = self::CREATE_IN_DATA_STRING)
-    {
-        if (empty($list)) {
-            return "";
-        } else {
-            if (!is_array($list)) {
-                $list = explode(',', trim($list));
-            }
-            $list = array_unique($list);
-
-            if (count($list)) {
-                foreach ($list as &$content) {
-                    if ($data_type == self::CREATE_IN_DATA_INT) {
-                        $content = (int)$content;
-                    } elseif ($data_type == self::CREATE_IN_DATA_FLOAT) {
-                        $content = (float)$content;
-                    } else {
-                        $content = addslashes(trim($content));
-                    }
-                }
-                return " IN ('" . implode("','", $list) . "') ";
-            } else {
-                return "";
-            }
-        }
-    }
-
-
-    /**
-     * 组成sql语句的in方法
-     * @param $list
-     * @param null $attribute
-     * @return string
-     */
-    public function buildInSql($list, $attribute = null)
-    {
-        if (count($list) == 0) {
-            return "";
-        }
-
-        $arr = array();
-        foreach ($list as $item) {
-            if ($attribute == null && is_string($item)) {
-                $arr[] = $item;
-            } elseif (array_key_exists($attribute, $item)) {
-                $arr[] = $item[$attribute];
-            } else {
-                return "";
-            }
-        }
-
-        return (count($arr) == 1) ? "='" . $arr[0] . "'" : " IN(" . implode(",", $arr) . ")";
-    }
-
     /**
      * 读取一个表的字段数据
      * @param string $table 表名，默认本实例的table属性
@@ -825,21 +741,5 @@ class MyPdo
         $fields = $this->getRows($sql, [], true);
         return $fields;
     }
-
-
-    /**
-     * 获取表字段
-     * @param $table
-     * @return array 一维数组
-     */
-    public function getTableFields($table)
-    {
-        $sql = "DESC {$table} ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        $tableFields = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-        return $tableFields;
-    }
-
 
 }

@@ -131,15 +131,21 @@ var Field = (function() {
         for( var _key in _add_options ){
             var btn_class = 'add_option_delete';
             var btn_default_class = 'add_option_default';
-            if( render_id=='edit_option_render_id' ){
+            var default_value = $('#add_options_default').val();
+            if( render_id==='edit_option_render_id' ){
                 btn_class = 'edit_option_delete';
                 btn_default_class = 'edit_option_default';
+                default_value = $('#edit_options_default').val();
+            }
+            let btn_default = '<a style="color: #3e9df7" class=" '+btn_default_class+' btn btn-transparent "  href="javascript:;" data-value="'+_key+'" >设置为默认值</a>';
+            if(_key==default_value){
+                btn_default = '<a class="btn btn-transparent">当前为默认值 </a>';
             }
             html += '<tr class="commit">\n' +
                 '      <td  ><strong>'+_key+'</strong></td>\n' +
                 '      <td>--></td>\n' +
                 '      <td>'+_add_options[_key]+'</td>\n' +
-                '      <td  ><a class=" '+btn_default_class+' btn btn-transparent "  href="javascript:;" data-value="'+_key+'" >设置默认值</a><a class="'+btn_class+' btn btn-transparent "  href="javascript:;" data-value="'+_key+'" ><i class="fa fa-trash"></i><span class="sr-only">删除</span></a></td>\n' +
+                '      <td  >'+btn_default+'<a class="'+btn_class+' btn btn-transparent "  href="javascript:;" data-value="'+_key+'" ><i style="color:red" class="fa fa-trash"></i><span class="sr-only">删除</span></a></td>\n' +
                 '  </tr>';
         }
         $('#'+render_id).html(html);
@@ -147,19 +153,35 @@ var Field = (function() {
         $(".add_option_delete").click(function(){
             Field.prototype.add_option_delete( $(this).attr("data-value") );
         });
+        $(".add_option_default").click(function(){
+            Field.prototype.add_option_default( $(this).attr("data-value") );
+        });
         $(".edit_option_delete").click(function(){
             Field.prototype.edit_option_delete( $(this).attr("data-value") );
         });
+        $(".edit_option_default").click(function(){
+            Field.prototype.edit_option_default( $(this).attr("data-value") );
+        });
+
     }
     Field.prototype.add_option_delete = function( _key ) {
         delete _add_options[_key]
         Field.prototype.options_format();
         Field.prototype.options_render('add_option_render_id',_add_options);
     }
+    Field.prototype.add_option_default = function( _key ) {
+        $('#add_options_default').val(_key);
+        Field.prototype.options_render('add_option_render_id',_add_options);
+    }
 
     Field.prototype.edit_option_delete = function( _key ) {
         delete _edit_options[_key]
         Field.prototype.options_format();
+        Field.prototype.options_render('edit_option_render_id',_edit_options);
+    }
+
+    Field.prototype.edit_option_default = function( _key ) {
+        $('#edit_options_default').val(_key);
         Field.prototype.options_render('edit_option_render_id',_edit_options);
     }
 
@@ -181,6 +203,7 @@ var Field = (function() {
                 $("#edit_description").val(resp.data.description);
                 _edit_options = resp.data.options;
                 $('#edit_options').val(JSON.stringify(_edit_options));
+                $('#edit_options_default').val(resp.data.default_value);
                 Field.prototype.options_render('edit_option_render_id',_edit_options);
             },
             error: function (res) {
@@ -201,8 +224,8 @@ var Field = (function() {
             data: params ,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
-                if( resp.ret == 200 ){
+                notify_success( resp.msg,resp.data );
+                if( resp.ret == '200' ){
                     window.location.reload();
                 }
             },
@@ -224,8 +247,8 @@ var Field = (function() {
             data: params ,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
-                if( resp.ret == 200 ){
+                notify_success( resp.msg,resp.data );
+                if( resp.ret == '200' ){
                     window.location.reload();
                 }
             },
@@ -250,8 +273,8 @@ var Field = (function() {
             url: _options.delete_url,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
-                if( resp.ret == 200 ){
+                notify_success( resp.msg,resp.data );
+                if( resp.ret == '200' ){
                     window.location.reload();
                 }
             },

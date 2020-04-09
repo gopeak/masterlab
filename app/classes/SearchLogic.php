@@ -24,32 +24,6 @@ class SearchLogic
     public static $mysqlVersion = 0;
 
     /**
-     *
-     * @param $keyword
-     * @param int $page
-     * @param int $pageSize
-     * @return array
-     */
-    public static function getIssueBySphinx($keyword, $page = 1, $pageSize = 50)
-    {
-        require_once APP_PATH . '../lib/SphinxClient.php';
-        $mailConfig = getConfigVar('sphinx');
-        $host = $mailConfig['server']['host'] ;
-        $port = $mailConfig['server']['port'] ;
-        $s = new \SphinxClient;
-        $s->setServer($host, $port);
-
-        $start = $pageSize * ($page - 1);
-        $s->setMaxQueryTime(30);
-        $s->SetLimits($start, $pageSize);
-        $queryRet = $s->Query($keyword, 'issue');
-        $err = $s->GetLastError();
-        $matches = !empty($queryRet['matches']) ? $queryRet['matches'] : [];
-        $s->close();
-        return [$err, $queryRet, $matches];
-    }
-
-    /**
      * 通过id从数据库查询数据
      * @param $issueIdArr
      * @return array
@@ -66,7 +40,7 @@ class SearchLogic
 
         $sql = "SELECT * FROM {$table} WHERE id in({$issueIdStr}) ";
         //var_dump($sql);
-        $rows = $issueModel->db->getRows($sql);
+        $rows = $issueModel->db->fetchAll($sql);
         return $rows;
     }
 
@@ -99,7 +73,7 @@ class SearchLogic
         $sql = "SELECT {$field} FROM {$table} " . $where . $limitSql;
         //echo $keyword;
         //echo $sql;
-        $projects = $model->db->getRows($sql, $params);
+        $projects = $model->db->fetchAll($sql, $params);
         return $projects;
     }
 
@@ -125,7 +99,7 @@ class SearchLogic
 
         $sqlCount = "SELECT count(*)  as cc  FROM {$table}  " . $where;
         // echo $sqlCount;
-        $count = $model->db->getOne($sqlCount, $params);
+        $count = $model->getFieldBySql($sqlCount, $params);
 
         return (int)$count;
     }
@@ -156,7 +130,7 @@ class SearchLogic
         $params['keyword'] = $keyword;
         $sql = "SELECT * FROM {$table}  {$where} {$limitSql}";
         //var_dump($sql);
-        $rows = $issueModel->db->getRows($sql, $params);
+        $rows = $issueModel->db->fetchAll($sql, $params);
         return $rows;
     }
 
@@ -183,7 +157,7 @@ class SearchLogic
         $params['keyword'] = $keyword;
         $sqlCount = "SELECT count(*)  as cc  FROM {$table}  " . $where;
         //echo $sqlCount;
-        $count = $model->db->getOne($sqlCount, $params);
+        $count = $model->getFieldBySql($sqlCount, $params);
         return (int)$count;
     }
 
@@ -210,7 +184,7 @@ class SearchLogic
         $params['display_name'] = $keyword;
 
         $sql = "SELECT {$field} FROM {$table}  " . $where . $limitSql;
-        $users = $model->db->getRows($sql, $params);
+        $users = $model->db->fetchAll($sql, $params);
         foreach ($users as &$item) {
             $item = UserLogic::format($item);
         }
@@ -234,7 +208,7 @@ class SearchLogic
         $params['username'] = $keyword;
         $params['display_name'] = $keyword;
         $sqlCount = "SELECT count(*)  as cc  FROM {$table}  " . $where;
-        $count = $model->db->getOne($sqlCount, $params);
+        $count = $model->getFieldBySql($sqlCount, $params);
 
         return (int)$count;
     }

@@ -2,9 +2,12 @@
 
 namespace main\app\model;
 
+use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Events;
 use Exception;
-use \main\lib\MyPdo;
+use main\lib\SlowLog;
 use PDOException;
+
 
 /**
  *  数据库操作模型基类
@@ -30,10 +33,9 @@ class DbModel extends BaseModel
      */
     private $persistent = false;
 
+
     /**
-     * MyPDO封装对象
-     * @see \PDO
-     * @var MyPdo
+     * @var \Doctrine\DBAL\Connection|mixed
      */
     public $db;
 
@@ -62,6 +64,11 @@ class DbModel extends BaseModel
      */
     public $prefix = 'main_';
 
+    /**
+     * 最后执行的sql语句
+     * @var string
+     */
+    public $sql = '';
 
     /**
      * 当前表的字段信息
@@ -75,29 +82,45 @@ class DbModel extends BaseModel
      */
     public $enableSqlLog = false;
 
+    /**
+     * @var
+     */
+    public static $dalDriverInstances;
 
     /**
-     * 实现单例模式
-     * @var \PDO
+     * 用于实现单例模式
+     * @var self
      */
-    public static $pdoDriverInstances;
+    protected static $dbInstance;
+
+    /**
+     * 创建一个自身的单例对象
+     * @param bool $persistent
+     * @return self
+     * @throws \Exception
+     */
+    public static function getDbInstance($persistent = false)
+    {
+        $index = intval($persistent);
+        if (!isset(self::$dbInstance[$index]) || !is_object(self::$dbInstance[$index])) {
+            self::$dbInstance[$index] = new self($persistent);
+        }
+        return self::$dbInstance[$index];
+    }
 
 
     /**
      * DbModel构造函数，读取系统配置的分库设置，确定要连接的数据库，然后进行DB和db数据库预连接，创建缓存预连接
-     * @throws Exception
      * @param bool $persistent 是否使用持久连接，子类继承时在构造函数中传入
+     * @throws Exception
      */
     public function __construct($persistent = false)
     {
         parent::__construct();
-
-        $this->dbConfig = getConfigVar('database');
-
+        $this->dbConfig = getYamlConfigByModule('database');
         if (defined('XPHP_DEBUG')) {
             $this->enableSqlLog = XPHP_DEBUG;
         }
-
         $child_class_name = get_class($this);
         if (strpos($child_class_name, '\\') !== false) {
             $arr = explode('\\', $child_class_name);
@@ -106,9 +129,8 @@ class DbModel extends BaseModel
             }
             unset($arr);
         }
-
-        if (isset($this->dbConfig['config_map_class'])) {
-            foreach ($this->dbConfig['config_map_class'] as $key => $row) {
+        if (getYamlConfigByModule('config_map_model')) {
+            foreach (getYamlConfigByModule('config_map_model') as $key => $row) {
                 if (in_array($child_class_name, $row)) {
                     $this->configName = $key;
                     break;
@@ -116,27 +138,7 @@ class DbModel extends BaseModel
             }
         }
         $this->persistent = $persistent;
-        if (empty($this->db)) {
-            $this->db = $this->prepareConnect(); // 数据库预连接
-        }
-        $dbConfig = $this->dbConfig['database'][$this->configName];
-        if (isset($dbConfig['show_field_info'])
-            && $dbConfig['show_field_info']
-            && !empty($this->table)
-        ) {
-            $db_name = $dbConfig['db_name'];
-            $table = str_replace("`", "", $this->getTable());
-            $cacheFile = STORAGE_PATH . 'cache/tables/' . $db_name . '-' . $table . '-field_info.php';
-            if (file_exists($cacheFile)) {
-                $field_info = [];
-                include $cacheFile;
-                $this->fieldFnfo = $field_info;
-            } else {
-                $this->fieldFnfo = $this->db->getFullFields($this->getTable());
-                $saveSource = "<?php \n\n\n  " . ' $field_info = ' . var_export($this->fieldFnfo, true) . ";\n\n";
-                file_put_contents($cacheFile, $saveSource);
-            }
-        }
+        $this->connect();
     }
 
 
@@ -164,43 +166,62 @@ class DbModel extends BaseModel
         return $table;
     }
 
-
     /**
-     * 预连接数据库,并没有真正的进行连接
-     * @return MyPdo
-     * @throws Exception
+     * @param $config
+     * @return \Doctrine\DBAL\Connection|mixed
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function prepareConnect()
+    public function connect()
     {
         $index = $this->configName . '_' . strval($this->persistent);
-        if (empty(self::$pdoDriverInstances[$index])) {
-            $dbConfig = $this->dbConfig['database'][$this->configName];
+        if (empty(self::$dalDriverInstances[$index])) {
+            $dbConfig = $this->dbConfig[$this->configName];
             if (!$dbConfig) {
                 $msg = '[CORE] 数据库配置错误';
                 throw new Exception($msg, 500);
             }
-            self::$pdoDriverInstances[$index] = new  MyPdo($dbConfig, $this->persistent, $this->enableSqlLog);
+            $connectionParams = array(
+                'dbname' => $dbConfig['db_name'],
+                'user' => $dbConfig['user'],
+                'password' => $dbConfig['password'],
+                'host' => $dbConfig['host'],
+                'charset' => $dbConfig['charset'],
+                'driver' => 'pdo_mysql',
+            );
+            self::$dalDriverInstances[$index] = \Doctrine\DBAL\DriverManager::getConnection($connectionParams);
         }
-        return self::$pdoDriverInstances[$index];
+        $this->db = self::$dalDriverInstances[$index];
     }
 
 
     /**
-     * 真正的连接数据库
-     * @throws Exception
-     * @return MyPdo
+     * 开始一个事务
+     * @access public
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function realConnect()
+    public function beginTransaction()
     {
-        if (empty($this->db)) {
-            $this->db = $this->prepareConnect(); // 数据库预连接
-        }
-        $this->db->connect();
-        if (!isset($GLOBALS['global_pdo']) || !in_array($this->db->pdo, $GLOBALS['global_pdo'])) {
-            $GLOBALS['global_pdo'][] = $this->db;
-        }
+        return $this->db->beginTransaction();
+    }
 
-        return $this->db;
+    /**
+     * 回滚一个事务
+     * @access public
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function rollBack()
+    {
+        return $this->db->rollBack();
+    }
+
+    /**
+     * 提交一个事务
+     * @access public
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function commit()
+    {
+        return $this->db->commit();
     }
 
 
@@ -208,11 +229,15 @@ class DbModel extends BaseModel
      * 执行更新性的SQL语句 ,返回受修改或删除 SQL语句影响的行数。如果没有受影响的行，则返回 0。失败返回false
      * @param string $sql
      * @param array $params
-     * @return bool
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function exec($sql = '', $params = [])
     {
-        return $this->db->exec($sql, $params);
+        $this->sql = $sql;
+        //echo $sql;
+        //print_r($params);
+        return $this->db->executeUpdate($sql, $params);
     }
 
     /**
@@ -220,6 +245,7 @@ class DbModel extends BaseModel
      * @param string $id
      * @param string $fields
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getRowById($id, $fields = '*')
     {
@@ -236,42 +262,25 @@ class DbModel extends BaseModel
      * @param string $field
      * @param int $id
      * @return mixed:
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getFieldById($field, $id)
     {
-        return $this->getOne($field, [$this->primaryKey => $id]);
+        return $this->getField($field, [$this->primaryKey => $id]);
     }
-
-
-    /**
-     * @param $conditions
-     * @param string $order
-     * @param string $sort
-     * @param int $page
-     * @param int $pageSize
-     * @param string $fields
-     * @return array
-     */
-    public function getRowsByPage($conditions, $order = 'id', $sort = 'desc', $page = 1, $pageSize = 10, $fields = '*')
-    {
-        $start = $pageSize * ($page - 1);
-
-        $limit = "$start, $pageSize";
-
-        $lists = $this->getRows($fields, $conditions, null, $order,$sort, $limit, "");
-        //    var_dump($shops);
-        return $lists;
-    }
-
 
     /**
      * 通过条件获取总数
-     * @param array $conditions
-     * @return number
+     * @param $conditions
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getCount($conditions)
     {
-        return $this->db->getCount($this->getTable(), $this->primaryKey, $conditions);
+        $field = "count({$this->primaryKey}) as cc";
+        $sql = 'SELECT ' . $field . ' FROM ' . $this->getTable();
+        $this->sql = $sql;
+        return (int)$this->db->fetchColumn($sql, $conditions);
     }
 
     /**
@@ -304,14 +313,29 @@ class DbModel extends BaseModel
      * 获取某个字段的值
      * @param $field
      * @param $conditions
-     * @return mixed
+     * @return false|mixed
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function getOne($field, $conditions)
+    public function getField($field, $conditions)
     {
-        $conditions = $this->db->buildWhereSqlByParam($conditions);
         $table = $this->getTable();
+        $conditions = $this->buildWhereSqlByParam($conditions);
         $sql = 'SELECT ' . $field . ' FROM ' . $table . $conditions["_where"];
-        return $this->db->getOne($sql, $conditions["_bindParams"]);
+        $this->sql = $sql;
+        return $this->db->fetchColumn($sql, $conditions["_bindParams"]);
+    }
+
+    /**
+     * 获得一条查询结果一列的一个值，没有数据则返回false
+     * @param string $sql 要执行的SQL指令
+     * @param array $params 参数化数组
+     * @return mixed  获得一条查询结果一列的一个值，没有数据则返回false
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getFieldBySql($sql, $params = array())
+    {
+        $result = $this->db->fetchColumn($sql, $params);
+        return $result;
     }
 
 
@@ -320,14 +344,65 @@ class DbModel extends BaseModel
      * @param $fields
      * @param $conditions
      * @return array 一条查询数据
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getRow($fields, $conditions)
     {
         $table = $this->getTable();
-        $conditions = $this->db->buildWhereSqlByParam($conditions);
+        $conditions = $this->buildWhereSqlByParam($conditions);
         $sql = 'SELECT ' . $fields . ' FROM ' . $table . $conditions["_where"];
-        $row = $this->db->getRow($sql, $conditions["_bindParams"]);
+        $this->sql = $sql;
+        $row = $this->db->fetchAssoc($sql, $conditions["_bindParams"]);
+        if ($row === false) {
+            return [];
+        }
         return $row;
+    }
+
+    /**
+     * 处理参数绑定的健，避免别名引用字段时错误.
+     * @param $key
+     * @return string 如果是别名引用字段，例如main_user.uid将被替换成:main_user_uid，其中的点号被替换成下换线 ,因为PDO在执行绑定参数后SQL时报无效参数错误.
+     */
+    private function processBindKey($key)
+    {
+        if (strpos($key, '.') !== false) {
+            $key = str_replace('.', '_', $key);
+        }
+        return ':' . $key;
+    }
+
+
+    /**
+     * 参数化条件语句
+     * @param $conditions
+     * @return array
+     */
+    public function buildWhereSqlByParam($conditions = array())
+    {
+        $result = array("_where" => " ", "_bindParams" => array());
+        if (is_array($conditions) && !empty($conditions)) {
+            $sql = null;
+            $join = array();
+            if (isset($conditions[0]) && $sql = $conditions[0]) {
+                unset($conditions[0]);
+            }
+            foreach ($conditions as $key => $condition) {
+                $bindKey = $this->processBindKey($key);
+                if (substr($key, 0, 1) != ":") {
+                    unset($conditions[$key]);
+                    $conditions[$bindKey] = $condition;
+                }
+                $join[] = $this->backquoteColumn($key) . ' = ' . $bindKey;
+            }
+            if (!$sql) {
+                $sql = join(" AND ", $join);
+            }
+
+            $result["_where"] = " WHERE " . $sql;
+            $result["_bindParams"] = $conditions;
+        }
+        return $result;
     }
 
     /**
@@ -347,12 +422,46 @@ class DbModel extends BaseModel
         $orderBy = !empty($orderBy) ? ' ORDER BY ' . $orderBy . ' ' : '';
         $sort = !empty($sort) ? ' ' . $sort . ' ' : '';
         $limit = !empty($limit) ? ' LIMIT ' . $limit : '';
-        $conditions = $this->db->buildWhereSqlByParam($conditions);
+        $conditions = $this->buildWhereSqlByParam($conditions);
         $append = !empty($append) ? (empty(trim($conditions['_where'])) ? ' WHERE ' . $append : ' AND ' . $append) : '';
         $where = $conditions["_where"];
         $sql = "SELECT {$fields} FROM {$table}  {$where} {$append}  {$orderBy}  {$sort}  {$limit}";
-        // echo $sql;
-        return $this->db->getRows($sql, $conditions["_bindParams"], $primaryKey);
+        $this->sql = $sql;
+        //  echo $sql;
+        $rowsArr = $this->db->fetchAll($sql, $conditions['_bindParams']);
+        if ($rowsArr === false) {
+            return [];
+        }
+        if (empty($rowsArr)) {
+            return [];
+        }
+        if ($primaryKey) {
+            $key = array_keys(current($rowsArr));
+            $rowsArr = array_column($rowsArr, null, $key[0]);
+        }
+
+        return $rowsArr;
+    }
+
+    /**
+     * @param $sql
+     * @param array $conditions
+     * @param $primaryKey
+     * @return array|mixed[]
+     */
+    public function fetchALLForGroup($sql, $conditions = [], $primaryKey = false)
+    {
+        $rowsArr = $this->db->fetchAll($sql, $conditions);
+        if (!$rowsArr) {
+            return [];
+        }
+        if ($primaryKey) {
+            $key = array_keys(current($rowsArr));
+            $rowsArr = array_column($rowsArr, null, $key[0]);
+        }
+
+        return $rowsArr;
+
     }
 
     /**
@@ -366,25 +475,41 @@ class DbModel extends BaseModel
     }
 
     /**
+     * lastInsertId 的别名
+     * @return string
+     */
+    public function getLastInsId()
+    {
+        return $this->db->lastInsertId();
+    }
+
+    /**
      * 获取最后执行的SQL
      *
      * @return string  获取最后执行的SQL
      */
     public function getLastSql()
     {
-        return $this->db->getLastSql();
+        return $this->sql;
     }
 
     /**
      * 参数化插入数据
      * @param $row
      * @return array
-     * @throws Exception
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function insert($row)
     {
         $this->checkField($row);
-        return $this->db->insert($this->getTable(), $row);
+        $sql = "Insert  into  {$this->getTable()} Set  ";
+        $sql .= $this->parsePrepareSql($row);
+        $this->sql = $sql;
+        $ret = $this->db->insert($this->getTable(), $row);
+        if (!$ret) {
+            return [false, 'db insert err:' . print_r($row, true)];
+        }
+        return [true, $this->db->lastInsertId()];
     }
 
     /**
@@ -407,22 +532,64 @@ class DbModel extends BaseModel
         }
     }
 
+
+    public function parsePrepareSql($arr, $is_index = false)
+    {
+        $setsStr = '';
+        if (is_array($arr) && !empty($arr)) {
+            foreach ($arr as $key => $val) {
+                $key = trimStr(str_replace('`', '', $key));
+
+                $bind_key = ":{$key}";
+                if ($is_index) {
+                    $bind_key = '?';
+                }
+
+                $_key = "`{$key}`";
+                $setsStr .= "$_key={$bind_key},";
+            }
+            $setsStr = substr($setsStr, 0, -1);
+        } elseif (is_string($arr)) {
+            $setsStr = $arr;
+        }
+        return $setsStr;
+    }
+
     /**
      * 插入一行数据（重复则忽略）
-     * @param $row array 插入数据的键值对数组
+     * @param array $row 插入数据的键值对数组
      * @return array
      * @throws Exception
      */
     public function insertIgnore($row)
     {
         $this->checkField($row);
-        return $this->db->insertIgnore($this->getTable(), $row);
+        $table = $this->getTable();
+        if (empty($table) || empty($row)) {
+            return [false, 'insert data is null'];
+        }
+        $sql = "INSERT IGNORE INTO {$table} SET ";
+        $sql .= $this->parsePrepareSql($row);
+        $this->sql = $sql;
+        //echo $sql;
+        try {
+            $this->db->executeUpdate($sql, $row);
+            return [true, $this->db->lastInsertId()];
+        } catch (PDOException $e) {
+            //echo $e->getMessage();
+            return [false, 'db insertIgnore err:' . $e->getMessage()];
+        }
     }
 
     /**
      * 插入多行数据
      * @param array $rows 插入数据的二维键值对数组
      * @return bool 执行是否成功
+     */
+    /**
+     * @param array $rows $rows 插入数据的二维键值对数组
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function insertRows($rows)
     {
@@ -442,22 +609,55 @@ class DbModel extends BaseModel
     public function replace($info)
     {
         $this->checkField($info);
-        return $this->db->replace($this->getTable(), $info);
+        $table = $this->getTable();
+        if (empty($table) || empty($info)) {
+            return [false, 'replace data is null'];
+        }
+        $sql = " Replace  into  {$table} Set  ";
+        $sql .= $this->parsePrepareSql($info);
+        try {
+            $this->exec($sql, $info);
+            return [true, $this->db->lastInsertId()];
+        } catch (PDOException $e) {
+            //echo $e->getMessage();
+            return [false, 'db replace err:' . $sql . print_r($info, true) . $e->getMessage()];
+        }
     }
+
 
     /**
      * 通过条件删除
      * @param array $conditions
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function delete($conditions)
     {
         return $this->db->delete($this->getTable(), $conditions);
     }
 
-    public function truncate()
+    /**
+     * 清空当前数据库的表
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function truncate($table)
     {
-        return $this->db->truncate($this->getTable());
+        $sql = " Truncate  $table";
+        $ret = $this->exec($sql);
+        return intval($ret);
+    }
+
+    /**
+     * 参数绑定时反引查询字段，避免安全字符事项.
+     * @param $column
+     * @return string 如果是别名引用字段，将把别名和字段名分别用反引号括起来，否则在执行SQL时将报字段名无效错误.
+     */
+    private function backquoteColumn($column)
+    {
+        // 考虑到点号只会在别名引用时出现一次，所以直接用字符串替换中间的点号，而不用判断是否存在点号再拆分拼凑方式处理
+        return '`' . str_replace('.', '`.`', $column) . '`';
     }
 
     /**
@@ -468,8 +668,18 @@ class DbModel extends BaseModel
      */
     public function update($row, $conditions)
     {
-        $this->checkField($row);
-        return $this->db->update($this->getTable(), $row, $conditions);
+        if (!is_array($conditions)) {
+            return [false, 0];
+        }
+        $table = $this->getTable();
+        $sql = " UPDATE {$table} SET ";
+        $sql .= $this->parsePrepareSql($row, true);
+        $this->sql = $sql;
+        $ret = $this->db->update($table, $row, $conditions);
+        if ($ret===false) {
+            return [false, 'db update err:' . print_r($row, true) . print_r($conditions, true)];
+        }
+        return [true, $ret];
     }
 
     /**
@@ -479,13 +689,15 @@ class DbModel extends BaseModel
      * @param string $primaryKey 主键字段名称
      * @param int $incValue 自增值
      * @return boolean
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function inc($field, $id, $primaryKey = 'id', $incValue = 1)
     {
-        $conditions = $this->db->buildWhereSqlByParam(array($primaryKey => $id));
-        $sql = "UPDATE " . $this->getTable() . "  SET $field= {$field} + {$incValue} " . $conditions["_where"];
-        $ret = $this->db->exec($sql, $conditions["_bindParams"]);
-        return $ret;
+        $conditions = [$primaryKey => $id];
+        $where = "WHERE {$primaryKey}=:{$primaryKey}";
+        $sql = "UPDATE " . $this->getTable() . "  SET $field= {$field} + {$incValue} " . $where;
+        $ret = $this->exec($sql, $conditions);
+        return (boolean)$ret;
     }
 
     /**
@@ -495,13 +707,15 @@ class DbModel extends BaseModel
      * @param string $primaryKey 主键字段名称
      * @param int $decValue 自减值
      * @return boolean
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function dec($field, $id, $primaryKey = 'id', $decValue = 1)
     {
-        $conditions = $this->db->buildWhereSqlByParam(array($primaryKey => $id));
-        $sql = "UPDATE " . $this->getTable() . "  SET $field=IF($field>0, {$field} - {$decValue} ,0) " . $conditions["_where"];
-        $ret = $this->exec($sql, $conditions["_bindParams"]);
-        return $ret;
+        $conditions = [$primaryKey => $id];
+        $where = "WHERE {$primaryKey}=:{$primaryKey}";
+        $sql = "UPDATE " . $this->getTable() . "  SET $field=IF($field>0, {$field} - {$decValue} ,0) " . $where;
+        $ret = $this->exec($sql, $conditions);
+        return (boolean)$ret;
     }
 
 
@@ -514,7 +728,20 @@ class DbModel extends BaseModel
      */
     public function quote($str, $type = \PDO::PARAM_STR)
     {
-        $this->realConnect();
-        return $this->db->pdo->quote($str, $type);
+        return $this->db->quote($str, $type);
+    }
+
+
+    /**
+     * 获取一个表的全部字段信息
+     * @param $table
+     * @return array
+     */
+    public function getFullFields($table)
+    {
+        $sql = "show full fields from  {$table} ";
+        $this->sql = $sql;
+        $fields = $this->db->fetchAll($sql);
+        return $fields;
     }
 }

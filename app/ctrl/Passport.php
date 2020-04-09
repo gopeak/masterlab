@@ -8,6 +8,7 @@ namespace main\app\ctrl;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\SystemLogic;
+use main\app\model\Setting2Model;
 use main\app\model\user\EmailFindPasswordModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
@@ -102,6 +103,34 @@ class Passport extends BaseCtrl
         $this->render('gitlab/passport/login.php', $data);
     }
 
+    public function pageTest()
+    {
+        $data = [];
+        $data['title'] = '测试Dbal';
+
+        $id = 10;
+        $dbalModel = new Setting2Model();
+        $sql = "SELECT * FROM main_setting WHERE id > ?";
+        $stmt = $dbalModel->db->prepare($sql);
+        $stmt->bindValue(1, $id);
+        $stmt->execute();
+        // $settings = $stmt->fetchAll();
+        $table = str_replace("`",'',$dbalModel->getTable());
+        $sql = "SHOW TABLES LIKE  '" . $table. "'";
+        echo $sql;
+        $tableName = $dbalModel->db->fetchColumn($sql);
+        var_dump($tableName);
+
+        $paramArr = [];
+        $paramArr = ['username'=>'master'];
+        $user =  $dbalModel->db->fetchAssoc('SELECT * FROM user_main WHERE username =:username', $paramArr);
+        print_r($user);
+
+        $queryBuilder = $dbalModel->db->createQueryBuilder();
+
+    }
+
+
     /**
      * 输出验证码
      */
@@ -156,6 +185,8 @@ class Passport extends BaseCtrl
         $source = 0
     )
     {
+        //print_r($GLOBALS['framework']);
+        // var_dump(func_get_args());
         if (empty($username)) {
             $this->ajaxFailed('错误', '参数错误,username 不能为空');
         }
@@ -380,6 +411,24 @@ class Passport extends BaseCtrl
                 unset($_SESSION['reg_captcha_time']);
             }
         }
+
+        $passwordStrategy = $settingModel->getSettingValue('password_strategy');
+        if ($passwordStrategy == 2) {
+            // 密码需要6位及以上，并且包含大写字母、小写字母、数字至少两种
+            // $pattern = '/^(?=.{6,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$/';
+            // 密码需要6位及以上
+            $pattern = '/(?=.{6,}).*/';
+            if (!preg_match($pattern, $_POST['password'])) {
+                $err['password'] = '密码需要6位及以上';
+            }
+        } elseif ($passwordStrategy == 3) {
+            // 密码要求8位及以上，并且包含大写字母、小写字母、数字和特殊字符
+            $pattern = '/^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).*$/';
+            if (!preg_match($pattern, $_POST['password'])) {
+                $err['password'] = '密码要求8位及以上，并且包含大写字母、小写字母、数字和特殊字符';
+            }
+        }
+
         if (!isset($_POST['email']) || empty($_POST['email'])) {
             $err['email'] = 'email不能为空';
         }

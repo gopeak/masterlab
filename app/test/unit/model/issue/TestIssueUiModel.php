@@ -116,7 +116,7 @@ class TestIssueUiModel extends TestBaseIssueModel
         }
         $deleteCount = $model->deleteByIssueType($issueBugTypeId, $newUiType);
         $this->assertTrue($deleteCount > 0);
-        $this->assertEquals($addNum, (int)$model->db->pdoStatement->rowCount());
+        $this->assertEquals($addNum, (int)$deleteCount);
         $this->assertEmpty($model->getsByUiType($issueBugTypeId, $newUiType));
     }
 }

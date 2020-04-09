@@ -32,6 +32,10 @@ class Workflow extends BaseAdminCtrl
             exit;
         }
     }
+
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];
@@ -44,6 +48,7 @@ class Workflow extends BaseAdminCtrl
 
     /**
      * 详情页面
+     * @throws \Exception
      */
     public function pageView()
     {
@@ -64,6 +69,7 @@ class Workflow extends BaseAdminCtrl
     /**
      * 新增页面
      * @param array $params
+     * @throws \Exception
      */
     public function pageCreate($params = [])
     {
@@ -75,14 +81,53 @@ class Workflow extends BaseAdminCtrl
         $id = 1;
         $workflowModel = new WorkflowModel();
         $data['workflow'] = $workflowModel->getById($id);
-        $data['workflow']['data'] = json_decode($data['workflow']['data']);
+        $jsonArr = json_decode($data['workflow']['data'], true);
+        $data['workflow']['data'] = $this->initNewStatus($jsonArr);
+
         $data['params'] = $params;
         $this->render('twig/admin/issue/workflow_new.twig', $data);
     }
 
+
+    /**
+     * 将新增的状态加入进来
+     * @param $workflowArr
+     * @return mixed
+     * @throws \Exception
+     */
+    public function initNewStatus($workflowArr)
+    {
+        $statusModel = new IssueStatusModel();
+        $statusRows = $statusModel->getAllItem();
+        $statusKeyArr = [];
+        foreach ($statusRows as $statusRow) {
+            $statusKeyArr[$statusRow['_key']] = $statusRow['_key'];
+        }
+        foreach ($workflowArr['blocks'] as $block) {
+            $key = str_replace('state_', '', $block['id']);
+            if (in_array($key, $statusKeyArr)) {
+                unset($statusKeyArr[$key]);
+            }
+        }
+        $sizeY = 0;
+        foreach ($statusKeyArr as $item) {
+            $statusRow = $statusModel->getByKey($item);
+            $sizeY = $sizeY + 80;
+            $adds = [];
+            $adds['id'] = 'state_'.$item;
+            $adds['positionX'] = 1250;
+            $adds['positionY'] = $sizeY;
+            $adds['innerHTML'] = $statusRow['name'] . '  <div class="ep" action="' . $statusRow['name'] . '"></div>';
+            $adds['innerText'] = $statusRow['name'];
+            $workflowArr['blocks'][] = $adds;
+        }
+
+        return $workflowArr;
+    }
     /**
      * 编辑页面
      * @param array $params
+     * @throws \Exception
      */
     public function pageEdit($params = [])
     {
@@ -100,32 +145,7 @@ class Workflow extends BaseAdminCtrl
         $data['workflow'] = $workflowModel->getById($id);
         $json = $data['workflow']['data'];
         $jsonArr = json_decode($json, true);
-
-        $statusModel = new IssueStatusModel();
-        $statusRows = $statusModel->getAllItem();
-        $statusKeyArr = [];
-        foreach ($statusRows as $statusRow) {
-            $statusKeyArr[$statusRow['_key']] = $statusRow['_key'];
-        }
-        foreach ($jsonArr['blocks'] as $block) {
-            $key = str_replace('state_', '', $block['id']);
-            if (in_array($key, $statusKeyArr)) {
-                unset($statusKeyArr[$key]);
-            }
-        }
-        $sizeY = 0;
-        foreach ($statusKeyArr as $item) {
-            $statusRow = $statusModel->getByKey($item);
-            $sizeY = $sizeY + 80;
-            $adds = [];
-            $adds['id'] = 'state_'.$item;
-            $adds['positionX'] = 1250;
-            $adds['positionY'] = $sizeY;
-            $adds['innerHTML'] = $statusRow['name'] . '  <div class="ep" action="' . $statusRow['name'] . '"></div>';
-            $adds['innerText'] = $statusRow['name'];
-            $jsonArr['blocks'][] = $adds;
-        }
-        $data['workflow']['data'] = json_encode($jsonArr);
+        $data['workflow']['data'] = $this->initNewStatus($jsonArr);
         $data['params'] = $params;
         $data['id'] = $id;
 

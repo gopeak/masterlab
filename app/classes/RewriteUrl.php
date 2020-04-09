@@ -28,7 +28,6 @@ class RewriteUrl
     public function orgRoute($engine)
     {
         $ctrl = $engine->ctrl;
-        // var_dump($engine);
         if ($engine->enableSecurityMap) {
             $mapConfig = getCommonConfigVar('map');
             if (empty($engine->mod)) {

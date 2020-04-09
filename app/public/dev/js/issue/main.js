@@ -531,6 +531,10 @@ var IssueMain = (function () {
             });
 
             $(".module-select > a").bind("dblclick", function () {
+                if(cur_project_id ===''){
+                    notify_warn('提示','需要进入项目才能修改');
+                    return false;
+                }
                 var $self = $(this);
                 var issue_id = $self.parent().data('issue_id');
                 var list_box = $self.siblings(".module-list");
@@ -563,6 +567,10 @@ var IssueMain = (function () {
             
 
             $(".sprint-select > a").bind("dblclick", function (e) {
+                if(cur_project_id ===''){
+                    notify_warn('提示','需要进入项目才能修改');
+                    return false;
+                }
                 var $self = $(this);
                 var issue_id = $self.parent().data('issue_id');
                 var list_box = $self.siblings(".sprint-list");
@@ -592,6 +600,10 @@ var IssueMain = (function () {
             });
 
             $(".assignee-select > span > a").bind("dblclick", function () {
+                if(cur_project_id ===''){
+                    notify_warn('提示','需要进入项目才能修改');
+                    return false;
+                }
                 var $self = $(this);
                 var issue_id = $self.parent().parent().data('issue_id');
                 var list_box = $self.parent().siblings(".assignee-list");

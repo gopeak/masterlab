@@ -95,7 +95,7 @@ class PermissionLogic
         $table = $orgModel->getTable();
         $orgIdStr = implode(',', $orgIdArr);
         $sql = "SELECT * FROM {$table} WHERE id IN ({$orgIdStr}) ";
-        $orgArr = $orgModel->db->getRows($sql);
+        $orgArr = $orgModel->db->fetchAll($sql);
 
         return $orgArr;
     }
@@ -121,7 +121,7 @@ class PermissionLogic
         if (!empty($limit)) {
             $sql .= " limit $limit";
         }
-        $projects = $projectModel->db->getRows($sql);
+        $projects = $projectModel->db->fetchAll($sql);
 
         foreach ($projects as &$item) {
             $item = ProjectLogic::formatProject($item);
@@ -148,7 +148,7 @@ class PermissionLogic
         $projectRoleModel = new ProjectRoleModel();
         $table = $projectRoleModel->getTable();
         $sql = "SELECT DISTINCT project_id FROM {$table} WHERE id IN ({$roleIdStr})  ";
-        $rows = $projectRoleModel->db->getRows($sql);
+        $rows = $projectRoleModel->db->fetchAll($sql);
         //print_r($rows);
         $projectIdArr = [];
         foreach ($rows as $row) {
@@ -173,7 +173,7 @@ class PermissionLogic
         $projectModel = new ProjectModel();
         $table = $projectModel->getTable();
         $sql = "SELECT DISTINCT org_id FROM {$table} WHERE id IN ({$projectIdStr})  ";
-        $rows = $projectModel->db->getRows($sql);
+        $rows = $projectModel->db->fetchAll($sql);
         //print_r($rows);
         $orgIdArr = [];
         foreach ($rows as $row) {

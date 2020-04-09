@@ -2,6 +2,7 @@
 
 namespace main\app\test\requirement;
 
+use Doctrine\DBAL\DBALException;
 use main\app\test\BaseTestCase;
 
 /**
@@ -47,9 +48,9 @@ class TestEnv extends BaseTestCase
             'memory_limit',
             'max_execution_time'
         ];
-        $req['inis'] = json_encode($inis);
+        $req['ini_arr'] = json_encode($inis);
         $curl = new \Curl\Curl();
-        $curl->post(ROOT_URL . 'framework/feature/get_php_ini?data_type=json', $req);
+        $curl->post(ROOT_URL . 'framework/feature/getPhpIni?data_type=json', $req);
         $ret = json_decode($curl->rawResponse);
         $this->assertTrue(isset($ret->data), 'get php ini value failed, response: ' . $curl->rawResponse);
         $iniData = $ret->data;
@@ -58,9 +59,6 @@ class TestEnv extends BaseTestCase
 
         $sessionUseCookies = $iniData->session_use_cookies;
         $this->assertContains($sessionUseCookies, ['1', 'on', 'true'], 'php.ini session.use_cookies not open ');
-
-        // 要求打开短标记
-        $this->assertContains($iniData->short_open_tag, ['1', 'on', 'true'], 'php.ini short_open_tag not open ');
 
         // 要求上传限制为8M
         $limit8m = return_bytes($iniData->upload_max_filesize) >= (1048576 * 8);
@@ -205,12 +203,6 @@ class TestEnv extends BaseTestCase
         include $configFile;
         $this->assertNotEmpty($_config);
 
-        $_config = [];
-        $configFile = $configDir . 'queue' . '.cfg.php';
-        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
-        include $configFile;
-        $this->assertNotEmpty($_config);
-
 
         $_config = [];
         $configFile = $configDir . 'server_status' . '.cfg.php';
@@ -223,9 +215,6 @@ class TestEnv extends BaseTestCase
         $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
         include $configFile;
         $this->assertNotEmpty($_config);
-
-        $configFile = $configDir . 'validation.cfg.php';
-        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
     }
 
     /**
@@ -252,7 +241,7 @@ class TestEnv extends BaseTestCase
      */
     public function testMysqlServer()
     {
-        $dbConfigs = getConfigVar('database')['database'];
+        $dbConfigs = getYamlConfigByModule('database');
         foreach ($dbConfigs as $name => $dbConfig) {
             if ($name == 'default' && empty($dbConfig)) {
                 $this->fail('database default config undefined');
@@ -264,44 +253,38 @@ class TestEnv extends BaseTestCase
                     $this->assertTrue(isset($dbConfig[$key]), "db_config {$key} undefined");
                 }
                 $this->assertEquals('mysql', $dbConfig['driver'], "database {$name} config's driver not mysql");
-
-                $format = "%s:host=%s;port=%s;dbname=%s";
-                $driver = $dbConfig['driver'];
-                $host = $dbConfig['host'];
-                $port = $dbConfig['port'];
-                $db_name = $dbConfig['db_name'];
-                $names = $dbConfig['charset'];
-                $dsn = sprintf($format, $driver, $host, $port, $db_name);
-                $params = [
-                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$names}",
+                $connectionParams = array(
+                    'dbname' => $dbConfig['db_name'],
+                    'user' => $dbConfig['user'],
+                    'password' => $dbConfig['password'],
+                    'host' => $dbConfig['host'],
+                    'charset' => $dbConfig['charset'],
+                    'driver' => 'pdo_mysql',
                     \PDO::ATTR_PERSISTENT => false,
-                    \PDO::ATTR_TIMEOUT => 20
-                ];
+                    \PDO::ATTR_TIMEOUT=>$dbConfig['timeout']
+                );
+
                 try {
                     // 检查连接
-                    $pdo = new \PDO($dsn, $dbConfig['user'], $dbConfig['password'], $params);
-                    if (!$pdo) {
+                    $db = \Doctrine\DBAL\DriverManager::getConnection($connectionParams);
+                    if (!$db) {
                         $this->fail('mysql err: connection failed');
                     }
                     // 检查版本
-                    $sth = $pdo->prepare("select version() as v");
-                    $sth->execute();
-                    $version = $sth->fetch(\PDO :: FETCH_ASSOC)['v'];
+                    $version = $db->fetchColumn("select version() as v");
                     self::$mysqlVersion = $v = floatval(substr($version, 0, 3));
                     if ($v < 5.5) {
                         $this->fail('mysql version require 5.5+ ,current version id ' . $version);
                     }
                     // 检查表引擎
-                    $sth = $pdo->prepare("SHOW TABLE STATUS FROM " . $dbConfig['db_name']);
-                    $sth->execute();
-                    $tables = $sth->fetchAll(\PDO :: FETCH_ASSOC);
+                    $tables = $db->fetchAll("SHOW TABLE STATUS FROM " . $dbConfig['db_name']);
                     foreach ($tables as $tb) {
                         if (!empty($tb['Engine']) && strtolower($tb['Engine']) != 'innodb') {
                             $this->fail('table ' . $tb['Name'] . ' engine not InnoDB ');
                         }
                     }
                     $pdo = null;
-                } catch (\PDOException $e) {
+                } catch (\Doctrine\DBAL\DBALException $e) {
                     $this->fail('mysql err: ' . $e->getMessage());
                 }
             }
@@ -341,7 +324,7 @@ class TestEnv extends BaseTestCase
      */
     public function testMailServer()
     {
-        $mailConfig = getCommonConfigVar('mail_tpl');
+        $mailConfig = getConfigVar('mail');
         $host = $mailConfig['host'];
         $port = $mailConfig['port'];
         $timeout = $mailConfig['timeout'];

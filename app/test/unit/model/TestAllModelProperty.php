@@ -84,23 +84,14 @@ class TestAllExtendDbModelProperty extends TestCase
                 // 检查表名是否正确
                 $table = str_replace("`", '', $model->getTable());
                 $sql = "SHOW TABLES LIKE  '" . $table . "'";
-                $model->db->exec($sql);
-                $row = $model->db->pdoStatement->fetch(\PDO::FETCH_NUM, \PDO::FETCH_ORI_NEXT);
+                $fetchTable = $model->db->fetchColumn($sql);
                 //var_export($row);
-                if ($row === false) {
+                if ($fetchTable === false) {
                     $this->fail($modelName . ':' . $model->getTable() . " table error on ".$sql);
                     continue;
                 }
-                if (count($row) <= 0) {
-                    $this->fail($modelName . " table error");
-                }
-                $fetchTable = $row[0];
-                if ($fetchTable === false) {
-                    $this->fail($modelName . " table error,set " . $table . ', but get ' . $fetchTable);
-                }
-
                 $sql = "show full fields from  {$table} ";
-                $databaseFields = $model->db->getRows($sql, [], true);
+                $databaseFields = $model->fetchALLForGroup($sql, [], true);
                 if (empty($databaseFields)) {
                     continue;
                 }

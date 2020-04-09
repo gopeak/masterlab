@@ -41,7 +41,7 @@ class IssueTypeLogic
                 Order by t.id ASC ";
 
         $issueTypeModel = new IssueTypeModel();
-        return $issueTypeModel->db->getRows($sql);
+        return $issueTypeModel->db->fetchAll($sql);
     }
 
     /**
@@ -180,7 +180,7 @@ class IssueTypeLogic
                 GROUP BY
                     ts.id;";
 
-        return $issueTypeSchemeModel->db->getRows($sql);
+        return $issueTypeSchemeModel->db->fetchAll($sql);
     }
 
     /**
@@ -213,7 +213,7 @@ class IssueTypeLogic
                     $model->db->rollBack();
                     return [false, 'IssueTypeSchemeItemsModel insert failed:' . var_export($infoArr, true)];
                 } else {
-                    $affectedRows = $model->db->pdoStatement->rowCount();
+                    $affectedRows = (int)$rowsAffected;
                 }
             }
             $model->db->commit();

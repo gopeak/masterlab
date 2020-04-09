@@ -58,7 +58,7 @@ class PermissionGlobalModel extends BaseDictionaryModel
         $sql = " select `id` , `name` , `parent_id` , `description` , `_key` from {$table}   where  1 ";
         $sql .= " AND  parent_id > 0 ";
 
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->fetchALLForGroup($sql, $params, true);
 
         return $rows;
     }
@@ -81,7 +81,7 @@ class PermissionGlobalModel extends BaseDictionaryModel
         $ids_str = implode(',', $permIds);
         $sql .= " AND  id IN ({$ids_str}) ";
 
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->fetchALLForGroup($sql, $params, true);
 
         if (empty($rows)) {
             return [];

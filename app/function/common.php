@@ -9,19 +9,7 @@ function unit_set($key)
 
 function getConfigVar($file)
 {
-    $_config = [];
-    $_file = APP_PATH . 'config/' . APP_STATUS . '/' . $file . '.cfg.php';
-
-    if (file_exists($_file)) {
-        include $_file;
-    } else {
-        if (APP_STATUS == 'development') {
-            include APP_PATH . 'config/development/' . $file . '.cfg.php';
-        } else {
-            include APP_PATH . 'config/deploy/' . $file . '.cfg.php';
-        }
-    }
-    return $_config;
+    return getCommonConfigVar($file);
 }
 
 /**
@@ -32,11 +20,18 @@ function getConfigVar($file)
 function getCommonConfigVar($file)
 {
     $_config = [];
-
     $absFile = APP_PATH . 'config/' . $file . '.cfg.php';
-
     if (file_exists($absFile)) {
         include $absFile;
+    }
+    return $_config;
+}
+
+function getYamlConfigByModule($module)
+{
+    $_config = [];
+    if (isset($GLOBALS['_yml_config'][$module])) {
+        $_config = $GLOBALS['_yml_config'][$module];
     }
     return $_config;
 }

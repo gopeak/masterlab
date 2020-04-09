@@ -52,7 +52,7 @@ class TestSearch extends BaseAppTestCase
         // 检查版本
         $model = new IssueModel();
         $versionSql = 'select version() as vv';
-        $versionStr = $model->db->getOne($versionSql);
+        $versionStr = $model->getFieldBySql($versionSql);
         $mysqlVer = 0;
         if (strpos($versionStr, 'MariaDB') === false) {
             $mysqlVer = floatval(substr($versionStr, 0, 3));

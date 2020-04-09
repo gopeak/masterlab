@@ -102,7 +102,7 @@ class IssueLogic
         } else {
             $sqlPreNextSql = "SELECT  * FROM  {$table} WHERE  project_id=$projectId  AND id < $issueId limit 2";
         }
-        $rows = $issueModel->db->getRows($sqlPreNextSql, $params);
+        $rows = $issueModel->db->fetchAll($sqlPreNextSql, $params);
         return $rows;
     }
 
@@ -136,7 +136,7 @@ class IssueLogic
                     $start = $pageSize * ($currentPage);
                     $limit = " limit $start , 1 ";
                     $sqlPreNextSql = "SELECT  id FROM  {$table}  {$filterWhere}  $filterOrder  $limit";
-                    $nextId = $issueModel->db->getOne($sqlPreNextSql, $params);
+                    $nextId = $issueModel->getFieldBySql($sqlPreNextSql, $params);
                     return [true, $nextId];
                 }
             }
@@ -178,7 +178,7 @@ class IssueLogic
                     $start = $pageSize * ($filterCurrentPage - 1);
                     $limit = " limit $start , $pageSize ";
                     $sqlPreNextSql = "SELECT  id FROM  {$table}  {$filterWhere}  $filterOrder  $limit";
-                    $rows = $issueModel->db->getRows($sqlPreNextSql, $params);
+                    $rows = $issueModel->db->fetchAll($sqlPreNextSql, $params);
                     $prevRow = end($rows);
                     return [true, $prevRow['id']];
                 }
@@ -196,19 +196,17 @@ class IssueLogic
     {
         $model = new FieldModel();
         $customFields = $model->getCustomFields();
-        $fields = [];
-        foreach ($customFields as $customField) {
-            $fields[$customField['id']] = $customField;
-        }
-
+        $fields = array_column($customFields, null, 'id');
         $model = new FieldCustomValueModel($issueId);
         $rows = $model->getItemsByIssueId($issueId);
         foreach ($rows as &$row) {
             $row['field'] = new \stdClass();
             $row['field_title'] = '';
+            $row['field_name'] = '';
             if (isset($fields[$row['custom_field_id']])) {
                 $row['field'] = $fields[$row['custom_field_id']];
                 $row['field_title'] = $row['field']['title'];
+                $row['field_name'] = $row['field']['name'];
             }
 
             $valueType = $row['value_type'];
@@ -216,10 +214,7 @@ class IssueLogic
             if (isset($row[$valueType . '_value'])) {
                 $row['value'] = $row[$valueType . '_value'];
             }
-            $row['show_value'] = '';
-            if (!empty($row['value'])) {
-                $row['show_value'] = mb_substr(ucfirst($row['value']), 0, 20, 'utf-8');
-            }
+            $row['show_value'] = self::getFieldShowValue($row['value'], @$fields[$row['custom_field_id']]);
         }
         return $rows;
     }
@@ -249,7 +244,7 @@ class IssueLogic
      * @return array
      * @throws \Exception
      */
-    public function convertChild($currentId, $masterId, $secondType=null)
+    public function convertChild($currentId, $masterId, $secondType = null)
     {
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($currentId);
@@ -257,8 +252,8 @@ class IssueLogic
             return [false, 'data_is_empty'];
         }
         $master = $issueModel->getById($masterId);
-        $updateInfo = ['master_id' => $masterId,'module'=>$master['module']];
-        if(isset($master[$secondType])){
+        $updateInfo = ['master_id' => $masterId, 'module' => $master['module']];
+        if (isset($master[$secondType])) {
             $updateInfo[$secondType] = $master[$secondType];
         }
         //print_r($updateInfo);
@@ -324,13 +319,10 @@ class IssueLogic
     {
         $model = new FieldModel();
         $customFields = $model->getCustomFields();
-        $fields = [];
-        foreach ($customFields as $field) {
-            $fields[$field['name']] = $field;
-        }
         if (!$params) {
             return [false, 'param_error'];
         }
+        $fields = array_column($customFields, null, 'name');
         $model = new FieldCustomValueModel();
         foreach ($params as $key => $param) {
             if (isset($fields[$key])) {
@@ -342,7 +334,10 @@ class IssueLogic
                 $info['custom_field_id'] = $field['id'];
                 $info['value_type'] = $valueType;
                 $info[$valueType . '_value'] = $param;
-                $model->insert($info);
+                list($ret, $msg) = $model->insert($info);
+                if (!$ret) {
+                    return [$ret, $msg];
+                }
             }
         }
         return [true, 'ok'];
@@ -381,25 +376,88 @@ class IssueLogic
     }
 
     /**
+     * 获取自定义字段的显示值
+     * @param $value
+     * @param $field
+     * @return string
+     */
+    public static function getFieldShowValue($value, $field)
+    {
+        if(empty($value)){
+            return '';
+        }
+        if(empty($field) || !isset($field['type'])){
+            return '';
+        }
+
+        switch ($field['type']) {
+            case "RADIO":
+            case "CHECKBOX":
+            case "SELECT":
+            case "STATUS":
+                $options = json_decode($field['options'], true);
+                if (!$options) {
+                    return $value;
+                }
+                foreach ($options as $key => $option) {
+                    if ($value == $key) {
+                        return $option;
+                    }
+                }
+                break;
+            case "SELECT_MULTI":
+
+                $options = json_decode($field['options'], true);
+                if (!$options) {
+                    break;
+                }
+                $valueArr = null;
+                if (is_string($value)) {
+                    $valueArr = json_decode($value, true);
+                    if (!$valueArr) {
+                        $valueArr = explode(',', $value);
+                    }
+                }else{
+                    if(is_array($value)){
+                        $valueArr = $value;
+                    }
+                }
+                if(!$valueArr){
+                    break;
+                }
+                $mValue = '';
+                foreach ($options as $key => $option) {
+                    if ($value == $key) {
+                        $mValue .= $option.' ';
+                    }
+                }
+                $value = $mValue;
+                break;
+
+            default:
+                break;
+        }
+        return $value;
+    }
+
+    /**
      * 更新自定义字段的值
      * @param $issueId
      * @param $params
      * @return array
      * @throws \Exception
      */
-    public function updateCustomFieldValue($issueId, $params)
+    public function updateCustomFieldValue($issueId, $params, $projectId)
     {
-        // @todo 为避免频繁更新该表，应该通过patch方式提交
-        $model = new FieldModel();
-        $customFields = $model->getCustomFields();
-        $fields = [];
-        foreach ($customFields as $field) {
-            $fields[$field['name']] = $field;
-        }
         if (!$params) {
             return [false, 'param_error'];
         }
+        $model = new FieldModel();
+        $customFields = $model->getCustomFields();
+        $fields = array_column($customFields, null, 'name');
         $model = new FieldCustomValueModel();
+        $issueCustomRowsArr = $model->getItemsByIssueId($issueId);
+        $issueCustomFieldIdArr = array_column($issueCustomRowsArr, 'custom_field_id');
         foreach ($params as $key => $param) {
             if (isset($fields[$key])) {
                 $field = $fields[$key];
@@ -410,7 +468,15 @@ class IssueLogic
                 $info = [];
                 $info['value_type'] = $valueType;
                 $info[$valueType . '_value'] = $param;
-                $model->update($info, $conditions);
+                if (!in_array($field['id'], $issueCustomFieldIdArr)) {
+                    $info['issue_id'] = $issueId;
+                    $info['project_id'] = $projectId;
+                    $info['custom_field_id'] = $field['id'];
+                    $model->insert($info);
+                } else {
+                    $model->update($info, $conditions);
+                }
+
             }
         }
         return [true, 'ok'];
@@ -546,8 +612,8 @@ class IssueLogic
      * @param $issueId
      * @param $arr
      * @param $field
-     * @throws \Exception
      * @return array
+     * @throws \Exception
      */
     public function addChildData($model, $issueId, $arr, $field)
     {
@@ -604,7 +670,7 @@ class IssueLogic
 
     /**
      * 获取事项活动动态信息
-     * @param  \main\app\model\issue\IssueStatusModel $statusModel
+     * @param \main\app\model\issue\IssueStatusModel $statusModel
      * @param \main\app\model\issue\IssueResolveModel $resolveModel
      * @param $info
      * @return string
@@ -662,7 +728,7 @@ class IssueLogic
         $issueModel = new IssueModel();
         $issueTable = $issueModel->getTable();
         $sql = "Select group_concat(summary) as names  From {$issueTable}  Where id in ({$issueIds})";
-        $issueNames = $issueModel->db->getRows($sql);
+        $issueNames = $issueModel->db->fetchAll($sql);
         if (empty($issueNames)) {
             return $issueIds;
         } else {
@@ -747,7 +813,7 @@ class IssueLogic
     {
         $issueModel = new IssueModel();
         $sql = "SELECT i.id,i.issue_num ,count(f.id) as cc FROM `issue_main` i LEFT JOIN issue_follow f ON i.id=f.issue_id GROUP BY i.id";
-        $issueDataArr = $issueModel->db->getRows($sql);
+        $issueDataArr = $issueModel->db->fetchAll($sql);
         foreach ($issueDataArr as $item) {
             $updateCount = intval($item['cc']);
             if ($updateCount > 0) {
@@ -760,7 +826,7 @@ class IssueLogic
     {
         $issueModel = new IssueModel();
         $sql = "SELECT i.id,i.issue_num ,count(f.id) as cc FROM `issue_main` i LEFT JOIN main_timeline f ON i.id=f.issue_id GROUP BY i.id";
-        $issueDataArr = $issueModel->db->getRows($sql);
+        $issueDataArr = $issueModel->db->fetchAll($sql);
         foreach ($issueDataArr as $item) {
             $updateCount = intval($item['cc']);
             if ($updateCount > 0) {
@@ -1072,7 +1138,7 @@ class IssueLogic
                 // 更新数据
                 if (!empty($item['update']) && isset($item['update']['issue_num']) && !empty($item['update']['issue_num'])) {
                     $opt = true;
-                    $issueId = $issueModel->getOne('id', ['issue_num' => $item['update']['issue_num']]);
+                    $issueId = $issueModel->getField('id', ['issue_num' => $item['update']['issue_num']]);
                     //var_dump($issueId);
                     if ($issueId) {
                         list($ret, $insertIssueId) = $issueModel->updateItemById($issueId, $item['update']);

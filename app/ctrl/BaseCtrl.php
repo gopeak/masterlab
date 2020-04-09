@@ -123,6 +123,8 @@ class BaseCtrl
             $this->addGVar('_title', $title);
             $this->getSystemInfo();
         }
+        $this->addGVar('_currenPhpUser', isset($_SERVER['USER'])? $_SERVER['USER']:@get_current_user());
+        $this->addGVar('_root_path', PRE_APP_PATH);
     }
 
     /**
@@ -487,7 +489,7 @@ class BaseCtrl
 
             $issueModel = new SettingModel();
             $versionSql = 'select version() as vv';
-            $versionStr = $issueModel->db->getOne($versionSql);
+            $versionStr = $issueModel->getFieldBySql($versionSql);
             $basicSettingArr = $issueModel->getSettingByModule();
             $companyInfo = [];
             $fetchKeyArr = ['title', 'company', 'company_linkman', 'company_phone'];

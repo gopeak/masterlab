@@ -17,6 +17,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\SettingModel;
 use main\app\model\user\UserMessageModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
@@ -605,6 +606,24 @@ class User extends BaseUserCtrl
         $newPassword = $params['new_password'];
         if (empty($originPassword) || empty($newPassword)) {
             $this->ajaxFailed('错误', '密码不能为空');
+        }
+
+        $settingModel = new SettingModel();
+        $passwordStrategy = $settingModel->getSettingValue('password_strategy');
+        if ($passwordStrategy == 2) {
+            // 密码需要6位及以上，并且包含大写字母、小写字母、数字至少两种
+            // $pattern = '/^(?=.{6,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$/';
+            // 密码需要6位及以上
+            $pattern = '/(?=.{6,}).*/';
+            if (!preg_match($pattern, $newPassword)) {
+                $this->ajaxFailed('错误', '密码需要6位及以上');
+            }
+        } elseif ($passwordStrategy == 3) {
+            // 密码要求8位及以上，并且包含大写字母、小写字母、数字和特殊字符
+            $pattern = '/^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).*$/';
+            if (!preg_match($pattern, $newPassword)) {
+                $this->ajaxFailed('错误', '密码要求8位及以上，并且包含大写字母、小写字母、数字和特殊字符');
+            }
         }
 
         $uid = $_SESSION[UserAuth::SESSION_UID_KEY];

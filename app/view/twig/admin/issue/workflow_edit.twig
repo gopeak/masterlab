@@ -113,7 +113,7 @@
 <script type="text/javascript">
 
     var $Workflow = null;
-    var workflow_data = {{workflow['data']|raw}};
+    var workflow_data = {{workflow['data']|json_encode()|raw}};
     $(function() {
 
         $('#btn_add_states').on('click', function () {

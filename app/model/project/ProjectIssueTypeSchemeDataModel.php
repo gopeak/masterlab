@@ -52,7 +52,7 @@ class ProjectIssueTypeSchemeDataModel extends CacheModel
 
     public function getSchemeId($projectId)
     {
-        return $this->getOne('issue_type_scheme_id', ['project_id' => $projectId]);
+        return $this->getField('issue_type_scheme_id', ['project_id' => $projectId]);
     }
 
     public function deleteBySchemeId($scheme_id)
@@ -64,12 +64,12 @@ class ProjectIssueTypeSchemeDataModel extends CacheModel
     public function getByProjectId($project_id)
     {
         $sql = "SELECT * FROM (
-SELECT pitsd.issue_type_scheme_id, pitsd.project_id, itsd.type_id from project_issue_type_scheme_data as pitsd 
-JOIN issue_type_scheme_data as itsd ON pitsd.issue_type_scheme_id=itsd.id 
-WHERE pitsd.project_id={$project_id}
-) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
+                    SELECT pitsd.issue_type_scheme_id, pitsd.project_id, itsd.type_id from project_issue_type_scheme_data as pitsd 
+                    JOIN issue_type_scheme_data as itsd ON pitsd.issue_type_scheme_id=itsd.id 
+                    WHERE pitsd.project_id={$project_id}
+                    ) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
 
-        return $this->db->getRows($sql);
+        return $this->db->fetchAll($sql);
     }
 
 }

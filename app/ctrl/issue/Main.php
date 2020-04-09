@@ -23,6 +23,7 @@ use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
+use main\app\model\field\FieldCustomValueModel;
 use main\app\model\issue\ExtraWorkerDayModel;
 use main\app\model\issue\HolidayModel;
 use main\app\model\project\ProjectCatalogLabelModel;
@@ -128,9 +129,9 @@ class Main extends BaseUserCtrl
                     header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
                     die;
                 } else {
-                    if($fav['is_adv_query']=='1'){
+                    if ($fav['is_adv_query'] == '1') {
                         $data['adv_filter_json'] = $fav['filter'];
-                    }else{
+                    } else {
                         $data['adv_filter_json'] = [];
                     }
 
@@ -169,7 +170,22 @@ class Main extends BaseUserCtrl
         // 表格视图的显示字段
         $issueLogic = new IssueLogic();
         $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
-        $data['uiDisplayFields'] = IssueLogic::$uiDisplayFields;
+        $uiDisplayFields = IssueLogic::$uiDisplayFields;
+        $fieldsArr = FieldModel::getInstance()->getCustomFields();
+        $fieldsIdArr = array_column($fieldsArr, 'title', 'name');
+        $data['uiDisplayFields'] = array_merge($uiDisplayFields, $fieldsIdArr);
+
+        $displayCustomFieldArr = [];
+        foreach ($fieldsArr as $field) {
+            if (in_array($field['name'], $data['display_fields'])) {
+                $displayCustomFieldArr[] = $field;
+            }
+        }
+
+        $data['displayCustomFieldArr'] = $displayCustomFieldArr;
+
+
+        // 高级查询字段
         $data['advFields'] = IssueFilterLogic::$advFields;
 
         // 事项展示的视图方式
@@ -195,10 +211,12 @@ class Main extends BaseUserCtrl
         // 迭代数据
         $data['sprints'] = [];
         $data['active_sprint'] = [];
+        $sprintModel = new SprintModel();
         if (!empty($data['project_id'])) {
-            $sprintModel = new SprintModel();
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
+        }else{
+            $data['sprints'] = $sprintModel->getAllItems(false);
         }
 
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
@@ -611,22 +629,54 @@ class Main extends BaseUserCtrl
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
-            $issueIdArr = array_column($data['issues'],'id');
+            // 获取标签的关联数据
+            $issueIdArr = array_column($data['issues'], 'id');
             $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
             $labelDataArr = [];
             foreach ($labelDataRows as $labelData) {
                 $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
             }
+            // 获取自定义字段值
+            $fieldsArr = (new FieldModel())->getCustomFields();
+            if ($fieldsArr) {
+                $fieldsArr = array_column($fieldsArr, null, 'id');
+                $customFieldIdArr = array_column($fieldsArr, 'id');
+                $customValuesArr = (new FieldCustomValueModel())->getsByIssueIdArr($issueIdArr, $customFieldIdArr);
+                $customValuesIssueArr = [];
+                foreach ($customValuesArr as $customValue) {
+                    $key = $customValue['value_type'] . '_value';
+                    $issueId = $customValue['issue_id'];
+                    $fieldId = $customValue['custom_field_id'];
+                    $fieldArr = $fieldsArr[$fieldId];
+                    if (isset($fieldArr['name'])) {
+                        $fieldValue = !isset($customValue[$key]) ? $customValue['string_value'] : $customValue[$key];
+                        $fieldName = $fieldArr['name'];
+                        $customValuesIssueArr[$issueId][$fieldName] = $fieldValue;
+                    }
+                }
+            }
+
+            $userLogic = new UserLogic();
+            $users = $userLogic->getAllUser();
             foreach ($data['issues'] as &$issue) {
                 $issueId = $issue['id'];
                 IssueFilterLogic::formatIssue($issue);
-                if(isset($labelDataArr[$issueId])){
+                if (isset($labelDataArr[$issueId])) {
                     $arr = array_unique($labelDataArr[$issueId]);
                     sort($arr);
                     $issue['label_id_arr'] = $arr;
-                }else{
+                } else {
                     $issue['label_id_arr'] = [];
                 }
+                if (isset($customValuesIssueArr[$issueId])) {
+                    $customValueArr = $customValuesIssueArr[$issueId];
+                    $issue = array_merge($customValueArr, $issue);
+                }
+                $emptyObj = new \stdClass();
+                $issue['creator_info'] = isset($users[$issue['creator']])?$users[$issue['creator']]:$emptyObj;
+                $issue['modifier_info'] = isset($users[$issue['modifier']])?$users[$issue['modifier']]:$emptyObj;
+                $issue['reporter_info'] = isset($users[$issue['reporter']])?$users[$issue['reporter']]:$emptyObj;
+                $issue['assignee_info'] = isset($users[$issue['assignee']])?$users[$issue['assignee']]:$emptyObj;
             }
 
             $data['total'] = (int)$total;
@@ -925,6 +975,17 @@ class Main extends BaseUserCtrl
         $logic = new WorkflowLogic();
         $issue['allow_update_status'] = $logic->getStatusByIssue($issue);
 
+        // 自定义字段
+        $issueLogic = new IssueLogic();
+        $customFieldValues = $issueLogic->getCustomFieldValue($issueId);
+        if ($customFieldValues) {
+            $customFieldValuesArr = array_column($customFieldValues, 'value', 'field_name');
+            if ($customFieldValuesArr) {
+                $issue = array_merge($customFieldValuesArr, $issue);
+            }
+        }
+
+
         // tab页面
         $model = new IssueUiTabModel($issueId);
         $data['tabs'] = $model->getItemsByIssueTypeIdType($issueTypeId, $uiType);
@@ -948,12 +1009,26 @@ class Main extends BaseUserCtrl
         }
         $err = [];
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
-            //$this->ajaxFailed('param_error:summary_is_null');
             $err['summary'] = '标题不能为空';
         }
         if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
-            //$this->ajaxFailed('param_error:issue_type_id_is_null');
             $err['issue_type'] = '事项类型不能为空';
+        }
+
+        // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
+        $getDefaultPriorityId = function () {
+            return (new IssuePriorityModel())->getIdByKey('normal');
+        };
+        $priorityId = null;
+        if (isset($params['priority'])) {
+            $priorityId = (int)$params['priority'];
+            $model = new IssuePriorityModel();
+            $issuePriority = $model->getById($priorityId);
+            if (!$issuePriority) {
+                $priorityId = $getDefaultPriorityId();
+            }
+        } else {
+            $priorityId = $getDefaultPriorityId();
         }
 
         // 事项UI配置判断输入是否为空
@@ -963,7 +1038,7 @@ class Main extends BaseUserCtrl
         $uiConfigs = $issueUiModel->getsByUiType($params['issue_type'], 'create');
         //print_r($uiConfigs);
         // 迭代字段不会判断输入
-        $excludeFieldArr = ['sprint'];
+        $excludeFieldArr = ['sprint', 'priority'];
         foreach ($uiConfigs as $uiConfig) {
             if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
                 $field = $fieldsArr[$uiConfig['field_id']];
@@ -1012,7 +1087,7 @@ class Main extends BaseUserCtrl
         unset($issueTypes);
 
         $info['issue_type'] = $issueTypeId;
-
+        $info['priority'] = $priorityId;
         $info = $info + $this->getAddFormInfo($params);
 
         $model = new IssueModel();
@@ -1109,7 +1184,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['progress'])) {
-            $info['progress'] = max(0,(int)$params['progress']);
+            $info['progress'] = max(0, (int)$params['progress']);
         }
 
         if (isset($params['depends'])) {
@@ -1137,13 +1212,13 @@ class Main extends BaseUserCtrl
                 $aboveWeight = (int)$belowIssue[$fieldWeight];
                 $sprintId = $belowIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
-                $nextWeight = (int)$model->db->getOne($sql);
+                $nextWeight = (int)$model->getFieldBySql($sql);
                 if (empty($nextWeight)) {
                     $nextWeight = 0;
                 }
                 $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
 
-                if(!empty($belowIssue['master_id'])){
+                if (!empty($belowIssue['master_id'])) {
                     $params['master_issue_id'] = $belowIssue['master_id'];
                 }
                 // print_r($params);
@@ -1160,7 +1235,7 @@ class Main extends BaseUserCtrl
                 $sprintId = $aboveIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where $fieldWeight>$belowWeight  AND sprint=$sprintId Order by {$fieldWeight} DESC limit 1";
                 // echo $sql;
-                $prevWeight = (int)$model->db->getOne($sql);
+                $prevWeight = (int)$model->getFieldBySql($sql);
                 if (empty($prevWeight)) {
                     $prevWeight = 0;
                 }
@@ -1187,19 +1262,19 @@ class Main extends BaseUserCtrl
                 // 如果是子任务
                 $masterId = (int)$params['master_issue_id'];
                 $sql = "Select {$fieldWeight} From {$table} Where master_id={$masterId}  AND sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
-                $prevWeight = (int)$model->db->getOne($sql);
+                $prevWeight = (int)$model->getFieldBySql($sql);
                 $sql = "Select {$fieldWeight} From {$table} Where $prevWeight>{$fieldWeight} AND sprint={$sprintId} Order by {$fieldWeight} DESC limit 1";
                 //echo $sql;
-                $nextWeight = (int)$model->db->getOne($sql);
+                $nextWeight = (int)$model->getFieldBySql($sql);
                 if (($prevWeight - $nextWeight) > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $prevWeight - ProjectGantt::$offset;
                 } else {
-                    $info[$fieldWeight] = max(0, intval($prevWeight-($prevWeight - $nextWeight) / 2));
+                    $info[$fieldWeight] = max(0, intval($prevWeight - ($prevWeight - $nextWeight) / 2));
                 }
             } else {
                 // 如果是普通任务
                 $sql = "Select {$fieldWeight} From {$table} Where   sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
-                $minWeight = (int)$model->db->getOne($sql);
+                $minWeight = (int)$model->getFieldBySql($sql);
                 if ($minWeight > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $minWeight - ProjectGantt::$offset;
                 } else {
@@ -1247,34 +1322,23 @@ class Main extends BaseUserCtrl
             $info['status'] = $statusId;
         }
 
-        // 优先级
-        if (isset($params['priority'])) {
-            $priorityId = (int)$params['priority'];
-            $model = new IssuePriorityModel();
-            $issuePriority = $model->getAll();
-            if (!isset($issuePriority[$priorityId])) {
-                $this->ajaxFailed('param_error:priority_not_found');
-            }
-            unset($issuePriority);
-            $info['priority'] = $priorityId;
-        } else {
-            $priorityId = (new IssuePriorityModel())->getIdByKey('normal');
-            $info['priority'] = $priorityId;
-        }
-
-        // 解决结果
+        // 解决结果, @todo 数据库字段增加一个默认值，管理页面可以修改
+        $getDefaultResolveId = function () {
+            $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
+            $info['resolve'] = $resolveId;
+            return $resolveId;
+        };
         if (isset($params['resolve']) && !empty($params['resolve'])) {
             $resolveId = (int)$params['resolve'];
             $model = new IssueResolveModel();
             $issueResolves = $model->getAll();
             if (!isset($issueResolves[$resolveId])) {
-                $this->ajaxFailed('param_error:resolve_not_found');
+                $resolveId = $getDefaultResolveId();
             }
             unset($issueResolves);
             $info['resolve'] = $resolveId;
         } else {
-            $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
-            $info['resolve'] = $resolveId;
+            $info['resolve'] = $getDefaultResolveId();
         }
 
         // 负责人
@@ -1332,7 +1396,7 @@ class Main extends BaseUserCtrl
             $info['weight'] = (int)$params['weight'];
         }
         $this->getGanttInfo($params, $info);
-        if(!empty($params['start_date']) && !empty($params['due_date'])){
+        if (!empty($params['start_date']) && !empty($params['due_date'])) {
             $holidays = (new HolidayModel())->getDays($params['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
             $ganttSetting = (new ProjectGanttSettingModel())->getByProject($params['project_id']);
@@ -1592,7 +1656,7 @@ class Main extends BaseUserCtrl
         }
 
         // 更新用时
-        if(isset($info['start_date']) || isset($info['due_date'])){
+        if (isset($info['start_date']) || isset($info['due_date'])) {
             $holidays = (new HolidayModel())->getDays($issue['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
             $updatedIssue = $issueModel->getById($issueId);
@@ -1602,7 +1666,7 @@ class Main extends BaseUserCtrl
             $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $workDates, $holidays, $extraWorkerDays);
             // print_r($updateDurationArr);
             list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
-            if($ret){
+            if ($ret) {
                 $updatedIssue['duration'] = $updateDurationArr['duration'];
             }
 
@@ -1648,7 +1712,7 @@ class Main extends BaseUserCtrl
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
-        $issueLogic->updateCustomFieldValue($issueId, $params);
+        $issueLogic->updateCustomFieldValue($issueId, $params, $issue['project_id']);
 
         // 记录活动日志
         $fromModule = null;
@@ -1684,7 +1748,7 @@ class Main extends BaseUserCtrl
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
         // email通知
-        if(isset($notifyFlag)){
+        if (isset($notifyFlag)) {
             $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
         }
         $updatedIssue = $issueModel->getById($issueId);
@@ -1786,7 +1850,7 @@ class Main extends BaseUserCtrl
                         $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $resolves[$issueOldValue]['color'] . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
                     } elseif ($field == 'start_date' || $field == 'due_date') {
                         $issueNewValue = trim($issueNewValue);
-                        if (!$issueNewValue && !$issueOldValue) {
+                        if (!$issueNewValue && (!$issueOldValue || ($issueOldValue == '0000-00-00'))) {
                             continue;
                         }
 

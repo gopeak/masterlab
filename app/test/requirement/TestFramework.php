@@ -103,6 +103,7 @@ class TestFramework extends BaseTestCase
         $post_data['username'] = "13002510000' or '1'='1 ";
         $post_data['pwd'] = "121";
         $curl->post(ROOT_URL . "framework/feature/sql_inject?format=json&data_type=json", $post_data);
+        // echo $curl->rawResponse;
         $json = json_decode($curl->rawResponse);
         $this->assertNotEmpty($json);
         $this->assertTrue(isset($json->ret));
@@ -166,43 +167,34 @@ class TestFramework extends BaseTestCase
         }
 
         // 更改配置,多库设置
-        $dbConfig = getConfigVar('database');
-        $dbConfig['database']['log_db'] = $dbConfig['database']['default'];
-        if (!in_array($modelUnit, $dbConfig['database']['log_db'])) {
-            $dbConfig['config_map_class']['log_db'][] = $modelUnit;
+        $GLOBALS['_yml_config']['database']['log_db'] = $GLOBALS['_yml_config']['database']['default'];
+        if (!in_array($modelUnit, $GLOBALS['_yml_config']['config_map_model']['log_db'])) {
+            $GLOBALS['_yml_config']['config_map_model']['log_db'][] = $modelUnit;
         }
 
-        $newConfigSrc = "<?php\n " . '$_config = ' . var_export($dbConfig, true) . ";\n\n" . 'return $_config;' . "\n";
-        $file = APP_PATH . 'config/' . APP_STATUS . '/database.cfg.php';
-        $originDatabaseSource = $this->readWithLock($file);
-        $writeRet = $this->writeWithLock($file, $newConfigSrc);
-        if ($writeRet !== false) {
-            require_once MODEL_PATH . 'BaseModel.php';
-            require_once MODEL_PATH . 'DbModel.php';
-            require_once MODEL_PATH . $modelDefault . '.php';
-            $model_default_class = sprintf("main\\%s\\model\\%s", APP_NAME, $modelDefault);
-            if (!class_exists($model_default_class)) {
-                $this->fail('class ' . $model_default_class . ' no found');
-            }
-            $modelDefaultObj = new $model_default_class();
-            $modelDefaultObj->realConnect();
+        require_once MODEL_PATH . 'BaseModel.php';
+        require_once MODEL_PATH . 'DbModel.php';
+        require_once MODEL_PATH . $modelDefault . '.php';
+        $model_default_class = sprintf("main\\%s\\model\\%s", APP_NAME, $modelDefault);
+        if (!class_exists($model_default_class)) {
+            $this->fail('class ' . $model_default_class . ' no found');
+        }
+        $modelDefaultObj = new $model_default_class();
+        $modelDefaultObj->connect();
 
-            require_once MODEL_PATH . $modelUnit . '.php';
-            $modelClass = sprintf("main\\%s\\model\\%s", APP_NAME, $modelUnit);
-            if (!class_exists($modelClass)) {
-                $this->fail('class ' . $modelClass . ' no found');
-            }
-            $modelUnitObj = new $modelClass();
-            $modelUnitObj->realConnect();
-            if ($modelUnitObj->db->pdo == $modelDefaultObj->db->pdo) {
-                $this->writeWithLock($file, $originDatabaseSource);
-                unlink(MODEL_PATH . $modelDefault . '.php');
-                unlink(MODEL_PATH . $modelUnit . '.php');
-                $defaultConfigName = $modelDefaultObj->configName;
-                $unitConfigName = $modelUnitObj->configName;
-                $this->fail("SplitDatabase feature failed {$defaultConfigName} equal {$unitConfigName}");
-            }
-            $this->writeWithLock($file, $originDatabaseSource);
+        require_once MODEL_PATH . $modelUnit . '.php';
+        $modelClass = sprintf("main\\%s\\model\\%s", APP_NAME, $modelUnit);
+        if (!class_exists($modelClass)) {
+            $this->fail('class ' . $modelClass . ' no found');
+        }
+        $modelUnitObj = new $modelClass();
+        $modelUnitObj->connect();
+        if ($modelUnitObj->db == $modelDefaultObj->db) {
+            unlink(MODEL_PATH . $modelDefault . '.php');
+            unlink(MODEL_PATH . $modelUnit . '.php');
+            $defaultConfigName = $modelDefaultObj->configName;
+            $unitConfigName = $modelUnitObj->configName;
+            $this->fail("SplitDatabase feature failed {$defaultConfigName} equal {$unitConfigName}");
         }
         unlink(MODEL_PATH . $modelDefault . '.php');
         unlink(MODEL_PATH . $modelUnit . '.php');

@@ -786,7 +786,7 @@ class Agile extends BaseUserCtrl
         $updateArr['sprint'] = AgileLogic::BACKLOG_VALUE;
         $updateArr['backlog_weight'] = '0';
         // 判断是否为已关闭事项
-        $issueStatus = $model->getOne('status',['id'=>$issueId]);
+        $issueStatus = $model->getField('status',['id'=>$issueId]);
         $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
         if($issueStatus==$statusClosedId){
             $updateArr['status'] = IssueStatusModel::getInstance()->getIdByKey('open');

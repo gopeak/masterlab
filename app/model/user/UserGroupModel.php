@@ -43,7 +43,7 @@ class UserGroupModel extends CacheModel
         $table = $this->getTable();
         $sql = "select uid from {$table}   where  group_id in(:group_ids) ";
 
-        $rows = $this->db->getRows($sql, $params, false);
+        $rows = $this->db->fetchAll($sql, $params);
         $ret = [];
         if (!empty($rows)) {
             foreach ($rows as $row) {
@@ -62,7 +62,7 @@ class UserGroupModel extends CacheModel
         $params = [];
         $table = $this->getTable();
         $sql = "select * from {$table}   where  uid in( {$userIds_str} ) ";
-        $rows = $this->db->getRows($sql, $params, false);
+        $rows = $this->db->fetchAll($sql, $params);
         $ret = [];
         if (!empty($rows)) {
             foreach ($rows as $row) {

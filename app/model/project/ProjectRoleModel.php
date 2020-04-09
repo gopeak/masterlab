@@ -75,7 +75,7 @@ class ProjectRoleModel extends CacheModel
      */
     public function getProjectRoleIdByProjectIdRoleName($projectId, $roleName)
     {
-        return $this->getOne('id', ['project_id' => $projectId, 'name' => $roleName]);
+        return $this->getField('id', ['project_id' => $projectId, 'name' => $roleName]);
     }
 
 

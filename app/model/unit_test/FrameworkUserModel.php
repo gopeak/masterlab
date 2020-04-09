@@ -2,6 +2,7 @@
 
 namespace main\app\model\unit_test;
 
+use main\app\model\DbalModel;
 use main\app\model\DbModel;
 
 /**
@@ -10,7 +11,7 @@ use main\app\model\DbModel;
  */
 class FrameworkUserModel extends DbModel
 {
-    public $prefix = 'hornet_';
+    public $prefix = 'xphp_';
 
     public $table = 'user';
 
@@ -99,8 +100,9 @@ class FrameworkUserModel extends DbModel
 
     /**
      * 添加用户
-     * @param $userinfo   提交的用户信息
+     * @param array $userinfo 提交的用户信息
      * @return bool
+     * @throws \Exception
      */
     public function addUser($userinfo)
     {
@@ -122,7 +124,7 @@ class FrameworkUserModel extends DbModel
     /**
      * 根据用户名获取用户
      * @param $username
-     * @return  一条查询数据
+     * @return  array
      */
     public function getByUsername($username)
     {
@@ -135,7 +137,7 @@ class FrameworkUserModel extends DbModel
     /**
      * 根据手机号获取用户
      * @param $mobile
-     * @return 一条查询数据
+     * @return array
      */
     public function getByPhone($phone)
     {

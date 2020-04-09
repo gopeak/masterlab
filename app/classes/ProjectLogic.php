@@ -386,7 +386,7 @@ class ProjectLogic
             $sql .= " limit $limit ";
         }
         //echo $sql;
-        $rows = $model->db->getRows($sql, $params);
+        $rows = $model->db->fetchAll($sql, $params);
         unset($model);
 
         return $rows;
@@ -411,7 +411,7 @@ class ProjectLogic
                 WHERE p.archived='N' ORDER BY p.id DESC";
         //echo $sql;exit;
 
-        return $model->db->getRows($sql);
+        return $model->db->fetchAll($sql);
     }
 
     /**
@@ -432,7 +432,7 @@ class ProjectLogic
                 LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
                 WHERE p.archived='Y' ORDER BY p.id DESC";
         //echo $sql;exit;
-        return $model->db->getRows($sql);
+        return $model->db->fetchAll($sql);
     }
 
     /**
@@ -462,7 +462,7 @@ class ProjectLogic
                 WHERE pitsd.project_id={$project_id}
                 ) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
 
-        return $model->db->getRows($sql);
+        return $model->db->fetchAll($sql);
     }
 
     /**
@@ -534,6 +534,7 @@ class ProjectLogic
 
             $defaultRoleRelationModel = new DefaultRoleRelationModel();
             $defaultRoleRelation = $defaultRoleRelationModel->getAll(false);
+            //print_r($defaultRoleRelation);
             $defaultRoleRelationArr = [];
             foreach ($defaultRoleRelation as $item) {
                 $defaultRoleRelationArr[$item['role_id']][] = $item;
