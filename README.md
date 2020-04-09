@@ -69,6 +69,7 @@ http://demo.masterlab.vip
      ```
  2. 下载代码，将根目录的运行依赖库`vendor.zip`解压出来  
        ```text
+         # 解压后的vendor目录结构
          - masterlab
            - vendor
                - autoload.php 
