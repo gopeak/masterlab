@@ -1,0 +1,34 @@
+
+{% if ( left_nav_active is not defined ) %}
+    {% set left_nav_active = '' %}
+{% endif %}
+{% if ( sub_nav_active is not defined ) %}
+    {% set sub_nav_active = '' %}
+{% endif %}
+
+
+<aside aria-live="polite" class="js-right-sidebar left-sidebar right-sidebar-expanded affix-top"
+       data-spy="affix" tabindex="0"  >
+    <div class="issuable-sidebar">
+
+        <div class="admin-menu-links">
+            <div class="aui-nav-heading   {% if (sub_nav_active == 'plugin') %} {{ 'active' }}{% endif %}"><strong>插件类型</strong></div>
+            <ul class="aui-nav" resolved="">
+                <li class=" {% if (left_nav_active == 'list') %} {{ 'active' }}{% endif %}">
+                    <a href="/admin/plugin/index" id="plugin_list">全部</a>
+                </li>
+                <li class=" {% if (left_nav_active == 'module') %} {{ 'active' }}{% endif %}">
+                    <a href="/admin/plugin/index" id="plugin_list">项目模块</a>
+                </li>
+                <li class=" {% if (left_nav_active == 'theme') %} {{ 'active' }}{% endif %}">
+                    <a href="/admin/plugin/index" id="plugin_list">主题</a>
+                </li>
+                <li class=" {% if (left_nav_active == 'app') %} {{ 'active' }}{% endif %}">
+                    <a href="/admin/plugin/index" id="plugin_list">应用程序</a>
+                </li>
+
+            </ul>
+            <hr>
+        </div>
+    </div>
+</aside>
