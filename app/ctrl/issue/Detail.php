@@ -409,11 +409,15 @@ class Detail extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id不能为空');
         }
 
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
+
         $timelineModel = new TimelineModel();
         $rows = $timelineModel->getItemsByIssueId($issueId);
 
         foreach ($rows as &$row) {
             $row['time_text'] = format_unix_time($row['time']);
+            $row['user_info'] = $users[$row['uid']];
         }
         $data = [];
         $data['timelines'] = $rows;

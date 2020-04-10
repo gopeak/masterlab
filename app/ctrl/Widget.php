@@ -16,6 +16,7 @@ use main\app\classes\OrgLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ChartLogic;
 use main\app\classes\ActivityLogic;
+use main\app\classes\UserLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueFollowModel;
@@ -264,11 +265,17 @@ class Widget extends BaseUserCtrl
             $page = max(1, intval($_GET['page']));
         }
         $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : null;
+
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
+
         list($data['activity'], $total) = ActivityLogic::filterByIssueId($issueId, $page, $pageSize);
         foreach ($data['activity'] as &$item) {
+            $item['title_original'] = $item['title'];
             if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['title'] = '<span style="text-decoration: line-through;">' . $item['title'] . '</span>';
             }
+            $item['user_info'] = $users[$item['user_id']];
         }
         unset($item);
         $data['total'] = $total;
