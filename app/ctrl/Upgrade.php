@@ -258,7 +258,7 @@ class Upgrade extends BaseUserCtrl
      * 执行SQL
      *
      * @param $sql
-     * @param \main\lib\MyPdo $db
+     * @param \main\app\model\DbModel $db
      * @return bool
      */
     private function runSql($sql, $db)

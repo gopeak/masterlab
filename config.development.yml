@@ -14,7 +14,7 @@ xhprof:
   rate: 1
 
 cache:
-  enable: false
+  enable: true
   expire: 864000
   gc_rate: 10
   server:

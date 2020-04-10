@@ -31,7 +31,7 @@ class DataBackup extends BaseAdminCtrl
             mkdir($backupPath,0777);
         }
 
-        $dbConfig = getCommonConfigVar('database');
+        $dbConfig = getYamlConfigByModule('database');
         $dbConfig = $dbConfig['default'];
 
         $time = -microtime(true);
@@ -68,7 +68,7 @@ class DataBackup extends BaseAdminCtrl
         }
 
 
-        $dbConfig = getCommonConfigVar('database');
+        $dbConfig = getYamlConfigByModule('database');
         $dbConfig = $dbConfig['default'];
 
         $dumpFile = STORAGE_PATH .'dump_test.sql.gz';

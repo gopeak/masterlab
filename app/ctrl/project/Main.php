@@ -211,6 +211,24 @@ class Main extends Base
     }
 
     /**
+     * 跳转至事项页面
+     * @throws \Exception
+     */
+    public function pagePlugin()
+    {
+        // 1.取出插件名称
+        $pluginName = $_GET['_target'][3];
+
+        // 2. 数据库查询插件配置信息
+
+        // 3. 实例化插件控制器和入口
+
+        // 渲染数据
+
+
+    }
+
+    /**
      * backlog页面
      * @throws \Exception
      */

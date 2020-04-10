@@ -4,12 +4,12 @@ namespace main\app\ctrl;
 
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\model\DbModel;
 use main\app\model\user\UserPostedFlagModel;
 use main\app\model\SettingModel;
 use main\app\model\system\AnnouncementModel;
 use main\app\model\user\UserModel;
 use main\app\protocol\Ajax;
-use main\lib\MyPdo;
 
 /**
  * 控制器基类
@@ -223,7 +223,7 @@ class BaseCtrl
         if ($tplEngine == 'php') {
             require_once VIEW_PATH . $tpl;
             if (!$partial && XPHP_DEBUG) {
-                $sqlLogs = MyPdo::$sqlLogs;
+                $sqlLogs = DbModel::$sqlLogs;
                 include_once VIEW_PATH . 'debug.php';
                 unset($sqlLogs);
             }

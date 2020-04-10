@@ -42,7 +42,6 @@ class TestAllExtendDbModelProperty extends TestCase
                 }
             }
         }
-
         $currentDir->close();
     }
 

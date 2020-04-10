@@ -51,6 +51,9 @@ class OrgRoute extends BaseUserCtrl
                         case 'issues':
                             $projectCtrlMain->pageIssues();
                             break;
+                        case 'plugin':
+                            $projectCtrlMain->pagePlugin();
+                            break;
                         case 'summary':
                             $projectCtrlMain->pageHome();
                             break;

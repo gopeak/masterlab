@@ -54,7 +54,7 @@ class Main extends BaseAdminCtrl
         $settingModel = new SettingModel();
         $mysqlVersionStr = $settingModel->getFieldBySql($versionSql);
 
-        $dbConf = getCommonConfigVar('database');
+        $dbConf = getYamlConfigByModule('database');
 
         $data['sys_domain'] = ROOT_URL;//ServerInfo::getDomain();
         $data['sys_datetime'] = date('Y-m-d  H:i:s', time());
