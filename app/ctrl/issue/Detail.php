@@ -307,30 +307,59 @@ class Detail extends BaseUserCtrl
 
         IssueFilterLogic::formatIssue($issue);
 
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
+
+        $emptyObj = new \stdClass();
+
+        if (empty($issue['assistants_arr'])) {
+            $issue['assistants_info_arr'] = [];
+        } else {
+            foreach ($issue['assistants_arr'] as $assistantUserId) {
+                $issue['assistants_info_arr'][] = $users[$assistantUserId];
+            }
+        }
+
         $userModel = new UserModel();
+        /*
         $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
         UserLogic::formatAvatarUser($issue['assignee_info']);
         if (empty($issue['assignee_info'])) {
-            $issue['assignee_info'] = new \stdClass();
+            $issue['assignee_info'] = $emptyObj;
         }
+        */
+        $issue['assignee_info'] = isset($users[$issue['assignee']])?$users[$issue['assignee']]:$emptyObj;
 
+
+        /*
         $issue['reporter_info'] = $userModel->getByUid($issue['reporter']);
         UserLogic::formatAvatarUser($issue['reporter_info']);
         if (empty($issue['reporter_info'])) {
-            $issue['reporter_info'] = new \stdClass();
+            $issue['reporter_info'] = $emptyObj;
         }
+        */
+        $issue['reporter_info'] = isset($users[$issue['reporter']])?$users[$issue['reporter']]:$emptyObj;
 
+
+        /*
         $issue['modifier_info'] = $userModel->getByUid($issue['modifier']);
         UserLogic::formatAvatarUser($issue['modifier_info']);
         if (empty($issue['modifier_info'])) {
-            $issue['modifier_info'] = new \stdClass();
+            $issue['modifier_info'] = $emptyObj;
         }
+        */
+        $issue['modifier_info'] = isset($users[$issue['modifier']])?$users[$issue['modifier']]:$emptyObj;
 
+
+        /*
         $issue['creator_info'] = $userModel->getByUid($issue['creator']);
         UserLogic::formatAvatarUser($issue['creator_info']);
         if (empty($issue['creator_info'])) {
-            $issue['creator_info'] = new \stdClass();
+            $issue['creator_info'] = $emptyObj;
         }
+        */
+        $issue['creator_info'] = isset($users[$issue['creator']])?$users[$issue['creator']]:$emptyObj;
+
 
         $issue['master_info'] = new \stdClass();
         if (!empty($issue['master_id'])) {
@@ -359,9 +388,11 @@ class Detail extends BaseUserCtrl
 
         $followRows = $followModel->getItemsByIssueId($issueId);
         $issue['followed_users_arr'] = [];
+        $issue['followed_users_info_arr'] = [];
         if ($followRows) {
             foreach ($followRows as $item) {
                 $issue['followed_users_arr'][] = $item['user_id'];
+                $issue['followed_users_info_arr'][] = $users[$item['user_id']];
             }
         }
         $issue['followed_users_arr'] = array_unique($issue['followed_users_arr']);

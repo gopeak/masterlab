@@ -92,7 +92,7 @@ class UserLogic
         $orderBy = 'uid';
         $sort = "desc ";
         $append_sql = "";
-        $field = "uid as k,uid,phone,username,display_name,avatar,email,status";
+        $field = "uid as k,uid,schema_source,phone,username,display_name,avatar,email,status";
         $users = $userModel->getRows($field, $conditions, $append_sql, $orderBy, $sort, $limit, $primaryKey);
         foreach ($users as &$user) {
             self::formatAvatarUser($user);
