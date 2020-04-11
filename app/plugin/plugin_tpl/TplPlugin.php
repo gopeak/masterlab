@@ -1,16 +1,16 @@
 <?php
 
-namespace main\app\plugin\activity;
+namespace main\app\plugin\plugin_tpl;
 
 use main\app\event\PluginPlacedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * 活动日志插件
+ * 插件入口类
  * Class ActivityPlugin
  */
-class ActivityPlugin implements EventSubscriberInterface
+class TplPlugin implements EventSubscriberInterface
 {
 
     public $subscribersArr = [];
@@ -42,7 +42,7 @@ class ActivityPlugin implements EventSubscriberInterface
         $currentDir = dir($subscriberDir);
         while ($file = $currentDir->read()) {
             if ((is_dir($subscriberDir . $file)) and ($file != ".") and ($file != "..")) {
-                 $this->getEventSubscriberFile($subscriberDir . $file . '/');
+                $this->getEventSubscriberFile($subscriberDir . $file . '/');
             } else {
                 $subClassPath = str_replace(PLUGIN_PATH, '', $subscriberDir);
                 $subClassPath = str_replace('/', "\\", $subClassPath);

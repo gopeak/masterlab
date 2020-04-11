@@ -5,10 +5,7 @@
   "description": "Masterlab的活动日志",
   "version": "v1.0",
   "type": "module",
-  "chmod":[
-    {"mode":777,"path":"./tmp"},
-    {"mode":777,"path":"./log"}
-  ],
+  "chmod":[],
   "url":"http://www.masterlab.vip",
   "company":"Masterlab官方",
   "icon_file": "/attachment/plugin/1.png"

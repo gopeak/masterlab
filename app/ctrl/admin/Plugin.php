@@ -2,10 +2,13 @@
 
 namespace main\app\ctrl\admin;
 
+use Doctrine\Common\Inflector\Inflector;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\event\Events;
+use main\app\event\PluginPlacedEvent;
 use main\app\model\issue\IssueStatusModel;
 use main\app\classes\IssueStatusLogic;
 use main\app\model\PluginModel;
@@ -46,7 +49,7 @@ class Plugin extends BaseAdminCtrl
         $data['sub_nav_active'] = 'plugin';
         $data['left_nav_active'] = 'list';
 
-
+        $data['type_arr'] = PluginModel::$typeArr;
         $this->render('twig/admin/plugin/index.twig', $data);
     }
 
@@ -84,24 +87,25 @@ class Plugin extends BaseAdminCtrl
         foreach ($dirPluginArr as $dirName => $item) {
             if (!isset($pluginsKeyArr[$dirName])) {
                 $tmp = $item;
-                $tmp['status'] = PluginModel::STATUS_DEVELOPMENT;
+                $tmp['status'] = PluginModel::STATUS_UNINSTALLED;
+                $tmp['is_system'] = '0';
                 $plugins[] = $tmp;
             }
         }
         // 判断目录是否存在
-        foreach ($plugins as $plugin) {
+        foreach ($plugins as & $plugin) {
             $name = $plugin['name'];
             if (!isset($dirPluginArr[$name])) {
                 $plugin['status'] = PluginModel::STATUS_INVALID;
             }
+            $plugin['status_text'] = PluginModel::$statusArr[$plugin['status']];
+            $plugin['type_text'] = @PluginModel::$typeArr[$plugin['type']];
         }
-
-
         $data = [];
         $data['plugins'] = $plugins;
-
         $this->ajaxSuccess('', $data);
     }
+
 
     /**
      * 获取单条数据
@@ -114,152 +118,308 @@ class Plugin extends BaseAdminCtrl
         if (isset($_GET['_target'][3])) {
             $id = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['id'])) {
-            $id = (int)$_REQUEST['id'];
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id'];
         }
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $model = new IssueStatusModel();
-        $group = $model->getItemById($id);
+        $model = new PluginModel();
+        $plugin = $model->getById($id);
 
-        $this->ajaxSuccess('操作成功', (object)$group);
+        $this->ajaxSuccess('操作成功', (object)$plugin);
     }
 
-    /**
-     * 添加数据
-     * @param null $params
-     * @throws \Exception
-     */
-    public function add($params = null)
+    public function install()
     {
-        if (empty($params)) {
+        // 发布安装事件
+        if (empty($_POST)) {
             $this->ajaxFailed('错误', '没有提交表单数据');
         }
-
-        if (!isset($params['key']) || empty($params['key'])) {
-            $errorMsg['key'] = '关键字不能为空';
-        }
-
-        if (isset($params['name']) && empty($params['name'])) {
+        $_POST['name'] = trimStr($_POST['name']);
+        if (isset($_POST['name']) && empty($_POST['name'])) {
             $errorMsg['name'] = '名称不能为空';
         }
-        $model = new IssueStatusModel();
-        if (isset($model->getByName($params['name'])['id'])) {
-            $errorMsg['name'] = '名称已经被使用';
-        }
-        if (isset($model->getByKey($params['key'])['id'])) {
-            $errorMsg['key'] = '关键字已经被使用';
+        $model = new PluginModel();
+        if (isset($model->getByName($_POST['name'])['id'])) {
+            $errorMsg['name'] = '名称已经被使用或已经安装了';
         }
         if (!empty($errorMsg)) {
             $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
-        $info = [];
-        $info['name'] = $params['name'];
-        $info['_key'] = $params['key'];
-        $info['is_system'] = '0';
-        if (isset($params['description'])) {
-            $info['description'] = $params['description'];
-        }
-        if (isset($params['font_awesome'])) {
-            $info['font_awesome'] = $params['font_awesome'];
-        }
-        if (isset($params['color'])) {
-            $info['color'] = $params['color'];
+        $pluginName = $_POST['name'];
+        $jsonFile = PLUGIN_PATH . $pluginName . '/plugin.json';
+        if (!file_exists($jsonFile)) {
+            $this->ajaxFailed('提示', '参数错误,配置文件plugin.json缺失');
         }
 
-        list($ret, $msg) = $model->insertItem($info);
+        $jsonArr = json_decode(file_get_contents($jsonFile), true);
+        $info = [];
+        $info['name'] = $pluginName;
+        $info['title'] = $jsonArr['title'];
+        $info['type'] = $jsonArr['type'];
+        $info['url'] = $jsonArr['url'];
+        $info['version'] = $jsonArr['version'];
+        $info['status'] = PluginModel::STATUS_INSTALLED;
+        $info['is_system'] = '0';
+        if (isset($_POST['description'])) {
+            $info['description'] = $jsonArr['description'];
+        }
+        if (isset($_POST['icon'])) {
+            $info['icon_file'] = $jsonArr['icon_file'];
+        }
+        if (isset($jsonArr['company'])) {
+            $info['company'] = $jsonArr['company'];
+        }
+
+        list($ret, $msg) = $model->replace($info);
         if ($ret) {
+            $event = new PluginPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event, Events::onPluginInstall);
+            $this->ajaxSuccess('提示', '安装成功');
+        } else {
+            $this->ajaxFailed('服务器错误:', $msg);
+        }
+
+
+    }
+
+    public function unInstall()
+    {
+        $id = null;
+        if (isset($_POST['id'])) {
+            $id = (int)$_POST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+        $model = new PluginModel();
+        $plugin = $model->getById($id);
+        if (empty($plugin)) {
+            $errorMsg['name'] = '插件已卸载或不存在';
+        }
+
+        $ret = $model->deleteById($id);
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '删除操作失败了');
+        } else {
+            $event = new PluginPlacedEvent($this, $plugin);
+            $this->dispatcher->dispatch($event, Events::onPluginUnInstall);
             $this->ajaxSuccess('操作成功');
+        }
+
+        // 发布卸载事件
+
+    }
+
+
+    /**
+     * 创建插件
+     * @throws \Exception
+     */
+    public function add()
+    {
+        if (empty($_POST)) {
+            $this->ajaxFailed('错误', '没有提交表单数据');
+        }
+        $_POST['name'] = trimStr($_POST['name']);
+        if (isset($_POST['name']) && empty($_POST['name'])) {
+            $errorMsg['name'] = '名称不能为空';
+        }
+
+        if (isset($_POST['title']) && empty($_POST['title'])) {
+            $errorMsg['title'] = '标题不能为空';
+        }
+        if (isset($_POST['type']) && empty($_POST['type'])) {
+            $errorMsg['type'] = '类型不能为空';
+        }
+
+        if (!preg_match('/^[a-zA-Z]+[0-9]*[a-zA-Z]*$/u', $_POST['name'])) {
+            $errorMsg['name'] = '名称只能以英文字母开始，不能包含特殊字符和中文';
+        }
+        $model = new PluginModel();
+        if (isset($model->getByName($_POST['name'])['id']) || file_exists(PLUGIN_PATH . $_POST['name'])) {
+            $errorMsg['name'] = '名称已经被使用';
+        }
+
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+        $name = trimStr($_POST['name']);
+        $info = [];
+        $info['name'] = $name;
+        $info['title'] = $_POST['title'];
+        $info['type'] = $_POST['type'];
+        $info['url'] = $_POST['url'];
+        $info['version'] = $_POST['version'];
+        $info['status'] = PluginModel::STATUS_INSTALLED;
+        $info['is_system'] = '0';
+        if (isset($_POST['description'])) {
+            $info['description'] = $_POST['description'];
+        }
+        if (isset($_POST['icon'])) {
+            $info['icon_file'] = $_POST['icon'];
+        }
+        if (isset($_POST['company'])) {
+            $info['company'] = $_POST['company'];
+        }
+
+        // 生成插件目录
+        $pluginDirName = PLUGIN_PATH . $name;
+        if (!file_exists($pluginDirName)) {
+            mkdir($pluginDirName);
+        }
+        $this->rcopy(PLUGIN_PATH . 'plugin_tpl', $pluginDirName);
+        $pluginClassName = Inflector::classify($name.'_plugin');
+        $pluginClassFile = $pluginDirName."/{$pluginClassName}.php";
+        rename($pluginDirName . '/TplPlugin.php', $pluginClassFile);
+        $pluginSrc = str_replace(["plugin_tpl","TplPlugin"],[$name,$pluginClassName], file_get_contents($pluginClassFile));
+
+        file_put_contents($pluginClassFile, $pluginSrc);
+        rename($pluginDirName . '/plugin.json.tpl', $pluginDirName . '/plugin.json');
+        list($ret, $msg) = $model->insert($info);
+        if ($ret) {
+            $event = new PluginPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event, Events::onPluginInstall);
+            $this->ajaxSuccess('操作成功', $pluginDirName);
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
         }
     }
 
+
     /**
-     * 更新数据
+     * 删除目录和文件
+     * @param $dir
+     */
+    private function rrmdir($dir)
+    {
+        if (is_dir($dir)) {
+            $files = scandir($dir);
+            foreach ($files as $file)
+                if ($file != "." && $file != "..") $this->rrmdir("$dir/$file");
+            rmdir($dir);
+        } else if (file_exists($dir)) unlink($dir);
+    }
+
+    // copies files and non-empty directories
+
+    /**
+     * 复制目录和文件
+     * @param $src
+     * @param $dst
+     */
+    private function rcopy($src, $dst)
+    {
+        if (file_exists($dst)) $this->rrmdir($dst);
+        if (is_dir($src)) {
+            mkdir($dst);
+            $files = scandir($src);
+            foreach ($files as $file)
+                if ($file != "." && $file != "..") {
+                    $this->rcopy("$src/$file", "$dst/$file");
+                }
+        } else {
+            if (file_exists($src)) {
+                copy($src, $dst);
+            }
+        }
+    }
+
+
+    /**
+     * 更新插件数据
      * @param $id
      * @param $params
      * @throws \Exception
      */
-    public function update($params = [])
+    public function update()
     {
         $id = null;
-        if (isset($_GET['_target'][3])) {
-            $id = (int)$_GET['_target'][3];
-        }
-        if (isset($_REQUEST['id'])) {
-            $id = (int)$_REQUEST['id'];
+        if (isset($_POST['id'])) {
+            $id = (int)$_POST['id'];
         }
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-
         $errorMsg = [];
-        if (empty($params)) {
-            $this->ajaxFailed('错误', '没有提交表单数据');
+        if (isset($_POST['title']) && empty($_POST['title'])) {
+            $errorMsg['title'] = '标题不能为空';
         }
-
-        if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['name'] = '名称不能为空';
+        if (isset($_POST['type']) && empty($_POST['type'])) {
+            $errorMsg['type'] = '类型不能为空';
         }
-
-        $id = (int)$id;
-        $model = new IssueStatusModel();
-        $row = $model->getByName($params['name']);
-        if (isset($row['id']) && ($row['id'] != $id)) {
-            $errorMsg['name'] = '名称已经被使用';
-        }
-        unset($row);
-
         if (!empty($errorMsg)) {
             $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
-        $info = [];
-        $info['name'] = $params['name'];
-        if (isset($params['description'])) {
-            $info['description'] = $params['description'];
-        }
-        if (isset($params['font_awesome'])) {
-            $info['font_awesome'] = $params['font_awesome'];
-        }
-        if (isset($params['color'])) {
-            $info['color'] = $params['color'];
-        }
 
-        $ret = $model->updateItem($id, $info);
-        if ($ret) {
-            $this->ajaxSuccess('操作成功');
-        } else {
-            $this->ajaxFailed('服务器错误', '更新操作失败');
+        $id = (int)$id;
+        $model = new PluginModel();
+        $row = $model->getById($id);
+        if (!isset($row['id'])) {
+            $this->ajaxFailed('参数错误,数据不存在');
         }
+        unset($row);
+
+        $info = [];
+        if (isset($_POST['title'])) {
+            $info['title'] = $_POST['title'];
+        }
+        if (isset($_POST['type'])) {
+            $info['type'] = $_POST['type'];
+        }
+        if (isset($_POST['url'])) {
+            $info['url'] = $_POST['url'];
+        }
+        if (isset($_POST['version'])) {
+            $info['version'] = $_POST['version'];
+        }
+        if (isset($_POST['description'])) {
+            $info['description'] = $_POST['description'];
+        }
+        if (isset($_POST['icon'])) {
+            $info['icon_file'] = $_POST['icon'];
+        }
+        if (isset($_POST['company'])) {
+            $info['company'] = $_POST['company'];
+        }
+        if (!empty($info)) {
+            $model->updateById($id, $info);
+        }
+        $this->ajaxSuccess('操作成功');
     }
 
     /**
-     * 删除数据
+     * 删除插件，包括插件目录,谨慎操作
      * @param $id
      * @throws \Exception
      */
-    public function delete($id)
+    public function delete()
     {
-        $id = null;
-        if (isset($_GET['_target'][3])) {
-            $id = (int)$_GET['_target'][3];
+        $name = null;
+        if (isset($_POST['name'])) {
+            $name = trimStr($_POST['name']);
         }
-        if (isset($_REQUEST['id'])) {
-            $id = (int)$_REQUEST['id'];
+        if (!$name) {
+            $this->ajaxFailed('参数错误', '名称不能为空');
         }
-        if (!$id) {
-            $this->ajaxFailed('参数错误', 'id不能为空');
+        $model = new PluginModel();
+        $pluginRow = $model->getByName($name);
+        if (!empty($pluginRow)) {
+            //$errorMsg['name'] = '插件已卸载或不存在';
+            if($pluginRow['is_system']=='1'){
+                $this->ajaxFailed('参数错误', '系统自带的插件不能删除');
+            }
+
+            $model->deleteById($pluginRow['id']);
         }
-        $model = new IssueStatusModel();
-        $ret = $model->deleteItem($id);
-        if (!$ret) {
-            $this->ajaxFailed('服务器错误', '删除操作失败了');
-        } else {
-            $this->ajaxSuccess('操作成功');
-        }
+        $pluginDirName = PLUGIN_PATH . $name;
+        $this->rrmdir($pluginDirName);
+
+
+        $this->ajaxSuccess('操作成功');
+
     }
 }

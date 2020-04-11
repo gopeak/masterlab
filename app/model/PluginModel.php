@@ -30,14 +30,21 @@ class PluginModel extends DbModel
 
 
     const  STATUS_INVALID = 0;
-    const  STATUS_NORMAL = 1;
-    const  STATUS_DISABLED = 2;
-    const  STATUS_DEVELOPMENT = 3;
-    public static $status = [
+    const  STATUS_INSTALLED = 1;
+    const  STATUS_UNINSTALLED = 2;
+    public static $statusArr = [
         self::STATUS_INVALID => '无效(插件目录不存在)',
-        self::STATUS_NORMAL => '正常',
-        self::STATUS_DISABLED => '已禁用',
-        self::STATUS_DEVELOPMENT => '开发中'
+        self::STATUS_INSTALLED => '已安装',
+        self::STATUS_UNINSTALLED => '未安装',
+    ];
+
+    const  TYPE_MODULE = 'module';
+    const  TYPE_THEME = 'theme';
+    const  TYPE_APP = 'app';
+    public static $typeArr = [
+        self::TYPE_MODULE => '项目模块',
+        self::TYPE_THEME => '主题',
+        self::TYPE_APP => '应用',
     ];
 
 

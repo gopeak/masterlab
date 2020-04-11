@@ -2,6 +2,7 @@
 
 namespace main\plugin;
 
+use Doctrine\Common\Inflector\Inflector;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -37,16 +38,11 @@ class PluginManager
      */
     public function __construct($ctrlObj, $plugins)
     {
-        #这里$plugin数组包含我们获取已经由用户激活的插件信息
-        #$plugin = array(
-        #    'name' => '插件名称',
-        #    'directory'=>'插件安装目录'
-        #);
-        $this->dispatcher = new EventDispatcher();
+        $this->dispatcher = $ctrlObj->dispatcher;
         if ($plugins) {
             foreach ($plugins as $plugin) {
                 $pluginName = $plugin['name'];
-                $pluginFile = PRE_APP_PATH . 'plugin/' . $plugin['directory'] . '/' . $pluginName . '.php';
+                $pluginFile = PLUGIN_PATH . $pluginName . '/' . Inflector::classify($pluginName.'_plugin') . '.php';
                 if (file_exists($pluginFile)) {
                     include_once($pluginFile);
                     if (class_exists($pluginName)) {

@@ -5,12 +5,14 @@
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/js/admin/plugin.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-
-    <script src="/dev/lib/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" media="print" href="/dev/lib/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css" />
-
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+    <!-- Fine Uploader jQuery JS file-->
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
 </head>
 
@@ -41,14 +43,23 @@
                 <div class="row has-side-margin-left">
                     <div class="col-lg-12">
                         <div class="top-area">
+
                             <ul class="nav-links">
-                                <li class="active">
-                                    <a href="#">插件列表</a>
+                                <li id="state-all"  class="state_li active" data-value="">
+                                    <a  title="全部插件" href="#" ><span> 插件列表 </span>
+                                    </a>
+                                </li>
+                                <li id="state-normal"  class="state_li" data-value="{{status_normal}}">
+                                    <a title="已安装的插件" href="#"><span> 已安装 </span>
+                                    </a>
+                                </li>
+                                <li id="state-disable" class="state_li" data-value="{{status_disabled}}">
+                                    <a  title="未安装的插件" href="#"><span>未安装</span></a>
                                 </li>
                             </ul>
                             <div class="nav-controls">
                                 <div class="btn-group" role="group">
-                                    <a class="btn btn-new btn_plugin_add js-key-create" data-target="#modal-plugin_add" data-toggle="modal" href="#modal-plugin_add">
+                                    <a class="btn btn-new js-key-create"  id="btn-create_plugin">
                                         <i class="fa fa-plus"></i>
                                         创建插件
                                     </a>
@@ -87,75 +98,109 @@
     </div>
 </div>
 
-<div class="modal" id="modal-plugin_add">
-    <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add"
-          action="/admin/issue_status/add"
+<div class="modal" id="modal-plugin">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          id="form-plugin"
+          action="/admin/plugin/add"
           accept-charset="UTF-8"
           method="post">
+        <input type="hidden" name="format" id="id_format" value="json">
+        <input type="hidden" name="action" id="id_action" value="add">
+        <input type="hidden" name="id" id="edit_id" value="">
+
         <div class="modal-dialog">
             <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">新增事项状态</h3>
+                    <h3 class="modal-header-title" id="modal-header-title">创建插件</h3>
                 </div>
-                <div class="modal-body min-height300" >
-                    <input type="hidden" name="format" id="format" value="json">
+                <div class="modal-body min-height300" id="modal-body">
 
                     <div class="form-group">
                         <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" id="id_name"  value="" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                                <span id="tip_name">名称只能以英文字母开始，不能包含特殊字符和中文</span>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_title">标题:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="params[name]" id="id_name"  value="" />
+                                <input type="text" class="form-control" name="title" id="id_title"  value="" />
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <label class="control-label" for="id_key">Key:<span class="required"> *</span></label>
+                        <label class="control-label" for="id_type">类型:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="params[key]" id="id_key"  value="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="id_color">背景颜色:</label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <select   id="id_color" name="params[color]" class="selectpicker"  title="请选择"   >
-
-                                    {% for color in colors %}
-                                        <option value="{{color}}"  data-content="<span class='label label-{{color}}'>{{color}}</span>">{{color}}</option>
+                                <select  id="id_type" name="type" class="selectpicker"  title="请选择" >
+                                    {% for key,type in type_arr %}
+                                        <option value="{{key}}">{{type}}</option>
                                     {% endfor %}
-
                                 </select>
                             </div>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <label class="control-label" for="id_version">版本:<span class="required"> </span></label>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="version" id="id_version"  value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_url">URL:<span class="required"> </span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="url" id="id_url"  value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_company">提供方:<span class="required"> </span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="company" id="id_company"  value="" />
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="control-label" for="id_description">描述:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="params[description]" id="id_description"  value="" />
+                                <textarea  class="form-control" name="description" id="id_description" ></textarea>
                             </div>
                         </div>
                     </div>
 
-
-                    <div class="form-group" style="display: none">
-                        <label class="control-label" for="id_font_awesome">图标:</label>
+                    <div class="form-group">
+                        <label class="control-label" for="id_icon">
+                            <span>图标</span>
+                        </label>
                         <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control fontawesome-iconpicker" name="params[font_awesome]" id="id_font_awesome"  value="" >
-                            </div>
+                            <input type="hidden" name="icon" id="id_icon" value=""/>
+                            <div id="fine-uploader-gallery"></div>
+                            <div class="help-block">图片大小被限制为100KB.</div>
                         </div>
+
                     </div>
+
                 </div>
                 <div class="modal-footer footer-block row-content-block">
-                    <button name="submit" type="button" class="btn btn-create js-key-modal-enter1" id="btn-plugin_add">保存</button>
+                    <button name="submit"
+                            type="button"
+                            class="btn btn-create js-key-modal-enter1"
+                            id="btn-plugin_save"
+                            title="在app/plugin下取插件名称作为目录名，为插件源码目录">提 交</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
@@ -163,84 +208,107 @@
     </form>
 </div>
 
-<div class="modal" id="modal-issue_status_edit">
-    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"
-          action="/admin/issue_status/update"
-          accept-charset="UTF-8"
-          method="post">
-        <div class="modal-dialog">
-            <div class="modal-content modal-middle">
-                <div class="modal-header">
-                    <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">编辑事项状态</h3>
-                </div>
-
-                <div class="modal-body  min-height300">
-                    <input type="hidden" name="id" id="edit_id" value="">
-                    <input type="hidden" name="format" id="edit_format" value="json">
-
-                    <div class="form-group">
-                        <label class="control-label" for="edit_name">显示名称:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="params[name]" id="edit_name"  value="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="edit_key">Key:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="params[key]" id="edit_key"  value="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="edit_color">背景颜色:</label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <select   id="edit_color" name="params[color]" class="selectpicker"  title="请选择"   >
-                                    {% for color in colors %}
-                                        <option value="{{color}}"  data-content="<span class='label label-{{color}}'>{{color}}</span>">{{color}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="edit_description">描述:</label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="params[description]" id="edit_description"  value="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="display: none">
-                        <label class="control-label" for="edit_font_awesome">图标:</label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control fontawesome-iconpicker " name="params[font_awesome]" id="edit_font_awesome"  value="" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer form-actions">
-                    <button name="submit" type="button" class="btn btn-save js-key-modal-enter2" id="btn-issue_status_update">保存</button>
-                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
 
     </div>
 </section>
 
-{% verbatim %}<script type="text/html"  id="list_tpl">
+<!-- Fine Uploader Gallery template
+            ====================================================================== -->
+<script type="text/template" id="qq-template-gallery">
+    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="">
+        <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+            <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+        </div>
+        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+            <span class="qq-upload-drop-area-text-selector"></span>
+        </div>
+        <div class="qq-upload-button-selector qq-upload-button">
+            <div>点击上传</div>
+        </div>
+        <span class="qq-drop-processing-selector qq-drop-processing">
+					<span>Processing dropped files...</span>
+					<span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+				</span>
+        <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+            <li>
+                <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                <div class="qq-progress-bar-container-selector qq-progress-bar-container">
+                    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                </div>
+                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                <div class="qq-thumbnail-wrapper">
+                    <a href="javascript:;" class="qq-file-link qq-upload-file-url">
+                        <img class="qq-thumbnail-selector" qq-max-size="198" qq-server-scale>
+                    </a>
+                </div>
+                <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+                <button type="button" class="qq-upload-retry-selector qq-upload-retry">
+                    <span class="qq-btn qq-retry-icon" aria-label="重试"></span>
+                    重试
+                </button>
+
+                <div class="qq-file-info">
+                    <div class="qq-file-name">
+                        <span class="qq-upload-file-selector qq-upload-file"></span>
+                        <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+                    </div>
+                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+                        <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+                    </button>
+                    <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+                        <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+                    </button>
+                    <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+                        <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+                    </button>
+                </div>
+            </li>
+        </ul>
+
+        <dialog class="qq-alert-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">Close</button>
+            </div>
+        </dialog>
+
+        <dialog class="qq-confirm-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">否</button>
+                <button type="button" class="qq-ok-button-selector">是</button>
+            </div>
+        </dialog>
+
+        <dialog class="qq-prompt-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <input type="text">
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">取消</button>
+                <button type="button" class="qq-ok-button-selector">好的</button>
+            </div>
+        </dialog>
+    </div>
+</script>
+
+<style>
+    .qq-gallery.qq-uploader {
+        position: relative;
+        min-height: 140px;
+        max-height: 320px;
+        overflow-y: hidden;
+        width: inherit;
+        border-radius: 6px;
+        border: 1px dashed #CCCCCC;
+        background-color: #FAFAFA;
+        padding: 20px;
+    }
+</style>
+
+{% verbatim %}
+<script type="text/html"  id="list_tpl">
     {{#plugins}}
         <tr class="commit">
             <td>
@@ -259,7 +327,7 @@
                 {{company}}
             </td>
             <td>
-                {{type}}
+                {{type_text}}
             </td>
             <td>
                 {{description}}
@@ -268,21 +336,22 @@
                 {{version}}
             </td>
             <td>
-                {{#if_eq enable '0'}}
-                    禁用
-                 {{^}}
-                    启用中
-                {{/if_eq}}
+                <span class="label  label-{{#if_eq status '1'}}success{{/if_eq}}{{#if_eq status '2'}}info{{/if_eq}}{{#if_eq status '0'}}danger{{/if_eq}}">{{status_text}}</span>
             </td>
             <td  >
+             {{#if_eq is_system '0'}}
+                    <a class="list_for_edit btn btn-transparent  " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
 
-                    <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">安装 </a>
-                    {{#if_eq is_system '0'}}
-                        <a class="list_for_delete btn btn-transparent"  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
-                            <i class="fa fa-trash"></i>
-                            <span class="sr-only">卸载</span>
-                        </a>
+                    {{#if_eq status '2'}}
+                        <a class="list_for_install btn btn-transparent  " href="#" data-value="{{name}}" style="padding: 6px 2px;color:blue">安装 </a>
                     {{/if_eq}}
+                     {{#if_eq status '1'}}
+                        <a class="list_for_uninstall btn  btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;color: orange">卸载</a>
+                    {{/if_eq}}
+
+                    <a class="list_for_delete btn btn-transparent  " href="#" data-value="{{name}}" style="padding: 6px 2px;color:red">删除 </a>
+
+             {{/if_eq}}
 
             </td>
         </tr>
@@ -295,12 +364,10 @@
 <script type="text/javascript">
 
     var $plugin = null;
+    var uploader = null;
+
     $(function() {
-
-        $('.fontawesome-iconpicker').iconpicker();
-
         $('.selectpicker').selectpicker('refresh');
-
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
@@ -309,6 +376,8 @@
             get_url:"/admin/plugin/get",
             update_url:"/admin/plugin/update",
             add_url:"/admin/plugin/add",
+            install_url:"/admin/plugin/install",
+            uninstall_url:"/admin/plugin/uninstall",
             delete_url:"/admin/plugin/delete",
             pagination_id:"pagination"
 
@@ -316,7 +385,8 @@
         window.$plugin = new Plugin( options );
         window.$plugin.fetchPlugins( );
 
-        $("#modal-plugin_add").on('show.bs.modal', function (e) {
+        $("#modal-plugin").on('show.bs.modal', function (e) {
+
             keyMaster.addKeys([
                 {
                     key: ['command+enter', 'ctrl+enter'],
@@ -331,22 +401,34 @@
             ])
         });
 
-        $("#modal-issue_status_edit").on('show.bs.modal', function (e) {
-            keyMaster.addKeys([
-                {
-                    key: ['command+enter', 'ctrl+enter'],
-                    'trigger-element': '.js-key-modal-enter2',
-                    trigger: 'click'
-                },
-                {
-                    key: 'esc',
-                    'trigger-element': '.js-key-modal-close2',
-                    trigger: 'click'
+
+         uploader = new qq.FineUploader({
+            element: document.getElementById('fine-uploader-gallery'),
+            template: 'qq-template-gallery',
+            multiple: false,
+            request: {
+                endpoint: '/admin/upload/plugin'
+            },
+            validation: {
+                allowedExtensions: [
+                    'jpeg', 'jpg', 'gif', 'png'
+                ],
+                sizeLimit: 1024 * 100
+            },
+            callbacks: {
+                onComplete: function (id, fileName, responseJSON) {
+                    console.log(responseJSON);
+                    if (responseJSON.error === '') {
+                        $('#id_icon').val('/attachment/'+responseJSON.relate_path);
+                    }
                 }
-            ])
-        })
+            }
+        });
+
 
     });
+
+
 
 </script>
 </body>

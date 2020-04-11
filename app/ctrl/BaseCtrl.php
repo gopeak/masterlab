@@ -2,14 +2,17 @@
 
 namespace main\app\ctrl;
 
+use Doctrine\Common\Inflector\Inflector;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\model\DbModel;
+use main\app\model\PluginModel;
 use main\app\model\user\UserPostedFlagModel;
 use main\app\model\SettingModel;
 use main\app\model\system\AnnouncementModel;
 use main\app\model\user\UserModel;
 use main\app\protocol\Ajax;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * 控制器基类
@@ -19,6 +22,14 @@ use main\app\protocol\Ajax;
  */
 class BaseCtrl
 {
+
+    /**
+     * @var EventDispatcher|null
+     */
+    public $dispatcher = null;
+
+    protected $_plugins = array();
+
     /**
      * 模板引擎对象
      * @var
@@ -82,6 +93,9 @@ class BaseCtrl
     public function __construct()
     {
         static $siteName, $twigLoader, $twigTpl;
+
+        $this->dispatcher = new EventDispatcher();
+        $this->loadPlugin();
 
         if (count($_GET) > 200) {
             throw new \Exception('GET参数过多', 300);
@@ -527,5 +541,34 @@ class BaseCtrl
             $userPostedFlagModel->insertDateIp($userId, $date, $ip);
             //echo $curl->rawResponse;
         }
+    }
+
+
+    /**
+     * 初始化插件
+     * @throws \Exception
+     */
+    public function loadPlugin()
+    {
+        $pluginModel = new PluginModel();
+        $plugins = $pluginModel->getRows('id, name, title');
+
+        if ($plugins) {
+            foreach ($plugins as $plugin) {
+                $pluginName = $plugin['name'];
+                $pluginClassName = Inflector::classify($pluginName.'_plugin');
+                $pluginFile = PLUGIN_PATH . $pluginName . "/{$pluginClassName}.php";
+                //var_dump($pluginFile);
+                if (file_exists($pluginFile)) {
+                    require_once($pluginFile);
+                    $pluginClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, $pluginClassName);
+                    if (class_exists($pluginClass)) {
+                        $this->_plugins[$pluginName] = new $pluginClass($this->dispatcher);
+                        $this->dispatcher->addSubscriber($this->_plugins[$pluginName]);
+                    }
+                }
+            }
+        }
+        //print_r($this->_plugins);
     }
 }
