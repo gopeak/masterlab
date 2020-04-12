@@ -15,6 +15,8 @@ use main\app\classes\UserLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\WidgetLogic;
+use main\app\event\Events;
+use main\app\event\UserPlacedEvent;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\SettingModel;
@@ -580,6 +582,9 @@ class User extends BaseUserCtrl
                 LogOperatingLogic::add($currentUid, 0, $logData);
             }
         }
+        // 分发事件
+        $event = new UserPlacedEvent($this, $userInfo);
+        $this->dispatcher->dispatch($event,  Events::onUserUpdateProfile);
 
         $this->ajaxSuccess('保存成功', $ret);
     }

@@ -9,6 +9,9 @@ use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserAuth;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
+use main\app\event\UserPlacedEvent;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
@@ -423,6 +426,10 @@ class Org extends BaseUserCtrl
         $logData['cur_data'] = $info;
         LogOperatingLogic::add($currentUid, 0, $logData);
 
+        // 分发事件
+        $info['id'] = $insertId;
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onOrgCreate);
         $this->ajaxSuccess('success');
     }
 
@@ -532,6 +539,10 @@ class Org extends BaseUserCtrl
         $logData['cur_data'] = $info;
         LogOperatingLogic::add($currentUid, 0, $logData);
 
+        // 分发事件
+        $info['id'] = $id;
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onOrgUpdate);
         $this->ajaxSuccess('success');
     }
 
@@ -604,6 +615,9 @@ class Org extends BaseUserCtrl
         $logData['cur_data'] = $org2;
         LogOperatingLogic::add($currentUid, 0, $logData);
 
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $org);
+        $this->dispatcher->dispatch($event,  Events::onOrgDelete);
         $this->ajaxSuccess('ok');
     }
 }

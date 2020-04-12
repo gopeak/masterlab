@@ -80,4 +80,11 @@ class ProjectLabelModel extends BaseDictionaryModel
         return $count > 0;
     }
 
+    public function deleteByProject($projectId)
+    {
+        $where = ['project_id' => $projectId];
+        $row = $this->delete($where);
+        return $row;
+    }
+
 }

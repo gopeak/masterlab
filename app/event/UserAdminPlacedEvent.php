@@ -6,10 +6,10 @@ use main\app\ctrl\BaseAdminCtrl;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * 用于传递事件的插件安装和卸载数据
+ * 用于传递事件的用户数据
  *
  */
-class PluginPlacedEvent   extends Event
+class UserAdminPlacedEvent   extends Event
 {
     /**
      * @var BaseAdminCtrl|null

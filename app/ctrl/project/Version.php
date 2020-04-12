@@ -9,6 +9,8 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectVersionLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\ActivityModel;
@@ -120,6 +122,9 @@ class Version extends BaseUserCtrl
                 $logData['cur_data'] = $info;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 
+                $info['id'] = $ret[1];
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event,  Events::onVersionCreate);
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -163,6 +168,8 @@ class Version extends BaseUserCtrl
             $logData['cur_data'] = array('released' => $versionReleaseStatus);
             LogOperatingLogic::add($uid, $project_id, $logData);
 
+            $event = new CommonPlacedEvent($this, $version);
+            $this->dispatcher->dispatch($event,  Events::onVersionRelease);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('update_failed', array(), 500);
@@ -196,6 +203,9 @@ class Version extends BaseUserCtrl
             $logData['pre_data'] = $version;
             $logData['cur_data'] = $version2;
             LogOperatingLogic::add($uid, $project_id, $logData);
+
+            $event = new CommonPlacedEvent($this, $version);
+            $this->dispatcher->dispatch($event,  Events::onVersionDelete);
 
             $this->ajaxSuccess('success');
         } else {
@@ -256,7 +266,6 @@ class Version extends BaseUserCtrl
             $this->ajaxFailed('param_error:data_is_empty');
         }
 
-
         $ret = $projectVersionModel->updateById($id, $row);
         if ($ret[0]) {
             $activityModel = new ActivityModel();
@@ -280,6 +289,8 @@ class Version extends BaseUserCtrl
             $logData['cur_data'] = $row;
             LogOperatingLogic::add($uid, $version['project_id'], $logData);
 
+            $event = new CommonPlacedEvent($this, $version);
+            $this->dispatcher->dispatch($event,  Events::onVersionUpdate);
             $this->ajaxSuccess('add_success');
         } else {
             $this->ajaxFailed('add_failed');
@@ -371,6 +382,8 @@ class Version extends BaseUserCtrl
         $logData['cur_data'] = $version2;
         LogOperatingLogic::add($uid, $project_id, $logData);
 
+        $event = new CommonPlacedEvent($this, $version);
+        $this->dispatcher->dispatch($event,  Events::onVersionDelete);
         $this->ajaxSuccess('success');
     }
 }

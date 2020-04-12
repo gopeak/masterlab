@@ -543,6 +543,23 @@ class BaseCtrl
         }
     }
 
+    public function getPluginDirArr($pluginDir)
+    {
+        $pluginArr = [];
+        $currentDir = dir($pluginDir);
+        while ($file = $currentDir->read()) {
+            if ((is_dir($pluginDir . $file)) and ($file != ".") and ($file != "..")) {
+                $jsonFile = $pluginDir . $file . '/plugin.json';
+                if (file_exists($jsonFile)) {
+                    $jsonArr = json_decode(file_get_contents($jsonFile), true);
+                    $jsonArr['name'] = $file;
+                    $pluginArr[$file] = $jsonArr;
+                }
+            }
+        }
+        $currentDir->close();
+        return $pluginArr;
+    }
 
     /**
      * 初始化插件
@@ -552,6 +569,16 @@ class BaseCtrl
     {
         $pluginModel = new PluginModel();
         $plugins = $pluginModel->getRows('id, name, title');
+        $pluginsKeyArr = array_column($plugins, null, 'name');
+        $dirPluginArr = $this->getPluginDirArr(PLUGIN_PATH);
+        foreach ($dirPluginArr as $dirName => $item) {
+            if (!isset($pluginsKeyArr[$dirName])) {
+                $tmp = $item;
+                $tmp['status'] = PluginModel::STATUS_UNINSTALLED;
+                $tmp['is_system'] = '0';
+                $plugins[] = $tmp;
+            }
+        }
 
         if ($plugins) {
             foreach ($plugins as $plugin) {
@@ -569,6 +596,6 @@ class BaseCtrl
                 }
             }
         }
-        //print_r($this->_plugins);
+         //print_r($this->_plugins);
     }
 }

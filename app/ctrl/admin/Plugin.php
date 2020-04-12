@@ -50,28 +50,10 @@ class Plugin extends BaseAdminCtrl
         $data['left_nav_active'] = 'list';
 
         $data['type_arr'] = PluginModel::$typeArr;
+
         $this->render('twig/admin/plugin/index.twig', $data);
     }
 
-    public function getPluginDirArr($pluginDir)
-    {
-        $pluginArr = [];
-        $currentDir = dir($pluginDir);
-        while ($file = $currentDir->read()) {
-            if ((is_dir($pluginDir . $file)) and ($file != ".") and ($file != "..")) {
-                $jsonFile = $pluginDir . $file . '/plugin.json';
-                if (file_exists($jsonFile)) {
-                    $jsonArr = json_decode(file_get_contents($jsonFile), true);
-                    $jsonArr['name'] = $file;
-                    $pluginArr[$file] = $jsonArr;
-                }
-            }
-        }
-        $currentDir->close();
-
-        return $pluginArr;
-
-    }
 
     /**
      * 获取所有数据
@@ -175,14 +157,14 @@ class Plugin extends BaseAdminCtrl
 
         list($ret, $msg) = $model->replace($info);
         if ($ret) {
+            // 发布安装事件
+            $pluginClassName = Inflector::classify($pluginName.'_plugin');
             $event = new PluginPlacedEvent($this, $info);
-            $this->dispatcher->dispatch($event, Events::onPluginInstall);
+            $this->dispatcher->dispatch($event, $pluginClassName.'@'.Events::onPluginInstall);
             $this->ajaxSuccess('提示', '安装成功');
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
         }
-
-
     }
 
     public function unInstall()
@@ -204,13 +186,12 @@ class Plugin extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除操作失败了');
         } else {
+            // 发布卸载事件
+            $pluginClassName = Inflector::classify($plugin['name'].'_plugin');
             $event = new PluginPlacedEvent($this, $plugin);
-            $this->dispatcher->dispatch($event, Events::onPluginUnInstall);
+            $this->dispatcher->dispatch($event, $pluginClassName.'@'.Events::onPluginUnInstall);
             $this->ajaxSuccess('操作成功');
         }
-
-        // 发布卸载事件
-
     }
 
 
@@ -253,7 +234,7 @@ class Plugin extends BaseAdminCtrl
         $info['type'] = $_POST['type'];
         $info['url'] = $_POST['url'];
         $info['version'] = $_POST['version'];
-        $info['status'] = PluginModel::STATUS_INSTALLED;
+        $info['status'] = PluginModel::STATUS_UNINSTALLED;
         $info['is_system'] = '0';
         if (isset($_POST['description'])) {
             $info['description'] = $_POST['description'];
@@ -275,13 +256,22 @@ class Plugin extends BaseAdminCtrl
         $pluginClassFile = $pluginDirName."/{$pluginClassName}.php";
         rename($pluginDirName . '/TplPlugin.php', $pluginClassFile);
         $pluginSrc = str_replace(["plugin_tpl","TplPlugin"],[$name,$pluginClassName], file_get_contents($pluginClassFile));
-
         file_put_contents($pluginClassFile, $pluginSrc);
         rename($pluginDirName . '/plugin.json.tpl', $pluginDirName . '/plugin.json');
-        list($ret, $msg) = $model->insert($info);
+
+        $replaceArr = [];
+        foreach ($info as $key =>$item) {
+            $replaceArr['{{'.$key.'}}'] = $item;
+        }
+        $replaceArr['{{main_class}}'] = $pluginClassName;
+        $jsonFile = $pluginDirName . '/plugin.json';
+        $jsonSrc = str_replace(array_keys($replaceArr),array_values($replaceArr), file_get_contents($jsonFile));
+        file_put_contents($jsonFile, $jsonSrc);
+
+        //list($ret, $msg) = $model->insert($info);
+        $ret = true;
+        $msg = '';
         if ($ret) {
-            $event = new PluginPlacedEvent($this, $info);
-            $this->dispatcher->dispatch($event, Events::onPluginInstall);
             $this->ajaxSuccess('操作成功', $pluginDirName);
         } else {
             $this->ajaxFailed('服务器错误:', $msg);

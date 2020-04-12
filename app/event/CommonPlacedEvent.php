@@ -2,17 +2,18 @@
 
 namespace main\app\event;
 
-use main\app\ctrl\BaseAdminCtrl;
+use main\app\ctrl\BaseCtrl;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * 用于传递事件的插件安装和卸载数据
+ * 用于传递事件数据类
  *
  */
-class PluginPlacedEvent   extends Event
+class CommonPlacedEvent   extends Event
 {
     /**
-     * @var BaseAdminCtrl|null
+     * 控制器对象
+     * @var mixed
      */
     public $ctrl = null;
 
@@ -22,7 +23,7 @@ class PluginPlacedEvent   extends Event
     public $pluginDataArr = [];
 
 
-    public function __construct(BaseAdminCtrl $ctrl, $pluginDataArr)
+    public function __construct($ctrl, $pluginDataArr)
     {
         $this->ctrl = $ctrl;
         $this->pluginDataArr = $pluginDataArr;

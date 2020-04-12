@@ -21,6 +21,8 @@ use main\app\classes\ConfigLogic;
 use main\app\classes\Settings;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\field\FieldCustomValueModel;
@@ -785,6 +787,14 @@ class Main extends BaseUserCtrl
         $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {
+            $info = [];
+            $info['name'] = $name;
+            $info['filter'] = $filter;
+            $info['description'] = $description;
+            $info['shared'] = $shared;
+            $info['projectId'] = $projectId;
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onIssueAddFilter);
             $this->ajaxSuccess('success', $msg);
         } else {
             $this->ajaxFailed('failed', [], $msg);
@@ -818,6 +828,8 @@ class Main extends BaseUserCtrl
         $info['is_adv_query'] = '1';
         list($ret, $msg) = $filterModel->insert($info);
         if ($ret) {
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onIssueAddAdvFilter);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', $msg);
@@ -1015,6 +1027,9 @@ class Main extends BaseUserCtrl
             $err['issue_type'] = '事项类型不能为空';
         }
 
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $params);
+        $this->dispatcher->dispatch($event,  Events::onIssueCreateBefore);
         // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
         $getDefaultPriorityId = function () {
             return (new IssuePriorityModel())->getIdByKey('normal');
@@ -1167,6 +1182,9 @@ class Main extends BaseUserCtrl
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
 
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onIssueCreateAfter);
         $this->ajaxSuccess('添加成功', $issueId);
     }
 
@@ -1567,6 +1585,9 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误,数据为空');
         }
 
+        $event = new CommonPlacedEvent($this, $_REQUEST);
+        $this->dispatcher->dispatch($event,  Events::onIssueUpdateBefore);
+
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         $issueType = $issue['issue_type'];
@@ -1752,6 +1773,8 @@ class Main extends BaseUserCtrl
             $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
         }
         $updatedIssue = $issueModel->getById($issueId);
+        $event = new CommonPlacedEvent($this, $updatedIssue);
+        $this->dispatcher->dispatch($event,  Events::onIssueUpdateAfter);
         $this->ajaxSuccess('更新成功', $updatedIssue);
     }
 
@@ -1975,6 +1998,8 @@ class Main extends BaseUserCtrl
         $logData['cur_data'] = $value;
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
+        $event = new CommonPlacedEvent($this, $issueIdArr);
+        $this->dispatcher->dispatch($event,  Events::onIssueBatchUpdate);
         $this->ajaxSuccess('success');
     }
 
@@ -2017,6 +2042,9 @@ class Main extends BaseUserCtrl
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $issue['summary'];
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+        $event = new CommonPlacedEvent($this, ['user_id'=>$currentUid, 'issue_id'=>$issueId]);
+        $this->dispatcher->dispatch($event,  Events::onIssueFollow);
         $this->ajaxSuccess('success', $ret);
     }
 
@@ -2056,6 +2084,9 @@ class Main extends BaseUserCtrl
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $issue['summary'];
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+        $event = new CommonPlacedEvent($this, ['user_id'=>$currentUid, 'issue_id'=>$issueId]);
+        $this->dispatcher->dispatch($event,  Events::onIssueUnFollow);
 
         $this->ajaxSuccess('success');
     }
@@ -2157,6 +2188,8 @@ class Main extends BaseUserCtrl
         $activityInfo['title'] = $issue['summary'];
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
+        $event = new CommonPlacedEvent($this, $issue);
+        $this->dispatcher->dispatch($event,  Events::onIssueDelete);
         $this->ajaxSuccess('ok');
     }
 
@@ -2240,6 +2273,9 @@ class Main extends BaseUserCtrl
         $activityInfo['title'] = $issueNames;
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $issueIdArr);
+        $this->dispatcher->dispatch($event,  Events::onIssueBatchDelete);
         $this->ajaxSuccess('ok');
     }
 
@@ -2291,6 +2327,9 @@ class Main extends BaseUserCtrl
             $activityInfo['title'] = $issue['summary'];
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
+            // 分发事件
+            $event = new CommonPlacedEvent($this, $issueId);
+            $this->dispatcher->dispatch($event,  Events::onIssueClose);
             $this->ajaxSuccess("操作成功");
         }
     }
@@ -2341,6 +2380,8 @@ class Main extends BaseUserCtrl
             $activityInfo['title'] = $issue['summary'];
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
+            $event = new CommonPlacedEvent($this, ['master_id'=>$masterId, 'issue_id'=>$issueId]);
+            $this->dispatcher->dispatch($event,  Events::onIssueConvertChild);
             $this->ajaxSuccess($msg);
         }
     }
@@ -2374,6 +2415,8 @@ class Main extends BaseUserCtrl
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $issue['summary'];
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+            $event = new CommonPlacedEvent($this, $issueId);
+            $this->dispatcher->dispatch($event,  Events::onIssueRemoveChild);
             $this->ajaxSuccess($msg);
         }
     }
@@ -2447,6 +2490,8 @@ class Main extends BaseUserCtrl
             foreach ($successRows as $successRow) {
                 $successText .= "第" . $successRow['cell'] . '行: ' . $successRow['summary'] . '<br>';
             }
+            $event = new CommonPlacedEvent($this, $successRows);
+            $this->dispatcher->dispatch($event,  Events::onIssueImportByExcel);
             $this->ajaxSuccess('导入成功', $successText);
         } else {
             $errText = '';

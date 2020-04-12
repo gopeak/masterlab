@@ -12,6 +12,8 @@ use main\app\classes\PermissionLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserLogic;
 use main\app\classes\UserAuth;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\CacheKeyModel;
 use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\user\UserModel;
@@ -166,6 +168,9 @@ class Role extends BaseUserCtrl
             $logData['cur_data'] = $info;
             LogOperatingLogic::add($uid, $projectId, $logData);
 
+            $info['id'] = $msg;
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onProjectRoleAdd);
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
@@ -247,6 +252,9 @@ class Role extends BaseUserCtrl
             $logData['cur_data'] = $info;
             LogOperatingLogic::add($uid, $currentRow['project_id'], $logData);
 
+            $info['id'] = $id;
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onProjectRoleUpdate);
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败');
@@ -317,6 +325,8 @@ class Role extends BaseUserCtrl
         $logData['cur_data'] = $role2;
         LogOperatingLogic::add($uid, $role['project_id'], $logData);
 
+        $event = new CommonPlacedEvent($this, $role);
+        $this->dispatcher->dispatch($event,  Events::onProjectRoleRemove);
         $this->ajaxSuccess('ok');
     }
 
@@ -335,33 +345,35 @@ class Role extends BaseUserCtrl
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
         if (isset($_POST['user_id'])) {
-            $user_id = (int)$_POST['user_id'];
+            $userId = (int)$_POST['user_id'];
         }
-        if (!$user_id) {
+        if (!$userId) {
             $this->ajaxFailed('参数错误', 'user_id不能为空');
         }
         if (isset($_POST['project_id'])) {
-            $project_id = (int)$_POST['project_id'];
+            $projectId = (int)$_POST['project_id'];
         }
-        if (!$project_id) {
+        if (!$projectId) {
             $this->ajaxFailed('参数错误', 'project_id不能为空');
         }
         if (isset($_POST['role_id'])) {
-            $role_id = (int)$_POST['role_id'];
+            $roleId = (int)$_POST['role_id'];
         }
-        if (!$role_id) {
+        if (!$roleId) {
             $this->ajaxFailed('参数错误', 'role_id不能为空');
         }
 
         $id = intval($id);
-        $user_id = intval($user_id);
-        $project_id = intval($project_id);
-        $role_id = intval($role_id);
+        $userId = intval($userId);
+        $projectId = intval($projectId);
+        $roleId = intval($roleId);
 
 
         $model = new ProjectUserRoleModel();
-        $model->deleteUniqueItem($id, $user_id, $project_id, $role_id);
+        $model->deleteUniqueItem($id, $userId, $projectId, $roleId);
 
+        $event = new CommonPlacedEvent($this, ['id'=>$id,'user_id'=>$userId,'role_id'=>$roleId]);
+        $this->dispatcher->dispatch($event,  Events::onProjectRoleRemoveUser);
         $this->ajaxSuccess('操作成功');
     }
 
@@ -392,6 +404,9 @@ class Role extends BaseUserCtrl
 
         $model = new ProjectUserRoleModel();
         $model->delProjectUser($project_id, $user_id);
+
+        $event = new CommonPlacedEvent($this, $user_id);
+        $this->dispatcher->dispatch($event,  Events::onProjectUserRemove);
 
         $this->ajaxSuccess('操作成功');
     }
@@ -518,6 +533,9 @@ class Role extends BaseUserCtrl
             $this->ajaxFailed(' 服务器错误 ', '执行数据库操作失败,详情:' . $exception->getMessage());
         }
         unset($model);
+
+        $event = new CommonPlacedEvent($this, ['role_id'=>$roleId, 'perm'=> $permIdsList]);
+        $this->dispatcher->dispatch($event,  Events::onProjectRolePermUpdate);
         $this->ajaxSuccess('ok', []);
     }
 
@@ -615,6 +633,8 @@ class Role extends BaseUserCtrl
         $logData['cur_data'] = ['user_id'=>$userId, 'project_id'=>$role['project_id'], 'role_id'=>$roleId];
         LogOperatingLogic::add($uid, $role['project_id'], $logData);
 
+        $event = new CommonPlacedEvent($this, ['user_id'=>$userId,'role_id'=>$roleId]);
+        $this->dispatcher->dispatch($event,  Events::onProjectRoleAddUser);
         unset($model);
         $this->ajaxSuccess('ok', $data);
     }
@@ -680,6 +700,9 @@ class Role extends BaseUserCtrl
         }
 
         $model->db->commit();
+
+        $event = new CommonPlacedEvent($this, ['user_id' => $userId, 'roles'=> $insertRows]);
+        $this->dispatcher->dispatch($event,  Events::onProjectUserUpdateRoles);
 
         $data = [];
         $this->ajaxSuccess('修改成功', $data);
@@ -762,6 +785,9 @@ class Role extends BaseUserCtrl
         $logData['pre_data'] = [];
         $logData['cur_data'] = ['user_id' => $userId, 'project_id' => $projectId, 'role_id' => implode(",", $roleIds)];
         LogOperatingLogic::add($uid, $role['project_id'], $logData);
+
+        $event = new CommonPlacedEvent($this, ['user_id'=>$userId,'role_id'=>$roleIds]);
+        $this->dispatcher->dispatch($event,  Events::onProjectUserAdd);
 
         $this->ajaxSuccess('操作成功', $data);
     }

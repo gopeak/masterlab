@@ -8,6 +8,8 @@ namespace main\app\ctrl;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\SystemLogic;
+use main\app\event\Events;
+use main\app\event\UserPlacedEvent;
 use main\app\model\Setting2Model;
 use main\app\model\user\EmailFindPasswordModel;
 use main\app\model\user\UserModel;
@@ -157,6 +159,9 @@ class Passport extends BaseCtrl
     public function pageLogout()
     {
         UserAuth::getInstance()->logout();
+        // 分发事件
+        $event = new UserPlacedEvent($this, UserModel::getInstance()->getByUid(UserAuth::getId()));
+        $this->dispatcher->dispatch($event,  Events::onUserlogout);
         $this->pagelogin();
     }
 
@@ -292,6 +297,10 @@ class Passport extends BaseCtrl
         $loginLogModel->loginLogInsert($user['uid']);
         //$this->auth->kickCurrentUserOtherLogin($user['uid']);
         @setcookie('check_browser_flag', '', time() + 3600 * 4, '/', getCookieHost());
+        // 分发事件
+        $event = new UserPlacedEvent($this, $user);
+        $this->dispatcher->dispatch($event,  Events::onUserLogin);
+
         $this->ajaxSuccess($final['msg'], $final);
     }
 
@@ -488,6 +497,10 @@ class Passport extends BaseCtrl
         $userModel = new UserModel();
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
+            // 分发事件
+            $event = new UserPlacedEvent($this, $user);
+            $this->dispatcher->dispatch($event,  Events::onUserRegister);
+
             $this->sendActiveEmail($user, $email, $displayName);
             $this->ajaxSuccess('注册成功');
         } else {

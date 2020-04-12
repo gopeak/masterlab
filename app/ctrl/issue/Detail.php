@@ -17,6 +17,8 @@ use main\app\classes\IssueLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\PermissionLogic;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\ActivityModel;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
@@ -495,6 +497,8 @@ class Detail extends BaseUserCtrl
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $issueId, $contentHtml);
 
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onIssueAddComment);
             $this->ajaxSuccess('success', $insertId);
         } else {
             $this->ajaxFailed('failed:' . $insertId);
@@ -570,6 +574,8 @@ class Detail extends BaseUserCtrl
             $activityInfo['title'] = $timeline['content'];
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onIssueUpdateComment);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败:' . $msg);
@@ -633,6 +639,8 @@ class Detail extends BaseUserCtrl
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_REMOVE, $issue['project_id'], $issueId);
 
+            $event = new CommonPlacedEvent($this, $timeline);
+            $this->dispatcher->dispatch($event,  Events::onIssueDeleteComment);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('failed,server_error');

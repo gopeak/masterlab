@@ -12,10 +12,7 @@ class IssueSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'kernel.response'=> [
-                ['onKernelResponsePre', 10],
-                ['onKernelResponsePost', -10],
-            ],
+
             IssuePlacedEvent::NAME => [
                 ['onIssueCreateBefore', 1],
                 ['onIssueCreateAfter', 2],
@@ -23,17 +20,6 @@ class IssueSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelResponsePre(Event $event)
-    {
-        // ...
-        var_dump('onKernelResponsePre');
-    }
-
-    public function onKernelResponsePost(Event $event)
-    {
-        // ...
-        var_dump('onKernelResponsePost');
-    }
 
     public function onIssueCreateBefore(IssuePlacedEvent $event)
     {
