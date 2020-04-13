@@ -1,30 +1,16 @@
 <?php
 
-namespace main\app\ctrl\project;
+namespace main\app\plugin\activity\ctrl;
 
-use main\app\async\email;
-use main\app\classes\ConfigLogic;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionLogic;
-use main\app\classes\ProjectGantt;
-use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
-use main\app\model\agile\SprintModel;
-use main\app\model\DbModel;
-use main\app\model\issue\ExtraWorkerDayModel;
-use main\app\model\issue\HolidayModel;
 use main\app\model\project\ProjectCatalogLabelModel;
-use main\app\model\project\ProjectGanttSettingModel;
-use main\app\model\project\ProjectLabelModel;
-use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectRoleModel;
-use main\app\model\project\ProjectVersionModel;
-use main\app\model\project\ProjectModuleModel;
-use main\app\classes\ProjectLogic;
 use main\app\model\ActivityModel;
 use main\app\model\user\UserModel;
 

@@ -15,6 +15,8 @@ use main\app\ctrl\Agile;
 use main\app\ctrl\project\Mind;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\OrgModel;
@@ -874,6 +876,10 @@ class Main extends Base
                 $activityInfo['title'] = $info['name'];
                 $activityModel->insertItem($currentUid, $ret['data']['project_id'], $activityInfo);
 
+                // 分发事件
+                $info['id'] = $ret['data']['project_id'];
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event,  Events::onProjectCreate);
                 $this->ajaxSuccess('操作成功', $final);
             } else {
                 $projectModel->db->rollBack();
@@ -882,90 +888,6 @@ class Main extends Base
         } else {
             $projectModel->db->rollBack();
             $this->ajaxFailed('服务器错误', '添加失败,错误详情 :' . $ret['msg']);
-        }
-    }
-
-    /**
-     * 更新
-     * 注意：该方法未使用,可以删除该方法
-     * @param $project_id
-     *
-     */
-    public function update($project_id)
-    {
-        return $this->ajaxFailed('非预期调用');
-
-        // 判断权限:全局权限和项目角色
-        if (!isset($this->projectPermArr[PermissionLogic::BROWSE_ISSUES])) {
-            $this->ajaxFailed('您没有权限进行此操作,需要项目管理权限');
-        }
-
-        $uid = $this->getCurrentUid();
-        $projectModel = new ProjectModel($uid);
-        // $this->param_valid($projectModel, $name, $key, $type);
-
-        $key = null;
-        $projectId = intval($project_id);
-        $err = [];
-        $info = [];
-        if (isset($_REQUEST['name'])) {
-            $name = trimStr($_REQUEST['name']);
-            if ($projectModel->checkIdNameExist($projectId, $name)) {
-                $err['name'] = '名称已经被使用';
-            }
-            $info['name'] = trimStr($_REQUEST['name']);
-        }
-        if (isset($_REQUEST['key'])) {
-            $key = trimStr($_REQUEST['key']);
-            if ($projectModel->checkIdKeyExist($projectId, $key)) {
-                $err['key'] = '关键字已经被使用';
-            }
-            $info['key'] = trimStr($_REQUEST['key']);
-        }
-
-        if (!empty($err)) {
-            $this->ajaxFailed('提示', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
-        }
-
-        if (isset($_REQUEST['type'])) {
-            $info['type'] = intval($_REQUEST['type']);
-        }
-        if (isset($_REQUEST['lead'])) {
-            $info['lead'] = intval($_REQUEST['lead']);
-        }
-        if (isset($_REQUEST['description'])) {
-            $info['description'] = $_REQUEST['description'];
-        }
-        if (isset($_REQUEST['category'])) {
-            $info['category'] = (int)$_REQUEST['category'];
-        }
-        if (isset($_REQUEST['url'])) {
-            $info['url'] = $_REQUEST['url'];
-        }
-        if (isset($_REQUEST['avatar'])) {
-            $info['avatar'] = $_REQUEST['avatar'];
-        }
-        if (empty($info)) {
-            $this->ajaxFailed('参数错误', '无表单数据提交');
-        }
-        $project = $projectModel->getRowById($projectId);
-        $ret = $projectModel->updateById($projectId, $info);
-        if ($ret[0]) {
-            if ($project['key'] != $key) {
-                // @todo update issue key
-            }
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了项目';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $projectId;
-            $activityInfo['title'] = $project['name'];
-            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
-
-            $this->ajaxSuccess('success');
-        } else {
-            $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $ret[1]);
         }
     }
 }

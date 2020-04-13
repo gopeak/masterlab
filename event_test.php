@@ -73,12 +73,13 @@ class StoreSubscriber implements EventSubscriberInterface
 
 $dispatcher = new EventDispatcher();
 // the order is somehow created or retrieved
-$order = new Order(time(), mt_rand(1,10));
+
 // ...
 $subscriber = new StoreSubscriber();
 $dispatcher->addSubscriber($subscriber);
 
 // creates the OrderPlacedEvent and dispatches it
+$order = new Order(time(), mt_rand(1,10));
 $event = new OrderPlacedEvent($order);
 $dispatcher->dispatch($event, OrderPlacedEvent::NAME);
 

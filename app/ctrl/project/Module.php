@@ -11,6 +11,8 @@ use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
@@ -118,6 +120,9 @@ class Module extends BaseUserCtrl
                 $logData['cur_data'] = $row;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 
+                $row['id'] = $ret[1];
+                $event = new CommonPlacedEvent($this, $row);
+                $this->dispatcher->dispatch($event,  Events::onModuleCreate);
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -187,6 +192,9 @@ class Module extends BaseUserCtrl
             $logData['cur_data'] = $row;
             LogOperatingLogic::add($uid, $moduleInfo['project_id'], $logData);
 
+            $row['id'] = $id;
+            $event = new CommonPlacedEvent($this, $row);
+            $this->dispatcher->dispatch($event,  Events::onModuleUpdate);
             $this->ajaxSuccess('update_success');
         } else {
             $this->ajaxFailed('update_failed');
@@ -280,6 +288,8 @@ class Module extends BaseUserCtrl
         $logData['cur_data'] = $module2;
         LogOperatingLogic::add($uid, $project_id, $logData);
 
+        $event = new CommonPlacedEvent($this, $module);
+        $this->dispatcher->dispatch($event,  Events::onModuleDelete);
         $this->ajaxSuccess('success');
     }
 }

@@ -9,6 +9,8 @@ use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -131,6 +133,10 @@ class Catalog extends BaseUserCtrl
             $logData['cur_data'] = $insertArr;
             LogOperatingLogic::add($uid, $projectId, $logData);
 
+            $insertArr['id'] = $errMsg;
+            $event = new CommonPlacedEvent($this, $insertArr);
+            $this->dispatcher->dispatch($event,  Events::onCataloglCreate);
+
             $this->ajaxSuccess('提示', '分类添加成功');
         } else {
             $this->ajaxFailed('提示', '服务器执行失败:'.$errMsg);
@@ -214,7 +220,7 @@ class Catalog extends BaseUserCtrl
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];
             $logData['real_name'] = $this->auth->getUser()['display_name'];
-            $logData['obj_id'] = 0;
+            $logData['obj_id'] = $id;
             $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
             $logData['page'] = $_SERVER['REQUEST_URI'];
             $logData['action'] = LogOperatingLogic::ACT_EDIT;
@@ -223,6 +229,9 @@ class Catalog extends BaseUserCtrl
             $logData['cur_data'] = $updateArr;
             LogOperatingLogic::add($currentUserId, $catalog['project_id'], $logData);
 
+            $updateArr['id'] = $id;
+            $event = new CommonPlacedEvent($this, $updateArr);
+            $this->dispatcher->dispatch($event,  Events::onCatalogUpdate);
             $this->ajaxSuccess('提示','修改成功');
         } else {
             $this->ajaxFailed('提示','更新失败');
@@ -278,6 +287,8 @@ class Catalog extends BaseUserCtrl
         $logData['cur_data'] = $info2;
         LogOperatingLogic::add($currentUid, $project_id, $logData);
 
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onCatalogDelete);
         $this->ajaxSuccess('提示','操作成功');
     }
 }

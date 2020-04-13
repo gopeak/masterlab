@@ -262,6 +262,13 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         return $this->delete($conditions);
     }
 
+    public function deleteByProject($projectId)
+    {
+        $where = ['project_id' => $projectId];
+        $row = $this->delete($where);
+        return $row;
+    }
+
     /**
      * @param $projectIds
      * @param $roleIds

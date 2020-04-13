@@ -1,14 +1,12 @@
 {
-  "name": "ActivityPlugin",
-  "index_page": "./index.php",
+  "main_class": "ActivityPlugin",
+  "title": "活动日志",
+  "index_page": "ctrl@index@pageIndex",
   "description": "Masterlab的活动日志",
   "version": "v1.0",
-  "enable": true,
-  "type": "",
-  "chmod":[
-    {"mode":777,"path":"./tmp"},
-    {"mode":777,"path":"./log"}
-  ],
+  "type": "module",
+  "chmod":[],
   "url":"http://www.masterlab.vip",
-  "icon_file": "/public/attachment/plugin/1.png"
+  "company":"Masterlab官方",
+  "icon_file": "/attachment/plugin/1.png"
 }

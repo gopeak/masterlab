@@ -28,6 +28,19 @@ class Upload extends BaseAdminCtrl
         exit;
     }
 
+    public function plugin()
+    {
+        $uploadLogic = new UploadLogic();
+        $ret = $uploadLogic->move('qqfile', 'image');
+        if($ret['error']==0){
+            $ret['error'] = '';
+            $ret['success'] = true;
+        }
+        header('Content-type: application/json; charset=UTF-8');
+        echo json_encode($ret);
+        exit;
+    }
+
     /**
      * 上传头像
      * @throws \Exception

@@ -7,7 +7,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 use main\app\model\issue\IssueModel;
 
 /**
- * 系统全局设置的各种配置属性
+ * 用于传递事件的事项数据
  *
  */
 class IssuePlacedEvent   extends Event

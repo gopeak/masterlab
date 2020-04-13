@@ -7,6 +7,8 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -95,6 +97,9 @@ class Label extends BaseUserCtrl
                 $logData['cur_data'] = $row;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 
+                $row['id'] = $ret[1];
+                $event = new CommonPlacedEvent($this, $row);
+                $this->dispatcher->dispatch($event,  Events::onLabelCreate);
                 $this->ajaxSuccess('新标签添加成功');
             } else {
                 $this->ajaxFailed('操作失败', array(), 500);
@@ -168,6 +173,8 @@ class Label extends BaseUserCtrl
             $logData['cur_data'] = $row;
             LogOperatingLogic::add($uid, $project_id, $logData);
 
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onLabelUpdate);
             $this->ajaxSuccess('修改成功');
         } else {
             $this->ajaxFailed('更新失败');
@@ -228,6 +235,8 @@ class Label extends BaseUserCtrl
         $logData['cur_data'] = $info2;
         LogOperatingLogic::add($currentUid, $project_id, $logData);
 
+        $event = new CommonPlacedEvent($this, $label_id);
+        $this->dispatcher->dispatch($event,  Events::onLabelDelete);
         $this->ajaxSuccess('success');
     }
 }
