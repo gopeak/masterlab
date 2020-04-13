@@ -71,8 +71,8 @@ var FilteredSearch = (function () {
     var _searchesObject = {};
 
     function FilteredSearch(urlParams, issueConfig, project_id) {
-        _cur_project_id = project_id;
-        _issueListConfig = JSON.parse(JSON.stringify(issueConfig));
+        // _cur_project_id = project_id;
+        // _issueListConfig = JSON.parse(JSON.stringify(issueConfig));
         // IssueMain.prototype.getCurrentSearches();
         // IssueMain.prototype.setRecentStorage();
         // IssueMain.prototype.setCurrentSearch(_currentSearchesArr);
