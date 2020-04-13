@@ -77,7 +77,7 @@ final class Events
     public const onIssueImportByExcel = 'onIssueImportByExcel';
     public const onIssueRemoveChild = 'onIssueRemoveChild';
 
-    // 加入迭代
+    // 加入
     public const onIssueJoinSprint = 'onIssueJoinSprint';
     public const onIssueJoinClose = 'onIssueJoinClose';
     public const onIssueJoinBacklog = 'onIssueJoinBacklog';

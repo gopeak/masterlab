@@ -809,7 +809,7 @@ class Agile extends BaseUserCtrl
         list($ret, $msg) = $model->updateById($issueId, $updateArr);
         if ($ret) {
             $event = new CommonPlacedEvent($this, ['issue_id'=>$issueId, $updateArr]);
-            $this->dispatcher->dispatch($event,  Events::onIssueJoinSprint);
+            $this->dispatcher->dispatch($event,  Events::onIssueJoinBacklog);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
@@ -836,7 +836,7 @@ class Agile extends BaseUserCtrl
         list($ret, $msg) = $model->updateById($issueId, ['resolve' => $resolveClosedId, 'status' => $statusClosedId]);
         if ($ret) {
             $event = new CommonPlacedEvent($this, ['issue_id'=>$issueId, ['resolve' => $resolveClosedId, 'status' => $statusClosedId]]);
-            $this->dispatcher->dispatch($event,  Events::onIssueJoinSprint);
+            $this->dispatcher->dispatch($event,  Events::onIssueJoinClose);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('server_error:' . $msg);

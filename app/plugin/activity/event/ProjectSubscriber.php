@@ -2,7 +2,7 @@
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use main\app\event\IssuePlacedEvent;
-
+use main\app\event\Events;
 /**
  * 接收项目的事件
  * Class IssueSubscriber
@@ -12,25 +12,29 @@ class ProjectSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-
-            IssuePlacedEvent::NAME => [
-                ['onIssueCreateBefore', 1],
-                ['onIssueCreateAfter', 2],
-            ]
+            Events::onProjectCreate=>'onProjectCreate',
+            Events::onProjectUpdate=>'onProjectUpdate',
+            Events::onProjectDelete=>'onProjectDelete',
+            Events::onProjectArchive=>'onProjectArchive',
         ];
     }
 
-    public function onIssueCreateBefore(IssuePlacedEvent $event)
+    public function onProjectCreate(CommonPlacedEvent $event)
     {
-        // ...
-        var_dump($event);
-        var_dump('onIssueCreateBefore');
+
     }
 
-    public function onIssueCreateAfter(IssuePlacedEvent $event)
+    public function onProjectUpdate(CommonPlacedEvent $event)
     {
-        // ...
-        var_dump($event);
-        var_dump('onIssueCreateAfter');
+
     }
+    public function onProjectDelete(CommonPlacedEvent $event)
+    {
+
+    }
+    public function onProjectArchive(CommonPlacedEvent $event)
+    {
+
+    }
+
 }
