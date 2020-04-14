@@ -14,9 +14,15 @@ class BasePluginSubscriber implements EventSubscriberInterface
 
     public $subscribersArr = [];
 
-    public function __construct()
-    {
+    public $pluginName = '';
 
+    /**
+     * BasePluginSubscriber constructor.
+     * @param $pluginName
+     */
+    public function __construct($pluginName)
+    {
+        $this->pluginName = $pluginName;
     }
 
     /**
@@ -36,16 +42,17 @@ class BasePluginSubscriber implements EventSubscriberInterface
         $currentDir = dir($subscriberDir);
         while ($file = $currentDir->read()) {
             if ((is_dir($subscriberDir . $file)) and ($file != ".") and ($file != "..")) {
-                 $this->getEventSubscriberFile($subscriberDir . $file . '/');
+                 $this->getEventSubscriberFile($subscriberDir . $file . DS);
             } else {
                 $subClassPath = str_replace(PLUGIN_PATH, '', $subscriberDir);
                 $subClassPath = str_replace('/', "\\", $subClassPath);
                 $file = pathinfo($file);
                 if ($file['extension'] = 'php'
-                    && strpos($file['basename'], 'Model') !== false
                     && !in_array($file['basename'], ['BaseModel', 'DbModel'])
+                    && $file['basename']!='.'
+                    && $file['basename']!='..'
                 ) {
-                    $this->subscribersArr[] = $subClassPath . $file['basename'];
+                    $this->subscribersArr[] = $subClassPath .DS. $file['basename'];
                 }
             }
         }
@@ -53,18 +60,19 @@ class BasePluginSubscriber implements EventSubscriberInterface
 
     }
 
-
     /**
      * 注册事件订阅
      * @param EventDispatcher $dispatcher
+     * @param $pluginName
      */
-    protected function loadEventSubscriber(EventDispatcher $dispatcher)
+    protected function loadEventSubscriber(EventDispatcher $dispatcher, $pluginName)
     {
-        foreach ($this->subscribersArr as $subscriberName) {
+       // print_r($this->subscribersArr);
+        foreach ($this->subscribersArr as $subscriberFile) {
+            require_once  $subscriberFile;
+            $subscriberName = basename($subscriberFile);
             $subscriberClass = str_replace('.php', '', $subscriberName);
-            // require_once MODEL_PATH.$modelName.'.php';
-            $subscriberClass = sprintf("main\\%s\\plugin\\event\\%s", APP_NAME, $subscriberClass);
-            //var_dump($model_class);
+            $subscriberClass = sprintf("main\\%s\\plugin\\%s\\event\\%s", APP_NAME, $pluginName, $subscriberClass);
             if (!class_exists($subscriberClass)) {
                 // @todo 通用的使用日志写入
                 echo sprintf("plugin %s event/%s no found ", __CLASS__, $subscriberClass)."\n";

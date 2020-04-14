@@ -17,12 +17,17 @@ class CommonPlacedEvent   extends Event
      */
     public $ctrl = null;
 
+
     /**
-     * @var array
+     * @var mixed|null
      */
-    public $pluginDataArr = [];
+    public $pluginDataArr = null;
 
-
+    /**
+     * CommonPlacedEvent constructor.
+     * @param $ctrl
+     * @param $pluginDataArr
+     */
     public function __construct($ctrl, $pluginDataArr)
     {
         $this->ctrl = $ctrl;

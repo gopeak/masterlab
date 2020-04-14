@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\agile\SprintModel;
 use main\app\model\field\FieldCustomValueModel;
 use main\app\model\field\FieldModel;
 use main\app\model\issue\IssueAssistantsModel;
@@ -21,6 +22,7 @@ use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectModuleModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserIssueDisplayFieldsModel;
 use main\app\model\user\UserModel;
@@ -691,31 +693,6 @@ class IssueLogic
         return $title;
     }
 
-    /**获取模块、迭代、解决结果等的动态名称
-     * @param \main\app\model\project\ProjectModuleModel $moduleModel
-     * @param \main\app\model\agile\SprintModel $sprintModel
-     * @param \main\app\model\issue\IssueResolveModel $resolveModel
-     * @param $field
-     * @param $value
-     * @return string
-     */
-    public function getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value)
-    {
-        $name = '';
-        if ($field === 'module') {
-            //获取模块名称
-            $statusName = $moduleModel->getById($value);
-            $name = '模块:' . $statusName["name"];
-        } else if ($field === 'sprint') {
-            //获取迭代名称
-            $ResolveName = $sprintModel->getById($value);
-            $name = '迭代:' . $ResolveName["name"];
-        } else {
-            $ResolveName = $resolveModel->getById($value);
-            $name = '解决结果:' . $ResolveName["name"];
-        }
-        return $name;
-    }
 
     /**
      *

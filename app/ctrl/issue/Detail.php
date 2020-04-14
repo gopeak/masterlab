@@ -482,17 +482,6 @@ class Detail extends BaseUserCtrl
             $issueLogic = new IssueLogic();
             $issueLogic->updateCommentsCount($issueId);
 
-            // 活动记录
-            $currentUid = $this->getCurrentUid();
-            $issue = IssueModel::getInstance()->getById($issueId);
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '为' . $issue['summary'] . '添加了评论 ';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $content;
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
             // email
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $issueId, $contentHtml);
@@ -554,26 +543,8 @@ class Detail extends BaseUserCtrl
         $info['action'] = 'commented';
         list($ret, $msg) = $model->updateById($id, $info);
         if ($ret) {
-            $info = [];
-            $info['uid'] = UserAuth::getInstance()->getId();
-            $info['issue_id'] = $timeline['issue_id'];
-            $info['content'] = 'updated comment';
-            $info['contentHtml'] = $contentHtml;
-            $info['time'] = time();
-            $info['type'] = 'issue';
-            $info['action'] = 'updated_comment';
-            $model->insert($info);
             // 活动记录
-            $currentUid = $this->getCurrentUid();
-            $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了评论 ' . $content . ' 为 ';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $timeline['content'];
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
+            $info['id'] = $id;
             $event = new CommonPlacedEvent($this, $info);
             $this->dispatcher->dispatch($event,  Events::onIssueUpdateComment);
             $this->ajaxSuccess('success');
@@ -624,21 +595,11 @@ class Detail extends BaseUserCtrl
             $issueLogic = new IssueLogic();
             $issueLogic->updateCommentsCount($issueId);
 
-            // 活动记录
-            $currentUid = $this->getCurrentUid();
-            $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '删除了评论 ' . $timeline['content'];
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = '';
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
             // email
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_REMOVE, $issue['project_id'], $issueId);
 
+            $timeline['id'] = $id;
             $event = new CommonPlacedEvent($this, $timeline);
             $this->dispatcher->dispatch($event,  Events::onIssueDeleteComment);
             $this->ajaxSuccess('success');

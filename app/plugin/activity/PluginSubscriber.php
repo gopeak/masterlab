@@ -16,16 +16,20 @@ class PluginSubscriber extends BasePluginSubscriber implements EventSubscriberIn
 
     public $subscribersArr = [];
 
+    public $pluginName = '';
+
+
     /**
      * ActivityPlugin constructor.
      * @param EventDispatcher $dispatcher
      */
-    public function __construct(EventDispatcher $dispatcher)
+    public function __construct(EventDispatcher $dispatcher, $pluginName)
     {
-        parent::__construct();
+        parent::__construct($pluginName);
+        $this->pluginName = $pluginName;
         // 载入事件订阅类和函数
-        parent::getEventSubscriberFile(realpath(dirname(__FILE__)));
-        parent::loadEventSubscriber($dispatcher);
+        parent::getEventSubscriberFile(realpath(dirname(__FILE__)).DS.'event');
+        parent::loadEventSubscriber($dispatcher, basename (__DIR__));
     }
 
     /**
@@ -34,8 +38,8 @@ class PluginSubscriber extends BasePluginSubscriber implements EventSubscriberIn
     public static function getSubscribedEvents()
     {
         return [
-            basename (__CLASS__).'@'.\main\app\event\Events::onPluginInstall =>'onInstallEvent',
-            basename (__CLASS__).'@'.\main\app\event\Events::onPluginUnInstall =>'onUnInstallEvent'
+            basename (__DIR__).'@'.\main\app\event\Events::onPluginInstall =>'onInstallEvent',
+            basename (__DIR__).'@'.\main\app\event\Events::onPluginUnInstall =>'onUnInstallEvent'
         ];
     }
 

@@ -65,6 +65,7 @@ final class Events
      */
     public const onIssueCreateBefore = 'onIssueCreateBefore';
     public const onIssueCreateAfter = 'onIssueCreateAfter';
+    public const onIssueCreateChild= 'onIssueCreateChild';
     public const onIssueUpdateBefore = 'onIssueUpdateBefore';
     public const onIssueUpdateAfter = 'onIssueUpdateAfter';
     public const onIssueDelete = 'onIssueDelete';
@@ -76,6 +77,12 @@ final class Events
     public const onIssueBatchUpdate = 'onIssueBatchUpdate';
     public const onIssueImportByExcel = 'onIssueImportByExcel';
     public const onIssueRemoveChild = 'onIssueRemoveChild';
+    public const onIssueUpload= 'onIssueUpload';
+    public const onIssueMobileUpload= 'onIssueMobileUpload';
+    public const onIssueDeleteUpload= 'onIssueDeleteUpload';
+
+
+
 
     // 加入
     public const onIssueJoinSprint = 'onIssueJoinSprint';

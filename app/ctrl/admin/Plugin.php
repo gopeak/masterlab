@@ -162,9 +162,8 @@ class Plugin extends BaseAdminCtrl
         list($ret, $msg) = $model->replace($info);
         if ($ret) {
             // 发布安装事件
-            $pluginClassName = Inflector::classify($pluginName.'_plugin');
             $event = new PluginPlacedEvent($this, $info);
-            $this->dispatcher->dispatch($event, $pluginClassName.'@'.Events::onPluginInstall);
+            $this->dispatcher->dispatch($event, $pluginName.'@'.Events::onPluginInstall);
             $this->ajaxSuccess('提示', '安装成功');
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
@@ -195,9 +194,8 @@ class Plugin extends BaseAdminCtrl
             $this->ajaxFailed('服务器错误', '删除操作失败了');
         } else {
             // 发布卸载事件
-            $pluginClassName = Inflector::classify($plugin['name'].'_plugin');
             $event = new PluginPlacedEvent($this, $plugin);
-            $this->dispatcher->dispatch($event, $pluginClassName.'@'.Events::onPluginUnInstall);
+            $this->dispatcher->dispatch($event, $plugin['name'].'@'.Events::onPluginUnInstall);
             $this->ajaxSuccess('操作成功');
         }
     }
