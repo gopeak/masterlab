@@ -878,16 +878,6 @@ class Main extends Base
 
             if ($flagInitRole && $flagAssignAdminRole) {
                 $projectModel->db->commit();
-
-                $currentUid = $this->getCurrentUid();
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '创建了项目';
-                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-                $activityInfo['obj_id'] = $ret['data']['project_id'];
-                $activityInfo['title'] = $info['name'];
-                $activityModel->insertItem($currentUid, $ret['data']['project_id'], $activityInfo);
-
                 // 分发事件
                 $info['id'] = $ret['data']['project_id'];
                 $event = new CommonPlacedEvent($this, $info);

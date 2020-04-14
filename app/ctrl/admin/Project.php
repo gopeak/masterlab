@@ -197,14 +197,6 @@ class Project extends BaseAdminCtrl
             // 分发事件
             $event = new CommonPlacedEvent($this, $project);
             $this->dispatcher->dispatch($event,  Events::onProjectDelete);
-
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '删除了项目';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $projectId;
-            $activityInfo['title'] = $project['name'];
-            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
         }
 
         $model->db->commit();

@@ -2,6 +2,12 @@
 
 namespace main\app\plugin\activity\event;
 
+use main\app\classes\UserAuth;
+use main\app\ctrl\admin\Project;
+use main\app\model\ActivityModel;
+use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectRoleModel;
+use main\app\model\user\UserModel;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use main\app\event\CommonPlacedEvent;
@@ -23,19 +29,52 @@ class ProjectUserSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param CommonPlacedEvent $event
+     * @throws \Exception
+     */
     public function onProjectUserAdd(CommonPlacedEvent $event)
     {
+        $projectRoleModel = new ProjectRoleModel();
+        $roleIdArr = (new ProjectRoleModel())->getById($event->pluginDataArr['role_id_arr']);
+        $roleNames = '';
+        foreach ($roleIdArr as $roleId) {
+            $roleNames .= $projectRoleModel->getById($roleId)['name'] . ' ';
+        }
 
+        $user = (new UserModel())->getByUid($event->pluginDataArr['user_id']);
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '项目添加用户';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $user['uid'];
+        $activityInfo['title'] = $user['display_name'] . ':' . $roleNames;
+        $activityModel->insertItem(UserAuth::getId(), $event->pluginDataArr['project_id'], $activityInfo);
     }
 
+    /**
+     * @param CommonPlacedEvent $event
+     */
     public function onProjectUserUpdateRoles(CommonPlacedEvent $event)
     {
 
     }
 
+    /**
+     * @param CommonPlacedEvent $event
+     * @throws \Exception
+     */
     public function onProjectUserRemove(CommonPlacedEvent $event)
     {
-
+        $user = (new UserModel())->getByUid($event->pluginDataArr['user_id']);
+        $project = (new ProjectModel())->getById($event->pluginDataArr['project_id']);
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '项目移除了用户';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $user['uid'];
+        $activityInfo['title'] = $project['name'] . ':' . $user['display_name'];
+        $activityModel->insertItem(UserAuth::getId(), $event->pluginDataArr['project_id'], $activityInfo);
     }
 
 }

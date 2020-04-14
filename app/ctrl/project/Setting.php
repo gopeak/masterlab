@@ -155,7 +155,7 @@ class Setting extends BaseUserCtrl
                 LogOperatingLogic::add($uid, $_GET[ProjectLogic::PROJECT_GET_PARAM_ID], $logData);
                 // 分发事件
                 $info['id'] = $projectId;
-                $event = new CommonPlacedEvent($this, $info);
+                $event = new CommonPlacedEvent($this, ['pre_data'=>$preData,'cur_data'=>$info]);
                 $this->dispatcher->dispatch($event,  Events::onProjectUpdate);
                 $this->ajaxSuccess("success");
             } else {

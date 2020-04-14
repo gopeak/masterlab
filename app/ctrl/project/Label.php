@@ -32,8 +32,8 @@ class Label extends BaseUserCtrl
 
     public function pageEdit()
     {
-    }
 
+    }
 
     /**
      * @param $id
@@ -76,13 +76,6 @@ class Label extends BaseUserCtrl
 
             $ret = $projectLabelModel->insert($row);
             if ($ret[0]) {
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '创建了标签';
-                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-                $activityInfo['obj_id'] = $ret[1];
-                $activityInfo['title'] = $title;
-                $activityModel->insertItem($uid, $project_id, $activityInfo);
 
                 //写入操作日志
                 $logData = [];
@@ -152,19 +145,12 @@ class Label extends BaseUserCtrl
         }
         $ret = $projectLabelModel->updateById($id, $row);
         if ($ret[0]) {
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了标签';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $title;
-            $activityModel->insertItem($uid, $project_id, $activityInfo);
 
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];
             $logData['real_name'] = $this->auth->getUser()['display_name'];
-            $logData['obj_id'] = 0;
+            $logData['obj_id'] = $id;
             $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
             $logData['page'] = $_SERVER['REQUEST_URI'];
             $logData['action'] = LogOperatingLogic::ACT_EDIT;
@@ -173,6 +159,7 @@ class Label extends BaseUserCtrl
             $logData['cur_data'] = $row;
             LogOperatingLogic::add($uid, $project_id, $logData);
 
+            $info['id'] = $id;
             $event = new CommonPlacedEvent($this, $info);
             $this->dispatcher->dispatch($event,  Events::onLabelUpdate);
             $this->ajaxSuccess('修改成功');
@@ -209,13 +196,6 @@ class Label extends BaseUserCtrl
         }
         $projectLabelModel->deleteItem($label_id);
         $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了标签';
-        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-        $activityInfo['obj_id'] = $label_id;
-        $activityInfo['title'] = $info['title'];
-        $activityModel->insertItem($currentUid, $project_id, $activityInfo);
 
 
         $callFunc = function ($value) {
@@ -235,7 +215,8 @@ class Label extends BaseUserCtrl
         $logData['cur_data'] = $info2;
         LogOperatingLogic::add($currentUid, $project_id, $logData);
 
-        $event = new CommonPlacedEvent($this, $label_id);
+        $info['id'] = $label_id;
+        $event = new CommonPlacedEvent($this, $info);
         $this->dispatcher->dispatch($event,  Events::onLabelDelete);
         $this->ajaxSuccess('success');
     }

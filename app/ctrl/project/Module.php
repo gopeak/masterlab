@@ -98,15 +98,6 @@ class Module extends BaseUserCtrl
 
             $ret = $projectModuleModel->insert($row);
             if ($ret[0]) {
-                $currentUid = $this->getCurrentUid();
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '创建了模块';
-                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-                $activityInfo['obj_id'] = $ret[1];
-                $activityInfo['title'] = $module_name;
-                $activityModel->insertItem($currentUid, $project_id, $activityInfo);
-
                 //写入操作日志
                 $logData = [];
                 $logData['user_name'] = $this->auth->getUser()['username'];
@@ -171,14 +162,6 @@ class Module extends BaseUserCtrl
 
         $ret = $projectModuleModel->updateById($id, $row);
         if ($ret[0]) {
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了模块';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $name;
-            $activityModel->insertItem($uid, $module['project_id'], $activityInfo);
-
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];
@@ -262,14 +245,6 @@ class Module extends BaseUserCtrl
         $projectModuleModel = new ProjectModuleModel();
         $module = $projectModuleModel->getRowById($module_id);
         $projectModuleModel->removeById($project_id, $module_id);
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了模块';
-        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-        $activityInfo['obj_id'] = $module_id;
-        $activityInfo['title'] = $module["name"];
-        $activityModel->insertItem($currentUid, $project_id, $activityInfo);
 
         $callFunc = function ($value) {
             return '已删除';

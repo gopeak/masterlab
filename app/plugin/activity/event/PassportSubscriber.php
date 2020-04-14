@@ -2,6 +2,10 @@
 
 namespace main\app\plugin\activity\event;
 
+use main\app\classes\UserAuth;
+use main\app\model\ActivityModel;
+use main\app\model\OrgModel;
+use main\app\model\user\UserModel;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use main\app\event\CommonPlacedEvent;
@@ -40,6 +44,20 @@ class PassportSubscriber implements EventSubscriberInterface
 
     public function onUserUpdateProfile(CommonPlacedEvent $event)
     {
-
+        $preData = $event->pluginDataArr['pre_data'];
+        $currentUser = $event->pluginDataArr['cur_data'];
+        $updatedMsg = '';
+        foreach ($currentUser as $key => $item) {
+            if ($item != $preData[$key]) {
+                $updatedMsg .= $preData[$key] . '-->' . $item . ' ';
+            }
+        }
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '更新了资料';
+        $activityInfo['type'] = ActivityModel::TYPE_USER;
+        $activityInfo['obj_id'] = UserAuth::getId();
+        $activityInfo['title'] = $updatedMsg;
+        $activityModel->insertItem(UserAuth::getId(), 0, $activityInfo);
     }
 }

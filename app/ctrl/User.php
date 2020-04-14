@@ -556,18 +556,14 @@ class User extends BaseUserCtrl
         }
         // print_r($userInfo);
         $ret = false;
+        $preUserRow = $userModel->getByUid($userId);
         if (!empty($userInfo)) {
+            foreach ($userInfo as $key =>$item) {
+                $preUser[$key] = $preUserRow[$key];
+            }
             list($ret) = $userModel->updateUser($userInfo);
             if ($ret) {
                 $currentUid = $this->getCurrentUid();
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '更新了资料';
-                $activityInfo['type'] = ActivityModel::TYPE_USER;
-                $activityInfo['obj_id'] = $userId;
-                $activityInfo['title'] = $userInfo['display_name'];
-                $activityModel->insertItem($currentUid, 0, $activityInfo);
-
                 //写入操作日志
                 $logData = [];
                 $logData['user_name'] = $this->auth->getUser()['username'];
@@ -577,13 +573,13 @@ class User extends BaseUserCtrl
                 $logData['page'] = $_SERVER['REQUEST_URI'];
                 $logData['action'] = LogOperatingLogic::ACT_EDIT;
                 $logData['remark'] = '用户修改个人资料';
-                $logData['pre_data'] = $userModel->getRowById($currentUid);
+                $logData['pre_data'] = $preUser;
                 $logData['cur_data'] = $userInfo;
                 LogOperatingLogic::add($currentUid, 0, $logData);
             }
         }
         // 分发事件
-        $event = new UserPlacedEvent($this, $userInfo);
+        $event = new UserPlacedEvent($this, ['pre_data'=>$preUser, 'cur_data'=>$userInfo]);
         $this->dispatcher->dispatch($event,  Events::onUserUpdateProfile);
 
         $this->ajaxSuccess('保存成功', $ret);

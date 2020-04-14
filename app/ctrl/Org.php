@@ -405,14 +405,6 @@ class Org extends BaseUserCtrl
             $this->ajaxFailed('服务器错误', '新增数据错误,错误信息:' . $insertId);
         }
 
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '创建了组织';
-        $activityInfo['type'] = ActivityModel::TYPE_ORG;
-        $activityInfo['obj_id'] = $insertId;
-        $activityInfo['title'] = $info['name'];
-        $activityModel->insertItem($currentUid, 0, $activityInfo);
-
         //写入操作日志
         $logData = [];
         $logData['user_name'] = $this->auth->getUser()['username'];
@@ -518,13 +510,6 @@ class Org extends BaseUserCtrl
         }
 
         $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '更新了组织';
-        $activityInfo['type'] = ActivityModel::TYPE_ORG;
-        $activityInfo['obj_id'] = $id;
-        $activityInfo['title'] = $org['name'];
-        $activityModel->insertItem($currentUid, 0, $activityInfo);
 
         //写入操作日志
         $logData = [];
@@ -590,14 +575,6 @@ class Org extends BaseUserCtrl
         }
 
         $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了组织';
-        $activityInfo['type'] = ActivityModel::TYPE_ORG;
-        $activityInfo['obj_id'] = $id;
-        $activityInfo['title'] = $org['name'];
-        $activityModel->insertItem($currentUid, 0, $activityInfo);
-
         $callFunc = function ($value) {
             return '已删除';
         };

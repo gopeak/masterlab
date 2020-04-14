@@ -2,6 +2,9 @@
 
 namespace main\app\plugin\activity\event;
 
+use main\app\classes\UserAuth;
+use main\app\model\ActivityModel;
+use main\app\model\project\ProjectCatalogLabelModel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
@@ -42,26 +45,50 @@ class CatalogSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
+     * @throws \Exception
      */
     public function onCataloglCreate(CommonPlacedEvent $event)
     {
-
+        $catalog = $event->pluginDataArr;
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '创建了分类';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $catalog['id'];
+        $activityInfo['title'] = $catalog['name'];
+        $activityModel->insertItem(UserAuth::getId(), $catalog['project_id'], $activityInfo);
     }
 
     /**
      * @param CommonPlacedEvent $event
+     * @throws \Exception
      */
     public function onCatalogUpdate(CommonPlacedEvent $event)
     {
-
+        $model = new ProjectCatalogLabelModel();
+        $catalog = $model->getById($event->pluginDataArr['id']);
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '更新了分类';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $catalog['id'];
+        $activityInfo['title'] = $catalog['name'];
+        $activityModel->insertItem(UserAuth::getId(), $catalog['project_id'], $activityInfo);
     }
-
     /**
      * @param CommonPlacedEvent $event
+     * @throws \Exception
      */
     public function onCatalogDelete(CommonPlacedEvent $event)
     {
-
+        $catalog = $event->pluginDataArr;
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '删除了分类';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $catalog['id'];
+        $activityInfo['title'] = $catalog['name'];
+        $activityModel->insertItem(UserAuth::getId(), $catalog['project_id'], $activityInfo);
     }
 
 }
