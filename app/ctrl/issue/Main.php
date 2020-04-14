@@ -1967,7 +1967,7 @@ class Main extends BaseUserCtrl
             $issueModel->db->rollBack();
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
-
+        $issue['id'] = $issueId;
         $event = new CommonPlacedEvent($this, $issue);
         $this->dispatcher->dispatch($event,  Events::onIssueDelete);
         $this->ajaxSuccess('ok');

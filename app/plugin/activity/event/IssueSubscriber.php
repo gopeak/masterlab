@@ -107,7 +107,7 @@ class IssueSubscriber implements EventSubscriberInterface
      * @param $issueOldValues
      * @param $issueNewValues
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     private function makeActionContent($issueOldValues, $issueNewValues)
     {
@@ -211,7 +211,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueCreateAfter(CommonPlacedEvent $event)
     {
@@ -226,7 +226,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueCreateChild(CommonPlacedEvent $event)
     {
@@ -253,7 +253,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueUpdateAfter(CommonPlacedEvent $event)
     {
@@ -284,7 +284,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueDelete(CommonPlacedEvent $event)
     {
@@ -300,7 +300,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueClose(CommonPlacedEvent $event)
     {
@@ -319,7 +319,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueFollow(CommonPlacedEvent $event)
     {
@@ -338,7 +338,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueUnFollow(CommonPlacedEvent $event)
     {
@@ -357,7 +357,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueConvertChild(CommonPlacedEvent $event)
     {
@@ -375,7 +375,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueBatchDelete(CommonPlacedEvent $event)
     {
@@ -391,7 +391,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueBatchUpdate(CommonPlacedEvent $event)
     {
@@ -436,7 +436,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueImportByExcel(CommonPlacedEvent $event)
     {
@@ -459,7 +459,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueRemoveChild(CommonPlacedEvent $event)
     {
@@ -477,7 +477,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueJoinSprint(CommonPlacedEvent $event)
     {
@@ -497,7 +497,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueJoinClose(CommonPlacedEvent $event)
     {
@@ -515,7 +515,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueJoinBacklog(CommonPlacedEvent $event)
     {
@@ -549,7 +549,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueAddComment(CommonPlacedEvent $event)
     {
@@ -569,7 +569,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueDeleteComment(CommonPlacedEvent $event)
     {
@@ -588,7 +588,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueUpdateComment(CommonPlacedEvent $event)
     {
@@ -608,7 +608,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueUpload(CommonPlacedEvent $event)
     {
@@ -644,7 +644,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueMobileUpload(CommonPlacedEvent $event)
     {
@@ -680,7 +680,7 @@ class IssueSubscriber implements EventSubscriberInterface
 
     /**
      * @param CommonPlacedEvent $event
-     * @throws Exception
+     * @throws \Exception
      */
     public function onIssueDeleteUpload(CommonPlacedEvent $event)
     {
