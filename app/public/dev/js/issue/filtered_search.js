@@ -71,62 +71,62 @@ var FilteredSearch = (function () {
     var _searchesObject = {};
 
     function FilteredSearch(urlParams, issueConfig, project_id) {
-        _cur_project_id = project_id;
-        _issueConfig = issueConfig;
-        IssueMain.prototype.getCurrentSearches();
-        IssueMain.prototype.setRecentStorage();
-        IssueMain.prototype.setCurrentSearch(_currentSearchesArr);
-        IssueMain.prototype.setRecentSearch();
-        IssueMain.prototype.getHintData();
-        // IssueMain.prototype.getDropdownData("解决结果");
-        _urlParams = urlParams;
-
-        _searches.forEach(function (item) {
-            var str = "#js-dropdown-" + item.name + " .filter-dropdown";
-            _dropdownHtml[item.key] = $.trim($(str).html());
-            _searchesObject[item.key] = str;
-        });
-
-        _dropdownHtml.hint = $.trim($("#js-dropdown-hint .filter-dropdown").html());
-        _searchesObject.hint = "#js-dropdown-hint .filter-dropdown";
-
-        $(".tokens-container").on("click.close", ".selectable-close", function () {
-            $(this).parents(".js-visual-token").remove();
-        });
-
-        $(".tokens-container").on("click.clear", ".clear-search", function () {
-            $(".tokens-container .filtered-search-token").remove();
-        });
-
-        $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-dropdown-item", function (e) {
-            var $item = $(this).find(".filtered-search-history-dropdown-token");
-            var temp = [];
-
-            $item.each(function (e) {
-                var $this = $(this);
-                var name = $this.find(".name").text();
-                var value = $this.find(".value").text();
-                temp.push({
-                    name,
-                    value
-                });
-            });
-
-            // IssueMain.prototype.setCurrentSearch(temp);
-        });
-
-        $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-clear-button", function (e) {
-            sessionStorage.setItem("issue-recent-searches", "");
-        });
-
-        $("#filter-form").submit(function () {
-            IssueMain.prototype.search(_urlParams);
-            return false;
-        });
-
-        $("#filtered-search-issues").on("focus", function (e) {
-            // console.log("dd");
-        });
+        // _cur_project_id = project_id;
+        // _issueConfig = issueConfig;
+        // IssueMain.prototype.getCurrentSearches();
+        // IssueMain.prototype.setRecentStorage();
+        // IssueMain.prototype.setCurrentSearch(_currentSearchesArr);
+        // IssueMain.prototype.setRecentSearch();
+        // IssueMain.prototype.getHintData();
+        // // IssueMain.prototype.getDropdownData("解决结果");
+        // _urlParams = urlParams;
+        //
+        // _searches.forEach(function (item) {
+        //     var str = "#js-dropdown-" + item.name + " .filter-dropdown";
+        //     _dropdownHtml[item.key] = $.trim($(str).html());
+        //     _searchesObject[item.key] = str;
+        // });
+        //
+        // _dropdownHtml.hint = $.trim($("#js-dropdown-hint .filter-dropdown").html());
+        // _searchesObject.hint = "#js-dropdown-hint .filter-dropdown";
+        //
+        // $(".tokens-container").on("click.close", ".selectable-close", function () {
+        //     $(this).parents(".js-visual-token").remove();
+        // });
+        //
+        // $(".tokens-container").on("click.clear", ".clear-search", function () {
+        //     $(".tokens-container .filtered-search-token").remove();
+        // });
+        //
+        // $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-dropdown-item", function (e) {
+        //     var $item = $(this).find(".filtered-search-history-dropdown-token");
+        //     var temp = [];
+        //
+        //     $item.each(function (e) {
+        //         var $this = $(this);
+        //         var name = $this.find(".name").text();
+        //         var value = $this.find(".value").text();
+        //         temp.push({
+        //             name,
+        //             value
+        //         });
+        //     });
+        //
+        //     // IssueMain.prototype.setCurrentSearch(temp);
+        // });
+        //
+        // $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-clear-button", function (e) {
+        //     sessionStorage.setItem("issue-recent-searches", "");
+        // });
+        //
+        // $("#filter-form").submit(function () {
+        //     IssueMain.prototype.search(_urlParams);
+        //     return false;
+        // });
+        //
+        // $("#filtered-search-issues").on("focus", function (e) {
+        //     // console.log("dd");
+        // });
     };
 
     IssueMain.prototype.getSearchObjectValue = function (data) {
