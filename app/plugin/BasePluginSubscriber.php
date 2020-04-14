@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *  插件基类
  * Class ActivityPlugin
  */
-class BasePlugin implements EventSubscriberInterface
+class BasePluginSubscriber implements EventSubscriberInterface
 {
 
     public $subscribersArr = [];

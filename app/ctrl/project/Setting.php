@@ -20,6 +20,10 @@ use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\user\UserModel;
 
+/**
+ * Class Setting
+ * @package main\app\ctrl\project
+ */
 class Setting extends BaseUserCtrl
 {
     public function __construct()

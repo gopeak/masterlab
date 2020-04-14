@@ -1,21 +1,25 @@
 <?php
 
-namespace main\app\plugin\plugin_tpl;
+namespace main\app\plugin\activity;
 
+use main\app\plugin\BasePluginSubscriber;
 use main\app\event\PluginPlacedEvent;
-use main\app\plugin\BasePlugin;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * 插件入口类
+ * 活动日志插件
  * Class ActivityPlugin
  */
-class TplPlugin extends BasePlugin implements  EventSubscriberInterface
+class PluginSubscriber extends BasePluginSubscriber implements EventSubscriberInterface
 {
 
     public $subscribersArr = [];
 
+    /**
+     * ActivityPlugin constructor.
+     * @param EventDispatcher $dispatcher
+     */
     public function __construct(EventDispatcher $dispatcher)
     {
         parent::__construct();
@@ -41,8 +45,7 @@ class TplPlugin extends BasePlugin implements  EventSubscriberInterface
      */
     public function onInstallEvent(PluginPlacedEvent $pluginPlacedEvent)
     {
-
-        //var_dump($pluginPlacedEvent);
+        var_dump($pluginPlacedEvent);
 
     }
 
@@ -52,7 +55,7 @@ class TplPlugin extends BasePlugin implements  EventSubscriberInterface
      */
     public function onUnInstallEvent(PluginPlacedEvent $pluginPlacedEvent)
     {
-        //var_dump($pluginPlacedEvent);
+        var_dump($pluginPlacedEvent);
     }
 
 

@@ -220,14 +220,26 @@ class Main extends Base
     {
         // 1.取出插件名称
         $pluginName = $_GET['_target'][3];
+        $pluginFile = PLUGIN_PATH . $pluginName . "/index.php";
+        //var_dump($pluginFile);
+        if (file_exists($pluginFile)) {
+            require_once($pluginFile);
+            $pluginIndexClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, 'Index');
+            if (class_exists($pluginIndexClass)) {
+                $indexCtrl = new $pluginIndexClass($this->dispatcher);
+                if(method_exists($indexCtrl,'main')){
+                    $indexCtrl->main();
+                }
+                if(method_exists($indexCtrl,'pageIndex')){
+                    $indexCtrl->pageIndex();
+                }
+            }else{
+                echo "入口类: {$pluginIndexClass} 缺失";
+            }
 
-        // 2. 数据库查询插件配置信息
-
-        // 3. 实例化插件控制器和入口
-
-        // 渲染数据
-
-
+        }else{
+            echo "入口文件: {$pluginFile} 缺失";
+        }
     }
 
     /**

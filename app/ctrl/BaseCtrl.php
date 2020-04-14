@@ -543,6 +543,10 @@ class BaseCtrl
         }
     }
 
+    /**
+     * @param $pluginDir
+     * @return array
+     */
     public function getPluginDirArr($pluginDir)
     {
         $pluginArr = [];
@@ -583,8 +587,8 @@ class BaseCtrl
         if ($plugins) {
             foreach ($plugins as $plugin) {
                 $pluginName = $plugin['name'];
-                $pluginClassName = Inflector::classify($pluginName.'_plugin');
-                $pluginFile = PLUGIN_PATH . $pluginName . "/{$pluginClassName}.php";
+                $pluginClassName = 'PluginSubscriber';
+                $pluginFile = PLUGIN_PATH . $pluginName . "/PluginSubscriber.php";
                 //var_dump($pluginFile);
                 if (file_exists($pluginFile)) {
                     require_once($pluginFile);

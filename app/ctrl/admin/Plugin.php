@@ -112,6 +112,10 @@ class Plugin extends BaseAdminCtrl
         $this->ajaxSuccess('操作成功', (object)$plugin);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public function install()
     {
         // 发布安装事件
@@ -167,6 +171,10 @@ class Plugin extends BaseAdminCtrl
         }
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public function unInstall()
     {
         $id = null;
@@ -253,10 +261,12 @@ class Plugin extends BaseAdminCtrl
         }
         $this->rcopy(PLUGIN_PATH . 'plugin_tpl', $pluginDirName);
         $pluginClassName = Inflector::classify($name.'_plugin');
-        $pluginClassFile = $pluginDirName."/{$pluginClassName}.php";
-        rename($pluginDirName . '/TplPlugin.php', $pluginClassFile);
+        $pluginClassFile = $pluginDirName."/PluginSubscriber.php";
         $pluginSrc = str_replace(["plugin_tpl","TplPlugin"],[$name,$pluginClassName], file_get_contents($pluginClassFile));
         file_put_contents($pluginClassFile, $pluginSrc);
+
+        $pluginIndexFile = $pluginDirName."/index.php";
+        file_put_contents($pluginIndexFile, str_replace(["plugin_tpl"],[$name], file_get_contents($pluginIndexFile)));
         rename($pluginDirName . '/plugin.json.tpl', $pluginDirName . '/plugin.json');
 
         $replaceArr = [];
