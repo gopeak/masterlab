@@ -11,7 +11,7 @@ use main\app\classes\UserLogic;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\event\Events;
-use main\app\event\UserAdminPlacedEvent;
+use main\app\event\CommonPlacedEvent;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
@@ -142,7 +142,7 @@ class User extends BaseAdminCtrl
         $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
         // 分发事件
-        $event = new UserAdminPlacedEvent($this, $user=$userModel->getByUid($userId));
+        $event = new CommonPlacedEvent($this, $user=$userModel->getByUid($userId));
         $this->dispatcher->dispatch($event,  Events::onUserDisableByAdmin);
         $this->ajaxSuccess('操作成功');
     }
@@ -160,7 +160,7 @@ class User extends BaseAdminCtrl
         $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
         // 分发事件
-        $event = new UserAdminPlacedEvent($this, $user = $userModel->getByUid($userId));
+        $event = new CommonPlacedEvent($this, $user = $userModel->getByUid($userId));
         $this->dispatcher->dispatch($event,  Events::onUserActiveByAdmin);
         $this->ajaxSuccess('提示','操作成功');
     }
@@ -313,7 +313,7 @@ class User extends BaseAdminCtrl
                 $content = "管理用户为您创建了Masterlab账号。<br>用户名：{$username}<br>密码：{$password}<br><br>请访问 " . ROOT_URL . " 进行登录<br>";
                 $sysLogic->mail([$email], "Masterlab创建账号通知", $content);
             }
-            $event = new UserAdminPlacedEvent($this, $user);
+            $event = new CommonPlacedEvent($this, $user);
             $this->dispatcher->dispatch($event,  Events::onUserAddByAdmin);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
@@ -367,7 +367,7 @@ class User extends BaseAdminCtrl
         $userModel->uid = $userId;
         $userModel->updateUser($info);
         // 分发事件
-        $event = new UserAdminPlacedEvent($this, $info);
+        $event = new CommonPlacedEvent($this, $info);
         $this->dispatcher->dispatch($event,  Events::onUserUpdateByAdmin);
         $this->ajaxSuccess('提示', '操作成功');
     }
@@ -403,7 +403,7 @@ class User extends BaseAdminCtrl
             $userModel = new UserGroupModel();
             $userModel->deleteByUid($userId);
             // 分发事件
-            $event = new UserAdminPlacedEvent($this, $user);
+            $event = new CommonPlacedEvent($this, $user);
             $this->dispatcher->dispatch($event,  Events::onUserDeleteByAdmin);
             $this->ajaxSuccess('提示', '操作成功');
         }
@@ -430,7 +430,7 @@ class User extends BaseAdminCtrl
             }
         }
         // 分发事件
-        $event = new UserAdminPlacedEvent($this, $user=$userModel->getUsersByIds($userIdArr));
+        $event = new CommonPlacedEvent($this, $user=$userModel->getUsersByIds($userIdArr));
         $this->dispatcher->dispatch($event,  Events::onUserBatchDisableByAdmin);
         $this->ajaxSuccess('提示', '操作成功');
     }
@@ -453,7 +453,7 @@ class User extends BaseAdminCtrl
             $userModel->updateUser($userInfo);
         }
         // 分发事件
-        $event = new UserAdminPlacedEvent($this, $user=$userModel->getUsersByIds($userIdArr));
+        $event = new CommonPlacedEvent($this, $user=$userModel->getUsersByIds($userIdArr));
         $this->dispatcher->dispatch($event,  Events::onUserBatchRecoveryByAdmin);
         $this->ajaxSuccess('提示', '操作成功');
     }

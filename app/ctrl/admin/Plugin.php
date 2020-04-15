@@ -147,17 +147,12 @@ class Plugin extends BaseAdminCtrl
         $info['type'] = $jsonArr['type'];
         $info['url'] = $jsonArr['url'];
         $info['version'] = $jsonArr['version'];
+        $info['icon_file'] = $jsonArr['icon_file'];
+        $info['icon_file'] = $jsonArr['icon_file'];
+        $info['company'] = $jsonArr['company'];
+        $info['description'] = $jsonArr['description'];
         $info['status'] = PluginModel::STATUS_INSTALLED;
         $info['is_system'] = '0';
-        if (isset($_POST['description'])) {
-            $info['description'] = $jsonArr['description'];
-        }
-        if (isset($_POST['icon'])) {
-            $info['icon_file'] = $jsonArr['icon_file'];
-        }
-        if (isset($jsonArr['company'])) {
-            $info['company'] = $jsonArr['company'];
-        }
 
         list($ret, $msg) = $model->replace($info);
         if ($ret) {

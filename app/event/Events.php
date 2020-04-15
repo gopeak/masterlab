@@ -13,7 +13,7 @@ final class Events
     /**
      * Private constructor. This class cannot be instantiated.
      */
-    private function __construct()
+    public function __construct()
     {
     }
 

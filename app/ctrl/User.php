@@ -16,7 +16,7 @@ use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\WidgetLogic;
 use main\app\event\Events;
-use main\app\event\UserPlacedEvent;
+use main\app\event\CommonPlacedEvent;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\SettingModel;
@@ -579,7 +579,7 @@ class User extends BaseUserCtrl
             }
         }
         // 分发事件
-        $event = new UserPlacedEvent($this, ['pre_data'=>$preUser, 'cur_data'=>$userInfo]);
+        $event = new CommonPlacedEvent($this, ['pre_data'=>$preUser, 'cur_data'=>$userInfo]);
         $this->dispatcher->dispatch($event,  Events::onUserUpdateProfile);
 
         $this->ajaxSuccess('保存成功', $ret);

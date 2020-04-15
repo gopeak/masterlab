@@ -248,19 +248,6 @@ class NotifyLogic
             return false;
         }
 
-        // 获取发信配置信息
-        /**
-        $settingsLogic = new SettingsLogic();
-
-        $this->emailConfig['mail_port'] = $settingsLogic->mailPort();
-        $this->emailConfig['mail_prefix'] = $settingsLogic->mailPrefix();
-        $this->emailConfig['mail_host'] = $settingsLogic->mailHost();
-        $this->emailConfig['mail_account'] = $settingsLogic->mailAccount();
-        $this->emailConfig['mail_password'] = $settingsLogic->mailPassword();
-        $this->emailConfig['mail_timeout'] = $settingsLogic->mailTimeout();
-        $this->emailConfig['send_mailer'] = $settingsLogic->sendMailer();
-        */
-
         $sourceTitle = '';
 
         $projectModel = new ProjectModel();

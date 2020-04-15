@@ -17,7 +17,6 @@ class CommonPlacedEvent   extends Event
      */
     public $ctrl = null;
 
-
     /**
      * @var mixed|null
      */
@@ -33,6 +32,5 @@ class CommonPlacedEvent   extends Event
         $this->ctrl = $ctrl;
         $this->pluginDataArr = $pluginDataArr;
     }
-
 
 }

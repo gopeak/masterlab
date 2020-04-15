@@ -1,6 +1,6 @@
 <?php
 
-namespace main\app\plugin\plugin_tpl;
+namespace main\app\plugin\webhook;
 
 use main\app\plugin\BasePluginSubscriber;
 use main\app\event\PluginPlacedEvent;
@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * 插件事件类
+ * 活动日志插件
  * Class ActivityPlugin
  */
 class PluginSubscriber extends BasePluginSubscriber implements EventSubscriberInterface

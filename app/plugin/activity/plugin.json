@@ -4,7 +4,7 @@
   "index_page": "ctrl@index@pageIndex",
   "description": "Masterlab的活动日志",
   "version": "v1.0",
-  "type": "module",
+  "type": "project_module",
   "chmod":[],
   "url":"http://www.masterlab.vip",
   "company":"Masterlab官方",

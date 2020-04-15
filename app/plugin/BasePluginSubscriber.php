@@ -51,6 +51,7 @@ class BasePluginSubscriber implements EventSubscriberInterface
                     && !in_array($file['basename'], ['BaseModel', 'DbModel'])
                     && $file['basename']!='.'
                     && $file['basename']!='..'
+                    && $file['basename']!='.gitignore'
                 ) {
                     $this->subscribersArr[] = $subClassPath .DS. $file['basename'];
                 }
@@ -67,7 +68,7 @@ class BasePluginSubscriber implements EventSubscriberInterface
      */
     protected function loadEventSubscriber(EventDispatcher $dispatcher, $pluginName)
     {
-       // print_r($this->subscribersArr);
+        //print_r($this->subscribersArr);
         foreach ($this->subscribersArr as $subscriberFile) {
             require_once  $subscriberFile;
             $subscriberName = basename($subscriberFile);

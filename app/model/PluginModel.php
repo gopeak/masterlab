@@ -38,11 +38,13 @@ class PluginModel extends DbModel
         self::STATUS_UNINSTALLED => '未安装',
     ];
 
-    const  TYPE_MODULE = 'module';
+    const  TYPE_MODULE = 'project_module';
+    const  TYPE_ADMIN = 'admin_module';
     const  TYPE_THEME = 'theme';
     const  TYPE_APP = 'app';
     public static $typeArr = [
         self::TYPE_MODULE => '项目模块',
+        self::TYPE_ADMIN => '管理模块',
         self::TYPE_THEME => '主题',
         self::TYPE_APP => '应用',
     ];
