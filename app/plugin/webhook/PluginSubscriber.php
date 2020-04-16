@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * 活动日志插件
+ *  插件事件接收
  * Class ActivityPlugin
  */
 class PluginSubscriber extends BasePluginSubscriber implements EventSubscriberInterface

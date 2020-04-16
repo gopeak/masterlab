@@ -1,5 +1,5 @@
 {
-  "main_class": "WebhookPlugin",
+  "main_class": "PluginSubscriber",
   "title": "webhook",
   "description": "默认自带的插件：webhook",
   "version": "1.0",
