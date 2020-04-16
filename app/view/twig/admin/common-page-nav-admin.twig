@@ -31,10 +31,18 @@
                     </a>
                 </li>
                 <li class=" {% if (nav_links_active == 'plugin') %} {{ 'active' }}{% endif %}">
-                    <a title=" " href="/admin/plugin"><i class="fa fa-plug"></i> <span>插件管理</span>
+                    <a title=" " href="/admin/plugin_manager"><i class="fa fa-plug"></i> <span>插件管理</span>
                     </a>
                 </li>
 
+                {% for plugin in _pluginArr %}
+                    {% if plugin.type == _plugin_admin_type %}
+                        <li class=" {% if (nav_links_active == plugin.name) %} {{ 'active' }}{% endif %}">
+                            <a title=" " href="/admin/plugin/{{plugin.name}}"><i class="fa fa-adjust"></i> <span>{{plugin.title}}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
             </ul>
         </div>
     </div>

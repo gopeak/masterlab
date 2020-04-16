@@ -17,6 +17,7 @@ use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectUserRoleModel;
+use Doctrine\Common\Inflector\Inflector;
 
 class Org extends BaseUserCtrl
 {
@@ -300,6 +301,7 @@ class Org extends BaseUserCtrl
     /**
      * @param $err
      * @param $params
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function checkParam(&$err, $params)
     {
@@ -343,7 +345,6 @@ class Org extends BaseUserCtrl
         }
     }
 
-
     /**
      *  处理添加
      * @param array $params
@@ -372,7 +373,6 @@ class Org extends BaseUserCtrl
         if (!empty($err)) {
             $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
-
         $model = new OrgModel();
         $info = [];
         $info['path'] = $params['path'];

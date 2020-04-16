@@ -116,8 +116,9 @@ class BaseCtrl
         }
         $this->loader  = $twigLoader;
         if (empty($twigTpl)) {
+            $debug = XPHP_DEBUG ? true : false;
             $twigTpl = new \Twig\Environment($this->loader, [
-                'debug' => true
+                'debug' => $debug
             ]);
             $function = new \Twig\TwigFunction('str_replace', function ($find, $replace, $string) {
                 return str_replace($find, $replace, $string);

@@ -16,7 +16,7 @@ use main\app\model\PluginModel;
 /**
  * 插件管理控制器
  */
-class Plugin extends BaseAdminCtrl
+class PluginManager extends BaseAdminCtrl
 {
 
     private $subscribersArr = [];

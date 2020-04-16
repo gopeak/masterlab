@@ -4,6 +4,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
+use main\app\model\PluginModel;
 use main\app\model\UserModel;
 use main\app\classes\PermissionGlobal;
 use main\app\model\user\UserSettingModel;
@@ -68,7 +69,6 @@ class BaseAdminCtrl extends BaseCtrl
             }
         }
 
-
         // 是否也有系统管理员权限
         //$haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
         $haveAdminPerm = PermissionGlobal::isGlobalUser(UserAuth::getId());
@@ -90,5 +90,7 @@ class BaseAdminCtrl extends BaseCtrl
             $userSettings[$item['_key']] = $item['_value'];
         }
         $this->addGVar('G_Preferences', $userSettings);
+
+
     }
 }

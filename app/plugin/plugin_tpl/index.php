@@ -17,12 +17,29 @@ class Index extends BasePluginCtrl
 
     public $pluginInfo = [];
 
+    public $dirName = '';
+
+    public $pluginMethod = 'pageIndex';
+
     public function __construct()
     {
         parent::__construct();
-        $dirName = pathinfo(__FILE__)['dirname'];
+
+        // 当前插件目录名
+        $this->dirName = basename(pathinfo(__FILE__)['dirname']);
+
+        // 当前插件的配置信息
         $pluginModel = new PluginModel();
-        $this->pluginInfo = $pluginModel->getByName($dirName);
+        $this->pluginInfo = $pluginModel->getByName($this->dirName);
+
+        $pluginMethod = isset($_GET['_target'][3])? $_GET['_target'][3] :'';
+        if($pluginMethod=="/" || $pluginMethod=="\\" || $pluginMethod==''){
+            $pluginMethod = "pageIndex";
+        }
+        if(method_exists($this,$pluginMethod)){
+            $this->pluginMethod = $pluginMethod;
+            $this->$pluginMethod();
+        }
     }
 
     /**
@@ -35,7 +52,7 @@ class Index extends BasePluginCtrl
         $data['title'] = '插件首页';
         $data['nav_links_active'] = 'plugin';
         $data['current_user']  = UserModel::getInstance()->getByUid(UserAuth::getId());
-        $this->myRender('index.php', $data);
+        $this->phpRender('index.php', $data);
     }
 
 

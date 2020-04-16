@@ -86,6 +86,7 @@ class ChartLogic
      * 计算燃尽图
      * @param $sprintId
      * @return array
+     * @throws \Exception
      */
     public static function computeSprintBurnDownLine($sprintId)
     {

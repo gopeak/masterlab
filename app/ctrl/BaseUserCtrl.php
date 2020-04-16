@@ -7,6 +7,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
+use main\app\model\PluginModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\ProjectLogic;
 use main\app\model\user\UserMessageModel;
@@ -177,11 +178,18 @@ class BaseUserCtrl extends BaseCtrl
             $this->addGVar('G_uid', UserAuth::getId());
             $this->addGVar('G_show_announcement', $this->getAnnouncement());
 
-            $this->checkUpdate();
-
             $model = new UserMessageModel();
             $conditionArr['readed'] = '0';
             $this->addGVar('_unread_count', $model->getUnreadCountByfilter($conditionArr));
+
+            //  加载插件
+            $model = new PluginModel();
+            $pluginArr = $model->getRows('*');
+            $this->addGVar('_pluginArr', $pluginArr);
+            $this->addGVar('_plugin_admin_type', PluginModel::TYPE_ADMIN);
+            $this->addGVar('_plugin_project_type', PluginModel::TYPE_MODULE);
+
+            $this->checkUpdate();
         }
     }
 

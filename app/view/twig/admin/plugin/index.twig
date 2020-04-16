@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="" lang="en">
-<head  >
+<head>
 
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/js/admin/plugin.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
@@ -101,7 +101,7 @@
 <div class="modal" id="modal-plugin">
     <form class="js-quick-submit js-upload-blob-form form-horizontal"
           id="form-plugin"
-          action="/admin/plugin/add"
+          action="/admin/plugin_manager/add"
           accept-charset="UTF-8"
           method="post">
         <input type="hidden" name="format" id="id_format" value="json">
@@ -372,13 +372,13 @@
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_form_id:"filter_form",
-            filter_url:"/admin/plugin/fetch_all",
-            get_url:"/admin/plugin/get",
-            update_url:"/admin/plugin/update",
-            add_url:"/admin/plugin/add",
-            install_url:"/admin/plugin/install",
-            uninstall_url:"/admin/plugin/uninstall",
-            delete_url:"/admin/plugin/delete",
+            filter_url:"/admin/plugin_manager/fetch_all",
+            get_url:"/admin/plugin_manager/get",
+            update_url:"/admin/plugin_manager/update",
+            add_url:"/admin/plugin_manager/add",
+            install_url:"/admin/plugin_manager/install",
+            uninstall_url:"/admin/plugin_manager/uninstall",
+            delete_url:"/admin/plugin_manager/delete",
             pagination_id:"pagination"
 
         }
@@ -400,7 +400,6 @@
                 }
             ])
         });
-
 
          uploader = new qq.FineUploader({
             element: document.getElementById('fine-uploader-gallery'),
@@ -424,7 +423,6 @@
                 }
             }
         });
-
 
     });
 
