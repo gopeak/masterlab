@@ -2,7 +2,9 @@
 
 namespace main\app\plugin\activity;
 
+use main\app\classes\ConfigLogic;
 use main\app\classes\LogOperatingLogic;
+use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserAuth;
@@ -11,6 +13,7 @@ use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\PluginModel;
 use main\app\model\project\ProjectCatalogLabelModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\ActivityModel;
 use main\app\model\user\UserModel;
@@ -26,12 +29,31 @@ class Index extends BasePluginCtrl
 
     public $pluginInfo = [];
 
+
+    public $dirName = '';
+
+    public $pluginMethod = 'pageIndex';
+
     public function __construct()
     {
         parent::__construct();
-        $dirName = pathinfo(__FILE__)['dirname'];
+
+        // 当前插件目录名
+        $this->dirName = basename(pathinfo(__FILE__)['dirname']);
+
+        // 当前插件的配置信息
         $pluginModel = new PluginModel();
-        $this->pluginInfo = $pluginModel->getByName($dirName);
+        $this->pluginInfo = $pluginModel->getByName($this->dirName);
+
+
+        $pluginMethod = isset($_GET['_target'][3]) ? $_GET['_target'][3] : '';
+        if ($pluginMethod == "/" || $pluginMethod == "\\" || $pluginMethod == '') {
+            $pluginMethod = "pageIndex";
+        }
+        if (method_exists($this, $pluginMethod)) {
+            $this->pluginMethod = $pluginMethod;
+            $this->$pluginMethod();
+        }
     }
 
     /**
@@ -40,7 +62,9 @@ class Index extends BasePluginCtrl
     public function pageIndex()
     {
         $data = [];
-        $data['title'] = '项目活动日志';
+        $data['sub_nav_active'] = 'plugin';
+        $data['plugin_name'] = $this->dirName;
+        $data['title'] = '活动日志';
         $data['nav_links_active'] = 'activity';
         $data = RewriteUrl::setProjectData($data);
         // 权限判断
@@ -50,88 +74,21 @@ class Index extends BasePluginCtrl
                 die;
             }
         }
-        $projectId = $data['project_id'];
-        $data['current_uid'] = UserAuth::getId();
-        $userLogic = new UserLogic();
-        $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
-
-        foreach ($projectUsers as &$user) {
+        $userModel = new UserModel();
+        $users = $userModel->getAll();
+        foreach ($users as &$user) {
             $user = UserLogic::format($user);
         }
-        $data['project_users'] = $projectUsers;
+        $data['users'] = $users;
 
-        $projectRolemodel = new ProjectRoleModel();
-        $data['roles'] = $projectRolemodel->getsByProject($projectId);
-
-        $this->myRender('index.php', $data);
+        $data['type_arr'] = [
+            ActivityModel::TYPE_ISSUE => '事项',
+            ActivityModel::TYPE_AGILE => '敏捷',
+            ActivityModel::TYPE_USER => '用户',
+            ActivityModel::TYPE_PROJECT => '项目',
+        ];
+        $this->twigRender('index.twig', $data);
     }
 
 
-    /**
-     * @param $id
-     * @throws \Exception
-     */
-    public function fetch($id)
-    {
-        if (!isset($id)) {
-            $this->ajaxFailed('提示', '缺少参数');
-        }
-        $model = new ProjectCatalogLabelModel();
-        $arr = $model->getById($id);
-        $this->ajaxSuccess('success', $arr);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function fetchAll()
-    {
-        $projectId = null;
-        if (isset($_GET['_target'][3])) {
-            $projectId = (int)$_GET['_target'][3];
-        }
-        if (isset($_GET['project_id'])) {
-            $projectId = (int)$_GET['project_id'];
-        }
-        if (empty($projectId)) {
-            $this->ajaxFailed('参数错误', '项目id不能为空');
-        }
-        $model = new ProjectCatalogLabelModel();
-        $data['catalogs'] = $model->getByProject($projectId);
-        $this->ajaxSuccess('ok', $data);
-    }
-
-
-    /**
-     * @param $project_id
-     * @param $label_id
-     * @throws \Exception
-     */
-    public function delete($project_id, $label_id)
-    {
-        $id = null;
-        if (isset($_POST['id'])) {
-            $id = (int)$_POST['id'];
-        }
-        if (!$id) {
-            $this->ajaxFailed('参数错误', 'id不能为空');
-        }
-        $id = intval($id);
-        $model = new ProjectCatalogLabelModel();
-        $info = $model->getById($id);
-        if ($info['project_id'] != $this->projectId) {
-            $this->ajaxFailed('提示', '参数错误,非当前项目的分类无法删除');
-        }
-        $model->deleteItem($id);
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了分类';
-        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-        $activityInfo['obj_id'] = $label_id;
-        $activityInfo['title'] = $info['name'];
-        $activityModel->insertItem($currentUid, $project_id, $activityInfo);
-
-        $this->ajaxSuccess('提示','操作成功');
-    }
 }

@@ -60,6 +60,14 @@ class WebHookModel extends DbModel
         return $this->getRows('*', ['enable'=>'1']);
     }
 
+
+    /**
+     * 获取全部数据
+     */
+    public function getAllItem(){
+        return $this->getRows('*');
+    }
+
     /**
      * @param $id
      * @return array

@@ -255,6 +255,35 @@ class Widget extends BaseUserCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    public function fetchProjectActivity()
+    {
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
+        }
+        $userId = UserAuth::getId();
+        list($data['activity'], $total) = ActivityLogic::filterByIndex($userId, $page, $pageSize);
+        // print_r($data['activity']);
+        foreach ($data['activity'] as &$item) {
+            $item['zip_title'] = $item['title'];
+            if (mb_strlen($item['title']) > 40) {
+                $item['zip_title'] = mb_substr($item['title'], 0, 40) . '...';
+            }
+
+            if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
+                $item['zip_title'] = '<span style="text-decoration: line-through;">' . $item['zip_title'] . '</span>';
+            }
+        }
+        unset($item);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+
     public function fetchIssueActivity()
     {
         $pageSize = 20;

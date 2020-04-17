@@ -10,7 +10,16 @@
                 <div class="fade-right">
                     <i class="fa fa-angle-right"></i>
                 </div>
-                <ul class="nav-links scrolling-tabs">
+                <style>
+
+                    .project-nav-links-fix {
+                        display: flex;
+                        text-align: center;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                </style>
+                <ul class="nav-links scrolling-tabs project-nav-links-fix">
 
                     <li class=" {% if (nav_links_active == 'home') %} {{ 'active' }}{% endif %}">
                         <a title="Home" class="shortcuts-project" href="{{project_root_url}}/home"><i class="fa fa-home"></i> <span> 项目概要 </span> </a>
@@ -46,7 +55,7 @@
                     {% for plugin in _pluginArr %}
                         {% if plugin.type == _plugin_project_type and plugin.is_display=='1' %}
                             <li class=" {% if (nav_links_active == plugin.name) %} {{ 'active' }}{% endif %}">
-                                <a title=" " href="/admin/plugin/{{plugin.name}}"><img style="width:14px;height: 14px" src="{{plugin.icon_file}}" /> <span>{{plugin.title}}</span>
+                                <a title=" " href="{{project_root_url}}/plugin/{{plugin.name}}"><img style="width:14px;height: 14px" src="{{plugin.icon_file}}" /> <span>{{plugin.title}}</span>
                                 </a>
                             </li>
                         {% endif %}

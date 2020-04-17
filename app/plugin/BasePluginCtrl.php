@@ -104,7 +104,7 @@ class BasePluginCtrl extends BaseUserCtrl
 
         $pluginName = $this->dirName;
 
-        $twigLoader = new \Twig\Loader\FilesystemLoader([PLUGIN_PATH .$pluginName.'/view', VIEW_PATH]);
+        $twigLoader = new \Twig\Loader\FilesystemLoader([VIEW_PATH, PLUGIN_PATH .$pluginName.'/view' ]);
         $debug =  XPHP_DEBUG ? true : false;
         $twigTpl = new \Twig\Environment($twigLoader, [
             'debug' => $debug
@@ -112,8 +112,6 @@ class BasePluginCtrl extends BaseUserCtrl
         if($debug){
             $twigTpl->addExtension(new \Twig\Extension\DebugExtension());
         }
-
-
         echo $twigTpl->render($tpl, $dataArr);
         echo ob_get_clean();
     }

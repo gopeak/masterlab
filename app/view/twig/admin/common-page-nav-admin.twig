@@ -38,7 +38,7 @@
                 {% for plugin in _pluginArr %}
                     {% if plugin.type == _plugin_admin_type %}
                         <li class=" {% if (nav_links_active == plugin.name) %} {{ 'active' }}{% endif %}">
-                            <a title=" " href="/admin/plugin/{{plugin.name}}"><i class="fa fa-adjust"></i> <span>{{plugin.title}}</span>
+                            <a title=" " href="/admin/plugin/{{plugin.name}}"><img style="width:14px;height: 14px" src="{{plugin.icon_file}}" /> <span>{{plugin.title}}</span>
                             </a>
                         </li>
                     {% endif %}

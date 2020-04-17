@@ -10,6 +10,7 @@
 namespace main\app\classes;
 
 use main\app\model\ActivityModel;
+use \Doctrine\DBAL\ParameterType;
 
 /**
  * 活动动态逻辑类
@@ -122,23 +123,48 @@ class ActivityLogic
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public static function filterByProject($projectId = 0,  $page = 1, $pageSize = 50)
     {
-        $conditions = [];
-        if (!empty($projectId)) {
-            $conditions['project_id'] = $projectId;
-        }
         $start = $pageSize * ($page - 1);
-        $appendSql = " 1=1 Order by id desc  limit $start, " . $pageSize;
-
         $model = new ActivityModel();
-        $fields = " * ";
-        $rows = $model->getRows($fields, $conditions, $appendSql);
+        $table = $model->getTable();
+        $queryBuilder = $model->db->createQueryBuilder();
+        $queryBuilder->select('*')->from($table)->where('project_id =:project_id')->setParameter('project_id', intval($projectId),ParameterType::INTEGER);
+
+        if (isset($_GET['user_id'])  && !empty($_GET['user_id'])) {
+            $queryBuilder->andWhere('user_id =:user_id')->setParameter('user_id', intval($_GET['user_id']),ParameterType::INTEGER);
+        }
+        if (isset($_GET['type']) && !empty($_GET['type'])) {
+            $queryBuilder->andWhere('type =:type')->setParameter('type', trimStr($_GET['type']),ParameterType::STRING);
+        }
+        if (isset($_GET['start_datetime']) && !empty($_GET['start_datetime']) ) {
+            $queryBuilder->andWhere('time >=:start_time')->setParameter('start_time', strtotime($_GET['start_datetime']),ParameterType::INTEGER);
+        }
+        if (isset($_GET['end_datetime'])  && !empty($_GET['end_datetime'])) {
+            $queryBuilder->andWhere('time <=:end_time')->setParameter('end_time', strtotime($_GET['end_datetime']),ParameterType::INTEGER);
+        }
+
+        $count = (int)$queryBuilder->select('count(*) as cc')->execute()->fetchColumn();
+
+        $queryBuilder->select('*');
+        $orderBy = 'id';
+        if (isset($_GET['sort_field'])) {
+            $orderBy = trimStr($_GET['sort_field']);
+        }
+        $sortBy = 'DESC';
+        if (isset($_GET['sort_by'])) {
+            $sortBy = trimStr($_GET['sort_by']);
+        }
+
+        $queryBuilder->orderBy($orderBy, $sortBy)->setFirstResult($start)->setMaxResults($pageSize);
+       // echo $queryBuilder->getSQL();
+        $rows =  $queryBuilder->execute()->fetchAll();
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
-        $count = $model->getField('count(*) as cc', $conditions);
+
         return [$rows, $count];
     }
 

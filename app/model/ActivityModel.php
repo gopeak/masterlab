@@ -25,6 +25,14 @@ class ActivityModel extends CacheModel
 
     const TYPE_ORG = 'org';
 
+    public static $typeArr = [
+       self::TYPE_ISSUE =>'事项',
+        self::TYPE_AGILE =>'敏捷',
+        self::TYPE_USER =>'用户',
+        self::TYPE_PROJECT =>'项目',
+        self::TYPE_ORG =>'组织',
+    ];
+
     /**
      * ActivityModel constructor.
      * @param string $userId

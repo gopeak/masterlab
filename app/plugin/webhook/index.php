@@ -6,7 +6,6 @@ use Doctrine\Common\Inflector\Inflector;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\event\Events;
-use main\app\event\PluginPlacedEvent;
 use main\app\model\PluginModel;
 use main\app\model\user\UserModel;
 use main\app\plugin\BasePluginCtrl;

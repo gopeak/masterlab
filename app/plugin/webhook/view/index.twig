@@ -212,17 +212,17 @@
                 <span class="label  label-success">启用中</span>
              {{/if_eq}}
              {{#if_eq enable '0'}}
-                <span class="label  label-danger">{已停用/span>
+                <span class="label  label-danger">已停用</span>
              {{/if_eq}}
             </td>
             <td  >
                     <a class="list_for_edit btn btn-transparent  " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
 
                     {{#if_eq enable '1'}}
-                        <a class="list_for_install btn btn-transparent  " href="#" data-value="{{id}}" style="padding: 6px 2px;color:blue">停用 </a>
+                        <a class="list_for_disable btn btn-transparent  " href="#" data-value="{{id}}" style="padding: 6px 2px;color:blue">停用 </a>
                     {{/if_eq}}
                      {{#if_eq enable '0'}}
-                        <a class="list_for_uninstall btn  btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;color: orange">启用</a>
+                        <a class="list_for_enable btn  btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;color: orange">启用</a>
                     {{/if_eq}}
 
                     <a class="list_for_delete btn btn-transparent  " href="#" data-value="{{id}}" style="padding: 6px 2px;color:red">删除 </a>
@@ -251,8 +251,8 @@
             get_url:"/admin/plugin/{{plugin_name}}/get",
             update_url:"/admin/plugin/{{plugin_name}}/update",
             add_url:"/admin/plugin/{{plugin_name}}/add",
-            install_url:"/admin/plugin/{{plugin_name}}/enable",
-            uninstall_url:"/admin/plugin/{{plugin_name}}/disable",
+            enable_url:"/admin/plugin/{{plugin_name}}/enable",
+            disable_url:"/admin/plugin/{{plugin_name}}/disable",
             delete_url:"/admin/plugin/{{plugin_name}}/delete",
             pagination_id:"pagination"
 

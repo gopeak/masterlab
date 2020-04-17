@@ -91,6 +91,12 @@ class BaseAdminCtrl extends BaseCtrl
         }
         $this->addGVar('G_Preferences', $userSettings);
 
+        //  加载插件
+        $model = new PluginModel();
+        $pluginArr = $model->getRows('*');
+        $this->addGVar('_pluginArr', $pluginArr);
+        $this->addGVar('_plugin_admin_type', PluginModel::TYPE_ADMIN);
+        $this->addGVar('_plugin_project_type', PluginModel::TYPE_MODULE);
 
     }
 }
