@@ -1,12 +1,4 @@
 
-ALTER TABLE `issue_main` ADD INDEX(`project_id`);
-
-ALTER TABLE `issue_label_data` ADD INDEX(`issue_id`);
-ALTER TABLE `issue_label_data` ADD INDEX(`label_id`);
-ALTER TABLE `field_main` ADD INDEX(`is_system`);
-ALTER TABLE `field_custom_value` ADD INDEX( `issue_id`, `custom_field_id`);
-
-
 --
 -- 表的结构 `main_plugin`
 --
@@ -27,35 +19,77 @@ CREATE TABLE `main_plugin` (
   `install_time` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用'
+  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
+  `is_display` tinyint(1) UNSIGNED NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- 转存表中的数据 `main_plugin`
+-- 表的结构 `main_webhook`
 --
 
-INSERT INTO `main_plugin` (`id`, `name`, `title`, `index_page`, `description`, `version`, `status`, `type`, `chmod_json`, `url`, `icon_file`, `company`, `install_time`, `order_weight`, `is_system`, `enable`) VALUES
-(1, 'activity', '活动日志', 'ctrl@index@pageIndex', '默认自带的插件：活动日志', '1', 1, 'module', '', 'http://www.masterlab.vip', '/attachment/plugin/1.png', 'Masterlab官方', 0, 0, 1, 1);
-
-ALTER TABLE `main_plugin`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD KEY `order_weight` (`order_weight`);
-
-ALTER TABLE `main_plugin`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-COMMIT;
-
-CREATE TABLE IF NOT EXISTS `webhook` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `main_webhook` (
+  `id` int(11) UNSIGNED NOT NULL,
   `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
   `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `event_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
   `secret_token` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
-  UNIQUE KEY `id` (`id`),
-  KEY `enable` (`enable`)
+  `timeout` tinyint(2) UNSIGNED NOT NULL DEFAULT '10',
+  `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-COMMIT;
 
 
+--
+-- 转存表中的数据 `main_plugin`
+--
+
+INSERT INTO `main_plugin` (`id`, `name`, `title`, `index_page`, `description`, `version`, `status`, `type`, `chmod_json`, `url`, `icon_file`, `company`, `install_time`, `order_weight`, `is_system`, `enable`, `is_display`) VALUES
+(1, 'activity', '活动日志', 'ctrl@index@pageIndex', '默认自带的插件：活动日志', '1.0', 1, 'project_module', '', 'http://www.masterlab.vip', '/attachment/plugin/1.png', 'Masterlab官方', 0, 0, 1, 1, 1),
+(22, 'webhook', 'webhook', '', '默认自带的插件：webhook', '1.0', 1, 'admin_module', '', 'http://www.masterlab.vip', '/attachment/plugin/webhook.png', 'Masterlab官方', 0, 0, 1, 1, 1);
+
+--
+-- 转存表中的数据 `main_webhook`
+--
+
+INSERT INTO `main_webhook` (`id`, `name`, `url`, `event_json`, `secret_token`, `enable`, `timeout`, `description`) VALUES
+(1, 'local', 'http://masterlab.ink/webhook.php', '', 'xxxxxxxxxxxxxxxxx', 1, 10, '');
+
+
+
+ALTER TABLE `issue_main` ADD INDEX(`project_id`);
+
+ALTER TABLE `issue_label_data` ADD INDEX(`issue_id`);
+ALTER TABLE `issue_label_data` ADD INDEX(`label_id`);
+ALTER TABLE `field_main` ADD INDEX(`is_system`);
+ALTER TABLE `field_custom_value` ADD INDEX( `issue_id`, `custom_field_id`);
+ALTER TABLE `project_flag` ADD UNIQUE( `project_id`, `flag`);
+
+
+--
+-- 表的索引 `main_plugin`
+--
+ALTER TABLE `main_plugin`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `order_weight` (`order_weight`),
+  ADD KEY `type` (`type`);
+
+
+--
+-- 使用表AUTO_INCREMENT `main_plugin`
+--
+ALTER TABLE `main_plugin` MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+
+--
+-- 表的索引 `main_webhook`
+--
+ALTER TABLE `main_webhook`
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `enable` (`enable`);
+
+
+--
+-- 使用表AUTO_INCREMENT `main_webhook`
+--
+ALTER TABLE `main_webhook`  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
