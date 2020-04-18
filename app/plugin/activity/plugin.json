@@ -1,0 +1,12 @@
+{
+  "main_class": "ActivityPlugin",
+  "title": "活动日志",
+  "index_page": "ctrl@index@pageIndex",
+  "description": "Masterlab的活动日志",
+  "version": "v1.0",
+  "type": "project_module",
+  "chmod":[],
+  "url":"http://www.masterlab.vip",
+  "company":"Masterlab官方",
+  "icon_file": "/attachment/plugin/1.png"
+}

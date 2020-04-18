@@ -63,7 +63,7 @@ class WorkflowSchemeDataModel extends CacheModel
 
     public function getWorkflowId($schemeId, $issueTypeId)
     {
-        return $this->getOne('workflow_id', ['scheme_id' => $schemeId,'issue_type_id'=>$issueTypeId]);
+        return $this->getField('workflow_id', ['scheme_id' => $schemeId,'issue_type_id'=>$issueTypeId]);
     }
 
     public function deleteBySchemeId($schemeId)

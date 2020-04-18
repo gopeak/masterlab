@@ -4,7 +4,10 @@ namespace main\app\ctrl\admin;
 
 use main\app\classes\PermissionGlobal;
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\issue\IssueModel;
+use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
@@ -106,34 +109,6 @@ class Project extends BaseAdminCtrl
 
 
     /**
-     * 更新
-     * @param $params
-     * @throws \Exception
-     */
-    public function update($params)
-    {
-        $projectId = null;
-        if (isset($_GET['_target'][3])) {
-            $projectId = (int)$_GET['_target'][3];
-        }
-        if (isset($_REQUEST['project_id'])) {
-            $projectId = (int)$_REQUEST['project_id'];
-        }
-        if (empty($projectId)) {
-            $this->ajaxFailed('参数错误', '项目id不能为空');
-        }
-        // @todo 全局权限
-        $model = new ProjectModel();
-        $ret = $model->updateById($projectId, $params);
-
-        if (!$ret) {
-            $this->ajaxFailed('服务器错误', '更新数据失败');
-        } else {
-            $this->ajaxSuccess('操作成功');
-        }
-    }
-
-    /**
      * 项目归档
      * @throws \Exception
      */
@@ -153,6 +128,9 @@ class Project extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         } else {
+            // 分发事件
+            $event = new CommonPlacedEvent($this, $project=$model->getById($projectId));
+            $this->dispatcher->dispatch($event,  Events::onProjectArchive);
             $this->ajaxSuccess('归档成功');
         }
     }
@@ -204,17 +182,21 @@ class Project extends BaseAdminCtrl
             $projectModuleModel = new ProjectModuleModel($uid);
             $projectModuleModel->deleteByProject($projectId);
 
-            // @todo 删除标签
+            // 删除标签
+            $projectLabelModel = new ProjectLabelModel();
+            $projectLabelModel->deleteByProject($projectId);
 
-            // @todo 删除初始化的角色
+            // 删除分类
+            $projectCatalogLabelModel = new ProjectCatalogLabelModel();
+            $projectCatalogLabelModel->deleteByProject($projectId);
 
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '删除了项目';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $projectId;
-            $activityInfo['title'] = $project['name'];
-            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+            // 删除初始化的角色
+            $projectUserRoleModel = new ProjectUserRoleModel();
+            $projectUserRoleModel->deleteByProject($projectId);
+
+            // 分发事件
+            $event = new CommonPlacedEvent($this, $project);
+            $this->dispatcher->dispatch($event,  Events::onProjectDelete);
         }
 
         $model->db->commit();

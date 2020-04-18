@@ -49,14 +49,15 @@ class Upgrade extends BaseUserCtrl
      */
     public function run()
     {
+        set_time_limit(0);
+        ob_end_clean(); // 清空并关闭缓冲区
+        ob_implicit_flush(1); // 立即输出
+        header('X-Accel-Buffering: no');
+
         if (!$this->isAdmin) {
             $this->showLine('权限不足，请联系管理员！');
             die;
         }
-
-        set_time_limit(0);
-        $curl = new \Curl\Curl();
-        $curl->setTimeout(10);
 
         $host = isset($_GET['source']) ? trim($_GET['source']) : 'http://www.masterlab.vip/';
         if (!preg_match('/\/$/', $host)) {
@@ -64,6 +65,7 @@ class Upgrade extends BaseUserCtrl
         }
         $url = $host . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
 
+        $curl = new \Curl\Curl();
         $curl->get($url);
         $response = $curl->rawResponse;
         $response = json_decode($response);
@@ -110,6 +112,10 @@ class Upgrade extends BaseUserCtrl
 
         if (!extension_loaded('zip')) {
             $this->showLine('错误：PHP 扩展 zip 未安装！');
+            $checkOk = false;
+        }
+        if (!$this->isPathWritable($projectDir)) {
+            $this->showLine('错误：' . $projectDir . ' 目录权限不足，无法写入。');
             $checkOk = false;
         }
         if (!$this->isPathWritable($upgradePath)) {
@@ -238,6 +244,7 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('');
         }
         // 更新版本号
+        $this->showLine('写入新版本号......');
         $this->writeVersionConfig($latestVersion);
 
         // 生成锁文件
@@ -251,7 +258,7 @@ class Upgrade extends BaseUserCtrl
      * 执行SQL
      *
      * @param $sql
-     * @param \main\lib\MyPdo $db
+     * @param \main\app\model\DbModel $db
      * @return bool
      */
     private function runSql($sql, $db)
@@ -347,8 +354,9 @@ class Upgrade extends BaseUserCtrl
     private function showLine($message)
     {
         echo $message . '<br>';
-        ob_flush();
-        //flush();
+        // ob_end_flush();
+        // ob_flush();
+        // flush();
     }
 
     /**

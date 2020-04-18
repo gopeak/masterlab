@@ -11,6 +11,8 @@ use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
@@ -96,15 +98,6 @@ class Module extends BaseUserCtrl
 
             $ret = $projectModuleModel->insert($row);
             if ($ret[0]) {
-                $currentUid = $this->getCurrentUid();
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '创建了模块';
-                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-                $activityInfo['obj_id'] = $ret[1];
-                $activityInfo['title'] = $module_name;
-                $activityModel->insertItem($currentUid, $project_id, $activityInfo);
-
                 //写入操作日志
                 $logData = [];
                 $logData['user_name'] = $this->auth->getUser()['username'];
@@ -118,6 +111,9 @@ class Module extends BaseUserCtrl
                 $logData['cur_data'] = $row;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 
+                $row['id'] = $ret[1];
+                $event = new CommonPlacedEvent($this, $row);
+                $this->dispatcher->dispatch($event,  Events::onModuleCreate);
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -166,14 +162,6 @@ class Module extends BaseUserCtrl
 
         $ret = $projectModuleModel->updateById($id, $row);
         if ($ret[0]) {
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了模块';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $name;
-            $activityModel->insertItem($uid, $module['project_id'], $activityInfo);
-
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];
@@ -187,6 +175,9 @@ class Module extends BaseUserCtrl
             $logData['cur_data'] = $row;
             LogOperatingLogic::add($uid, $moduleInfo['project_id'], $logData);
 
+            $row['id'] = $id;
+            $event = new CommonPlacedEvent($this, $row);
+            $this->dispatcher->dispatch($event,  Events::onModuleUpdate);
             $this->ajaxSuccess('update_success');
         } else {
             $this->ajaxFailed('update_failed');
@@ -254,14 +245,6 @@ class Module extends BaseUserCtrl
         $projectModuleModel = new ProjectModuleModel();
         $module = $projectModuleModel->getRowById($module_id);
         $projectModuleModel->removeById($project_id, $module_id);
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了模块';
-        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-        $activityInfo['obj_id'] = $module_id;
-        $activityInfo['title'] = $module["name"];
-        $activityModel->insertItem($currentUid, $project_id, $activityInfo);
 
         $callFunc = function ($value) {
             return '已删除';
@@ -280,6 +263,8 @@ class Module extends BaseUserCtrl
         $logData['cur_data'] = $module2;
         LogOperatingLogic::add($uid, $project_id, $logData);
 
+        $event = new CommonPlacedEvent($this, $module);
+        $this->dispatcher->dispatch($event,  Events::onModuleDelete);
         $this->ajaxSuccess('success');
     }
 }

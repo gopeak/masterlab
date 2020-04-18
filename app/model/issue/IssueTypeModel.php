@@ -67,7 +67,7 @@ class IssueTypeModel extends BaseDictionaryModel
     public function getIdByKey($key)
     {
         $where = ['_key' => trim($key)];
-        $id = $this->getOne("id", $where);
+        $id = $this->getField("id", $where);
         return $id;
     }
 }

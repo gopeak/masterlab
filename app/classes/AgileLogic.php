@@ -139,7 +139,7 @@ class AgileLogic
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
             $sql .= ' ' . $order;
             //echo $sql;die;
-            $issues = $model->db->getRows($sql, $params);
+            $issues = $model->db->fetchAll($sql, $params);
             $this->updateBacklogOrderWeight($projectId, $issues);
             return [true, $issues];
         } catch (\PDOException $e) {
@@ -284,7 +284,7 @@ class AgileLogic
             $order = " Order By priority Asc,id DESC";
             $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
             //echo $sql;die;
-            $issues = $model->db->getRows($sql, $params);
+            $issues = $model->db->fetchAll($sql, $params);
             foreach ($issues as &$issue) {
                 IssueFilterLogic::formatIssue($issue);
             }
@@ -408,7 +408,7 @@ class AgileLogic
         $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
         //echo $sql;
         //print_r($params);
-        $issues = $model->db->getRows($sql, $params);
+        $issues = $model->db->fetchAll($sql, $params);
         foreach ($issues as &$issue) {
             IssueFilterLogic::formatIssue($issue);
         }
@@ -443,7 +443,7 @@ class AgileLogic
         $order = " Order By priority Asc,id DESC";
         $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
         //echo $sql;die;
-        $issues = $model->db->getRows($sql, $params);
+        $issues = $model->db->fetchAll($sql, $params);
         foreach ($issues as &$issue) {
             IssueFilterLogic::formatIssue($issue);
         }
@@ -475,7 +475,7 @@ class AgileLogic
             $order = " Order By priority Asc,id DESC";
             $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
             //echo $sql;die;
-            $issues = $model->db->getRows($sql, $params);
+            $issues = $model->db->fetchAll($sql, $params);
             foreach ($issues as &$issue) {
                 IssueFilterLogic::formatIssue($issue);
             }
@@ -516,7 +516,7 @@ class AgileLogic
             $sql = "SELECT {$field} FROM  {$leftJoinTable} " . $sql . '  GROUP BY m.id  ' . $order . "";
             //echo $sql;
             //print_r($params);
-            $issues = $issueModel->db->getRows($sql, $params);
+            $issues = $issueModel->db->fetchAll($sql, $params);
             foreach ($issues as $key => &$issue) {
                 if (empty($issue['id'])) {
                     unset($issues[$key]);
@@ -858,7 +858,7 @@ class AgileLogic
                 $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
                 //echo $sqlCount;
                 //print_r($params);
-                $count = $issueModel->db->getOne($sqlCount, $params);
+                $count = $issueModel->getFieldBySql($sqlCount, $params);
                 // var_dump($count);
                 $column['count'] = $count;
 
@@ -867,7 +867,7 @@ class AgileLogic
                 $sql .= ' ' . $order;
                 //print_r($params);
                 //echo $sql;die;
-                $arr = $issueModel->db->getRows($sql, $params);
+                $arr = $issueModel->db->fetchAll($sql, $params);
                 $column['issues'] = $arr;
             }
             return [true, 'ok'];

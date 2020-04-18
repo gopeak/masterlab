@@ -245,7 +245,7 @@ class PermissionGlobalUserRoleModel extends BaseDictionaryModel
         $roleIds_str = implode(',', $roleIds);
         $sql .= " AND  role_id in ({$roleIds_str})";
 
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->fetchALLForGroup($sql, $params, true);
 
         if (!empty($rows)) {
             return array_keys($rows);
@@ -266,7 +266,7 @@ class PermissionGlobalUserRoleModel extends BaseDictionaryModel
         $conditions['user_id'] = $userId;
         $conditions['role_id'] = $roleId;
         $sql = "SELECT count(*) as cc  FROM {$table} Where user_id=:user_id AND role_id=:role_id  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getFieldBySql($sql, $conditions);
         return $count > 0;
     }
 
@@ -278,7 +278,7 @@ class PermissionGlobalUserRoleModel extends BaseDictionaryModel
     {
         $table = $this->getTable();
         $sql = "SELECT DISTINCT project_id FROM {$table} WHERE user_id={$userId}";
-        $rows = $this->db->getRows($sql);
+        $rows = $this->db->fetchAll($sql);
         return $rows;
     }
 }

@@ -40,4 +40,19 @@ class FieldCustomValueModel extends BaseIssueItemsModel
         return self::$instance[$index];
     }
 
+    public function getsByIssueIdArr($issueIdArr, $fieldIdArr)
+    {
+        if(empty($issueIdArr)){
+            return [];
+        }
+        $issueIdsStr = implode(",", $issueIdArr);
+        $fieldIdStr = implode(",", $fieldIdArr);
+        $table = $this->getTable();
+        $where = "WHERE issue_id IN ({$issueIdsStr})  AND custom_field_id IN ({$fieldIdStr})";
+        $sql = "SELECT * FROM " . $table . $where;
+        $rows = $this->db->fetchAll($sql);
+        return $rows;
+    }
+
+
 }

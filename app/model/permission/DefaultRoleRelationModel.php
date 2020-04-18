@@ -72,7 +72,7 @@ class DefaultRoleRelationModel extends BaseDictionaryModel
         $roleIds_str = implode(',', $roleIds);
         $sql .= " AND  default_role_id IN ({$roleIds_str}) GROUP BY perm_id";
 
-        $rows = $this->db->getRows($sql, $params, true);
+        $rows = $this->db->fetchAll($sql, $params);
 
         if (empty($rows)) {
             return [];

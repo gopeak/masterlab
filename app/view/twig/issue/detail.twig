@@ -287,6 +287,14 @@
                         <div id="issue_fields" class="content-block" style="margin-left: 15px">
 
                         </div>
+                        <div id="issue_custom_fields" class="content-block hide" style="margin-left: 15px">
+                            <p><strong>自定义字段：</strong></p>
+                            <div id="custom_field_values_div">
+
+                            </div>
+
+                        </div>
+
                         <div id="detail-page-description" class="content-block detail-page-description"
                              style="margin-left: 15px">
                             <div class="issue-title-data hidden" data-endpoint="#"
@@ -384,7 +392,7 @@
                                 <div class="form-group col-lg-6 ">
                                     <label class="control-label col-sm-2" for="issue_milestone_id">模块:</label>
                                     <div class="col-sm-10">
-                                        <span>{{issue.module_name}}</span>
+                                        <span >{{issue.module_name}}</span>
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6">
@@ -816,7 +824,7 @@
                                     </div>
                                 </div>
 
-                                <div id="custom_field_values_block" class="block project-reference hide">
+                                <!--<div id="custom_field_values_block" class="block project-reference hide">
                                     <div class="sidebar-collapsed-icon">
                                         <i aria-hidden="true" title="自定义字段" class="fa fa-info"></i>
                                         <span></span>
@@ -827,7 +835,7 @@
                                     <div id="custom_field_values_div" class="cross-project-reference hide-collapsed">
 
                                     </div>
-                                </div>
+                                </div>-->
 
                             </form>
 
@@ -887,20 +895,20 @@
                                 {{^}}
 {% endverbatim %}
  {% if (is_admin or projectPermArr['MANAGE_COMMENTS'] is defined) %}
-                                        {% verbatim %}
-                                        <a id="btn-timeline-edit_{{id}}" data-id="{{id}}" title="编辑此评论"
-                                           class="note-action-button js-note-edit2 perm-is_admin perm-MANAGE_COMMENTS" href="#timeline_{{id}}">
-                                            <i class="fa fa-pencil link-highlight"></i>
-                                        </a>
-                                        <a id="btn-timeline-remove_{{id}}" data-id="{{id}}"
-                                           class="note-action-button js-note-remove danger"
-                                           data-title="删除此评论"
-                                           data-confirm2="您确认删除此评论?"
-                                           data-url="/issue/detail/delete_timeline/{{id}}"
-                                           href="#timeline_{{id}}">
-                                            <i class="fa fa-trash-o danger-highlight"></i>
-                                        </a>
-                                        {% endverbatim %}
+                                    {% verbatim %}
+                                    <a id="btn-timeline-edit_{{id}}" data-id="{{id}}" title="编辑此评论"
+                                       class="note-action-button js-note-edit2 perm-is_admin perm-MANAGE_COMMENTS" href="#timeline_{{id}}">
+                                        <i class="fa fa-pencil link-highlight"></i>
+                                    </a>
+                                    <a id="btn-timeline-remove_{{id}}" data-id="{{id}}"
+                                       class="note-action-button js-note-remove danger"
+                                       data-title="删除此评论"
+                                       data-confirm2="您确认删除此评论?"
+                                       data-url="/issue/detail/delete_timeline/{{id}}"
+                                       href="#timeline_{{id}}">
+                                        <i class="fa fa-trash-o danger-highlight"></i>
+                                    </a>
+                                    {% endverbatim %}
   {% endif %}
 
 {% verbatim %}             {{/if}}
@@ -1009,14 +1017,9 @@
 
      <script type="text/html" id="custom_field_values_tpl">
         {{#custom_field_values}}
-        <span>
-        <cite title="{{field.description}}">{{field_title}}:{{show_value}}</cite>
-    </span>
-        <button class="btn btn--map-pin btn-transparent" data-toggle="tooltip" data-placement="left"
-                data-container="body" data-title="{{show_value}}" data-body="{{value}}" data-clipboard-text="{{value}}"
-                type="button" title="{{value}}">
-            <i aria-hidden="true" class="fa fa-map-pin"></i>
-        </button>
+            <div class="form-group ">
+                <strong>{{field_title}}:</strong><div>{{show_value}}</div>
+            </div>
         {{/custom_field_values}}
     </script>
 
@@ -1235,7 +1238,7 @@
 
         var _cur_activity_page = 1;
 
-        _editor_md = editormd("editor_md", {
+        _comment_editor_md = editormd("editor_md", {
             width: "100%",
             height: 220,
             markdown: "",
@@ -1252,7 +1255,7 @@
             placeholder: "",
             autoFocus: false
         });
-
+        _editor_md = _comment_editor_md;
         $(function () {
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);

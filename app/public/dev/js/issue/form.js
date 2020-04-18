@@ -1089,7 +1089,7 @@ var IssueForm = (function () {
                     selected = 'checked=true';
                 }
                 var id = ui_type + '_issue_' + name + Key;
-                html += '<div class="radio"><label><input ' + selected + '  type="radio" name="' + field_name + '" id="' + id + '"  value="' + Key + '" disabled >' + field.options[Key] + '</label></div>';
+                html += '<div class="radio-inline"><label><input ' + selected + '  type="radio" name="' + field_name + '" id="' + id + '"  value="' + Key + '"  >' + field.options[Key] + '</label></div>';
             }
         }
         //<div class="radio"> <label><input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Option two  </label></div>
@@ -1116,7 +1116,7 @@ var IssueForm = (function () {
                     selected = 'checked=true';
                 }
                 var id = ui_type + '_issue_' + name + Key;
-                html += '<input ' + selected + '  type="checkbox" class="form-control" name="' + field_name + '" id="' + id + '"  value="' + Key + '" />' + field.options[Key];
+                html += '<label class="checkbox-inline"><input ' + selected + '  type="checkbox"   name="' + field_name + '" id="' + id + '"  value="' + Key + '" />' + field.options[Key]+'</label>';
             }
         }
         return IssueForm.prototype.wrapField(config, field, html);
@@ -1140,17 +1140,18 @@ var IssueForm = (function () {
             multi = 'multiple ';
         }
         var html = '';
-        html += '<select ' + multi + ' class="form-control" name="' + field_name + '" id="' + id + '"   />';
+        html += '<select ' + multi + ' class="selectpicker" name="' + field_name + '" id="' + id + '"   >';
         if (field.options) {
             for (var Key in field.options) {
                 var selected = '';
                 if (Key == default_value) {
                     selected = 'selected';
                 }
-                html += '<option value="' + Key + '">' + field.options[Key] + '</option>';
+                html += '<option value="' + Key + '" '+selected+'>' + field.options[Key] + '</option>';
             }
         }
         html += '</select>';
+        console.log(html);
         return IssueForm.prototype.wrapField(config, field, html);
     }
 

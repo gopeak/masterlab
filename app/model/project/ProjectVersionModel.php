@@ -32,7 +32,7 @@ class ProjectVersionModel extends CacheModel
         $table = $this->getTable();
         $sql = "Select *  From {$table}   Where project_id=:project_id  Order by sequence DESC, id  ASC ";
         $params['project_id'] = $projectId;
-        $rows = $this->db->getRows($sql, $params,  $primaryKey);
+        $rows = $this->fetchALLForGroup($sql, $params,  $primaryKey);
         foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];
@@ -83,7 +83,7 @@ class ProjectVersionModel extends CacheModel
         $conditions['project_id'] = $project_id;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND name=:name  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getFieldBySql($sql, $conditions);
         return $count > 0;
     }
 
@@ -94,7 +94,7 @@ class ProjectVersionModel extends CacheModel
         $conditions['project_id'] = $project_id;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND  project_id=:project_id AND name=:name  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getFieldBySql($sql, $conditions);
         return $count > 0;
     }
 

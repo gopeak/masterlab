@@ -1406,6 +1406,8 @@ MM.Map = function (options) {
 		layout: MM.Layout.Map
 	}
 	for (var p in options) { o[p] = options[p]; }
+	var left = o.left;
+	var top = o.top;
 	this._root = null;
 	this._visible = false;
 	this._position = [0, 0];
@@ -1484,12 +1486,19 @@ MM.Map.prototype.update = function () {
 	return this;
 }
 
-MM.Map.prototype.show = function (where) {
+MM.Map.prototype.show = function (where, initPosition) {
 	var node = this._root.getDOM().node;
 	where.appendChild(node);
 	this._visible = true;
 	this._root.updateSubtree();
-	this.center();
+
+	if (initPosition[0] !== undefined && initPosition[1] !== undefined) {
+        setTimeout(() => {
+			this._moveTo(initPosition[0], initPosition[1]);
+		}, 0);
+	} else {
+        this.center();
+	}
 	MM.App.select(this._root);
 	return this;
 }
@@ -1504,7 +1513,6 @@ MM.Map.prototype.hide = function () {
 MM.Map.prototype.center = function () {
 	var node = this._root.getDOM().node;
 	var port = MM.App.portSize;
-	console.log('init center')
 	setTimeout(() => {
 		var left = (port[0] - node.offsetWidth) / 2;
 		var top = (port[1] - node.offsetHeight) / 3;
@@ -1658,7 +1666,6 @@ MM.Map.prototype._getPickCandidates = function (currentRect, item, direction, ca
 
 MM.Map.prototype._moveTo = function (left, top) {
 	this._position = [left, top];
-
 	var node = this._root.getDOM().node;
 	node.style.left = left + "px";
 	node.style.top = top + "px";
@@ -6233,6 +6240,8 @@ MM.Mouse._endDrag = function () {
 	this._port.removeEventListener("mousemove", this);
 	this._port.removeEventListener("mouseup", this);
 
+    this.savePosition(MM.App.map._position);
+
 	if (this._mode == "pan") { return; } /* no cleanup after panning */
 
 	if (this._ghost) {
@@ -6244,6 +6253,10 @@ MM.Mouse._endDrag = function () {
 	}
 
 	this._item = null;
+}
+
+MM.Mouse.savePosition = function (position) {
+	console.log(position);
 }
 
 MM.Mouse._buildGhost = function () {
@@ -6435,7 +6448,7 @@ MM.App = {
 		this.historyIndex = 0;
 
 		this.map = map;
-		this.map.show(this._port);
+		this.map.show(this._port, this.initPosition);
 	},
 
 	select: function (item) {
@@ -6488,7 +6501,7 @@ MM.App = {
 		this._throbber.classList[visible ? "add" : "remove"]("visible");
 	},
 
-	init: function () {
+	init: function (left, top) {
 		this._port = document.querySelector("#port");
 		this._throbber = document.querySelector("#throbber");
 		this.ui = new MM.UI();
@@ -6507,6 +6520,7 @@ MM.App = {
 		MM.subscribe("item-change", this);
 
 		this._syncPort();
+		this.initPosition = [left, top];
 		this.setMap(new MM.Map());
 	},
 

@@ -484,7 +484,7 @@ class UserAuth
                     if ($deleteRet) {
                         $sql = "delete from {$loginlogModel->getTable()} where id !=$lastId AND uid=$uid limit 100 ";
                         //echo $sql;
-                        $userModel->db->query($sql);
+                        $userModel->db->exec($sql);
                     }
                 }
                 // @todo session为redis情况

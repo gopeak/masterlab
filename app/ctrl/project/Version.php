@@ -9,6 +9,8 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectVersionLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\ActivityModel;
@@ -99,19 +101,11 @@ class Version extends BaseUserCtrl
 
             $ret = $projectVersionModel->insert($info);
             if ($ret[0]) {
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '创建了版本';
-                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-                $activityInfo['obj_id'] = $ret[1];
-                $activityInfo['title'] = $name;
-                $activityModel->insertItem($uid, $project_id, $activityInfo);
-
                 //写入操作日志
                 $logData = [];
                 $logData['user_name'] = $this->auth->getUser()['username'];
                 $logData['real_name'] = $this->auth->getUser()['display_name'];
-                $logData['obj_id'] = 0;
+                $logData['obj_id'] = $ret[1];
                 $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
                 $logData['page'] = $_SERVER['REQUEST_URI'];
                 $logData['action'] = LogOperatingLogic::ACT_ADD;
@@ -120,6 +114,9 @@ class Version extends BaseUserCtrl
                 $logData['cur_data'] = $info;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 
+                $info['id'] = $ret[1];
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event,  Events::onVersionCreate);
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -163,6 +160,8 @@ class Version extends BaseUserCtrl
             $logData['cur_data'] = array('released' => $versionReleaseStatus);
             LogOperatingLogic::add($uid, $project_id, $logData);
 
+            $event = new CommonPlacedEvent($this, $version);
+            $this->dispatcher->dispatch($event,  Events::onVersionRelease);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('update_failed', array(), 500);
@@ -196,6 +195,9 @@ class Version extends BaseUserCtrl
             $logData['pre_data'] = $version;
             $logData['cur_data'] = $version2;
             LogOperatingLogic::add($uid, $project_id, $logData);
+
+            $event = new CommonPlacedEvent($this, $version);
+            $this->dispatcher->dispatch($event,  Events::onVersionDelete);
 
             $this->ajaxSuccess('success');
         } else {
@@ -256,16 +258,8 @@ class Version extends BaseUserCtrl
             $this->ajaxFailed('param_error:data_is_empty');
         }
 
-
         $ret = $projectVersionModel->updateById($id, $row);
         if ($ret[0]) {
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了版本';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $name;
-            $activityModel->insertItem($uid, $version['project_id'], $activityInfo);
 
             //写入操作日志
             $logData = [];
@@ -280,6 +274,8 @@ class Version extends BaseUserCtrl
             $logData['cur_data'] = $row;
             LogOperatingLogic::add($uid, $version['project_id'], $logData);
 
+            $event = new CommonPlacedEvent($this, ['pre_data' => $version, 'cur_data' => $row]);
+            $this->dispatcher->dispatch($event,  Events::onVersionUpdate);
             $this->ajaxSuccess('add_success');
         } else {
             $this->ajaxFailed('add_failed');
@@ -344,16 +340,7 @@ class Version extends BaseUserCtrl
         $projectVersionModel = new ProjectVersionModel();
         $version = $projectVersionModel->getRowById($version_id);
         $projectVersionModel->deleteByVersinoId($project_id, $version_id);
-        $activityModel = new ActivityModel();
         $uid = $this->getCurrentUid();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了版本';
-        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-        $activityInfo['obj_id'] = $version_id;
-        $activityInfo['title'] = $version['name'];
-        $activityModel->insertItem($uid, $project_id, $activityInfo);
-
-
         $callFunc = function ($value) {
             return '已删除';
         };
@@ -371,6 +358,8 @@ class Version extends BaseUserCtrl
         $logData['cur_data'] = $version2;
         LogOperatingLogic::add($uid, $project_id, $logData);
 
+        $event = new CommonPlacedEvent($this, $version);
+        $this->dispatcher->dispatch($event,  Events::onVersionDelete);
         $this->ajaxSuccess('success');
     }
 }

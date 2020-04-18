@@ -17,6 +17,8 @@ use main\app\classes\IssueLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\PermissionLogic;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\ActivityModel;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
@@ -307,30 +309,60 @@ class Detail extends BaseUserCtrl
 
         IssueFilterLogic::formatIssue($issue);
 
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
+
+        $emptyObj = new \stdClass();
+
+        if (empty($issue['assistants_arr'])) {
+            $issue['assistants_info_arr'] = [];
+        } else {
+            foreach ($issue['assistants_arr'] as $assistantUserId) {
+                $issue['assistants_info_arr'][] = $users[$assistantUserId];
+            }
+        }
+
         $userModel = new UserModel();
+        /*
         $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
         UserLogic::formatAvatarUser($issue['assignee_info']);
         if (empty($issue['assignee_info'])) {
-            $issue['assignee_info'] = new \stdClass();
+            $issue['assignee_info'] = $emptyObj;
         }
+        */
+        $issue['assignee_info'] = isset($users[$issue['assignee']])?$users[$issue['assignee']]:$emptyObj;
 
+
+        /*
         $issue['reporter_info'] = $userModel->getByUid($issue['reporter']);
         UserLogic::formatAvatarUser($issue['reporter_info']);
         if (empty($issue['reporter_info'])) {
-            $issue['reporter_info'] = new \stdClass();
+            $issue['reporter_info'] = $emptyObj;
         }
+        */
+        $issue['reporter_info'] = isset($users[$issue['reporter']])?$users[$issue['reporter']]:$emptyObj;
 
+
+        /*
         $issue['modifier_info'] = $userModel->getByUid($issue['modifier']);
         UserLogic::formatAvatarUser($issue['modifier_info']);
         if (empty($issue['modifier_info'])) {
-            $issue['modifier_info'] = new \stdClass();
+            $issue['modifier_info'] = $emptyObj;
         }
+        */
+        $issue['modifier_info'] = isset($users[$issue['modifier']])?$users[$issue['modifier']]:$emptyObj;
 
+
+        /*
         $issue['creator_info'] = $userModel->getByUid($issue['creator']);
         UserLogic::formatAvatarUser($issue['creator_info']);
         if (empty($issue['creator_info'])) {
-            $issue['creator_info'] = new \stdClass();
+            
+            $issue['creator_info'] = $emptyObj;
         }
+        */
+        $issue['creator_info'] = isset($users[$issue['creator']])?$users[$issue['creator']]:$emptyObj;
+
 
         $issue['master_info'] = new \stdClass();
         if (!empty($issue['master_id'])) {
@@ -359,9 +391,11 @@ class Detail extends BaseUserCtrl
 
         $followRows = $followModel->getItemsByIssueId($issueId);
         $issue['followed_users_arr'] = [];
+        $issue['followed_users_info_arr'] = [];
         if ($followRows) {
             foreach ($followRows as $item) {
                 $issue['followed_users_arr'][] = $item['user_id'];
+                $issue['followed_users_info_arr'][] = $users[$item['user_id']];
             }
         }
         $issue['followed_users_arr'] = array_unique($issue['followed_users_arr']);
@@ -374,6 +408,10 @@ class Detail extends BaseUserCtrl
         // 子任务
         $issue['child_issues'] = $issueLogic->getChildIssue($issueId);
         //IssueFilterLogic::formatIssue($issue);
+
+        // 优化显示描述的图片宽度, markdown格式无法设置
+        //$issue['description'] = IssueLogic::fixContentImgAttr($issue['description']);
+
         $data['issue'] = $issue;
 
         //下一个 上一个事项
@@ -409,11 +447,15 @@ class Detail extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id不能为空');
         }
 
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
+
         $timelineModel = new TimelineModel();
         $rows = $timelineModel->getItemsByIssueId($issueId);
 
         foreach ($rows as &$row) {
             $row['time_text'] = format_unix_time($row['time']);
+            $row['user_info'] = $users[$row['uid']];
         }
         $data = [];
         $data['timelines'] = $rows;
@@ -480,21 +522,13 @@ class Detail extends BaseUserCtrl
             $issueLogic = new IssueLogic();
             $issueLogic->updateCommentsCount($issueId);
 
-            // 活动记录
-            $currentUid = $this->getCurrentUid();
-            $issue = IssueModel::getInstance()->getById($issueId);
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '为' . $issue['summary'] . '添加了评论 ';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $content;
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
             // email
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $issueId, $contentHtml);
 
+            $info['id'] = $insertId;
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onIssueAddComment);
             $this->ajaxSuccess('success', $insertId);
         } else {
             $this->ajaxFailed('failed:' . $insertId);
@@ -550,27 +584,11 @@ class Detail extends BaseUserCtrl
         $info['action'] = 'commented';
         list($ret, $msg) = $model->updateById($id, $info);
         if ($ret) {
-            $info = [];
-            $info['uid'] = UserAuth::getInstance()->getId();
-            $info['issue_id'] = $timeline['issue_id'];
-            $info['content'] = 'updated comment';
-            $info['contentHtml'] = $contentHtml;
-            $info['time'] = time();
-            $info['type'] = 'issue';
-            $info['action'] = 'updated_comment';
-            $model->insert($info);
-            // 活动记录
-            $currentUid = $this->getCurrentUid();
-            $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了评论 ' . $content . ' 为 ';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $timeline['content'];
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
-            $this->ajaxSuccess('success');
+
+			$info['id'] = $id;
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onIssueUpdateComment);            $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败:' . $msg);
         }
@@ -618,21 +636,16 @@ class Detail extends BaseUserCtrl
             $issueLogic = new IssueLogic();
             $issueLogic->updateCommentsCount($issueId);
 
-            // 活动记录
-            $currentUid = $this->getCurrentUid();
-            $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '删除了评论 ' . $timeline['content'];
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = '';
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
-            // email
+  
+ 			$timeline['id'] = $id;
+            $event = new CommonPlacedEvent($this, $timeline);
+            $this->dispatcher->dispatch($event,  Events::onIssueDeleteComment);            // email
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_REMOVE, $issue['project_id'], $issueId);
 
+            $timeline['id'] = $id;
+            $event = new CommonPlacedEvent($this, $timeline);
+            $this->dispatcher->dispatch($event,  Events::onIssueDeleteComment);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('failed,server_error');

@@ -131,6 +131,8 @@ let Upgrade = (function () {
                         $('#upgrade-msg').alert('close');
                         //html = '<p style="color: #ff0000; font-weight: bold;">升级完成！</p>';
                         //$upgradeMessageBox.append($(html));
+                        html = xhr.responseText;
+                        $upgradeMessageBox.html(html);
                     } else if (xhr.readyState === 3) {
                         html = xhr.responseText;
                         $upgradeMessageBox.html(html);

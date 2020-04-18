@@ -10,9 +10,8 @@ use main\app\classes\ConfigLogic;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
-use main\app\model\project\ProjectModel;
-use main\app\model\project\ProjectRoleModel;
-use main\app\model\project\ProjectUserRoleModel;
+use main\app\event\Events;
+use main\app\event\CommonPlacedEvent;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
@@ -142,6 +141,9 @@ class User extends BaseAdminCtrl
         $userInfo['status'] = UserModel::STATUS_DISABLED;
         $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $user=$userModel->getByUid($userId));
+        $this->dispatcher->dispatch($event,  Events::onUserDisableByAdmin);
         $this->ajaxSuccess('操作成功');
     }
 
@@ -157,6 +159,9 @@ class User extends BaseAdminCtrl
         $userInfo['status'] = UserModel::STATUS_NORMAL;
         $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $user = $userModel->getByUid($userId));
+        $this->dispatcher->dispatch($event,  Events::onUserActiveByAdmin);
         $this->ajaxSuccess('提示','操作成功');
     }
 
@@ -308,6 +313,8 @@ class User extends BaseAdminCtrl
                 $content = "管理用户为您创建了Masterlab账号。<br>用户名：{$username}<br>密码：{$password}<br><br>请访问 " . ROOT_URL . " 进行登录<br>";
                 $sysLogic->mail([$email], "Masterlab创建账号通知", $content);
             }
+            $event = new CommonPlacedEvent($this, $user);
+            $this->dispatcher->dispatch($event,  Events::onUserAddByAdmin);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('服务器错误', "插入数据错误:" . $user);
@@ -359,7 +366,9 @@ class User extends BaseAdminCtrl
         $userModel = UserModel::getInstance($userId);
         $userModel->uid = $userId;
         $userModel->updateUser($info);
-
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onUserUpdateByAdmin);
         $this->ajaxSuccess('提示', '操作成功');
     }
 
@@ -393,6 +402,9 @@ class User extends BaseAdminCtrl
         } else {
             $userModel = new UserGroupModel();
             $userModel->deleteByUid($userId);
+            // 分发事件
+            $event = new CommonPlacedEvent($this, $user);
+            $this->dispatcher->dispatch($event,  Events::onUserDeleteByAdmin);
             $this->ajaxSuccess('提示', '操作成功');
         }
     }
@@ -406,9 +418,9 @@ class User extends BaseAdminCtrl
         if (empty($_REQUEST['checkbox_id']) || !isset($_REQUEST['checkbox_id'])) {
             $this->ajaxFailed('no_request_uid');
         }
-
+        $userIdArr = $_REQUEST['checkbox_id'];
         $userModel = UserModel::getInstance();
-        foreach ($_REQUEST['checkbox_id'] as $uid) {
+        foreach ($userIdArr as $uid) {
             $userModel->uid = intval($uid);
             $userInfo = [];
             $userInfo['status'] = UserModel::STATUS_DISABLED;
@@ -417,6 +429,9 @@ class User extends BaseAdminCtrl
                 $this->ajaxFailed('server_error_update_failed:' . $msg);
             }
         }
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $user=$userModel->getUsersByIds($userIdArr));
+        $this->dispatcher->dispatch($event,  Events::onUserBatchDisableByAdmin);
         $this->ajaxSuccess('提示', '操作成功');
     }
 
@@ -429,15 +444,17 @@ class User extends BaseAdminCtrl
         if (empty($_REQUEST['checkbox_id']) || !isset($_REQUEST['checkbox_id'])) {
             $this->ajaxFailed('no_request_id');
         }
-
+        $userIdArr = $_REQUEST['checkbox_id'];
         $userModel = UserModel::getInstance();
-
-        foreach ($_REQUEST['checkbox_id'] as $id) {
+        foreach ($userIdArr as $id) {
             $userModel->uid = intval($id);
             $userInfo = [];
             $userInfo['status'] = UserModel::STATUS_NORMAL;
             $userModel->updateUser($userInfo);
         }
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $user=$userModel->getUsersByIds($userIdArr));
+        $this->dispatcher->dispatch($event,  Events::onUserBatchRecoveryByAdmin);
         $this->ajaxSuccess('提示', '操作成功');
     }
 }

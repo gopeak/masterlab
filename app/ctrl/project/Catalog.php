@@ -9,6 +9,8 @@ use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -110,14 +112,6 @@ class Catalog extends BaseUserCtrl
 
         list($ret, $errMsg) = $projectCatalogLabelModel->insert($insertArr);
         if ($ret) {
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '创建了分类';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $errMsg;
-            $activityInfo['title'] = $insertArr['name'];
-            $activityModel->insertItem($uid, $projectId, $activityInfo);
-
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];
@@ -130,6 +124,10 @@ class Catalog extends BaseUserCtrl
             $logData['pre_data'] = [];
             $logData['cur_data'] = $insertArr;
             LogOperatingLogic::add($uid, $projectId, $logData);
+
+            $insertArr['id'] = $errMsg;
+            $event = new CommonPlacedEvent($this, $insertArr);
+            $this->dispatcher->dispatch($event,  Events::onCataloglCreate);
 
             $this->ajaxSuccess('提示', '分类添加成功');
         } else {
@@ -202,19 +200,12 @@ class Catalog extends BaseUserCtrl
         }
         $ret = $model->updateById($id, $updateArr);
         if ($ret[0]) {
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了分类';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $updateArr['name'];
-            $activityModel->insertItem($currentUserId, $catalog['project_id'], $activityInfo);
 
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];
             $logData['real_name'] = $this->auth->getUser()['display_name'];
-            $logData['obj_id'] = 0;
+            $logData['obj_id'] = $id;
             $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
             $logData['page'] = $_SERVER['REQUEST_URI'];
             $logData['action'] = LogOperatingLogic::ACT_EDIT;
@@ -223,6 +214,9 @@ class Catalog extends BaseUserCtrl
             $logData['cur_data'] = $updateArr;
             LogOperatingLogic::add($currentUserId, $catalog['project_id'], $logData);
 
+            $updateArr['id'] = $id;
+            $event = new CommonPlacedEvent($this, $updateArr);
+            $this->dispatcher->dispatch($event,  Events::onCatalogUpdate);
             $this->ajaxSuccess('提示','修改成功');
         } else {
             $this->ajaxFailed('提示','更新失败');
@@ -251,15 +245,6 @@ class Catalog extends BaseUserCtrl
             $this->ajaxFailed('提示', '参数错误,非当前项目的分类无法删除');
         }
         $model->deleteItem($id);
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了分类';
-        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-        $activityInfo['obj_id'] = $label_id;
-        $activityInfo['title'] = $info['name'];
-        $activityModel->insertItem($currentUid, $project_id, $activityInfo);
-
 
         $callFunc = function ($value) {
             return '已删除';
@@ -276,8 +261,10 @@ class Catalog extends BaseUserCtrl
         $logData['remark'] = '删除分类';
         $logData['pre_data'] = $info;
         $logData['cur_data'] = $info2;
-        LogOperatingLogic::add($currentUid, $project_id, $logData);
+        LogOperatingLogic::add(UserAuth::getId(), $project_id, $logData);
 
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onCatalogDelete);
         $this->ajaxSuccess('提示','操作成功');
     }
 }

@@ -1,0 +1,11 @@
+{
+  "main_class": "PluginSubscriber",
+  "title": "webhook",
+  "description": "默认自带的插件：webhook",
+  "version": "1.0",
+  "type": "admin_module",
+  "chmod":[],
+  "url":"http://www.masterlab.vip",
+  "company":"Masterlab",
+  "icon_file": "/attachment/image/20200415/20200415230149_63177.png"
+}

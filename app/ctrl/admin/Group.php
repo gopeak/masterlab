@@ -97,12 +97,12 @@ class Group extends BaseAdminCtrl
 
         $fields = "U.uid as uid,username,display_name,email,avatar,create_time ";
         $sql = "SELECT {$fields} FROM  {$table} " . $sql;
-        $users = $userModel->db->getRows($sql, $params);
+        $users = $userModel->db->fetchAll($sql, $params);
 
         $userMainModel = new UserModel();
         $user_main_talbe = $userMainModel->getTable();
         $sql = "SELECT count(distinct u.uid ) as cc FROM {$user_group_table} ug left join {$user_main_talbe} u ON ug.uid=u.uid Where ug.group_id=:group_id";
-        $data['count'] =  $userModel->db->getOne($sql, ['group_id' => $group_id]);
+        $data['count'] =  $userModel->getFieldBySql($sql, ['group_id' => $group_id]);
 
         if (!empty($users)) {
             foreach ($users as &$user) {

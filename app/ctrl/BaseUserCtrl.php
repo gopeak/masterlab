@@ -7,6 +7,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
+use main\app\model\PluginModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\ProjectLogic;
 use main\app\model\user\UserMessageModel;
@@ -50,9 +51,9 @@ class BaseUserCtrl extends BaseCtrl
     public $projectId = null;
 
     /**
+     * @throws \Exception
      * @todo 构造函数重复调用
      * BaseUserCtrl constructor.
-     * @throws \Exception
      */
     public function __construct()
     {
@@ -153,7 +154,7 @@ class BaseUserCtrl extends BaseCtrl
             }
             $this->addGVar('G_Preferences', $userSettings);
 
-            $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
+            $assigneeCount = IssueFilterLogic::getUnResolveCountByAssignee(UserAuth::getId());
             if ($assigneeCount <= 0) {
                 $assigneeCount = '';
             }
@@ -164,11 +165,7 @@ class BaseUserCtrl extends BaseCtrl
             if (!isset($this->projectPermArr)) {
                 $this->projectPermArr = [];
             }
-
-            $model = new UserMessageModel();
-            $conditionArr['readed'] = '0';
-            $this->addGVar('_unread_count', $model->getUnreadCountByfilter($conditionArr));
-
+            // var_dump($this->projectPermArr);
             $this->addGVar('projectPermArr', $this->projectPermArr);
             $this->addGVar('_projectPermArrJson', json_encode(array_keys($this->projectPermArr)));
             $this->addGVar(
@@ -178,9 +175,21 @@ class BaseUserCtrl extends BaseCtrl
 
             $this->addGVar('_is_admin ', $this->isAdmin ? 'true' : 'false');
 
-
             $this->addGVar('G_uid', UserAuth::getId());
             $this->addGVar('G_show_announcement', $this->getAnnouncement());
+
+            $model = new UserMessageModel();
+            $conditionArr['readed'] = '0';
+            $this->addGVar('_unread_count', $model->getUnreadCountByfilter($conditionArr));
+
+            //  加载插件
+            $model = new PluginModel();
+            $pluginArr = $model->getRows('*');
+            $this->addGVar('_pluginArr', $pluginArr);
+            $this->addGVar('_plugin_admin_type', PluginModel::TYPE_ADMIN);
+            $this->addGVar('_plugin_project_type', PluginModel::TYPE_MODULE);
+
+            $this->checkUpdate();
         }
     }
 
@@ -192,6 +201,34 @@ class BaseUserCtrl extends BaseCtrl
     public function getCurrentUid()
     {
         return $this->auth->getId();
+    }
+
+    /**
+     * 检查是否可以在线更新
+     * @throws \ErrorException
+     */
+    public function checkUpdate()
+    {
+        if ($this->isAdmin) {
+            $checkVersionFile = STORAGE_PATH . 'tmp/' . date('Y-m-d-H') . '.-check-version.log';
+            if (!file_exists($checkVersionFile)) {
+                $sourceHost = 'http://www.masterlab.vip/';
+                $url = $sourceHost . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
+                $curl = new \Curl\Curl();
+                $curl->setTimeout(5);
+                $curl->get($url);
+                $responseArr = json_decode($curl->rawResponse, true);
+                if($responseArr['ret']=='200'){
+                    // print_r($responseArr);
+                    $lastVersionArr = $responseArr['data']['last_version'];
+                    $title = isset($lastVersionArr['title']) ? $lastVersionArr['title']:$lastVersionArr['version'].'升级通知';
+                    $content = isset($lastVersionArr['release_html']) ? $lastVersionArr['release_html']:'';
+                    $model = new UserMessageModel();
+                    $model->setMsg2User(UserAuth::getId(), UserMessageModel::TYPE_UPGRADE, $title, $content);
+                }
+                @file_put_contents($checkVersionFile, print_r($lastVersionArr, true));
+            }
+        }
     }
 
     /**

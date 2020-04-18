@@ -40,6 +40,10 @@ class LdapLogic
 
     private $setting = [];
 
+    /**
+     * LdapLogic constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         $ldapRowsArr = SettingModel::getInstance()->getSettingByModule('ldap');

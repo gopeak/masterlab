@@ -59,11 +59,11 @@ class CacheModel extends DbModel
     {
         $this->uid = $uid;
         parent::__construct($persistent);
-        $cacheConfig = getConfigVar('cache');
+        $cacheConfig = getYamlConfigByModule('cache');
         $this->config = $cacheConfig;
         $this->cache = $this->redisConnect();
-        if (isset($cacheConfig['default_expire'])) {
-            $this->expire = (int)$cacheConfig['default_expire'];
+        if (isset($cacheConfig['expire'])) {
+            $this->expire = (int)$cacheConfig['expire'];
         }
     }
 
@@ -75,8 +75,8 @@ class CacheModel extends DbModel
     {
         static $_myRedisInstance;
         if (empty($_myRedisInstance)) {
-            $_cache_cfg = $this->config['redis']['data'];
-            $_myRedisInstance = new MyRedis($_cache_cfg, (bool)$this->config['enable']);
+            $servers = $this->config['server'];
+            $_myRedisInstance = new MyRedis($servers, (bool)$this->config['enable']);
         }
         return $_myRedisInstance;
     }
@@ -125,11 +125,11 @@ class CacheModel extends DbModel
             }
         }
         // 从数据库中获取,@todo 判断字段如果为boolean类型时的处理
-        $one = parent::getOne($field, $where);
-        if ($one && !empty($key) && !empty($this->cache)) {
-            $this->cache->set($key, $one, $this->expire);
+        $value = parent::getField($field, $where);
+        if ($value && !empty($key) && !empty($this->cache)) {
+            $this->cache->set($key, $value, $this->expire);
         }
-        return $one;
+        return $value;
     }
 
     /**

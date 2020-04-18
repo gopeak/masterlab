@@ -41,7 +41,7 @@ class ProjectListCountModel extends DbModel
 
     public function getTotal()
     {
-        $total = $this->getOne('sum(`project_total`) as `total`', []);
+        $total = $this->getField('sum(`project_total`) as `total`', []);
         return $total;
     }
 

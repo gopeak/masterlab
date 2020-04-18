@@ -14,18 +14,18 @@ try{
     $model->db->connect();
 
     // 判断当前数据库是否演示项目数据库
-    $database = $model->db->getOne('select database()');
+    $database = $model->getFieldBySql('select database()');
     if (strpos($database, 'demo') === false) {
         showLine('Not masterlab demo project, restore abandoned!');
         die;
     }
 
-    $tables = $model->db->getRows('show tables');
+    $tables = $model->db->fetchAll('show tables');
     foreach ( $tables as $row) {
         $table = current($row);
         $sql = "TRUNCATE $table ;";
         showLine('数据表  ' . $table . ' ...删除成功');
-        $ret = $model->db->exec($sql);
+        $ret = $model->db->executeUpdate($sql);
         //var_dump($ret);
     }
     $demoSqlFile = realpath(APP_PATH . 'public/install/data/main.sql');

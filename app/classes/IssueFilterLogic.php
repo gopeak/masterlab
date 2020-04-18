@@ -160,7 +160,7 @@ class IssueFilterLogic
             if (!empty($search)) {
                 $versionSql = 'select version() as vv';
                 $issueModel = new IssueModel();
-                $versionStr = $issueModel->db->getOne($versionSql);
+                $versionStr = $issueModel->getFieldBySql($versionSql);
                 $versionNum = floatval($versionStr);
                 if (strpos($versionStr, 'MariaDB') !== false) {
                     $versionNum = 0;
@@ -297,7 +297,7 @@ class IssueFilterLogic
                 $sql .= " AND id in ({$issueIdStr})";
             }
         }
-        
+
         // 所属分类
         if (strpos($sysFilter, 'catalog_') === 0) {
             list(, $catalogId) = explode('catalog_', $sysFilter);
@@ -318,11 +318,7 @@ class IssueFilterLogic
         // 我未解决的
         if ($sysFilter == 'my_unsolved') {
             $params['assignee'] = UserAuth::getInstance()->getId();
-            $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
-            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
-            $statusKeyStr = implode(',', $statusIdArr);
-            unset($statusKeyArr, $statusIdArr);
-            $sql .= " AND assignee=:assignee AND status in ({$statusKeyStr})";
+            $sql .= " AND assignee=:assignee AND " . self::getUnDoneSql();
         }
         // 我关注的
         if ($sysFilter == 'my_followed') {
@@ -442,7 +438,7 @@ class IssueFilterLogic
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             // echo $sqlCount;
             // print_r($params);
-            $count = $model->db->getOne($sqlCount, $params);
+            $count = $model->getFieldBySql($sqlCount, $params);
 
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
 
@@ -450,7 +446,7 @@ class IssueFilterLogic
             //print_r($params);
             // echo $sql;die;
 
-            $arr = $model->db->getRows($sql, $params);
+            $arr = $model->db->fetchAll($sql, $params);
             $idArr = [];
             foreach ($arr as &$item) {
                 self::formatIssue($item);
@@ -506,7 +502,7 @@ class IssueFilterLogic
         // 先获取Mysql版本号
         $versionSql = 'select version() as vv';
         $issueModel = new IssueModel();
-        $versionStr = $issueModel->db->getOne($versionSql);
+        $versionStr = $issueModel->getFieldBySql($versionSql);
         $versionNum = floatval($versionStr);
         if (strpos($versionStr, 'MariaDB') !== false) {
             $versionNum = 0;
@@ -651,13 +647,13 @@ class IssueFilterLogic
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             // echo $sqlCount;
             // print_r($params);
-            $count = $model->db->getOne($sqlCount, $params);
+            $count = $model->getFieldBySql($sqlCount, $params);
             $fields = '*';
             $sql = "SELECT {$fields} FROM  {$table} " . $sql;
             $sql .= ' ' . $order . $limit;
             //print_r($params);
             //echo $sql;print_r($params);die;
-            $arr = $model->db->getRows($sql, $params);
+            $arr = $model->db->fetchAll($sql, $params);
             // var_dump( $arr, $count);
             return [true, $arr, $count];
         } catch (\PDOException $e) {
@@ -688,7 +684,7 @@ class IssueFilterLogic
         foreach ($rows as &$row) {
             self::formatIssue($row);
         }
-        $count = $model->getOne('count(*) as cc', $conditions);
+        $count = $model->getField('count(*) as cc', $conditions);
         return [$rows, $count];
     }
 
@@ -715,7 +711,7 @@ class IssueFilterLogic
         foreach ($rows as &$row) {
             self::formatIssue($row);
         }
-        $count = $model->getOne('count(*) as cc', $conditions);
+        $count = $model->getField('count(*) as cc', $conditions);
         return [$rows, $count];
     }
 
@@ -733,12 +729,12 @@ class IssueFilterLogic
         $conditions = [];
         $conditions['assignee'] = $userId;
         $model = new IssueModel();
-        $count = $model->getOne('count(*) as cc', $conditions);
+        $count = $model->getField('count(*) as cc', $conditions);
         return intval($count);
     }
 
     /**
-     * 获取未解决的数量
+     * 获取未解决的事项数量
      * @param $userId
      * @param $projectId
      * @return int
@@ -755,7 +751,28 @@ class IssueFilterLogic
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND project_id=:project_id AND  " . self::getUnDoneSql();
-        $count = $model->db->getOne($sql, $params);
+        $count = $model->getFieldBySql($sql, $params);
+        return intval($count);
+    }
+
+    /**
+     * 所有项目未解决的事项数量
+     * @param $userId
+     * @param $projectId
+     * @return int
+     * @throws \Exception
+     */
+    public static function getUnResolveCountByAssignee($userId)
+    {
+        if (empty($userId)) {
+            return 0;
+        }
+        $params = [];
+        $params['assignee'] = $userId;
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND   " . self::getUnDoneSql();
+        $count = $model->getFieldBySql($sql, $params);
         return intval($count);
     }
 
@@ -773,7 +790,7 @@ class IssueFilterLogic
         $conditions = [];
         $conditions['sprint'] = $sprintId;
         $model = new IssueModel();
-        $count = $model->getOne('count(*) as cc', $conditions);
+        $count = $model->getField('count(*) as cc', $conditions);
         return intval($count);
     }
 
@@ -810,7 +827,7 @@ class IssueFilterLogic
             $sql .= " Order by id DESC limit $limit ";
         }
         // echo $sql;
-        $rows = $model->db->getRows($sql, $params);
+        $rows = $model->db->fetchAll($sql, $params);
         unset($model);
 
         return $rows;
@@ -831,7 +848,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -852,7 +869,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  AND resolve ='$closedResolveId' ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -873,7 +890,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId}  AND resolve ='$closedResolveId' ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -967,7 +984,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -986,7 +1003,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
         //  echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1005,7 +1022,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1024,7 +1041,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1043,7 +1060,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1062,7 +1079,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1081,7 +1098,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT sum(`weight`) as cc FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1100,7 +1117,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT sum(`weight`) as cc FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1119,7 +1136,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1138,7 +1155,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1154,7 +1171,7 @@ class IssueFilterLogic
         $appendSql = self::getUnDoneSql();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE  {$appendSql} ";
         // echo $sql;
-        $count = $model->db->getOne($sql);
+        $count = $model->getFieldBySql($sql);
         return intval($count);
     }
 
@@ -1188,7 +1205,7 @@ class IssueFilterLogic
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
                           WHERE project_id ={$projectId} {$statusSql} GROUP BY {$field} ";
         // echo $sql;
-        $rows = $model->db->getRows($sql);
+        $rows = $model->db->fetchAll($sql);
         return $rows;
     }
 
@@ -1222,7 +1239,7 @@ class IssueFilterLogic
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
                           WHERE sprint ={$sprintId} {$statusSql} GROUP BY {$field} ";
         // echo $sql;
-        $rows = $model->db->getRows($sql);
+        $rows = $model->db->fetchAll($sql);
         return $rows;
     }
 
@@ -1324,7 +1341,7 @@ class IssueFilterLogic
         $sql = "SELECT assignee as user_id,sum(weight) as count FROM {$table} 
                           WHERE sprint ={$sprintId}   GROUP BY assignee ";
         // echo $sql;
-        $rows = $model->db->getRows($sql);
+        $rows = $model->db->fetchAll($sql);
         foreach ($rows as $k => $row) {
             if (empty($row['user_id'])) {
                 unset($rows[$k]);
@@ -1351,7 +1368,7 @@ class IssueFilterLogic
         $sql = "SELECT assignee as user_id,sum(weight) as count FROM {$table} 
                           WHERE project_id ={$projectId}   GROUP BY assignee ";
         // echo $sql;
-        $rows = $model->db->getRows($sql);
+        $rows = $model->db->fetchAll($sql);
         foreach ($rows as $k => $row) {
             if (empty($row['user_id'])) {
                 unset($rows[$k]);
@@ -1380,20 +1397,27 @@ class IssueFilterLogic
                 $statusSql = " AND " . self::getUnDoneSql();
                 break;
             case GlobalConstant::ISSUE_STATUS_TYPE_DONE:
-                $statusSql = " AND " . self::getDoneSql();
+                $statusSql = " AND  " . self::getDoneSql();
                 break;
             default:
         }
 
         $model = new IssueModel();
         $table = $model->getTable();
-        $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} {$statusSql}  GROUP BY assignee ";
+
+        $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} WHERE project_id ={$projectId} {$statusSql}  GROUP BY assignee ";
         // echo $sql;
-        $rows = $model->db->getRows($sql);
+        $rows = $model->db->fetchAll($sql);
+        $userIdArr = array_column($rows, 'user_id');
+        $userArr = (new UserModel())->getUsersByIds($userIdArr);
+        $userKeyArr = array_column($userArr, 'display_name', 'uid');
         foreach ($rows as $k => $row) {
             if (empty($row['user_id'])) {
                 unset($rows[$k]);
+            }
+            $row['display_name'] = '';
+            if (isset($userKeyArr[$row['user_id']])) {
+                $row['display_name'] = $userKeyArr[$row['user_id']];
             }
         }
         sort($rows);
@@ -1428,7 +1452,7 @@ class IssueFilterLogic
         $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
                           WHERE sprint ={$sprintId} {$statusSql}  GROUP BY assignee ";
         // echo $sql;
-        $rows = $model->db->getRows($sql);
+        $rows = $model->db->fetchAll($sql);
         foreach ($rows as $k => $row) {
             if (empty($row['user_id'])) {
                 unset($rows[$k]);
@@ -1478,7 +1502,7 @@ class IssueFilterLogic
         //echo $sql;
         //echo($startDate.'--'.$endDate);
         //print_r($params);
-        $rows = $model->db->getRows($sql, $params);
+        $rows = $model->db->fetchAll($sql, $params);
         return $rows;
     }
 
@@ -1508,7 +1532,7 @@ class IssueFilterLogic
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
                           WHERE sprint =:sprint  {$noDoneStatusSql}  GROUP BY {$field} ";
         // echo $sql;
-        $rows = $model->db->getRows($sql, $params);
+        $rows = $model->db->fetchAll($sql, $params);
         return $rows;
     }
 
@@ -1553,7 +1577,7 @@ class IssueFilterLogic
         }
         //echo $sql;
         //print_r($params);
-        $rows = $model->db->getRows($sql, $params);
+        $rows = $model->db->fetchAll($sql, $params);
         //print_r($rows);
         return $rows;
     }
@@ -1591,7 +1615,7 @@ class IssueFilterLogic
                     WHERE sprint_id =:sprint_id    GROUP BY {$field} ";
         }
         //echo $sql;
-        $rows = $model->db->getRows($sql, $params);
+        $rows = $model->db->fetchAll($sql, $params);
         return $rows;
     }
 
@@ -1619,8 +1643,8 @@ class IssueFilterLogic
 
                 $sql = "SELECT {$fields} FROM {$table} WHERE {$inWhere} {$appendSql}";
                 //echo $sql;
-                $rows = $model->db->getRows($sql);
-                $count = $model->db->getOne("SELECT count(*) as cc FROM {$table} WHERE {$inWhere}");
+                $rows = $model->db->fetchAll($sql);
+                $count = $model->getFieldBySql("SELECT count(*) as cc FROM {$table} WHERE {$inWhere}");
                 foreach ($rows as &$row) {
                     self::formatIssue($row);
                 }

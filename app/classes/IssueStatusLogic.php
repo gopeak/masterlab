@@ -20,13 +20,11 @@ class IssueStatusLogic
         $issueStatusTable = $issueStatusModel->getTable();
 
         $workflowBlockModel = new WorkflowBlockModel();
-        $workflowBlockTable = $workflowBlockModel->getTable();
 
-        $sql = "Select t.* ,COUNT(b.workflow_id ) as workflow_count  From {$issueStatusTable} t 
-                Left join {$workflowBlockTable} b on b.status_id=t.id 
+        $sql = "Select t.*  From {$issueStatusTable} t 
                 Group by t.id 
                 Order by t.id ASC ";
-        return  $issueStatusModel->db->getRows($sql);
+        return  $issueStatusModel->db->fetchAll($sql);
     }
 
     public function getStatus()
@@ -34,7 +32,7 @@ class IssueStatusLogic
         $issueStatusModel = new IssueStatusModel();
         $issueStatusTable = $issueStatusModel->getTable();
         $sql = "Select *  From {$issueStatusTable}   Order by sequence DESC, id ASC ";
-        return  $issueStatusModel->db->getRows($sql);
+        return  $issueStatusModel->db->fetchAll($sql);
     }
 
     /**

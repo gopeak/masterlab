@@ -11,6 +11,8 @@ use main\app\classes\RewriteUrl;
 use main\app\classes\PermissionLogic;
 use main\app\classes\IssueLogic;
 use main\app\classes\IssueFilterLogic;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\CacheKeyModel;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
@@ -426,18 +428,13 @@ class Agile extends BaseUserCtrl
         $sprintModel = new SprintModel();
         list($ret, $msg) = $sprintModel->insertItem($info);
         if ($ret) {
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '创建了迭代';
-            $activityInfo['type'] = ActivityModel::TYPE_AGILE;
-            $activityInfo['obj_id'] = $msg;
-            $activityInfo['title'] = $info['name'];
-            $activityModel->insertItem(UserAuth::getId(), $projectId, $activityInfo);
-
             // email
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_CREATE, $projectId, $msg);
 
+            $info['id'] = $msg;
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event, Events::onSprintCreate);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', '服务器错误:' . $msg);
@@ -493,13 +490,9 @@ class Agile extends BaseUserCtrl
         }
         list($ret, $msg) = $sprintModel->updateItem($sprintId, $info);
         if ($ret) {
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了迭代';
-            $activityInfo['type'] = ActivityModel::TYPE_AGILE;
-            $activityInfo['obj_id'] = $sprintId;
-            $activityInfo['title'] = $info['name'];
-            $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
+            $info['id'] = $sprintId;
+            $event = new CommonPlacedEvent($this, ['pre_data' => $sprint, 'cur_data' => $info]);
+            $this->dispatcher->dispatch($event, Events::onSprintUpdate);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', '服务器错误:' . $msg);
@@ -539,14 +532,8 @@ class Agile extends BaseUserCtrl
             $condition = ['sprint' => $sprintId];
             $issueModel->update($updateInfo, $condition);
 
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '删除了迭代';
-            $activityInfo['type'] = ActivityModel::TYPE_AGILE;
-            $activityInfo['obj_id'] = $sprintId;
-            $activityInfo['title'] = $sprint['name'];
-            $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
-
+            $event = new CommonPlacedEvent($this, $sprint);
+            $this->dispatcher->dispatch($event, Events::onSprintDelete);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', '数据库删除迭代失败');
@@ -589,6 +576,8 @@ class Agile extends BaseUserCtrl
         $model = new IssueModel();
         list($ret, $msg) = $model->updateById($issueId, ['sprint' => $sprintId, 'sprint_weight' => 0]);
         if ($ret) {
+            $event = new CommonPlacedEvent($this, ['issue_id' => $issueId, 'sprint' => $sprint]);
+            $this->dispatcher->dispatch($event, Events::onIssueJoinSprint);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
@@ -761,6 +750,8 @@ class Agile extends BaseUserCtrl
         CacheKeyModel::getInstance()->clearCache('dict/' . $sprintModel->table);
         list($upRet, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
         if ($upRet) {
+            $event = new CommonPlacedEvent($this, $sprint);
+            $this->dispatcher->dispatch($event, Events::onSprintSetActive);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', 'server_error:' . $msg);
@@ -786,13 +777,15 @@ class Agile extends BaseUserCtrl
         $updateArr['sprint'] = AgileLogic::BACKLOG_VALUE;
         $updateArr['backlog_weight'] = '0';
         // 判断是否为已关闭事项
-        $issueStatus = $model->getOne('status',['id'=>$issueId]);
+        $issueStatus = $model->getField('status', ['id' => $issueId]);
         $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
-        if($issueStatus==$statusClosedId){
+        if ($issueStatus == $statusClosedId) {
             $updateArr['status'] = IssueStatusModel::getInstance()->getIdByKey('open');
         }
         list($ret, $msg) = $model->updateById($issueId, $updateArr);
         if ($ret) {
+            $event = new CommonPlacedEvent($this, ['issue_id' => $issueId, $updateArr]);
+            $this->dispatcher->dispatch($event, Events::onIssueJoinBacklog);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
@@ -818,6 +811,8 @@ class Agile extends BaseUserCtrl
         $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
         list($ret, $msg) = $model->updateById($issueId, ['resolve' => $resolveClosedId, 'status' => $statusClosedId]);
         if ($ret) {
+            $event = new CommonPlacedEvent($this, ['issue_id' => $issueId, ['resolve' => $resolveClosedId, 'status' => $statusClosedId]]);
+            $this->dispatcher->dispatch($event, Events::onIssueJoinClose);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
@@ -1065,7 +1060,7 @@ class Agile extends BaseUserCtrl
         unset($userLogic);
 
         $data['backlogs'] = [];
-        if($board['is_filter_backlog']=='0'){
+        if ($board['is_filter_backlog'] == '0') {
             list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
             if ($fetchRet) {
                 $data['backlogs'] = $issues;
@@ -1074,8 +1069,8 @@ class Agile extends BaseUserCtrl
             }
         }
 
-        list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $board, $columns );
-        if($board['is_filter_closed']=='0') {
+        list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $board, $columns);
+        if ($board['is_filter_closed'] == '0') {
             $closedColumn = $column;
             $closedColumn['name'] = 'Closed';
             $closedColumn['data'] = '';

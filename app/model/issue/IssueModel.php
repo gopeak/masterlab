@@ -61,7 +61,7 @@ class IssueModel extends CacheModel
         }
         $idStr = implode(',', $idArr);
         $sql = "select * from " . $this->getTable() . " where id in({$idStr})";
-        $rows = $this->db->getRows($sql);
+        $rows = $this->db->fetchAll($sql);
         return $rows;
     }
 
@@ -72,7 +72,7 @@ class IssueModel extends CacheModel
      */
     public function getChildrenCount($id)
     {
-        return (int)$this->getOne('count(*) as cc', ['master_id'=>$id]);
+        return (int)$this->getField('count(*) as cc', ['master_id'=>$id]);
     }
 
     /**

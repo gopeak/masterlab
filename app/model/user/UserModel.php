@@ -175,7 +175,7 @@ class UserModel extends DbModel
         }
         $uids = implode(',', $uids);
         $sql = "select * from " . $this->getTable() . " where uid in({$uids})";
-        $rows = $this->db->getRows($sql);
+        $rows = $this->db->fetchAll($sql);
         return $rows;
     }
 
@@ -187,7 +187,7 @@ class UserModel extends DbModel
 
         $params['user_ids'] = $userIds = implode(',', $userIds);
         $sql = "select uid as k,{$field}  from " . $this->getTable() . " where uid in({$userIds})";
-        $rows = $this->db->getRows($sql, $params);
+        $rows = $this->db->fetchAll($sql, $params);
 
         $ret = [];
         if (!empty($rows)) {

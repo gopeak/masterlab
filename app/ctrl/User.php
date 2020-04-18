@@ -15,8 +15,11 @@ use main\app\classes\UserLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\WidgetLogic;
+use main\app\event\Events;
+use main\app\event\CommonPlacedEvent;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\SettingModel;
 use main\app\model\user\UserMessageModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
@@ -553,18 +556,14 @@ class User extends BaseUserCtrl
         }
         // print_r($userInfo);
         $ret = false;
+        $preUserRow = $userModel->getByUid($userId);
         if (!empty($userInfo)) {
+            foreach ($userInfo as $key =>$item) {
+                $preUser[$key] = $preUserRow[$key];
+            }
             list($ret) = $userModel->updateUser($userInfo);
             if ($ret) {
                 $currentUid = $this->getCurrentUid();
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '更新了资料';
-                $activityInfo['type'] = ActivityModel::TYPE_USER;
-                $activityInfo['obj_id'] = $userId;
-                $activityInfo['title'] = $userInfo['display_name'];
-                $activityModel->insertItem($currentUid, 0, $activityInfo);
-
                 //写入操作日志
                 $logData = [];
                 $logData['user_name'] = $this->auth->getUser()['username'];
@@ -574,11 +573,14 @@ class User extends BaseUserCtrl
                 $logData['page'] = $_SERVER['REQUEST_URI'];
                 $logData['action'] = LogOperatingLogic::ACT_EDIT;
                 $logData['remark'] = '用户修改个人资料';
-                $logData['pre_data'] = $userModel->getRowById($currentUid);
+                $logData['pre_data'] = $preUser;
                 $logData['cur_data'] = $userInfo;
                 LogOperatingLogic::add($currentUid, 0, $logData);
             }
         }
+        // 分发事件
+        $event = new CommonPlacedEvent($this, ['pre_data'=>$preUser, 'cur_data'=>$userInfo]);
+        $this->dispatcher->dispatch($event,  Events::onUserUpdateProfile);
 
         $this->ajaxSuccess('保存成功', $ret);
     }
@@ -605,6 +607,24 @@ class User extends BaseUserCtrl
         $newPassword = $params['new_password'];
         if (empty($originPassword) || empty($newPassword)) {
             $this->ajaxFailed('错误', '密码不能为空');
+        }
+
+        $settingModel = new SettingModel();
+        $passwordStrategy = $settingModel->getSettingValue('password_strategy');
+        if ($passwordStrategy == 2) {
+            // 密码需要6位及以上，并且包含大写字母、小写字母、数字至少两种
+            // $pattern = '/^(?=.{6,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$/';
+            // 密码需要6位及以上
+            $pattern = '/(?=.{6,}).*/';
+            if (!preg_match($pattern, $newPassword)) {
+                $this->ajaxFailed('错误', '密码需要6位及以上');
+            }
+        } elseif ($passwordStrategy == 3) {
+            // 密码要求8位及以上，并且包含大写字母、小写字母、数字和特殊字符
+            $pattern = '/^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).*$/';
+            if (!preg_match($pattern, $newPassword)) {
+                $this->ajaxFailed('错误', '密码要求8位及以上，并且包含大写字母、小写字母、数字和特殊字符');
+            }
         }
 
         $uid = $_SESSION[UserAuth::SESSION_UID_KEY];

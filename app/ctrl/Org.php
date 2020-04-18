@@ -9,11 +9,15 @@ use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserAuth;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
+use main\app\event\UserPlacedEvent;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectUserRoleModel;
+use Doctrine\Common\Inflector\Inflector;
 
 class Org extends BaseUserCtrl
 {
@@ -26,6 +30,7 @@ class Org extends BaseUserCtrl
 
     /**
      * index
+     * @throws \Exception
      */
     public function pageIndex()
     {
@@ -33,6 +38,12 @@ class Org extends BaseUserCtrl
         $data['title'] = '组织';
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
+
+        $data['is_admin'] = false;
+        if (PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_ORG_PERM_ID)) {
+            $data['is_admin'] = true;
+        }
+
         $this->render('gitlab/org/main.php', $data);
     }
 
@@ -290,6 +301,7 @@ class Org extends BaseUserCtrl
     /**
      * @param $err
      * @param $params
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function checkParam(&$err, $params)
     {
@@ -333,7 +345,6 @@ class Org extends BaseUserCtrl
         }
     }
 
-
     /**
      *  处理添加
      * @param array $params
@@ -342,20 +353,26 @@ class Org extends BaseUserCtrl
     public function add($params = [])
     {
         if (!$this->isAdmin) {
-            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+            $this->ajaxFailed('您没有权限进行此操作');
         }
 
         if (empty($params)) {
             $this->ajaxFailed('错误', '无表单数据提交');
         }
-        $currentUid = $this->getCurrentUid();
         //print_r($params);
+
+        $currentUid = $this->getCurrentUid();
+
+        $data['is_admin'] = false;
+        if (!PermissionGlobal::check($currentUid, PermissionGlobal::MANAGER_ORG_PERM_ID)) {
+            $this->ajaxFailed('您没有权限进行此操作.');
+        }
+
         $err = [];
         $this->checkParam($err, $params);
         if (!empty($err)) {
             $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
-
         $model = new OrgModel();
         $info = [];
         $info['path'] = $params['path'];
@@ -388,14 +405,6 @@ class Org extends BaseUserCtrl
             $this->ajaxFailed('服务器错误', '新增数据错误,错误信息:' . $insertId);
         }
 
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '创建了组织';
-        $activityInfo['type'] = ActivityModel::TYPE_ORG;
-        $activityInfo['obj_id'] = $insertId;
-        $activityInfo['title'] = $info['name'];
-        $activityModel->insertItem($currentUid, 0, $activityInfo);
-
         //写入操作日志
         $logData = [];
         $logData['user_name'] = $this->auth->getUser()['username'];
@@ -409,6 +418,10 @@ class Org extends BaseUserCtrl
         $logData['cur_data'] = $info;
         LogOperatingLogic::add($currentUid, 0, $logData);
 
+        // 分发事件
+        $info['id'] = $insertId;
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onOrgCreate);
         $this->ajaxSuccess('success');
     }
 
@@ -497,13 +510,6 @@ class Org extends BaseUserCtrl
         }
 
         $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '更新了组织';
-        $activityInfo['type'] = ActivityModel::TYPE_ORG;
-        $activityInfo['obj_id'] = $id;
-        $activityInfo['title'] = $org['name'];
-        $activityModel->insertItem($currentUid, 0, $activityInfo);
 
         //写入操作日志
         $logData = [];
@@ -518,6 +524,10 @@ class Org extends BaseUserCtrl
         $logData['cur_data'] = $info;
         LogOperatingLogic::add($currentUid, 0, $logData);
 
+        // 分发事件
+        $info['id'] = $id;
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onOrgUpdate);
         $this->ajaxSuccess('success');
     }
 
@@ -565,14 +575,6 @@ class Org extends BaseUserCtrl
         }
 
         $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了组织';
-        $activityInfo['type'] = ActivityModel::TYPE_ORG;
-        $activityInfo['obj_id'] = $id;
-        $activityInfo['title'] = $org['name'];
-        $activityModel->insertItem($currentUid, 0, $activityInfo);
-
         $callFunc = function ($value) {
             return '已删除';
         };
@@ -590,6 +592,9 @@ class Org extends BaseUserCtrl
         $logData['cur_data'] = $org2;
         LogOperatingLogic::add($currentUid, 0, $logData);
 
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $org);
+        $this->dispatcher->dispatch($event,  Events::onOrgDelete);
         $this->ajaxSuccess('ok');
     }
 }

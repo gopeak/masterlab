@@ -205,10 +205,9 @@
             <td  >
                     <a class="list_for_edit btn btn-transparent btn-sm-self" href="#" data-value="{{id}}">编辑 </a>
 
-                    {{#if_eq is_system '0'}}
+                    {{#if_eq is_default '0'}}
                     <a class="list_for_delete btn btn-transparent btn-sm-self"  href="javascript:;" data-value="{{id}}">
-                        <i class="fa fa-trash"></i>
-                        <span class="sr-only">Remove</span>
+                         删除
                     </a>
                     {{/if_eq}}
 

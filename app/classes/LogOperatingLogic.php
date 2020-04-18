@@ -72,12 +72,12 @@ class LogOperatingLogic
         // 获取总数
         $sqlCount = "SELECT count(id) as cc FROM  {$table} " . $sql;
         //var_dump($sqlCount,$params);
-        $count = $logOperatingModel->db->getOne($sqlCount, $params);
+        $count = $logOperatingModel->getFieldBySql($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$table} " . $sql;
         $sql .= ' ' . $order . $limit;
 
-        $logs = $logOperatingModel->db->getRows($sql, $params);
+        $logs = $logOperatingModel->db->fetchAll($sql, $params);
 
 
         unset($logOperatingModel);
@@ -122,12 +122,12 @@ class LogOperatingLogic
         // 获取总数
         $sqlCount = "SELECT count(id) as cc FROM  {$table} " . $sql;
         //var_dump($sqlCount,$params);
-        $count = $logOperatingModel->db->getOne($sqlCount, $params);
+        $count = $logOperatingModel->getFieldBySql($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$table} " . $sql;
         $sql .= ' ' . $order . $limit;
 
-        $logs = $logOperatingModel->db->getRows($sql, $params);
+        $logs = $logOperatingModel->db->fetchAll($sql, $params);
 
 
         unset($logOperatingModel);

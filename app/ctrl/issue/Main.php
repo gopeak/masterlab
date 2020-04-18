@@ -21,8 +21,10 @@ use main\app\classes\ConfigLogic;
 use main\app\classes\Settings;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
-use main\app\model\ActivityModel;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\agile\SprintModel;
+use main\app\model\field\FieldCustomValueModel;
 use main\app\model\issue\ExtraWorkerDayModel;
 use main\app\model\issue\HolidayModel;
 use main\app\model\project\ProjectCatalogLabelModel;
@@ -128,9 +130,9 @@ class Main extends BaseUserCtrl
                     header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
                     die;
                 } else {
-                    if($fav['is_adv_query']=='1'){
+                    if ($fav['is_adv_query'] == '1') {
                         $data['adv_filter_json'] = $fav['filter'];
-                    }else{
+                    } else {
                         $data['adv_filter_json'] = [];
                     }
 
@@ -169,7 +171,22 @@ class Main extends BaseUserCtrl
         // 表格视图的显示字段
         $issueLogic = new IssueLogic();
         $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
-        $data['uiDisplayFields'] = IssueLogic::$uiDisplayFields;
+        $uiDisplayFields = IssueLogic::$uiDisplayFields;
+        $fieldsArr = FieldModel::getInstance()->getCustomFields();
+        $fieldsIdArr = array_column($fieldsArr, 'title', 'name');
+        $data['uiDisplayFields'] = array_merge($uiDisplayFields, $fieldsIdArr);
+
+        $displayCustomFieldArr = [];
+        foreach ($fieldsArr as $field) {
+            if (in_array($field['name'], $data['display_fields'])) {
+                $displayCustomFieldArr[] = $field;
+            }
+        }
+
+        $data['displayCustomFieldArr'] = $displayCustomFieldArr;
+
+
+        // 高级查询字段
         $data['advFields'] = IssueFilterLogic::$advFields;
 
         // 事项展示的视图方式
@@ -195,10 +212,12 @@ class Main extends BaseUserCtrl
         // 迭代数据
         $data['sprints'] = [];
         $data['active_sprint'] = [];
+        $sprintModel = new SprintModel();
         if (!empty($data['project_id'])) {
-            $sprintModel = new SprintModel();
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
+        }else{
+            $data['sprints'] = $sprintModel->getAllItems(false);
         }
 
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
@@ -353,12 +372,6 @@ class Main extends BaseUserCtrl
             }
         }
 
-        if (isset($_REQUEST['summary']) && !empty($_REQUEST['summary'])) {
-            $summary = '为' . $_REQUEST['summary'] . '添加了一个附件';
-        } else {
-            $summary = '添加了一个附件';
-        }
-
         $uploadLogic = new UploadLogic($issueId);
 
         //print_r($_FILES);
@@ -376,14 +389,9 @@ class Main extends BaseUserCtrl
             $resp['uuid'] = $ret['uuid'];
 
             if (!empty($issueId)) {
-                $currentUid = $this->getCurrentUid();
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = $summary;
-                $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-                $activityInfo['obj_id'] = $issueId;
-                $activityInfo['title'] = $originName;
-                $activityModel->insertItem($currentUid, $issueId, $activityInfo);
+             
+                $event = new CommonPlacedEvent($this, $issueId);
+                $this->dispatcher->dispatch($event,  Events::onIssueUpload);
             }
         } else {
             $resp['success'] = false;
@@ -495,11 +503,6 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_REQUEST['issue_id'];
         }
 
-        $summary = '';
-        if (isset($_REQUEST['summary'])) {
-            $summary = $_REQUEST['summary'];
-        }
-
         $uploadLogic = new UploadLogic($issueId);
 
         //print_r($_FILES);
@@ -516,18 +519,9 @@ class Main extends BaseUserCtrl
             $resp['insert_id'] = $ret['insert_id'];
             $resp['uuid'] = $ret['uuid'];
 
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $preAction = '';
-            if ($summary != '') {
-                $preAction = '为 ' . $summary;
-            }
-            $activityInfo['action'] = $preAction . ' 添加了一个附件';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $originName;
-            $activityModel->insertItem($currentUid, $issueId, $activityInfo);
+
+            $event = new CommonPlacedEvent($this, $issueId);
+            $this->dispatcher->dispatch($event,  Events::onIssueMobileUpload);
         } else {
             $resp['success'] = false;
             $resp['error'] = $resp['message'];
@@ -587,6 +581,8 @@ class Main extends BaseUserCtrl
                 if (!$unlinkRet) {
                     $this->ajaxFailed('服务器错误', "删除文件失败,路径:" . $savePath . '' . $file['file_name']);
                 }
+                $event = new CommonPlacedEvent($this, $file['issue_id']);
+                $this->dispatcher->dispatch($event,  Events::onIssueDeleteUpload);
                 $this->ajaxSuccess('success', $ret);
             }
         } else {
@@ -611,24 +607,55 @@ class Main extends BaseUserCtrl
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
-            $issueIdArr = array_column($data['issues'],'id');
+            // 获取标签的关联数据
+            $issueIdArr = array_column($data['issues'], 'id');
             $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
             $labelDataArr = [];
             foreach ($labelDataRows as $labelData) {
                 $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
             }
-            foreach ($data['issues'] as &$issue) {
-                $issueId = $issue['id'];
-                IssueFilterLogic::formatIssue($issue);
-                if(isset($labelDataArr[$issueId])){
-                    $arr = array_unique($labelDataArr[$issueId]);
-                    sort($arr);
-                    $issue['label_id_arr'] = $arr;
-                }else{
-                    $issue['label_id_arr'] = [];
+            // 获取自定义字段值
+            $fieldsArr = (new FieldModel())->getCustomFields();
+            if ($fieldsArr) {
+                $fieldsArr = array_column($fieldsArr, null, 'id');
+                $customFieldIdArr = array_column($fieldsArr, 'id');
+                $customValuesArr = (new FieldCustomValueModel())->getsByIssueIdArr($issueIdArr, $customFieldIdArr);
+                $customValuesIssueArr = [];
+                foreach ($customValuesArr as $customValue) {
+                    $key = $customValue['value_type'] . '_value';
+                    $issueId = $customValue['issue_id'];
+                    $fieldId = $customValue['custom_field_id'];
+                    $fieldArr = $fieldsArr[$fieldId];
+                    if (isset($fieldArr['name'])) {
+                        $fieldValue = !isset($customValue[$key]) ? $customValue['string_value'] : $customValue[$key];
+                        $fieldName = $fieldArr['name'];
+                        $customValuesIssueArr[$issueId][$fieldName] = $fieldValue;
+                    }
                 }
             }
 
+			$userLogic = new UserLogic();
+            $users = $userLogic->getAllUser();
+            $emptyObj = new \stdClass();
+            foreach ($data['issues'] as &$issue) {
+                $issueId = $issue['id'];
+                IssueFilterLogic::formatIssue($issue);
+                if (isset($labelDataArr[$issueId])) {
+                    $arr = array_unique($labelDataArr[$issueId]);
+                    sort($arr);
+                    $issue['label_id_arr'] = $arr;
+                } else {
+                    $issue['label_id_arr'] = [];
+                }
+                if (isset($customValuesIssueArr[$issueId])) {
+                    $customValueArr = $customValuesIssueArr[$issueId];
+                    $issue = array_merge($customValueArr, $issue);
+                }
+                $issue['creator_info'] = isset($users[$issue['creator']])?$users[$issue['creator']]:$emptyObj;
+                $issue['modifier_info'] = isset($users[$issue['modifier']])?$users[$issue['modifier']]:$emptyObj;
+                $issue['reporter_info'] = isset($users[$issue['reporter']])?$users[$issue['reporter']]:$emptyObj;
+                $issue['assignee_info'] = isset($users[$issue['assignee']])?$users[$issue['assignee']]:$emptyObj;
+            }
             $data['total'] = (int)$total;
             $data['pages'] = ceil($total / $pageSize);
             $data['page_size'] = $pageSize;
@@ -735,12 +762,23 @@ class Main extends BaseUserCtrl
         $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {
+            $info = [];
+            $info['name'] = $name;
+            $info['filter'] = $filter;
+            $info['description'] = $description;
+            $info['shared'] = $shared;
+            $info['projectId'] = $projectId;
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onIssueAddFilter);
             $this->ajaxSuccess('success', $msg);
         } else {
             $this->ajaxFailed('failed', [], $msg);
         }
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function saveAdvFilter()
     {
         $err = [];
@@ -768,6 +806,8 @@ class Main extends BaseUserCtrl
         $info['is_adv_query'] = '1';
         list($ret, $msg) = $filterModel->insert($info);
         if ($ret) {
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event,  Events::onIssueAddAdvFilter);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', $msg);
@@ -840,6 +880,8 @@ class Main extends BaseUserCtrl
         if (empty($issue)) {
             $this->ajaxFailed('failed:issue_id is error');
         }
+
+
         $issueTypeId = (int)$issue['issue_type'];
         if (isset($_GET['issue_type'])) {
             $issueTypeId = (int)$_GET['issue_type'];
@@ -925,6 +967,17 @@ class Main extends BaseUserCtrl
         $logic = new WorkflowLogic();
         $issue['allow_update_status'] = $logic->getStatusByIssue($issue);
 
+        // 自定义字段
+        $issueLogic = new IssueLogic();
+        $customFieldValues = $issueLogic->getCustomFieldValue($issueId);
+        if ($customFieldValues) {
+            $customFieldValuesArr = array_column($customFieldValues, 'value', 'field_name');
+            if ($customFieldValuesArr) {
+                $issue = array_merge($customFieldValuesArr, $issue);
+            }
+        }
+
+
         // tab页面
         $model = new IssueUiTabModel($issueId);
         $data['tabs'] = $model->getItemsByIssueTypeIdType($issueTypeId, $uiType);
@@ -954,8 +1007,11 @@ class Main extends BaseUserCtrl
             $err['issue_type'] = '事项类型不能为空';
         }
 
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $params);
+        $this->dispatcher->dispatch($event,  Events::onIssueCreateBefore);
         // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
-        $getDefaultPriorityId = function(){
+        $getDefaultPriorityId = function () {
             return (new IssuePriorityModel())->getIdByKey('normal');
         };
         $priorityId = null;
@@ -977,7 +1033,7 @@ class Main extends BaseUserCtrl
         $uiConfigs = $issueUiModel->getsByUiType($params['issue_type'], 'create');
         //print_r($uiConfigs);
         // 迭代字段不会判断输入
-        $excludeFieldArr = ['sprint','priority'];
+        $excludeFieldArr = ['sprint', 'priority'];
         foreach ($uiConfigs as $uiConfig) {
             if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
                 $field = $fieldsArr[$uiConfig['field_id']];
@@ -1035,7 +1091,6 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器执行错误,原因:' . $issueId);
         }
-        $currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
         $issueUpdateInfo['issue_num'] = $issueId;
@@ -1044,16 +1099,11 @@ class Main extends BaseUserCtrl
             $masterId = (int)$params['master_issue_id'];
             $master = $model->getById($masterId);
             if (!empty($master)) {
-                $issueUpdateInfo['master_id'] = $masterId;
-                $issueUpdateInfo['module'] = $master['module'];
-                $model->inc('have_children', $masterId, 'id', 1);
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '创建了 #' . $master['issue_num'] . ' 的子任务';
-                $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-                $activityInfo['obj_id'] = $issueId;
-                $activityInfo['title'] = $info['summary'];
-                $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+                
+
+                $info['id'] = $issueId;
+                $event = new CommonPlacedEvent($this, ['master'=>$master,'child'=>$info]);
+                $this->dispatcher->dispatch($event,  Events::onIssueCreateChild);
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
@@ -1093,19 +1143,14 @@ class Main extends BaseUserCtrl
         // @todo这里表结构有bug需要测试
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
-
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '创建了事项';
-        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = $info['summary'];
-        $activityModel->insertItem($currentUid, $projectId, $activityInfo);
-
         // email
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
 
+        // 分发事件
+        $info['id'] = $issueId;
+        $event = new CommonPlacedEvent($this, $info);
+        $this->dispatcher->dispatch($event,  Events::onIssueCreateAfter);
         $this->ajaxSuccess('添加成功', $issueId);
     }
 
@@ -1123,7 +1168,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['progress'])) {
-            $info['progress'] = max(0,(int)$params['progress']);
+            $info['progress'] = max(0, (int)$params['progress']);
         }
 
         if (isset($params['depends'])) {
@@ -1151,13 +1196,14 @@ class Main extends BaseUserCtrl
                 $aboveWeight = (int)$belowIssue[$fieldWeight];
                 $sprintId = $belowIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
-                $nextWeight = (int)$model->db->getOne($sql);
+                
+                $nextWeight = (int)$model->getFieldBySql($sql);
                 if (empty($nextWeight)) {
                     $nextWeight = 0;
                 }
                 $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
 
-                if(!empty($belowIssue['master_id'])){
+                if (!empty($belowIssue['master_id'])) {
                     $params['master_issue_id'] = $belowIssue['master_id'];
                 }
                 // print_r($params);
@@ -1174,7 +1220,7 @@ class Main extends BaseUserCtrl
                 $sprintId = $aboveIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where $fieldWeight>$belowWeight  AND sprint=$sprintId Order by {$fieldWeight} DESC limit 1";
                 // echo $sql;
-                $prevWeight = (int)$model->db->getOne($sql);
+                $prevWeight = (int)$model->getFieldBySql($sql);
                 if (empty($prevWeight)) {
                     $prevWeight = 0;
                 }
@@ -1201,19 +1247,22 @@ class Main extends BaseUserCtrl
                 // 如果是子任务
                 $masterId = (int)$params['master_issue_id'];
                 $sql = "Select {$fieldWeight} From {$table} Where master_id={$masterId}  AND sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
-                $prevWeight = (int)$model->db->getOne($sql);
+               
+                $prevWeight = (int)$model->getFieldBySql($sql);
                 $sql = "Select {$fieldWeight} From {$table} Where $prevWeight>{$fieldWeight} AND sprint={$sprintId} Order by {$fieldWeight} DESC limit 1";
                 //echo $sql;
-                $nextWeight = (int)$model->db->getOne($sql);
+               
+                $nextWeight = (int)$model->getFieldBySql($sql);
                 if (($prevWeight - $nextWeight) > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $prevWeight - ProjectGantt::$offset;
                 } else {
-                    $info[$fieldWeight] = max(0, intval($prevWeight-($prevWeight - $nextWeight) / 2));
+                    $info[$fieldWeight] = max(0, intval($prevWeight - ($prevWeight - $nextWeight) / 2));
                 }
             } else {
                 // 如果是普通任务
                 $sql = "Select {$fieldWeight} From {$table} Where   sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
-                $minWeight = (int)$model->db->getOne($sql);
+             
+                $minWeight = (int)$model->getFieldBySql($sql);
                 if ($minWeight > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $minWeight - ProjectGantt::$offset;
                 } else {
@@ -1236,7 +1285,8 @@ class Main extends BaseUserCtrl
 
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+           
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1262,7 +1312,7 @@ class Main extends BaseUserCtrl
         }
 
         // 解决结果, @todo 数据库字段增加一个默认值，管理页面可以修改
-        $getDefaultResolveId = function(){
+        $getDefaultResolveId = function () {
             $resolveId = (new IssueResolveModel())->getIdByKey('not_fix');
             $info['resolve'] = $resolveId;
             return $resolveId;
@@ -1319,7 +1369,8 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = $params['environment'];
+           
+            $info['environment'] = htmlentities($params['environment']);
         }
 
 
@@ -1335,7 +1386,7 @@ class Main extends BaseUserCtrl
             $info['weight'] = (int)$params['weight'];
         }
         $this->getGanttInfo($params, $info);
-        if(!empty($params['start_date']) && !empty($params['due_date'])){
+        if (!empty($params['start_date']) && !empty($params['due_date'])) {
             $holidays = (new HolidayModel())->getDays($params['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
             $ganttSetting = (new ProjectGanttSettingModel())->getByProject($params['project_id']);
@@ -1353,7 +1404,8 @@ class Main extends BaseUserCtrl
         $info = [];
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+           
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1429,7 +1481,8 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = $params['environment'];
+            
+            $info['environment'] = htmlentities($params['environment']);
         }
 
 
@@ -1498,13 +1551,17 @@ class Main extends BaseUserCtrl
         $info = [];
 
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+            
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         $info = $info + $this->getUpdateFormInfo($params);
         if (empty($info)) {
             $this->ajaxFailed('参数错误,数据为空');
         }
+
+        $event = new CommonPlacedEvent($this, $_REQUEST);
+        $this->dispatcher->dispatch($event,  Events::onIssueUpdateBefore);
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
@@ -1547,9 +1604,11 @@ class Main extends BaseUserCtrl
                 unset($info[$k]);
             }
         }
+        /*
         if ($noModified) {
             //$this->ajaxSuccess('success');
         }
+        */
 
         // 实例化邮件通知
         $notifyLogic = new NotifyLogic();
@@ -1595,7 +1654,7 @@ class Main extends BaseUserCtrl
         }
 
         // 更新用时
-        if(isset($info['start_date']) || isset($info['due_date'])){
+        if (isset($info['start_date']) || isset($info['due_date'])) {
             $holidays = (new HolidayModel())->getDays($issue['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
             $updatedIssue = $issueModel->getById($issueId);
@@ -1605,7 +1664,7 @@ class Main extends BaseUserCtrl
             $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $workDates, $holidays, $extraWorkerDays);
             // print_r($updateDurationArr);
             list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
-            if($ret){
+            if ($ret) {
                 $updatedIssue['duration'] = $updateDurationArr['duration'];
             }
 
@@ -1636,7 +1695,7 @@ class Main extends BaseUserCtrl
         // effect version
         if (isset($params['effect_version'])) {
             $model = new IssueEffectVersionModel();
-            $ret = $model->delete(['issue_id' => $issueId]);
+            $model->delete(['issue_id' => $issueId]);
             $issueLogic->addChildData($model, $issueId, $params['effect_version'], 'version_id');
         }
         // labels
@@ -1651,7 +1710,7 @@ class Main extends BaseUserCtrl
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
-        $issueLogic->updateCustomFieldValue($issueId, $params);
+        $issueLogic->updateCustomFieldValue($issueId, $params, $issue['project_id']);
 
         // 记录活动日志
         $fromModule = null;
@@ -1660,18 +1719,6 @@ class Main extends BaseUserCtrl
         } elseif (isset($_GET['from_module'])) {
             $fromModule = strtolower(trim($_GET['from_module']));
         }
-        $actionInfo = $this->makeActionInfo($fromModule);
-        $actionContent = $this->makeActionContent($issue, $info);
-
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = $actionInfo;
-        $activityInfo['content'] = $actionContent;
-        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = $issue['summary'];
-        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
         // 操作日志
         $logData = [];
@@ -1687,138 +1734,15 @@ class Main extends BaseUserCtrl
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
         // email通知
-        if(isset($notifyFlag)){
+        if (isset($notifyFlag)) {
             $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
         }
         $updatedIssue = $issueModel->getById($issueId);
+        $event = new CommonPlacedEvent($this, $updatedIssue);
+        $this->dispatcher->dispatch($event,  Events::onIssueUpdateAfter);
         $this->ajaxSuccess('更新成功', $updatedIssue);
     }
 
-    /**
-     * 生成事项活动日志的活动名称
-     *
-     * @param $fromModule string 来源操作模块
-     * @return string
-     */
-    private function makeActionInfo($fromModule)
-    {
-        // 生成日志备注详情
-        $moduleNames = [
-            'issue_list' => '事项列表',
-            'issue_detail' => '事项详情',
-            'gantt' => '甘特图',
-            'mind' => '事项分解',
-            'kanban' => '看板',
-            'sprint' => '迭代',
-            'backlog' => '待办事项'
-        ];
-
-        $actionInfo = "修改事项";
-        if ($fromModule && isset($moduleNames[$fromModule]) && !in_array($fromModule, ['issue_list', 'issue_detail'])) {
-            $moduleName = $moduleNames[$fromModule];
-            $actionInfo = "在 \"{$moduleName}\" 模块中修改事项";
-        }
-
-        return $actionInfo;
-    }
-
-    /**
-     * 组装事项活动日志的备注信息
-     *
-     * @param $issueOldValues
-     * @param $issueNewValues
-     * @return string
-     */
-    private function makeActionContent($issueOldValues, $issueNewValues)
-    {
-        $fieldLabels = [
-            'issue_type' => '事项类型',
-            'priority' => '优先级',
-            'module' => '模块',
-            'summary' => '标题',
-            'assignee' => '经办人',
-            'status' => '状态',
-            'resolve' => '解决结果',
-            'start_date' => '开始日期',
-            'due_date' => '结束日期',
-            'assistants' => '协助人'
-        ];
-
-        $fields = array_keys($fieldLabels);
-
-        $userModel = new UserModel();
-        $users = $userModel->getAll();
-
-        $issueTypeModel = new IssueTypeModel();
-        $types = $issueTypeModel->getAll();
-
-        $issuePriorityModel = new IssuePriorityModel();
-        $priorities = $issuePriorityModel->getAll();
-
-        $projectModuleModel = new ProjectModuleModel();
-        $modules = $projectModuleModel->getByProject($issueOldValues['project_id'], true);
-
-        $issueStatusModel = new IssueStatusModel();
-        $status = $issueStatusModel->getAll();
-
-        $issueResolveModel = new IssueResolveModel();
-        $resolves = $issueResolveModel->getAll();
-
-        $changes = [];
-        foreach ($issueNewValues as $field => $issueNewValue) {
-            if (in_array($field, $fields)) {
-                $issueOldValue = $issueOldValues[$field];
-                if ($issueNewValue != $issueOldValue) {
-                    if ($field == 'assignee' || $field == 'assistants') {
-                        $issueNewValue = isset($users[$issueNewValue]) ? '<span style="color:#337ab7">' . $users[$issueNewValue]['display_name'] . '</span>' : '<span>未分配</span>';
-                        $issueOldValue = isset($users[$issueOldValue]) ? '<span style="color:#337ab7">' . $users[$issueOldValue]['display_name'] . '</span>' : '<span>未分配</span>';
-                    } elseif ($field == 'issue_type') {
-                        $issueNewValue = isset($types[$issueNewValue]) ? '<span style="color:#337ab7">' . $types[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
-                        $issueOldValue = isset($types[$issueOldValue]) ? '<span style="color:#337ab7">' . $types[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
-                    } elseif ($field == 'priority') {
-                        $issueNewValue = isset($priorities[$issueNewValue]) ? '<span style="color:' . $priorities[$issueNewValue]['status_color'] . '">' . $priorities[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
-                        $issueOldValue = isset($priorities[$issueOldValue]) ? '<span style="color:' . $priorities[$issueOldValue]['status_color'] . '">' . $priorities[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
-                    } elseif ($field == 'module') {
-                        $issueNewValue = isset($modules[$issueNewValue]) ? '<span style="color:#337ab7">' . $modules[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
-                        $issueOldValue = isset($modules[$issueOldValue]) ? '<span style="color:#337ab7">' . $modules[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
-                    } elseif ($field == 'status') {
-                        $issueNewValue = isset($status[$issueNewValue]) ? '<span class="label label-' . $status[$issueNewValue]['color'] . '">' . $status[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
-                        $issueOldValue = isset($status[$issueOldValue]) ? '<span class="label label-' . $status[$issueOldValue]['color'] . '">' . $status[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
-                    } elseif ($field == 'resolve') {
-                        $issueNewValue = isset($resolves[$issueNewValue]) ? '<span style="color:' . $resolves[$issueNewValue]['color'] . '">' . $resolves[$issueNewValue]['name'] . '</span>' : '<span>无</span>';
-                        $issueOldValue = isset($resolves[$issueOldValue]) ? '<span style="color:' . $resolves[$issueOldValue]['color'] . '">' . $resolves[$issueOldValue]['name'] . '</span>' : '<span>无</span>';
-                    } elseif ($field == 'start_date' || $field == 'due_date') {
-                        $issueNewValue = trim($issueNewValue);
-                        if (!$issueNewValue && !$issueOldValue) {
-                            continue;
-                        }
-
-                        $issueNewValue = $issueNewValue ? '<span style="color:#337ab7">' . $issueNewValue . '</span>' : '<span>无</span>';
-                        if ($issueOldValue && ($issueOldValue != '0000-00-00')) {
-                            $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
-                        } else {
-                            $issueOldValue = '<span>无</span>';
-                        }
-                    } else {
-                        $issueNewValue = '<span style="color:#337ab7">' . $issueNewValue . '</span>';
-                        $issueOldValue = '<span style="color:#337ab7">' . $issueOldValue . '</span>';
-                    }
-
-                    $change = $fieldLabels[$field] . '：' . $issueOldValue . ' --> ' . $issueNewValue;
-                    if ($field == 'summary') {
-                        $change = '标题 变更为 ' . $issueNewValue;
-                    }
-                    $changes[] = $change;
-                }
-            }
-        }
-
-        if ($changes) {
-            return join('，', $changes);
-        } else {
-            return '';
-        }
-    }
 
     /**
      * 批量修改
@@ -1874,46 +1798,34 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('当前项目中你没有权限关闭该事项');
             }
         }
-
-        // 活动记录
-        $issueLogic = new IssueLogic();
-        $issueIds = implode(',', $issueIdArr);
-        $moduleModel = new ProjectModuleModel();
-        $sprintModel = new SprintModel();
-        $resolveModel = new IssueResolveModel();
-
-
         $info = [];
+        $successIssueIdArr = [];
+        $errArr = [];
         foreach ($issueIdArr as $issueId) {
             $info[$field] = $value;
             list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
             if (!$ret) {
-                $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+                //$this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+                $errArr[] = "事项id:{$issueId} 更新失败:{$affectedRows},已忽略";
             }
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityAction = $issueLogic->getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value);
-            $activityInfo = [];
-            $activityInfo['action'] = '批量更新事项';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $activityAction;
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+            $successIssueIdArr[] = $issueId;
         }
 
         // 操作日志
         $logData = [];
         $logData['user_name'] = $this->auth->getUser()['username'];
         $logData['real_name'] = $this->auth->getUser()['display_name'];
-        $logData['obj_id'] = $issueId;
+        $logData['obj_id'] = null;//json_encode($successIssueIdArr);
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
         $logData['page'] = $_SERVER['REQUEST_URI'];
         $logData['action'] = LogOperatingLogic::ACT_EDIT;
-        $logData['remark'] = '批量修改事项';
+        $logData['remark'] = '批量修改事项id:'.implode(',', $successIssueIdArr);
         $logData['pre_data'] = '-';
         $logData['cur_data'] = $value;
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
+        $event = new CommonPlacedEvent($this, ['field'=>$field, 'value'=>$value, 'project_id'=>$projectId, 'issue_id_arr'=>$successIssueIdArr]);
+        $this->dispatcher->dispatch($event,  Events::onIssueBatchUpdate);
         $this->ajaxSuccess('success');
     }
 
@@ -1947,15 +1859,8 @@ class Main extends BaseUserCtrl
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
 
-        // 活动记录
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '关注了事项';
-        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = $issue['summary'];
-        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+        $event = new CommonPlacedEvent($this, $issueId);
+        $this->dispatcher->dispatch($event,  Events::onIssueFollow);
         $this->ajaxSuccess('success', $ret);
     }
 
@@ -1985,16 +1890,9 @@ class Main extends BaseUserCtrl
             $issueLogic = new IssueLogic();
             $issueLogic->updateFollowCount($issueId);
         }
-        // 活动记录
-        $issue = IssueModel::getInstance()->getById($issueId);
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '取消关注了事项';
-        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = $issue['summary'];
-        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+        $event = new CommonPlacedEvent($this,  $issueId);
+        $this->dispatcher->dispatch($event,  Events::onIssueUnFollow);
 
         $this->ajaxSuccess('success');
     }
@@ -2085,17 +1983,9 @@ class Main extends BaseUserCtrl
             $issueModel->db->rollBack();
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
-
-        // 活动记录
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '删除了事项';
-        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = $issue['summary'];
-        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
+        $issue['id'] = $issueId;
+        $event = new CommonPlacedEvent($this, $issue);
+        $this->dispatcher->dispatch($event,  Events::onIssueDelete);
         $this->ajaxSuccess('ok');
     }
 
@@ -2169,16 +2059,10 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
 
-        // 活动记录
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '批量删除了事项: ';
-        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = json_encode($issueIdArr);
-        $activityInfo['title'] = $issueNames;
-        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
+        // 分发事件
+        $event = new CommonPlacedEvent($this, ['title'=>$issueNames,'project_id'=>$projectId, 'issue_id_arr'=>$issueIdArr]);
+        $this->dispatcher->dispatch($event,  Events::onIssueBatchDelete);
         $this->ajaxSuccess('ok');
     }
 
@@ -2219,17 +2103,9 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
-            // 活动记录
-            $issue = IssueModel::getInstance()->getById($issueId);
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '关闭了事项:' . $issue['summary'];
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $issue['summary'];
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
+            // 分发事件
+            $event = new CommonPlacedEvent($this, $issueId);
+            $this->dispatcher->dispatch($event,  Events::onIssueClose);
             $this->ajaxSuccess("操作成功");
         }
     }
@@ -2269,17 +2145,8 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
-            // 活动记录
-            $issue = IssueModel::getInstance()->getById($issueId);
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '转为子任务';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $issue['summary'];
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
+            $event = new CommonPlacedEvent($this, ['master_id'=>$masterId, 'issue_id'=>$issueId]);
+            $this->dispatcher->dispatch($event,  Events::onIssueConvertChild);
             $this->ajaxSuccess($msg);
         }
     }
@@ -2303,16 +2170,8 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
-            // 活动记录
-            $issue = IssueModel::getInstance()->getById($issueId);
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '取消了子任务';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $issue['summary'];
-            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+            $event = new CommonPlacedEvent($this, $issueId);
+            $this->dispatcher->dispatch($event,  Events::onIssueRemoveChild);
             $this->ajaxSuccess($msg);
         }
     }
@@ -2386,6 +2245,8 @@ class Main extends BaseUserCtrl
             foreach ($successRows as $successRow) {
                 $successText .= "第" . $successRow['cell'] . '行: ' . $successRow['summary'] . '<br>';
             }
+            $event = new CommonPlacedEvent($this, $successRows);
+            $this->dispatcher->dispatch($event,  Events::onIssueImportByExcel);
             $this->ajaxSuccess('导入成功', $successText);
         } else {
             $errText = '';

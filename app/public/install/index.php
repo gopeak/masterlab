@@ -5,7 +5,7 @@
 
 set_time_limit(0);   //设置运行时间
 error_reporting(E_ERROR );  //显示全部错误
-define('ROOT_PATH', dirname(dirname(__FILE__)));  //定义根目录
+define('INSTALL_PATH', dirname(dirname(__FILE__)));  //定义根目录
 define('DBCHARSET', 'UTF8');   //设置数据库默认编码
 require_once('./include/function.php');
 $currenPhpUser = $_SERVER['USER']? $_SERVER['USER']:@get_current_user();

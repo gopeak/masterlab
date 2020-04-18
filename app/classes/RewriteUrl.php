@@ -24,11 +24,15 @@ class RewriteUrl
      * 将url的参数解析,转发到 OrgRoute 控制器的 index 方法上
      * @param $engine
      * @return array
+     * @throws \Exception
      */
     public function orgRoute($engine)
     {
+        $_target = $_GET['_target'];
+        if(isset($_target[0]) && $_target[0]=='admin' && isset($_target[1]) &&   $_target[1]=='plugin'){
+            return ['OrgRoute', '', 'AdminPlugin'];
+        }
         $ctrl = $engine->ctrl;
-        // var_dump($engine);
         if ($engine->enableSecurityMap) {
             $mapConfig = getCommonConfigVar('map');
             if (empty($engine->mod)) {

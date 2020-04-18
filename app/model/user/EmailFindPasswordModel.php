@@ -68,8 +68,8 @@ class EmailFindPasswordModel extends CacheModel
 
         $sql = "INSERT IGNORE INTO {$table} SET email=:email,verify_code=:verify_code, `time`=:time ";
         $sql .= " ON DUPLICATE KEY UPDATE verify_code=:verify_code";
-        $ret = $this->db->exec($sql, $params);
-        $insertId = $this->db->getLastInsId();
+        $ret = $this->db->executeUpdate($sql, $params);
+        $insertId = $this->getLastInsId();
 
         // 更新缓存
         $this->cache->delete(self::DATA_KEY . $email);

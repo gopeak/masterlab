@@ -61,7 +61,7 @@ class ProjectLabelModel extends BaseDictionaryModel
             $appendSql = ' OR project_id=:project_id ';
         }
         $sql = "Select *  From {$table}  Where project_id=0 {$appendSql}  Order by  id  ASC ";
-        $rows = $this->db->getRows($sql, $params, $primaryKey);
+        $rows = $this->fetchALLForGroup($sql, $params, $primaryKey);
         return $rows;
     }
 
@@ -74,12 +74,17 @@ class ProjectLabelModel extends BaseDictionaryModel
 
     public function checkNameExist($projectId, $name)
     {
-        $table = $this->getTable();
         $conditions['project_id'] = $projectId;
         $conditions['title'] = $name;
-        $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND title=:title  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = $this->getCount($conditions);
         return $count > 0;
+    }
+
+    public function deleteByProject($projectId)
+    {
+        $where = ['project_id' => $projectId];
+        $row = $this->delete($where);
+        return $row;
     }
 
 }

@@ -68,8 +68,16 @@ class ProjectCatalogLabelModel extends BaseDictionaryModel
     {
         $conditions['project_id'] = $projectId;
         $conditions['name'] = $name;
-        $count = $this->getOne('count(*) as cc', $conditions);
+        $count = $this->getField('count(*) as cc', $conditions);
         return $count > 0;
     }
+
+    public function deleteByProject($projectId)
+    {
+        $where = ['project_id' => $projectId];
+        $row = $this->delete($where);
+        return $row;
+    }
+
 
 }

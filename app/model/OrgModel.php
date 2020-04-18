@@ -19,6 +19,7 @@ class OrgModel extends CacheModel
      * OrgModel constructor.
      * @param string $uid
      * @param bool $persistent
+     * @throws \Exception
      */
     public function __construct($uid = '', $persistent = false)
     {
@@ -29,6 +30,7 @@ class OrgModel extends CacheModel
      * 通过 id 获取一条记录
      * @param $id
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getById($id)
     {
@@ -39,6 +41,7 @@ class OrgModel extends CacheModel
      * 通过 path 获取一条记录
      * @param $path
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getByPath($path)
     {
@@ -49,6 +52,7 @@ class OrgModel extends CacheModel
      * 通过 name 获取一条记录
      * @param $name
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getByName($name)
     {
@@ -101,6 +105,8 @@ class OrgModel extends CacheModel
      * 删除记录
      * @param $id
      * @return bool|int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function deleteById($id)
     {

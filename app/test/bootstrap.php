@@ -11,7 +11,6 @@ define('TEST_LOG', TEST_PATH . 'data/log');
 require_once TEST_PATH . '../globals.php';
 require_once TEST_PATH . 'BaseTestCase.php';
 require_once TEST_PATH . 'BaseAppTestCase.php';
-require_once PRE_APP_PATH . 'lib/MyPdo.php';
 //require_once TEST_PATH . '../../../hornet-framework/src/framework/bootstrap.php';
 
 spl_autoload_register('testAutoload');

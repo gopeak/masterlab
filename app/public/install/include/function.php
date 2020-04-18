@@ -84,15 +84,10 @@ function importSql(&$install_error, &$install_recover)
     $sitepath = str_replace('install', "", $sitepath);
     $auto_site_url = strtolower($http_type . $_SERVER['HTTP_HOST'] . $sitepath);
     $auto_site_url = substr($auto_site_url, -1) == '/' ? $auto_site_url : $auto_site_url . '/';
-    writeDbConfig();
-    writeAppConfig($auto_site_url);
-    $enable_redis = false;
-    if(isset($_POST['enable_redis']) && $_POST['enable_redis']=='1'){
-        $enable_redis = true;
-    }
-    writeCacheConfig($enable_redis);
+
+    writeConfigYml();
     writeSocketConfig();
-    $ret = file_put_contents(ROOT_PATH . '/../../env.ini', "APP_STATUS = deploy\n");
+    $ret = file_put_contents(INSTALL_PATH . '/../../env.ini', "APP_STATUS = deploy\n");
     showJsMessage("env.ini文件写入结果:" . $ret);
 
     $_charset = strtolower(DBCHARSET);
@@ -154,6 +149,11 @@ function importSql(&$install_error, &$install_recover)
 
 
 //execute sql
+/**
+ * @param $sql
+ * @param $db_prefix
+ * @param  \mysqli $mysqli
+ */
 function runSql($sql, $db_prefix, $mysqli)
 {
     if (!isset($sql) || empty($sql)) {
@@ -197,74 +197,43 @@ function showJsMessage($message)
     ob_flush();
 }
 
-//写入config文件
-function writeDbConfig()
+
+
+
+function writeConfigYml()
 {
-    //var_dump($url);
-    //extract($GLOBALS, EXTR_SKIP);
-    $_config = [];
-    $dbFile = ROOT_PATH . '/../config/deploy/database.cfg.php';
-    if (file_exists($dbFile)) {
-        include $dbFile;
-    }
+    $searchArr = [];
 
-    $db_type = 'mysql';
-    $mysqlConfig = array(
-        'driver' => $db_type,
-        'host' => $_POST['db_host'],
-        'port' => $_POST['db_port'],
-        'user' => $_POST['db_user'],
-        'password' => $_POST['db_pwd'],
-        'db_name' => $_POST['db_name'],
-        'charset' => 'utf8',
-        'timeout' => 10,
-        'show_field_info' => false,
-    );
-    $_config['database']['default'] = $mysqlConfig;
-    $_config['database']['framework_db'] = $mysqlConfig;
-    $_config['database']['log_db'] = $mysqlConfig;
+    $searchArr['{{db_host}}'] = trimString($_POST['db_host']);
+    $searchArr['{{db_port}}'] =trimString( $_POST['db_port']);
+    $searchArr['{{db_user}}'] = trimString($_POST['db_user']);
+    $searchArr['{{db_password}}'] = trimString($_POST['db_pwd']);
+    $searchArr['{{db_name}}'] = trimString($_POST['db_name']);
 
-    $ret = file_put_contents($dbFile, "<?php \n" . '$_config=' . var_export($_config, true) . ";\n" . 'return $_config;');
-    showJsMessage("数据库文件配置写入结果:" . $ret);
-}
 
-/**
- * @param $url
- */
-function writeAppConfig($url)
-{
-    $appFile = ROOT_PATH . '/../config/deploy/app.cfg.php';
-    $appContent = file_get_contents($appFile);
-    $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']*)\'\);/m', "define('ROOT_URL', '" . $url . "');", $appContent);
-    $ret = file_put_contents($appFile, $appContent);
-    showJsMessage("主配置文件写入结果:" . $ret);
-}
+    $searchArr['{{cache_enable}}'] = trimString($_POST['enable_redis'])=='1' ? 'true':'false';
+    $searchArr['{{redis_host}}'] = trimString($_POST['redis_host']);
+    $searchArr['{{redis_port}}'] = trimString($_POST['redis_port']);
+    $searchArr['{{redis_password}}'] = trimString($_POST['redis_password']);
 
-/**
- * @param bool $enable
- */
-function writeCacheConfig($enable = false)
-{
-    $_config = [];
-    $redisFile = ROOT_PATH . '/../config/deploy/cache.cfg.php';
-    if (file_exists($redisFile)) {
-        include $redisFile;
-    }
-    $redisHost = trimString($_POST['redis_host']);
-    $redisPort = trimString($_POST['redis_port']);
-    $redisPassword = trimString($_POST['redis_password']);
-    $redisConfig = [[$redisHost, $redisPort,$redisPassword]];
-    $_config['redis']['data'] = $redisConfig;
-    $_config['redis']['session'] = $redisConfig;
-    $_config['enable'] = (bool)$enable;
+    $searchArr['{{socket_host}}'] = trimString($_POST['socket_host']);
+    $searchArr['{{socket_port}}'] = trimString($_POST['socket_port']);
 
-    $ret = file_put_contents($redisFile, "<?php \n" . '$_config = ' . var_export($_config, true) . ";\n" . 'return $_config;');
-    showJsMessage("缓存配置文件写入结果:" . $ret);
+    $searchArr['{{php_exe}}'] = trimString($_POST['php_bin']);
+    $preAppPath = realpath(INSTALL_PATH. '/../../') . "/";
+    $searchArr['{{root_path}}'] = str_replace('\\','/',$preAppPath );
+
+    $tplFile = INSTALL_PATH . '/../../config.tpl.yml';
+    $tplContent = file_get_contents($tplFile);
+    $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
+    $ret = file_put_contents(INSTALL_PATH . '/../../config.yml', $content);
+    showJsMessage("主配置文件 config.yml 文件写入结果:" . (bool)$ret);
+
 }
 
 function writeSocketConfig()
 {
-    $tplFile = ROOT_PATH . '/../../bin/config-tpl.toml';
+    $tplFile = INSTALL_PATH . '/../../bin/config-tpl.toml';
     $tplContent = file_get_contents($tplFile);
     $searchArr = [];
     $searchArr['{{db}}'] = trimString($_POST['db_name']);
@@ -276,17 +245,17 @@ function writeSocketConfig()
     $searchArr['{{redis_port}}'] = trimString($_POST['redis_port']);
     $searchArr['{{redis_password}}'] = trimString($_POST['redis_password']);
     $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
-    $ret = file_put_contents(ROOT_PATH . '/../../bin/config.toml', $content);
+    $ret = file_put_contents(INSTALL_PATH . '/../../bin/config.toml', $content);
     showJsMessage("MasterlabSocket config.toml 文件写入结果:" . (bool)$ret);
 
-    $tplFile = ROOT_PATH . '/../../bin/cron-tpl.json';
+    $tplFile = INSTALL_PATH . '/../../bin/cron-tpl.json';
     $tplContent = file_get_contents($tplFile);
-    $preAppPath = realpath(ROOT_PATH. '/../../') . "/";
+    $preAppPath = realpath(INSTALL_PATH. '/../../') . "/";
     $searchArr = [];
     $searchArr['{{exe_bin}}'] = $_POST['php_bin'];
     $searchArr['{{root_path}}'] = str_replace('\\','/',$preAppPath );
     $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
-    $ret = file_put_contents(ROOT_PATH . '/../../bin/cron.json', $content);
+    $ret = file_put_contents(INSTALL_PATH . '/../../bin/cron.json', $content);
     showJsMessage("MasterlabSocket cron.json 文件写入结果:" . (bool)$ret);
 }
 
@@ -295,7 +264,7 @@ function writeSocketConfig()
  */
 function env_check(&$env_items)
 {
-    $masterlabRootDir = realpath(ROOT_PATH . '/../../').'/';
+    $masterlabRootDir = realpath(INSTALL_PATH . '/../../').'/';
     $env_items[] = array('name' => '操作系统', 'min' => '无限制', 'good' => 'linux', 'cur' => PHP_OS, 'status' => 1);
     $env_items[] = array('name' => 'PHP版本', 'min' => '5.6', 'good' => '7.2', 'cur' => PHP_VERSION, 'status' => (PHP_VERSION < 5.6 ? 0 : 1));
     $tmp = function_exists('gd_info') ? gd_info() : array();

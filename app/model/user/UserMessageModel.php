@@ -71,12 +71,6 @@ class UserMessageModel extends CacheModel
 
     const LAST_UNREADED_LIMIT = 5;
 
-    /**
-     * 用于实现单例模式
-     *
-     * @var self
-     */
-    protected static $instance;
 
     protected static $instances;
 
@@ -90,6 +84,7 @@ class UserMessageModel extends CacheModel
      *
      * @param int $uid
      * @return \main\platform\model\self
+     * @throws \Exception
      */
     public static function getInstance($uid)
     {
@@ -260,7 +255,7 @@ class UserMessageModel extends CacheModel
             $where['readed'] = $readed;
         }
         $fields = "COUNT(*) as cc ";
-        $total = parent::getOne($fields, $where);
+        $total = parent::getField($fields, $where);
         // v( $this->db->queryStr  );
         //v( $total );
         if (!$total) {

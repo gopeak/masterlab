@@ -15,19 +15,19 @@ var FilteredSearch = (function () {
         {
             key: "迭代",
             name: "sprint",
-            api: "/config/sprint?project_id=" + _cur_project_id,
+            api: "/config/sprint?project_id={{project_id}}",
             symbol: ""
         },
         {
             key: "类型",
             name: "issue_type",
-            api: "/config/issueType?project_id=" + _cur_project_id,
+            api: "/config/issueType?project_id={{project_id}}",
             symbol: ""
         },
         {
             key: "模块",
             name: "module",
-            api: "/config/module?project_id=" + _cur_project_id,
+            api: "/config/module?project_id={{project_id}}",
             symbol: ""
         },
         {
@@ -39,13 +39,13 @@ var FilteredSearch = (function () {
         {
             key: "报告人",
             name: "author",
-            json: "users",
+            jsonData: "users",
             symbol: "@"
         },
         {
             key: "经办人",
             name: "assignee",
-            json: "users",
+            jsonData: "users",
             symbol: "@"
         }];
 
@@ -67,66 +67,101 @@ var FilteredSearch = (function () {
     var _urlParams = {};
     var _dropdownHtml = {};
     var _cur_project_id = "";
-    var _issueConfig = {};
+    var _issueListConfig = "";
     var _searchesObject = {};
 
     function FilteredSearch(urlParams, issueConfig, project_id) {
-        _cur_project_id = project_id;
-        _issueConfig = issueConfig;
-        IssueMain.prototype.getCurrentSearches();
-        IssueMain.prototype.setRecentStorage();
-        IssueMain.prototype.setCurrentSearch(_currentSearchesArr);
-        IssueMain.prototype.setRecentSearch();
-        IssueMain.prototype.getHintData();
-        // IssueMain.prototype.getDropdownData("解决结果");
-        _urlParams = urlParams;
-
-        _searches.forEach(function (item) {
-            var str = "#js-dropdown-" + item.name + " .filter-dropdown";
-            _dropdownHtml[item.key] = $.trim($(str).html());
-            _searchesObject[item.key] = str;
-        });
-
-        _dropdownHtml.hint = $.trim($("#js-dropdown-hint .filter-dropdown").html());
-        _searchesObject.hint = "#js-dropdown-hint .filter-dropdown";
-
-        $(".tokens-container").on("click.close", ".selectable-close", function () {
-            $(this).parents(".js-visual-token").remove();
-        });
-
-        $(".tokens-container").on("click.clear", ".clear-search", function () {
-            $(".tokens-container .filtered-search-token").remove();
-        });
-
-        $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-dropdown-item", function (e) {
-            var $item = $(this).find(".filtered-search-history-dropdown-token");
-            var temp = [];
-
-            $item.each(function (e) {
-                var $this = $(this);
-                var name = $this.find(".name").text();
-                var value = $this.find(".value").text();
-                temp.push({
-                    name,
-                    value
-                });
-            });
-
-            // IssueMain.prototype.setCurrentSearch(temp);
-        });
-
-        $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-clear-button", function (e) {
-            sessionStorage.setItem("issue-recent-searches", "");
-        });
-
-        $("#filter-form").submit(function () {
-            IssueMain.prototype.search(_urlParams);
-            return false;
-        });
-
-        $("#filtered-search-issues").on("focus", function (e) {
-            // console.log("dd");
-        });
+        // _cur_project_id = project_id;
+        // _issueListConfig = JSON.parse(JSON.stringify(issueConfig));
+        // IssueMain.prototype.getCurrentSearches();
+        // IssueMain.prototype.setRecentStorage();
+        // IssueMain.prototype.setCurrentSearch(_currentSearchesArr);
+        // IssueMain.prototype.setRecentSearch();
+        // _urlParams = urlParams;
+        //
+        // $("#filtered-search-issues").attr("data-dropdown-trigger", "#js-dropdown-hint");
+        //
+        // _searches.forEach(function (item) {
+        //     var str = "#js-dropdown-" + item.name + " .filter-dropdown";
+        //     _dropdownHtml[item.key] = $.trim($(str).html());
+        //     _searchesObject[item.key] = str;
+        // });
+        //
+        // _dropdownHtml["hint"] = $.trim($("#js-dropdown-hint .filter-dropdown").html());
+        // _searchesObject["hint"] = "#js-dropdown-hint .filter-dropdown";
+        //
+        // $(".tokens-container").on("click.close", ".selectable-close", function () {
+        //     $(this).parents(".js-visual-token").remove();
+        // });
+        //
+        // $(".tokens-container").on("click.clear", ".clear-search", function () {
+        //     $(".tokens-container .filtered-search-token").remove();
+        // });
+        //
+        // $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-dropdown-item", function (e) {
+        //     var $item = $(this).find(".filtered-search-history-dropdown-token");
+        //     var temp = [];
+        //
+        //     $item.each(function (e) {
+        //         var $this = $(this);
+        //         var name = $this.find(".name").text();
+        //         var value = $this.find(".value").text();
+        //         temp.push({
+        //             name,
+        //             value
+        //         });
+        //     });
+        //
+        //     // IssueMain.prototype.setCurrentSearch(temp);
+        // });
+        //
+        // $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-clear-button", function (e) {
+        //     sessionStorage.setItem("issue-recent-searches", "");
+        // });
+        //
+        // $("#btn-go_search").on("click", function () {
+        //     IssueMain.prototype.search(_urlParams);
+        //     return false;
+        // });
+        //
+        // $("#filtered-search-issues").on("focus", function (e) {
+        //     var dropdownTrigger = $(this).data("dropdown-trigger");
+        //     var hint = $(dropdownTrigger).data("hint") || "";
+        //     if (dropdownTrigger === "#js-dropdown-hint") {
+        //         $(dropdownTrigger + " ul.filter-dropdown").html(IssueMain.prototype.getHintData());
+        //     } else if (hint) {
+        //         IssueMain.prototype.getDropdownData(hint);
+        //     }
+        //     $(dropdownTrigger).css("left", IssueMain.prototype.getSearchLeft()).slideDown(300);
+        // });
+        //
+        // $("#js-dropdown-hint").on("click", ".filter-dropdown-item", function () {
+        //     var name = $(this).find(".js-filter-hint").text();
+        //     var obj = mapping[name];
+        //     IssueMain.prototype.setCurrentSearchName(name);
+        //     IssueMain.prototype.getDropdownData(name);
+        //     $("#js-dropdown-hint").slideUp();
+        //     $(obj).css("left", IssueMain.prototype.getSearchLeft()).slideDown(300);
+        // });
+        //
+        // $(".filtered-search-input-dropdown-menu:not(.hint-dropdown)").on("click", ".filter-dropdown-item", function () {
+        //     var value = $(this).find(".js-data-value").text();
+        //     var $parent = $(this).parents(".filtered-search-input-dropdown-menu");
+        //     IssueMain.prototype.setCurrentSearchValue(value);
+        //     $parent.slideUp();
+        // });
+        //
+        // $(document).on("click", function (e) {
+        //     var $dropdown = $(".filtered-search-input-dropdown-menu");
+        //     var $input = $(".input-token .filtered-search");
+        //     var $search = $(".tokens-container .filtered-search-token").last();
+        //     if ((!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0) && (!$input.is(e.target) && $input.has(e.target).length === 0)) {
+        //         $(".filtered-search-input-dropdown-menu:visible").hide();
+        //         if ($search.find(".value").length === 0) {
+        //             $search.remove();
+        //         }
+        //     }
+        // });
     };
 
     IssueMain.prototype.getSearchObjectValue = function (data) {
@@ -214,6 +249,20 @@ var FilteredSearch = (function () {
         // $(".tokens-container .input-token").before(html);
     };
 
+    IssueMain.prototype.setCurrentSearchName = function (name) {
+        var html = '<li class="js-visual-token filtered-search-token">';
+        html += '<div class="name">' + name + '</div>';
+        html += '</li>';
+
+        $(".tokens-container .input-token").before(html);
+    };
+
+    IssueMain.prototype.setCurrentSearchValue = function (value) {
+        var html = '<div class="value">' + value + '</div><div class="selectable-close"><i class="fa fa-times"></i></div>';
+
+        $(".tokens-container .filtered-search-token").last().append(html);
+    };
+
     IssueMain.prototype.setRecentSearch = function () {
         var tempSearches = IssueMain.prototype.getRecentStorage();
         var html = "";
@@ -229,6 +278,14 @@ var FilteredSearch = (function () {
             });
             html += '</li>';
         });
+        if (!html) {
+            html = '<div class="dropdown-info-note">您没有历史搜索记录</div>';
+        } else {
+            html += '<li class="divider"></li>';
+            html += '<li><button type="button" class="filtered-search-history-clear-button">清除搜索记录</button></li>';
+        }
+
+        $(".filtered-search-history-dropdown .filtered-search-history-dropdown-content ul").html(html);
     };
 
     IssueMain.prototype.search = function (urlParams) {
@@ -245,6 +302,8 @@ var FilteredSearch = (function () {
             });
             searches[encodeURIComponent(name)] = value;
         });
+
+        console.log(searches);
     };
 
     IssueMain.prototype.getSearchLeft = function () {
@@ -252,6 +311,7 @@ var FilteredSearch = (function () {
         var left2 = $('.tokens-container .input-token').offset().left;
 
         var left = left2 - left1;
+        return left;
     };
 
     IssueMain.prototype.getHintData = function () {
@@ -262,10 +322,10 @@ var FilteredSearch = (function () {
             var isSearched = false;
 
             $search.each(function (e) {
-               var name = $(this).find(".name").text();
-               if(name === $this.data("hint")) {
-                   isSearched = true;
-               }
+                var name = $(this).find(".name").text();
+                if(name === $this.data("hint")) {
+                    isSearched = true;
+                }
             });
 
             if (!isSearched) {
@@ -279,24 +339,29 @@ var FilteredSearch = (function () {
 
         var html = "";
         hintArr.forEach(function (n) {
-            var tempData = _dropdownHtml.hint;
-            var tempHtml = "";
-            tempHtml = tempHtml.replace("{{icon}}", n.icon || "");
-            tempHtml = tempHtml.replace("{{hint}}", n.hint || "");
-            tempHtml = tempHtml.replace("{{tag}}", "<" + n.hint + ">" || "");
+            var tempHtml = _dropdownHtml.hint || "";
+            tempHtml = tempHtml.replace("{{icon}}", "fa-" + n.icon);
+            tempHtml = tempHtml.replace("{{hint}}", n.name);
+            tempHtml = tempHtml.replace("{{tag}}", "<" + n.tag + ">");
+
+            html += tempHtml;
         });
+
+        return html;
     };
 
     IssueMain.prototype.getDropdownData = function (name) {
         var html = "";
         var apiUrl = "";
-        var json = "";
+        var tempJson = "";
 
         _searches.forEach(function (n) {
-           if (n.key === name) {
-               apiUrl = n.api || "";
-               json = n.json ? _issueConfig[n.key] : ""
-           }
+            if (n.key === name) {
+                let tempData = JSON.parse(JSON.stringify(_issueListConfig));
+                apiUrl = n.api || "";
+                apiUrl = apiUrl.replace("{{project_id}}", _cur_project_id);
+                tempJson = n.jsonData ? tempData[n.jsonData] : "";
+            }
         });
 
         if (apiUrl) {
@@ -306,15 +371,16 @@ var FilteredSearch = (function () {
                 async: true,
                 url: apiUrl,
                 success: function (resp) {
+                    console.log(resp);
                     IssueMain.prototype.setDropdownData(resp, name);
                 },
                 error: function (res) {
                     notify_error("请求数据错误" + res);
                 }
             });
-        } else if (json){
+        } else if (tempJson){
             var tempData = [];
-            for (var [key, value] of Object.entries(json)) {
+            for (var [key, value] of Object.entries(tempJson)) {
                 tempData.push(value);
             }
 
@@ -325,9 +391,9 @@ var FilteredSearch = (function () {
     IssueMain.prototype.setDropdownData = function (data, name) {
         var html = ""
         data.forEach(function (n) {
-            var tempData = _dropdownHtml[name];
-            var tempHtml = "";
-            tempHtml = tempData.replace("{{name}}", n.name || n.display_name || "");
+            var tempHtml = _dropdownHtml[name];
+            var reg = new RegExp("{{name}}", "g");
+            tempHtml = tempHtml.replace(reg, n.name || n.display_name || "");
             tempHtml = tempHtml.replace("{{avatar_url}}", n.avatar || "");
             tempHtml = tempHtml.replace("{{username}}", n.username || "");
             tempHtml = tempHtml.replace("{{color}}", n.color || "");

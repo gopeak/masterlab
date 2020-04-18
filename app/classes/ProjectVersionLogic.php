@@ -16,12 +16,12 @@ class ProjectVersionLogic
         $order = " ORDER BY id DESC";
 
         $sqlCount = "SELECT count(*) as cc FROM  {$table} {$where}";
-        $count = $model->db->getOne($sqlCount);
+        $count = $model->getFieldBySql($sqlCount);
 
         $sql = "SELECT * FROM {$table} {$where}";
         $sql .= $order . $limit;
 
-        $arr = $model->db->getRows($sql);
+        $arr = $model->db->fetchAll($sql);
         return [true, $arr, $count];
     }
 }

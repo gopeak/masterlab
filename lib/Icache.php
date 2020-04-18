@@ -38,7 +38,7 @@ interface  Icache
     /**
      * 将数据存入缓存中
      * @param string $key   key
-     * @param mix    $value 要存入的数据
+     * @param mixed    $value 要存入的数据
      * @param int    $life  存活时间
      * @return bool
      */
@@ -56,7 +56,7 @@ interface  Icache
     /**
      * 将数据存入缓存中
      * @param string $key   key
-     * @param mix    $value 要存入的数据
+     * @param mixed    $value 要存入的数据
      * @param int    $life  存活时间
      * @return bool
      */
@@ -64,7 +64,7 @@ interface  Icache
     /**
      * 将数据更新到缓存中，如果存在缓存
      * @param string $key   key
-     * @param mix    $value 要存入的数据
+     * @param mixed  $value 要存入的数据
      * @param int    $life  存活时间
      * @global $this->link 为Memache类的对象
      * @return bool
@@ -73,17 +73,15 @@ interface  Icache
 
     /**
      * 将数据更新到缓存中，如果存在缓存
-     * @param string $key   key
-     * @param mix    $value 要存入的数据
-     * @param int    $life  存活时间
-     * @global $this->link 为Memache类的对象
+     * @param string $key key
      * @return bool
+     * @global $this ->link 为Memache类的对象
      */
     public function delete($key);
 
     /**
      * 清除公共缓存
-     * @param $userid
+     * @param $keys
      */
     public function clearCache($keys);
     

@@ -66,14 +66,14 @@ class IssueResolveModel extends BaseDictionaryModel
     public function getIdByKey($key)
     {
         $where = ['_key' => trim($key)];
-        $id = $this->getOne("id", $where);
+        $id = $this->getField("id", $where);
         return $id;
     }
 
     public function getIdByName($name)
     {
         $where = ['name' => trim($name)];
-        $id = $this->getOne("id", $where);
+        $id = $this->getField("id", $where);
         return $id;
     }
 

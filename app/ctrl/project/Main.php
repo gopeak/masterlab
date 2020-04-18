@@ -15,6 +15,8 @@ use main\app\ctrl\Agile;
 use main\app\ctrl\project\Mind;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\OrgModel;
@@ -211,6 +213,36 @@ class Main extends Base
     }
 
     /**
+     * 跳转至事项页面
+     * @throws \Exception
+     */
+    public function pagePlugin()
+    {
+        // 1.取出插件名称
+        $pluginName = $_GET['_target'][3];
+        $pluginFile = PLUGIN_PATH . $pluginName . "/index.php";
+        //var_dump($pluginFile);
+        if (file_exists($pluginFile)) {
+            require_once($pluginFile);
+            $pluginIndexClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, 'Index');
+            if (class_exists($pluginIndexClass)) {
+                $indexCtrl = new $pluginIndexClass($this->dispatcher);
+                if(method_exists($indexCtrl,'main')){
+                    $indexCtrl->main();
+                }
+                if(method_exists($indexCtrl,'pageIndex')){
+                    $indexCtrl->pageIndex();
+                }
+            }else{
+                echo "入口类: {$pluginIndexClass} 缺失";
+            }
+
+        }else{
+            echo "入口文件: {$pluginFile} 缺失";
+        }
+    }
+
+    /**
      * backlog页面
      * @throws \Exception
      */
@@ -307,7 +339,7 @@ class Main extends Base
         $orgList = $orgModel->getAllItems();
         $data['org_list'] = $orgList;
 
-        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
+        $orgName = $orgModel->getField('name', array('id' => $info['org_id']));
         $data['title'] = '设置';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'basic_info';
@@ -677,6 +709,27 @@ class Main extends Base
         $sprintModel = new SprintModel();
         $project['sprint_count'] = $sprintModel->getCountByProject($id);
         $project = ProjectLogic::formatProject($project);
+
+
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
+        $userIdArr = $userLogic->getUserIdArrByProject($id);
+
+        $userArr = [];
+        foreach ($userIdArr as $userId => $hasRoles) {
+            if (isset($users[$userId])) {
+                $user = $users[$userId];
+                $user['is_leader'] = false;
+                if ($userId == $project['lead']) {
+                    $user['is_leader'] = true;
+                }
+                $userArr[] = $user;
+            }
+        }
+
+        $project['lead_user_info'] = isset($users[$project['lead']])?$users[$project['lead']]:[];
+        $project['join_users'] = $userArr;
+
         $this->ajaxSuccess('ok', $project);
     }
 
@@ -825,16 +878,10 @@ class Main extends Base
 
             if ($flagInitRole && $flagAssignAdminRole) {
                 $projectModel->db->commit();
-
-                $currentUid = $this->getCurrentUid();
-                $activityModel = new ActivityModel();
-                $activityInfo = [];
-                $activityInfo['action'] = '创建了项目';
-                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-                $activityInfo['obj_id'] = $ret['data']['project_id'];
-                $activityInfo['title'] = $info['name'];
-                $activityModel->insertItem($currentUid, $ret['data']['project_id'], $activityInfo);
-
+                // 分发事件
+                $info['id'] = $ret['data']['project_id'];
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event,  Events::onProjectCreate);
                 $this->ajaxSuccess('操作成功', $final);
             } else {
                 $projectModel->db->rollBack();
@@ -843,88 +890,6 @@ class Main extends Base
         } else {
             $projectModel->db->rollBack();
             $this->ajaxFailed('服务器错误', '添加失败,错误详情 :' . $ret['msg']);
-        }
-    }
-
-    /**
-     * 更新
-     * 注意：该方法未使用,可以删除该方法
-     * @param $project_id
-     * @throws \Exception
-     */
-    public function update($project_id)
-    {
-        // 判断权限:全局权限和项目角色
-        if (!isset($this->projectPermArr[PermissionLogic::BROWSE_ISSUES])) {
-            $this->ajaxFailed('您没有权限进行此操作,需要项目管理权限');
-        }
-
-        $uid = $this->getCurrentUid();
-        $projectModel = new ProjectModel($uid);
-        // $this->param_valid($projectModel, $name, $key, $type);
-
-        $key = null;
-        $projectId = intval($project_id);
-        $err = [];
-        $info = [];
-        if (isset($_REQUEST['name'])) {
-            $name = trimStr($_REQUEST['name']);
-            if ($projectModel->checkIdNameExist($projectId, $name)) {
-                $err['name'] = '名称已经被使用';
-            }
-            $info['name'] = trimStr($_REQUEST['name']);
-        }
-        if (isset($_REQUEST['key'])) {
-            $key = trimStr($_REQUEST['key']);
-            if ($projectModel->checkIdKeyExist($projectId, $key)) {
-                $err['key'] = '关键字已经被使用';
-            }
-            $info['key'] = trimStr($_REQUEST['key']);
-        }
-
-        if (!empty($err)) {
-            $this->ajaxFailed('提示', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
-        }
-
-        if (isset($_REQUEST['type'])) {
-            $info['type'] = intval($_REQUEST['type']);
-        }
-        if (isset($_REQUEST['lead'])) {
-            $info['lead'] = intval($_REQUEST['lead']);
-        }
-        if (isset($_REQUEST['description'])) {
-            $info['description'] = $_REQUEST['description'];
-        }
-        if (isset($_REQUEST['category'])) {
-            $info['category'] = (int)$_REQUEST['category'];
-        }
-        if (isset($_REQUEST['url'])) {
-            $info['url'] = $_REQUEST['url'];
-        }
-        if (isset($_REQUEST['avatar'])) {
-            $info['avatar'] = $_REQUEST['avatar'];
-        }
-        if (empty($info)) {
-            $this->ajaxFailed('参数错误', '无表单数据提交');
-        }
-        $project = $projectModel->getRowById($projectId);
-        $ret = $projectModel->updateById($projectId, $info);
-        if ($ret[0]) {
-            if ($project['key'] != $key) {
-                // @todo update issue key
-            }
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '更新了项目';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $projectId;
-            $activityInfo['title'] = $project['name'];
-            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
-
-            $this->ajaxSuccess('success');
-        } else {
-            $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $ret[1]);
         }
     }
 }

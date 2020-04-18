@@ -91,7 +91,7 @@ class LogOperatingModel extends DbModel
     public function getsByObj($obj_id, $fields = '*')
     {
         $sql = " SELECT {$fields} FROM {$this->getTable()} Where obj_id='$obj_id' order by id desc ";
-        $rows = $this->db->getRows($sql);
+        $rows = $this->db->fetchAll($sql);
         return $rows;
     }
 

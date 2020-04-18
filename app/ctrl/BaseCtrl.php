@@ -2,14 +2,17 @@
 
 namespace main\app\ctrl;
 
+use Doctrine\Common\Inflector\Inflector;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\model\DbModel;
+use main\app\model\PluginModel;
 use main\app\model\user\UserPostedFlagModel;
 use main\app\model\SettingModel;
 use main\app\model\system\AnnouncementModel;
 use main\app\model\user\UserModel;
 use main\app\protocol\Ajax;
-use main\lib\MyPdo;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * 控制器基类
@@ -19,6 +22,14 @@ use main\lib\MyPdo;
  */
 class BaseCtrl
 {
+
+    /**
+     * @var EventDispatcher|null
+     */
+    public $dispatcher = null;
+
+    protected $_plugins = array();
+
     /**
      * 模板引擎对象
      * @var
@@ -83,6 +94,9 @@ class BaseCtrl
     {
         static $siteName, $twigLoader, $twigTpl;
 
+        $this->dispatcher = new EventDispatcher();
+        $this->loadPlugin();
+
         if (count($_GET) > 200) {
             throw new \Exception('GET参数过多', 300);
         }
@@ -102,8 +116,9 @@ class BaseCtrl
         }
         $this->loader  = $twigLoader;
         if (empty($twigTpl)) {
+            $debug = XPHP_DEBUG ? true : false;
             $twigTpl = new \Twig\Environment($this->loader, [
-                'debug' => true
+                'debug' => $debug
             ]);
             $function = new \Twig\TwigFunction('str_replace', function ($find, $replace, $string) {
                 return str_replace($find, $replace, $string);
@@ -123,6 +138,8 @@ class BaseCtrl
             $this->addGVar('_title', $title);
             $this->getSystemInfo();
         }
+        $this->addGVar('_currenPhpUser', isset($_SERVER['USER'])? $_SERVER['USER']:@get_current_user());
+        $this->addGVar('_root_path', PRE_APP_PATH);
     }
 
     /**
@@ -221,7 +238,7 @@ class BaseCtrl
         if ($tplEngine == 'php') {
             require_once VIEW_PATH . $tpl;
             if (!$partial && XPHP_DEBUG) {
-                $sqlLogs = MyPdo::$sqlLogs;
+                $sqlLogs = DbModel::$sqlLogs;
                 include_once VIEW_PATH . 'debug.php';
                 unset($sqlLogs);
             }
@@ -487,7 +504,7 @@ class BaseCtrl
 
             $issueModel = new SettingModel();
             $versionSql = 'select version() as vv';
-            $versionStr = $issueModel->db->getOne($versionSql);
+            $versionStr = $issueModel->getFieldBySql($versionSql);
             $basicSettingArr = $issueModel->getSettingByModule();
             $companyInfo = [];
             $fetchKeyArr = ['title', 'company', 'company_linkman', 'company_phone'];
@@ -525,5 +542,65 @@ class BaseCtrl
             $userPostedFlagModel->insertDateIp($userId, $date, $ip);
             //echo $curl->rawResponse;
         }
+    }
+
+    /**
+     * @param $pluginDir
+     * @return array
+     */
+    public function getPluginDirArr($pluginDir)
+    {
+        $pluginArr = [];
+        $currentDir = dir($pluginDir);
+        while ($file = $currentDir->read()) {
+            if ((is_dir($pluginDir . $file)) and ($file != ".") and ($file != "..")) {
+                $jsonFile = $pluginDir . $file . '/plugin.json';
+                if (file_exists($jsonFile)) {
+                    $jsonArr = json_decode(file_get_contents($jsonFile), true);
+                    $jsonArr['name'] = $file;
+                    $pluginArr[$file] = $jsonArr;
+                }
+            }
+        }
+        $currentDir->close();
+        return $pluginArr;
+    }
+
+    /**
+     * 初始化插件
+     * @throws \Exception
+     */
+    public function loadPlugin()
+    {
+        $pluginModel = new PluginModel();
+        $plugins = $pluginModel->getRows('id, name, title');
+        $pluginsKeyArr = array_column($plugins, null, 'name');
+        $dirPluginArr = $this->getPluginDirArr(PLUGIN_PATH);
+        foreach ($dirPluginArr as $dirName => $item) {
+            if (!isset($pluginsKeyArr[$dirName])) {
+                $tmp = $item;
+                $tmp['status'] = PluginModel::STATUS_UNINSTALLED;
+                $tmp['is_system'] = '0';
+                $plugins[] = $tmp;
+            }
+        }
+
+        if ($plugins) {
+            foreach ($plugins as $plugin) {
+                $pluginName = $plugin['name'];
+                $pluginClassName = 'PluginSubscriber';
+                $pluginFile = PLUGIN_PATH . $pluginName . "/PluginSubscriber.php";
+                //var_dump($pluginFile);
+                if (file_exists($pluginFile)) {
+                    require_once($pluginFile);
+                    $pluginClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, $pluginClassName);
+                    if (class_exists($pluginClass)) {
+                        $this->_plugins[$pluginName] = new $pluginClass($this->dispatcher, $pluginName);
+                        $this->dispatcher->addSubscriber($this->_plugins[$pluginName]);
+                    }
+                }
+            }
+        }
+         //print_r($this->_plugins);
     }
 }

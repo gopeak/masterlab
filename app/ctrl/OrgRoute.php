@@ -31,8 +31,10 @@ class OrgRoute extends BaseUserCtrl
     public function pageIndex()
     {
         global $framework;
-        if (isset($_GET['_target'][1]) && !empty($_GET['_target'][1])) {
-            $projectKey = trimStr($_GET['_target'][1]);
+        $_target = $_GET['_target'];
+
+        if (isset($_target[1]) && !empty($_target[1])) {
+            $projectKey = trimStr($_target[1]);
             $model = new projectModel();
             $project = $model->getByKey($projectKey);
             if (isset($project['id']) && $project['id']) {
@@ -50,6 +52,9 @@ class OrgRoute extends BaseUserCtrl
                     switch ($projectHomePage) {
                         case 'issues':
                             $projectCtrlMain->pageIssues();
+                            break;
+                        case 'plugin':
+                            $this->pageProjectPlugin();
                             break;
                         case 'summary':
                             $projectCtrlMain->pageHome();
@@ -78,6 +83,55 @@ class OrgRoute extends BaseUserCtrl
                 }
                 return;
             }
+        }
+    }
+
+
+    public function pageAdminPlugin()
+    {
+        // 1.取出插件名称
+        $pluginName = $_GET['_target'][2];
+
+        $pluginFile = PLUGIN_PATH . $pluginName . "/index.php";
+        //var_dump($pluginFile);
+        if (file_exists($pluginFile)) {
+            require_once($pluginFile);
+            $pluginIndexClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, 'Index');
+            if (class_exists($pluginIndexClass)) {
+                $indexCtrl = new $pluginIndexClass($this->dispatcher);
+
+            }else{
+                echo "入口类: {$pluginIndexClass} 缺失";
+            }
+
+        }else{
+            echo "入口文件: {$pluginFile} 缺失";
+        }
+    }
+
+    public function pageProjectPlugin()
+    {
+        // 1.取出插件名称
+        $pluginName = $_GET['_target'][3];
+        $pluginFile = PLUGIN_PATH . $pluginName . "/index.php";
+        //var_dump($pluginFile);
+        if (file_exists($pluginFile)) {
+            require_once($pluginFile);
+            $pluginIndexClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, 'Index');
+            if (class_exists($pluginIndexClass)) {
+                $indexCtrl = new $pluginIndexClass($this->dispatcher);
+                if(method_exists($indexCtrl,'main')){
+                    $indexCtrl->main();
+                }
+                if(method_exists($indexCtrl,'pageIndex')){
+                    $indexCtrl->pageIndex();
+                }
+            }else{
+                echo "入口类: {$pluginIndexClass} 缺失";
+            }
+
+        }else{
+            echo "入口文件: {$pluginFile} 缺失";
         }
     }
 }
