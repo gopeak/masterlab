@@ -761,7 +761,7 @@
         "sprint":{{sprints|json_encode()|raw}}
     };
     window.onload = function() {
-        MM.App.init();
+        MM.App.init(13, 14);
         MM.App.io.fetchIssues();
         MM.App.setServerSettings(window.mind_setting);
     }

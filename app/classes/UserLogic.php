@@ -92,7 +92,7 @@ class UserLogic
         $orderBy = 'uid';
         $sort = "desc ";
         $append_sql = "";
-        $field = "uid as k,uid,phone,username,display_name,avatar,email,status";
+        $field = "uid as k,uid,schema_source,phone,username,display_name,avatar,email,status";
         $users = $userModel->getRows($field, $conditions, $append_sql, $orderBy, $sort, $limit, $primaryKey);
         foreach ($users as &$user) {
             self::formatAvatarUser($user);
@@ -187,6 +187,7 @@ class UserLogic
         $sql = "SELECT {$field} FROM  {$table} " . $sql;
         $sql .= ' ' . $order . $limit;
         //var_dump($sql);
+       
         $rows = $userModel->fetchALLForGroup($sql, $params, true);
         $userIds = array_keys($rows);
 
@@ -350,6 +351,7 @@ class UserLogic
             $sql .= " limit $limit ";
         }
         // echo $sql;
+        
         $rows = $userModel->db->fetchAll($sql, $params);
         unset($userModel);
         return $rows;
@@ -431,11 +433,13 @@ class UserLogic
         $sql .= " group by G.id ";
 
         // 获取总数
+        
         $count = $groupModel->getFieldBySql($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$joinTable} " . $sql;
         $sql .= ' ' . $order . $limit;
         //echo $sql;
+        
         $rows = $groupModel->db->fetchAll($sql, $params);
         unset($userGroupModel, $groupModel);
 

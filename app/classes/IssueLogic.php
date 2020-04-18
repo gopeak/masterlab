@@ -610,7 +610,7 @@ class IssueLogic
 
     /**
      * 添加子项数据
-     * @param IssueModel $model
+     * @param mixed $model
      * @param $issueId
      * @param $arr
      * @param $field
@@ -1183,7 +1183,6 @@ class IssueLogic
         'summary' => '标题',
         'module' => '模块',
         'sprint' => '迭代',
-        'summary' => '标题',
         'description' => '描述',
         'weight' => '权重',
         'assignee' => '经办人',
@@ -1198,4 +1197,40 @@ class IssueLogic
         'effect_version' => '影响版本',
         'labels' => '标签',
     ];
+
+    /**
+     * 将描述的图片，增加样式最大宽度600px
+     * @param $content
+     * @return string|string[]|null
+     */
+    public static function fixContentImgAttr($content)
+    {
+        if(!empty($content)){
+            $content = preg_replace_callback(
+                '/(<img\s+[^>]+)>/sU',
+                function ($matches) {
+                    if(!empty($matches[1])){
+                        $imgAttr = $matches[1];
+                        if (preg_match('/src="([^"]+)?"/sU', $imgAttr, $regs)) {
+                            $src = $regs[1];
+                        } else {
+                            $src = "#";
+                        }
+                        if(strpos($imgAttr, 'style="')!==false){
+                            //print_r($imgAttr);
+                            $imgAttr = preg_replace('/style="([^"]*)?"/sU', 'style="\\1;max-width:600px"', $imgAttr);
+                            return '<a href="'.$src.'" target="_blank">'.$imgAttr.'</a>';
+                        }else{
+                            $imgAttr .= ' style="max-width:600px"';
+                            return '<a href="'.$src.'" target="_blank">'.$imgAttr.'</a>';
+                        }
+                    }
+                },
+                $content
+            );
+        }
+        return  $content;
+    }
+
+
 }

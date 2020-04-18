@@ -16,6 +16,7 @@ use main\app\classes\OrgLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ChartLogic;
 use main\app\classes\ActivityLogic;
+use main\app\classes\UserLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueFollowModel;
@@ -237,15 +238,17 @@ class Widget extends BaseUserCtrl
         $userId = UserAuth::getId();
         list($data['activity'], $total) = ActivityLogic::filterByIndex($userId, $page, $pageSize);
         // print_r($data['activity']);
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
         foreach ($data['activity'] as &$item) {
             $item['zip_title'] = $item['title'];
-            if (mb_strlen($item['title']) > 40) {
-                $item['zip_title'] = mb_substr($item['title'], 0, 40) . '...';
+            if (mb_strlen($item['title']) > 60) {
+                $item['zip_title'] = mb_substr($item['title'], 0, 60) . '...';
             }
-
             if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['zip_title'] = '<span style="text-decoration: line-through;">' . $item['zip_title'] . '</span>';
             }
+            $item['user_info'] = $users[$item['user_id']];
         }
         unset($item);
         $data['total'] = $total;
@@ -293,11 +296,18 @@ class Widget extends BaseUserCtrl
             $page = max(1, intval($_GET['page']));
         }
         $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : null;
+
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
+
         list($data['activity'], $total) = ActivityLogic::filterByIssueId($issueId, $page, $pageSize);
         foreach ($data['activity'] as &$item) {
+            $item['title_original'] = $item['title'];
             if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['title'] = '<span style="text-decoration: line-through;">' . $item['title'] . '</span>';
             }
+            //    max-width: 200px;
+            $item['user_info'] = $users[$item['user_id']];
         }
         unset($item);
         $data['total'] = $total;

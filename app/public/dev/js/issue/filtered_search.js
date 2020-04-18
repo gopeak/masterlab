@@ -322,10 +322,10 @@ var FilteredSearch = (function () {
             var isSearched = false;
 
             $search.each(function (e) {
-               var name = $(this).find(".name").text();
-               if(name === $this.data("hint")) {
-                   isSearched = true;
-               }
+                var name = $(this).find(".name").text();
+                if(name === $this.data("hint")) {
+                    isSearched = true;
+                }
             });
 
             if (!isSearched) {
@@ -356,12 +356,12 @@ var FilteredSearch = (function () {
         var tempJson = "";
 
         _searches.forEach(function (n) {
-           if (n.key === name) {
-               let tempData = JSON.parse(JSON.stringify(_issueListConfig));
-               apiUrl = n.api || "";
-               apiUrl = apiUrl.replace("{{project_id}}", _cur_project_id);
-               tempJson = n.jsonData ? tempData[n.jsonData] : "";
-           }
+            if (n.key === name) {
+                let tempData = JSON.parse(JSON.stringify(_issueListConfig));
+                apiUrl = n.api || "";
+                apiUrl = apiUrl.replace("{{project_id}}", _cur_project_id);
+                tempJson = n.jsonData ? tempData[n.jsonData] : "";
+            }
         });
 
         if (apiUrl) {

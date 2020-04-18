@@ -389,6 +389,7 @@ class Main extends BaseUserCtrl
             $resp['uuid'] = $ret['uuid'];
 
             if (!empty($issueId)) {
+             
                 $event = new CommonPlacedEvent($this, $issueId);
                 $this->dispatcher->dispatch($event,  Events::onIssueUpload);
             }
@@ -518,6 +519,7 @@ class Main extends BaseUserCtrl
             $resp['insert_id'] = $ret['insert_id'];
             $resp['uuid'] = $ret['uuid'];
 
+
             $event = new CommonPlacedEvent($this, $issueId);
             $this->dispatcher->dispatch($event,  Events::onIssueMobileUpload);
         } else {
@@ -632,7 +634,7 @@ class Main extends BaseUserCtrl
                 }
             }
 
-            $userLogic = new UserLogic();
+			$userLogic = new UserLogic();
             $users = $userLogic->getAllUser();
             $emptyObj = new \stdClass();
             foreach ($data['issues'] as &$issue) {
@@ -654,7 +656,6 @@ class Main extends BaseUserCtrl
                 $issue['reporter_info'] = isset($users[$issue['reporter']])?$users[$issue['reporter']]:$emptyObj;
                 $issue['assignee_info'] = isset($users[$issue['assignee']])?$users[$issue['assignee']]:$emptyObj;
             }
-
             $data['total'] = (int)$total;
             $data['pages'] = ceil($total / $pageSize);
             $data['page_size'] = $pageSize;
@@ -879,6 +880,8 @@ class Main extends BaseUserCtrl
         if (empty($issue)) {
             $this->ajaxFailed('failed:issue_id is error');
         }
+
+
         $issueTypeId = (int)$issue['issue_type'];
         if (isset($_GET['issue_type'])) {
             $issueTypeId = (int)$_GET['issue_type'];
@@ -1096,6 +1099,7 @@ class Main extends BaseUserCtrl
             $masterId = (int)$params['master_issue_id'];
             $master = $model->getById($masterId);
             if (!empty($master)) {
+                
 
                 $info['id'] = $issueId;
                 $event = new CommonPlacedEvent($this, ['master'=>$master,'child'=>$info]);
@@ -1192,6 +1196,7 @@ class Main extends BaseUserCtrl
                 $aboveWeight = (int)$belowIssue[$fieldWeight];
                 $sprintId = $belowIssue['sprint'];
                 $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
+                
                 $nextWeight = (int)$model->getFieldBySql($sql);
                 if (empty($nextWeight)) {
                     $nextWeight = 0;
@@ -1242,9 +1247,11 @@ class Main extends BaseUserCtrl
                 // 如果是子任务
                 $masterId = (int)$params['master_issue_id'];
                 $sql = "Select {$fieldWeight} From {$table} Where master_id={$masterId}  AND sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
+               
                 $prevWeight = (int)$model->getFieldBySql($sql);
                 $sql = "Select {$fieldWeight} From {$table} Where $prevWeight>{$fieldWeight} AND sprint={$sprintId} Order by {$fieldWeight} DESC limit 1";
                 //echo $sql;
+               
                 $nextWeight = (int)$model->getFieldBySql($sql);
                 if (($prevWeight - $nextWeight) > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $prevWeight - ProjectGantt::$offset;
@@ -1254,6 +1261,7 @@ class Main extends BaseUserCtrl
             } else {
                 // 如果是普通任务
                 $sql = "Select {$fieldWeight} From {$table} Where   sprint={$sprintId} Order by {$fieldWeight} ASC limit 1";
+             
                 $minWeight = (int)$model->getFieldBySql($sql);
                 if ($minWeight > (ProjectGantt::$offset * 2)) {
                     $info[$fieldWeight] = $minWeight - ProjectGantt::$offset;
@@ -1277,7 +1285,8 @@ class Main extends BaseUserCtrl
 
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+           
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1360,7 +1369,8 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = $params['environment'];
+           
+            $info['environment'] = htmlentities($params['environment']);
         }
 
 
@@ -1394,7 +1404,8 @@ class Main extends BaseUserCtrl
         $info = [];
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+           
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1470,7 +1481,8 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = $params['environment'];
+            
+            $info['environment'] = htmlentities($params['environment']);
         }
 
 
@@ -1539,7 +1551,8 @@ class Main extends BaseUserCtrl
         $info = [];
 
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+            
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         $info = $info + $this->getUpdateFormInfo($params);
@@ -1591,9 +1604,11 @@ class Main extends BaseUserCtrl
                 unset($info[$k]);
             }
         }
+        /*
         if ($noModified) {
             //$this->ajaxSuccess('success');
         }
+        */
 
         // 实例化邮件通知
         $notifyLogic = new NotifyLogic();
@@ -1680,7 +1695,7 @@ class Main extends BaseUserCtrl
         // effect version
         if (isset($params['effect_version'])) {
             $model = new IssueEffectVersionModel();
-            $ret = $model->delete(['issue_id' => $issueId]);
+            $model->delete(['issue_id' => $issueId]);
             $issueLogic->addChildData($model, $issueId, $params['effect_version'], 'version_id');
         }
         // labels
@@ -1727,6 +1742,7 @@ class Main extends BaseUserCtrl
         $this->dispatcher->dispatch($event,  Events::onIssueUpdateAfter);
         $this->ajaxSuccess('更新成功', $updatedIssue);
     }
+
 
     /**
      * 批量修改
