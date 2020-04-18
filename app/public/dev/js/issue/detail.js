@@ -165,7 +165,7 @@ var IssueDetail = (function () {
                 var _editormd_view = editormd.markdownToHTML("description-view", {
                     markdown: resp.data.issue.description
                 });
-
+                $('#description-view').html(IssueDetail.prototype.imgTagAddStyle($('#description-view').html()));
                 source = '{{make_assistants issue.assistants_arr users}}';
                 template = Handlebars.compile(source);
                 result = template(resp.data);
@@ -243,6 +243,19 @@ var IssueDetail = (function () {
             }
         });
     }
+
+    IssueDetail.prototype.imgTagAddStyle = function(htmlstr) {
+
+        var regex1 = new RegExp("(i?)(\<img)(?!(.*?style=['\"](.*)['\"])[^\>]+\>)", 'gmi')
+        htmlstr = htmlstr.replace(regex1, '$1  $2 style="" onclick="window.open(this.src);" $3 ');
+
+        console.log('增加style=""后的html字符串：' + htmlstr)
+        var regex2 = new RegExp("(i?)(\<img.*?style=['\"])([^\>]+\>)", 'gmi')
+        htmlstr = htmlstr.replace(regex2, '$2max-width:600px; height:auto; cursor:pointer$3')
+        console.log('在img标签的style里面增加样式后的html字符串：' + htmlstr)
+        return htmlstr
+    }
+
 
     IssueDetail.prototype.fetchTimeline = function (id) {
         $('#issue_id').val(id);

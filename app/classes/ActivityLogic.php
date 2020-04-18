@@ -159,15 +159,14 @@ class ActivityLogic
         $conditions = [];
         $conditions['obj_id'] = $issueId;
         $conditions['type'] = ActivityModel::TYPE_ISSUE;
-        $conditions['type_comment'] =  ActivityModel::TYPE_ISSUE_COMMIT;
         $start = $pageSize * ($page - 1);
         $model = new ActivityModel();
-        $sql = "SELECT  *  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND (`type` =:type  or `type` = :type_comment) Order by id desc  limit $start, " . $pageSize;
+        $sql = "SELECT  *  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND `type` =:type   Order by id desc  limit $start, " . $pageSize;
         $rows = $model->db->getRows($sql, $conditions);
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
-        $sqlCount = "SELECT  count(*) as cc  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND (`type` =:type  or `type` = :type_comment)  ";
+        $sqlCount = "SELECT  count(*) as cc  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND  `type` =:type    ";
         $count = $model->db->getOne($sqlCount, $conditions);
         return [$rows, $count];
     }

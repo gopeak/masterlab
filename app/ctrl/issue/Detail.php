@@ -405,6 +405,10 @@ class Detail extends BaseUserCtrl
         // 子任务
         $issue['child_issues'] = $issueLogic->getChildIssue($issueId);
         //IssueFilterLogic::formatIssue($issue);
+
+        // 优化显示描述的图片宽度, markdown格式无法设置
+        //$issue['description'] = IssueLogic::fixContentImgAttr($issue['description']);
+
         $data['issue'] = $issue;
 
         //下一个 上一个事项
@@ -523,7 +527,6 @@ class Detail extends BaseUserCtrl
             $activityInfo['action'] = '添加了评论 ';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $content;
             $issueId = $issue['id'];
             $summary = $issue['summary'];
             $activityInfo['title'] = "<a href='/issue/detail/index/{$issueId}' >{$summary}</a>";
@@ -590,15 +593,6 @@ class Detail extends BaseUserCtrl
         $info['action'] = 'commented';
         list($ret, $msg) = $model->updateById($id, $info);
         if ($ret) {
-            $info = [];
-            $info['uid'] = UserAuth::getInstance()->getId();
-            $info['issue_id'] = $timeline['issue_id'];
-            $info['content'] = 'updated comment';
-            $info['contentHtml'] = $contentHtml;
-            $info['time'] = time();
-            $info['type'] = 'issue';
-            $info['action'] = 'updated_comment';
-            $model->insert($info);
             // 活动记录
             $currentUid = $this->getCurrentUid();
             $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
@@ -669,7 +663,10 @@ class Detail extends BaseUserCtrl
             $activityInfo['action'] = '删除了评论 ' . $timeline['content'];
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = '';
+            $issueId = $issue['id'];
+            $summary = $issue['summary'];
+            $activityInfo['title'] = "<a href='/issue/detail/index/{$issueId}' >{$summary}</a>";
+            $activityInfo['content'] = $timeline['content_html'] ;
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
             // email
