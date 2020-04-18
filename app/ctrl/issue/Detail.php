@@ -486,6 +486,7 @@ class Detail extends BaseUserCtrl
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $issueId, $contentHtml);
 
+            $info['id'] = $insertId;
             $event = new CommonPlacedEvent($this, $info);
             $this->dispatcher->dispatch($event,  Events::onIssueAddComment);
             $this->ajaxSuccess('success', $insertId);

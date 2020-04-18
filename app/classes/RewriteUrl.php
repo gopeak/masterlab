@@ -29,7 +29,7 @@ class RewriteUrl
     public function orgRoute($engine)
     {
         $_target = $_GET['_target'];
-        if($_target[0]=='admin' && $_target[1]=='plugin'){
+        if(isset($_target[0]) && $_target[0]=='admin' && isset($_target[1]) &&   $_target[1]=='plugin'){
             return ['OrgRoute', '', 'AdminPlugin'];
         }
         $ctrl = $engine->ctrl;

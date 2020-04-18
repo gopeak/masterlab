@@ -554,15 +554,18 @@ class IssueSubscriber implements EventSubscriberInterface
     public function onIssueAddComment(CommonPlacedEvent $event)
     {
         $issueId = $event->pluginDataArr['issue_id'];
-        $content = $event->pluginDataArr['content'];
         $currentUid = UserAuth::getId();
         $issue = IssueModel::getInstance()->getById($issueId);
         $activityModel = new ActivityModel();
         $activityInfo = [];
         $activityInfo['action'] = '为' . $issue['summary'] . '添加了评论 ';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
-        $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = $content;
+        $activityInfo['obj_id'] = $event->pluginDataArr['id'];
+        $issueId = $issue['id'];
+        $summary = $issue['summary'];
+        $activityInfo['title'] = "<a href='/issue/detail/index/{$issueId}' >{$summary}</a>";
+        $activityInfo['content'] = $event->pluginDataArr['content_html'] ;
+
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
         unset($issue);
     }
@@ -582,6 +585,10 @@ class IssueSubscriber implements EventSubscriberInterface
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
         $activityInfo['obj_id'] = $timeline['id'];
         $activityInfo['title'] = $timeline['content'];
+        $issueId = $issue['id'];
+        $summary = $issue['summary'];
+        $activityInfo['title'] = "<a href='/issue/detail/index/{$issueId}' >{$summary}</a>";
+        $activityInfo['content'] = $timeline['content_html'] ;
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
         unset($issue);
     }
@@ -600,7 +607,12 @@ class IssueSubscriber implements EventSubscriberInterface
         $activityInfo['action'] = '更新了评论 ';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
         $activityInfo['obj_id'] = $timeline['id'];
-        $activityInfo['title'] = $timeline['content'];
+
+        $issueId = $issue['id'];
+        $summary = $issue['summary'];
+        $activityInfo['title'] = "<a href='/issue/detail/index/{$issueId}' >{$summary}</a>";
+        $activityInfo['content'] = $timeline['content_html'];
+
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
         unset($issue);
     }
