@@ -238,15 +238,17 @@ class Widget extends BaseUserCtrl
         $userId = UserAuth::getId();
         list($data['activity'], $total) = ActivityLogic::filterByIndex($userId, $page, $pageSize);
         // print_r($data['activity']);
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
         foreach ($data['activity'] as &$item) {
             $item['zip_title'] = $item['title'];
-            if (mb_strlen($item['title']) > 40) {
-                $item['zip_title'] = mb_substr($item['title'], 0, 40) . '...';
+            if (mb_strlen($item['title']) > 60) {
+                $item['zip_title'] = mb_substr($item['title'], 0, 60) . '...';
             }
-
             if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['zip_title'] = '<span style="text-decoration: line-through;">' . $item['zip_title'] . '</span>';
             }
+            $item['user_info'] = $users[$item['user_id']];
         }
         unset($item);
         $data['total'] = $total;
@@ -275,6 +277,7 @@ class Widget extends BaseUserCtrl
             if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['title'] = '<span style="text-decoration: line-through;">' . $item['title'] . '</span>';
             }
+            //    max-width: 200px;
             $item['user_info'] = $users[$item['user_id']];
         }
         unset($item);

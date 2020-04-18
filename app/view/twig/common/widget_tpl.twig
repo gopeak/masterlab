@@ -271,8 +271,12 @@
 <script id="activity_tpl" type="text/html">
     {{#activity}}
     <li class="event-list-item">
-        <div class="g-avatar g-avatar-lg event-list-item-avatar">
-            {{user_html user_id}}
+        <div class=" g-avatar-lg event-list-item-avatar">
+            <span class="list-item-name">
+                <a href="/user/profile/{{user_id}}" draggable="false">
+                    <img  class=" float-none" style="border-radius: 50%;min-height:32px;width:34px" src="{{user_info.avatar}}" title="{{user_info.display_name}}"  draggable="false">
+                </a>
+            </span>
         </div>
 
         <div class="event-list-item-content">
@@ -290,7 +294,7 @@
                         <a href="/issue/detail/index/{{obj_id}}" title="{{title}}">{{{zip_title}}}</a>
                     {{/if_eq}}
                     {{#if_eq type 'issue_comment'}}
-                        <a href="/issue/detail/index/{{obj_id}}" title="{{title}}">{{{zip_title}}}</a>
+                        <a href="/issue/detail/index/{{obj_id}}" title="{{title}}">{{{title}}}</a>
                     {{/if_eq}}
                     {{#if_eq type 'user'}}
                         <a href="/user/profile/{{user_id}}" title="{{title}}">{{{zip_title}}}</a>

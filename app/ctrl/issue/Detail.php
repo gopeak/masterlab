@@ -520,10 +520,15 @@ class Detail extends BaseUserCtrl
             $issue = IssueModel::getInstance()->getById($issueId);
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '为' . $issue['summary'] . '添加了评论 ';
+            $activityInfo['action'] = '添加了评论 ';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $content;
+            $issueId = $issue['id'];
+            $summary = $issue['summary'];
+            $activityInfo['title'] = "<a href='/issue/detail/index/{$issueId}' >{$summary}</a>";
+            $activityInfo['content'] = $contentHtml;
+
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
             // email
@@ -599,10 +604,13 @@ class Detail extends BaseUserCtrl
             $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '更新了评论 ' . $content . ' 为 ';
+            $activityInfo['action'] =  '修改了事项的评论';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $timeline['content'];
+            $issueId = $issue['id'];
+            $summary = $issue['summary'];
+            $activityInfo['title'] = "<a href='/issue/detail/index/{$issueId}' >{$summary}</a>";
+            $activityInfo['content'] = $contentHtml;
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
             $this->ajaxSuccess('success');
