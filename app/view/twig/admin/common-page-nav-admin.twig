@@ -7,7 +7,15 @@
             <div class="fade-right">
                 <i class="fa fa-angle-right"></i>
             </div>
-            <ul class="nav-links scrolling-tabs">
+            <style>
+                .admin-nav-links-fix {
+                    display: flex;
+                    text-align: center;
+                    justify-content: center;
+                    align-items: center;
+                }
+            </style>
+            <ul class="nav-links scrolling-tabs admin-nav-links-fix">
                 <li class=" {% if (nav_links_active == 'index') %} {{ 'active' }}{% endif %}">
                     <a title="显示主程序信息，MasterlabSocket信息，PHP信息，Web服务器信息，数据库信息" href="/admin/main">
                         <i class="fa fa-home"></i> <span>服务信息</span>
