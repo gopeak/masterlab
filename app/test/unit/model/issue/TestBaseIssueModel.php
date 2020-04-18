@@ -18,6 +18,7 @@ class TestBaseIssueModel extends BaseAppTestCase
 
     public static function setUpBeforeClass()
     {
+        var_dump(111);
     }
 
     public static function tearDownAfterClass()
