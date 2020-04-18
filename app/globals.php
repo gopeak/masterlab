@@ -15,7 +15,7 @@ require_once APP_PATH . '/../vendor/autoload.php';
 include_once APP_PATH . 'function/autoload.php';
 
 // 项目状态:deploy | development
-$appStatus = "";
+$appStatus = "deploy";
 $cacheYamlConfig = false;
 if (file_exists(PRE_APP_PATH . 'env.ini')) {
     $envArr = parse_ini_file(PRE_APP_PATH . 'env.ini');
@@ -26,11 +26,12 @@ if (file_exists(PRE_APP_PATH . 'env.ini')) {
 if (isset($_SERVER['APP_STATUS'])) {
     $appStatus = $_SERVER['APP_STATUS'];
 }
-define('APP_STATUS', $appStatus);
+define("APP_STATUS", $appStatus);
 
 // 加载主配置文件 config.yml @todo 使用yaml扩展函数将更高效
 use Symfony\Component\Yaml\Yaml;
-$cacheYamlConfigFile = APP_PATH . 'storage/cache/config.yaml.php';
+
+$cacheYamlConfigFile = APP_PATH . 'storage/cache/config.' . $appStatus . '.yaml.php';
 if ($cacheYamlConfig && file_exists($cacheYamlConfigFile)) {
     include $cacheYamlConfigFile;
     if (isset($_yaml_config) && !empty($_yaml_config)) {
@@ -38,9 +39,13 @@ if ($cacheYamlConfig && file_exists($cacheYamlConfigFile)) {
         unset($_yaml_config);
     }
 } else {
-    $GLOBALS['_yml_config'] = Yaml::parseFile(PRE_APP_PATH . 'config.' . $appStatus . '.yml');
-    if($cacheYamlConfig){
-        $cacheYamlConfigVar = "<?php \n".'$_yaml_config = '.var_export($GLOBALS['_yml_config'], true).";\n";
+    $configFile = PRE_APP_PATH . 'config.yml';
+    if ($appStatus != 'deploy') {
+        $configFile = PRE_APP_PATH . 'config.' . $appStatus . '.yml';
+    }
+    $GLOBALS['_yml_config'] = Yaml::parseFile($configFile);
+    if ($cacheYamlConfig) {
+        $cacheYamlConfigVar = "<?php \n" . '$_yaml_config = ' . var_export($GLOBALS['_yml_config'], true) . ";\n";
         @file_put_contents($cacheYamlConfigFile, $cacheYamlConfigVar);
     }
 }

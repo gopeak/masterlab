@@ -1,6 +1,6 @@
 # Masterlab主配置文件
 app_url: ''
-version: '{{version}}'
+version: '2.2'
 error_reporting: 'E_ERROR'
 xdebug: false
 trace: false
@@ -14,7 +14,7 @@ xhprof:
   rate: 1
 
 cache:
-  enable: false
+  enable: {{cache_enable}}
   expire: 864000
   gc_rate: 10
   server:
@@ -28,17 +28,16 @@ session:
   gc_probability: 1
   no_session_cmd:
     - '/version/gets'
-    - '/app/get_bg'
 
 database:
   default:
     host: '{{db_host}}'
     port: '{{db_port}}'
     user: '{{db_user}}'
-    password: ''
+    password: '{{db_password}}'
     db_name: '{{db_name}}'
-    charset: '{{db_charset}}'
-    timeout: '{{db_timeout}}'
+    charset: 'utf8'
+    timeout: 10
     show_field_info: false
   log_db:
     host: 'localhost'
@@ -57,6 +56,7 @@ config_map_model:
       - UnitTestUnitModel
 
 socket:
+  host: '{{socket_host}}'
   port: '{{socket_port}}'
   port_websocket: 9003
 
@@ -65,17 +65,17 @@ schedule:
     name: 'ProjectStat'
     exe_bin: '{{php_exe}}'
     exp: '0 */30 * * * ?'
-    file: 'app/server/timer/project.php'
+    file: '{{root_path}}app/server/timer/project.php'
     arg: '-f'
   -
     name: 'ProjectReport'
     exe_bin: '{{php_exe}}'
     exp: '0 58 23 * * ?'
-    file: 'app/server/timer/projectDayReport.php'
+    file: '{{root_path}}app/server/timer/projectDayReport.php'
     arg: '-f'
   -
     name: 'SprintReport'
     exe_bin: '{{php_exe}}'
     exp: '0 59 23 * * ?'
-    file: 'app/server/timer/sprintDayReport.php'
+    file: '{{root_path}}app/server/timer/sprintDayReport.php'
     arg: '-f'
