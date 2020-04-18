@@ -13,6 +13,7 @@ use main\app\classes\ConfigLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserSettingModel;
@@ -52,19 +53,19 @@ class Dashboard extends BaseUserCtrl
         $data['sub_nav_active'] = 'all';
         ConfigLogic::getAllConfigs($data);
 
-        $model = new ProjectModel();
-        $data['project_count'] = $model->getAllCount();
-
-        $model = new UserModel();
-        $data['user_count'] = $model->getNormalCount();
-        $data['un_done_issue_count'] = IssueFilterLogic::getAllNoDoneCount();
-
         $userId = UserAuth::getId();
         $widgetLogic = new WidgetLogic();
         $data['widgets'] = $widgetLogic->getAvailableWidget();
         $data['user_widgets'] = $widgetLogic->getUserWidgets($userId);
-        $data['user_in_projects'] = $widgetLogic->getUserHaveJoinProjects(500);
+        $data['user_in_projects'] = $widgetLogic->getUserHaveJoinProjects(1000);
         $data['user_in_sprints'] = $widgetLogic->getUserHaveSprints($data['user_in_projects']);
+
+        // 参与项目数
+        $data['joined_project_count'] = count($data['user_in_projects']);
+
+        // 关注事项数
+        $issueFollowModel = new IssueFollowModel();
+        $data['follow_issue_count'] = $issueFollowModel->getCountByUserId(UserAuth::getId());
 
         $data['user_layout'] = 'aa';
         $userSettingModel = new UserSettingModel();
