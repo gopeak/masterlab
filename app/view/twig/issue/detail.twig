@@ -1238,7 +1238,7 @@
 
         var _cur_activity_page = 1;
 
-        _editor_md = editormd("editor_md", {
+        _comment_editor_md = editormd("editor_md", {
             width: "100%",
             height: 220,
             markdown: "",
@@ -1255,7 +1255,7 @@
             placeholder: "",
             autoFocus: false
         });
-
+        _editor_md = _comment_editor_md;
         $(function () {
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);

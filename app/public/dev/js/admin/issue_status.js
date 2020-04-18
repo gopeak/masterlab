@@ -86,6 +86,11 @@ var IssueStatus = (function() {
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
                 $("#edit_key").val(resp.data._key);
+                if(resp.data.is_system==='1'){
+                    $("#edit_key").attr('readonly', true);
+                }else{
+                    $("#edit_key").attr('readonly', false);
+                }
                 $("#edit_font_awesome").val(resp.data.font_awesome);
                 $("#edit_description").val(resp.data.description);
 

@@ -20,10 +20,8 @@ class IssueStatusLogic
         $issueStatusTable = $issueStatusModel->getTable();
 
         $workflowBlockModel = new WorkflowBlockModel();
-        $workflowBlockTable = $workflowBlockModel->getTable();
 
-        $sql = "Select t.* ,COUNT(b.workflow_id ) as workflow_count  From {$issueStatusTable} t 
-                Left join {$workflowBlockTable} b on b.status_id=t.id 
+        $sql = "Select t.*  From {$issueStatusTable} t 
                 Group by t.id 
                 Order by t.id ASC ";
         return  $issueStatusModel->db->getRows($sql);

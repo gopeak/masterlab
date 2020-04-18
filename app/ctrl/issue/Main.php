@@ -888,6 +888,8 @@ class Main extends BaseUserCtrl
         if (empty($issue)) {
             $this->ajaxFailed('failed:issue_id is error');
         }
+
+
         $issueTypeId = (int)$issue['issue_type'];
         if (isset($_GET['issue_type'])) {
             $issueTypeId = (int)$_GET['issue_type'];
@@ -1295,7 +1297,7 @@ class Main extends BaseUserCtrl
 
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1378,7 +1380,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = $params['environment'];
+            $info['environment'] = htmlentities($params['environment']);
         }
 
 
@@ -1412,7 +1414,7 @@ class Main extends BaseUserCtrl
         $info = [];
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1488,7 +1490,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = $params['environment'];
+            $info['environment'] = htmlentities($params['environment']);
         }
 
 
@@ -1557,7 +1559,7 @@ class Main extends BaseUserCtrl
         $info = [];
 
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+            $info['summary'] = htmlentities($params['summary']);
         }
 
         $info = $info + $this->getUpdateFormInfo($params);

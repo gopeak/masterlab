@@ -32,7 +32,6 @@ class TestIssueStatusLogic extends TestCase
         $this->assertNotEmpty($rows);
         $idArr = [];
         foreach ($rows as $item) {
-            $this->assertTrue(isset($item['workflow_count']));
             $idArr[] = (int) $item['id'];
         }
         // status id 是否升序排序
