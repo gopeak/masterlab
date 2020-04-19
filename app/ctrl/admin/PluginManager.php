@@ -61,29 +61,55 @@ class PluginManager extends BaseAdminCtrl
      */
     public function fetchAll()
     {
-        $model = new PluginModel();
-        $plugins = $model->getAllItem(false);
-        $pluginsKeyArr = array_column($plugins, null, 'name');
+        $filterType = isset($_GET['type']) ? $_GET['type']:'all';
+        $filterRange = isset($_GET['range']) ? $_GET['type']:'all';
 
+        $conditionArr = [];
+        if($filterType!='all'){
+            $conditionArr['type'] = trimStr($filterType);
+        }
+
+        $plugins = [];
+        $model = new PluginModel();
+        $dbPluginsArr = $model->getRows('*', $conditionArr);
+        foreach ($dbPluginsArr as $dbPlugin) {
+            if($filterType=='all' || $dbPlugin['type']==$filterType){
+                $plugins[] = $dbPlugin;
+            }
+        }
+        //print_r($plugins);
+        $uninstallPlugins  = [];
+        $pluginsKeyArr = array_column($dbPluginsArr, null, 'name');
         $dirPluginArr = $this->getPluginDirArr(PLUGIN_PATH);
         foreach ($dirPluginArr as $dirName => $item) {
             if (!isset($pluginsKeyArr[$dirName])) {
                 $tmp = $item;
                 $tmp['status'] = PluginModel::STATUS_UNINSTALLED;
                 $tmp['is_system'] = '0';
-                $plugins[] = $tmp;
+                if ($filterType == 'all' || $tmp['type'] == $filterType) {
+                     $uninstallPlugins[] = $tmp;
+                }
             }
+        }
+
+        if($filterRange=='all' || $filterRange=='uninstalled') {
+            $plugins = $plugins + $uninstallPlugins;
         }
         // 判断目录是否存在
-        foreach ($plugins as & $plugin) {
-            $name = $plugin['name'];
-            if (!isset($dirPluginArr[$name])) {
-                $plugin['status'] = PluginModel::STATUS_INVALID;
+        if($plugins){
+            foreach ($plugins as & $plugin) {
+                $name = $plugin['name'];
+                if (!isset($dirPluginArr[$name])) {
+                    $plugin['status'] = PluginModel::STATUS_INVALID;
+                }
+                $plugin['status_text'] = PluginModel::$statusArr[$plugin['status']];
+                $plugin['type_text'] = @PluginModel::$typeArr[$plugin['type']];
             }
-            $plugin['status_text'] = PluginModel::$statusArr[$plugin['status']];
-            $plugin['type_text'] = @PluginModel::$typeArr[$plugin['type']];
         }
+
         $data = [];
+        $data['installed_count'] = count($dbPluginsArr);
+        $data['uninstalled_count'] = count($uninstallPlugins);
         $data['plugins'] = $plugins;
         $this->ajaxSuccess('', $data);
     }

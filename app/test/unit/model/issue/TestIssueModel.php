@@ -4,6 +4,7 @@ namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\user\UserModel;
 use main\app\test\BaseDataProvider;
 
 /**
@@ -12,6 +13,8 @@ use main\app\test\BaseDataProvider;
  */
 class TestIssueModel extends TestBaseIssueModel
 {
+
+
     /**
      * issue 数据
      * @var array
@@ -28,6 +31,8 @@ class TestIssueModel extends TestBaseIssueModel
 
     public static function setUpBeforeClass()
     {
+        (new UserModel())->db->beginTransaction();
+
         self::$user = self::initUser();
         self::$project = self::initProject();
     }
@@ -37,7 +42,8 @@ class TestIssueModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
+        $db = (new UserModel())->db;
+        (new UserModel())->db->rollBack();
     }
 
     /**
@@ -60,26 +66,6 @@ class TestIssueModel extends TestBaseIssueModel
     {
         $row = BaseDataProvider::createProject($info);
         return $row;
-    }
-
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        $model = new IssueModel();
-        if (!empty(self::$issue)) {
-            $model->deleteById(self::$issue['id']);
-        }
-
-        $model = new ProjectModel();
-        $model->deleteById(self::$project['id']);
-
-        if (!empty(self::$insertIdArr)) {
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
     }
 
     /**

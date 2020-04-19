@@ -96,7 +96,8 @@ class TestEnv extends BaseTestCase
             'PDO',
             'pdo_mysql',
             'Reflection',
-            'session'
+            'session',
+            'ldap'
         ];
 
         foreach ($requireExtensions as $ext) {
@@ -149,32 +150,13 @@ class TestEnv extends BaseTestCase
      */
     public function testConfigFile()
     {
-        $configDir = APP_PATH . 'config/' . APP_STATUS . DS;
+        $configDir = APP_PATH . 'config/';
 
         $configFile = $configDir . 'app.cfg.php';
         $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
 
         $_config = [];
-        $configFile = $configDir . 'async.cfg.php';
-        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
-        include $configFile;
-        $this->assertNotEmpty($_config);
-
-        $_config = [];
-        $configFile = $configDir . 'cache.cfg.php';
-        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
-        include $configFile;
-        $this->assertNotEmpty($_config);
-
-
-        $_config = [];
         $configFile = APP_PATH . 'config/' . 'common.cfg.php';
-        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
-        include $configFile;
-        $this->assertNotEmpty($_config);
-
-        $_config = [];
-        $configFile = $configDir . 'database.cfg.php';
         $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
         include $configFile;
         $this->assertNotEmpty($_config);
@@ -248,11 +230,10 @@ class TestEnv extends BaseTestCase
             }
             if (!empty($dbConfig)) {
                 // 检查配置
-                $keys = ['driver', 'host', 'port', 'db_name', 'user', 'password', 'charset'];
+                $keys = ['host', 'port', 'db_name', 'user', 'password', 'charset', 'timeout'];
                 foreach ($keys as $key) {
                     $this->assertTrue(isset($dbConfig[$key]), "db_config {$key} undefined");
                 }
-                $this->assertEquals('mysql', $dbConfig['driver'], "database {$name} config's driver not mysql");
                 $connectionParams = array(
                     'dbname' => $dbConfig['db_name'],
                     'user' => $dbConfig['user'],
@@ -297,7 +278,7 @@ class TestEnv extends BaseTestCase
      */
     public function testRedisServer()
     {
-        $redisConfig = getConfigVar('cache')['redis']['data'];
+        $redisConfig = getYamlConfigByModule('cache')['server'];
         try {
             $redis = new \Redis();
             foreach ($redisConfig as $info) {

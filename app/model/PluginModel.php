@@ -77,8 +77,7 @@ class PluginModel extends DbModel
      */
     public function getAllItem($primaryKey = false)
     {
-        $table = $this->getTable();
-        $fields = " id as k,{$table}.*";
+        $fields = " *";
         return $this->getRows($fields, [], null, 'order_weight', 'desc', null, $primaryKey);
     }
 

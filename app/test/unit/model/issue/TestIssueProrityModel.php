@@ -4,6 +4,7 @@ namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
+use main\app\model\user\UserModel;
 
 /**
  *  IssuePriorityModel 测试类
@@ -16,6 +17,7 @@ class TestIssuePriorityModel extends TestBaseIssueModel
 
     public static function setUpBeforeClass()
     {
+        (new UserModel())->db->beginTransaction();
     }
 
     /**
@@ -23,6 +25,7 @@ class TestIssuePriorityModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
+        (new UserModel())->db->rollBack();
         if (!empty(self::$insertIdArr)) {
             $model = new IssuePriorityModel();
             foreach (self::$insertIdArr as $id) {

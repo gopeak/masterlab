@@ -3,7 +3,7 @@
 <head>
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/admin/plugin.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/plugin_manager.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
@@ -44,17 +44,23 @@
                     <div class="col-lg-12">
                         <div class="top-area">
 
+                            <form id="filter_form" action="" onsubmit="return false" accept-charset="UTF-8" method="get">
+                                <input name="page" id="filter_page" type="hidden" value="1">
+                                <input name="type" id="filter_type" type="hidden" value="all">
+                                <input name="range" id="filter_range" type="hidden" value="all">
+                                <input name="sort_by" id="filter_sort_by" type="hidden" value="desc">
+                                <input name="sort_field" id="filter_sort_field" type="hidden" value="id">
                             <ul class="nav-links">
-                                <li id="state-all"  class="state_li active" data-value="">
-                                    <a  title="全部插件" href="#" ><span> 插件列表 </span>
+                                <li id="state-all"  class="li_plugin_range state_li active" data-range="all">
+                                    <a  title="全部插件" href="#" >插件列表
                                     </a>
                                 </li>
-                                <li id="state-install"  class="state_li" data-value="{{status_normal}}">
-                                    <a title="已安装的插件" href="#"><span> 已安装 </span>
+                                <li id="state-install"  class="li_plugin_range state_li" data-range="installed">
+                                    <a title="已安装的插件" href="#">已安装<span id="installed_count"></span>
                                     </a>
                                 </li>
-                                <li id="state-ready" class="state_li" data-value="{{status_disabled}}">
-                                    <a  title="未安装的插件" href="#"><span>未安装</span></a>
+                                <li id="state-ready" class="li_plugin_range state_li" data-range="uninstalled">
+                                    <a  title="未安装的插件" href="#">未安装<span id="uninstalled_count"></span></a>
                                 </li>
                             </ul>
                             <div class="nav-controls">
@@ -65,6 +71,7 @@
                                     </a>
                                 </div>
                             </div>
+                            </form>
                         </div>
                         <div class="content-list">
                             <div class="table-holder">
@@ -363,7 +370,7 @@
 <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
 <script type="text/javascript">
 
-    var $plugin = null;
+    var $pluginManager = null;
     var uploader = null;
 
     $(function() {
@@ -382,8 +389,26 @@
             pagination_id:"pagination"
 
         }
-        window.$plugin = new Plugin( options );
-        window.$plugin.fetchPlugins( );
+        $pluginManager = new Plugin_manager( options );
+        $pluginManager.fetchPlugins( );
+
+
+        $('.li_plugin_type').click(function(e){
+            let plugin_type = $(this).data('type');
+            $('#filter_type').val(plugin_type);
+            $('.li_plugin_type').removeClass('active');
+            $(this).addClass('active');
+            $pluginManager.fetchPlugins( );
+
+        });
+        $('.li_plugin_range').click(function(e){
+            let plugin_range = $(this).data('range');
+            $('#filter_range').val(plugin_range);
+            $('.li_plugin_range').removeClass('active');
+            $(this).addClass('active');
+            $pluginManager.fetchPlugins( );
+        });
+
 
         $("#modal-plugin").on('show.bs.modal', function (e) {
 
