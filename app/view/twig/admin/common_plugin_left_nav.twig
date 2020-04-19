@@ -14,17 +14,20 @@
         <div class="admin-menu-links">
             <div class="aui-nav-heading   {% if (sub_nav_active == 'plugin') %} {{ 'active' }}{% endif %}"><strong>插件类型</strong></div>
             <ul class="aui-nav" resolved="">
-                <li class=" {% if (left_nav_active == 'list') %} {{ 'active' }}{% endif %}">
-                    <a href="/admin/plugin/index" id="plugin_list">全部</a>
+                <li data-type="all" class="li_plugin_type {% if (left_nav_active == 'all') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >全部</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'module') %} {{ 'active' }}{% endif %}">
-                    <a href="/admin/plugin/index" id="plugin_list">项目模块</a>
+                <li data-type="project_module" class="li_plugin_type {% if (left_nav_active == 'project_module') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >项目模块</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'theme') %} {{ 'active' }}{% endif %}">
-                    <a href="/admin/plugin/index" id="plugin_list">主题</a>
+                <li data-type="admin_module" class="li_plugin_type {% if (left_nav_active == 'admin_module') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >管理模块</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'app') %} {{ 'active' }}{% endif %}">
-                    <a href="/admin/plugin/index" id="plugin_list">应用程序</a>
+                <li data-type="theme" class="li_plugin_type {% if (left_nav_active == 'theme') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >主题</a>
+                </li>
+                <li data-type="app" class="li_plugin_type {% if (left_nav_active == 'app') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >应用程序</a>
                 </li>
 
             </ul>

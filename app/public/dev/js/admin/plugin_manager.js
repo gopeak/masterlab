@@ -1,29 +1,29 @@
 
-var Plugin = (function() {
+var Plugin_manager = (function() {
 
     var _options = {};
 
     // constructor
-    function Plugin( options ) {
+    function PluginManager( options ) {
         _options = options;
         $("#btn-plugin_save").click(function(){
             if($('#id_action').val()==='add'){
-                Plugin.prototype.add();
+                PluginManager.prototype.add();
             }else{
-                Plugin.prototype.update();
+                PluginManager.prototype.update();
             }
         });
         $("#btn-create_plugin").click(function(){
-            Plugin.prototype.create();
+            PluginManager.prototype.create();
         });
 
     };
 
-    Plugin.prototype.getOptions = function() {
+    PluginManager.prototype.getOptions = function() {
         return _options;
     };
 
-    Plugin.prototype.setOptions = function( options ) {
+    PluginManager.prototype.setOptions = function( options ) {
         for( i in  options )  {
            // if( typeof( _options[options[i]] )=='undefined' ){
                 _options[i] = options[i];
@@ -31,7 +31,7 @@ var Plugin = (function() {
         }
     };
 
-    Plugin.prototype.fetchPlugins = function(  ) {
+    PluginManager.prototype.fetchPlugins = function(  ) {
 
         // url,  list_tpl_id, list_render_id
         var params = {  format:'json' };
@@ -43,26 +43,29 @@ var Plugin = (function() {
             data: $('#'+_options.filter_form_id).serialize() ,
             success: function (resp) {
                 auth_check(resp);
-                if(resp.data.plugins.length){
+                if(resp.data.plugins.length>0){
+
+                    $('#installed_count').html('('+resp.data.installed_count+')');
+                    $('#uninstalled_count').html('('+resp.data.uninstalled_count+')');
                     var source = $('#'+_options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
 
                     $(".list_for_install").click(function(){
-                        Plugin.prototype.install( $(this).attr("data-value") );
+                        PluginManager.prototype.install( $(this).attr("data-value") );
                     });
 
                     $(".list_for_uninstall").click(function(){
-                        Plugin.prototype.uninstall( $(this).attr("data-value") );
+                        PluginManager.prototype.uninstall( $(this).attr("data-value") );
                     });
 
                     $(".list_for_edit").click(function(){
-                        Plugin.prototype.edit( $(this).attr("data-value") );
+                        PluginManager.prototype.edit( $(this).attr("data-value") );
                     });
 
                     $(".list_for_delete").click(function(){
-                        Plugin.prototype._delete( $(this).attr("data-value") );
+                        PluginManager.prototype._delete( $(this).attr("data-value") );
                     });
                 }else{
                     var emptyHtml = defineStatusHtml({
@@ -81,7 +84,7 @@ var Plugin = (function() {
     };
 
 
-    Plugin.prototype.create = function( ) {
+    PluginManager.prototype.create = function( ) {
         $("#modal-plugin").modal('show');
         $('#modal-header-title').html('创建插件');
         $('#form-plugin')[0].reset();
@@ -96,7 +99,7 @@ var Plugin = (function() {
 
     };
 
-    Plugin.prototype.edit = function(id ) {
+    PluginManager.prototype.edit = function(id ) {
 
         $("#modal-plugin").modal('show');
         $('#modal-header-title').html('编辑插件');
@@ -134,7 +137,7 @@ var Plugin = (function() {
 
 
 
-    Plugin.prototype.add = function(  ) {
+    PluginManager.prototype.add = function(  ) {
 
         var method = 'post';
         var params = $('#form-plugin').serialize();
@@ -158,7 +161,7 @@ var Plugin = (function() {
         });
     };
 
-    Plugin.prototype.update = function(  ) {
+    PluginManager.prototype.update = function(  ) {
 
         var method = 'post';
         var params = $('#form-plugin').serialize();
@@ -183,7 +186,7 @@ var Plugin = (function() {
         });
     };
 
-    Plugin.prototype.install = function(name ) {
+    PluginManager.prototype.install = function(name ) {
 
         var method = 'POST';
         $.ajax({
@@ -204,7 +207,7 @@ var Plugin = (function() {
         });
     };
 
-    Plugin.prototype.uninstall = function(id ) {
+    PluginManager.prototype.uninstall = function(id ) {
 
         if  (!window.confirm('您确认要卸载吗?')) {
             return false;
@@ -228,7 +231,7 @@ var Plugin = (function() {
         });
     };
 
-    Plugin.prototype._delete = function(name ) {
+    PluginManager.prototype._delete = function(name ) {
 
         if  (!window.confirm('您确认删除吗?删除后插件的所有文件将被清空!')) {
             return false;
@@ -252,6 +255,6 @@ var Plugin = (function() {
         });
     };
 
-    return Plugin;
+    return PluginManager;
 })();
 
