@@ -258,7 +258,8 @@ class IssueSubscriber implements EventSubscriberInterface
     public function onIssueUpdateAfter(CommonPlacedEvent $event)
     {
         $info = $event->pluginDataArr;
-        $params = $_POST['params'];
+        // 使用 post 取不到
+        $params = $_REQUEST['params'];
         // 记录活动日志
         $fromModule = null;
         if (isset($params['from_module'])) {
