@@ -456,6 +456,36 @@ class DbModel extends BaseModel
     }
 
     /**
+     * 通过id数组获取多条记录
+     * @param string $fields
+     * @param string $field
+     * @param array $idArr
+     * @param null $append
+     * @param null $orderBy
+     * @param null $sort
+     * @param null $limit
+     * @return array|mixed[]
+     */
+    public function getRowsByIdArr($fields = '*', $field = 'id', $idArr = [], $append = null, $orderBy = null, $sort = null, $limit = null)
+    {
+        if(empty($idArr)){
+            return [];
+        }
+        $table = $this->getTable();
+        $idArrStr = implode(',', $idArr);
+        $where = "where {$field} in ( {$idArrStr} )";
+        $orderBy = !empty($orderBy) ? ' ORDER BY ' . $orderBy . ' ' : '';
+        $sort = !empty($sort) ? ' ' . $sort . ' ' : '';
+        $limit = !empty($limit) ? ' LIMIT ' . $limit : '';
+        $append = !empty($append) ?   ' AND ' . $append  : '';
+        $sql = "SELECT {$fields} FROM {$table}  {$where} {$append}  {$orderBy}  {$sort}  {$limit}";
+        //echo $sql;
+        $row = $this->db->fetchAll($sql, []);
+        return $row;
+    }
+
+
+    /**
      * @param $sql
      * @param array $conditions
      * @param $primaryKey
@@ -531,10 +561,10 @@ class DbModel extends BaseModel
      */
     protected function fixField(&$arr)
     {
-        if($arr){
+        if ($arr) {
             foreach ($arr as $k => $item) {
                 $key = str_replace(" ", "", $k);
-                if(substr($key, 0,1)!='`'){
+                if (substr($key, 0, 1) != '`') {
                     $key = "`{$key}`";
                     unset($arr[$k]);
                     $arr[$key] = $item;
@@ -716,7 +746,7 @@ class DbModel extends BaseModel
         $sql .= $this->parsePrepareSql($row, true);
         $this->sql = $sql;
         $ret = $this->db->update($table, $row, $conditions);
-        if ($ret===false) {
+        if ($ret === false) {
             return [false, 'db update err:' . print_r($row, true) . print_r($conditions, true)];
         }
         return [true, $ret];

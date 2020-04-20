@@ -35,11 +35,10 @@ class ProjectUserSubscriber implements EventSubscriberInterface
      */
     public function onProjectUserAdd(CommonPlacedEvent $event)
     {
-        $projectRoleModel = new ProjectRoleModel();
-        $roleIdArr = (new ProjectRoleModel())->getById($event->pluginDataArr['role_id_arr']);
+        $rolesArr = (new ProjectRoleModel())->getRowsByIdArr("*", 'id',$event->pluginDataArr['role_id_arr']);
         $roleNames = '';
-        foreach ($roleIdArr as $roleId) {
-            $roleNames .= $projectRoleModel->getById($roleId)['name'] . ' ';
+        foreach ($rolesArr as $role) {
+            $roleNames .= $role['name'] . ' ';
         }
 
         $user = (new UserModel())->getByUid($event->pluginDataArr['user_id']);
@@ -49,6 +48,7 @@ class ProjectUserSubscriber implements EventSubscriberInterface
         $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
         $activityInfo['obj_id'] = $user['uid'];
         $activityInfo['title'] = $user['display_name'] . ':' . $roleNames;
+       // print_r($activityInfo);
         $activityModel->insertItem(UserAuth::getId(), $event->pluginDataArr['project_id'], $activityInfo);
     }
 
