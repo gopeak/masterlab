@@ -255,7 +255,7 @@ class ProjectLogic
 
             $schemeId = self::getIssueTypeSchemeId($projectInfo['type']);
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-            $ret = $projectIssueTypeSchemeDataModel->insert(
+            $ret = $projectIssueTypeSchemeDataModel->replace(
                 array('issue_type_scheme_id' => $schemeId, 'project_id' => $pid)
             );
             if (!$ret[0]) {
@@ -268,7 +268,7 @@ class ProjectLogic
             }
 
             $projectMainExtra = new ProjectMainExtraModel();
-            $ret = $projectMainExtra->insert(array('project_id' => $pid, 'detail' => $projectInfo['detail']));
+            $ret = $projectMainExtra->replace(array('project_id' => $pid, 'detail' => $projectInfo['detail']));
             if (!$ret) {
                 return self::retModel(-1, 'insert detail is error..');
             }

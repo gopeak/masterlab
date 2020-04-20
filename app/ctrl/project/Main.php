@@ -862,7 +862,6 @@ class Main extends Base
                 ProjectLogic::assignProjectRoleForUser($ret['data']['project_id'], $uid, 'Users');
             }
 
-
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];
