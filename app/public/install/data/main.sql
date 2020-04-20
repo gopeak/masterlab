@@ -1556,8 +1556,6 @@ CREATE TABLE `main_announcement` (
 -- 转存表中的数据 `main_announcement`
 --
 
-INSERT INTO `main_announcement` (`id`, `content`, `status`, `flag`, `expire_time`) VALUES
-(1, '武汉加油！中国最棒！', 1, 4, 1588215633);
 
 -- --------------------------------------------------------
 
