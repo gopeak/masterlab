@@ -194,9 +194,13 @@ class DbModel extends BaseModel
                 'charset' => $dbConfig['charset'],
                 'driver' => 'pdo_mysql',
             );
-            self::$dalDriverInstances[$index] = \Doctrine\DBAL\DriverManager::getConnection($connectionParams);
+            $db = \Doctrine\DBAL\DriverManager::getConnection($connectionParams);
+            $sqlMode = "SET SQL_MODE='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'";
+            $db->exec($sqlMode);
+            self::$dalDriverInstances[$index] = $db;
         }
         $this->db = self::$dalDriverInstances[$index];
+
     }
 
 
