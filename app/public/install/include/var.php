@@ -15,7 +15,10 @@ if (ini_get('session.save_handler') == 'files') {
     if (strpos($sessionPath, ";") !== false) {
         $sessionPath = substr($sessionPath, strpos($sessionPath, ";") + 1);
     }
-    $dirfile_items[] = ['type' => 'file', 'path' => realpath($sessionPath)];
+    if(file_exists($sessionPath)){
+        $sessionPath = realpath($sessionPath);
+    }
+    $dirfile_items[] = ['type' => 'file', 'path' => $sessionPath];
 }
 
 $func_items = array(
