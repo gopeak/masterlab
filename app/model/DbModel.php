@@ -309,9 +309,11 @@ class DbModel extends BaseModel
     }
 
     /**
-     * 删除记录
+     * 通过主键删除记录
      * @param $id
-     * @return bool
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function deleteById($id)
     {
@@ -505,22 +507,42 @@ class DbModel extends BaseModel
 
     /**
      * 参数化插入数据
-     * @param $row
+     * @param $arr
      * @return array
      * @throws \Doctrine\DBAL\DBALException
+     * @throws Exception
      */
-    public function insert($row)
+    public function insert($arr)
     {
-        $this->checkField($row);
+        $this->checkField($arr);
+        $this->fixField($arr);
         $sql = "Insert  into  {$this->getTable()} Set  ";
-        $sql .= $this->parsePrepareSql($row);
+        $sql .= $this->parsePrepareSql($arr);
         $this->sql = $sql;
-        $ret = $this->db->insert($this->getTable(), $row);
+        $ret = $this->db->insert($this->getTable(), $arr);
         if (!$ret) {
-            return [false, 'db insert err:' . print_r($row, true)];
+            return [false, 'db insert err:' . print_r($arr, true)];
         }
         return [true, $this->db->lastInsertId()];
     }
+
+    /**
+     * @param $arr
+     */
+    protected function fixField(&$arr)
+    {
+        if($arr){
+            foreach ($arr as $k => $item) {
+                $key = str_replace(" ", "", $k);
+                if(substr($key, 0,1)!='`'){
+                    $key = "`{$key}`";
+                    unset($arr[$k]);
+                    $arr[$key] = $item;
+                }
+            }
+        }
+    }
+
 
     /**
      * 检查字段是否正确
@@ -543,6 +565,11 @@ class DbModel extends BaseModel
     }
 
 
+    /**
+     * @param $arr
+     * @param bool $is_index
+     * @return false|string
+     */
     public function parsePrepareSql($arr, $is_index = false)
     {
         $setsStr = '';
@@ -574,6 +601,7 @@ class DbModel extends BaseModel
     public function insertIgnore($row)
     {
         $this->checkField($row);
+        $this->fixField($row);
         $table = $this->getTable();
         if (empty($table) || empty($row)) {
             return [false, 'insert data is null'];
@@ -612,25 +640,26 @@ class DbModel extends BaseModel
 
     /**
      * 构造插入的SQL语句目的利于缓存,能够同步缓存的数据,该函数用于缓存中数据是一维数组的情况
-     * @param $info
+     * @param $arr
      * @return array
      * @throws Exception
      */
-    public function replace($info)
+    public function replace($arr)
     {
-        $this->checkField($info);
+        $this->checkField($arr);
+        $this->fixField($arr);
         $table = $this->getTable();
-        if (empty($table) || empty($info)) {
+        if (empty($table) || empty($arr)) {
             return [false, 'replace data is null'];
         }
         $sql = " Replace  into  {$table} Set  ";
-        $sql .= $this->parsePrepareSql($info);
+        $sql .= $this->parsePrepareSql($arr);
         try {
-            $this->exec($sql, $info);
+            $this->exec($sql, $arr);
             return [true, $this->db->lastInsertId()];
         } catch (PDOException $e) {
             //echo $e->getMessage();
-            return [false, 'db replace err:' . $sql . print_r($info, true) . $e->getMessage()];
+            return [false, 'db replace err:' . $sql . print_r($arr, true) . $e->getMessage()];
         }
     }
 
@@ -681,6 +710,7 @@ class DbModel extends BaseModel
         if (!is_array($conditions)) {
             return [false, 0];
         }
+        $this->fixField($row);
         $table = $this->getTable();
         $sql = " UPDATE {$table} SET ";
         $sql .= $this->parsePrepareSql($row, true);
