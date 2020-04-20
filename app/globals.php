@@ -20,7 +20,12 @@ $cacheYamlConfig = false;
 if (file_exists(PRE_APP_PATH . 'env.ini')) {
     $envArr = parse_ini_file(PRE_APP_PATH . 'env.ini');
     $appStatus = $envArr['APP_STATUS'];
-    $cacheYamlConfig = (boolean)$envArr['CACHE_YAML'];
+    if (isset($envArr['CACHE_YAML'])) {
+        if (strtolower($envArr['CACHE_YAML']) == 'false' || strtolower($envArr['CACHE_YAML']) == 'off') {
+            $envArr['CACHE_YAML'] = false;
+        }
+        $cacheYamlConfig = (boolean)$envArr['CACHE_YAML'];
+    }
     unset($envArr);
 }
 if (isset($_SERVER['APP_STATUS'])) {
