@@ -4,12 +4,13 @@ namespace main\app\test\unit\model\issue;
 
 use main\app\model\agile\AgileBoardColumnModel;
 use main\app\model\agile\AgileBoardModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 
 /**
  *  AgileBoardColumnModel 测试类
  * User: sven
  */
-class TestAgileBoardColumnModel extends TestBaseIssueModel
+class TestAgileBoardColumnModel extends BaseUnitTranTestCase
 {
 
     /**
@@ -20,17 +21,23 @@ class TestAgileBoardColumnModel extends TestBaseIssueModel
 
     public static $insertIdArr = [];
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         self::$board = self::initBoard();
     }
 
+
     /**
-     * 确保生成的测试数据被清除
+     * @throws \Doctrine\DBAL\DBALException
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
+        parent::tearDownAfterClass();
     }
 
     /**

@@ -27,7 +27,7 @@ class BaseTestCase extends TestCase
      */
     protected function curlGet(\Curl\Curl &$curl, $url, $data = [], $return_json = true)
     {
-        //$data['unit_token'] = 'xxxxxxxxxxxxxxxxxxxxxxxxxx';
+        $this->packUnitTestUrl($url);
         $curl->get($url, $data);
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
@@ -47,6 +47,7 @@ class BaseTestCase extends TestCase
      */
     protected function postPost(\Curl\Curl &$curl, $url, $data = [], $parse_json = true)
     {
+        $this->packUnitTestUrl($url);
         $curl->post($url, $data);
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
@@ -66,6 +67,7 @@ class BaseTestCase extends TestCase
      */
     protected function curlPut(\Curl\Curl $curl, $url, $data = [], $parse_json = true)
     {
+        $this->packUnitTestUrl($url);
         $curl->put($url, $data);
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
@@ -228,6 +230,36 @@ class ' . $model_name . ' extends DbModel{
             }
         }
         return $orderWeight;
+    }
+
+    /**
+     * 追加测试参数
+     * @param $url
+     */
+    protected function packUnitTestUrl(& $url)
+    {
+        $token = getCommonConfigVar('data')['token'];
+        $url = $this->addUrlParam($url, '_test_token', md5($token['public_key']));
+        $url = $this->addUrlParam($url, '_app_status', 'test');
+    }
+
+
+    /**
+     * 在url中追加参数
+     * @param $url
+     * @param $key
+     * @param $value
+     * @return string
+     */
+    protected function addUrlParam($url, $key, $value)
+    {
+        $url = preg_replace('/(.*)(?|&)' . $key . '=[^&]+?(&)(.*)/i', '$1$2$4', $url . '&');
+        $url = substr($url, 0, -1);
+        if (strpos($url, '?') === false) {
+            return ($url . '?' . $key . '=' . $value);
+        } else {
+            return ($url . '&' . $key . '=' . $value);
+        }
     }
 }
 

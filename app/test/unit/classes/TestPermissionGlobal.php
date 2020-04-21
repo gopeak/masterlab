@@ -3,6 +3,7 @@
 namespace main\app\test\permission;
 
 use main\app\classes\PermissionGlobal;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 
@@ -12,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  * Class TestPermissionGlobal
  * @package main\app\test\settings
  */
-class TestPermissionGlobal extends TestCase
+class TestPermissionGlobal extends BaseUnitTranTestCase
 {
     public static $uid = 1;
     public static $permId = 1;

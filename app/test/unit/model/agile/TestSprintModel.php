@@ -5,33 +5,30 @@ namespace main\app\test\unit\model\issue;
 use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectModel;
 use main\app\test\BaseDataProvider;
+use main\app\test\unit\BaseUnitTranTestCase;
 
 /**
  *  SprintModel 测试类
  * User: sven
  */
-class TestSprintModel extends TestBaseIssueModel
+class TestSprintModel extends BaseUnitTranTestCase
 {
 
-    /**
-     * project 数据
-     * @var array
-     */
-    public static $project = [];
 
     public static $insertIdArr = [];
 
     public static function setUpBeforeClass()
     {
-        self::$project = self::initProject();
+        parent::setUpBeforeClass();
     }
 
     /**
      * 确保生成的测试数据被清除
+     * @throws \Doctrine\DBAL\DBALException
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
+        parent::tearDownAfterClass();
     }
 
     /**
@@ -46,27 +43,11 @@ class TestSprintModel extends TestBaseIssueModel
     }
 
     /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$project['id']);
-
-        if (!empty(self::$insertIdArr)) {
-            $model = new SprintModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
-    }
-
-    /**
      * 主流程
      */
     public function testMain()
     {
-        $projectId = self::$project['id'];
+        $projectId = 100086;
         $model = new SprintModel();
         // 1. 新增测试需要的数据
         $addNum = 5;

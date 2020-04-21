@@ -1,16 +1,18 @@
 <?php
 
-namespace main\app\test\unit\model\issue;
+namespace main\app\test\unit\model\agile;
 
 use main\app\model\agile\AgileBoardModel;
 use main\app\model\project\ProjectModel;
 use main\app\test\BaseDataProvider;
+use main\app\test\unit\BaseUnitTranTestCase;
+
 
 /**
  *  AgileBoardModel 测试类
  * User: sven
  */
-class TestAgileBoardModel extends TestBaseIssueModel
+class TestAgileBoardModel extends BaseUnitTranTestCase
 {
 
     /**
@@ -21,17 +23,23 @@ class TestAgileBoardModel extends TestBaseIssueModel
 
     public static $insertIdArr = [];
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         self::$project = self::initProject();
     }
 
     /**
      * 确保生成的测试数据被清除
+     * @throws \Doctrine\DBAL\DBALException
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
+        parent::tearDownAfterClass();
     }
 
     /**

@@ -4,13 +4,14 @@ namespace main\app\test\unit\classes;
 
 use main\app\classes\ProjectModuleFilterLogic;
 use main\app\model\project\ProjectModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  *  ProjectModuleFilterLogic 模块业务逻辑
  * @package main\app\test\logic
  */
-class TestProjectModuleFilterLogic extends TestCase
+class TestProjectModuleFilterLogic extends BaseUnitTranTestCase
 {
 
     /**
@@ -18,12 +19,13 @@ class TestProjectModuleFilterLogic extends TestCase
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         ProjectLogicDataProvider::initProjectWithVersionAndModule();
     }
 
     public static function tearDownAfterClass()
     {
-        ProjectLogicDataProvider::clear();
+        parent::tearDownAfterClass();
     }
 
     /**

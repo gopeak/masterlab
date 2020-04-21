@@ -2,6 +2,7 @@
 
 namespace main\app\test\logic;
 
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 use main\app\model\LogBaseModel;
@@ -13,7 +14,7 @@ use main\app\test\data\LogDataProvider;
  * Class testLogLogic
  * @package main\app\test\logic
  */
-class TestLogLogic extends TestCase
+class TestLogLogic extends BaseUnitTranTestCase
 {
     public static $pageSize = 10;
 
@@ -22,11 +23,13 @@ class TestLogLogic extends TestCase
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         static::$logs = LogDataProvider::initLogs(self::$pageSize);
     }
 
     public static function tearDownAfterClass()
     {
+        parent::tearDownAfterClass();
         LogDataProvider::clearLogs();
     }
 

@@ -2,6 +2,7 @@
 
 namespace main\app\test\unit\model\issue;
 
+use main\app\model\DbModel;
 use  main\app\test\BaseAppTestCase;
 
 /**
@@ -16,13 +17,20 @@ class TestBaseIssueModel extends BaseAppTestCase
      */
     public static $issue = [];
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public static function setUpBeforeClass()
     {
-        var_dump(111);
+        (new DbModel())->beginTransaction();
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public static function tearDownAfterClass()
     {
+        (new DbModel())->rollBack();
     }
 
     /**

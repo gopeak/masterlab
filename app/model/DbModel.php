@@ -468,7 +468,7 @@ class DbModel extends BaseModel
      */
     public function getRowsByIdArr($fields = '*', $field = 'id', $idArr = [], $append = null, $orderBy = null, $sort = null, $limit = null)
     {
-        if(empty($idArr)){
+        if (empty($idArr)) {
             return [];
         }
         $table = $this->getTable();
@@ -477,7 +477,7 @@ class DbModel extends BaseModel
         $orderBy = !empty($orderBy) ? ' ORDER BY ' . $orderBy . ' ' : '';
         $sort = !empty($sort) ? ' ' . $sort . ' ' : '';
         $limit = !empty($limit) ? ' LIMIT ' . $limit : '';
-        $append = !empty($append) ?   ' AND ' . $append  : '';
+        $append = !empty($append) ? ' AND ' . $append : '';
         $sql = "SELECT {$fields} FROM {$table}  {$where} {$append}  {$orderBy}  {$sort}  {$limit}";
         //echo $sql;
         $row = $this->db->fetchAll($sql, []);
@@ -549,7 +549,8 @@ class DbModel extends BaseModel
         $sql = "Insert  into  {$this->getTable()} Set  ";
         $sql .= $this->parsePrepareSql($arr);
         $this->sql = $sql;
-        $ret = $this->db->insert($this->getTable(), $arr);
+        $this->removeFixField($arr);
+        $ret = $this->db->executeUpdate($sql, $arr);
         if (!$ret) {
             return [false, 'db insert err:' . print_r($arr, true)];
         }
@@ -571,6 +572,23 @@ class DbModel extends BaseModel
                 }
             }
         }
+    }
+
+    /**
+     * 移除字符: `
+     * @param $arr
+     */
+    protected function removeFixField(&$arr)
+    {
+        if ($arr) {
+            $newArr = [];
+            foreach ($arr as $k => $item) {
+                $key = str_replace("`", "", $k);
+                $newArr[$key] = $item;
+            }
+            $arr = $newArr;
+        }
+
     }
 
 
@@ -641,6 +659,7 @@ class DbModel extends BaseModel
         $this->sql = $sql;
         //echo $sql;
         try {
+            $this->removeFixField($row);
             $this->db->executeUpdate($sql, $row);
             return [true, $this->db->lastInsertId()];
         } catch (PDOException $e) {
@@ -684,6 +703,7 @@ class DbModel extends BaseModel
         }
         $sql = " Replace  into  {$table} Set  ";
         $sql .= $this->parsePrepareSql($arr);
+        $this->removeFixField($arr);
         try {
             $this->exec($sql, $arr);
             return [true, $this->db->lastInsertId()];
@@ -745,6 +765,7 @@ class DbModel extends BaseModel
         $sql = " UPDATE {$table} SET ";
         $sql .= $this->parsePrepareSql($row, true);
         $this->sql = $sql;
+        $this->removeFixField($row);
         $ret = $this->db->update($table, $row, $conditions);
         if ($ret === false) {
             return [false, 'db update err:' . print_r($row, true) . print_r($conditions, true)];

@@ -3,6 +3,7 @@
 namespace main\app\test\settings;
 
 use main\app\classes\Settings;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 
@@ -11,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * Class testLogLogic
  * @package main\app\test\settings
  */
-class TestSettings extends TestCase
+class TestSettings extends BaseUnitTranTestCase
 {
     public static $timestamp = 1531291961;
     public static $timeType = 'full_datetime_format';
@@ -21,10 +22,12 @@ class TestSettings extends TestCase
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
+        parent::tearDownAfterClass();
     }
 
     /**

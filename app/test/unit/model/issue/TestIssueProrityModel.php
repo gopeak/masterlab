@@ -26,12 +26,7 @@ class TestIssuePriorityModel extends TestBaseIssueModel
     public static function tearDownAfterClass()
     {
         (new UserModel())->db->rollBack();
-        if (!empty(self::$insertIdArr)) {
-            $model = new IssuePriorityModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
+
     }
 
     /**

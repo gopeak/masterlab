@@ -22,12 +22,6 @@ class TestIssueTypeModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        if (!empty(self::$insertIdArr)) {
-            $model = new IssueTypeModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
     }
 
     /**

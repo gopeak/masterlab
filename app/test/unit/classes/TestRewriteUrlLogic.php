@@ -2,28 +2,25 @@
 
 namespace main\app\test\unit\classes;
 
-use PHPUnit\Framework\TestCase;
-
-use main\app\model\system\MailQueueModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use main\app\classes\RewriteUrl;
-use main\app\test\data\LogDataProvider;
 
 /**
  *  RewriteUrlLogic 测试类
  * Class testRewriteUrl
  * @package main\app\test\logic
  */
-class TestRewriteUrlLogic extends TestCase
+class TestRewriteUrlLogic extends BaseUnitTranTestCase
 {
-
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
-        RewriteUrlDataProvider::clear();
+        parent::tearDownAfterClass();
     }
 
     /**

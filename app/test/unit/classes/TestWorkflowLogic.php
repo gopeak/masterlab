@@ -3,6 +3,7 @@
 namespace main\app\test\unit\classes;
 
 use main\app\classes\WorkflowLogic;
+use main\app\model\DbModel;
 use main\app\test\BaseAppTestCase;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\issue\WorkflowSchemeDataModel;
@@ -18,16 +19,12 @@ class TestWorkflowLogic extends BaseAppTestCase
 
     public static function setUpBeforeClass()
     {
+        (new DbModel())->beginTransaction();
     }
 
     public static function tearDownAfterClass()
     {
-        if (!empty(self::$insertIdArr)) {
-            $model = new WorkflowSchemeModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
+        (new DbModel())->rollBack();
     }
 
     /**

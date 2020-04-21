@@ -6,6 +6,7 @@ use main\app\classes\AgileLogic;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectLabelModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  * Class AgileLogic
  * @package main\app\test\logic
  */
-class TestAgileLogic extends TestCase
+class TestAgileLogic extends BaseUnitTranTestCase
 {
 
     public static $labelIdArr = [];
@@ -22,24 +23,16 @@ class TestAgileLogic extends TestCase
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
+    /**
+     * 清除数据
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
-        AgileLogicDataProvider::clear();
-        $projectLabelModel = new ProjectLabelModel();
-        $issueLabelDataModel = new IssueLabelDataModel();
-        if (!empty(self::$labelIdArr)) {
-            foreach (self::$labelIdArr as $id) {
-                $projectLabelModel->deleteById($id);
-                $issueLabelDataModel->deleteItemByIssueId($id);
-            }
-        }
-        if (!empty(self::$labelDataIdArr)) {
-            foreach (self::$labelDataIdArr as $id) {
-                $issueLabelDataModel->deleteById($id);
-            }
-        }
+        parent::tearDownAfterClass();
     }
 
     /**

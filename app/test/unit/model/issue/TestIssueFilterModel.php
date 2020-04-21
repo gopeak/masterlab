@@ -4,12 +4,13 @@ namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueFilterModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 
 /**
  *  IssueFilterModel 测试类
  * User: sven
  */
-class TestIssueFilterModel extends TestBaseIssueModel
+class TestIssueFilterModel extends BaseUnitTranTestCase
 {
     /**
      * issue 数据
@@ -21,17 +22,16 @@ class TestIssueFilterModel extends TestBaseIssueModel
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     /**
      * 确保生成的测试数据被清除
+     * @throws \Doctrine\DBAL\DBALException
      */
     public static function tearDownAfterClass()
     {
-        if (!empty(self::$insertId)) {
-            $model = new IssueFilterModel();
-            $model->deleteById(self::$insertId);
-        }
+        parent::tearDownAfterClass();
     }
 
     /**

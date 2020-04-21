@@ -28,6 +28,12 @@ if (file_exists(PRE_APP_PATH . 'env.ini')) {
     }
     unset($envArr);
 }
+if (isset($_GET['_app_status']) && isset($_GET['_test_token']) ) {
+    $token = getCommonConfigVar('data')['token'];
+    if($_GET['_test_token']==md5($token['public_key'])){
+        $appStatus = $_GET['_app_status'];
+    }
+}
 if (isset($_SERVER['APP_STATUS'])) {
     $appStatus = $_SERVER['APP_STATUS'];
 }

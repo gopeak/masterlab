@@ -4,6 +4,7 @@ namespace main\app\test\unit\classes;
 
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\GroupModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
@@ -12,7 +13,7 @@ use main\app\classes\ProjectLogic;
  *  PermissionLogic 测试类
  * @package main\app\test\logic
  */
-class TestPermissionLogic extends TestCase
+class TestPermissionLogic extends BaseUnitTranTestCase
 {
     public static $schemeId = 0;
 
@@ -31,6 +32,7 @@ class TestPermissionLogic extends TestCase
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         // 先初始化一个项目,并指定权限方案为默认
         $info['permission_scheme_id'] = self::$schemeId;
         self::$project = PermissionLogicDataProvider::initProject($info);
@@ -64,7 +66,7 @@ class TestPermissionLogic extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        PermissionLogicDataProvider::clear();
+        parent::tearDownAfterClass();
     }
 
     /**
