@@ -28,7 +28,6 @@ class TestWorkflowSchemeDataModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
     /**
@@ -50,22 +49,6 @@ class TestWorkflowSchemeDataModel extends TestBaseIssueModel
         }
         $row = $model->getRowById($schemeId);
         return $row;
-    }
-
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        $model = new WorkflowSchemeModel();
-        $model->deleteById(self::$scheme['id']);
-
-        if (!empty(self::$insertIdArr)) {
-            $model = new WorkflowSchemeDataModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
     }
 
     /**

@@ -25,20 +25,8 @@ class TestProjectModuleModel extends TestBaseProjectModel
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
-        self::clearData();
     }
 
-    /**
-     * @throws \Exception
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectData['id']);
-
-        $model = new ProjectModuleModel();
-        $model->deleteById(self::$projectModuleData['id']);
-    }
 
     public static function initProject($info = [])
     {

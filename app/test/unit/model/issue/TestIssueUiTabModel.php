@@ -28,22 +28,8 @@ class TestIssueUiTabModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
-
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        $model = new IssueUiTabModel();
-        if (!empty(self::$insertIdArr)) {
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
-    }
 
     /**
      * 主流程

@@ -95,6 +95,8 @@ class TestCacheKeyModel extends TestCase
             $cacheValue = 'gc-value-' . $i;
             $model->saveCache($module, $cacheKey, $cacheValue, $expire);
         }
+
+
         // 停止3秒,然后执行 gc(),检查是否清除
         sleep(2);
         $ret = $model->gc();

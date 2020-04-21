@@ -20,17 +20,8 @@ class TestProjectCategoryModel extends TestBaseProjectModel
 
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
-    /**
-     * @throws \Exception
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectData['id']);
-    }
 
     public static function initProject($info = [])
     {

@@ -23,19 +23,6 @@ class TestReportProjectIssueModel extends TestBaseProjectModel
 
     public static function tearDownAfterClass()
     {
-        self::clearData();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectData['id']);
-
-        $model = new ReportProjectIssueModel();
-        $model->deleteById(self::$reportProjectIssueData['id']);
     }
 
     public static function initProject($info = [])

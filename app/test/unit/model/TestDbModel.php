@@ -26,7 +26,7 @@ class TestDbModel extends TestCase
         $sql = "delete from " . $frameworkUserModel->getTable();
         $frameworkUserModel->exec($sql);
 
-        static::initUser();
+        self::initUser();
     }
 
     /**
@@ -34,10 +34,6 @@ class TestDbModel extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        // 清空数据
-        $frameworkUserModel = new FrameworkUserModel();
-        $sql = "delete from " . $frameworkUserModel->getTable();
-        $frameworkUserModel->exec($sql);
     }
 
     /**
@@ -65,7 +61,7 @@ class TestDbModel extends TestCase
             echo ('DbModel exec failed ,getLastInsId is empty') . "\n";
         }
         $params['id'] = $insertId;
-        static::$user = $params;
+        self::$user = $params;
     }
 
     /**
@@ -78,6 +74,7 @@ class TestDbModel extends TestCase
         try {
             $testUserTable = $frameworkUserModel->getTable();
             $fields = $frameworkUserModel->getFullFields($testUserTable);
+            // print_r($fields);
             $this->assertNotEmpty($fields);
         } catch (\PDOException $e) {
             $this->fail('FrameworkUserModel getTable() faild ,' . $e->getMessage());
@@ -107,8 +104,8 @@ class TestDbModel extends TestCase
     {
         $dbModel = new DbModel();
         $str = "13002510000' or '1'='1 ";
-        $quoted_str = $dbModel->quote($str);
-        $this->assertNotEquals($str, $quoted_str, 'DbModel expect quote str,bug not change ');
+        $quotedStr = $dbModel->quote($str);
+        $this->assertNotEquals($str, $quotedStr, 'DbModel expect quote str,bug not change ');
     }
 
     /**
@@ -123,6 +120,7 @@ class TestDbModel extends TestCase
         $frameworkUserModel = new FrameworkUserModel();
         $uid = static::$user['id'];
         $user = $frameworkUserModel->getRowById($uid);
+
         $this->assertNotEmpty($user);
         foreach (static::$user as $k => $v) {
             $this->assertEquals($v, $user[$k]);
@@ -201,7 +199,7 @@ class TestDbModel extends TestCase
         $catch = false;
 
         $frameworkUserModel = new FrameworkUserModel();
-        $dbConfig = $frameworkUserModel->dbConfig['database'][$frameworkUserModel->configName];
+        $dbConfig = $frameworkUserModel->dbConfig[$frameworkUserModel->configName];
         $this->assertNotEmpty($dbConfig);
         // v($db_config);
         if (isset($dbConfig['show_field_info'])
@@ -229,49 +227,47 @@ class TestDbModel extends TestCase
     public function testInsertAndReplaceAndDelete()
     {
         $model = new FrameworkUserModel();
-        try {
-            $params = [];
-            $params['name'] = 'unit_test_name_insert';
-            $params['phone'] = '170' . mt_rand(12345678, 92345678);
-            $params['email'] = $params['phone'] . '@qq.com';
-            $params['password'] = md5('123456');
-            $params['status'] = 1;
-            $params['reg_time'] = time();
-            $params['last_login_time'] = time();
+        $username = '170' . mt_rand(12345678, 92345678);
+        $params = [];
+        $params['username'] = $username;
+        $params['name'] = $username;
+        $params['phone'] = $username;
+        $params['email'] = $username . '@qq.com';
+        $params['password'] = md5('123456');
+        $params['status'] = 1;
+        $params['reg_time'] = time();
+        $params['last_login_time'] = time();
 
-            list($execRet, $insertId) = $model->insert($params);
-            $this->assertTrue($execRet, 'DbModel exec error:' . $model->getLastSql() . "\n" . $insertId);
-            $this->assertNotEmpty($insertId, 'DbModel insert failed ,getLastInsId is empty');
+        list($execRet, $insertId) = $model->insert($params);
+        $this->assertTrue($execRet, 'DbModel exec error:' . $model->getLastSql() . "\n" . $insertId);
+        $this->assertNotEmpty($insertId, 'DbModel insert failed ,getLastInsId is empty');
 
-            // test InsertIgnore
-            list($execRet, $msg) = $model->insertIgnore($params);
-            $this->assertTrue($execRet, 'DbModel insertIgnore error:' . $model->getLastSql() . "\n" . $msg);
+        // test InsertIgnore
+        list($execRet, $msg) = $model->insertIgnore($params);
+        $this->assertTrue($execRet, 'DbModel insertIgnore error:' . $model->getLastSql() . "\n" . $msg);
 
-            $conditions['phone'] = $params['phone'];
-            $users = $model->getRows("*", $conditions);
-            if (count($users) > 1) {
-                print_r($users);
-                $this->fail('DbModel insertIgnore error, expect row count is 1,but get ' . count($users));
-            }
-
-            // test replace
-            $params['id'] = $insertId;
-            $params['status'] = 2;
-            $params['last_login_time'] = time() + 10;
-            list($execRet, $msg) = $model->replace($params);
-            $this->assertTrue($execRet, 'DbModel replace error:' . $model->getLastSql() . "\n" . $msg);
-            $user = $model->getRowById($insertId);
-            foreach ($params as $k => $v) {
-                $this->assertEquals($v, $user[$k]);
-            }
-
-            // test delete
-            $deleteRet = $model->delete($conditions);
-            $this->assertNotEmpty($deleteRet, 'DbModel delete error:' . $model->getLastSql());
-        } catch (\PDOException $e) {
-            $msg = mb_convert_encoding($e->getMessage(), 'gbk', 'utf-8');
-            $this->fail('throw \PDOException :' . $e->getCode() . ' ' . $msg);
+        $conditions['phone'] = $params['phone'];
+        $users = $model->getRows("*", $conditions);
+        if (count($users) > 1) {
+            print_r($users);
+            $this->fail('DbModel insertIgnore error, expect row count is 1,but get ' . count($users));
         }
+
+        // test replace
+        $params['id'] = $insertId;
+        $params['status'] = 2;
+        $params['last_login_time'] = time() + 10;
+        list($execRet, $msg) = $model->replace($params);
+        $this->assertTrue($execRet, 'DbModel replace error:' . $model->getLastSql() . "\n" . $msg);
+        $user = $model->getRowById($insertId);
+        foreach ($params as $k => $v) {
+            $this->assertEquals($v, $user[$k]);
+        }
+
+        // test delete
+        $deleteRet = $model->delete($conditions);
+        $this->assertNotEmpty($deleteRet, 'DbModel delete error:' . $model->getLastSql());
+
     }
 
     /**

@@ -8,6 +8,7 @@ write_request_log: false
 security_map: false
 date_default_timezone: 'Asia/Shanghai'
 encrypy_key: '1234567890abc'
+use_transaction: true
 
 xhprof:
   enable: false

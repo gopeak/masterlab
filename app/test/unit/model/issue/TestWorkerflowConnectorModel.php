@@ -33,7 +33,6 @@ class TestWorkerflowConnectorModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
     /**
@@ -60,21 +59,6 @@ class TestWorkerflowConnectorModel extends TestBaseIssueModel
         return $row;
     }
 
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        $model = new WorkflowModel();
-        $model->deleteById(self::$workflow['id']);
-
-        $model = new WorkflowConnectorModel();
-        if (!empty(self::$insertIdArr)) {
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
-    }
 
     /**
      * 主流程
@@ -109,9 +93,5 @@ class TestWorkerflowConnectorModel extends TestBaseIssueModel
         $this->assertEquals(1, $deleteCount);
         $rows = $model->getItemsByWorkflowId($workflowId);
         $this->assertEmpty($rows);
-
-        // 4.删除
-        $ret = (bool)$model->deleteById($insertId);
-        $this->assertTrue($ret);
     }
 }

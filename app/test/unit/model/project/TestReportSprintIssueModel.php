@@ -25,21 +25,6 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
 
     public static function tearDownAfterClass()
     {
-        self::clearData();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectData['id']);
-
-        BaseDataProvider::deleteSprint(self::$projectSprintData['id']);
-
-        $model = new ReportSprintIssueModel();
-        $model->deleteById(self::$projectSprintReportData['id']);
     }
 
     public static function initProject($info = [])
@@ -106,7 +91,7 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
         $model = new ReportSprintIssueModel();
 
         $info['sprint_id'] = self::$projectSprintData['id'];
-        $info['date'] = '2018-09-02';
+        $info['date'] = date('y-m-d');
         $info['week'] = 4;
         $info['month'] = '08';
         $info['count_done'] = 2;

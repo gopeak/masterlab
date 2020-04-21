@@ -25,20 +25,8 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
 
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
-    /**
-     * @throws \Exception
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectData['id']);
-
-        $model = new ProjectIssueTypeSchemeDataModel();
-        $model->deleteById(self::$projectIssueTypeSchemeData['id']);
-    }
 
     public static function initProject($info = [])
     {
