@@ -83,19 +83,5 @@ class TestPermissionLogic extends BaseUnitTranTestCase
         $this->assertTrue($ret);
         $ret = $logic->checkUserHaveProjectItem($userId, 0);
         $this->assertFalse($ret);
-
-
-        //$ret = $logic->getUserHaveProjectPermissions($userId, $projectId);
-        //$this->assertNotEmpty($ret);
-
-        $key1 = $projectId . '_' . self::$userRoles[0]['id'];
-        $key2 = $projectId . '_' . mt_rand(10000, 999999);
-        $data[$key1] = '';
-        $data[$key2] = '';
-        list($ret, $msg) = $logic->updateUserProjectRole($userId, $data);
-        $this->assertTrue($ret, $msg);
-
-        list($ret) = $logic->updateUserProjectRole($userId, []);
-        $this->assertFalse($ret);
     }
 }

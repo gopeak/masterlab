@@ -94,7 +94,7 @@ class ResponseError extends BaseCtrl
 
     public function pageUnDefine()
     {
-        if($this->enableXdebug){
+        if($this->enableXdebug || !extension_loaded('xdebug')){
             echo "
 <br />
 <font size='1'><table class='xdebug-error xe-notice' dir='ltr' border='1' cellspacing='0' cellpadding='1'>

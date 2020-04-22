@@ -79,6 +79,7 @@ class TestActivity extends BaseAppTestCase
     {
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . '/activity/fetchCalendarHeatmap');
+
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if (!$respArr) {

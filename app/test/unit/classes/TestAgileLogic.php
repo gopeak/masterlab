@@ -3,9 +3,11 @@
 namespace main\app\test\unit\classes;
 
 use main\app\classes\AgileLogic;
+use main\app\model\DbModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectLabelModel;
+use main\app\model\unit_test\FrameworkUserModel;
 use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +25,12 @@ class TestAgileLogic extends BaseUnitTranTestCase
 
     public static function setUpBeforeClass()
     {
-        parent::setUpBeforeClass();
+        // 如果已经启动了事务则先回滚
+        $dbModel = new DbModel();
+        if ($dbModel->db->getTransactionNestingLevel() > 0) {
+            $dbModel->db->rollBack();
+        }
+        $dbModel->beginTransaction();
     }
 
     /**
@@ -32,7 +39,8 @@ class TestAgileLogic extends BaseUnitTranTestCase
      */
     public static function tearDownAfterClass()
     {
-        parent::tearDownAfterClass();
+        $dbModel = new DbModel();
+        $dbModel->rollBack();
     }
 
     /**

@@ -21,7 +21,7 @@ class TestDbModel extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        // 清空数据
+        // 关闭事务
         $frameworkUserModel = new FrameworkUserModel();
         if ($frameworkUserModel->db->getTransactionNestingLevel() > 0) {
             $frameworkUserModel->db->rollBack();

@@ -30,4 +30,11 @@ class  BaseUnitTranTestCase extends BaseTestCase
         (new DbModel())->rollBack();
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function testMain(){
+
+        $this->assertEquals(APP_STATUS, 'test');
+    }
 }
