@@ -98,7 +98,7 @@ class TestUserGroupModel extends TestCase
         $this->assertNotContains($devGroupId, $groups[$newUserId]);
 
         //  清除数据
-        $ret = $model->deleteByGroupIdUid($uid, $devGroupId);
+        $ret = $model->deleteByGroupIdUid($devGroupId, $uid);
         $this->assertEquals(1, $ret);
 
         $ret = (bool)$model->deleteByUid($uid);

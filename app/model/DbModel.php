@@ -71,6 +71,12 @@ class DbModel extends BaseModel
     public $sql = '';
 
     /**
+     * 执行 delete函数时删除的记录数
+     * @var int
+     */
+    public $deleteNum = 0;
+
+    /**
      * 请求生命周期的sql数组
      * @var array
      */
@@ -288,9 +294,9 @@ class DbModel extends BaseModel
     public function getCount($conditions)
     {
         $field = "count({$this->primaryKey}) as cc";
-        $sql = 'SELECT ' . $field . ' FROM ' . $this->getTable();
+        $sql = 'SELECT ' . $field . ' FROM ' . $this->getTable() ." Where ".print_r($conditions, true);
         $this->sql = $sql;
-        return (int)$this->db->fetchColumn($sql, $conditions);
+        return (int)$this->getField($field, $conditions);
     }
 
     /**
@@ -723,7 +729,13 @@ class DbModel extends BaseModel
      */
     public function delete($conditions)
     {
-        return $this->db->delete($this->getTable(), $conditions);
+        $this->deleteNum = 0;
+        try{
+            $this->deleteNum  = $this->db->delete($this->getTable(), $conditions);
+        }catch (\Exception $e){
+            throw $e;
+        }
+        return $this->deleteNum;
     }
 
     /**

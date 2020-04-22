@@ -68,12 +68,13 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
     public function testDeleteBySchemeId()
     {
         $model = new ProjectIssueTypeSchemeDataModel();
-
-        $info['issue_type_scheme_id'] = 5;
-        $info['project_id'] = self::$projectData['id'];
+        $issue_type_scheme_id = mt_rand(10000,1000000);
+        $project = BaseDataProvider::createProject();
+        $info['issue_type_scheme_id'] = $issue_type_scheme_id;
+        $info['project_id'] = $project['id'];
         list($flag, $insertId) = $model->insert($info);
 
-        $ret = $model->deleteBySchemeId($insertId);
+        $ret = $model->deleteBySchemeId($issue_type_scheme_id);
         $this->assertTrue($ret > 0);
     }
 

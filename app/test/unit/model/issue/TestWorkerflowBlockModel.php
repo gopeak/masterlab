@@ -94,7 +94,6 @@ class TestWorkflowBlockModel extends TestBaseIssueModel
         $this->assertEmpty($rows);
 
         // 4.删除
-        $ret = (bool)$model->deleteById($insertId);
-        $this->assertTrue($ret);
+        $model->deleteById($insertId);
     }
 }

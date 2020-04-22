@@ -178,7 +178,7 @@ class CacheKeyModel extends CacheModel
         }
 
         $curRate = mt_rand(0, 1000);
-        $_config = getConfigVar('cache');
+        $_config = getYamlConfigByModule('cache');
         if (!isset($_config['gc_rate'])) {
             $_config['gc_rate'] = 1;
         }

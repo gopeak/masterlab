@@ -42,7 +42,8 @@ class TestPhoneFindpassModel extends TestCase
         $this->assertEquals($phone, $row['phone']);
 
         // 测试删除
-        $model->deleteByPhone($phone);
+        $ret = $model->deleteByPhone($phone);
+        $this->assertEquals($ret, 1);
         $row = $model->getByPhone($phone);
         $this->assertFalse(isset($row['phone']));
     }

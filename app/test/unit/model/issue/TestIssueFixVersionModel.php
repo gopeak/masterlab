@@ -131,7 +131,7 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
         // 5.删除
         $ret = (bool)$model->deleteItemById($insertId);
         $this->assertTrue($ret);
-        $ret = (bool)$model->deleteItemByIssueId($insertId);
-        $this->assertTrue($ret);
+        $model->deleteItemByIssueId($insertId);
+
     }
 }

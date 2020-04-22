@@ -29,7 +29,7 @@ class TestEmailFindPasswordModel extends TestBaseUserModel
         $email = '190' . mt_rand(12345678, 92345678) . '@masterlab.org';
         $verifyCode = '123456';
         list($ret, $insertId) = $model->add($email, $verifyCode);
-        $this->assertTrue($ret, $insertId);
+        $this->assertTrue((bool)$ret, $insertId);
 
         // 2.测试 getByEmail
         $row = $model->getByEmail($email);

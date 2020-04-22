@@ -96,9 +96,9 @@ class TestCacheKeyModel extends TestCase
             $model->saveCache($module, $cacheKey, $cacheValue, $expire);
         }
 
-
-        // 停止3秒,然后执行 gc(),检查是否清除
+        // 停止2秒,然后执行 gc(),检查是否清除
         sleep(2);
+        $GLOBALS['_yml_config']['cache']['gc_rate'] = 1000;
         $ret = $model->gc();
         $this->assertTrue($ret);
         if ($model->cache) {
@@ -108,7 +108,6 @@ class TestCacheKeyModel extends TestCase
             }
         }
         $rows = $model->getRows('`key`', ['module' => $module]);
-        //print_r($rows);
         $this->assertEmpty($rows);
     }
 }

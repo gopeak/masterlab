@@ -23,6 +23,9 @@ class TestDbModel extends TestCase
     {
         // 清空数据
         $frameworkUserModel = new FrameworkUserModel();
+        if ($frameworkUserModel->db->getTransactionNestingLevel() > 0) {
+            $frameworkUserModel->db->rollBack();
+        }
         $sql = "delete from " . $frameworkUserModel->getTable();
         $frameworkUserModel->exec($sql);
 
@@ -34,6 +37,10 @@ class TestDbModel extends TestCase
      */
     public static function tearDownAfterClass()
     {
+        $frameworkUserModel = new FrameworkUserModel();
+        if ($frameworkUserModel->db->getTransactionNestingLevel() > 0) {
+            $frameworkUserModel->db->rollBack();
+        }
     }
 
     /**
@@ -89,7 +96,7 @@ class TestDbModel extends TestCase
     public function testConnect()
     {
         DbModel::$dalDriverInstances = [];
-        closeResources();
+        closeResources2();
         $dbModel = new DbModel();
         $sql = " show tables;";
         $dbModel->db->fetchAll($sql);
@@ -229,7 +236,6 @@ class TestDbModel extends TestCase
         $model = new FrameworkUserModel();
         $username = '170' . mt_rand(12345678, 92345678);
         $params = [];
-        $params['username'] = $username;
         $params['name'] = $username;
         $params['phone'] = $username;
         $params['email'] = $username . '@qq.com';

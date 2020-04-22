@@ -19,6 +19,7 @@ $config->enableWriteReqLog = WRITE_REQUEST_LOG;
 $config->enableSecurityMap = SECURITY_MAP_ENABLE;
 $config->enableReflectMethod = ENABLE_REFLECT_METHOD;
 $config->enableFilterSqlInject = false;
+$config->enableXssFilter = false;
 $config->exceptionPage = VIEW_PATH . 'exception.php';
 $config->ajaxProtocolClass = 'ajax';
 $config->ctrlMethodPrefix = 'page';

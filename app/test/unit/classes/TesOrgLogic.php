@@ -23,7 +23,7 @@ class TesOrgLogic extends BaseUnitTranTestCase
      */
     public static function setUpBeforeClass()
     {
-        //parent::setUpBeforeClass();
+        parent::setUpBeforeClass();
         $model = new OrgModel();
         for ($i = 0; $i < self::$insertNum; $i++) {
             $info = [];
@@ -43,7 +43,7 @@ class TesOrgLogic extends BaseUnitTranTestCase
      */
     public static function tearDownAfterClass()
     {
-        //parent::tearDownAfterClass();
+        parent::tearDownAfterClass();
     }
 
     /**

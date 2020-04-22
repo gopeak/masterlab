@@ -39,7 +39,7 @@ function arrayRecursive(&$array, $function, $apply_to_keys_also = false)
 
 /**
  * 将数组转换为JSON字符串（兼容中文）
- * @param $array 要转换的数组
+ * @param array $array 要转换的数组
  * @return string 转换得到的json字符串
  */
 function arr2json($array)

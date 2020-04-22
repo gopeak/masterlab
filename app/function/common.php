@@ -1,6 +1,8 @@
 <?php
 
 
+use main\app\model\DbModel;
+
 function unit_set($key)
 {
 
@@ -207,17 +209,17 @@ if (!function_exists('dump')) {
         echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";
     }
 }
-if (!function_exists('closeResources')) {
+if (!function_exists('closeResources2')) {
     /**
      * close resources
      */
-    function closeResources()
+    function closeResources2()
     {
-        if (isset($GLOBALS['global_pdo']) && !empty($GLOBALS['global_pdo'])) {
-            foreach ($GLOBALS['global_pdo'] as $k => &$pdo) {
-                $GLOBALS['global_pdo'][$k] = NULL;
+        if (isset(DbModel::$dalDriverInstances) && !empty(DbModel::$dalDriverInstances)) {
+            foreach (DbModel::$dalDriverInstances as $k => &$pdo) {
+                DbModel::$dalDriverInstances[$k] = NULL;
                 unset($pdo);
-                unset($GLOBALS['global_pdo'][$k]);
+                unset(DbModel::$dalDriverInstances[$k]);
             }
         }
         if (function_exists('get_resources')) {

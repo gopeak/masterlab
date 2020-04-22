@@ -15,9 +15,9 @@ xhprof:
   rate: 1
 
 cache:
-  enable: false
+  enable: true
   expire: 864000
-  gc_rate: 10
+  gc_rate: 100
   server:
     - ['127.0.0.1', '7379', '']
 

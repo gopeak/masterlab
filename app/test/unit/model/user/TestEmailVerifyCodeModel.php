@@ -62,7 +62,7 @@ class TestEmailVerifyCodeModel extends TestBaseUserModel
         $username= self::$user['username'];
         $verifyCode = '123456';
         list($ret, $insertId) = $model->add($userId, $email, $username, $verifyCode);
-        $this->assertTrue($ret, $insertId);
+        $this->assertTrue((bool)$ret, $insertId);
 
         // 2.测试 getByEmail
         $row = $model->getByEmail($email);

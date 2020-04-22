@@ -56,7 +56,6 @@ class TestIssueUiTabModel extends TestBaseIssueModel
         $deleteCount = (int) $model->deleteByIssueType($issueBugTypeId, $uiType);
         $this->assertEquals(1, $deleteCount);
         // 5.删除
-        $ret = (bool)$model->deleteById($insertId);
-        $this->assertTrue($ret);
+        $ret = $model->deleteById($insertId);
     }
 }

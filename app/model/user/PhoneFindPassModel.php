@@ -61,16 +61,17 @@ class PhoneFindPassModel extends CacheModel
         return $ret;
     }
 
-
     /**
      * 删除找回密码记录
-     * Enter description here ...
+     * @param $phone
+     * @return int
+     * @throws \Exception
      */
     public function deleteByPhone($phone)
     {
         $key = self::DATA_KEY . $phone;
-        $where = " Where phone = '$phone'";
-        $flag = parent::deleteBykey($where, $key);
+        $conditionArr = ['phone' => $phone];
+        $flag = parent::deleteBykey($conditionArr, $key);
         return $flag;
     }
 }

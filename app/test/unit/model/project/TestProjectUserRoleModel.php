@@ -82,10 +82,14 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $this->assertEquals(true, $ret[0]);
 
         // 测试表唯一索引是否生效 UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`)
-        $ret1 = $model->add($projectId, $userId, $roleId);
-        $this->assertEquals(false, $ret1[0]);
-
-        $model->deleteById($ret[1]);
+        $err = '';
+        try{
+            $model->add($projectId, $userId, $roleId);
+        }catch (\Exception $e){
+            $err = $e->getMessage();
+        }
+        $this->assertContains('Duplicate', $err);
+        $this->assertContains('SQLSTATE[23000]', $err);
     }
 
     /**
@@ -143,15 +147,19 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         // 检查一般插入
         $userId = 99999;
         $projectId = self::$projectData['id'];
-        $roleId = 99999;
+        $roleId = 100001;
         $ret = $model->insertRole($userId, $projectId, $roleId);
         $this->assertEquals(true, $ret[0]);
 
         // 测试表唯一索引是否生效 UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`)
-        $ret1 = $model->insertRole($userId, $projectId, $roleId);
-        $this->assertEquals(false, $ret1[0]);
-
-        $model->deleteById($ret[1]);
+        $err = '';
+        try{
+            $model->insertRole($userId, $projectId, $roleId);
+        }catch (\Exception $e){
+            $err = $e->getMessage();
+        }
+        $this->assertContains('Duplicate', $err);
+        $this->assertContains('SQLSTATE[23000]', $err);
     }
 
     /**

@@ -280,16 +280,14 @@ class CacheModel extends DbModel
 
     /**
      * 删除数据
-     *
-     * @param string $table 表名
-     * @param array $where 查询条件
-     * @param $key string  缓存键名
+     * @param array $conditionArr 查询条件
+     * @param  string $key 缓存键名
      * @return int 影响的行数。如果没有受影响的行，则返回 0,失败返回false
      * @throws \Exception
      */
-    public function deleteByKey($where, $key = '')
+    public function deleteByKey($conditionArr, $key = '')
     {
-        $rowsAffected = parent::delete($where);
+        $rowsAffected = parent::delete($conditionArr);
         if (!empty($key) && $rowsAffected && !empty($this->cache)) {
             $this->cache->delete($key);
         }

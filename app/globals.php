@@ -119,7 +119,10 @@ function testEnvAutoTransactionRollback()
         if (empty($dbModel)) {
             $dbModel = (new DbModel());
         }
-        $dbModel->rollBack();
+        if($dbModel->db->getTransactionNestingLevel()>0){
+            $dbModel->rollBack();
+        }
+
     }, $dbModel);
 }
 

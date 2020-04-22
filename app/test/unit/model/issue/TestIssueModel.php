@@ -65,7 +65,7 @@ class TestIssueModel extends BaseUnitTranTestCase
         if ($ret) {
             self::$insertIdArr[] = $issueId;
         }
-        self::$issue = $issue = $model->getById($issueId);
+        $issue = $model->getById($issueId);
         $this->assertNotEmpty($issue);
         foreach ($info as $key => $val) {
             $this->assertEquals($val, $issue[$key]);

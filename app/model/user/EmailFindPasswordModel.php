@@ -73,7 +73,7 @@ class EmailFindPasswordModel extends CacheModel
 
         // 更新缓存
         $this->cache->delete(self::DATA_KEY . $email);
-        return [$ret, $insertId];
+        return [(bool)$ret, $insertId];
     }
 
 

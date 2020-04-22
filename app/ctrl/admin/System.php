@@ -838,7 +838,7 @@ class System extends BaseAdminCtrl
                 }
             }
 
-            $cacheConfig = getConfigVar('cache');
+            $cacheConfig = getYamlConfigByModule('cache');
 
             if ((int)$params['enable']) {
                 $cacheConfig['redis']['data'] = $params['redis'];

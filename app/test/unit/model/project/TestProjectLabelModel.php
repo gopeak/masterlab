@@ -107,7 +107,6 @@ class TestProjectLabelModel extends TestBaseProjectModel
         $model = new ProjectLabelModel();
         $ret = $model->checkNameExist(self::$projectData['id'], self::$projectLabelData['title']);
         $this->assertTrue($ret);
-
         $ret = $model->checkNameExist(self::$projectData['id'], quickRandom(5));
         $this->assertFalse($ret);
     }
