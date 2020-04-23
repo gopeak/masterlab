@@ -9,21 +9,24 @@ use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\test\BaseDataProvider;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  *  ProjectLogic 模块业务逻辑
  * @package main\app\test\logic
  */
-class TestProjectLogic extends TestCase
+class TestProjectLogic extends BaseUnitTranTestCase
 {
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
+        parent::tearDownAfterClass();
     }
 
     /**

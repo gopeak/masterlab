@@ -189,6 +189,7 @@ class AgileLogic
                 $info['flag'] = $flagName;
                 $info['value'] = $issuesWeightJson;
                 $info['update_time'] = time();
+                // print_r($info);
                 $model->replace($info);
                 $model->db->commit();
                 return [true, $issuesWeightJson];

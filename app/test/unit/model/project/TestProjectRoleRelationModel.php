@@ -23,19 +23,6 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
 
     public static function tearDownAfterClass()
     {
-        self::clearData();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectData['id']);
-
-        $model = new ProjectRoleRelationModel();
-        $model->deleteById(self::$projectRoleRelationtData['id']);
     }
 
     public static function initProject($info = [])

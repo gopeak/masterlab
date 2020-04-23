@@ -4,6 +4,7 @@ namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueFixVersionModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 
 /**
  *  IssueFixVersionModel 测试类
@@ -21,15 +22,17 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         self::$issue = self::initIssue();
     }
 
     /**
      * 确保生成的测试数据被清除
+     * @throws \Doctrine\DBAL\DBALException
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
+        parent::tearDownAfterClass();
     }
 
     /**
@@ -128,7 +131,7 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
         // 5.删除
         $ret = (bool)$model->deleteItemById($insertId);
         $this->assertTrue($ret);
-        $ret = (bool)$model->deleteItemByIssueId($insertId);
-        $this->assertTrue($ret);
+        $model->deleteItemByIssueId($insertId);
+
     }
 }

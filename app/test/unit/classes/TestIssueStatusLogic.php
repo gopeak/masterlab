@@ -3,22 +3,24 @@
 namespace main\app\test\unit\classes;
 
 use main\app\classes\IssueStatusLogic;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  *  IssueStatusLogic 测试
  * @package main\app\test\logic
  */
-class TestIssueStatusLogic extends TestCase
+class TestIssueStatusLogic extends BaseUnitTranTestCase
 {
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
-        IssueFavFilterDataProvider::clear();
+        parent::tearDownAfterClass();
     }
 
     /**

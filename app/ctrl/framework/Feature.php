@@ -88,17 +88,16 @@ class Feature extends BaseCtrl
     public function validateWritableDir()
     {
         $dirs = [
+            PRE_APP_PATH.'config.yml',
             PRE_APP_PATH.'env.ini',
             PRE_APP_PATH.'bin',
             PRE_APP_PATH.'upgrade',
-            APP_PATH.'config/deploy',
-            APP_PATH.'config/travis',
-            APP_PATH.'config/development',
             APP_PATH.'public/install',
             APP_PATH.'public/attachment',
             STORAGE_PATH,
             STORAGE_PATH . 'upload',
             STORAGE_PATH . 'cache',
+            STORAGE_PATH . 'tmp',
             STORAGE_PATH . 'session',
             STORAGE_PATH . 'log',
             STORAGE_PATH . 'xhprof',
@@ -175,6 +174,8 @@ class Feature extends BaseCtrl
         $user = [];
         $table = $dbModel->getTable();
         try {
+            $sql = "Delete From {$table} Where phone = '13002510000'  ";
+            $dbModel->db->executeUpdate($sql);
             $sql = "INSERT INTO {$table} ( `name`, `phone`, `password`, `email`, `status`, `reg_time`, `last_login_time`) 
                 VALUES ( '帅哥', '13002510000', '{$pwd}', 'fun@163.com', 1, 0, {$time}) ;";
             $ret = $dbModel->db->executeUpdate($sql);
@@ -191,9 +192,10 @@ class Feature extends BaseCtrl
 
         if ($ret) {
             $insertId = $dbModel->getLastInsId();
-            $phone = $_POST['phone'];
+            $phone = $dbModel->quote($_POST['phone']);
             $pwd = $_POST['pwd'];
             $sql = "Select * From {$table} Where phone='$phone' AND password='$pwd'";
+            //echo $sql;
             $user = $dbModel->db->fetchAssoc($sql);
             if (!empty($insertId)) {
                 $sql = "Delete From {$table} Where phone = '13002510000'  ";
@@ -240,7 +242,7 @@ class Feature extends BaseCtrl
     public function doSqlInject()
     {
         $url = ROOT_URL . "/framework/sql_inject";
-        $post_data['phone'] = "13002510000' or '1'='1 ";
+        $post_data['phone'] = "13002510000' or '1'='1";
         $post_data['pwd'] = "121";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);

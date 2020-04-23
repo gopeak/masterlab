@@ -2,6 +2,7 @@
 
 namespace main\app\test\unit\classes;
 
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 use main\app\model\system\MailQueueModel;
@@ -12,17 +13,18 @@ use main\app\test\data\LogDataProvider;
  *  UploadLogic 测试类
  * @package main\app\test\unit\classes
  */
-class TestUploadLogic extends TestCase
+class TestUploadLogic extends BaseUnitTranTestCase
 {
 
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
-        UploadLogicDataProvider::clear();
+        parent::tearDownAfterClass();
     }
 
     /**
@@ -41,6 +43,7 @@ class TestUploadLogic extends TestCase
         list($ret) = UploadLogicDataProvider::providerFileObject($fieldName);
         $this->assertTrue($ret);
         $ret = $logic->move($fieldName, 'avatar');
+        print_r($ret);
         if ($ret['error'] != UPLOAD_ERR_OK) {
             print_r($ret);
             return;

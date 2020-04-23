@@ -2,6 +2,7 @@
 
 namespace main\app\test\logic;
 
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 use main\app\model\system\MailQueueModel;
@@ -12,7 +13,7 @@ use main\app\classes\MailQueueLogic;
  * Class testMailQueueLogic
  * @package main\app\test\logic
  */
-class TestMailQueueLogic extends TestCase
+class TestMailQueueLogic extends BaseUnitTranTestCase
 {
     public static $pageSize = 2;
 
@@ -28,6 +29,7 @@ class TestMailQueueLogic extends TestCase
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         $model = MailQueueModel::getInstance();
         $model->delete(['title' => 'test-title']);
         for ($i = 0; $i < self::$insertNum; $i++) {
@@ -52,20 +54,12 @@ class TestMailQueueLogic extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        if (!empty(self::$queues)) {
-            $model = new MailQueueModel();
-            foreach (self::$queues as $row) {
-                $model->deleteById($row['id']);
-            }
-        }
-        if (!empty(self::$queueIdArr)) {
-            $model = new MailQueueModel();
-            foreach (self::$queueIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
+        parent::tearDownAfterClass();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetPageInfo()
     {
         $logic = new MailQueueLogic(self::$pageSize);
@@ -81,6 +75,9 @@ class TestMailQueueLogic extends TestCase
         $this->assertRegExp('/page=\'' . $page . '\'\s+class="current"/', $pageHtml);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testQuery()
     {
         $logic = new MailQueueLogic(self::$pageSize);

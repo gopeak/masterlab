@@ -71,6 +71,12 @@ class DbModel extends BaseModel
     public $sql = '';
 
     /**
+     * 执行 delete函数时删除的记录数
+     * @var int
+     */
+    public $deleteNum = 0;
+
+    /**
      * 请求生命周期的sql数组
      * @var array
      */
@@ -288,9 +294,9 @@ class DbModel extends BaseModel
     public function getCount($conditions)
     {
         $field = "count({$this->primaryKey}) as cc";
-        $sql = 'SELECT ' . $field . ' FROM ' . $this->getTable();
+        $sql = 'SELECT ' . $field . ' FROM ' . $this->getTable() ." Where ".print_r($conditions, true);
         $this->sql = $sql;
-        return (int)$this->db->fetchColumn($sql, $conditions);
+        return (int)$this->getField($field, $conditions);
     }
 
     /**
@@ -456,6 +462,36 @@ class DbModel extends BaseModel
     }
 
     /**
+     * 通过id数组获取多条记录
+     * @param string $fields
+     * @param string $field
+     * @param array $idArr
+     * @param null $append
+     * @param null $orderBy
+     * @param null $sort
+     * @param null $limit
+     * @return array|mixed[]
+     */
+    public function getRowsByIdArr($fields = '*', $field = 'id', $idArr = [], $append = null, $orderBy = null, $sort = null, $limit = null)
+    {
+        if (empty($idArr)) {
+            return [];
+        }
+        $table = $this->getTable();
+        $idArrStr = implode(',', $idArr);
+        $where = "where {$field} in ( {$idArrStr} )";
+        $orderBy = !empty($orderBy) ? ' ORDER BY ' . $orderBy . ' ' : '';
+        $sort = !empty($sort) ? ' ' . $sort . ' ' : '';
+        $limit = !empty($limit) ? ' LIMIT ' . $limit : '';
+        $append = !empty($append) ? ' AND ' . $append : '';
+        $sql = "SELECT {$fields} FROM {$table}  {$where} {$append}  {$orderBy}  {$sort}  {$limit}";
+        //echo $sql;
+        $row = $this->db->fetchAll($sql, []);
+        return $row;
+    }
+
+
+    /**
      * @param $sql
      * @param array $conditions
      * @param $primaryKey
@@ -519,7 +555,8 @@ class DbModel extends BaseModel
         $sql = "Insert  into  {$this->getTable()} Set  ";
         $sql .= $this->parsePrepareSql($arr);
         $this->sql = $sql;
-        $ret = $this->db->insert($this->getTable(), $arr);
+        $this->removeFixField($arr);
+        $ret = $this->db->executeUpdate($sql, $arr);
         if (!$ret) {
             return [false, 'db insert err:' . print_r($arr, true)];
         }
@@ -531,16 +568,33 @@ class DbModel extends BaseModel
      */
     protected function fixField(&$arr)
     {
-        if($arr){
+        if ($arr) {
             foreach ($arr as $k => $item) {
                 $key = str_replace(" ", "", $k);
-                if(substr($key, 0,1)!='`'){
+                if (substr($key, 0, 1) != '`') {
                     $key = "`{$key}`";
                     unset($arr[$k]);
                     $arr[$key] = $item;
                 }
             }
         }
+    }
+
+    /**
+     * 移除字符: `
+     * @param $arr
+     */
+    protected function removeFixField(&$arr)
+    {
+        if ($arr) {
+            $newArr = [];
+            foreach ($arr as $k => $item) {
+                $key = str_replace("`", "", $k);
+                $newArr[$key] = $item;
+            }
+            $arr = $newArr;
+        }
+
     }
 
 
@@ -611,6 +665,7 @@ class DbModel extends BaseModel
         $this->sql = $sql;
         //echo $sql;
         try {
+            $this->removeFixField($row);
             $this->db->executeUpdate($sql, $row);
             return [true, $this->db->lastInsertId()];
         } catch (PDOException $e) {
@@ -654,6 +709,7 @@ class DbModel extends BaseModel
         }
         $sql = " Replace  into  {$table} Set  ";
         $sql .= $this->parsePrepareSql($arr);
+        $this->removeFixField($arr);
         try {
             $this->exec($sql, $arr);
             return [true, $this->db->lastInsertId()];
@@ -673,7 +729,13 @@ class DbModel extends BaseModel
      */
     public function delete($conditions)
     {
-        return $this->db->delete($this->getTable(), $conditions);
+        $this->deleteNum = 0;
+        try{
+            $this->deleteNum  = $this->db->delete($this->getTable(), $conditions);
+        }catch (\Exception $e){
+            throw $e;
+        }
+        return $this->deleteNum;
     }
 
     /**
@@ -715,8 +777,9 @@ class DbModel extends BaseModel
         $sql = " UPDATE {$table} SET ";
         $sql .= $this->parsePrepareSql($row, true);
         $this->sql = $sql;
+        $this->removeFixField($row);
         $ret = $this->db->update($table, $row, $conditions);
-        if ($ret===false) {
+        if ($ret === false) {
             return [false, 'db update err:' . print_r($row, true) . print_r($conditions, true)];
         }
         return [true, $ret];

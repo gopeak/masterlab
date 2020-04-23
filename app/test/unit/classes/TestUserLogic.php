@@ -2,6 +2,7 @@
 
 namespace main\app\test\unit\classes;
 
+use main\app\model\DbModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\GroupModel;
 use main\app\model\user\UserModel;
@@ -29,6 +30,7 @@ class TestUserLogic extends BaseAppTestCase
 
     public static function setUpBeforeClass()
     {
+        (new DbModel())->beginTransaction();
         // 先初始化一个项目
         self::$project = UserLogicDataProvider::initProject();
         list($flag, $roleInfo) = ProjectLogic::initRole(self::$project['id']);
@@ -61,7 +63,7 @@ class TestUserLogic extends BaseAppTestCase
 
     public static function tearDownAfterClass()
     {
-        UserLogicDataProvider::clear();
+        (new DbModel())->rollBack();
     }
 
     /**

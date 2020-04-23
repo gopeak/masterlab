@@ -4,19 +4,21 @@ namespace main\app\test\unit\classes;
 
 use main\app\classes\IssueFavFilterLogic;
 use main\app\model\issue\IssueFilterModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  *  IssueFavFilterLogic 模块业务逻辑
  * @package main\app\test\logic
  */
-class TestIssueFavFilterLogic extends TestCase
+class TestIssueFavFilterLogic extends BaseUnitTranTestCase
 {
 
     public static $issueFavFilterIdArr = [];
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     /**
@@ -24,14 +26,7 @@ class TestIssueFavFilterLogic extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        IssueFavFilterDataProvider::clear();
-
-        $model = new IssueFilterModel();
-        if (!empty(self::$issueFavFilterIdArr)) {
-            foreach (self::$issueFavFilterIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
+        parent::tearDownAfterClass();
     }
 
     /**

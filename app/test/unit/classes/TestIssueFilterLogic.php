@@ -10,6 +10,7 @@ use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\ProjectLabelModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,13 +18,14 @@ use PHPUnit\Framework\TestCase;
  * Class TestIssueFilterLogic
  * @package main\app\test\logic
  */
-class TestIssueFilterLogic extends TestCase
+class TestIssueFilterLogic extends BaseUnitTranTestCase
 {
 
     public static $projectId = null;
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     /**
@@ -31,10 +33,7 @@ class TestIssueFilterLogic extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectId);
-        AgileLogicDataProvider::clear();
-        IssueFilterLogicDataProvider::clear();
+        parent::tearDownAfterClass();
     }
 
     /**

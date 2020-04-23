@@ -6,20 +6,20 @@
             <file>./require/testFramework.php</file>
         </testsuite>
 
-        <!--- 2.测试所有model是否正常-->
+        <!--- 2.测试所有model是否正常
         <testsuite name="Unit-Model">
             <directory suffix=".php">unit/model</directory>
-        </testsuite>
+        </testsuite>-->
 
-        <!--- 3.测试所有自定义函数是否正常-->
+        <!--- 3.测试所有自定义函数是否正常
         <testsuite name="User-function">
             <directory suffix=".php">unit/user_function</directory>
-        </testsuite>
+        </testsuite>-->
 
-        <!--- 4.测试所有逻辑类是否正常-->
+        <!--- 4.测试所有逻辑类是否正常
         <testsuite name="Unit-Logic">
             <directory suffix=".php">unit/classes</directory>
-        </testsuite>
+        </testsuite>-->
 
         <!--- 5.测试所有的功能是否正常-->
         <testsuite name="Feature">

@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sven
- * Date: 2017/6/21 0021
- * Time: 下午 8:06
- */
+
 
 
 function get_func_argNames($funcName)

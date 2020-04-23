@@ -6,6 +6,8 @@ $appConfig = $GLOBALS['_yml_config'];
 // 设置错误报告
 error_reporting($appConfig['error_reporting'] == 'E_ALL' ? E_ALL : E_ERROR);
 
+define("APP_STATUS", $appConfig['app_status']);
+
 // 主程序URL地址，可手动设置
 define('ROOT_URL', trimStr($appConfig['app_url']) == '' ? currentHttpDomain() : $appConfig['app_url']);
 

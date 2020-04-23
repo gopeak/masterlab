@@ -25,20 +25,6 @@ class TestWorkflowSchemeModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
-    }
-
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        if (!empty(self::$insertIdArr)) {
-            $model = new WorkflowSchemeModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
     }
 
     /**

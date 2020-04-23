@@ -4,12 +4,13 @@ namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 
 /**
  *  IssueFileAttachmentModel 测试类
  * User: sven
  */
-class TestIssueFileAttachmentModel extends TestBaseIssueModel
+class TestIssueFileAttachmentModel extends BaseUnitTranTestCase
 {
     /**
      * issue 数据
@@ -19,12 +20,13 @@ class TestIssueFileAttachmentModel extends TestBaseIssueModel
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         self::$issue = self::initIssue();
     }
 
     public static function tearDownAfterClass()
     {
-        self::clearData();
+        parent::tearDownAfterClass();
     }
     /**
      * 初始化用户

@@ -28,22 +28,8 @@ class TestIssueUiTabModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
-
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        $model = new IssueUiTabModel();
-        if (!empty(self::$insertIdArr)) {
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
-    }
 
     /**
      * 主流程
@@ -70,7 +56,6 @@ class TestIssueUiTabModel extends TestBaseIssueModel
         $deleteCount = (int) $model->deleteByIssueType($issueBugTypeId, $uiType);
         $this->assertEquals(1, $deleteCount);
         // 5.删除
-        $ret = (bool)$model->deleteById($insertId);
-        $this->assertTrue($ret);
+        $ret = $model->deleteById($insertId);
     }
 }

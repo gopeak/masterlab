@@ -4,19 +4,21 @@ namespace main\app\test\unit\classes;
 
 use main\app\classes\FieldLogic;
 use main\app\model\issue\IssueTypeSchemeItemsModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  *  FieldLogic 模块业务逻辑
  * @package main\app\test\logic
  */
-class TestFieldLogic extends TestCase
+class TestFieldLogic extends BaseUnitTranTestCase
 {
 
     public static $issueTypeSchemeItemIdArr = [];
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     /**
@@ -24,14 +26,7 @@ class TestFieldLogic extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        FieldLogicDataProvider::clear();
-
-        $model = new IssueTypeSchemeItemsModel();
-        if (!empty(self::$issueTypeSchemeItemIdArr)) {
-            foreach (self::$issueTypeSchemeItemIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
+        parent::tearDownAfterClass();
     }
 
     /**

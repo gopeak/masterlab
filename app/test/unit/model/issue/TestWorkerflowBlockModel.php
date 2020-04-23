@@ -33,7 +33,6 @@ class TestWorkflowBlockModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
     /**
@@ -58,22 +57,6 @@ class TestWorkflowBlockModel extends TestBaseIssueModel
         }
         $row = $model->getRowById($insertId);
         return $row;
-    }
-
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        $model = new WorkflowModel();
-        $model->deleteById(self::$workflow['id']);
-
-        $model = new WorkflowBlockModel();
-        if (!empty(self::$insertIdArr)) {
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
     }
 
     /**
@@ -111,7 +94,6 @@ class TestWorkflowBlockModel extends TestBaseIssueModel
         $this->assertEmpty($rows);
 
         // 4.删除
-        $ret = (bool)$model->deleteById($insertId);
-        $this->assertTrue($ret);
+        $model->deleteById($insertId);
     }
 }

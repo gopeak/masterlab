@@ -32,29 +32,12 @@ class TestIssueUiModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
     public static function initProject($info = [])
     {
         $row = BaseDataProvider::createProject($info);
         return $row;
-    }
-
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$project['id']);
-
-        if (!empty(self::$insertIdArr)) {
-            $model = new IssueUiModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
     }
 
     /**

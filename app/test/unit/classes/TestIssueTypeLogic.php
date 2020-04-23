@@ -6,22 +6,24 @@ use main\app\classes\IssueTypeLogic;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueTypeSchemeItemsModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  *  IssueTypeLogic 测试
  * @package main\app\test\unit\classes;
  */
-class TestIssueTypeLogic extends TestCase
+class TestIssueTypeLogic extends BaseUnitTranTestCase
 {
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
-        IssueTypeLogicDataProvider::clear();
+        parent::tearDownAfterClass();
     }
 
     /**

@@ -3,17 +3,24 @@
 namespace main\app\test\unit\classes;
 
 use main\app\classes\SettingsLogic;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
-class TestSettingsLogic extends TestCase
+/**
+ * Class TestSettingsLogic
+ * @package main\app\test\unit\classes
+ */
+class TestSettingsLogic extends BaseUnitTranTestCase
 {
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
+        parent::tearDownAfterClass();
     }
 
     /**

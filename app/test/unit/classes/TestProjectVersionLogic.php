@@ -4,25 +4,27 @@ namespace main\app\test\unit\classes;
 
 use main\app\classes\ProjectVersionLogic;
 use main\app\model\project\ProjectModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  *  ProjectVersionLogic 模块业务逻辑
  * @package main\app\test\logic
  */
-class TestProjectVersionLogic extends TestCase
+class TestProjectVersionLogic extends BaseUnitTranTestCase
 {
     /**
      * @throws \Exception
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         ProjectLogicDataProvider::initProjectWithVersionAndModule();
     }
 
     public static function tearDownAfterClass()
     {
-        ProjectLogicDataProvider::clear();
+        parent::tearDownAfterClass();
     }
 
     /**

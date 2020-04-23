@@ -305,43 +305,4 @@ class PermissionLogic
         return [$ret, $projects, $projectRoles];
     }
 
-
-    /**
-     * 更新用户项目角色
-     * @param $userId
-     * @param $data
-     * @return array
-     * @throws \Exception
-     */
-    public static function updateUserProjectRole($userId, $data)
-    {
-        if (empty($data)) {
-            return [false, 'data_is_empty'];
-        }
-
-        $projectLogic = new ProjectLogic();
-        $projects = $projectLogic->projectListJoinUser();
-
-        if (empty($projects)) {
-            return [false, 'projects_is_empty'];
-        }
-
-        $projectRoleModel = new ProjectRoleModel();
-        $projectRoles = $projectRoleModel->getsAll();
-
-        $userProjectRoleModel = new ProjectUserRoleModel($userId);
-        foreach ($projects as $project) {
-            $projectId = $project['id'];
-            foreach ($projectRoles as $role) {
-                $roleId = $role['id'];
-                $key = $projectId . '_' . $roleId;
-                if (isset($data[$key])) {
-                    $userProjectRoleModel->insertRole($userId, $projectId, $roleId);
-                } else {
-                    $userProjectRoleModel->deleteByProjectRole($userId, $projectId, $roleId);
-                }
-            }
-        }
-        return [true, 'ok'];
-    }
 }

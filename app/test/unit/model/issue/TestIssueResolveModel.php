@@ -22,12 +22,7 @@ class TestIssueResolveModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        if (!empty(self::$insertIdArr)) {
-            $model = new IssueResolveModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
+
     }
 
     /**

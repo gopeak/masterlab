@@ -7,13 +7,14 @@ use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
  *  ConfigLogic 模块业务逻辑
  * @package main\app\test\logic
  */
-class TestConfigLogic extends TestCase
+class TestConfigLogic extends BaseUnitTranTestCase
 {
 
     public static $projectId = null;
@@ -29,6 +30,7 @@ class TestConfigLogic extends TestCase
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         self::$projectId = ConfigLogicDataProvider::initProject()['id'];
     }
 
@@ -37,26 +39,7 @@ class TestConfigLogic extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        ConfigLogicDataProvider::clear();
-        $model = new ProjectVersionModel();
-        if (!empty(self::$versionIdArr)) {
-            foreach (self::$versionIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
-        $model = new ProjectModuleModel();
-        if (!empty(self::$moduleIdArr)) {
-            foreach (self::$moduleIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
-
-        $model = new ProjectLabelModel();
-        if (!empty(self::$labelIdArr)) {
-            foreach (self::$labelIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
+        parent::tearDownAfterClass();
     }
 
     /**

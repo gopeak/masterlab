@@ -3,70 +3,37 @@
 namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueModel;
-use main\app\model\project\ProjectModel;
-use main\app\model\user\UserModel;
 use main\app\test\BaseDataProvider;
+use main\app\test\unit\BaseUnitTranTestCase;
 
 /**
  *  IssueModel 测试类
  * User: sven
  */
-class TestIssueModel extends TestBaseIssueModel
+class TestIssueModel extends BaseUnitTranTestCase
 {
 
 
-    /**
-     * issue 数据
-     * @var array
-     */
-    public static $user = [];
-
-    /**
-     * project 数据
-     * @var array
-     */
-    public static $project = [];
-
     public static $insertIdArr = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
-        (new UserModel())->db->beginTransaction();
+        parent::setUpBeforeClass();
 
-        self::$user = self::initUser();
-        self::$project = self::initProject();
     }
 
     /**
      * 确保生成的测试数据被清除
+     * @throws \Doctrine\DBAL\DBALException
      */
     public static function tearDownAfterClass()
     {
-        $db = (new UserModel())->db;
-        (new UserModel())->db->rollBack();
+        parent::tearDownAfterClass();
     }
 
-    /**
-     * 初始化用户
-     * @param array $info
-     * @return array
-     * @throws \Exception
-     */
-    public static function initUser($info = [])
-    {
-        $user = BaseDataProvider::createUser($info);
-        return $user;
-    }
-
-    /**
-     * @param array $info
-     * @return array
-     */
-    public static function initProject($info = [])
-    {
-        $row = BaseDataProvider::createProject($info);
-        return $row;
-    }
 
     /**
      * 主流程
@@ -75,9 +42,9 @@ class TestIssueModel extends TestBaseIssueModel
     public function testMain()
     {
         // 1. 新增测试需要的数据
-        $userId = self::$user['uid'];
+        $userId = 100001;
         $summary = 'testIssue';
-        $projectId = self::$project['id'];
+        $projectId = 100086;
         $issueTypeId = 1;
         $priority = 1;
         $resolve = 1;
@@ -98,7 +65,7 @@ class TestIssueModel extends TestBaseIssueModel
         if ($ret) {
             self::$insertIdArr[] = $issueId;
         }
-        self::$issue = $issue = $model->getById($issueId);
+        $issue = $model->getById($issueId);
         $this->assertNotEmpty($issue);
         foreach ($info as $key => $val) {
             $this->assertEquals($val, $issue[$key]);

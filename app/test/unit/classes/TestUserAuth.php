@@ -2,6 +2,7 @@
 
 namespace main\app\test\unit\classes;
 
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 use main\app\model\user\IpLoginTimesModel;
@@ -12,7 +13,7 @@ use main\app\classes\UserAuth;
  *  UserAuth 测试类
  * @package main\app\test\unit\classes
  */
-class TestUserAuth extends TestCase
+class TestUserAuth extends BaseUnitTranTestCase
 {
     public static $user = [];
 
@@ -24,6 +25,7 @@ class TestUserAuth extends TestCase
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         $info = [];
         $info['password'] = UserAuth::createPassword(self::$password);
         if (!$info['password']) {
@@ -34,7 +36,7 @@ class TestUserAuth extends TestCase
 
     public static function tearDownAfterClass()
     {
-        UserAuthDataProvider::clear();
+        parent::tearDownAfterClass();
         unset($_SESSION['login_captcha']);
         unset($_SESSION['login_captcha_time']);
         unset($_SESSION[UserAuth::SESSION_UID_KEY]);
@@ -42,9 +44,6 @@ class TestUserAuth extends TestCase
         unset($_SESSION[UserAuth::SESSION_EXPIRE_KEY]);
         unset($_SESSION[UserAuth::SESSION_ABS_KEY]);
         unset($_SESSION[UserAuth::SESSION_TIMEOUT_KEY]);
-        $ipLoginTimesModel = IpLoginTimesModel::getInstance();
-        $ipLoginTimesModel->deleteByIp(self::$ipAddress1);
-        $ipLoginTimesModel->deleteByIp(self::$ipAddress2);
     }
 
     /**

@@ -100,14 +100,14 @@ class TestFramework extends BaseTestCase
     public function testSqlInject()
     {
         $curl = new \Curl\Curl();
-        $post_data['username'] = "13002510000' or '1'='1 ";
+        $post_data['phone'] = "13002510000' or '1'='1 ";
         $post_data['pwd'] = "121";
         $curl->post(ROOT_URL . "framework/feature/sql_inject?format=json&data_type=json", $post_data);
         // echo $curl->rawResponse;
         $json = json_decode($curl->rawResponse);
         $this->assertNotEmpty($json);
         $this->assertTrue(isset($json->ret));
-        $this->assertEquals('0', $json->ret);
+        $this->assertEquals('0', $json->ret, "有sql注入危险!");
     }
 
     /**

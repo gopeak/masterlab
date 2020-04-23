@@ -24,21 +24,8 @@ class TestAnnouncementModel extends TestBaseIssueModel
      */
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
-    /**
-     * 清除数据
-     */
-    public static function clearData()
-    {
-        if (!empty(self::$insertIdArr)) {
-            $model = new AnnouncementModel();
-            foreach (self::$insertIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
-    }
 
     /**
      * 主流程

@@ -23,19 +23,6 @@ class TestProjectVersionModel extends TestBaseProjectModel
 
     public static function tearDownAfterClass()
     {
-        self::clearData();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectData['id']);
-
-        $model = new ProjectVersionModel();
-        $model->deleteById(self::$projectVersionData['id']);
     }
 
     public static function initProject($info = [])
@@ -51,8 +38,8 @@ class TestProjectVersionModel extends TestBaseProjectModel
     {
         $model = new ProjectVersionModel();
         $info['project_id'] = self::$projectData['id'];
-        $info['name'] = 'test-v'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
-        $info['description'] = 'test-description-'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
+        $info['name'] = 'test-v' . self::$projectData['id'] . '-' . quickRandom(3) . quickRandom(3);
+        $info['description'] = 'test-description-' . self::$projectData['id'] . '-' . quickRandom(3) . quickRandom(3);
         $info['released'] = 1;
         $info['start_date'] = time();
         $info['release_date'] = time();
@@ -127,8 +114,8 @@ class TestProjectVersionModel extends TestBaseProjectModel
     {
         $model = new ProjectVersionModel();
         $info['project_id'] = self::$projectData['id'];
-        $info['name'] = 'test-v'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
-        $info['description'] = 'test-description-'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
+        $info['name'] = 'test-v' . self::$projectData['id'] . '-' . quickRandom(3) . quickRandom(3);
+        $info['description'] = 'test-description-' . self::$projectData['id'] . '-' . quickRandom(3) . quickRandom(3);
         $info['released'] = 1;
         $info['start_date'] = time();
         $info['release_date'] = time();
@@ -148,8 +135,8 @@ class TestProjectVersionModel extends TestBaseProjectModel
     {
         $model = new ProjectVersionModel();
         $info['project_id'] = 999999;
-        $info['name'] = 'test-v'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
-        $info['description'] = 'test-description-'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
+        $info['name'] = 'test-v' . self::$projectData['id'] . '-' . quickRandom(3) . quickRandom(3);
+        $info['description'] = 'test-description-' . self::$projectData['id'] . '-' . quickRandom(3) . quickRandom(3);
         $info['released'] = 1;
         $info['start_date'] = time();
         $info['release_date'] = time();
@@ -191,20 +178,30 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $this->assertEquals(0, $ret);
 
         // 验证存在同项目下同名模块
-        $info['project_id'] = self::$projectVersionData['project_id'];
-        $info['name'] = self::$projectVersionData['name'];
-        $info['description'] = 'test-description-'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
-        $info['released'] = 1;
-        $info['start_date'] = time();
-        $info['release_date'] = time();
-        list($ret, $insertId) = $model->insert($info);
-        $ret = $model->checkNameExistExcludeCurrent(
-            $insertId,
-            self::$projectVersionData['project_id'],
-            self::$projectVersionData['name']
-        );
-        $this->assertNotEquals(0, $ret);
-        $model->deleteById($insertId);
+        $errorCode = 1;
+        $errMsg = '';
+        try {
+            $info['project_id'] = self::$projectVersionData['project_id'];
+            $info['name'] = self::$projectVersionData['name'];
+            $info['description'] = 'test-description-' . self::$projectData['id'] . '-' . quickRandom(3) . quickRandom(3);
+            $info['released'] = 1;
+            $info['start_date'] = time();
+            $info['release_date'] = time();
+            list($ret, $insertId) = $model->insert($info);
+            $ret = $model->checkNameExistExcludeCurrent(
+                $insertId,
+                self::$projectVersionData['project_id'],
+                self::$projectVersionData['name']
+            );
+            $this->assertNotEquals(0, $ret);
+            $model->deleteById($insertId);
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $errorCode = $e->getCode();
+            $errMsg = $e->getMessage();
+        }
+        $this->assertEquals(0, $errorCode);
+        $this->assertContains('Duplicate', $errMsg);
+
     }
 
 }

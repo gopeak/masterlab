@@ -23,20 +23,9 @@ class TestProjectLabelModel extends TestBaseProjectModel
 
     public static function tearDownAfterClass()
     {
-        self::clearData();
     }
 
-    /**
-     * @throws \Exception
-     */
-    public static function clearData()
-    {
-        $model = new ProjectModel();
-        $model->deleteById(self::$projectData['id']);
 
-        $model = new ProjectLabelModel();
-        $model->deleteById(self::$projectLabelData['id']);
-    }
 
     public static function initProject($info = [])
     {
@@ -118,7 +107,6 @@ class TestProjectLabelModel extends TestBaseProjectModel
         $model = new ProjectLabelModel();
         $ret = $model->checkNameExist(self::$projectData['id'], self::$projectLabelData['title']);
         $this->assertTrue($ret);
-
         $ret = $model->checkNameExist(self::$projectData['id'], quickRandom(5));
         $this->assertFalse($ret);
     }

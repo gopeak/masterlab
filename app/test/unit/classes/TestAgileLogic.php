@@ -3,9 +3,12 @@
 namespace main\app\test\unit\classes;
 
 use main\app\classes\AgileLogic;
+use main\app\model\DbModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectLabelModel;
+use main\app\model\unit_test\FrameworkUserModel;
+use main\app\test\unit\BaseUnitTranTestCase;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  * Class AgileLogic
  * @package main\app\test\logic
  */
-class TestAgileLogic extends TestCase
+class TestAgileLogic extends BaseUnitTranTestCase
 {
 
     public static $labelIdArr = [];
@@ -22,24 +25,22 @@ class TestAgileLogic extends TestCase
 
     public static function setUpBeforeClass()
     {
+        // 如果已经启动了事务则先回滚
+        $dbModel = new DbModel();
+        if ($dbModel->db->getTransactionNestingLevel() > 0) {
+            $dbModel->db->rollBack();
+        }
+        $dbModel->beginTransaction();
     }
 
+    /**
+     * 清除数据
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
-        AgileLogicDataProvider::clear();
-        $projectLabelModel = new ProjectLabelModel();
-        $issueLabelDataModel = new IssueLabelDataModel();
-        if (!empty(self::$labelIdArr)) {
-            foreach (self::$labelIdArr as $id) {
-                $projectLabelModel->deleteById($id);
-                $issueLabelDataModel->deleteItemByIssueId($id);
-            }
-        }
-        if (!empty(self::$labelDataIdArr)) {
-            foreach (self::$labelDataIdArr as $id) {
-                $issueLabelDataModel->deleteById($id);
-            }
-        }
+        $dbModel = new DbModel();
+        $dbModel->rollBack();
     }
 
     /**
