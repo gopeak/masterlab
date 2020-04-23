@@ -51,16 +51,17 @@ class IssueFilterLogic
     ];
 
     public static $advFields = [
-        'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
-        'summary' => ['title' => '标题', 'opt' => '=,!=,like,like %...%,regexp,regexp ^...$', 'type' => 'text', 'source' => ''],
+        'issue_num' => ['title' => '编 号', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
+        'summary' => ['title' => '标 题', 'opt' => '=,!=,like,like %...%,regexp,regexp ^...$', 'type' => 'text', 'source' => ''],
+        'description' => ['title' => '描 述', 'opt' => '=,!=,like,like %...%,regexp,regexp ^...$', 'type' => 'text', 'source' => ''],
         'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=', 'type' => 'datetime', 'source' => ''],
         'priority' => ['title' => '优先级', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'priority'],
         'module' => ['title' => '模  块', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'module'],
         'issue_type' => ['title' => '类  型', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'issueType'],
         'sprint' => ['title' => '迭 代', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'sprint'],
-        'weight' => ['title' => '权重', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
+        'weight' => ['title' => '权 重', 'opt' => '=,!=,like,<,>,<=,>=', 'type' => 'text', 'source' => ''],
         'assignee' => ['title' => '经办人', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'user'],
-        'status' => ['title' => '状态', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'status'],
+        'status' => ['title' => '状 态', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'status'],
         'resolve' => ['title' => '解决结果', 'opt' => '=,!=,like', 'type' => 'select', 'source' => 'status'],
         'due_date' => ['title' => '截止日期', 'opt' => '=,!=,<,>,<=,>=', 'type' => 'date', 'source' => ''],
     ];
