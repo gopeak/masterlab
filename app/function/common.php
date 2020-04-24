@@ -5,10 +5,14 @@ use main\app\model\DbModel;
 
 function unit_set($key)
 {
-
     return false;
 }
 
+/**
+ * 获取配置
+ * @param $file
+ * @return array
+ */
 function getConfigVar($file)
 {
     return getCommonConfigVar($file);
@@ -29,6 +33,11 @@ function getCommonConfigVar($file)
     return $_config;
 }
 
+/**
+ * 获取yml配置文件的配置
+ * @param $module
+ * @return array
+ */
 function getYamlConfigByModule($module)
 {
     $_config = [];
@@ -52,7 +61,7 @@ function is_weixin()
 
 /**
  * 价格格式化，四舍五入的方式
- * @param $price              价格，纯数字形式
+ * @param  double $price  价格，纯数字形式
  * @param int $decimals 规定多少个小数
  * @param null $format 单位换算，如输入数字10000，则换算为XX万，null则表示不进行单位换算
  * @param string $separator 千位分隔符，空字符则不显示分隔符.

@@ -64,6 +64,7 @@ class TestDashboard extends BaseAppTestCase
 
     /**
      *  测试完毕后执行此方法
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
@@ -81,19 +82,25 @@ class TestDashboard extends BaseAppTestCase
         parent::tearDownAfterClass();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testIndexPage()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'dashboard/index');
+        parent::curlGet($curl, ROOT_URL . 'dashboard/index');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetchPanelAssigneeIssues()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'dashboard/fetchPanelAssigneeIssues');
+        parent::curlGet($curl, ROOT_URL . 'dashboard/fetchPanelAssigneeIssues');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if (!$respArr) {
@@ -108,10 +115,13 @@ class TestDashboard extends BaseAppTestCase
         $this->assertNotEmpty(intval($respArr['data']['total']));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetchPanelActivity()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'dashboard/fetchPanelActivity');
+        parent::curlGet($curl, ROOT_URL . 'dashboard/fetchPanelActivity');
         parent::checkPageError($curl);
 
         $respArr = json_decode($curl->rawResponse, true);

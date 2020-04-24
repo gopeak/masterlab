@@ -133,8 +133,10 @@ class BaseAppTestCase extends BaseTestCase
         $loginData = [];
         $loginData['username'] = $username;
         $loginData['password'] = $originPassword;
-        self::$userCurl->post(ROOT_URL . 'passport/do_login?data_type=json', $loginData);
-        // echo self::$userCurl->rawResponse;
+        $url = ROOT_URL . 'passport/do_login?data_type=json';
+        parent::packUnitTestUrl($url);
+        self::$userCurl->post($url, $loginData);
+        //echo self::$userCurl->rawResponse;
         $respData = json_decode(self::$userCurl->rawResponse, true);
         // var_dump(self::$userCurl->requestHeaders);
         if (!$respData) {

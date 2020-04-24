@@ -67,9 +67,7 @@ class BaseUserCtrl extends BaseCtrl
 
         $this->auth = UserAuth::getInstance();
 
-        /**
-         * 处理app请求的token
-         */
+        // 处理app请求的token
         $this->processApiToken();
 
         $noAuth = false;
@@ -83,6 +81,7 @@ class BaseUserCtrl extends BaseCtrl
                 $noAuth = true;
             }
         }
+
         if (!UserAuth::getId() && !$noAuth) {
             //print_r($_SERVER);
             if ($this->isAjax()) {

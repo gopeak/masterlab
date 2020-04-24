@@ -93,10 +93,12 @@ class TestAgile extends BaseAppTestCase
 
     /**
      * 测试页面
+     * @throws \Exception
      */
     public function testPageBacklog()
     {
         $url = ROOT_URL . self::$currentProject['org_path'] . "/" . self::$currentProject['key'] . '/backlog';
+        parent::packUnitTestUrl($url);
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         $resp = BaseAppTestCase::$userCurl->rawResponse;
@@ -105,12 +107,12 @@ class TestAgile extends BaseAppTestCase
     }
 
     /**
-     * 获取待办事项列表
+     * @throws \Exception
      */
     public function testGetBacklogIssues()
     {
-        // http://masterlab.ink/agile/fetch_backlog_issues/1
         $url = ROOT_URL . 'agile/fetch_backlog_issues/' . self::$currentProject['id'];
+        parent::packUnitTestUrl($url);
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         parent::checkPageError($curl);
@@ -122,9 +124,13 @@ class TestAgile extends BaseAppTestCase
         $this->assertEquals(count(self::$issues), count($respData['issues']));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSprint()
     {
         $url = ROOT_URL . self::$currentProject['org_path'] . "/" . self::$currentProject['key'] . '/sprints';
+        parent::packUnitTestUrl($url);
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         $resp = BaseAppTestCase::$userCurl->rawResponse;
@@ -132,9 +138,13 @@ class TestAgile extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetSprints()
     {
         $url = ROOT_URL . 'agile/fetchSprints/' . self::$currentProject['id'];
+        parent::packUnitTestUrl($url);
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         parent::checkPageError($curl);
@@ -146,10 +156,13 @@ class TestAgile extends BaseAppTestCase
         $this->assertEquals(count(self::$sprints), count($respData['sprints']));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSprintAddUpdateDelete()
     {
         $url = ROOT_URL . 'agile/';
-
+        //parent::packUnitTestUrl($url);
         // 新增
         $name = 'test-name-' . mt_rand(10000, 99999);
         $start_date = date('Y-m-d');
@@ -162,7 +175,7 @@ class TestAgile extends BaseAppTestCase
         $reqInfo['params']['start_date'] = $start_date;
         $reqInfo['params']['end_date'] = $end_date;
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post($url . 'addSprint/', $reqInfo);
+        parent::curlPost($curl, $url . 'addSprint', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/addSprint failed');
@@ -186,7 +199,8 @@ class TestAgile extends BaseAppTestCase
         $reqInfo['params']['description'] = $description;
         $reqInfo['params']['start_date'] = $start_date;
         $reqInfo['params']['end_date'] = $end_date;
-        $curl->post($url . 'updateSprint/' . $sprint['id'], $reqInfo);
+        $postUrl = $url . 'updateSprint/' . $sprint['id'];
+        parent::curlPost($curl, $postUrl, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/updateSprint failed');
@@ -202,7 +216,8 @@ class TestAgile extends BaseAppTestCase
         // 删除
         $reqInfo = [];
         $reqInfo['sprint_id'] = $sprint['id'];
-        $curl->post($url . 'deleteSprint/' . $sprint['id'], $reqInfo);
+        $postUrl = $url . 'deleteSprint/' . $sprint['id'];
+        parent::curlPost($curl, $postUrl, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/deleteSprint failed');
@@ -212,6 +227,7 @@ class TestAgile extends BaseAppTestCase
 
     /**
      * 设置为活动的迭代
+     * @throws \Exception
      */
     public function testSetSprintActive()
     {
@@ -264,7 +280,9 @@ class TestAgile extends BaseAppTestCase
         $this->assertCount(1, $activeSprintArr);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testJoin()
     {
 
@@ -285,7 +303,7 @@ class TestAgile extends BaseAppTestCase
         $curl = BaseAppTestCase::$userCurl;
         $reqInfo['issue_id'] = $issue1['id'];
         $reqInfo['sprint_id'] = $sprint['id'];
-        $curl->post(ROOT_URL . 'agile/joinSprint', $reqInfo);
+        parent::curlPost($curl, ROOT_URL . 'agile/joinSprint', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/joinSprint failed');
@@ -294,7 +312,7 @@ class TestAgile extends BaseAppTestCase
         // fetchSprintIssues
         $curl = BaseAppTestCase::$userCurl;
         $reqInfo['id'] = $sprint['id'];
-        $curl->get(ROOT_URL . 'agile/fetchSprintIssues', $reqInfo);
+        parent::curlGet($curl, ROOT_URL . 'agile/fetchSprintIssues', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/fetchSprintIssues failed');
@@ -305,7 +323,7 @@ class TestAgile extends BaseAppTestCase
         // join closed
         $curl = BaseAppTestCase::$userCurl;
         $reqInfo['issue_id'] = $issue1['id'];
-        $curl->post(ROOT_URL . 'agile/joinClosed', $reqInfo);
+        parent::curlPost($curl, ROOT_URL . 'agile/joinClosed', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/joinClosed failed');
@@ -314,7 +332,7 @@ class TestAgile extends BaseAppTestCase
         // fetchClosedIssuesByProject
         $curl = BaseAppTestCase::$userCurl;
         $reqInfo['id'] = $projectId;
-        $curl->get(ROOT_URL . 'agile/fetchClosedIssuesByProject/' . $projectId, $reqInfo);
+        parent::curlGet($curl, ROOT_URL . 'agile/fetchClosedIssuesByProject/' . $projectId, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/fetchClosedIssuesByProject failed');
@@ -331,18 +349,21 @@ class TestAgile extends BaseAppTestCase
         // join backlog
         $curl = BaseAppTestCase::$userCurl;
         $reqInfo['issue_id'] = $issue1['id'];
-        $curl->post(ROOT_URL . 'agile/joinBacklog', $reqInfo);
+        parent::curlPost($curl, ROOT_URL . 'agile/joinBacklog', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/joinBacklog failed');
         $this->assertEquals('200', $respArr['ret']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testBoard()
     {
         $url = ROOT_URL . self::$currentProject['org_path'] . "/" . self::$currentProject['key'] . '/kanban';
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get($url);
+        parent::curlGet($curl, $url);
         $resp = BaseAppTestCase::$userCurl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
