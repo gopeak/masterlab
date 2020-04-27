@@ -1057,7 +1057,7 @@ class Main extends BaseUserCtrl
         }
 
         $info = [];
-        $info['summary'] = $params['summary'];
+        $info['summary'] = htmlspecialchars($params['summary']);
         $info['creator'] = $uid;
         $info['reporter'] = $uid;
         $info['created'] = time();
@@ -1409,6 +1409,11 @@ class Main extends BaseUserCtrl
         return $info;
     }
 
+    /**
+     * @param array $params
+     * @return array
+     * @throws \Exception
+     */
     private function getUpdateFormInfo($params = [])
     {
         $info = [];
