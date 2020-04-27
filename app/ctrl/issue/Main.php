@@ -1297,7 +1297,7 @@ class Main extends BaseUserCtrl
 
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = htmlentities($params['summary']);
+            $info['summary'] = htmlspecialchars($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1380,7 +1380,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = htmlentities($params['environment']);
+            $info['environment'] = htmlspecialchars($params['environment']);
         }
 
 
@@ -1414,7 +1414,7 @@ class Main extends BaseUserCtrl
         $info = [];
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = htmlentities($params['summary']);
+            $info['summary'] = htmlspecialchars($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1490,7 +1490,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = htmlentities($params['environment']);
+            $info['environment'] = htmlspecialchars($params['environment']);
         }
 
 
@@ -1559,7 +1559,7 @@ class Main extends BaseUserCtrl
         $info = [];
 
         if (isset($params['summary'])) {
-            $info['summary'] = htmlentities($params['summary']);
+            $info['summary'] = htmlspecialchars($params['summary']);
         }
 
         $info = $info + $this->getUpdateFormInfo($params);
