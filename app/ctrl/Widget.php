@@ -571,6 +571,10 @@ class Widget extends BaseUserCtrl
 
         $model = new SprintModel();
         $data['activeSprint'] = $model->getById($sprintId);
+        $data['count_down_date'] = '';
+        if(isset($data['activeSprint']['end_date'])){
+            $data['count_down_date'] = date('Y-m-d',strtotime($data['activeSprint']['end_date'])+86400);
+        }
 
         // 获取项目名称
         if (isset($data['activeSprint']['name'])) {

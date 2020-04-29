@@ -570,7 +570,7 @@ var Widgets = (function () {
                 auth_check(resp);
                 console.log(resp)
                 if(!is_empty( resp.data.activeSprint.end_date)){
-                    var sprint_end_date = resp.data.activeSprint.end_date;
+                    var sprint_end_date = resp.data.count_down_date;
                     $('#'+_key+'_wrap').countdown(sprint_end_date, function (event) {
                         $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
                     });
