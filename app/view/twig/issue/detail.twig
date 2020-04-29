@@ -7,7 +7,7 @@
     <script src="/gitlab/assets/webpack/common_vue.bundle.js"></script>
     <script src="/gitlab/assets/webpack/issuable.bundle.js"></script>
 
-    <script src="/dev/lib/url_param.js?v={{_version}}" type="textdescription-view/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
@@ -288,7 +288,7 @@
 
                         </div>
                         <div id="issue_custom_fields" class="content-block hide" style="margin-left: 15px">
-                            <p><strong>自定义字段：</strong></p>
+                            <h5>自定义字段</h5>
                             <div id="custom_field_values_div">
 
                             </div>
@@ -1018,7 +1018,83 @@
      <script type="text/html" id="custom_field_values_tpl">
         {{#custom_field_values}}
             <div class="form-group ">
-                <strong>{{field_title}}:</strong><div>{{show_value}}</div>
+                <strong>{{field_title}}:</strong>
+                <div>
+                    {{#if_eq field_type 'TEXT' }}
+                         {{show_value}}
+                    {{^}}
+                         {{#if_eq field_type 'TEXT_MULTI_LINE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'TEXTAREA' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'RADIO' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'CHECKBOX' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SELECT' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SELECT_MULTI' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'DATE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'UPLOAD_IMG' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						  {{#if_eq field_type 'UPLOAD_FILE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MILESTONE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MARKDOWN' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'NUMBER' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'PROGRESS' }}
+							 {{show_value}}
+						 {{/if_eq}}
+
+
+                         {{#if_eq field_type 'USER' }}
+							 {{user_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'USER_MULTI' }}
+							 {{issue_assistants_avatar show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'LABELS' }}
+							 {{make_label_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'VERSION' }}
+							 {{version_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MODULE' }}
+							 {{module_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SPRINT' }}
+							 {{make_issue_sprint show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'RESOLUTION' }}
+							 {{resolve_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'STATUS' }}
+							 {{status_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'ISSUES' }}
+							  <a href="/issue/detail/index/{{show_value}}" >{{show_value}}</a>
+						 {{/if_eq}}
+
+					{{/if_eq}}
+
+                </div>
             </div>
         {{/custom_field_values}}
     </script>
