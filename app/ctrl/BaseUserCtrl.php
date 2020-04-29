@@ -155,7 +155,7 @@ class BaseUserCtrl extends BaseCtrl
 
             $assigneeCount = IssueFilterLogic::getUnResolveCountByAssignee(UserAuth::getId());
             if ($assigneeCount <= 0) {
-                $assigneeCount = '';
+                $assigneeCount = '0';
             }
             $this->addGVar('assignee_count', $assigneeCount);
             // $token = isset($_GET['token']) ? $_GET['token'] : '';
