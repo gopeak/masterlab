@@ -133,8 +133,8 @@ class TestIssue extends BaseAppTestCase
             $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
             self::$issueArr[] = BaseDataProvider::createIssue($info);
         }
-        self::$issue = BaseDataProvider::createIssue();
-        self::$issueMaster = BaseDataProvider::createIssue();
+        self::$issue = BaseDataProvider::createIssue(['project_id'=>$projectId]);
+        self::$issueMaster = BaseDataProvider::createIssue(['project_id'=>$projectId]);
     }
 
     /**
@@ -270,7 +270,7 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 用户名查询
         $param = [];
@@ -357,7 +357,7 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 按创建时间的范围
         $param = [];
@@ -370,7 +370,7 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 按更新时间的范围
         $param = [];
@@ -442,7 +442,7 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 过滤器 打开的
         $param = [];
@@ -454,7 +454,7 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 所有条件都满足的查询
         $param = [];

@@ -3,7 +3,11 @@
 namespace main\app\test\featrue\ctrl\project;
 
 use main\app\classes\ProjectListCountLogic;
+use main\app\classes\ProjectLogic;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectRoleRelationModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 
@@ -31,6 +35,20 @@ class TestMain extends BaseAppTestCase
         $info['org_id'] = self::$org['id'];
         $info['org_path'] = self::$org['path'];
         self::$currentProject = BaseDataProvider::createProject($info);
+        // 加入到项目中
+        list($flag, $roleInfo) = ProjectLogic::initRole(self::$currentProject['id']);
+        $projectRoleRelationModel = new ProjectRoleRelationModel();
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        $permIdArr = array_column( (new ProjectPermissionModel())->getRows(),'id');
+        if ($flag) {
+            foreach ($roleInfo as $role) {
+                $projectUserRoleModel->insertRole(self::$user['uid'], self::$currentProject['id'], $role['id']);
+                $projectRoleRelationModel->deleteByRoleId($role['id']);
+                foreach ($permIdArr as $permId) {
+                    $projectRoleRelationModel->add($role['project_id'], $role['id'], $permId);
+                }
+            }
+        }
         self::$projectUrl = ROOT_URL . self::$org['path'] . '/' . self::$currentProject['key'];
     }
 

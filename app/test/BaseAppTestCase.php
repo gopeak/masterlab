@@ -13,7 +13,10 @@ namespace main\app\test;
 use main\app\classes\PermissionGlobal;
 use main\app\model\OrgModel;
 use main\app\model\permission\PermissionGlobalUserRoleModel;
+use main\app\model\permission\ProjectPermissionModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectUserRoleModel;
 use \main\app\model\user\UserModel;
 use \main\app\model\user\UserGroupModel;
@@ -90,6 +93,9 @@ class BaseAppTestCase extends BaseTestCase
         self::initAppData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function initAppData()
     {
         // 创建组织
@@ -102,12 +108,19 @@ class BaseAppTestCase extends BaseTestCase
 
         // 初始化项目角色与用户绑定
         list($flag, $roleInfo) = ProjectLogic::initRole(self::$project['id']);
+        $projectRoleRelationModel = new ProjectRoleRelationModel();
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        $permIdArr = array_column( (new ProjectPermissionModel())->getRows(),'id');
         if ($flag) {
             foreach ($roleInfo as $role) {
-                $model = new ProjectUserRoleModel();
-                $model->insertRole(self::$user['uid'], self::$project['id'], $role['id']);
+                $projectUserRoleModel->insertRole(self::$user['uid'], self::$project['id'], $role['id']);
+                $projectRoleRelationModel->deleteByRoleId($role['id']);
+                foreach ($permIdArr as $permId) {
+                    $projectRoleRelationModel->add($role['project_id'], $role['id'], $permId);
+                }
             }
         }
+        $projectRoleRelationModel->cache->flush();
     }
 
     /**
