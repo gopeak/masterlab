@@ -275,6 +275,21 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
+
+
+    Handlebars.registerHelper('version_html', function (version_id) {
+        var html = '';
+        if (is_empty(version_id)) {
+            return '';
+        }
+        var version_row = getValueByKey(_issueConfig.version, version_id);
+        if (version_row == null) {
+            return '';
+        }
+        html += '<span >' + version_row.name + '</span>';
+        return new Handlebars.SafeString(html);
+    });
+
     Handlebars.registerHelper('priority_html', function (priority_id) {
         var html = '';
         if (is_empty(priority_id)) {

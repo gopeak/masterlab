@@ -332,25 +332,99 @@
         </script>{% endverbatim %}
     </div>
 
-    <div id="custom_field_values_block" class="issue-detail issue-project-reference hide">
+    <div id="custom_field_values_block" class="issue-detail issue-project-reference ">
         <h3 class="issue-detail-title">自定义字段</h3>
 
-        <div id="custom_field_values_div" class="cross-project-reference hide-collapsed">
-
+        <div id="issue_custom_fields" class="content-block " style="margin-left: 15px">
+            <div id="custom_field_values_div">
+            </div>
         </div>
 
-        {% verbatim %}<script type="text/html" id="custom_field_values_tpl">
+        {% verbatim %}
+        <script type="text/html" id="custom_field_values_tpl">
             {{#custom_field_values}}
             <span>
-                                    <cite title="{{field.description}}">{{field_title}}:{{show_value}}</cite>
-                                </span>
-            <button class="btn btn--map-pin btn-transparent" data-toggle="tooltip" data-placement="left"
-                    data-container="body" data-title="{{show_value}}" data-body="{{value}}"
-                    data-clipboard-text="{{value}}" type="button" title="{{value}}">
-                <i aria-hidden="true" class="fa fa-map-pin"></i>
-            </button>
+               <cite title="{{field.description}}">{{field_title}}:</cite>
+            </span>
+            <div class="form-group ">
+             {{#if_eq field_type 'TEXT' }}
+                         {{show_value}}
+                    {{^}}
+                         {{#if_eq field_type 'TEXT_MULTI_LINE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'TEXTAREA' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'RADIO' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'CHECKBOX' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SELECT' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SELECT_MULTI' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'DATE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'UPLOAD_IMG' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						  {{#if_eq field_type 'UPLOAD_FILE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MILESTONE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MARKDOWN' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'NUMBER' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'PROGRESS' }}
+							 {{show_value}}
+						 {{/if_eq}}
+
+
+                         {{#if_eq field_type 'USER' }}
+							 {{user_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'USER_MULTI' }}
+							 {{issue_assistants_avatar show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'LABELS' }}
+							 {{make_label_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'VERSION' }}
+							 {{version_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MODULE' }}
+							 {{module_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SPRINT' }}
+							 {{make_issue_sprint show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'RESOLUTION' }}
+							 {{resolve_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'STATUS' }}
+							 {{status_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'ISSUES' }}
+							  <a href="/issue/detail/index/{{show_value}}" >{{show_value}}</a>
+						 {{/if_eq}}
+
+					{{/if_eq}}
+					 </div>
+              </div>
             {{/custom_field_values}}
-        </script>{% endverbatim %}
+        </script>
+        {% endverbatim %}
     </div>
 
     <div class="issue-detail issue-discussion">
