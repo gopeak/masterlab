@@ -7596,9 +7596,12 @@
                         fileUrlEl.setAttribute("href", url);
                         fileUrlEl.setAttribute("target", '_blank');
                         $(fileUrlEl).html("<i class='fa fa-file-" + ext + "-o'></i>");
-                    } else if (ext === 'txt' || ext === 'zip'){
+                    } else if (ext === 'txt'){
                         this.setAttributeEl(fileUrlEl, url, name);
-                        $(fileUrlEl).html("<i class='fa fa-file-" + ext + "-o'></i>");
+                        $(fileUrlEl).html("<i class='fa fa-file-text-o'></i>");
+                    } else if ( ext === 'zip'){
+                        this.setAttributeEl(fileUrlEl, url, name);
+                        $(fileUrlEl).html("<i class='fa fa-file-archive-o'></i>");
                     } else if (ext === 'xls' || ext === 'xlsx') {
                         this.setAttributeEl(fileUrlEl, url, name);
                         $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
