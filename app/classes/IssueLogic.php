@@ -205,10 +205,12 @@ class IssueLogic
             $row['field'] = new \stdClass();
             $row['field_title'] = '';
             $row['field_name'] = '';
+            $row['field_type'] = 'TEXT';
             if (isset($fields[$row['custom_field_id']])) {
                 $row['field'] = $fields[$row['custom_field_id']];
                 $row['field_title'] = $row['field']['title'];
                 $row['field_name'] = $row['field']['name'];
+                $row['field_type'] = $row['field']['type'];
             }
 
             $valueType = $row['value_type'];
@@ -335,6 +337,12 @@ class IssueLogic
                 $info['project_id'] = $projectId;
                 $info['custom_field_id'] = $field['id'];
                 $info['value_type'] = $valueType;
+                if(is_array($param)){
+                    $param = implode(',',$param);
+                }
+                if(is_object($param) || is_null($param)){
+                    $param = strval($param);
+                }
                 $info[$valueType . '_value'] = $param;
                 list($ret, $msg) = $model->insert($info);
                 if (!$ret) {
@@ -408,7 +416,6 @@ class IssueLogic
                 }
                 break;
             case "SELECT_MULTI":
-
                 $options = json_decode($field['options'], true);
                 if (!$options) {
                     break;
@@ -435,7 +442,9 @@ class IssueLogic
                 }
                 $value = $mValue;
                 break;
-
+            case "USER_MULTI":
+                $value =  is_string($value) ? explode(',',$value) : $value;
+                break;
             default:
                 break;
         }
@@ -469,6 +478,12 @@ class IssueLogic
                 $conditions['custom_field_id'] = $field['id'];
                 $info = [];
                 $info['value_type'] = $valueType;
+                if(is_array($param)){
+                    $param = implode(',',$param);
+                }
+                if(is_object($param) || is_null($param)){
+                    $param = strval($param);
+                }
                 $info[$valueType . '_value'] = $param;
                 if (!in_array($field['id'], $issueCustomFieldIdArr)) {
                     $info['issue_id'] = $issueId;

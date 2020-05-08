@@ -30,9 +30,9 @@
         function viewVideo (src,ext) {
 
             var video_html ='<video id="qq_video" class="video-js" style="height: 400px;width:100%" controls preload="none" width="800" height="600" poster="" data-setup="{}">\n' +
-            '                <source src="' + src + '" type="video/mp4">\n' +
-            '                <p class="vjs-no-js">请启用Javascript或使用最新浏览器 <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>\n' +
-            '            </video>';
+                '                <source src="' + src + '" type="video/mp4">\n' +
+                '                <p class="vjs-no-js">请启用Javascript或使用最新浏览器 <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>\n' +
+                '            </video>';
 
             var html = '<div id="qq-view-img" class="qq-view-img hide">' +
                 '<div class="qq-view-img-box">' +
@@ -1685,18 +1685,18 @@
                     throw new qq.Error(id + " is not a valid file ID.");
                 }
                 switch (newStatus) {
-                  case qq.status.DELETED:
-                    this._onDeleteComplete(id, null, false);
-                    break;
+                    case qq.status.DELETED:
+                        this._onDeleteComplete(id, null, false);
+                        break;
 
-                  case qq.status.DELETE_FAILED:
-                    this._onDeleteComplete(id, null, true);
-                    break;
+                    case qq.status.DELETE_FAILED:
+                        this._onDeleteComplete(id, null, true);
+                        break;
 
-                  default:
-                    var errorMessage = "Method setStatus called on '" + name + "' not implemented yet for " + newStatus;
-                    this.log(errorMessage);
-                    throw new qq.Error(errorMessage);
+                    default:
+                        var errorMessage = "Method setStatus called on '" + name + "' not implemented yet for " + newStatus;
+                        this.log(errorMessage);
+                        throw new qq.Error(errorMessage);
                 }
             },
             uploadStoredFiles: function() {
@@ -4537,58 +4537,58 @@
         }
         function transformCoordinate(canvas, width, height, orientation) {
             switch (orientation) {
-              case 5:
-              case 6:
-              case 7:
-              case 8:
-                canvas.width = height;
-                canvas.height = width;
-                break;
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    canvas.width = height;
+                    canvas.height = width;
+                    break;
 
-              default:
-                canvas.width = width;
-                canvas.height = height;
+                default:
+                    canvas.width = width;
+                    canvas.height = height;
             }
             var ctx = canvas.getContext("2d");
             switch (orientation) {
-              case 2:
-                ctx.translate(width, 0);
-                ctx.scale(-1, 1);
-                break;
+                case 2:
+                    ctx.translate(width, 0);
+                    ctx.scale(-1, 1);
+                    break;
 
-              case 3:
-                ctx.translate(width, height);
-                ctx.rotate(Math.PI);
-                break;
+                case 3:
+                    ctx.translate(width, height);
+                    ctx.rotate(Math.PI);
+                    break;
 
-              case 4:
-                ctx.translate(0, height);
-                ctx.scale(1, -1);
-                break;
+                case 4:
+                    ctx.translate(0, height);
+                    ctx.scale(1, -1);
+                    break;
 
-              case 5:
-                ctx.rotate(.5 * Math.PI);
-                ctx.scale(1, -1);
-                break;
+                case 5:
+                    ctx.rotate(.5 * Math.PI);
+                    ctx.scale(1, -1);
+                    break;
 
-              case 6:
-                ctx.rotate(.5 * Math.PI);
-                ctx.translate(0, -height);
-                break;
+                case 6:
+                    ctx.rotate(.5 * Math.PI);
+                    ctx.translate(0, -height);
+                    break;
 
-              case 7:
-                ctx.rotate(.5 * Math.PI);
-                ctx.translate(width, -height);
-                ctx.scale(-1, 1);
-                break;
+                case 7:
+                    ctx.rotate(.5 * Math.PI);
+                    ctx.translate(width, -height);
+                    ctx.scale(-1, 1);
+                    break;
 
-              case 8:
-                ctx.rotate(-.5 * Math.PI);
-                ctx.translate(-width, 0);
-                break;
+                case 8:
+                    ctx.rotate(-.5 * Math.PI);
+                    ctx.translate(-width, 0);
+                    break;
 
-              default:
-                break;
+                default:
+                    break;
             }
         }
         function MegaPixImage(srcImage, errorCallback) {
@@ -4688,22 +4688,22 @@
             var pathSegments = nameWithPath.split("/"), name = pathSegments[pathSegments.length - 1].split("?")[0], extension = qq.getExtension(name);
             extension = extension && extension.toLowerCase();
             switch (extension) {
-              case "jpeg":
-              case "jpg":
-                return "image/jpeg";
+                case "jpeg":
+                case "jpg":
+                    return "image/jpeg";
 
-              case "png":
-                return "image/png";
+                case "png":
+                    return "image/png";
 
-              case "bmp":
-                return "image/bmp";
+                case "bmp":
+                    return "image/bmp";
 
-              case "gif":
-                return "image/gif";
+                case "gif":
+                    return "image/gif";
 
-              case "tiff":
-              case "tif":
-                return "image/tiff";
+                case "tiff":
+                case "tif":
+                    return "image/tiff";
             }
         }
         function isCrossOrigin(url) {
@@ -5084,19 +5084,19 @@
                 if (limitValue > 0) {
                     var limitMatcher = /(max|min)(Width|Height)/.exec(limitName), dimensionPropName = limitMatcher[2].charAt(0).toLowerCase() + limitMatcher[2].slice(1), actualValue = dimensions[dimensionPropName];
                     switch (limitMatcher[1]) {
-                      case "min":
-                        if (actualValue < limitValue) {
-                            failingLimit = limitName;
-                            return false;
-                        }
-                        break;
+                        case "min":
+                            if (actualValue < limitValue) {
+                                failingLimit = limitName;
+                                return false;
+                            }
+                            break;
 
-                      case "max":
-                        if (actualValue > limitValue) {
-                            failingLimit = limitName;
-                            return false;
-                        }
-                        break;
+                        case "max":
+                            if (actualValue > limitValue) {
+                                failingLimit = limitName;
+                                return false;
+                            }
+                            break;
                     }
                 }
             });

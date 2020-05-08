@@ -246,6 +246,9 @@ var IssueDetail = (function () {
 
     IssueDetail.prototype.imgTagAddStyle = function(htmlstr) {
 
+        if(!htmlstr){
+            return ;
+        }
         var regex1 = new RegExp("(i?)(\<img)(?!(.*?style=['\"](.*)['\"])[^\>]+\>)", 'gmi')
         htmlstr = htmlstr.replace(regex1, '$1  $2 style="" onclick="window.open(this.src);" $3 ');
 

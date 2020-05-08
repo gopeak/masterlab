@@ -72,7 +72,7 @@ var Plugin_manager = (function() {
                         message : '暂无数据',
                         handleHtml: ''
                     })
-                    $('#'+_options.list_render_id).append($('<tr><td colspan="5" id="' + _options.list_render_id + '_wrap"></td></tr>'))
+                    $('#'+_options.list_render_id).html($('<tr><td colspan="5" id="' + _options.list_render_id + '_wrap"></td></tr>'))
                     $('#'+_options.list_render_id + '_wrap').append(emptyHtml.html)
                 }
 
