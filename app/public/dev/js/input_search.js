@@ -42,11 +42,6 @@ var InputSearch = (function () {
             return false;
         });
 
-        // 点击历史下拉
-        $("#history-dropdown").on("shown.bs.dropdown", function () {
-
-        });
-
         // input输入下拉
         $("#filtered-search-issues").on("focus keyup keydown", function (e) {
             _isSearch = true;
@@ -87,13 +82,11 @@ var InputSearch = (function () {
                     $("#js-dropdown-hint").css("left", self.getSearchLeft()).slideDown(300);
                 }
             } else if (e.keyCode !== 13) {
-                console.log(dropdown_name);
                 if (dropdown_name === "hint"){
                     $("#js-dropdown-hint ul.filter-dropdown").html(self.getHintData($this.val()));
                 } else if (dropdown_name === "operator") {
                     self.getOperatorsData($this.val());
                 } else if (value) {
-                    console.log(value);
                     self.getDropdownData(dropdown_name, value);
                 }
                 $(dropdown_js).siblings(".filtered-search-input-dropdown-menu").hide();
@@ -163,8 +156,28 @@ var InputSearch = (function () {
             }
         });
 
-        // 清除历史记录
+        // 点击历史搜索
+        $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-dropdown-item", function (e) {
+            var $item = $(this).find(".filtered-search-history-dropdown-token");
+            var temp = [];
+            $(".tokens-container .filtered-search-token").remove();
 
+            $item.each(function (e) {
+                var $this = $(this);
+                var name = $this.find(".name").text();
+                var value = $this.find(".value").text();
+                var operator = $this.find(".operator").text();
+                temp.push({
+                    name,
+                    operator,
+                    value
+                });
+            });
+
+            self.setCurrentSearch(temp);
+        });
+
+        // 清除历史记录
         $(".filtered-search-history-dropdown").on("click", ".filtered-search-history-clear-button", function (e) {
             sessionStorage.setItem("issue-recent-searches", "");
             self.setRecentSearch();

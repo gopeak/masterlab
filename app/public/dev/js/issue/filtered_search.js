@@ -109,7 +109,6 @@ var FilteredSearch = (function () {
                 var $this = $(this);
                 var name = $this.find(".name").text();
                 var value = $this.find(".value").text();
-                var operator = $this.find(".operator").text();
                 temp.push({
                     name,
                     value
