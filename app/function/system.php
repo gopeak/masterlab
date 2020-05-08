@@ -25,7 +25,6 @@ function return_bytes($val)
         return 0;
     }
 
-
     preg_match('#([0-9]+)[\s]*([a-z]+)#i', $val, $matches);
 
     $last = '';

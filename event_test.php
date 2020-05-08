@@ -1,4 +1,9 @@
 <?php
+
+echo " ?\"ddd\"><><>\n";
+echo htmlspecialchars(" ?\"ddd\"><><>");
+die;
+
 require './app/globals.php';
 
 use Symfony\Contracts\EventDispatcher\Event;

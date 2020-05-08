@@ -27,7 +27,7 @@ class BaseTestCase extends TestCase
      */
     protected function curlGet(\Curl\Curl &$curl, $url, $data = [], $return_json = true)
     {
-        $this->packUnitTestUrl($url);
+        self::packUnitTestUrlData($data);
         $curl->get($url, $data);
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
@@ -45,9 +45,10 @@ class BaseTestCase extends TestCase
      * @param bool $parse_json
      * @return mixed|null
      */
-    protected function postPost(\Curl\Curl &$curl, $url, $data = [], $parse_json = true)
+    protected function curlPost(\Curl\Curl &$curl, $url, $data = [], $parse_json = true)
     {
-        $this->packUnitTestUrl($url);
+        self::packUnitTestUrl($url);
+
         $curl->post($url, $data);
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
@@ -67,7 +68,7 @@ class BaseTestCase extends TestCase
      */
     protected function curlPut(\Curl\Curl $curl, $url, $data = [], $parse_json = true)
     {
-        $this->packUnitTestUrl($url);
+        self::packUnitTestUrl($url);
         $curl->put($url, $data);
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
@@ -236,11 +237,23 @@ class ' . $model_name . ' extends DbModel{
      * 追加测试参数
      * @param $url
      */
-    protected function packUnitTestUrl(& $url)
+    public static function packUnitTestUrl(& $url)
     {
         $token = getCommonConfigVar('data')['token'];
-        $url = $this->addUrlParam($url, '_test_token', md5($token['public_key']));
-        $url = $this->addUrlParam($url, '_app_status', 'test');
+        $url = self::addUrlParam($url, '_test_token', md5($token['public_key']));
+        $url = self::addUrlParam($url, '_app_status', 'test');
+    }
+
+    /**
+     * @param $data
+     */
+    public static function packUnitTestUrlData(& $data)
+    {
+        $token = getCommonConfigVar('data')['token'];
+        if(is_array($data)){
+            $data['_test_token']=md5($token['public_key']);
+            $data['_app_status']='test';
+        }
     }
 
 
@@ -251,7 +264,7 @@ class ' . $model_name . ' extends DbModel{
      * @param $value
      * @return string
      */
-    protected function addUrlParam($url, $key, $value)
+    public static function addUrlParam($url, $key, $value)
     {
         $url = preg_replace('/(.*)(?|&)' . $key . '=[^&]+?(&)(.*)/i', '$1$2$4', $url . '&');
         $url = substr($url, 0, -1);

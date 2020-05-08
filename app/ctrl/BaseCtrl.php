@@ -93,7 +93,7 @@ class BaseCtrl
     public function __construct()
     {
         static $siteName, $twigLoader, $twigTpl;
-
+        //print_r($_SESSION);
         $this->dispatcher = new EventDispatcher();
         $this->loadPlugin();
 

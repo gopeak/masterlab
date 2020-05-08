@@ -28,6 +28,9 @@ class TestPermission extends BaseAppTestCase
 
     /**
      * 测试结束后执行此方法,清除测试数据
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
@@ -45,6 +48,7 @@ class TestPermission extends BaseAppTestCase
 
     /**
      * 测试页面
+     * @throws \Exception
      */
     public function testIndexPage()
     {
@@ -56,6 +60,9 @@ class TestPermission extends BaseAppTestCase
         $this->assertRegExp('/默认角色/', $resp);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetch()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -79,6 +86,9 @@ class TestPermission extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDefaultRoleUpdatePermission()
     {
         // 1.创建一个测试的默认角色

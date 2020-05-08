@@ -20,12 +20,15 @@ use Symfony\Component\Yaml\Yaml;
 // 项目状态:deploy | development
 $envVarArr = getEnvVar(PRE_APP_PATH);
 bindAppConfig($envVarArr);
-
 // 加载公共常量定义文件
 include_once APP_PATH . "constants.php";
 
 // 测试环境
-testEnvAutoTransactionRollback();
+try {
+    testEnvAutoTransactionRollback();
+} catch (Exception $e) {
+    echo "测试环境事务设置失效:".$e->getMessage();
+}
 
 /**
  * 获取env.ini的设置项
@@ -82,6 +85,11 @@ function bindAppConfig($envVarArr)
         if ($appStatus != 'deploy') {
             $configFile = PRE_APP_PATH . 'config.' . $appStatus . '.yml';
         }
+        //var_dump($configFile);
+        if(!file_exists($configFile)){
+            print_r($envVarArr);
+            echo $configFile;
+        }
         $GLOBALS['_yml_config'] = Yaml::parseFile($configFile);
         if ($cacheYamlConfig) {
             $cacheYamlConfigVar = "<?php \n" . '$_yaml_config = ' . var_export($GLOBALS['_yml_config'], true) . ";\n";
@@ -104,7 +112,7 @@ function testEnvAutoTransactionRollback()
     }
     // 必须先自动加载
     spl_autoload_register('testAutoload');
-
+    // print_r($GLOBALS['_yml_config']);
     if (!$GLOBALS['_yml_config']['use_transaction']) {
         return;
     }

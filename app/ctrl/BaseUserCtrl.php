@@ -67,9 +67,7 @@ class BaseUserCtrl extends BaseCtrl
 
         $this->auth = UserAuth::getInstance();
 
-        /**
-         * 处理app请求的token
-         */
+        // 处理app请求的token
         $this->processApiToken();
 
         $noAuth = false;
@@ -83,6 +81,7 @@ class BaseUserCtrl extends BaseCtrl
                 $noAuth = true;
             }
         }
+
         if (!UserAuth::getId() && !$noAuth) {
             //print_r($_SERVER);
             if ($this->isAjax()) {
@@ -156,7 +155,7 @@ class BaseUserCtrl extends BaseCtrl
 
             $assigneeCount = IssueFilterLogic::getUnResolveCountByAssignee(UserAuth::getId());
             if ($assigneeCount <= 0) {
-                $assigneeCount = '';
+                $assigneeCount = '0';
             }
             $this->addGVar('assignee_count', $assigneeCount);
             // $token = isset($_GET['token']) ? $_GET['token'] : '';

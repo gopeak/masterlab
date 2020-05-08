@@ -50,7 +50,7 @@ class DefaultRoleRelationModel extends BaseDictionaryModel
     public function add($roleId, $permId)
     {
         $info = [];
-        $info['default_role_id'] = $roleId;
+        $info['role_id'] = $roleId;
         $info['perm_id'] = $permId;
         return $this->insert($info);
     }
@@ -70,7 +70,7 @@ class DefaultRoleRelationModel extends BaseDictionaryModel
         $sql = "select perm_id from {$table}   where  1 ";
 
         $roleIds_str = implode(',', $roleIds);
-        $sql .= " AND  default_role_id IN ({$roleIds_str}) GROUP BY perm_id";
+        $sql .= " AND  role_id IN ({$roleIds_str}) GROUP BY perm_id";
 
         $rows = $this->db->fetchAll($sql, $params);
 
@@ -84,10 +84,12 @@ class DefaultRoleRelationModel extends BaseDictionaryModel
     /**
      * @param $roleId
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function deleteByRoleId($roleId)
     {
-        $where = ['default_role_id' => $roleId];
+        $where = ['role_id' => $roleId];
         $row = $this->delete($where);
         return $row;
     }

@@ -2,6 +2,7 @@
 
 namespace main\app\test\unit\classes;
 
+use main\app\classes\ProjectLogic;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\issue\IssueModel;
@@ -11,6 +12,7 @@ use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueFollowModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserModel;
 use main\app\test\BaseAppTestCase;
@@ -74,6 +76,15 @@ class TestIssue extends BaseAppTestCase
         $projectId = self::$project['id'];
         $userId = parent::$user['uid'];
 
+        // @todo 赋予角色权限
+        list($flagInitRole, $roleInfoArr) = ProjectLogic::initRole($projectId);
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        if($flagInitRole){
+            foreach ($roleInfoArr as $item) {
+                $projectUserRoleModel->insertRole($userId,$projectId, $item['id']);
+            }
+        }
+
         $info = [];
         $info['project_id'] = self::$project['id'];
         $info['active'] = '1';
@@ -122,8 +133,8 @@ class TestIssue extends BaseAppTestCase
             $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
             self::$issueArr[] = BaseDataProvider::createIssue($info);
         }
-        self::$issue = BaseDataProvider::createIssue();
-        self::$issueMaster = BaseDataProvider::createIssue();
+        self::$issue = BaseDataProvider::createIssue(['project_id'=>$projectId]);
+        self::$issueMaster = BaseDataProvider::createIssue(['project_id'=>$projectId]);
     }
 
     /**
@@ -189,11 +200,12 @@ class TestIssue extends BaseAppTestCase
 
     /**
      * 测试页面
+     * @throws \Exception
      */
     public function testIndexPage()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(self::$projectUrl . '/issues');
+        parent::curlGet($curl, self::$projectUrl . '/issues');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
@@ -212,11 +224,14 @@ class TestIssue extends BaseAppTestCase
         $this->assertTrue(isset($issueConfigArr['projects']));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDetailPage()
     {
         $curl = BaseAppTestCase::$userCurl;
         $issue = self::$issueArr[0];
-        $curl->get(ROOT_URL . '/issue/detail/index/' . $issue['id']);
+        parent::curlGet($curl, ROOT_URL . '/issue/detail/index/' . $issue['id']);
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
@@ -234,6 +249,9 @@ class TestIssue extends BaseAppTestCase
         $this->assertTrue(isset($issueConfigArr['projects']));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFilter()
     {
         $projectId = self::$project['id'];
@@ -241,7 +259,7 @@ class TestIssue extends BaseAppTestCase
 
         // 无参数查询
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'issue/main/filter?project=' . $projectId);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter?project=' . $projectId);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if (!$respArr) {
@@ -252,14 +270,14 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 用户名查询
         $param = [];
         $param['project'] = $projectId;
         $param['assignee_username'] = $user['username'];
         $param['assignee'] = $user['uid'];
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -272,7 +290,7 @@ class TestIssue extends BaseAppTestCase
         $param['project'] = $projectId;
         $param['author'] = $user['uid'];
         $param['reporter_uid'] = $user['uid'];
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -282,7 +300,7 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['project'] = $projectId;
         $param['search'] = 'UnitTest测试事项';//self::$issueArr[0]['summary'];
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -294,7 +312,7 @@ class TestIssue extends BaseAppTestCase
         $param['project'] = $projectId;
         $param['module'] = self::$module['name'];
         $param['module_id'] = self::$module['id'];
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -307,7 +325,7 @@ class TestIssue extends BaseAppTestCase
         $param['project'] = $projectId;
         $param['priority'] = 'high';
         $param['priority_id'] = IssuePriorityModel::getInstance()->getIdByKey('high');
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -320,7 +338,7 @@ class TestIssue extends BaseAppTestCase
         $param['project'] = $projectId;
         $param['resolve'] = 'done';
         $param['resolve_id'] = IssueResolveModel::getInstance()->getIdByKey('done');
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -333,33 +351,33 @@ class TestIssue extends BaseAppTestCase
         $param['project'] = $projectId;
         $param['status'] = 'open';
         $param['status_id'] = IssueStatusModel::getInstance()->getIdByKey('open');
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 按创建时间的范围
         $param = [];
         $param['project'] = $projectId;
         $param['created_start'] = time() - 100;
         $param['created_end'] = time() + 10;
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 按更新时间的范围
         $param = [];
         $param['project'] = $projectId;
         $param['updated_start'] = time() - 100;
         $param['updated_end'] = time();
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -372,7 +390,7 @@ class TestIssue extends BaseAppTestCase
         $param['project'] = $projectId;
         $param['sort_field'] = 'id';
         $param['sort_by'] = 'DESC';
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -383,7 +401,7 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['project'] = $projectId;
         $param['sys_filter'] = 'assignee_mine';
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -395,7 +413,7 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['project'] = $projectId;
         $param['sys_filter'] = 'my_report';
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -407,7 +425,7 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['project'] = $projectId;
         $param['sys_filter'] = 'recently_resolve';
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -418,25 +436,25 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['project'] = $projectId;
         $param['sys_filter'] = 'update_recently';
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 过滤器 打开的
         $param = [];
         $param['project'] = $projectId;
         $param['sys_filter'] = 'open';
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr)+2, intval($respArr['data']['total']));
 
         // 所有条件都满足的查询
         $param = [];
@@ -460,7 +478,7 @@ class TestIssue extends BaseAppTestCase
         $param['updated_end'] = time() + 100;
         $param['sort_field'] = 'id';
         $param['sort_by'] = 'DESC';
-        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -471,10 +489,10 @@ class TestIssue extends BaseAppTestCase
 
     /**
      * 测试自定义过滤器
+     * @throws \Exception
      */
     public function testSaveFilter()
     {
-
         $projectId = self::$project['id'];
         $user = parent::$user;
         $curl = BaseAppTestCase::$userCurl;
@@ -492,7 +510,7 @@ class TestIssue extends BaseAppTestCase
         $param['name'] = $filterName = 'testSaveFilterName_' . mt_rand(10000, 999999);
         $param['filter'] = http_build_query($filterArr);
         $param['description'] = 'test';
-        $curl->get(ROOT_URL . 'issue/main/saveFilter', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/saveFilter', $param);
         //echo self::$userCurl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
@@ -501,7 +519,7 @@ class TestIssue extends BaseAppTestCase
         }
 
         // 查询过滤器
-        $curl->get(ROOT_URL . 'issue/main/getFavFilter');
+        parent::curlGet($curl, ROOT_URL . 'issue/main/getFavFilter');
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -536,16 +554,17 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetchIssueTypeAndUi()
     {
         $projectId = self::$project['id'];
         $curl = BaseAppTestCase::$userCurl;
-
         // 获取事项类型
-
         $param = [];
         $param['project_id'] = $projectId;
-        $curl->get(ROOT_URL . 'issue/main/fetchIssueType');
+        parent::curlGet($curl, ROOT_URL . 'issue/main/fetchIssueType');
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -560,7 +579,7 @@ class TestIssue extends BaseAppTestCase
             $param['project_id'] = $projectId;
             $param['issue_type_id'] = $issueTypeId;
             $param['type'] = $uiType;
-            $curl->get(ROOT_URL . 'issue/main/fetchUiConfig', $param);
+            parent::curlGet($curl, ROOT_URL . 'issue/main/fetchUiConfig', $param);
             parent::checkPageError($curl);
             $respArr = json_decode(self::$userCurl->rawResponse, true);
             if ($respArr['ret'] != '200') {
@@ -573,6 +592,9 @@ class TestIssue extends BaseAppTestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAddFetchUpdate()
     {
         // 获得标签id
@@ -606,7 +628,7 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['params'] = $info;
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'issue/main/add', $param);
+        parent::curlPost($curl, ROOT_URL . 'issue/main/add', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -618,7 +640,7 @@ class TestIssue extends BaseAppTestCase
 
         $param = [];
         $param['issue_id'] = $issueId;
-        $curl->get(ROOT_URL . 'issue/main/fetchIssueEdit', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/fetchIssueEdit', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -649,7 +671,7 @@ class TestIssue extends BaseAppTestCase
         // detail 页面的get方法
         $param = [];
         $param['id'] = $issueId;
-        $curl->get(ROOT_URL . 'issue/detail/get', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/detail/get', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -690,7 +712,7 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['params'] = $info;
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'issue/main/update?issue_id=' . $issueId, $param);
+        parent::curlPost($curl, ROOT_URL . 'issue/main/update?issue_id=' . $issueId, $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -701,7 +723,7 @@ class TestIssue extends BaseAppTestCase
         // 再次获取
         $param = [];
         $param['issue_id'] = $issueId;
-        $curl->get(ROOT_URL . 'issue/main/fetchIssueEdit', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/fetchIssueEdit', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -734,7 +756,9 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['issue']['assignee_id'] = $user['uid'];
         $curl = parent::$userCurl;
-        $curl->patch(ROOT_URL . 'issue/main/patch?id=' . $issueId, $param);
+        $url = ROOT_URL . 'issue/main/patch?id=' . $issueId;
+        parent::packUnitTestUrl($url);
+        $curl->patch($url, $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -751,7 +775,7 @@ class TestIssue extends BaseAppTestCase
     {
         // 上传
         $curl = parent::$userCurl;
-        $curl->post(ROOT_URL . 'issue/main/upload/'.parent::$project['id'], array(
+        parent::curlPost($curl, ROOT_URL . 'issue/main/upload/'.parent::$project['id'], array(
             'qqfile' => new \CURLFile(PUBLIC_PATH . 'attachment/unittest/sample.png'),
         ));
         parent::checkPageError($curl);
@@ -764,7 +788,7 @@ class TestIssue extends BaseAppTestCase
         self::$attachmentArr[] = $attachment = $model->getById($respArr['insert_id']);
         // 删除
         $uuid = $respArr['uuid'];
-        $curl->get(ROOT_URL . 'issue/main/uploadDelete/'.parent::$project['id'], ['uuid' => $uuid]);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/uploadDelete/'.parent::$project['id'], ['uuid' => $uuid]);
         //echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
@@ -783,7 +807,7 @@ class TestIssue extends BaseAppTestCase
     {
         $issueId = self::$issue['id'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'issue/main/follow?issue_id=' . $issueId);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/follow?issue_id=' . $issueId);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -801,7 +825,7 @@ class TestIssue extends BaseAppTestCase
         $this->assertNotEmpty($followRow);
 
 
-        $curl->get(ROOT_URL . 'issue/main/unFollow?issue_id=' . $issueId);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/unFollow?issue_id=' . $issueId);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -812,6 +836,9 @@ class TestIssue extends BaseAppTestCase
         $this->assertEmpty($row);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testIssueChild()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -823,7 +850,7 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['issue_id'] = $issueId;
         $param['master_id'] = $masterIssueId;
-        $curl->post(ROOT_URL . 'issue/main/convertChild', $param);
+        parent::curlPost($curl, ROOT_URL . 'issue/main/convertChild', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -837,7 +864,7 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals($issueMaster['have_children'], '1');
 
         // 获取子任务列表
-        $curl->get(ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -848,7 +875,7 @@ class TestIssue extends BaseAppTestCase
         // 移除子任务
         $param = [];
         $param['issue_id'] = $issueId;
-        $curl->post(ROOT_URL . 'issue/main/removeChild', $param);
+        parent::curlPost($curl, ROOT_URL . 'issue/main/removeChild', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -857,7 +884,7 @@ class TestIssue extends BaseAppTestCase
         }
 
         // 再次获取子任务列表
-        $curl->get(ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -873,7 +900,7 @@ class TestIssue extends BaseAppTestCase
             $param['master_id'] = $masterIssueId;
             $curl->post(ROOT_URL . 'issue/main/convertChild', $param);
         }
-        $curl->get(ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -890,7 +917,7 @@ class TestIssue extends BaseAppTestCase
     {
         // 上传
         $curl = parent::$userCurl;
-        $curl->post(ROOT_URL . 'issue/detail/editormdUpload', array(
+        parent::curlPost($curl, ROOT_URL . 'issue/detail/editormdUpload', array(
             'editormd-image-file' => new \CURLFile(PUBLIC_PATH . 'attachment/unittest/sample.png'),
         ));
         parent::checkPageError($curl);
@@ -905,7 +932,7 @@ class TestIssue extends BaseAppTestCase
         self::$attachmentArr[] = $attachment = $model->getById($respArr['insert_id']);
         // 删除
         $uuid = $respArr['uuid'];
-        $curl->get(ROOT_URL . 'issue/main/uploadDelete/'.parent::$project['id'], ['uuid' => $uuid]);
+        parent::curlGet($curl, ROOT_URL . 'issue/main/uploadDelete/'.parent::$project['id'], ['uuid' => $uuid]);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -928,7 +955,7 @@ class TestIssue extends BaseAppTestCase
         $param['content'] = 'test-content';
         $param['content_html'] = 'test-content-html';
         $param['reopen'] = '1';
-        $curl->post(ROOT_URL . 'issue/detail/addTimeline', $param);
+        parent::curlPost($curl, ROOT_URL . 'issue/detail/addTimeline', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -972,7 +999,7 @@ class TestIssue extends BaseAppTestCase
         // 某一事项的获取评论列表
         $param = [];
         $param['issue_id'] = $issueId;
-        $curl->get(ROOT_URL . 'issue/detail/fetchTimeline', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/detail/fetchTimeline', $param);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -983,7 +1010,7 @@ class TestIssue extends BaseAppTestCase
         // 删除评论
         $param = [];
         $param['id'] = $insertId;
-        $curl->get(ROOT_URL . 'issue/detail/deleteTimeline', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/detail/deleteTimeline', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -991,7 +1018,7 @@ class TestIssue extends BaseAppTestCase
         }
         $param = [];
         $param['issue_id'] = $issueId;
-        $curl->get(ROOT_URL . 'issue/detail/fetchTimeline', $param);
+        parent::curlGet($curl, ROOT_URL . 'issue/detail/fetchTimeline', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -1010,7 +1037,7 @@ class TestIssue extends BaseAppTestCase
         // 删除任务
         $param = [];
         $param['issue_id'] = $issueId;
-        $curl->post(ROOT_URL . 'issue/main/delete', $param);
+        parent::curlPost($curl, ROOT_URL . 'issue/main/delete', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {

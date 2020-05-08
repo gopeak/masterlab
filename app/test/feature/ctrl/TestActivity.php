@@ -75,13 +75,18 @@ class TestActivity extends BaseAppTestCase
         parent::tearDownAfterClass();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetchCalendarHeatmap()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . '/activity/fetchCalendarHeatmap');
-
+        $url = ROOT_URL . 'activity/fetchCalendarHeatmap?data_type=json';
+        parent::packUnitTestUrl($url);
+        $curl->get($url);
+        //echo $curl->rawResponse;
         parent::checkPageError($curl);
-        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        $respArr = json_decode($curl->rawResponse, true);
         if (!$respArr) {
             $this->fail('fetchCalendarHeatmap failed');
             return;
@@ -94,7 +99,9 @@ class TestActivity extends BaseAppTestCase
     public function testFetchByUser()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . '/activity/fetchByUser');
+        $url = ROOT_URL . '/activity/fetchByUser?data_type=json';
+        parent::packUnitTestUrl($url);
+        $curl->get($url);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if (!$respArr) {
