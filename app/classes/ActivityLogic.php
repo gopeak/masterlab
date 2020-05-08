@@ -39,6 +39,8 @@ class ActivityLogic
         }
         $row['time_text'] = format_unix_time($row['time']);
         $row['time_full'] = format_unix_time($row['time'], time(), 'full_datetime_format');
+
+        $row['content'] = self::fixContentImgAttr($row['content']);
     }
 
     /**
@@ -156,17 +158,50 @@ class ActivityLogic
         }
         $conditions = [];
         $conditions['obj_id'] = $issueId;
-        $conditions['type'] = 'issue';
+        $conditions['type'] = ActivityModel::TYPE_ISSUE;
         $start = $pageSize * ($page - 1);
         $model = new ActivityModel();
-        $sql = "SELECT  *  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND `type` =:type  Order by id desc  limit $start, " . $pageSize;
+        $sql = "SELECT  *  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND `type` =:type   Order by id desc  limit $start, " . $pageSize;
         $rows = $model->db->getRows($sql, $conditions);
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
-        $sqlCount = "SELECT  count(*) as cc  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND `type` =:type ";
+        $sqlCount = "SELECT  count(*) as cc  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND  `type` =:type    ";
         $count = $model->db->getOne($sqlCount, $conditions);
         return [$rows, $count];
     }
 
+    /**
+     * 修正活动日志内容图片大小太宽的问题
+     * @param $content
+     * @return string|string[]|null
+     */
+    public static function fixContentImgAttr($content)
+    {
+        if(!empty($content)){
+            $content = preg_replace_callback(
+                '/(<img\s+[^>]+)>/sU',
+                function ($matches) {
+                    if(!empty($matches[1])){
+                        $imgAttr = $matches[1];
+                        if (preg_match('/src="([^"]+)?"/sU', $imgAttr, $regs)) {
+                            $src = $regs[1];
+                        } else {
+                            $src = "#";
+                        }
+                        if(strpos($imgAttr, 'style="')!==false){
+                            //print_r($imgAttr);
+                            $imgAttr = preg_replace('/style="([^"]*)?"/sU', 'style="\\1;max-width:300px"', $imgAttr);
+                            return '<a href="'.$src.'" target="_blank">'.$imgAttr.'</a>';
+                        }else{
+                            $imgAttr .= ' style="max-width:300px"';
+                            return '<a href="'.$src.'" target="_blank">'.$imgAttr.'</a>';
+                        }
+                    }
+                },
+                $content
+            );
+        }
+        return  $content;
+    }
 }

@@ -121,7 +121,7 @@ var IssueDetail = (function () {
                     $('#detail-page-date').html(result);
 
                     var top = $(window).scrollTop();
-                    _editor_md = editormd("editor_md", {
+                    _comment_editor_md = editormd("editor_md", {
                         width: "100%",
                         height: 240,
                         markdown: "",
@@ -165,7 +165,7 @@ var IssueDetail = (function () {
                 var _editormd_view = editormd.markdownToHTML("description-view", {
                     markdown: resp.data.issue.description
                 });
-
+                $('#description-view').html(IssueDetail.prototype.imgTagAddStyle($('#description-view').html()));
                 source = '{{make_assistants issue.assistants_arr users}}';
                 template = Handlebars.compile(source);
                 result = template(resp.data);
@@ -244,6 +244,22 @@ var IssueDetail = (function () {
         });
     }
 
+    IssueDetail.prototype.imgTagAddStyle = function(htmlstr) {
+
+        if(!htmlstr){
+            return ;
+        }
+        var regex1 = new RegExp("(i?)(\<img)(?!(.*?style=['\"](.*)['\"])[^\>]+\>)", 'gmi')
+        htmlstr = htmlstr.replace(regex1, '$1  $2 style="" onclick="window.open(this.src);" $3 ');
+
+        console.log('增加style=""后的html字符串：' + htmlstr)
+        var regex2 = new RegExp("(i?)(\<img.*?style=['\"])([^\>]+\>)", 'gmi')
+        htmlstr = htmlstr.replace(regex2, '$2max-width:600px; height:auto; cursor:pointer$3')
+        console.log('在img标签的style里面增加样式后的html字符串：' + htmlstr)
+        return htmlstr
+    }
+
+
     IssueDetail.prototype.fetchTimeline = function (id) {
         $('#issue_id').val(id);
         var method = 'get';
@@ -291,7 +307,22 @@ var IssueDetail = (function () {
                         htmlDecode: "style,script,iframe",  // you can filter tags decode
                         tocm: true,    // Using [TOCM]
                         emoji: true,
-                        saveHTMLToTextarea: true
+                        saveHTMLToTextarea: true,
+                        onload : function() {
+                            _editor_md = this;
+                            var text = $('#timeline-textarea_'+id).text();
+                            var temp = document.createElement("div");
+                            temp.innerHTML = text;
+                            var output = temp.innerText || temp.textContent;
+                            temp = null;
+                            this.setMarkdown(output);
+                            console.log("onload =>", this, this.id, this.settings, this.state);
+                            // ....
+                        },
+                        onchange : function() {
+                            console.log("onchange =>", this, this.id, this.settings, this.state);
+                            // ....
+                        }
                     });
                     $('#timeline-text_' + id).hide();
                     $('#note-actions_' + id).hide();
@@ -317,6 +348,7 @@ var IssueDetail = (function () {
                         url: "/issue/detail/update_timeline/",
                         data: { id: timeline_id, content: content, content_html: content_html },
                         success: function (resp) {
+                            _editor_md = _comment_editor_md;
                             auth_check(resp);
                             if (resp.ret == '200') {
                                 IssueDetail.prototype.fetchTimeline($('#issue_id').val());
@@ -325,6 +357,7 @@ var IssueDetail = (function () {
                             }
                         },
                         error: function (res) {
+                            _editor_md = _comment_editor_md;
                             notify_error("请求数据错误" + res);
                         }
                     });
@@ -450,8 +483,8 @@ var IssueDetail = (function () {
         if (is_reopen == '1') {
             reopen = '1';
         }
-        var content = _editor_md.getMarkdown();
-        var content_html = _editor_md.getHTML();
+        var content = _comment_editor_md.getMarkdown();
+        var content_html = _comment_editor_md.getHTML();
         var method = 'post';
         $.ajax({
             type: method,
@@ -464,7 +497,7 @@ var IssueDetail = (function () {
                 //alert(resp.msg);
                 if (resp.ret == '200') {
                     IssueDetail.prototype.fetchTimeline(issue_id);
-                    _editor_md.clear();
+                    _comment_editor_md.clear();
                 } else {
                     notify_error(resp.msg);
                 }

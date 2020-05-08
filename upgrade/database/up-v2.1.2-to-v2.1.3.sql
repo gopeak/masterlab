@@ -1,0 +1,1 @@
+ALTER TABLE `field_custom_value` CHANGE `number_value` `number_value` VARCHAR(255) NULL DEFAULT NULL;

@@ -203,10 +203,12 @@ class IssueLogic
             $row['field'] = new \stdClass();
             $row['field_title'] = '';
             $row['field_name'] = '';
+            $row['field_type'] = 'TEXT';
             if (isset($fields[$row['custom_field_id']])) {
                 $row['field'] = $fields[$row['custom_field_id']];
                 $row['field_title'] = $row['field']['title'];
                 $row['field_name'] = $row['field']['name'];
+                $row['field_type'] = $row['field']['type'];
             }
 
             $valueType = $row['value_type'];
@@ -333,6 +335,12 @@ class IssueLogic
                 $info['project_id'] = $projectId;
                 $info['custom_field_id'] = $field['id'];
                 $info['value_type'] = $valueType;
+                if(is_array($param)){
+                    $param = implode(',',$param);
+                }
+                if(is_object($param) || is_null($param)){
+                    $param = strval($param);
+                }
                 $info[$valueType . '_value'] = $param;
                 list($ret, $msg) = $model->insert($info);
                 if (!$ret) {
@@ -406,7 +414,6 @@ class IssueLogic
                 }
                 break;
             case "SELECT_MULTI":
-
                 $options = json_decode($field['options'], true);
                 if (!$options) {
                     break;
@@ -433,7 +440,9 @@ class IssueLogic
                 }
                 $value = $mValue;
                 break;
-
+            case "USER_MULTI":
+                $value =  is_string($value) ? explode(',',$value) : $value;
+                break;
             default:
                 break;
         }
@@ -467,6 +476,12 @@ class IssueLogic
                 $conditions['custom_field_id'] = $field['id'];
                 $info = [];
                 $info['value_type'] = $valueType;
+                if(is_array($param)){
+                    $param = implode(',',$param);
+                }
+                if(is_object($param) || is_null($param)){
+                    $param = strval($param);
+                }
                 $info[$valueType . '_value'] = $param;
                 if (!in_array($field['id'], $issueCustomFieldIdArr)) {
                     $info['issue_id'] = $issueId;
@@ -1206,7 +1221,6 @@ class IssueLogic
         'summary' => '标题',
         'module' => '模块',
         'sprint' => '迭代',
-        'summary' => '标题',
         'description' => '描述',
         'weight' => '权重',
         'assignee' => '经办人',
@@ -1221,4 +1235,40 @@ class IssueLogic
         'effect_version' => '影响版本',
         'labels' => '标签',
     ];
+
+    /**
+     * 将描述的图片，增加样式最大宽度600px
+     * @param $content
+     * @return string|string[]|null
+     */
+    public static function fixContentImgAttr($content)
+    {
+        if(!empty($content)){
+            $content = preg_replace_callback(
+                '/(<img\s+[^>]+)>/sU',
+                function ($matches) {
+                    if(!empty($matches[1])){
+                        $imgAttr = $matches[1];
+                        if (preg_match('/src="([^"]+)?"/sU', $imgAttr, $regs)) {
+                            $src = $regs[1];
+                        } else {
+                            $src = "#";
+                        }
+                        if(strpos($imgAttr, 'style="')!==false){
+                            //print_r($imgAttr);
+                            $imgAttr = preg_replace('/style="([^"]*)?"/sU', 'style="\\1;max-width:600px"', $imgAttr);
+                            return '<a href="'.$src.'" target="_blank">'.$imgAttr.'</a>';
+                        }else{
+                            $imgAttr .= ' style="max-width:600px"';
+                            return '<a href="'.$src.'" target="_blank">'.$imgAttr.'</a>';
+                        }
+                    }
+                },
+                $content
+            );
+        }
+        return  $content;
+    }
+
+
 }

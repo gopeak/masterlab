@@ -888,6 +888,8 @@ class Main extends BaseUserCtrl
         if (empty($issue)) {
             $this->ajaxFailed('failed:issue_id is error');
         }
+
+
         $issueTypeId = (int)$issue['issue_type'];
         if (isset($_GET['issue_type'])) {
             $issueTypeId = (int)$_GET['issue_type'];
@@ -1055,7 +1057,7 @@ class Main extends BaseUserCtrl
         }
 
         $info = [];
-        $info['summary'] = $params['summary'];
+        $info['summary'] = htmlspecialchars($params['summary']);
         $info['creator'] = $uid;
         $info['reporter'] = $uid;
         $info['created'] = time();
@@ -1295,7 +1297,7 @@ class Main extends BaseUserCtrl
 
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+            $info['summary'] = htmlspecialchars($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1378,7 +1380,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = $params['environment'];
+            $info['environment'] = htmlspecialchars($params['environment']);
         }
 
 
@@ -1407,12 +1409,17 @@ class Main extends BaseUserCtrl
         return $info;
     }
 
+    /**
+     * @param array $params
+     * @return array
+     * @throws \Exception
+     */
     private function getUpdateFormInfo($params = [])
     {
         $info = [];
         // 标题
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+            $info['summary'] = htmlspecialchars($params['summary']);
         }
 
         if (isset($params['issue_type'])) {
@@ -1488,7 +1495,7 @@ class Main extends BaseUserCtrl
         }
 
         if (isset($params['environment'])) {
-            $info['environment'] = $params['environment'];
+            $info['environment'] = htmlspecialchars($params['environment']);
         }
 
 
@@ -1557,7 +1564,7 @@ class Main extends BaseUserCtrl
         $info = [];
 
         if (isset($params['summary'])) {
-            $info['summary'] = $params['summary'];
+            $info['summary'] = htmlspecialchars($params['summary']);
         }
 
         $info = $info + $this->getUpdateFormInfo($params);

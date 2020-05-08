@@ -34,7 +34,7 @@
     <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
     <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
-    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js?v={{_version}}"></script>
 
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
@@ -288,7 +288,7 @@
 
                         </div>
                         <div id="issue_custom_fields" class="content-block hide" style="margin-left: 15px">
-                            <p><strong>自定义字段：</strong></p>
+                            <h5>自定义字段</h5>
                             <div id="custom_field_values_div">
 
                             </div>
@@ -392,7 +392,7 @@
                                 <div class="form-group col-lg-6 ">
                                     <label class="control-label col-sm-2" for="issue_milestone_id">模块:</label>
                                     <div class="col-sm-10">
-                                        <span>{{issue.module_name}}</span>
+                                        <span >{{issue.module_name}}</span>
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6">
@@ -1018,7 +1018,83 @@
      <script type="text/html" id="custom_field_values_tpl">
         {{#custom_field_values}}
             <div class="form-group ">
-                <strong>{{field_title}}:</strong><div>{{show_value}}</div>
+                <strong>{{field_title}}:</strong>
+                <div>
+                    {{#if_eq field_type 'TEXT' }}
+                         {{show_value}}
+                    {{^}}
+                         {{#if_eq field_type 'TEXT_MULTI_LINE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'TEXTAREA' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'RADIO' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'CHECKBOX' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SELECT' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SELECT_MULTI' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'DATE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'UPLOAD_IMG' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						  {{#if_eq field_type 'UPLOAD_FILE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MILESTONE' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MARKDOWN' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'NUMBER' }}
+							 {{show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'PROGRESS' }}
+							 {{show_value}}
+						 {{/if_eq}}
+
+
+                         {{#if_eq field_type 'USER' }}
+							 {{user_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'USER_MULTI' }}
+							 {{issue_assistants_avatar show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'LABELS' }}
+							 {{make_label_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'VERSION' }}
+							 {{version_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'MODULE' }}
+							 {{module_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'SPRINT' }}
+							 {{make_issue_sprint show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'RESOLUTION' }}
+							 {{resolve_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'STATUS' }}
+							 {{status_html show_value}}
+						 {{/if_eq}}
+						 {{#if_eq field_type 'ISSUES' }}
+							  <a href="/issue/detail/index/{{show_value}}" >{{show_value}}</a>
+						 {{/if_eq}}
+
+					{{/if_eq}}
+
+                </div>
             </div>
         {{/custom_field_values}}
     </script>
@@ -1238,7 +1314,7 @@
 
         var _cur_activity_page = 1;
 
-        _editor_md = editormd("editor_md", {
+        _comment_editor_md = editormd("editor_md", {
             width: "100%",
             height: 220,
             markdown: "",
@@ -1255,7 +1331,7 @@
             placeholder: "",
             autoFocus: false
         });
-
+        _editor_md = _comment_editor_md;
         $(function () {
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);
