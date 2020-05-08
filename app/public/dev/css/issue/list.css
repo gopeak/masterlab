@@ -570,3 +570,8 @@ table tbody tr td.width_7_9 {
 .filtered-search-token {
     cursor: pointer;
 }
+
+.filtered-search-history-dropdown-item {
+    padding: .5em 10px !important;
+    margin: 0 !important;
+}

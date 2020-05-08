@@ -1496,9 +1496,9 @@ var IssueMain = (function () {
                 toolbarIcons: "custom"
             });
         });
-        new UsersSelect();
-        new LabelsSelect();
-        new MilestoneSelect();
+        // new UsersSelect();
+        // new LabelsSelect();
+        // new MilestoneSelect();
         IssueForm.prototype.bindNavTabClick();
         var deleteFileEnabled = true;
         if (is_edit) {
