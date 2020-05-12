@@ -1,0 +1,11 @@
+{
+  "main_class": "DocumentPlugin",
+  "title": "document",
+  "description": "",
+  "version": "1.0",
+  "type": "project_module",
+  "chmod":[],
+  "url":"http://www.masterlab.vip/",
+  "company":"Masterlab",
+  "icon_file": "/attachment/image/20200512/20200512151006_96933.png"
+}

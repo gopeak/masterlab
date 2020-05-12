@@ -70,6 +70,10 @@ class Chart extends BaseUserCtrl
         }
         $model = new SprintModel();
         $data['activeSprint'] = $model->getActive($data['project_id']);
+        $data['count_down_date'] = '';
+        if(isset($data['activeSprint']['end_date'])){
+            $data['count_down_date'] = date('Y-m-d',strtotime($data['activeSprint']['end_date'])+86400);
+        }
         $this->render('gitlab/project/chart_sprint.php', $data);
     }
 

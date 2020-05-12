@@ -23,10 +23,8 @@
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
 
-
             <div class="flash-container flash-container-page">
             </div>
-
 
         </div>
         <div class="content padding-0" id="content-body">
@@ -172,7 +170,7 @@
 
 <script type="text/javascript">
     $(function () {
-        var sprint_end_date = '{{activeSprint['end_date']}}';
+        var sprint_end_date = '{{count_down_date}}';
         $('#getting-started').countdown(sprint_end_date, function (event) {
             $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
         });
