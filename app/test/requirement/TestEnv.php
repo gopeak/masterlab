@@ -28,7 +28,7 @@ class TestEnv extends BaseTestCase
      */
     public function testPhpVersion()
     {
-        $expectVersion = '5.6.0';
+        $expectVersion = '7.0';
         $failMsg = "expect php version >={$expectVersion},but get " . PHP_VERSION;
         $this->assertTrue(version_compare(PHP_VERSION, $expectVersion, '>='), $failMsg);
     }
