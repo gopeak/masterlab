@@ -62,7 +62,7 @@ class PluginManager extends BaseAdminCtrl
     public function fetchAll()
     {
         $filterType = isset($_GET['type']) ? $_GET['type']:'all';
-        $filterRange = isset($_GET['range']) ? $_GET['type']:'all';
+        $filterRange = isset($_GET['range']) ? $_GET['range']:'all';
 
         $conditionArr = [];
         if($filterType!='all'){
@@ -77,13 +77,13 @@ class PluginManager extends BaseAdminCtrl
                 $plugins[] = $dbPlugin;
             }
         }
-        //print_r($plugins);
         $uninstallPlugins  = [];
         $pluginsKeyArr = array_column($dbPluginsArr, null, 'name');
         $dirPluginArr = $this->getPluginDirArr(PLUGIN_PATH);
         foreach ($dirPluginArr as $dirName => $item) {
             if (!isset($pluginsKeyArr[$dirName])) {
                 $tmp = $item;
+                $tmp['id'] = '';
                 $tmp['status'] = PluginModel::STATUS_UNINSTALLED;
                 $tmp['is_system'] = '0';
                 if ($filterType == 'all' || $tmp['type'] == $filterType) {
@@ -92,9 +92,16 @@ class PluginManager extends BaseAdminCtrl
             }
         }
 
-        if($filterRange=='all' || $filterRange=='uninstalled') {
-            $plugins = $plugins + $uninstallPlugins;
+        // var_dump($filterRange);
+        if($filterRange=='all') {
+            foreach ($uninstallPlugins as $uninstallPlugin) {
+                $plugins[] = $uninstallPlugin;
+            }
         }
+        if($filterRange=='uninstalled') {
+           $plugins = $uninstallPlugins;
+        }
+        // print_r($uninstallPlugins);
         // 判断目录是否存在
         if($plugins){
             foreach ($plugins as & $plugin) {

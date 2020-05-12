@@ -61,7 +61,8 @@ class BasePluginCtrl extends BaseUserCtrl
         ob_implicit_flush(false);
         extract($dataArr, EXTR_PREFIX_SAME, 'tpl_');
 
-        require_once PLUGIN_PATH .'activity/view/'. $tpl;
+        $pluginName = $this->pluginInfo['name'];
+        require_once PLUGIN_PATH .$pluginName.'/view/'. $tpl;
 
         echo ob_get_clean();
     }
