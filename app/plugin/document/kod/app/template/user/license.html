@@ -1,0 +1,37 @@
+<?php include(TEMPLATE.'common/header.html');?>
+	<title><?php echo 'License Register - '.strip_tags(LNG('kod_name')).LNG('kod_power_by');?></title>
+	<link href="<?php echo STATIC_PATH;?>style/login.css?ver=<?php echo KOD_VERSION;?>" rel="stylesheet">
+</head>
+
+<body class="license-page">
+	<?php echo pageBackground();?>
+	<div class="background"></div>
+	<div class="loginbox aero" >
+		<div class="title">
+			<div class="logo">升级为商业版</div>
+			<div class='info'><?php echo LNG('copyright_contact');?></div>
+		</div>
+		<div class="form" style="padding: 10px 20px;">
+			<div class="inputs admin-password"><input type="text" placeholder="LICENSE KEY" autocomplete="off"/></div>
+			<a href="javascript:void(0);" class="LICENSE_SUBMIT btn btn-primary">注册授权</a>
+			<div class="links">
+				<a href="./index.php?user/versionInstall&reset=1" class="btn btn-link license-use-free"><?php echo LNG('use_free');?></a> 
+				<a href="http://kodcloud.com/buy.html#<?php echo I18n::getType();?>" target="_blank" class="btn btn-link license-learn-more"><?php echo LNG('learn_more');?></a>
+			</div>
+			<br/>
+		</div>
+	</div>
+	<?php $GLOBALS['loadCommonJs'] = true;?>
+	<?php include(TEMPLATE.'common/footer.html');?>
+	<script type="text/javascript" >
+		seajs.config({
+			base: "<?php echo STATIC_PATH;?>js/",
+			preload: ["lib/jquery-1.8.0.min"],
+			map:[
+				[ /^(.*\.(?:css|js))(.*)$/i,'$1$2?ver='+G.version]
+			]
+		});
+		seajs.use("<?php echo STATIC_JS;?>/src/user/main");
+	</script>
+</body>
+</html>
