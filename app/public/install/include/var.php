@@ -16,8 +16,8 @@ if (ini_get('session.save_handler') == 'files') {
     $sessionPath = session_save_path();
     if (strpos($sessionPath, ";") !== false) {
         $sessionPath = substr($sessionPath, strpos($sessionPath, ";") + 1);
+        $dirfile_items[] = ['type' => 'file', 'path' => realpath($sessionPath)];
     }
-    $dirfile_items[] = ['type' => 'file', 'path' => realpath($sessionPath)];
 }
 
 $func_items = array(
