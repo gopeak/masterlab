@@ -51,9 +51,10 @@ class Index extends BasePluginCtrl
         $data = [];
         $data['title'] = '插件首页';
         $data['nav_links_active'] = 'plugin';
-        $data['current_user']  = UserModel::getInstance()->getByUid(UserAuth::getId());
+        //$data['current_user']  = UserModel::getInstance()->getByUid(UserAuth::getId());
 
-        require_once realpath(__DIR__).'/kod/index.php';
+        header("location:/index.php?kod=1");
+        //require_once realpath(__DIR__).'/kod/index.php';
         //$this->phpRender('index.php', $data);
     }
 
