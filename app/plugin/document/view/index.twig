@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/plugin/activity/js/activity.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
+
+    <link href="/plugin/activity/css/index.css" rel="stylesheet">
+</head>
+
+<body class="" data-group="" data-page="projects:issues:index" data-project="default">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+    <div class="page-layout page-content-body system-page">
+        {% include 'twig/common/body/header-content.twig' %}
+
+        <script>
+            var findFileURL = "";
+        </script>
+        <div class="page-with-sidebar system-page">
+            {% include 'twig/project/common-page-nav-project.twig' %}
+
+            <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+                <div class="alert-wrapper">
+                    <div class="flash-container flash-container-page">
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="content" id="content-body">
+                        <iframe width="100%" frameborder=no  height="900px" src="/kod_index.php?user/login&kod=1"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+    $(function() {
+
+
+    });
+
+</script>
+</body>
+</html>
