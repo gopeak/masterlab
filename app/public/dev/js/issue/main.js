@@ -1496,9 +1496,9 @@ var IssueMain = (function () {
                 toolbarIcons: "custom"
             });
         });
-        // new UsersSelect();
-        // new LabelsSelect();
-        // new MilestoneSelect();
+        new UsersSelect();
+        new LabelsSelect();
+        new MilestoneSelect();
         IssueForm.prototype.bindNavTabClick();
         var deleteFileEnabled = true;
         if (is_edit) {
@@ -1506,7 +1506,6 @@ var IssueMain = (function () {
         }
         $(".fine_uploader_img").each(function (i) {
             var id = $(this).attr('id');
-            console.log("id", id);
             //if( typeof(window._fineUploader[id])=='undefined' ){
             var uploader = new qq.FineUploader({
                 element: document.getElementById(id),
