@@ -99,6 +99,13 @@ class Passport extends BaseCtrl
         $data['allow_user_reg'] = $basicSettingArr['allow_user_reg'];
         $data['ldap_enable'] = (bool)$settingModel->getSettingValue('ldap_enable');
 
+        if(isset($_COOKIE[UserAuth::SESSION_UID_KEY]) && isset($_COOKIE[UserAuth::SESSION_TOKEN_KEY])){
+            $ret = $this->auth->autoLogin($_COOKIE[UserAuth::SESSION_UID_KEY], $_COOKIE[UserAuth::SESSION_TOKEN_KEY]);
+            if($ret){
+                header("location:".ROOT_URL);
+                die;
+            }
+        }
         $this->render('gitlab/passport/login.php', $data);
     }
 
@@ -249,7 +256,7 @@ class Passport extends BaseCtrl
             $info['source'] = $source;
         }
 
-        $this->auth->autoLogin($user);
+        $this->auth->setAutoLogin($user);
 
         // 更新登录信息
         $userModel->uid = $user['uid'];

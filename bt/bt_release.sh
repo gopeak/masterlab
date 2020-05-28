@@ -2,20 +2,20 @@
 
 # 先清除数据
 rm -rf ./masterlab
-rm -rf ./masterlab-2.1.2
+rm -rf ./masterlab-2.1.3
 rm -f  ./masterlab-bt-last.zip
 rm -rf ./vendor
 
-git clone git@github.com:gopeak/masterlab.git masterlab-2.1.2
+git clone git@github.com:gopeak/masterlab.git masterlab-2.1.3
 
-cd masterlab-2.1.2
+cd masterlab-2.1.3
 # git pull
 git checkout 2.1
 git pull origin 2.1
-git archive --format zip --output "./masterlab-2.1.2.zip" 2.1 -0
-cp -f ./masterlab-2.1.2.zip ../
+git archive --format zip --output "./masterlab-2.1.3.zip" 2.1 -0
+cp -f ./masterlab-2.1.3.zip ../
 cd ../
-unzip ./masterlab-2.1.2.zip -d masterlab
+unzip ./masterlab-2.1.3.zip -d masterlab
 cd  masterlab
 
 # 解压composer类库
@@ -40,5 +40,5 @@ cd ../
 #rm -rf ./masterlab-2.1.2
 
 cp -f ./masterlab-bt-last.zip /data/www/masterlab_site/ant/downloads/masterlab-bt-last.zip
-cp -f ./masterlab-bt-last.zip /data/www/masterlab_site/ant/downloads/masterlab-bt-v2.1.2.zip
+cp -f ./masterlab-bt-last.zip /data/www/masterlab_site/ant/downloads/masterlab-bt-v2.1.3.zip
 

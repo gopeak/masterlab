@@ -151,7 +151,7 @@
                                     <span class="list-item-name">
                                         <img class="avatar s40" alt="" src=" {{ user['avatar']}}">
                                         <strong>
-                                        <a href="/user/profile/ {{ user['uid']}}"> {{ user['display_name']}}</a>
+                                        <a href="/user/profile/{{ user['uid']}}">{{ user['display_name']}}</a>
                                         </strong>
                                         <span class="cgray">  {{ user['username']}}</span>
                                         {% if (current_uid == user['uid']) %}
