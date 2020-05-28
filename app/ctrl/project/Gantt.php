@@ -483,8 +483,9 @@ class Gantt extends BaseUserCtrl
                 $targetWeight = max(0, $targetWeight - ProjectGantt::$offset);
             }
             $tmp = $targetWeight;
-            $currentWeight = $tmp;
             $targetWeight = $currentWeight;
+            $currentWeight = $tmp;
+
             // 执行更新操作
             $currentArr = [$fieldWeight => $currentWeight];
             $issueModel->updateItemById($currentId, $currentArr);
