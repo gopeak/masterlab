@@ -99,6 +99,7 @@ class Passport extends BaseCtrl
         $data['allow_user_reg'] = $basicSettingArr['allow_user_reg'];
         $data['ldap_enable'] = (bool)$settingModel->getSettingValue('ldap_enable');
 
+        //print_r($_COOKIE);
         if(isset($_COOKIE[UserAuth::SESSION_UID_KEY]) && isset($_COOKIE[UserAuth::SESSION_TOKEN_KEY])){
             $ret = $this->auth->autoLogin($_COOKIE[UserAuth::SESSION_UID_KEY], $_COOKIE[UserAuth::SESSION_TOKEN_KEY]);
             if($ret){
@@ -135,7 +136,8 @@ class Passport extends BaseCtrl
     public function pageLogout()
     {
         UserAuth::getInstance()->logout();
-        $this->pagelogin();
+        header("location: /passport/login");
+        die;
     }
 
     /**

@@ -175,62 +175,6 @@ class NotifyLogic
         }
     }
 
-    /**
-     * @return bool
-     */
-    private function syncSend()
-    {
-        $headers   = [];
-        $headers[] = "MIME-Version: 1.0";
-        $headers[] = 'Content-type: text/html; charset="UTF-8";';
-        $headers[] = "From: {$this->from}";
-        $headers[] = "Reply-To: {$this->from}";
-        $headers[] = "Subject: {$this->subject}";
-
-        $result =  mail($this->to, $this->subject, $this->body, implode("\r\n", $headers));
-        return $result;
-    }
-
-    private function syncSendBySmtp()
-    {
-        $ret = false;
-        $msg = '';
-        try {
-            $mail = new \PHPMailer(true);
-            $mail->IsSMTP();
-            $mail->CharSet = 'UTF-8';
-            $mail->SMTPAuth = true;
-            $mail->Port = $this->emailConfig['mail_port'];
-            $mail->SMTPDebug = 0;
-            $mail->Host =  $this->emailConfig['mail_host'];
-            $mail->Username = $this->emailConfig['mail_account'];
-            $mail->Password = $this->emailConfig['mail_password'];
-            $mail->Timeout = $this->emailConfig['mail_timeout'];
-            $mail->From = $this->emailConfig['send_mailer'];
-            $mail->FromName = 'Notify';
-            if (is_array($this->to) && !empty($this->to)) {
-                foreach ($this->to as $t) {
-                    $mail->AddAddress($t);
-                }
-            } else {
-                $msg = 'Mailer Error: email address is error...';
-            }
-
-            $mail->Subject = $this->subject;
-            $mail->Body = $this->body;
-            $mail->AltBody = "To view the message, please use an HTML compatible email viewer!";
-            $mail->WordWrap = 80;
-            $mail->IsHTML(true);
-            $ret = $mail->Send();
-            if (!$ret) {
-                $msg = 'Mailer Error: ' . $mail->ErrorInfo;
-            }
-        } catch (\phpmailerException $e) {
-            $msg =  "邮件发送失败：" . $e->errorMessage();
-        }
-
-        return [$ret, $msg];
-    }
 
     /**
      * 初始化发送邮件的参数
@@ -248,18 +192,6 @@ class NotifyLogic
             return false;
         }
 
-        // 获取发信配置信息
-        /**
-        $settingsLogic = new SettingsLogic();
-
-        $this->emailConfig['mail_port'] = $settingsLogic->mailPort();
-        $this->emailConfig['mail_prefix'] = $settingsLogic->mailPrefix();
-        $this->emailConfig['mail_host'] = $settingsLogic->mailHost();
-        $this->emailConfig['mail_account'] = $settingsLogic->mailAccount();
-        $this->emailConfig['mail_password'] = $settingsLogic->mailPassword();
-        $this->emailConfig['mail_timeout'] = $settingsLogic->mailTimeout();
-        $this->emailConfig['send_mailer'] = $settingsLogic->sendMailer();
-        */
 
         $sourceTitle = '';
 

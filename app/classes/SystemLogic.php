@@ -103,7 +103,13 @@ class SystemLogic
         if (is_string($replyTo)) {
             $replyTo = explode(';', $replyTo);
         }
-
+        $fromName =  $settingModel->getValue('mail_prefix');
+        $currentUser = UserModel::getInstance()->getByUid(UserAuth::getId());
+        if(isset($currentUser['display_name'])){
+            $fromName = $currentUser['display_name'].'('.$fromName.')';
+        }
+        unset($currentUser);
+        $others['from_name'] =  $fromName;
         $enableAsyncMail = (int)$settingModel->getValue('enable_async_mail');
         if ($enableAsyncMail != 1) {
             return $this->directMail($title, $content, $recipients, $replyTo, $others);
@@ -166,7 +172,7 @@ class SystemLogic
             $mail->Password = trimStr($config['mail_password']);
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
             $mail->From = trimStr($config['send_mailer']);
-            $mail->FromName = isset($others['from_name']) ? $others['from_name'] : 'Masterlab';
+            $mail->FromName = isset($others['from_name']) ? $others['from_name'] : $config['mail_prefix'];
             if (isset($config['is_exchange_server']) && $config['is_exchange_server'] == '1') {
                 $mail->setFrom($mail->From, $mail->FromName);
             }
@@ -263,7 +269,7 @@ class SystemLogic
         $sendArr['user'] = trimStr($config['mail_account']);
         $sendArr['password'] = trimStr($config['mail_password']);
         $sendArr['from'] = trimStr($config['send_mailer']);
-        $sendArr['from_name'] = isset($others['from_name']) ? $others['from_name'] : 'Masterlab';
+        $sendArr['from_name'] = isset($others['from_name']) ? $others['from_name'] : $config['mail_prefix'];
         $sendArr['to'] = $recipients;
         $sendArr['cc'] = $replyTo;
         $sendArr['bcc'] = isset($others['bcc']) ? $others['bcc'] : [];

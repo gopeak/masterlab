@@ -245,8 +245,8 @@ class UserAuth
                 unset($_SESSION[$v]);
             }
         }
-        @setcookie(self::SESSION_UID_KEY, '', time() + 3600 * 4, '/', getCookieHost());
-        @setcookie(self::SESSION_TOKEN_KEY, '', time() + 3600 * 4, '/', getCookieHost());
+        @setcookie(self::SESSION_UID_KEY, '', time() - 3600 * 4, '/', getCookieHost());
+        @setcookie(self::SESSION_TOKEN_KEY, '', time() - 3600 * 4, '/', getCookieHost());
     }
 
     /**
