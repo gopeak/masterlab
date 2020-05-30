@@ -713,11 +713,18 @@ class Passport extends BaseCtrl
         list($ret, $msg) = $userModel->updateUser($userInfo);
         if ($ret) {
             $emailFindPwdModel->deleteByEmail($email);
-            $this->info('信息提示', '重置密码成功!');
+            $arr = [];
+            $arr['_title'] = '提示';
+            $arr['_links'] =  ['type' => 'link', 'link' => '/passport/login', 'title' => '重新登录'];
+            $arr['_content'] = '重置密码成功!';
+            $arr['_icon'] = 'icon-font-ok';
+            $arr['_color_type'] = 'alert-success';
+            $this->render('twig/common/info_reset_password.twig', $arr);
         } else {
             $this->info('信息提示', '很抱歉,重置密码失败,请重试.' . $msg);
         }
     }
+
 
     /**
      * 检查邮箱是否存在
