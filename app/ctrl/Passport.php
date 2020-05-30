@@ -285,7 +285,7 @@ class Passport extends BaseCtrl
         $userTokenInfo = $userTokenModel->getUserToken($user['uid']);
 
         // 允许同一账户同时登陆(pc、app同时在线)，不再签发新的token
-        if ($userTokenModel->isTokenExpire($userTokenInfo['token_time'])) {
+        if ($userTokenModel->isTokenExpire(@$userTokenInfo['token_time'])) {
             // 生成和刷新token
             list($ret, $token, $refresh_token) = $userTokenModel->makeToken($user);
             if (!$ret) {

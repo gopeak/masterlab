@@ -66,9 +66,6 @@ let Upgrade = (function () {
             $modalUpgrade.modal('hide');
         });
 
-        // 自动检查更新
-        Upgrade.prototype.dailyCheck();
-
         // 关闭升级提示条幅
         $('#upgrade-msg').on('closed.bs.alert', function () {
             upgradeMsgViewed();
@@ -210,7 +207,7 @@ let Upgrade = (function () {
     // 每日检测升级
     Upgrade.prototype.dailyCheck = function () {
         let checked = cookie('upgrade-checked') == '1';
-        if (!checked) {
+        if (!checked && _is_admin) {
             let url = 'http://www.masterlab.vip/upgrade.php?action=get_patch_info';
             $.ajax({
                 type: 'get',
