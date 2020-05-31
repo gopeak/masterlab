@@ -79,7 +79,7 @@ class SystemLogic
 
     /**
      * 通用的邮件发送函数
-     * @param $recipients array 收件人
+     * @param $recipients array|string 收件人
      * @param $title  string 邮件标题
      * @param $content  string 邮件内容
      * @param $replyTo array 抄送人

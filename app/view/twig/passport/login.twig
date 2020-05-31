@@ -2,10 +2,18 @@
 <html class="devise-layout-html">
 <head>
     {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/vendor/jquery.cookie.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        if($.cookie('reg_email')){
+            $('#wrap_resend_email').show();
+        }else{
+            $('#wrap_resend_email').hide();
+        }
+
         $("#login_submit_btn").on("click", function () {
             $.ajax({
                 type: "POST",
@@ -38,7 +46,9 @@
                 data: $('#new_new_user').serialize(),
                 success: function (resp) {
                     if (resp.ret == 200) {
-                        notify_success('注册成功')
+                        $.cookie('reg_email', $('#new_user_email').val(), { expires: 7 });
+                        $.cookie('reg_username', $('#username').val(), { expires: 7 });
+                        notify_success(resp.msg, resp.data)
                         setTimeout(function(){ window.location.href = root_url+'passport/login'; }, 2000);
                     } else {
                         if(resp.ret=='104'){
@@ -82,6 +92,37 @@
         $("#li-login").click(function () {
             Mousetrap.bind('enter', function () {
                 $("#login_submit_btn").click();
+            });
+        });
+
+        $("#btn_resend_email").click(function () {
+
+            var email = '';
+            var username = '';
+            if($.cookie('reg_email')){
+                email = $.cookie('reg_email');
+            }else{
+                email = window.prompt('请输入这注册时的Email地址');
+            }
+            if($.cookie('reg_username')){
+                username = $.cookie('reg_username');
+            }
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: 'json',
+                url: '/passport/reSendActiveEmail',
+                data: {email:email,username:username},
+                success: function (resp) {
+                    if (resp.ret == 200) {
+                        notify_success(resp.msg, resp.data)
+                    } else {
+                       notify_error(resp.msg,resp.data);
+                    }
+                },
+                error: function (resp) {
+                    notify_error(resp.msg.resp.data);
+                }
             });
         });
 
@@ -246,17 +287,17 @@
                                         {% endif %}
                                         <div>
                                             <input type="button" id="register_submit_btn" name="register_submit_btn"
-                                                   value="确 定" class="btn-register btn"/>
+                                                   value="提 交" class="btn-register btn"/>
                                         </div>
                                     </form>
                                     {% else %}
                                         <b>注册功能已关闭！</b>
                                     {% endif %}
                                 </div>
-                                <div class="clearfix submit-container hide">
+                                <div id="wrap_resend_email" class="clearfix submit-container ">
                                     <p>
                                         <span class="light">没有收到确认邮件？</span>
-                                        <a href="#">重新发送</a>.
+                                        <a href="#" id="btn_resend_email">重新发送</a>.
                                     </p>
                                 </div>
                             </div>

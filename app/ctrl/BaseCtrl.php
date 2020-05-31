@@ -443,7 +443,7 @@ class BaseCtrl
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
     )
     {
-        $this->info( $title , $content, $links, 'icon-font-fail','alert-info');
+        $this->info( $title , $content, $links, 'icon-font-fail','alert-danger');
     }
 
 
