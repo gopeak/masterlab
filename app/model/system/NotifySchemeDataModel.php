@@ -28,4 +28,15 @@ class NotifySchemeDataModel extends BaseDictionaryModel
         return $this->getRows($fields, $conditions, null, null, null, null, true);
     }
 
+    /**
+     * 通过flag获取数据
+     * @param $flag
+     * @return array
+     */
+    public function getByFlag($flag)
+    {
+        $conditions = ['flag' => $flag];
+        return $this->getRow('*', $conditions);
+    }
+
 }

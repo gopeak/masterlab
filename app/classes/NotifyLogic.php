@@ -1,22 +1,32 @@
 <?php
+
 namespace main\app\classes;
 
+use main\app\ctrl\admin\IssueType;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueStatusModel;
+use main\app\model\issue\IssueTypeModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\system\NotifySchemeDataModel;
 use main\app\model\system\NotifySchemeModel;
+use main\app\model\TimelineModel;
 use main\app\model\user\UserModel;
 
+/**
+ * 邮件通知处理类
+ * @package main\app\classes
+ */
 class NotifyLogic
 {
     public $to = null;
     public $from = null;
     public $subject = null;
     public $body = null;
+    public $tplVarArr = [];
     public $emailConfig = [];
 
     const NOTIFY_ROLE_ASSIGEE = 'assigee';
@@ -45,6 +55,10 @@ class NotifyLogic
      */
     const NOTIFY_FLAG_ISSUE_CLOSE = 'issue@close';
     /**
+     * 事项删除
+     */
+    const NOTIFY_FLAG_ISSUE_DELETE = 'issue@delete';
+    /**
      * 事项评论
      */
     const NOTIFY_FLAG_ISSUE_COMMENT_CREATE = 'issue@comment@create';
@@ -72,13 +86,22 @@ class NotifyLogic
      * 删除迭代
      */
     const NOTIFY_FLAG_SPRINT_REMOVE = 'sprint@remove';
+    /**
+     * 更新迭代
+     */
+    const NOTIFY_FLAG_SPRINT_UPDATE = 'sprint@update';
+
+
 
     public function __construct()
     {
     }
 
 
-
+    /**
+     * @param $issueStatusId
+     * @return string
+     */
     public function getEmailNotifyFlag($issueStatusId)
     {
         $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
@@ -106,10 +129,10 @@ class NotifyLogic
     }
 
     /**
-     * @param string $schemeDataFlag    标识
-     * @param int $projectId            项目ID
-     * @param int $sourceId             资源ID(issueid or sprintid)
-     * @param string $body              邮件内容html, 如果为空自动用标题代替
+     * @param string $schemeDataFlag 标识
+     * @param int $projectId 项目ID
+     * @param int $sourceId 资源ID(issueid or sprintid)
+     * @param string $body 邮件内容html, 如果为空自动用标题代替
      * @throws \Exception
      */
     public function send($schemeDataFlag, $projectId, $sourceId = 0, $body = '')
@@ -117,7 +140,7 @@ class NotifyLogic
         // 是否开启邮件
         $settingsLogic = new SettingsLogic();
         if (!$settingsLogic->enableMail()) {
-            return ;
+            return;
         }
 
         $toTargetUidArr = [];
@@ -126,11 +149,22 @@ class NotifyLogic
         $notifySchemeDataResult = $notifySchemeDataModel->getSchemeData(NotifySchemeModel::DEFAULT_SCHEME_ID);
 
         $flagUserRoleMap = array_column($notifySchemeDataResult, 'user', 'flag');
-        $flagNameMap = array_column($notifySchemeDataResult, 'name', 'flag');
 
         $schemeDataFlagArr = explode('@', $schemeDataFlag);
         $sourceType = $schemeDataFlagArr[0];
 
+        if ($schemeDataFlagArr[1] == 'comment') {
+            $sourceType = 'issue_comment';
+        }
+        $row = [];
+        if ($sourceType == 'issue_comment') {
+            $timelineModel = new TimelineModel();
+            $timeline = $timelineModel->getRowById($sourceId);
+            if (!empty($timeline)) {
+                $issueModel = new IssueModel();
+                $row = $issueModel->getById($timeline['issue_id']);
+            }
+        }
         if ($sourceType == 'issue') {
             $issueModel = new IssueModel();
             $row = $issueModel->getById($sourceId);
@@ -156,16 +190,18 @@ class NotifyLogic
                 $toTargetUidArr = array_merge($toTargetUidArr, $this->getProjectUser($projectId));
             }
         }
-
+        //print_r($toTargetUidArr);
         // 提取用户的email
         $userModel = new UserModel();
         $userRows = $userModel->getUsersByIds($toTargetUidArr);
         $toEmails = array_column($userRows, 'email');
-
+        if ($schemeDataFlagArr[1] == 'comment') {
+            $sourceType = 'issue_comment';
+        }
         if ($this->sendEmailInitParams(
             $toEmails,
             $sourceType,
-            $flagNameMap[$schemeDataFlag],
+            $schemeDataFlag,
             $projectId,
             $sourceId,
             $body
@@ -184,37 +220,67 @@ class NotifyLogic
      * @param int $projectId
      * @param int $sourceId
      * @param string $body
+     * @return bool
      * @throws \Exception
      */
-    private function sendEmailInitParams($toEmails, $sourceType, $schemeDataFlagName, $projectId, $sourceId, $body)
+    private function sendEmailInitParams($toEmails, $sourceType, $schemeDataFlag, $projectId, $sourceId, $body)
     {
         if (empty($toEmails)) {
             return false;
         }
-
-
-        $sourceTitle = '';
-
+        $currentUser = $_SESSION[UserAuth::SESSION_USER_INFO_KEY];
+        if (empty($currentUser)) {
+            $currentUser = UserModel::getInstance()->getByUid(UserAuth::getId());
+        }
+        $tplArr = [];
         $projectModel = new ProjectModel();
         $projectRow = $projectModel->getById($projectId);
         $projectPathName = $projectRow['org_path'] . '/' . $projectRow['key'];
+        $tplArr['project_key'] = $projectRow['key'];
+        $tplArr['project_name'] = $projectRow['name'];
+        $tplArr['project_title'] = $projectRow['name'];
+        $tplArr['project_path'] = $projectPathName;
+        $tplArr['display_name'] = $currentUser['display_name'];
 
-        if ($sourceType == 'issue') {
+        if ($sourceType == 'issue' || $sourceType == 'issue_comment') {
+            if ($sourceType == 'issue_comment') {
+                $timelineModel = new TimelineModel();
+                $timeline = $timelineModel->getRowById($sourceId);
+                $tplArr['comment_content'] = $timeline['content'];
+                $sourceId = $timeline['issue_id'];
+            }
             $issueModel = new IssueModel();
             $row = $issueModel->getById($sourceId);
             $sourceTitle = $row['summary'];
-            $sourceId = $projectRow['key'] . $sourceId;
+            $tplArr['issue_title'] = $sourceTitle;
+            $tplArr['issue_key'] = $row['issue_num'];
+            $tplArr['issue_link'] = ROOT_URL . 'issue/detail/index/' . $row['id'];
+            $issueTypeModel = new IssueTypeModel();
+            $tplArr['issue_type_title'] = $issueTypeModel->getById($row['issue_type'])['name'];
+            $moduleRow = (new ProjectModuleModel())->getById($row['module']);
+            $tplArr['issue_module_title'] = isset($moduleRow['name']) ? $moduleRow['name'] : '';
+            $tplArr['assignee_display_name'] = (new UserModel())->getByUid($row['assignee'])['display_name'];
+            $tplArr['report_display_name'] = (new UserModel())->getByUid($row['reporter'])['display_name'];
         }
         if ($sourceType == 'sprint') {
             $sprintModel = SprintModel::getInstance();
             $row = $sprintModel->getById($sourceId);
-            $sourceTitle = $row['name'];
+            $tplArr['sprint_id'] = $row['id'];
+            $tplArr['sprint_title'] = $row['name'];
+            $tplArr['sprint_start_date'] = $row['name'];
+            $tplArr['sprint_end_date'] = $row['end_date'];
         }
+        //print_r($tplArr);
+        $schemeData = (new NotifySchemeDataModel())->getByFlag($schemeDataFlag);
+        $replaceKeyArr = array_keys($tplArr);
+        foreach ($replaceKeyArr as &$item) {
+            $item = '{' . $item . '}';
+        }
+        $replaceKeyData = array_values($tplArr);
 
         $this->to = $toEmails;
-        // $this->from = mb_encode_mimeheader($fromName) . ' <' . $fromEmail . '>';
-        $this->subject = sprintf('[%s] %s #%s %s', $projectPathName, $schemeDataFlagName, $sourceId, $sourceTitle);
-        $this->body = empty($body) ? $this->subject : $body;
+        $this->subject = str_replace($replaceKeyArr, $replaceKeyData, $schemeData['title_tpl']);
+        $this->body = str_replace($replaceKeyArr, $replaceKeyData, $schemeData['body_tpl']);
 
         return true;
     }
@@ -259,7 +325,7 @@ class NotifyLogic
         }
 
         $assigneeUserId = 0;
-        if ($sourceType == 'issue') {
+        if ($sourceType == 'issue' || $sourceType == 'issue_comment') {
             $assigneeUserId = $rowData['assignee'];
         }
 
@@ -277,7 +343,7 @@ class NotifyLogic
         }
 
         $reporterUserId = 0;
-        if ($sourceType == 'issue') {
+        if ($sourceType == 'issue' || $sourceType == 'issue_comment') {
             $reporterUserId = $rowData['reporter'];
         }
         return [$reporterUserId];
@@ -297,7 +363,7 @@ class NotifyLogic
         }
 
         $followUserIdArr = [];
-        if ($sourceType == 'issue') {
+        if ($sourceType == 'issue' || $sourceType == 'issue_comment') {
             $issueFollowModel = new IssueFollowModel();
             $issueFollowRows = $issueFollowModel->getItemsByIssueId($rowData['id']);
             $followUserIdArr = array_column($issueFollowRows, 'user_id');

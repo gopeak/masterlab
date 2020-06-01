@@ -536,7 +536,7 @@ class Detail extends BaseUserCtrl
 
             // email
             $notifyLogic = new NotifyLogic();
-            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $issueId, $contentHtml);
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $insertId, $contentHtml);
 
             $this->ajaxSuccess('success', $insertId);
         } else {
@@ -671,7 +671,7 @@ class Detail extends BaseUserCtrl
 
             // email
             $notifyLogic = new NotifyLogic();
-            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_REMOVE, $issue['project_id'], $issueId);
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_REMOVE, $issue['project_id'], $id);
 
             $this->ajaxSuccess('success');
         } else {

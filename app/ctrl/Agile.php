@@ -500,6 +500,11 @@ class Agile extends BaseUserCtrl
             $activityInfo['obj_id'] = $sprintId;
             $activityInfo['title'] = $info['name'];
             $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
+
+            // email
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_UPDATE, $sprint['project_id'], $sprintId);
+
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', '服务器错误:' . $msg);
