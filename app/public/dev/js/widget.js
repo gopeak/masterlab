@@ -713,7 +713,6 @@ var Widgets = (function () {
             data: paramObj,
             success: function (resp) {
                 auth_check(resp);
-                console.log(resp)
                 loading.hide('#'+_key);
                 var source = $('#'+_key+'_tpl').html();
                 var template = Handlebars.compile(source);

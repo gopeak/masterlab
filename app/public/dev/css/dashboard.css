@@ -208,6 +208,7 @@ header .header-content {
 .panel {
     border: none;
     box-shadow: none;
+    position: relative;
 }
 
 .panel-info > .panel-heading {
@@ -231,7 +232,14 @@ header .header-content {
     font-weight: 500;
 }
 
-.panel-heading .panel-heading-extra a:not(.btn){
+.panel-heading-extra {
+    position: absolute;
+    top: 18px;
+    right: 25px;
+    z-index: 9;
+}
+
+ .panel-heading-extra a:not(.btn){
     color: #1890ff;
     text-decoration: none;
 }
