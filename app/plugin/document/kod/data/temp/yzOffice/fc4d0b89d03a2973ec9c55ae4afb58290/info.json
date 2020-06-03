@@ -1,0 +1,20 @@
+{
+    "currentStep": 1,
+    "success": 0,
+    "taskUuid": "2fbae774bc0150629de54bb3580a6006",
+    "hideData": [],
+    "steps": [
+        {
+            "name": "upload",
+            "process": "uploadProcess",
+            "status": 2,
+            "result": "<html>\r\n<head><title>404 Not Found<\/title><\/head>\r\n<body>\r\n<center><h1>404 Not Found<\/h1><\/center>\r\n<hr><center>nginx\/1.16.0<\/center>\r\n<\/body>\r\n<\/html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n"
+        },
+        {
+            "name": "convert",
+            "process": "convert",
+            "status": 0,
+            "result": ""
+        }
+    ]
+}

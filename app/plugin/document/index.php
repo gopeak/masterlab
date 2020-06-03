@@ -2,6 +2,7 @@
 
 namespace main\app\plugin\document;
 
+use main\app\classes\RewriteUrl;
 use main\app\classes\UserAuth;
 use main\app\model\PluginModel;
 use main\app\model\user\UserModel;
@@ -49,11 +50,16 @@ class Index extends BasePluginCtrl
     public function pageIndex()
     {
         $data = [];
-        $data['title'] = '插件首页';
+        $data['title'] = '文档管理';
         $data['nav_links_active'] = 'plugin';
-        //$data['current_user']  = UserModel::getInstance()->getByUid(UserAuth::getId());
+        $data['sub_nav_active'] = 'plugin';
+        $data['plugin_name'] = $this->dirName;
+        $data['nav_links_active'] = 'document';
+        $data = RewriteUrl::setProjectData($data);
+        $data['current_user']  = UserModel::getInstance()->getByUid(UserAuth::getId());
 
-        header("location:/index.php?kod=1");
+        $this->twigRender('index.twig', $data);
+        //header("location:/kod_index.php?user/login&kod=1");
         //require_once realpath(__DIR__).'/kod/index.php';
         //$this->phpRender('index.php', $data);
         // create database mastererp  character set ‘utf8’ collate ‘utf8_general_ci’;

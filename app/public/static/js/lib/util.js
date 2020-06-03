@@ -354,6 +354,7 @@ var LocalData = (function(){
 		}
 	};
 	var set = function(key,value,timeout){
+
 		key = makeKey(key);
 		if(support()){
 			localStorage.setItem(key,value);
