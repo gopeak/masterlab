@@ -12,7 +12,6 @@
 		<script src="/dev/js/issue/adv_query.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 		<script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 		<script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-        <script src="/dev/js/issue/filtered_search.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 		<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 		<link href="/dev/lib/video-js/video-js.min.css" rel="stylesheet">
 		<script src="/dev/lib/video-js/video.min.js"></script>
@@ -993,7 +992,7 @@
                     }
 
                     window.$IssueMain = new IssueMain(options);
-                    window.$FilteredSearch = new FilteredSearch(urls.searchObject, _issueConfig, _cur_project_id);
+//                    window.$FilteredSearch = new FilteredSearch(urls.searchObject, _issueConfig, _cur_project_id);
                     if(is_adv_filter==='0' || is_empty(adv_filter_json)){
                         window.$IssueMain.fetchIssueMains(getdata);
                     }else{

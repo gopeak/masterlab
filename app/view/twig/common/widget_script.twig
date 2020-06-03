@@ -85,32 +85,33 @@
             $(this).siblings("ul").slideDown(100);
         });
 
-        $(document).on("click", function () {
+        $(document).on("click", function (e) {
+            //e.preventDefault();
             $(".panel-action ul").slideUp(100);
         });
 
-        $(document).on("click", ".panel-action .panel-edit", function () {
-            var $panel = $(this).parents(".panel");
+        $(document).on("click", ".panel-action .panel-edit", function (e) {
+            var key = $(this).data("key");
+            show_form(key);
         });
 
-        $(document).on("click", ".panel-action .panel-delete", function () {
-            var $panel = $(this).parents(".panel");
-            var index = $panel.index;
-            var parent_index = $panel.index();
-
-            moveWidget(parent_index, index, false);
-            filterHasTool();
-            $panel.remove();
+        $(document).on("click", ".panel-action .panel-delete", function (e) {
+            var key = $(this).data("key");
+            removeWidget(key);
         });
     });
 
     (function () {
-        'use strict';
         var byId = function (id) {
                 return document.getElementById(id);
             },
 
             console = window.console;
+
+        var before_parent_index = 0;
+        var before_index = 0;
+        var after_parent_index = 0;
+        var after_index = 0;
 
         //移动panel
         [].forEach.call(byId('multi').getElementsByClassName('group_panel'), function (el) {
@@ -124,22 +125,25 @@
                 onStart: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
                     var $parent = $(evt.item).parent();
-                    var index = $parent.children().index($(evt.item));
-                    var parent_index = $parent.index();
+                    before_index = $parent.children().index($(evt.item));
+                    before_parent_index = $parent.index();
 
-                    console.log(evt.item.title+"拖动前位置：",index);
+                    console.log(evt.item.title+"拖动前位置：",before_index);
 
-                    moveWidget(parent_index, index, false, true);
+//                    moveWidget(parent_index, index, false, true);
                 },
                 onEnd: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
                     var $parent = $(evt.item).parent();
-                    var index = $parent.children().index($(evt.item));
-                    var parent_index = $parent.index();
-                    console.log(evt.item.title+"拖动到位置：",index);
+                    after_index = $parent.children().index($(evt.item));
+                    after_parent_index = $parent.index();
+                    console.log(evt.item.title+"拖动到位置：",after_index);
 
-                    moveWidget(parent_index, index, true);
-                    saveUserWidget(_user_widgets);
+                    if (before_parent_index !== after_parent_index || before_index !== after_index) {
+                        moveWidget(before_parent_index, before_index, false, true);
+                        moveWidget(after_parent_index, after_index, true);
+                        saveUserWidget(_user_widgets);
+                    }
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
@@ -419,11 +423,10 @@
     }
 
     function removeWidget(_key) {
-        console.log(_key);
-        var $panel = $(`#widget_${_key}`);
+        console.log("key", _key);
+        var $panel = $("#widget_" + _key);
         var index = $panel.index();
         var parent_index = $panel.parent().index();
-        $(`#widget_${_key}`).remove();
 
         var parent_text = "first";
         if (parent_index === 1) {
@@ -431,9 +434,6 @@
         } else if (parent_index === 2) {
             parent_text = "third";
         }
-        console.log(index, parent_text);
-        
-        _user_widgets[parent_text].splice(index, 1);
 
         $.ajax({
             type: 'post',
@@ -445,6 +445,9 @@
                 auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
+                    $panel.remove();
+                    _user_widgets[parent_text].splice(index, 1);
+                    filterHasTool();
                     notify_success('删除成功');
                 }else {
                     notify_error(resp.msg);
@@ -454,8 +457,6 @@
                 notify_error("请求数据错误" + res);
             }
         });
-
-        console.log("removeWidgets", _user_widgets);
     }
 
     function saveUserWidget(user_widgets){
@@ -496,11 +497,14 @@
             panel_data = panel_data.concat(value);
         }
         _widgets.forEach(function (data) {
+            var isExist = false;
+
             panel_data.forEach(function (val) {
                 if (val.widget_id === data.id) {
-                    data.isExist = true;
+                    isExist = true;
                 }
             });
+            data.isExist = isExist;
         });
 
         source = $("#tools_list_tpl").html();

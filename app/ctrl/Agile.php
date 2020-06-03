@@ -428,6 +428,7 @@ class Agile extends BaseUserCtrl
         $sprintModel = new SprintModel();
         list($ret, $msg) = $sprintModel->insertItem($info);
         if ($ret) {
+
             // email
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_CREATE, $projectId, $msg);
@@ -490,9 +491,15 @@ class Agile extends BaseUserCtrl
         }
         list($ret, $msg) = $sprintModel->updateItem($sprintId, $info);
         if ($ret) {
+
             $info['id'] = $sprintId;
             $event = new CommonPlacedEvent($this, ['pre_data' => $sprint, 'cur_data' => $info]);
             $this->dispatcher->dispatch($event, Events::onSprintUpdate);
+
+            // email
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_UPDATE, $sprint['project_id'], $sprintId);
+
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', '服务器错误:' . $msg);
@@ -779,6 +786,7 @@ class Agile extends BaseUserCtrl
         // 判断是否为已关闭事项
         $issueStatus = $model->getField('status', ['id' => $issueId]);
         $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+
         if ($issueStatus == $statusClosedId) {
             $updateArr['status'] = IssueStatusModel::getInstance()->getIdByKey('open');
         }
@@ -1060,6 +1068,7 @@ class Agile extends BaseUserCtrl
         unset($userLogic);
 
         $data['backlogs'] = [];
+
         if ($board['is_filter_backlog'] == '0') {
             list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
             if ($fetchRet) {
@@ -1068,6 +1077,7 @@ class Agile extends BaseUserCtrl
                 $this->ajaxFailed('服务器错误:', $issues);
             }
         }
+
 
         list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $board, $columns);
         if ($board['is_filter_closed'] == '0') {

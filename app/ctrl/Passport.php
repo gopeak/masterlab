@@ -96,15 +96,26 @@ class Passport extends BaseCtrl
         $data['is_login_page'] = true;
         // 获取设置
         $settingModel = new SettingModel();
-        $basicSettingArr = array_column($settingModel->getSettingByModule('basic'),'_value','_key');
+        $basicSettingArr = array_column($settingModel->getSettingByModule('basic'), '_value', '_key');
         $data['login_require_captcha'] = $basicSettingArr['login_require_captcha'];
         $data['reg_require_captcha'] = $basicSettingArr['reg_require_captcha'];
         $data['allow_user_reg'] = $basicSettingArr['allow_user_reg'];
         $data['ldap_enable'] = (bool)$settingModel->getSettingValue('ldap_enable');
 
+        //print_r($_COOKIE);
+        if (isset($_COOKIE[UserAuth::SESSION_UID_KEY]) && isset($_COOKIE[UserAuth::SESSION_TOKEN_KEY])) {
+            $ret = $this->auth->autoLogin($_COOKIE[UserAuth::SESSION_UID_KEY], $_COOKIE[UserAuth::SESSION_TOKEN_KEY]);
+            if ($ret) {
+                header("location:" . ROOT_URL);
+                die;
+            }
+        }
         $this->render('gitlab/passport/login.php', $data);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function pageTest()
     {
         $data = [];
@@ -128,7 +139,7 @@ class Passport extends BaseCtrl
         $user =  $dbalModel->db->fetchAssoc('SELECT * FROM user_main WHERE username =:username', $paramArr);
         print_r($user);
 
-        $queryBuilder = $dbalModel->db->createQueryBuilder();
+        //$queryBuilder = $dbalModel->db->createQueryBuilder();
 
     }
 
@@ -157,13 +168,13 @@ class Passport extends BaseCtrl
      * 注销
      */
     public function pageLogout()
-    {
-        UserAuth::getInstance()->logout();
-        // 分发事件
-        $event = new CommonPlacedEvent($this, UserModel::getInstance()->getByUid(UserAuth::getId()));
-        $this->dispatcher->dispatch($event,  Events::onUserlogout);
+    { 		UserAuth::getInstance()->logout();
         $this->pagelogin();
-    }
+		$event = new CommonPlacedEvent($this, UserModel::getInstance()->getByUid(UserAuth::getId()));
+        $this->dispatcher->dispatch($event,  Events::onUserlogout);
+
+        header("location: /passport/login");
+        die;    }
 
     /**
      * 登录
@@ -230,7 +241,7 @@ class Passport extends BaseCtrl
             $schemaType = 'ldap';
         }
         // 检查登录账号和密码
-        if ($schemaType==='inner') {
+        if ($schemaType === 'inner') {
             list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
         } else {
             // LDAP认证登录
@@ -285,7 +296,7 @@ class Passport extends BaseCtrl
             $info['source'] = $source;
         }
 
-        $this->auth->autoLogin($user);
+        $this->auth->setAutoLogin($user);
 
         // 更新登录信息
         $userModel->uid = $user['uid'];
@@ -316,7 +327,7 @@ class Passport extends BaseCtrl
         $userTokenInfo = $userTokenModel->getUserToken($user['uid']);
 
         // 允许同一账户同时登陆(pc、app同时在线)，不再签发新的token
-        if ($userTokenModel->isTokenExpire($userTokenInfo['token_time'])) {
+        if ($userTokenModel->isTokenExpire(@$userTokenInfo['token_time'])) {
             // 生成和刷新token
             list($ret, $token, $refresh_token) = $userTokenModel->makeToken($user);
             if (!$ret) {
@@ -497,15 +508,63 @@ class Passport extends BaseCtrl
         $userModel = new UserModel();
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
-            // 分发事件
+
+			list($mailRet, $msg) = $this->sendActiveEmail($user, $email, $displayName);
+            if ($mailRet) {
+                $this->ajaxSuccess('提示', '注册已经提交，请查看邮箱的激活邮件');
+            } else {
+                $this->ajaxSuccess('提示', '但发送激活邮件失效，请联系管理手动激活');
+            }
+
+			// 分发事件
             $event = new CommonPlacedEvent($this, $user);
             $this->dispatcher->dispatch($event,  Events::onUserRegister);
 
             $this->sendActiveEmail($user, $email, $displayName);
-            $this->ajaxSuccess('注册成功');
-        } else {
+            $this->ajaxSuccess('注册成功');        } else {
             $this->ajaxFailed('服务器错误', '注册失败,详情:' . $user);
         }
+    }
+
+
+    /**
+     * 重新发送注册激活邮件
+     * @throws \Exception
+     */
+    public function reSendActiveEmail()
+    {
+        $email = null;
+        if (isset($_POST['email'])) {
+            $email = $_POST['email'];
+        }
+        $userName = null;
+        if (isset($_POST['username'])) {
+            $userName = $_POST['username'];
+        }
+        if (empty($email)) {
+            $this->ajaxFailed('提示', '参数错误, cookie失效，注册的Email已经丢失，请联系管理员手动激活用户');
+        }
+
+        $emailVerifyCodeModel = new EmailVerifyCodeModel();
+        $row = $emailVerifyCodeModel->getByEmail($email);
+        if (!isset($row['email'])) {
+            $this->ajaxFailed('提示', '注册Email不存在，您的账号可能已经激活了');
+        }
+        if (time() - intval($row['time']) < 10) {
+            $this->ajaxFailed('提示', '请10秒后再点击重新发送');
+        }
+        $verifyCode = $row['verify_code'];
+        $userModel = new UserModel();
+        $user = $userModel->getByUsername($userName);
+        if (empty($user)) {
+            $user = $userModel->getByEmail($email);
+        }
+        $emailVerifyCodeModel->updateById($row['id'], ['time' => time()]);
+        list($ret, $msg) = $this->sendActiveEmailByVerifyCode($user, $email, $verifyCode);
+        if (!$ret) {
+            $this->ajaxFailed('提示', $msg);
+        }
+        $this->ajaxSuccess('提示', '已经重新发送,请耐心查看收件箱');
     }
 
     /**
@@ -518,42 +577,53 @@ class Passport extends BaseCtrl
      */
     private function sendActiveEmail($user, $email = '', $username = '')
     {
-
         $verifyCode = randString(32);
         $emailVerifyCodeModel = new EmailVerifyCodeModel();
         $row = $emailVerifyCodeModel->getByEmail($email);
         if (isset($row['email'])) {
             if (time() - intval($row['time']) < 30) {
-                return [false, '请30秒后再点击发送验证码'];
+                return [false, '请30秒后再点击重新发送'];
             }
         }
-
         list($flag, $insertId) = $emailVerifyCodeModel->add($user['uid'], $email, $username, $verifyCode);
         if ($flag && APP_STATUS != 'travis') {
-            $args = [];
-            $args['{{site_name}}'] = 'Masterlab';
-            $args['{{name}}'] = $user['display_name'];
-            $args['{{display_name}}'] = $user['display_name'];
-            $args['{{email}}'] = $email;
-            $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verify_code=' . $verifyCode;
-            $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['active_email']);
-            // echo $body;die;
-            $systemLogic = new SystemLogic();
-            list($ret, $errMsg) = $systemLogic->mail($email, 'Masterlab激活用户通知', $body);
-            //var_dump($ret, $errMsg);
-            if (!$ret) {
-                return [false, 'send_email_failed:' . $errMsg];
-            }
+
+            return $this->sendActiveEmailByVerifyCode($user, $email, $verifyCode);
         } else {
             //'很抱歉,服务器繁忙，请重试!!';
-            return [false, 'server_error_insert_failed:' . $insertId];
+            return [false, '服务器错误:' . $insertId];
+        }
+    }
+
+    /**
+     * @param $user
+     * @param $email
+     * @param $verifyCode
+     * @return array
+     * @throws \Exception
+     */
+    private function sendActiveEmailByVerifyCode($user, $email, $verifyCode)
+    {
+        $args = [];
+        $args['{{site_name}}'] = 'Masterlab';
+        $args['{{name}}'] = $user['display_name'];
+        $args['{{display_name}}'] = $user['display_name'];
+        $args['{{email}}'] = $email;
+        $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verify_code=' . $verifyCode;
+        $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['active_email']);
+        // echo $body;die;
+        $systemLogic = new SystemLogic();
+        list($ret, $errMsg) = $systemLogic->mail($email, 'Masterlab激活用户通知', $body);
+        //var_dump($ret, $errMsg);
+        if (!$ret) {
+            return [false, '发送邮件失败,请联系管理员:' . $errMsg];
         }
         return [true, 'ok'];
     }
 
-
     /**
      * 打开邮箱,激活用户
+     * @throws \Exception
      */
     public function pageActiveEmail()
     {
@@ -585,7 +655,7 @@ class Passport extends BaseCtrl
             return;
         }
 
-        if ((time() - (int)$find['time']) > 3600) {
+        if ((time() - (int)$find['time']) > 7 * 24 * 3600) {
             $this->error('错误信息', '亲,激活链接时间已经失效');
             return;
         }
@@ -595,8 +665,8 @@ class Passport extends BaseCtrl
         $userInfo['status'] = UserModel::STATUS_NORMAL;
         // $userInfo['email'] = $find['email'];
         // $userInfo['username'] = $find['username'];
-        $userModel->uid = $find['uid'];
-        list($ret, $msg) = $userModel->updateUser($userInfo);
+        $userId = $find['uid'];
+        list($ret, $msg) = $userModel->updateById($userId, $userInfo);
         if ($ret) {
             $emailVerifyCodeModel->deleteByEmail($email);
             $this->info('信息提示', '激活账号成功!');
@@ -605,6 +675,9 @@ class Passport extends BaseCtrl
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageFindPassword()
     {
         $this->render('gitlab/passport/find_password.php');
@@ -748,11 +821,18 @@ class Passport extends BaseCtrl
         list($ret, $msg) = $userModel->updateUser($userInfo);
         if ($ret) {
             $emailFindPwdModel->deleteByEmail($email);
-            $this->info('信息提示', '重置密码成功!');
+            $arr = [];
+            $arr['_title'] = '提示';
+            $arr['_links'] = ['type' => 'link', 'link' => '/passport/login', 'title' => '重新登录'];
+            $arr['_content'] = '重置密码成功!';
+            $arr['_icon'] = 'icon-font-ok';
+            $arr['_color_type'] = 'alert-success';
+            $this->render('twig/common/info_reset_password.twig', $arr);
         } else {
             $this->info('信息提示', '很抱歉,重置密码失败,请重试.' . $msg);
         }
     }
+
 
     /**
      * 检查邮箱是否存在

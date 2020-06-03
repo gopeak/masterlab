@@ -524,7 +524,7 @@ class Detail extends BaseUserCtrl
 
             // email
             $notifyLogic = new NotifyLogic();
-            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $issueId, $contentHtml);
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $insertId, $contentHtml);
 
             $info['id'] = $insertId;
             $event = new CommonPlacedEvent($this, $info);
@@ -641,7 +641,7 @@ class Detail extends BaseUserCtrl
             $event = new CommonPlacedEvent($this, $timeline);
             $this->dispatcher->dispatch($event,  Events::onIssueDeleteComment);            // email
             $notifyLogic = new NotifyLogic();
-            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_REMOVE, $issue['project_id'], $issueId);
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_REMOVE, $issue['project_id'], $id);
 
             $timeline['id'] = $id;
             $event = new CommonPlacedEvent($this, $timeline);

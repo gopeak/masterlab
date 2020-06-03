@@ -266,7 +266,7 @@ function env_check(&$env_items)
 {
     $masterlabRootDir = realpath(INSTALL_PATH . '/../../').'/';
     $env_items[] = array('name' => '操作系统', 'min' => '无限制', 'good' => 'linux', 'cur' => PHP_OS, 'status' => 1);
-    $env_items[] = array('name' => 'PHP版本', 'min' => '7.0', 'good' => '7.2', 'cur' => PHP_VERSION, 'status' => (PHP_VERSION < 5.6 ? 0 : 1));
+    $env_items[] = array('name' => 'PHP版本', 'min' => '7.1', 'good' => '7.2', 'cur' => PHP_VERSION, 'status' => (PHP_VERSION < 5.6 ? 0 : 1));
     $tmp = function_exists('gd_info') ? gd_info() : array();
     preg_match("/[\d.]+/", $tmp['GD Version'], $match);
     unset($tmp);

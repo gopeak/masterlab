@@ -414,7 +414,8 @@ class BaseCtrl
         $title = '信息提示',
         $content = '',
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页'],
-        $icon = 'icon-font-ok'
+        $icon = 'icon-font-ok',
+        $colorType = 'alert-info'
     )
     {
         $arr = [];
@@ -423,8 +424,10 @@ class BaseCtrl
         $arr['_links'] = $links;
         $arr['_content'] = $content;
         $arr['_icon'] = $icon;
-        $this->render('gitlab/common/info.php', $arr);
+        $arr['_color_type'] = $colorType;
+        $this->render('twig/common/info.twig', $arr);
     }
+
 
     /**
      * 跳转至警告页面
@@ -439,7 +442,7 @@ class BaseCtrl
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
     )
     {
-        $this->info('<span style="color:orange">' . $title . '</span>', $content, $links, 'icon-font-fail');
+        $this->info( $title , $content, $links, 'icon-font-fail', 'alert-warning');
     }
 
     /**
@@ -455,7 +458,7 @@ class BaseCtrl
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
     )
     {
-        $this->info('<span style="color:red">' . $title . '</span>', $content, $links, 'icon-font-fail');
+        $this->info( $title , $content, $links, 'icon-font-fail','alert-danger');
     }
 
 

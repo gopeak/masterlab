@@ -209,7 +209,7 @@ class BaseUserCtrl extends BaseCtrl
     public function checkUpdate()
     {
         if ($this->isAdmin) {
-            $checkVersionFile = STORAGE_PATH . 'tmp/' . date('Y-m-d-H') . '.-check-version.log';
+            $checkVersionFile = STORAGE_PATH . 'tmp/' . date('Y-m-d') . '.-check-version.log';
             if (!file_exists($checkVersionFile)) {
                 $sourceHost = 'http://www.masterlab.vip/';
                 $url = $sourceHost . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;

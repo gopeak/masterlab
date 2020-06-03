@@ -3,6 +3,7 @@
 namespace main\app\plugin\webhook\event;
 
 use main\app\event\CommonPlacedEvent;
+use main\app\model\project\ProjectModel;
 use main\app\plugin\webhook\model\WebHookModel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use main\app\event\Events;
@@ -59,6 +60,14 @@ class WebhookSubscriber implements EventSubscriberInterface
      */
     public function post(CommonPlacedEvent $event)
     {
+        $event->pluginDataArr['project_info'] = new \stdClass();
+        if(isset($event->pluginDataArr['project_id'])){
+            $project = (new ProjectModel())->getById($event->pluginDataArr['project_id']);
+            if(!empty($project)){
+                $event->pluginDataArr['project_info'] = $project;
+            }
+        }
+
         $postData = [];
         $postData['json'] = json_encode($event->pluginDataArr);
         $postData['event_name'] = $this->currentFuc;
