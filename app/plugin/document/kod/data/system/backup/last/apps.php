@@ -157,19 +157,6 @@
         "resize": 1,
         "undefined": 0
     },
-    "iqiyi影视": {
-        "type": "url",
-        "content": "http:\/\/www.qiyi.com\/mini\/baidu.html?from115",
-        "group": "movie",
-        "name": "iqiyi影视",
-        "desc": "iqiyi影视",
-        "icon": "iqiyi.png",
-        "width": "1000",
-        "height": "643",
-        "simple": 0,
-        "resize": 1,
-        "undefined": 0
-    },
     "Web PhotoShop": {
         "type": "url",
         "content": "http:\/\/www.kantu.com\/tool\/ps\/",
@@ -179,32 +166,6 @@
         "icon": "ps.png",
         "width": "800",
         "height": "560",
-        "simple": 0,
-        "resize": 1,
-        "undefined": 0
-    },
-    "icloud": {
-        "type": "app",
-        "content": "window.open(\"https:\/\/www.icloud.com\/\");",
-        "group": "others",
-        "name": "icloud",
-        "desc": "icloud",
-        "icon": "icloud.png",
-        "width": "800",
-        "height": "600",
-        "simple": 0,
-        "resize": 1,
-        "undefined": 0
-    },
-    "迅捷文档转换": {
-        "type": "url",
-        "content": "http:\/\/app.xunjiepdf.com\/",
-        "group": "tools",
-        "name": "迅捷文档转换",
-        "desc": "各类文件格式转换",
-        "icon": "xunjie.png",
-        "width": "90%",
-        "height": "80%",
         "simple": 0,
         "resize": 1,
         "undefined": 0

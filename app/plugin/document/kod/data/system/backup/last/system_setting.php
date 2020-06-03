@@ -1,7 +1,7 @@
 <?php exit;?>{
     "systemPassword": "WNDkey3am9AYdVbDbkn8",
     "systemName": "Masterlab文件管理模块",
-    "systemDesc": "——基于可道云进行二次开发",
+    "systemDesc": "",
     "pathHidden": "Thumb.db,.DS_Store,.gitignore,.git",
     "autoLogin": "0",
     "needCheckCode": "0",
