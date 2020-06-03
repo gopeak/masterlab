@@ -56,6 +56,7 @@ class Index extends BasePluginCtrl
         header("location:/index.php?kod=1");
         //require_once realpath(__DIR__).'/kod/index.php';
         //$this->phpRender('index.php', $data);
+        // create database mastererp  character set ‘utf8’ collate ‘utf8_general_ci’;
     }
 
 

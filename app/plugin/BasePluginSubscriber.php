@@ -46,6 +46,7 @@ class BasePluginSubscriber implements EventSubscriberInterface
             } else {
                 $subClassPath = str_replace(PLUGIN_PATH, '', $subscriberDir);
                 $subClassPath = str_replace('/', "\\", $subClassPath);
+                //var_dump($subClassPath);
                 $file = pathinfo($file);
                 if ($file['extension'] = 'php'
                     && !in_array($file['basename'], ['BaseModel', 'DbModel'])
@@ -68,7 +69,7 @@ class BasePluginSubscriber implements EventSubscriberInterface
      */
     protected function loadEventSubscriber(EventDispatcher $dispatcher, $pluginName)
     {
-        //print_r($this->subscribersArr);
+        // print_r($this->subscribersArr);
         foreach ($this->subscribersArr as $subscriberFile) {
             require_once  $subscriberFile;
             $subscriberName = basename($subscriberFile);
