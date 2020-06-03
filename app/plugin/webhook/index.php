@@ -9,7 +9,7 @@ use main\app\event\Events;
 use main\app\model\PluginModel;
 use main\app\model\user\UserModel;
 use main\app\plugin\BasePluginCtrl;
-use main\app\plugin\webhook\model\WebhookModel;
+use main\app\plugin\webhook\model\WebHookModel;
 
 /**
  *
@@ -28,6 +28,7 @@ class Index extends BasePluginCtrl
     public function __construct()
     {
         parent::__construct();
+
 
         // 当前插件目录名
         $this->dirName = basename(pathinfo(__FILE__)['dirname']);
@@ -69,7 +70,8 @@ class Index extends BasePluginCtrl
      */
     public function fetchAll()
     {
-        $model = new WebhookModel();
+
+        $model = new WebHookModel();
         $webhooks = $model->getAllItem();
         $data = [];
         $data['webhooks'] = $webhooks;
@@ -94,7 +96,7 @@ class Index extends BasePluginCtrl
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $model = new WebhookModel();
+        $model = new WebHookModel();
         $plugin = $model->getById($id);
 
         $this->ajaxSuccess('操作成功', (object)$plugin);
@@ -167,7 +169,7 @@ class Index extends BasePluginCtrl
             $errorMsg['url'] = 'url格式不正确';
         }
 
-        $model = new WebhookModel();
+        $model = new WebHookModel();
         if (isset($model->getByName($_POST['name'])['id'])  && !empty($_POST['name'])) {
             $errorMsg['name'] = '名称已经被使用';
         }
@@ -235,7 +237,7 @@ class Index extends BasePluginCtrl
 
 
         $id = (int)$id;
-        $model = new WebhookModel();
+        $model = new WebHookModel();
         $row = $model->getById($id);
         if (!isset($row['id'])) {
             $this->ajaxFailed('参数错误,数据不存在');
@@ -280,7 +282,7 @@ class Index extends BasePluginCtrl
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $model = new WebhookModel();
+        $model = new WebHookModel();
         $model->deleteById($id);
 
         $this->ajaxSuccess("提示",'操作成功');

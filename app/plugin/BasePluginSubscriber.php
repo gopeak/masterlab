@@ -54,7 +54,7 @@ class BasePluginSubscriber implements EventSubscriberInterface
                     && $file['basename']!='..'
                     && $file['basename']!='.gitignore'
                 ) {
-                    $this->subscribersArr[] = $subClassPath .DS. $file['basename'];
+                    $this->subscribersArr[] = $subscriberDir .DS. $file['basename'];
                 }
             }
         }
