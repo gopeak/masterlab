@@ -2,8 +2,11 @@
 
 namespace main\app\plugin\webhook\event;
 
+use main\app\classes\UserAuth;
+use main\app\classes\UserLogic;
 use main\app\event\CommonPlacedEvent;
 use main\app\model\project\ProjectModel;
+use main\app\model\user\UserModel;
 use main\app\plugin\webhook\model\WebHookModel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use main\app\event\Events;
@@ -48,7 +51,13 @@ class WebhookSubscriber implements EventSubscriberInterface
 
     public $currentFuc = '';
 
-    public function __call($method, $args) {
+    /**
+     * @param $method
+     * @param $args
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
         $this->currentFuc = $method;
         return call_user_func_array([$this, 'post'], $args);
     }
@@ -61,14 +70,23 @@ class WebhookSubscriber implements EventSubscriberInterface
     public function post(CommonPlacedEvent $event)
     {
         $event->pluginDataArr['project_info'] = new \stdClass();
-        if(isset($event->pluginDataArr['project_id'])){
+        if (isset($event->pluginDataArr['project_id'])) {
             $project = (new ProjectModel())->getById($event->pluginDataArr['project_id']);
-            if(!empty($project)){
+            if (!empty($project)) {
                 $event->pluginDataArr['project_info'] = $project;
             }
         }
+        $currentUserId = UserAuth::getId();
+        $currentUserInfo = (new UserModel($currentUserId))->getByUid($currentUserId);
+        if(empty($currentUserInfo)){
+            $currentUserInfo = new \stdClass();
+        }else{
+            $currentUserInfo = UserLogic::format($currentUserInfo);
+        }
 
         $postData = [];
+        $postData['current_user_id'] = $currentUserId;
+        $postData['current_user_info'] = json_encode($currentUserInfo);
         $postData['json'] = json_encode($event->pluginDataArr);
         $postData['event_name'] = $this->currentFuc;
         $model = new WebHookModel();
@@ -78,8 +96,15 @@ class WebhookSubscriber implements EventSubscriberInterface
         //print_r($resArr);
         foreach ($webhooks as $i => $webhook) {
             $url = $webhook['url'];
+            $hookEventsArr = json_decode($webhook['hook_event_json'], true);
+            if (empty($hookEventsArr)) {
+                $hookEventsArr = [];
+            }
+            if (!in_array($this->currentFuc, $hookEventsArr)) {
+                continue;
+            }
             $postData['secret_token'] = $webhook['secret_token'];
-            $this->fsockopenPost($url, $postData,(int)$webhook['timeout']);
+            $this->fsockopenPost($url, $postData, (int)$webhook['timeout']);
         }
     }
 
@@ -94,21 +119,21 @@ class WebhookSubscriber implements EventSubscriberInterface
     private function fsockopenPost($url, $data, $timeout)
     {
         $urlInfo = parse_url($url);
-        if(!isset($urlInfo["port"])){
+        if (!isset($urlInfo["port"])) {
             $urlInfo["port"] = 80;
         }
         $fp = fsockopen($urlInfo["host"], $urlInfo["port"], $errno, $errStr, $timeout);
         $content = http_build_query($data);
-        fwrite($fp, "POST ".$urlInfo["path"]." HTTP/1.1\r\n");
-        fwrite($fp, "Host: ".$urlInfo["host"]."\r\n");
+        fwrite($fp, "POST " . $urlInfo["path"] . " HTTP/1.1\r\n");
+        fwrite($fp, "Host: " . $urlInfo["host"] . "\r\n");
         fwrite($fp, "Content-Type: application/x-www-form-urlencoded\r\n");
-        fwrite($fp, "Content-Length: ".strlen($content)."\r\n");
+        fwrite($fp, "Content-Length: " . strlen($content) . "\r\n");
         fwrite($fp, "Connection: close\r\n");
         fwrite($fp, "\r\n");
         fwrite($fp, $content);
         $result = "";
         //while (!feof($fp)) {
-            //$result .= fgets($fp, 1024);
+        //$result .= fgets($fp, 1024);
         //}
         fclose($fp);
         return $result;

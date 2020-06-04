@@ -92,9 +92,6 @@ var Webhook = (function() {
         $("#id_secret_token").val('');
         $("#id_timeout").val('10');
         $("#id_description").text('');
-        console.log(window.uploader)
-        window.uploader.reset();
-
     };
 
     Webhook.prototype.edit = function(id ) {
@@ -120,6 +117,7 @@ var Webhook = (function() {
                 $("#id_secret_token").val(resp.data.secret_token);
                 $("#id_timeout").val(resp.data.timeout);
                 $("#id_description").text(resp.data.description);
+                $('#id_hook_events').val(resp.data.hook_event_arr);
                 $('.selectpicker').selectpicker('refresh');
             },
             error: function (res) {
@@ -127,8 +125,6 @@ var Webhook = (function() {
             }
         });
     };
-
-
 
     Webhook.prototype.add = function(  ) {
 

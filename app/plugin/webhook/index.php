@@ -137,7 +137,7 @@ class Index extends BasePluginCtrl
             Events::onProjectUserUpdateRoles=>'更新角色成员',
             Events::onProjectUserRemove=>'移除用户',
         ];
-        $arr[''] = [
+        $arr['项目角色'] = [
             Events::onProjectRoleAdd=>'添加项目角色',
             Events::onProjectRoleUpdate=>'编辑项目角色',
             Events::onProjectRoleRemove=>'删除项目角色',
@@ -145,7 +145,6 @@ class Index extends BasePluginCtrl
             Events::onProjectRoleAddUser=>'角色添加用户',
             Events::onProjectRoleRemoveUser=>'角色移除用户',
         ];
-
         $arr['用户管理'] = [
             Events::onUserAddByAdmin=>'添加用户',
             Events::onUserUpdateByAdmin=>'编辑用户',
@@ -155,7 +154,6 @@ class Index extends BasePluginCtrl
             Events::onUserBatchDisableByAdmin=>'批量禁用用户',
             Events::onUserBatchRecoveryByAdmin=>'批量恢复用户',
         ];
-
         $arr['用户相关'] = [
             Events::onUserRegister=>'用户注册',
             Events::onUserLogin=>'用户登录',
@@ -167,9 +165,14 @@ class Index extends BasePluginCtrl
             Events::onOrgUpdate=>'编辑组织',
             Events::onOrgDelete=>'删除组织',
         ];
-
-
-
+        $data['default_hook_event_arr'] = [
+            Events::onIssueCreateAfter,
+            Events::onIssueUpdateAfter,
+            Events::onIssueDelete,
+            Events::onIssueClose,
+            Events::onIssueAddComment
+            ];
+        $data['hook_event_arr'] = $arr;
         $this->twigRender('index.twig', $data);
     }
 
@@ -208,6 +211,7 @@ class Index extends BasePluginCtrl
         }
         $model = new WebHookModel();
         $plugin = $model->getById($id);
+        $plugin['hook_event_arr'] = json_decode($plugin['hook_event_json'], true);
 
         $this->ajaxSuccess('操作成功', (object)$plugin);
     }
@@ -301,6 +305,10 @@ class Index extends BasePluginCtrl
         if (isset($_POST['timeout'])) {
             $info['timeout'] = (int)$_POST['timeout'];
         }
+        $info['hook_event_json'] = "[]";
+        if (isset($_POST['hook_events'])) {
+            $info['hook_event_json'] =  json_encode($_POST['hook_events']);
+        }
 
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
@@ -370,6 +378,9 @@ class Index extends BasePluginCtrl
         }
         if (isset($_POST['timeout'])) {
             $info['timeout'] = (int)$_POST['timeout'];
+        }
+        if (isset($_POST['hook_events'])) {
+            $info['hook_event_json'] =  json_encode($_POST['hook_events']);
         }
 
         if (!empty($info)) {

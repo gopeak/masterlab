@@ -105,7 +105,7 @@
                     <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title" id="modal-header-title">创建Webhook</h3>
                 </div>
-                <div class="modal-body min-height300" id="modal-body">
+                <div class="modal-body min-height400" id="modal-body">
 
                     <div class="form-group">
                         <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
@@ -132,17 +132,18 @@
                         <label class="control-label" for="id_description">触发事件:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <select class="selectpicker" multiple data-actions-box="true">
-                                    <optgroup label="项目">
-                                        <option data-subtext="Heinz">Mustard</option>
-                                        <option data-subtext="Heinz">Ketchup</option>
-                                        <option data-subtext="Heinz">Relish</option>
-                                    </optgroup>
-                                    <optgroup label="事项">
-                                        <option>Tent</option>
-                                        <option>Flashlight</option>
-                                        <option>Toilet Paper</option>
-                                    </optgroup>
+                                <select name="hook_events[]" id="id_hook_events" class="selectpicker" multiple data-actions-box="true">
+                                    {% for key, events in hook_event_arr %}
+                                        <optgroup label="{{key}}">
+                                            {% for event_key,event_name in events %}
+                                                {% set selected = '' %}
+                                                {% if event_key  in default_hook_event_arr %}
+                                                    {% set selected = 'selected' %}
+                                                {% endif %}
+                                                <option  value="{{event_key}}" {{selected}} data-subtext="{{event_key}}">{{event_name}}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
