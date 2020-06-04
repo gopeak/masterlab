@@ -60,11 +60,13 @@ class ProjectRoleModel extends CacheModel
 
     /**
      * 获取某个项目的所有角色
+     * @param $projectId
+     * @param bool $primaryKey
      * @return array
      */
-    public function getsByProject($projectId)
+    public function getsByProject($projectId, $primaryKey = false)
     {
-        return $this->getRows('*', ['project_id' => $projectId], null, 'is_system', 'desc');
+        return $this->getRows('*', ['project_id' => $projectId], null, 'is_system', 'desc', $primaryKey);
     }
 
     /**

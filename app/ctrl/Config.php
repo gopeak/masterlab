@@ -59,6 +59,8 @@ class Config extends BaseCtrl
         $data['project_modules'] = ConfigLogic::getModules($projectId, $primaryKey);
         $data['project_versions'] = ConfigLogic::getVersions($projectId, $primaryKey);
         $data['project_labels'] = ConfigLogic::getLabels($projectId, $primaryKey);
+        $data['project_sprints'] = ConfigLogic::getSprints($projectId, $primaryKey);
+        $data['project_roles'] = ConfigLogic::getProjectRoles($projectId, $primaryKey);
         header('Content-Type:application/json');
         $this->ajaxSuccess('ok', $data);
         die;

@@ -14,6 +14,7 @@ use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
@@ -153,6 +154,19 @@ class ConfigLogic
     }
 
     /**
+     * @param null $projectId
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getProjectRoles($projectId = null, $primaryKey = false)
+    {
+        $model = new ProjectRoleModel();
+        $rows = $model->getsByProject($projectId, $primaryKey);
+        return $rows;
+    }
+
+    /**
      * @param bool $primaryKey
      * @return array
      * @throws \Exception
@@ -164,17 +178,18 @@ class ConfigLogic
     }
 
     /**
-     * @param $projectId
+     * @param null $projectId
+     * @param bool $primaryKey
      * @return array
      * @throws \Exception
      */
-    public static function getSprints($projectId)
+    public static function getSprints($projectId = null, $primaryKey = false)
     {
         if (empty($projectId)) {
             return [];
         }
         $model = new SprintModel();
-        $rows = $model->getItemsByProject($projectId);
+        $rows = $model->getItemsByProject($projectId, $primaryKey);
         foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];
