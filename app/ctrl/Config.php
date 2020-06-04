@@ -33,12 +33,12 @@ class Config extends BaseCtrl
     {
         $data = [];
         $projectId = null;
-        if (isset($data['project_id'])) {
-            $projectId = $data['project_id'];
+        if (isset($_GET['project_id'])) {
+            $projectId = $_GET['project_id'];
         }
         $primaryKey = false;
-        if (isset($data['primary_key'])) {
-            $primaryKey = $data['primary_key'];
+        if (isset($_GET['primary_key'])) {
+            $primaryKey = boolval($_GET['primary_key']);
         }
 
         list(, $data['settings']) = SettingsLogic::getsByModule();
