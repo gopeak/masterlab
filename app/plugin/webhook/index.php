@@ -60,6 +60,116 @@ class Index extends BasePluginCtrl
         $data['sub_nav_active'] = 'plugin';
         $data['plugin_name'] = $this->dirName;
 
+        $arr['事项'] = [
+            Events::onIssueCreateBefore=>'创建事项之前',
+            Events::onIssueCreateAfter=>'创建事项之后',
+            Events::onIssueCreateChild=>'创建子任务之后',
+            Events::onIssueUpdateBefore=>'更新事项之前',
+            Events::onIssueUpdateAfter=>'更新事项之后',
+            Events::onIssueDelete=>'删除事项',
+            Events::onIssueClose=>'关闭事项',
+            Events::onIssueFollow=>'关注事项',
+            Events::onIssueUnFollow=>'取消关注事项',
+            Events::onIssueConvertChild=>'转换子任务事项',
+            Events::onIssueBatchDelete=>'批量删除事项',
+            Events::onIssueBatchUpdate=>'批量更新事项',
+            Events::onIssueImportByExcel=>'导入事项',
+            Events::onIssueRemoveChild=>'移除子任务',
+            Events::onIssueUpload=>'附件上传',
+            Events::onIssueMobileUpload=>'移动端附件上传',
+            Events::onIssueDeleteUpload=>'删除附件',
+        ];
+
+        $arr['事项迭代'] = [
+            Events::onIssueJoinSprint=>'事项加入迭代',
+            Events::onIssueJoinClose=>'事项移动到关闭事项',
+            Events::onIssueJoinBacklog=>'事项移动到待办事项',
+        ];
+
+        $arr['过滤器'] = [
+            Events::onIssueAddAdvFilter=>'添加高级查询过滤器',
+            Events::onIssueAddFilter=>'添加过滤器',
+        ];
+
+        $arr['评论'] = [
+            Events::onIssueAddComment=>'添加评论',
+            Events::onIssueDeleteComment=>'删除评论',
+            Events::onIssueUpdateComment=>'编辑评论',
+        ];
+
+        $arr['项目'] = [
+            Events::onProjectCreate=>'创建项目',
+            Events::onProjectUpdate=>'编辑项目',
+            Events::onProjectDelete=>'删除项目',
+            Events::onProjectArchive=>'归档项目',
+        ];
+
+        $arr['迭代管理'] = [
+            Events::onSprintCreate=>'创建迭代',
+            Events::onSprintUpdate=>'编辑迭代',
+            Events::onSprintSetActive=>'设置迭代为进行时',
+            Events::onSprintDelete=>'删除迭代',
+        ];
+
+        $arr['版本管理'] = [
+            Events::onVersionCreate=>'创建版本',
+            Events::onVersionUpdate=>'编辑版本',
+            Events::onVersionDelete=>'删除办法',
+            Events::onVersionRelease=>'发布版本',
+        ];
+        $arr['模块管理'] = [
+            Events::onModuleCreate=>'创建模块',
+            Events::onModuleUpdate=>'编辑模块',
+            Events::onModuleDelete=>'删除模块',
+        ];
+        $arr['标签管理'] = [
+            Events::onLabelCreate=>'标签模块',
+            Events::onLabelUpdate=>'标签模块',
+            Events::onLabelDelete=>'标签模块',
+        ];
+        $arr['分类管理'] = [
+            Events::onCataloglCreate=>'分类模块',
+            Events::onCatalogUpdate=>'分类模块',
+            Events::onCatalogDelete=>'分类模块',
+        ];
+        $arr['项目成员'] = [
+            Events::onProjectUserAdd=>'添加项目成员',
+            Events::onProjectUserUpdateRoles=>'更新角色成员',
+            Events::onProjectUserRemove=>'移除用户',
+        ];
+        $arr[''] = [
+            Events::onProjectRoleAdd=>'添加项目角色',
+            Events::onProjectRoleUpdate=>'编辑项目角色',
+            Events::onProjectRoleRemove=>'删除项目角色',
+            Events::onProjectRolePermUpdate=>'编辑角色权限',
+            Events::onProjectRoleAddUser=>'角色添加用户',
+            Events::onProjectRoleRemoveUser=>'角色移除用户',
+        ];
+
+        $arr['用户管理'] = [
+            Events::onUserAddByAdmin=>'添加用户',
+            Events::onUserUpdateByAdmin=>'编辑用户',
+            Events::onUserActiveByAdmin=>'激活用户',
+            Events::onUserDeleteByAdmin=>'删除用户',
+            Events::onUserDisableByAdmin=>'禁用用户',
+            Events::onUserBatchDisableByAdmin=>'批量禁用用户',
+            Events::onUserBatchRecoveryByAdmin=>'批量恢复用户',
+        ];
+
+        $arr['用户相关'] = [
+            Events::onUserRegister=>'用户注册',
+            Events::onUserLogin=>'用户登录',
+            Events::onUserlogout=>'用户注销',
+            Events::onUserUpdateProfile=>'编辑资料',
+        ];
+        $arr['组织'] = [
+            Events::onOrgCreate=>'创建组织',
+            Events::onOrgUpdate=>'编辑组织',
+            Events::onOrgDelete=>'删除组织',
+        ];
+
+
+
         $this->twigRender('index.twig', $data);
     }
 

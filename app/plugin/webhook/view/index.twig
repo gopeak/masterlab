@@ -120,15 +120,36 @@
 
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="id_url">URL:<span class="required"> </span></label>
+                        <label class="control-label" for="id_url">URL:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="url" id="id_url"  value="" />
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <label class="control-label" for="id_secret_token">Secret Token:<span class="required"> </span></label>
+                        <label class="control-label" for="id_description">触发事件:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <select class="selectpicker" multiple data-actions-box="true">
+                                    <optgroup label="项目">
+                                        <option data-subtext="Heinz">Mustard</option>
+                                        <option data-subtext="Heinz">Ketchup</option>
+                                        <option data-subtext="Heinz">Relish</option>
+                                    </optgroup>
+                                    <optgroup label="事项">
+                                        <option>Tent</option>
+                                        <option>Flashlight</option>
+                                        <option>Toilet Paper</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_secret_token">验证Token:<span class="required"> </span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="secret_token" id="id_secret_token"  value="" />
@@ -153,6 +174,10 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
 
 
                 </div>

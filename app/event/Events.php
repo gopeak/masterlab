@@ -81,9 +81,6 @@ final class Events
     public const onIssueMobileUpload= 'onIssueMobileUpload';
     public const onIssueDeleteUpload= 'onIssueDeleteUpload';
 
-
-
-
     // 加入
     public const onIssueJoinSprint = 'onIssueJoinSprint';
     public const onIssueJoinClose = 'onIssueJoinClose';
@@ -94,11 +91,11 @@ final class Events
     public const onIssueAddAdvFilter = 'onIssueAddAdvFilter';
     public const onIssueAddFilter = 'onIssueAddFilter';
 
+
     // 事项评论事件
     public const onIssueAddComment = 'onIssueAddComment';
     public const onIssueDeleteComment = 'onIssueDeleteComment';
     public const onIssueUpdateComment = 'onIssueUpdateComment';
-
 
     /**
      * 迭代事件
@@ -115,6 +112,7 @@ final class Events
     public const onVersionUpdate = 'onVersionUpdate';
     public const onVersionDelete = 'onVersionDelete';
     public const onVersionRelease = 'onVersionRelease';
+
 
     /**
      * 模块事件
@@ -154,6 +152,14 @@ final class Events
     public const onProjectRolePermUpdate = 'onProjectRolePermUpdate';
     public const onProjectRoleAddUser = 'onProjectRoleAddUser';
     public const onProjectRoleRemoveUser = 'onProjectRoleRemoveUser';
+    public $arr = [
+        Events::onProjectRoleAdd=>'添加项目角色',
+        Events::onProjectRoleUpdate=>'编辑项目角色',
+        Events::onProjectRoleRemove=>'删除项目角色',
+        Events::onProjectRolePermUpdate=>'编辑角色权限',
+        Events::onProjectRoleAddUser=>'角色添加用户',
+        Events::onProjectRoleRemoveUser=>'角色移除用户',
+    ];
 
 
 }
