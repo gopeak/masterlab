@@ -5,6 +5,8 @@ namespace main\app\plugin\webhook\event;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\event\CommonPlacedEvent;
+use main\app\model\CacheModel;
+use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\user\UserModel;
 use main\app\plugin\webhook\model\WebHookModel;
@@ -78,9 +80,9 @@ class WebhookSubscriber implements EventSubscriberInterface
         }
         $currentUserId = UserAuth::getId();
         $currentUserInfo = (new UserModel($currentUserId))->getByUid($currentUserId);
-        if(empty($currentUserInfo)){
+        if (empty($currentUserInfo)) {
             $currentUserInfo = new \stdClass();
-        }else{
+        } else {
             $currentUserInfo = UserLogic::format($currentUserInfo);
         }
 
@@ -104,7 +106,8 @@ class WebhookSubscriber implements EventSubscriberInterface
                 continue;
             }
             $postData['secret_token'] = $webhook['secret_token'];
-            $this->fsockopenPost($url, $postData, (int)$webhook['timeout']);
+            $this->requestByRedis($url, $postData, (int)$webhook['timeout']);
+            //$this->fsockopenPost($url, $postData, (int)$webhook['timeout']);
         }
     }
 
@@ -150,6 +153,13 @@ class WebhookSubscriber implements EventSubscriberInterface
         $curl_array = array();
         foreach ($webhooks as $i => $webhook) {
             $url = $webhook['url'];
+            $hookEventsArr = json_decode($webhook['hook_event_json'], true);
+            if (empty($hookEventsArr)) {
+                $hookEventsArr = [];
+            }
+            if (!in_array($this->currentFuc, $hookEventsArr)) {
+                continue;
+            }
             $postData['secret_token'] = $webhook['secret_token'];
             $curl_array[$i] = curl_init($url);
             curl_setopt($curl_array[$i], CURLOPT_POST, 1);
@@ -177,5 +187,27 @@ class WebhookSubscriber implements EventSubscriberInterface
         return $res;
     }
 
+    /**
+     * @param $url
+     * @param $data
+     * @param $timeout
+     * @throws \Exception
+     */
+    private function requestByRedis($url, $data, $timeout)
+    {
+        $issueModel = new IssueModel();
+        $issueModel->cache->connect();
+        if (!$issueModel->cache) {
+            return;
+        }
+        $pushArr = [];
+        $pushArr['url'] = $url;
+        $pushArr['data'] = $data;
+        $pushArr['timeout'] = $timeout;
+        $key = 'webhook';
+        $ret = $issueModel->cache->redis->rPush($key, $pushArr);
+        //var_dump($ret);
+
+    }
 
 }
