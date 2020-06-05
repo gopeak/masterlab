@@ -426,7 +426,14 @@ class User extends BaseUserCtrl
         }
         $user = $userModel->getUser();
         $user = UserLogic::formatUserInfo($user);
-        $this->ajaxSuccess('ok', ['user' => $user]);
+
+        $issueInfo['my_issue_count'] = IssueFilterLogic::getCountByAssignee($userModel->uid);
+        $issueInfo['my_issue_resolve_count'] = IssueFilterLogic::getResolveCountByAssignee($userModel->uid);
+        $issueInfo['my_issue_unresolve_count'] = IssueFilterLogic::getUnResolveCountByAssignee($userModel->uid);
+        $this->ajaxSuccess('ok', [
+            'user' => $user,
+            'issue_info' => $issueInfo
+        ]);
     }
 
     /**

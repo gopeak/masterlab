@@ -778,6 +778,26 @@ class IssueFilterLogic
     }
 
     /**
+     * 所有项目已解决的事项数量
+     * @param $userId
+     * @return int
+     * @throws \Exception
+     */
+    public static function getResolveCountByAssignee($userId)
+    {
+        if (empty($userId)) {
+            return 0;
+        }
+        $params = [];
+        $params['assignee'] = $userId;
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND   " . self::getDoneSql();
+        $count = $model->db->getOne($sql, $params);
+        return intval($count);
+    }
+
+    /**
      * 获取迭代的事项数量
      * @param $sprintId
      * @return int
