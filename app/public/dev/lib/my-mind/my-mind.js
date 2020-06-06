@@ -1270,7 +1270,7 @@ MM.Item.prototype.getProgressImgName = function (issue_progress) {
 		progress_img_name = 'progress_6.png';
 	}
 	if (issue_progress > 90 && issue_progress <= 99) {
-		progress_img_name = 'progress_7.png';
+		progress_img_name = 'progress_6.png';
 	}
 	if (issue_progress >= 100) {
 		progress_img_name = 'progress_done.png';
