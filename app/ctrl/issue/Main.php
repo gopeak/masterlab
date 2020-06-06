@@ -2162,6 +2162,10 @@ class Main extends BaseUserCtrl
         $activityInfo['title'] = $issue['summary'];
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
+        // email
+        $notifyLogic = new NotifyLogic();
+        $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_DELETE, $issue['project_id'], $issueId);
+
         $this->ajaxSuccess('ok');
     }
 
@@ -2295,6 +2299,10 @@ class Main extends BaseUserCtrl
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $issue['summary'];
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+            // email
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CLOSE, $issue['project_id'], $issueId);
 
             $this->ajaxSuccess("操作成功");
         }

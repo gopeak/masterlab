@@ -766,6 +766,11 @@ class Agile extends BaseUserCtrl
         CacheKeyModel::getInstance()->clearCache('dict/' . $sprintModel->table);
         list($upRet, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
         if ($upRet) {
+
+            // email
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_START, $sprint['project_id'], $sprintId);
+
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', 'server_error:' . $msg);
