@@ -302,7 +302,7 @@ class UserLogic
         $userModel = new UserModel();
         $userTable = $userModel->getTable();
 
-        $fields = " uid  as id,username,display_name as name,avatar,status ";
+        $fields = " uid  as id,username,display_name as name,avatar,status,email ";
 
         $sql = "Select {$fields} From {$userTable} Where 1 ";
         $params = [];
