@@ -261,9 +261,13 @@ function isVideoUrl($url)
  */
 function getCookieHost()
 {
-    $host = str_replace('www', '', parse_url(ROOT_URL, PHP_URL_HOST));
-    //v( $host );
-    return $host;
+    if (preg_match('/([^.]+)\.(\D+)$/sim', $_SERVER['HTTP_HOST'], $regs)) {
+        $arr = explode('.', $_SERVER['HTTP_HOST']);
+        $cookieDomain = '.' . $arr[count($arr) - 2] . '.' . $arr[count($arr) - 1];
+    } else {
+        $cookieDomain = $_SERVER['HTTP_HOST'];
+    }
+    return $cookieDomain;
 }
 
 
@@ -401,4 +405,48 @@ if (!function_exists('getallheaders')) {
         return $headers;
     }
 }
+
+/*
+*  判断是否合法的URL，合法则返回true；
+*  格式不是http/https协议，或是内网IP，则视为不合法
+*  注意：判断是否是内网url的时候并没有检测30X跳转的location响应头部，
+*  使用此方法时，要求curl或其他工具设置不允许重定向跟踪
+*
+*  @author Ovie
+*  @param string $url
+*  @return bool
+*/
+function is_allowed_url($url){
+    //可用来防止HTTP头注入
+    if (!$url || !filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED & FILTER_FLAG_HOST_REQUIRED & FILTER_FLAG_QUERY_REQUIRED)){
+        return false;
+    }
+
+    //仅允许http或https协议
+    if(!preg_match('/^https?:\/\/.*$/', $url)){
+        return false;
+    }
+
+    $host = parse_url($url, PHP_URL_HOST);
+    if(!$host){
+        return false;
+    }
+
+    $ip = gethostbyname($host);
+    $ip = ip2long($ip);
+    if($ip === false){
+        return false;
+    }
+
+    $is_inner_ipaddress = ip2long('127.0.0.0') >> 24 == $ip >> 24 or
+    ip2long('10.0.0.0') >> 24 == $ip >> 24 or
+    ip2long('172.16.0.0') >> 20 == $ip >> 20 or
+    ip2long('192.168.0.0') >> 16 == $ip >> 16 ;
+    if($is_inner_ipaddress){
+        return false;
+    }
+
+    return true;
+}
+
 
