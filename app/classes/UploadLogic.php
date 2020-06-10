@@ -275,6 +275,22 @@ class UploadLogic
     }
 
     /**
+     * 通用的用户头像上传，使用$_FILES
+     * @param $fieldName
+     * @param $path
+     * @param $uid
+     * @return mixed
+     */
+    public static function normalAvatarFile($fieldName, $path, $uid)
+    {
+        list($bool, $filename) = uploadFile($fieldName, $path, $uid);
+        if ($bool) {
+            return $filename;
+        }
+        return false;
+    }
+
+    /**
      * 保存文件
      * @param $text
      * @param $path

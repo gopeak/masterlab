@@ -559,6 +559,14 @@ class User extends BaseUserCtrl
             }
             unset($_POST['image'], $base64_string);
         }
+
+        if (!empty($_FILES['avatar_img']['tmp_name'])) {
+            $saveRet = UploadLogic::normalAvatarFile('avatar_img', PUBLIC_PATH . 'attachment/avatar/', $userId);
+            if ($saveRet !== false) {
+                $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
+            }
+        }
+
         // print_r($userInfo);
         $ret = false;
         if (!empty($userInfo)) {
