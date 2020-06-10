@@ -560,11 +560,8 @@ class User extends BaseUserCtrl
             unset($_POST['image'], $base64_string);
         }
 
-        if (!empty($_FILES['avatar_img']['tmp_name'])) {
-            $saveRet = UploadLogic::normalAvatarFile('avatar_img', PUBLIC_PATH . 'attachment/avatar/', $userId);
-            if ($saveRet !== false) {
-                $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
-            }
+        if (isset($_POST['avatar_img'])) {
+            $userInfo['avatar'] = $_POST['avatar_img'];
         }
 
         // print_r($userInfo);
@@ -597,6 +594,25 @@ class User extends BaseUserCtrl
         }
 
         $this->ajaxSuccess('保存成功', $ret);
+    }
+
+    /**
+     * 用户头像上传接口，应用于移动端
+     * @throws \Exception
+     */
+    public function setProfileAvatar()
+    {
+        $userInfo['avatar'] = '';
+        if (!empty($_FILES['avatar_img']['tmp_name'])) {
+            $userId = UserAuth::getInstance()->getId();
+            $saveRet = UploadLogic::normalAvatarFile('avatar_img', PUBLIC_PATH . 'attachment/avatar/', $userId);
+            if ($saveRet !== false) {
+                $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
+            }
+        } else {
+            $this->ajaxFailed('错误', '没有上传头像文件');
+        }
+        $this->ajaxSuccess('上传成功', $userInfo['avatar']);
     }
 
     /**
