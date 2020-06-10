@@ -8,11 +8,6 @@
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <!-- Fine Uploader jQuery JS file-->
-    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
-    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
 </head>
 
@@ -44,8 +39,12 @@
                         <div class="top-area">
 
                             <ul class="nav-links">
-                                <li id="state-all"  class="state_li active" data-value="">
-                                    <a  title="Webhook列表" href="#" ><span> Webhook </span>
+                                <li id="state-list"  class="state_li active" data-value="list">
+                                    <a  title="Webhook列表" href="/admin/plugin/webhook/" ><span> Url列表 </span>
+                                    </a>
+                                </li>
+                                <li id="state-log"  class="state_li" data-value="log">
+                                    <a  title="执行日志" href="/admin/plugin/webhook/log" ><span> 执行日志 </span>
                                     </a>
                                 </li>
                             </ul>
