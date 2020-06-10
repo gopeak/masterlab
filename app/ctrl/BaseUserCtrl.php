@@ -255,7 +255,8 @@ class BaseUserCtrl extends BaseCtrl
                 $userModel = UserModel::getInstance($userToken['uid']);
                 $user = $userModel->getByUid($userToken['uid']);
                 $userAuth = UserAuth::getInstance();
-                $userAuth->login($user);
+                $cookieLifetime = getConfigVar('session')['session.cookie_lifetime'];
+                $userAuth->login($user, $cookieLifetime);
             }
 
         }

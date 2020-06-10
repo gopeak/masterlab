@@ -208,7 +208,8 @@ class UserAuth
         //echo  '---';
         //echo $md5;
         if ($token == $md5) {
-            $this->login($user);
+            $cookieLifetime = getConfigVar('session')['session.cookie_lifetime'];
+            $this->login($user, $cookieLifetime);
             return true;
         }
         return false;
