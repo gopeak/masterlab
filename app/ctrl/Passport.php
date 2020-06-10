@@ -258,7 +258,7 @@ class Passport extends BaseCtrl
             $info['source'] = $source;
         }
 
-        $this->auth->setAutoLogin($user);
+        $this->auth->setAutoLogin($user);// 此处的cookie设置会被$this->processLoginReturn的cookie设置覆盖
 
         // 更新登录信息
         $userModel->uid = $user['uid'];
