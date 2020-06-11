@@ -1,11 +1,7 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
--- https://www.phpmyadmin.net/
+-- version 5.0.1
 --
--- 主机： 127.0.0.1
--- 生成日期： 2020-06-01 13:23:49
--- 服务器版本： 5.7.24-log
--- PHP 版本： 7.2.27
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +15,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 数据库： `masterlab_dev`
+-- 数据库： `masterlab216`
 --
 
 -- --------------------------------------------------------
@@ -29,16 +25,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `agile_board` (
-                               `id` int(11) UNSIGNED NOT NULL,
-                               `name` varchar(128) NOT NULL,
-                               `project_id` int(11) UNSIGNED NOT NULL,
-                               `type` enum('status','issue_type','label','module','resolve','priority','assignee') DEFAULT NULL,
-                               `is_filter_backlog` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-                               `is_filter_closed` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-                               `weight` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                               `range_type` enum('current_sprint','all','sprints','modules','issue_types') NOT NULL COMMENT '看板数据范围',
-                               `range_data` varchar(1024) NOT NULL COMMENT '范围数据',
-                               `is_system` tinyint(2) NOT NULL DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `type` enum('status','issue_type','label','module','resolve','priority','assignee') DEFAULT NULL,
+  `is_filter_backlog` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `is_filter_closed` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `weight` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `range_type` enum('current_sprint','all','sprints','modules','issue_types') NOT NULL COMMENT '看板数据范围',
+  `range_data` varchar(1024) NOT NULL COMMENT '范围数据',
+  `is_system` tinyint(2) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -56,11 +52,11 @@ INSERT INTO `agile_board` (`id`, `name`, `project_id`, `type`, `is_filter_backlo
 --
 
 CREATE TABLE `agile_board_column` (
-                                      `id` int(11) UNSIGNED NOT NULL,
-                                      `name` varchar(128) NOT NULL,
-                                      `board_id` int(11) UNSIGNED NOT NULL,
-                                      `data` varchar(1000) NOT NULL,
-                                      `weight` int(11) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `board_id` int(11) UNSIGNED NOT NULL,
+  `data` varchar(1000) NOT NULL,
+  `weight` int(11) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -85,18 +81,18 @@ INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VA
 --
 
 CREATE TABLE `agile_sprint` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `project_id` int(11) UNSIGNED NOT NULL,
-                                `name` varchar(128) NOT NULL,
-                                `description` varchar(256) DEFAULT NULL,
-                                `active` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',
-                                `status` tinyint(2) UNSIGNED NOT NULL DEFAULT '1' COMMENT '1为准备中，2为已完成，3为已归档',
-                                `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0',
-                                `start_date` date DEFAULT NULL,
-                                `end_date` date DEFAULT NULL,
-                                `target` text NOT NULL COMMENT 'sprint目标内容',
-                                `inspect` text NOT NULL COMMENT 'Sprint 评审会议内容',
-                                `review` text NOT NULL COMMENT 'Sprint 回顾会议内容'
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `description` varchar(256) DEFAULT NULL,
+  `active` tinyint(2) UNSIGNED NOT NULL DEFAULT 0,
+  `status` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT '1为准备中，2为已完成，3为已归档',
+  `order_weight` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `target` text NOT NULL COMMENT 'sprint目标内容',
+  `inspect` text NOT NULL COMMENT 'Sprint 评审会议内容',
+  `review` text NOT NULL COMMENT 'Sprint 回顾会议内容'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -114,17 +110,17 @@ INSERT INTO `agile_sprint` (`id`, `project_id`, `name`, `description`, `active`,
 --
 
 CREATE TABLE `agile_sprint_issue_report` (
-                                             `id` int(10) UNSIGNED NOT NULL,
-                                             `sprint_id` int(11) UNSIGNED NOT NULL,
-                                             `date` date NOT NULL,
-                                             `week` tinyint(2) UNSIGNED DEFAULT NULL,
-                                             `month` varchar(20) DEFAULT NULL,
-                                             `done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-                                             `no_done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-                                             `done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-                                             `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-                                             `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-                                             `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
+  `id` int(10) UNSIGNED NOT NULL,
+  `sprint_id` int(11) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `week` tinyint(2) UNSIGNED DEFAULT NULL,
+  `month` varchar(20) DEFAULT NULL,
+  `done_count` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总完成的事项总数',
+  `no_done_count` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
+  `done_count_by_resolve` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
+  `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
+  `today_done_points` int(11) UNSIGNED DEFAULT 0 COMMENT '敏捷开发中的事项工作量或点数',
+  `today_done_number` int(11) UNSIGNED DEFAULT 0 COMMENT '当天完成的事项数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -134,35 +130,34 @@ CREATE TABLE `agile_sprint_issue_report` (
 --
 
 CREATE TABLE `field_custom_value` (
-                                      `id` int(11) UNSIGNED NOT NULL,
-                                      `issue_id` int(11) UNSIGNED DEFAULT NULL,
-                                      `project_id` int(11) UNSIGNED DEFAULT NULL,
-                                      `custom_field_id` int(11) DEFAULT NULL,
-                                      `parent_key` varchar(255) DEFAULT NULL,
-                                      `string_value` varchar(255) DEFAULT NULL,
-                                      `number_value` varchar(255) DEFAULT NULL,
-                                      `text_value` longtext,
-                                      `date_value` datetime DEFAULT NULL,
-                                      `value_type` varchar(32) NOT NULL DEFAULT 'string'
+  `id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(11) UNSIGNED DEFAULT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL,
+  `custom_field_id` int(11) DEFAULT NULL,
+  `parent_key` varchar(255) DEFAULT NULL,
+  `string_value` varchar(255) DEFAULT NULL,
+  `number_value` varchar(255) DEFAULT NULL,
+  `text_value` longtext DEFAULT NULL,
+  `date_value` datetime DEFAULT NULL,
+  `value_type` varchar(32) NOT NULL DEFAULT 'string'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
+-- --------------------------------------------------------
 
 --
 -- 表的结构 `field_layout_default`
 --
 
 CREATE TABLE `field_layout_default` (
-                                        `id` int(11) UNSIGNED NOT NULL,
-                                        `issue_type` int(11) UNSIGNED DEFAULT NULL,
-                                        `issue_ui_type` tinyint(1) UNSIGNED DEFAULT '1',
-                                        `field_id` int(11) UNSIGNED DEFAULT '0',
-                                        `verticalposition` decimal(18,0) DEFAULT NULL,
-                                        `ishidden` varchar(60) DEFAULT NULL,
-                                        `isrequired` varchar(60) DEFAULT NULL,
-                                        `sequence` int(11) UNSIGNED DEFAULT NULL,
-                                        `tab` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `issue_type` int(11) UNSIGNED DEFAULT NULL,
+  `issue_ui_type` tinyint(1) UNSIGNED DEFAULT 1,
+  `field_id` int(11) UNSIGNED DEFAULT 0,
+  `verticalposition` decimal(18,0) DEFAULT NULL,
+  `ishidden` varchar(60) DEFAULT NULL,
+  `isrequired` varchar(60) DEFAULT NULL,
+  `sequence` int(11) UNSIGNED DEFAULT NULL,
+  `tab` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -226,16 +221,16 @@ INSERT INTO `field_layout_default` (`id`, `issue_type`, `issue_ui_type`, `field_
 --
 
 CREATE TABLE `field_layout_project_custom` (
-                                               `id` int(11) UNSIGNED NOT NULL,
-                                               `project_id` int(11) UNSIGNED DEFAULT NULL,
-                                               `issue_type` int(11) UNSIGNED DEFAULT NULL,
-                                               `issue_ui_type` tinyint(2) UNSIGNED DEFAULT NULL,
-                                               `field_id` int(11) UNSIGNED DEFAULT '0',
-                                               `verticalposition` decimal(18,0) DEFAULT NULL,
-                                               `ishidden` varchar(60) DEFAULT NULL,
-                                               `isrequired` varchar(60) DEFAULT NULL,
-                                               `sequence` int(11) UNSIGNED DEFAULT NULL,
-                                               `tab` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL,
+  `issue_type` int(11) UNSIGNED DEFAULT NULL,
+  `issue_ui_type` tinyint(2) UNSIGNED DEFAULT NULL,
+  `field_id` int(11) UNSIGNED DEFAULT 0,
+  `verticalposition` decimal(18,0) DEFAULT NULL,
+  `ishidden` varchar(60) DEFAULT NULL,
+  `isrequired` varchar(60) DEFAULT NULL,
+  `sequence` int(11) UNSIGNED DEFAULT NULL,
+  `tab` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -245,16 +240,16 @@ CREATE TABLE `field_layout_project_custom` (
 --
 
 CREATE TABLE `field_main` (
-                              `id` int(11) UNSIGNED NOT NULL,
-                              `name` varchar(255) DEFAULT NULL,
-                              `title` varchar(64) NOT NULL DEFAULT '',
-                              `description` varchar(512) DEFAULT NULL,
-                              `type` varchar(255) DEFAULT NULL,
-                              `default_value` varchar(255) DEFAULT NULL,
-                              `is_system` tinyint(1) UNSIGNED DEFAULT '0',
-                              `options` varchar(5000) DEFAULT '' COMMENT '{}',
-                              `order_weight` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                              `extra_attr` varchar(512) NOT NULL DEFAULT '' COMMENT '额外的html属性'
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `title` varchar(64) NOT NULL DEFAULT '',
+  `description` varchar(512) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `default_value` varchar(255) DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED DEFAULT 0,
+  `options` varchar(5000) DEFAULT '' COMMENT '{}',
+  `order_weight` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `extra_attr` varchar(512) NOT NULL DEFAULT '' COMMENT '额外的html属性'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -286,11 +281,7 @@ INSERT INTO `field_main` (`id`, `name`, `title`, `description`, `type`, `default
 (26, 'progress', '完成度', '', 'PROGRESS', '0', 1, '', 0, 'min=\"0\" max=\"100\"'),
 (27, 'duration', '用时(天)', '', 'TEXT', '1', 1, '', 0, ''),
 (28, 'is_start_milestone', '是否起始里程碑', '', 'TEXT', '0', 1, '', 0, ''),
-(29, 'is_end_milestone', '是否结束里程碑', '', 'TEXT', '0', 1, '', 0, ''),
-(35, 'test_user', '用户测试', '', 'USER', '', 0, '', 0, ''),
-(36, 'user_mm', '多用户', '', 'USER_MULTI', '', 0, '', 0, ''),
-(37, 'select_test', 'SelectTest', '', 'SELECT', '', 0, '{\"aa\":\"AAAAAA\",\"bb\":\"BBBB\"}', 0, ''),
-(38, 'textarea1', 'textarea1', '', 'TEXTAREA', '', 0, '', 0, '');
+(29, 'is_end_milestone', '是否结束里程碑', '', 'TEXT', '0', 1, '', 0, '');
 
 -- --------------------------------------------------------
 
@@ -299,10 +290,10 @@ INSERT INTO `field_main` (`id`, `name`, `title`, `description`, `type`, `default
 --
 
 CREATE TABLE `field_type` (
-                              `id` int(11) UNSIGNED NOT NULL,
-                              `name` varchar(64) DEFAULT NULL,
-                              `description` varchar(255) DEFAULT NULL,
-                              `type` varchar(64) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(64) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `type` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -342,10 +333,10 @@ INSERT INTO `field_type` (`id`, `name`, `description`, `type`) VALUES
 --
 
 CREATE TABLE `hornet_cache_key` (
-                                    `key` varchar(100) NOT NULL,
-                                    `module` varchar(64) DEFAULT NULL,
-                                    `datetime` datetime DEFAULT NULL,
-                                    `expire` int(10) UNSIGNED DEFAULT NULL
+  `key` varchar(100) NOT NULL,
+  `module` varchar(64) DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
+  `expire` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -355,15 +346,15 @@ CREATE TABLE `hornet_cache_key` (
 --
 
 CREATE TABLE `hornet_user` (
-                               `id` int(11) UNSIGNED NOT NULL,
-                               `name` varchar(60) NOT NULL DEFAULT '',
-                               `phone` varchar(20) NOT NULL,
-                               `password` varchar(32) NOT NULL DEFAULT '',
-                               `email` varchar(50) NOT NULL DEFAULT '',
-                               `status` tinyint(2) UNSIGNED NOT NULL DEFAULT '1' COMMENT '用户状态:1正常,2禁用',
-                               `reg_time` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                               `last_login_time` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                               `company_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `phone` varchar(20) NOT NULL,
+  `password` varchar(32) NOT NULL DEFAULT '',
+  `email` varchar(50) NOT NULL DEFAULT '',
+  `status` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT '用户状态:1正常,2禁用',
+  `reg_time` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `last_login_time` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `company_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- --------------------------------------------------------
@@ -373,10 +364,10 @@ CREATE TABLE `hornet_user` (
 --
 
 CREATE TABLE `issue_assistant` (
-                                   `id` int(11) NOT NULL,
-                                   `issue_id` int(11) UNSIGNED DEFAULT NULL,
-                                   `user_id` int(11) UNSIGNED DEFAULT NULL,
-                                   `join_time` int(11) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `issue_id` int(11) UNSIGNED DEFAULT NULL,
+  `user_id` int(11) UNSIGNED DEFAULT NULL,
+  `join_time` int(11) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -394,11 +385,11 @@ INSERT INTO `issue_assistant` (`id`, `issue_id`, `user_id`, `join_time`) VALUES
 --
 
 CREATE TABLE `issue_description_template` (
-                                              `id` int(11) NOT NULL,
-                                              `name` varchar(32) NOT NULL,
-                                              `content` text NOT NULL,
-                                              `created` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '创建时间',
-                                              `updated` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '更新时间'
+  `id` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `content` text NOT NULL,
+  `created` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建时间',
+  `updated` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='新增事项时描述的模板';
 
 --
@@ -416,9 +407,9 @@ INSERT INTO `issue_description_template` (`id`, `name`, `content`, `created`, `u
 --
 
 CREATE TABLE `issue_effect_version` (
-                                        `id` int(11) UNSIGNED NOT NULL,
-                                        `issue_id` int(11) UNSIGNED DEFAULT NULL,
-                                        `version_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(11) UNSIGNED DEFAULT NULL,
+  `version_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -428,10 +419,10 @@ CREATE TABLE `issue_effect_version` (
 --
 
 CREATE TABLE `issue_extra_worker_day` (
-                                          `id` int(11) NOT NULL,
-                                          `project_id` int(11) NOT NULL DEFAULT '0',
-                                          `day` date NOT NULL,
-                                          `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL DEFAULT 0,
+  `day` date NOT NULL,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -441,14 +432,14 @@ CREATE TABLE `issue_extra_worker_day` (
 --
 
 CREATE TABLE `issue_field_layout_project` (
-                                              `id` decimal(18,0) NOT NULL,
-                                              `fieldlayout` decimal(18,0) DEFAULT NULL,
-                                              `fieldidentifier` varchar(255) DEFAULT NULL,
-                                              `description` text,
-                                              `verticalposition` decimal(18,0) DEFAULT NULL,
-                                              `ishidden` varchar(60) DEFAULT NULL,
-                                              `isrequired` varchar(60) DEFAULT NULL,
-                                              `renderertype` varchar(255) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `fieldlayout` decimal(18,0) DEFAULT NULL,
+  `fieldidentifier` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `verticalposition` decimal(18,0) DEFAULT NULL,
+  `ishidden` varchar(60) DEFAULT NULL,
+  `isrequired` varchar(60) DEFAULT NULL,
+  `renderertype` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -458,17 +449,17 @@ CREATE TABLE `issue_field_layout_project` (
 --
 
 CREATE TABLE `issue_file_attachment` (
-                                         `id` int(11) UNSIGNED NOT NULL,
-                                         `uuid` varchar(64) NOT NULL DEFAULT '',
-                                         `issue_id` int(11) DEFAULT '0',
-                                         `tmp_issue_id` varchar(32) NOT NULL,
-                                         `mime_type` varchar(64) DEFAULT '',
-                                         `origin_name` varchar(128) NOT NULL DEFAULT '',
-                                         `file_name` varchar(255) DEFAULT '',
-                                         `created` int(11) DEFAULT '0',
-                                         `file_size` int(11) DEFAULT '0',
-                                         `author` int(11) DEFAULT '0',
-                                         `file_ext` varchar(32) NOT NULL DEFAULT ''
+  `id` int(11) UNSIGNED NOT NULL,
+  `uuid` varchar(64) NOT NULL DEFAULT '',
+  `issue_id` int(11) DEFAULT 0,
+  `tmp_issue_id` varchar(32) NOT NULL,
+  `mime_type` varchar(64) DEFAULT '',
+  `origin_name` varchar(128) NOT NULL DEFAULT '',
+  `file_name` varchar(255) DEFAULT '',
+  `created` int(11) DEFAULT 0,
+  `file_size` int(11) DEFAULT 0,
+  `author` int(11) DEFAULT 0,
+  `file_ext` varchar(32) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -527,17 +518,17 @@ INSERT INTO `issue_file_attachment` (`id`, `uuid`, `issue_id`, `tmp_issue_id`, `
 --
 
 CREATE TABLE `issue_filter` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `name` varchar(64) DEFAULT NULL,
-                                `author` int(11) DEFAULT NULL,
-                                `description` varchar(255) DEFAULT NULL,
-                                `share_obj` varchar(255) DEFAULT NULL,
-                                `share_scope` varchar(20) DEFAULT NULL COMMENT 'all,group,uid,project,origin',
-                                `projectid` decimal(18,0) DEFAULT NULL,
-                                `filter` mediumtext,
-                                `fav_count` decimal(18,0) DEFAULT NULL,
-                                `name_lower` varchar(255) DEFAULT NULL,
-                                `is_adv_query` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级查询'
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(64) DEFAULT NULL,
+  `author` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `share_obj` varchar(255) DEFAULT NULL,
+  `share_scope` varchar(20) DEFAULT NULL COMMENT 'all,group,uid,project,origin',
+  `projectid` decimal(18,0) DEFAULT NULL,
+  `filter` mediumtext DEFAULT NULL,
+  `fav_count` decimal(18,0) DEFAULT NULL,
+  `name_lower` varchar(255) DEFAULT NULL,
+  `is_adv_query` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否为高级查询'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -560,9 +551,9 @@ INSERT INTO `issue_filter` (`id`, `name`, `author`, `description`, `share_obj`, 
 --
 
 CREATE TABLE `issue_fix_version` (
-                                     `id` int(11) UNSIGNED NOT NULL,
-                                     `issue_id` int(11) UNSIGNED DEFAULT NULL,
-                                     `version_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(11) UNSIGNED DEFAULT NULL,
+  `version_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -572,9 +563,9 @@ CREATE TABLE `issue_fix_version` (
 --
 
 CREATE TABLE `issue_follow` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `issue_id` int(11) UNSIGNED NOT NULL,
-                                `user_id` int(11) UNSIGNED NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -591,10 +582,10 @@ INSERT INTO `issue_follow` (`id`, `issue_id`, `user_id`) VALUES
 --
 
 CREATE TABLE `issue_holiday` (
-                                 `id` int(11) NOT NULL,
-                                 `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                 `day` date NOT NULL,
-                                 `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `id` int(11) NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `day` date NOT NULL,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -634,11 +625,11 @@ INSERT INTO `issue_holiday` (`id`, `project_id`, `day`, `name`) VALUES
 --
 
 CREATE TABLE `issue_label` (
-                               `id` int(11) UNSIGNED NOT NULL,
-                               `project_id` int(11) UNSIGNED NOT NULL,
-                               `title` varchar(64) NOT NULL,
-                               `color` varchar(20) NOT NULL,
-                               `bg_color` varchar(20) NOT NULL DEFAULT ''
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `title` varchar(64) NOT NULL,
+  `color` varchar(20) NOT NULL,
+  `bg_color` varchar(20) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -657,9 +648,9 @@ INSERT INTO `issue_label` (`id`, `project_id`, `title`, `color`, `bg_color`) VAL
 --
 
 CREATE TABLE `issue_label_data` (
-                                    `id` int(11) UNSIGNED NOT NULL,
-                                    `issue_id` int(11) UNSIGNED DEFAULT NULL,
-                                    `label_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(11) UNSIGNED DEFAULT NULL,
+  `label_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -707,45 +698,45 @@ INSERT INTO `issue_label_data` (`id`, `issue_id`, `label_id`) VALUES
 --
 
 CREATE TABLE `issue_main` (
-                              `id` int(11) UNSIGNED NOT NULL,
-                              `pkey` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                              `issue_num` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                              `project_id` int(11) DEFAULT '0',
-                              `issue_type` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                              `creator` int(11) UNSIGNED DEFAULT '0',
-                              `modifier` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                              `reporter` int(11) DEFAULT '0',
-                              `assignee` int(11) DEFAULT '0',
-                              `summary` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
-                              `description` text COLLATE utf8mb4_unicode_ci,
-                              `environment` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
-                              `priority` int(11) DEFAULT '0',
-                              `resolve` int(11) DEFAULT '0',
-                              `status` int(11) DEFAULT '0',
-                              `created` int(11) DEFAULT '0',
-                              `updated` int(11) DEFAULT '0',
-                              `start_date` date DEFAULT NULL,
-                              `due_date` date DEFAULT NULL,
-                              `duration` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                              `resolve_date` date DEFAULT NULL,
-                              `module` int(11) DEFAULT '0',
-                              `milestone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                              `sprint` int(11) NOT NULL DEFAULT '0',
-                              `weight` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '优先级权重值',
-                              `backlog_weight` int(11) NOT NULL DEFAULT '0' COMMENT 'backlog排序权重',
-                              `sprint_weight` int(11) NOT NULL DEFAULT '0' COMMENT 'sprint排序权重',
-                              `assistants` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                              `level` tinyint(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '甘特图级别',
-                              `master_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
-                              `have_children` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否拥有子任务',
-                              `followed_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '被关注人数',
-                              `comment_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '评论数',
-                              `progress` tinyint(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '完成百分比',
-                              `depends` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '前置任务',
-                              `gant_sprint_weight` int(11) NOT NULL DEFAULT '0' COMMENT '迭代甘特图中该事项在同级的排序权重',
-                              `gant_hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '甘特图中是否隐藏该事项',
-                              `is_start_milestone` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-                              `is_end_milestone` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `pkey` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `issue_num` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `project_id` int(11) DEFAULT 0,
+  `issue_type` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `creator` int(11) UNSIGNED DEFAULT 0,
+  `modifier` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `reporter` int(11) DEFAULT 0,
+  `assignee` int(11) DEFAULT 0,
+  `summary` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `environment` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `priority` int(11) DEFAULT 0,
+  `resolve` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `created` int(11) DEFAULT 0,
+  `updated` int(11) DEFAULT 0,
+  `start_date` date DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `duration` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `resolve_date` date DEFAULT NULL,
+  `module` int(11) DEFAULT 0,
+  `milestone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sprint` int(11) NOT NULL DEFAULT 0,
+  `weight` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '优先级权重值',
+  `backlog_weight` int(11) NOT NULL DEFAULT 0 COMMENT 'backlog排序权重',
+  `sprint_weight` int(11) NOT NULL DEFAULT 0 COMMENT 'sprint排序权重',
+  `assistants` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `level` tinyint(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '甘特图级别',
+  `master_id` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '父任务的id,非0表示子任务',
+  `have_children` tinyint(1) UNSIGNED DEFAULT 0 COMMENT '是否拥有子任务',
+  `followed_count` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '被关注人数',
+  `comment_count` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '评论数',
+  `progress` tinyint(2) UNSIGNED NOT NULL DEFAULT 0 COMMENT '完成百分比',
+  `depends` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '前置任务',
+  `gant_sprint_weight` int(11) NOT NULL DEFAULT 0 COMMENT '迭代甘特图中该事项在同级的排序权重',
+  `gant_hide` tinyint(1) NOT NULL DEFAULT 0 COMMENT '甘特图中是否隐藏该事项',
+  `is_start_milestone` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `is_end_milestone` tinyint(1) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -782,9 +773,9 @@ INSERT INTO `issue_main` (`id`, `pkey`, `issue_num`, `project_id`, `issue_type`,
 --
 
 CREATE TABLE `issue_moved_issue_key` (
-                                         `id` decimal(18,0) NOT NULL,
-                                         `old_issue_key` varchar(255) DEFAULT NULL,
-                                         `issue_id` decimal(18,0) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `old_issue_key` varchar(255) DEFAULT NULL,
+  `issue_id` decimal(18,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -794,15 +785,15 @@ CREATE TABLE `issue_moved_issue_key` (
 --
 
 CREATE TABLE `issue_priority` (
-                                  `id` int(11) UNSIGNED NOT NULL,
-                                  `sequence` int(11) UNSIGNED DEFAULT '0',
-                                  `name` varchar(60) DEFAULT NULL,
-                                  `_key` varchar(128) NOT NULL,
-                                  `description` text,
-                                  `iconurl` varchar(255) DEFAULT NULL,
-                                  `status_color` varchar(60) DEFAULT NULL,
-                                  `font_awesome` varchar(40) DEFAULT NULL,
-                                  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `sequence` int(11) UNSIGNED DEFAULT 0,
+  `name` varchar(60) DEFAULT NULL,
+  `_key` varchar(128) NOT NULL,
+  `description` text DEFAULT NULL,
+  `iconurl` varchar(255) DEFAULT NULL,
+  `status_color` varchar(60) DEFAULT NULL,
+  `font_awesome` varchar(40) DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -823,36 +814,36 @@ INSERT INTO `issue_priority` (`id`, `sequence`, `name`, `_key`, `description`, `
 --
 
 CREATE TABLE `issue_recycle` (
-                                 `id` int(11) UNSIGNED NOT NULL,
-                                 `delete_user_id` int(11) UNSIGNED NOT NULL,
-                                 `issue_id` int(11) UNSIGNED DEFAULT NULL,
-                                 `pkey` varchar(32) DEFAULT NULL,
-                                 `issue_num` decimal(18,0) DEFAULT NULL,
-                                 `project_id` int(11) DEFAULT '0',
-                                 `issue_type` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                 `creator` int(11) UNSIGNED DEFAULT '0',
-                                 `modifier` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                 `reporter` int(11) DEFAULT '0',
-                                 `assignee` int(11) DEFAULT '0',
-                                 `summary` varchar(255) DEFAULT '',
-                                 `description` text,
-                                 `environment` varchar(128) DEFAULT '',
-                                 `priority` int(11) DEFAULT '0',
-                                 `resolve` int(11) DEFAULT '0',
-                                 `status` int(11) DEFAULT '0',
-                                 `created` int(11) DEFAULT '0',
-                                 `updated` int(11) DEFAULT '0',
-                                 `start_date` date DEFAULT NULL,
-                                 `due_date` date DEFAULT NULL,
-                                 `resolve_date` datetime DEFAULT NULL,
-                                 `workflow_id` int(11) DEFAULT '0',
-                                 `module` int(11) DEFAULT '0',
-                                 `milestone` varchar(20) DEFAULT NULL,
-                                 `sprint` int(11) NOT NULL DEFAULT '0',
-                                 `assistants` varchar(256) NOT NULL DEFAULT '',
-                                 `master_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
-                                 `data` text,
-                                 `time` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `delete_user_id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(11) UNSIGNED DEFAULT NULL,
+  `pkey` varchar(32) DEFAULT NULL,
+  `issue_num` decimal(18,0) DEFAULT NULL,
+  `project_id` int(11) DEFAULT 0,
+  `issue_type` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `creator` int(11) UNSIGNED DEFAULT 0,
+  `modifier` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `reporter` int(11) DEFAULT 0,
+  `assignee` int(11) DEFAULT 0,
+  `summary` varchar(255) DEFAULT '',
+  `description` text DEFAULT NULL,
+  `environment` varchar(128) DEFAULT '',
+  `priority` int(11) DEFAULT 0,
+  `resolve` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `created` int(11) DEFAULT 0,
+  `updated` int(11) DEFAULT 0,
+  `start_date` date DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `resolve_date` datetime DEFAULT NULL,
+  `workflow_id` int(11) DEFAULT 0,
+  `module` int(11) DEFAULT 0,
+  `milestone` varchar(20) DEFAULT NULL,
+  `sprint` int(11) NOT NULL DEFAULT 0,
+  `assistants` varchar(256) NOT NULL DEFAULT '',
+  `master_id` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '父任务的id,非0表示子任务',
+  `data` text DEFAULT NULL,
+  `time` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -870,14 +861,14 @@ INSERT INTO `issue_recycle` (`id`, `delete_user_id`, `issue_id`, `pkey`, `issue_
 --
 
 CREATE TABLE `issue_resolve` (
-                                 `id` int(11) UNSIGNED NOT NULL,
-                                 `sequence` int(11) UNSIGNED DEFAULT '0',
-                                 `name` varchar(60) DEFAULT NULL,
-                                 `_key` varchar(128) NOT NULL,
-                                 `description` text,
-                                 `font_awesome` varchar(32) DEFAULT NULL,
-                                 `color` varchar(20) DEFAULT NULL,
-                                 `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `sequence` int(11) UNSIGNED DEFAULT 0,
+  `name` varchar(60) DEFAULT NULL,
+  `_key` varchar(128) NOT NULL,
+  `description` text DEFAULT NULL,
+  `font_awesome` varchar(32) DEFAULT NULL,
+  `color` varchar(20) DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -901,15 +892,15 @@ INSERT INTO `issue_resolve` (`id`, `sequence`, `name`, `_key`, `description`, `f
 --
 
 CREATE TABLE `issue_status` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `sequence` int(11) UNSIGNED DEFAULT '0',
-                                `name` varchar(60) DEFAULT NULL,
-                                `_key` varchar(20) DEFAULT NULL,
-                                `description` varchar(500) DEFAULT NULL,
-                                `font_awesome` varchar(255) DEFAULT NULL,
-                                `is_system` tinyint(1) UNSIGNED DEFAULT '0',
-                                `color` varchar(20) DEFAULT NULL COMMENT 'Default Primary Success Info Warning Danger可选',
-                                `text_color` varchar(12) NOT NULL DEFAULT 'black' COMMENT '字体颜色'
+  `id` int(11) UNSIGNED NOT NULL,
+  `sequence` int(11) UNSIGNED DEFAULT 0,
+  `name` varchar(60) DEFAULT NULL,
+  `_key` varchar(20) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `font_awesome` varchar(255) DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED DEFAULT 0,
+  `color` varchar(20) DEFAULT NULL COMMENT 'Default Primary Success Info Warning Danger可选',
+  `text_color` varchar(12) NOT NULL DEFAULT 'black' COMMENT '字体颜色'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -933,16 +924,16 @@ INSERT INTO `issue_status` (`id`, `sequence`, `name`, `_key`, `description`, `fo
 --
 
 CREATE TABLE `issue_type` (
-                              `id` int(11) UNSIGNED NOT NULL,
-                              `sequence` decimal(18,0) DEFAULT NULL,
-                              `name` varchar(60) DEFAULT NULL,
-                              `_key` varchar(64) NOT NULL,
-                              `catalog` enum('Custom','Kanban','Scrum','Standard') DEFAULT 'Standard' COMMENT '类型',
-                              `description` text,
-                              `font_awesome` varchar(20) DEFAULT NULL,
-                              `custom_icon_url` varchar(128) DEFAULT NULL,
-                              `is_system` tinyint(1) UNSIGNED DEFAULT '0',
-                              `form_desc_tpl_id` int(11) UNSIGNED DEFAULT '0' COMMENT '创建事项时,描述字段对应的模板id'
+  `id` int(11) UNSIGNED NOT NULL,
+  `sequence` decimal(18,0) DEFAULT NULL,
+  `name` varchar(60) DEFAULT NULL,
+  `_key` varchar(64) NOT NULL,
+  `catalog` enum('Custom','Kanban','Scrum','Standard') DEFAULT 'Standard' COMMENT '类型',
+  `description` text DEFAULT NULL,
+  `font_awesome` varchar(20) DEFAULT NULL,
+  `custom_icon_url` varchar(128) DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED DEFAULT 0,
+  `form_desc_tpl_id` int(11) UNSIGNED DEFAULT 0 COMMENT '创建事项时,描述字段对应的模板id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -958,8 +949,7 @@ INSERT INTO `issue_type` (`id`, `sequence`, `name`, `_key`, `catalog`, `descript
 (6, '2', '用户故事', 'user_story', 'Scrum', '从用户的角度来描述用户渴望得到的功能。一个好的用户故事包括三个要素：1. 角色；2. 活动　3. 商业价值', 'fa-users', NULL, 1, 2),
 (7, '3', '技术任务', 'tech_task', 'Scrum', '技术性的任务,如架构设计,数据库选型', 'fa-cogs', NULL, 1, 2),
 (8, '5', '史诗任务', 'epic', 'Scrum', '大型的或大量的工作，包含许多用户故事', 'fa-address-book-o', NULL, 1, 0),
-(12, NULL, '甘特图', 'gantt', 'Custom', '', 'fa-exchange', NULL, 0, 0),
-(13, NULL, 'WWWW', 'WWW', 'Custom', 'WW', '', NULL, 0, 0);
+(12, NULL, '甘特图', 'gantt', 'Custom', '', 'fa-exchange', NULL, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -968,10 +958,10 @@ INSERT INTO `issue_type` (`id`, `sequence`, `name`, `_key`, `catalog`, `descript
 --
 
 CREATE TABLE `issue_type_scheme` (
-                                     `id` int(11) UNSIGNED NOT NULL,
-                                     `name` varchar(64) DEFAULT NULL,
-                                     `description` varchar(100) DEFAULT NULL,
-                                     `is_default` tinyint(1) UNSIGNED DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(64) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  `is_default` tinyint(1) UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题方案表';
 
 --
@@ -990,9 +980,9 @@ INSERT INTO `issue_type_scheme` (`id`, `name`, `description`, `is_default`) VALU
 --
 
 CREATE TABLE `issue_type_scheme_data` (
-                                          `id` int(11) UNSIGNED NOT NULL,
-                                          `scheme_id` int(11) UNSIGNED DEFAULT NULL,
-                                          `type_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `scheme_id` int(11) UNSIGNED DEFAULT NULL,
+  `type_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题方案字表';
 
 --
@@ -1025,13 +1015,13 @@ INSERT INTO `issue_type_scheme_data` (`id`, `scheme_id`, `type_id`) VALUES
 --
 
 CREATE TABLE `issue_ui` (
-                            `id` int(10) UNSIGNED NOT NULL,
-                            `issue_type_id` int(10) UNSIGNED DEFAULT NULL,
-                            `ui_type` varchar(10) DEFAULT '',
-                            `field_id` int(10) UNSIGNED DEFAULT NULL,
-                            `order_weight` int(10) UNSIGNED DEFAULT NULL,
-                            `tab_id` int(11) UNSIGNED DEFAULT '0',
-                            `required` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否必填项'
+  `id` int(10) UNSIGNED NOT NULL,
+  `issue_type_id` int(10) UNSIGNED DEFAULT NULL,
+  `ui_type` varchar(10) DEFAULT '',
+  `field_id` int(10) UNSIGNED DEFAULT NULL,
+  `order_weight` int(10) UNSIGNED DEFAULT NULL,
+  `tab_id` int(11) UNSIGNED DEFAULT 0,
+  `required` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否必填项'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1283,51 +1273,43 @@ INSERT INTO `issue_ui` (`id`, `issue_type_id`, `ui_type`, `field_id`, `order_wei
 (1658, 3, 'edit', 3, 2, 91, 0),
 (1659, 3, 'edit', 23, 1, 91, 0),
 (1660, 3, 'edit', 21, 0, 91, 0),
-(2143, 1, 'create', 1, 15, 0, 1),
-(2144, 1, 'create', 6, 14, 0, 0),
-(2145, 1, 'create', 2, 13, 0, 1),
-(2146, 1, 'create', 7, 12, 0, 0),
-(2147, 1, 'create', 4, 11, 0, 1),
-(2148, 1, 'create', 11, 10, 0, 0),
-(2149, 1, 'create', 12, 9, 0, 0),
-(2150, 1, 'create', 13, 8, 0, 0),
-(2151, 1, 'create', 15, 7, 0, 0),
-(2152, 1, 'create', 23, 6, 0, 0),
-(2153, 1, 'create', 35, 5, 0, 0),
-(2154, 1, 'create', 36, 4, 0, 0),
-(2155, 1, 'create', 37, 3, 0, 1),
-(2156, 1, 'create', 38, 2, 0, 1),
-(2157, 1, 'create', 19, 9, 115, 0),
-(2158, 1, 'create', 10, 8, 115, 0),
-(2159, 1, 'create', 20, 7, 115, 0),
-(2160, 1, 'create', 18, 6, 115, 0),
-(2161, 1, 'create', 3, 5, 115, 0),
-(2162, 1, 'create', 21, 4, 115, 0),
-(2163, 1, 'create', 8, 3, 115, 0),
-(2164, 1, 'create', 9, 2, 115, 0),
-(2165, 1, 'create', 29, 1, 115, 0),
-(2166, 1, 'create', 28, 0, 115, 0),
-(2167, 1, 'edit', 1, 16, 0, 1),
-(2168, 1, 'edit', 6, 15, 0, 0),
-(2169, 1, 'edit', 2, 14, 0, 1),
-(2170, 1, 'edit', 19, 13, 0, 0),
-(2171, 1, 'edit', 10, 12, 0, 0),
-(2172, 1, 'edit', 7, 11, 0, 0),
-(2173, 1, 'edit', 4, 10, 0, 1),
-(2174, 1, 'edit', 11, 9, 0, 0),
-(2175, 1, 'edit', 12, 8, 0, 0),
-(2176, 1, 'edit', 13, 7, 0, 0),
-(2177, 1, 'edit', 15, 6, 0, 0),
-(2178, 1, 'edit', 35, 5, 0, 0),
-(2179, 1, 'edit', 36, 4, 0, 0),
-(2180, 1, 'edit', 37, 3, 0, 0),
-(2181, 1, 'edit', 38, 2, 0, 1),
-(2182, 1, 'edit', 3, 5, 116, 0),
-(2183, 1, 'edit', 18, 4, 116, 0),
-(2184, 1, 'edit', 20, 3, 116, 0),
-(2185, 1, 'edit', 21, 2, 116, 0),
-(2186, 1, 'edit', 8, 1, 116, 0),
-(2187, 1, 'edit', 9, 0, 116, 0);
+(2188, 1, 'create', 1, 9, 0, 1),
+(2189, 1, 'create', 6, 8, 0, 0),
+(2190, 1, 'create', 2, 7, 0, 1),
+(2191, 1, 'create', 7, 6, 0, 0),
+(2192, 1, 'create', 4, 5, 0, 1),
+(2193, 1, 'create', 11, 4, 0, 0),
+(2194, 1, 'create', 12, 3, 0, 0),
+(2195, 1, 'create', 13, 2, 0, 0),
+(2196, 1, 'create', 15, 1, 0, 0),
+(2197, 1, 'create', 23, 0, 0, 0),
+(2198, 1, 'create', 19, 9, 117, 0),
+(2199, 1, 'create', 10, 8, 117, 0),
+(2200, 1, 'create', 20, 7, 117, 0),
+(2201, 1, 'create', 18, 6, 117, 0),
+(2202, 1, 'create', 3, 5, 117, 0),
+(2203, 1, 'create', 21, 4, 117, 0),
+(2204, 1, 'create', 8, 3, 117, 0),
+(2205, 1, 'create', 9, 2, 117, 0),
+(2206, 1, 'create', 29, 1, 117, 0),
+(2207, 1, 'create', 28, 0, 117, 0),
+(2208, 1, 'edit', 1, 10, 0, 1),
+(2209, 1, 'edit', 6, 9, 0, 0),
+(2210, 1, 'edit', 2, 8, 0, 1),
+(2211, 1, 'edit', 19, 7, 0, 0),
+(2212, 1, 'edit', 10, 6, 0, 0),
+(2213, 1, 'edit', 7, 5, 0, 0),
+(2214, 1, 'edit', 4, 4, 0, 1),
+(2215, 1, 'edit', 11, 3, 0, 0),
+(2216, 1, 'edit', 12, 2, 0, 0),
+(2217, 1, 'edit', 13, 1, 0, 0),
+(2218, 1, 'edit', 15, 0, 0, 0),
+(2219, 1, 'edit', 3, 5, 118, 0),
+(2220, 1, 'edit', 18, 4, 118, 0),
+(2221, 1, 'edit', 20, 3, 118, 0),
+(2222, 1, 'edit', 21, 2, 118, 0),
+(2223, 1, 'edit', 8, 1, 118, 0),
+(2224, 1, 'edit', 9, 0, 118, 0);
 
 -- --------------------------------------------------------
 
@@ -1336,11 +1318,11 @@ INSERT INTO `issue_ui` (`id`, `issue_type_id`, `ui_type`, `field_id`, `order_wei
 --
 
 CREATE TABLE `issue_ui_tab` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `issue_type_id` int(11) UNSIGNED DEFAULT NULL,
-                                `name` varchar(255) DEFAULT NULL,
-                                `order_weight` int(11) DEFAULT NULL,
-                                `ui_type` varchar(20) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `issue_type_id` int(11) UNSIGNED DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `order_weight` int(11) DEFAULT NULL,
+  `ui_type` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1359,8 +1341,8 @@ INSERT INTO `issue_ui_tab` (`id`, `issue_type_id`, `name`, `order_weight`, `ui_t
 (82, 2, '\n            \n            \n            \n            \n            \n            \n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             ', 0, 'edit'),
 (90, 3, '其他', 0, 'create'),
 (91, 3, '\n            \n            \n            \n            \n            \n            \n            \n            其他\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        \n    ', 0, 'edit'),
-(115, 1, '更 多', 0, 'create'),
-(116, 1, '\n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n       ', 0, 'edit');
+(117, 1, '更 多', 0, 'create'),
+(118, 1, '\n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n       ', 0, 'edit');
 
 -- --------------------------------------------------------
 
@@ -1369,22 +1351,22 @@ INSERT INTO `issue_ui_tab` (`id`, `issue_type_id`, `name`, `order_weight`, `ui_t
 --
 
 CREATE TABLE `log_base` (
-                            `id` int(11) NOT NULL,
-                            `company_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                            `module` varchar(20) DEFAULT NULL COMMENT '所属模块',
-                            `obj_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作记录所关联的对象id,如现货id 订单id',
-                            `uid` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作者id,0为系统操作',
-                            `user_name` varchar(32) DEFAULT '' COMMENT '操作者用户名',
-                            `real_name` varchar(255) DEFAULT NULL,
-                            `page` varchar(100) DEFAULT '' COMMENT '页面',
-                            `pre_status` tinyint(3) UNSIGNED DEFAULT NULL,
-                            `cur_status` tinyint(3) UNSIGNED DEFAULT NULL,
-                            `action` varchar(20) DEFAULT NULL COMMENT '操作动作',
-                            `remark` varchar(100) DEFAULT '' COMMENT '动作',
-                            `pre_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
-                            `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
-                            `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
-                            `time` int(11) UNSIGNED DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `company_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `module` varchar(20) DEFAULT NULL COMMENT '所属模块',
+  `obj_id` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作记录所关联的对象id,如现货id 订单id',
+  `uid` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作者id,0为系统操作',
+  `user_name` varchar(32) DEFAULT '' COMMENT '操作者用户名',
+  `real_name` varchar(255) DEFAULT NULL,
+  `page` varchar(100) DEFAULT '' COMMENT '页面',
+  `pre_status` tinyint(3) UNSIGNED DEFAULT NULL,
+  `cur_status` tinyint(3) UNSIGNED DEFAULT NULL,
+  `action` varchar(20) DEFAULT NULL COMMENT '操作动作',
+  `remark` varchar(100) DEFAULT '' COMMENT '动作',
+  `pre_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
+  `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
+  `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
+  `time` int(11) UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
 -- --------------------------------------------------------
@@ -1394,22 +1376,22 @@ CREATE TABLE `log_base` (
 --
 
 CREATE TABLE `log_operating` (
-                                 `id` int(11) NOT NULL,
-                                 `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                 `module` varchar(20) DEFAULT NULL COMMENT '所属模块',
-                                 `obj_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作记录所关联的对象id,如现货id 订单id',
-                                 `uid` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作者id,0为系统操作',
-                                 `user_name` varchar(32) DEFAULT '' COMMENT '操作者用户名',
-                                 `real_name` varchar(255) DEFAULT NULL,
-                                 `page` varchar(100) DEFAULT '' COMMENT '页面',
-                                 `pre_status` tinyint(3) UNSIGNED DEFAULT NULL,
-                                 `cur_status` tinyint(3) UNSIGNED DEFAULT NULL,
-                                 `action` varchar(20) DEFAULT NULL COMMENT '操作动作',
-                                 `remark` varchar(100) DEFAULT '' COMMENT '动作',
-                                 `pre_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
-                                 `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
-                                 `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
-                                 `time` int(11) UNSIGNED DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `module` varchar(20) DEFAULT NULL COMMENT '所属模块',
+  `obj_id` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作记录所关联的对象id,如现货id 订单id',
+  `uid` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作者id,0为系统操作',
+  `user_name` varchar(32) DEFAULT '' COMMENT '操作者用户名',
+  `real_name` varchar(255) DEFAULT NULL,
+  `page` varchar(100) DEFAULT '' COMMENT '页面',
+  `pre_status` tinyint(3) UNSIGNED DEFAULT NULL,
+  `cur_status` tinyint(3) UNSIGNED DEFAULT NULL,
+  `action` varchar(20) DEFAULT NULL COMMENT '操作动作',
+  `remark` varchar(100) DEFAULT '' COMMENT '动作',
+  `pre_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
+  `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
+  `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
+  `time` int(11) UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
 -- --------------------------------------------------------
@@ -1419,14 +1401,14 @@ CREATE TABLE `log_operating` (
 --
 
 CREATE TABLE `log_runtime_error` (
-                                     `id` int(10) UNSIGNED NOT NULL,
-                                     `md5` varchar(32) NOT NULL,
-                                     `file` varchar(255) NOT NULL,
-                                     `line` smallint(6) UNSIGNED NOT NULL,
-                                     `time` int(10) UNSIGNED NOT NULL,
-                                     `date` date NOT NULL,
-                                     `err` varchar(32) NOT NULL DEFAULT '',
-                                     `errstr` varchar(255) NOT NULL DEFAULT ''
+  `id` int(10) UNSIGNED NOT NULL,
+  `md5` varchar(32) NOT NULL,
+  `file` varchar(255) NOT NULL,
+  `line` smallint(6) UNSIGNED NOT NULL,
+  `time` int(10) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `err` varchar(32) NOT NULL DEFAULT '',
+  `errstr` varchar(255) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1436,17 +1418,17 @@ CREATE TABLE `log_runtime_error` (
 --
 
 CREATE TABLE `main_action` (
-                               `id` decimal(18,0) NOT NULL,
-                               `issueid` decimal(18,0) DEFAULT NULL,
-                               `author` varchar(255) DEFAULT NULL,
-                               `actiontype` varchar(255) DEFAULT NULL,
-                               `actionlevel` varchar(255) DEFAULT NULL,
-                               `rolelevel` decimal(18,0) DEFAULT NULL,
-                               `actionbody` longtext,
-                               `created` datetime DEFAULT NULL,
-                               `updateauthor` varchar(255) DEFAULT NULL,
-                               `updated` datetime DEFAULT NULL,
-                               `actionnum` decimal(18,0) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `issueid` decimal(18,0) DEFAULT NULL,
+  `author` varchar(255) DEFAULT NULL,
+  `actiontype` varchar(255) DEFAULT NULL,
+  `actionlevel` varchar(255) DEFAULT NULL,
+  `rolelevel` decimal(18,0) DEFAULT NULL,
+  `actionbody` longtext DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `updateauthor` varchar(255) DEFAULT NULL,
+  `updated` datetime DEFAULT NULL,
+  `actionnum` decimal(18,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1456,16 +1438,16 @@ CREATE TABLE `main_action` (
 --
 
 CREATE TABLE `main_activity` (
-                                 `id` int(11) UNSIGNED NOT NULL,
-                                 `user_id` int(11) UNSIGNED DEFAULT NULL,
-                                 `project_id` int(11) UNSIGNED DEFAULT NULL,
-                                 `action` varchar(32) DEFAULT NULL COMMENT '动作说明,如 关闭了，创建了，修复了',
-                                 `content` varchar(1024) NOT NULL DEFAULT '' COMMENT '内容',
-                                 `type` enum('agile','user','issue','issue_comment','org','project') DEFAULT 'issue' COMMENT 'project,issue,user,agile,issue_comment',
-                                 `obj_id` int(11) UNSIGNED DEFAULT NULL,
-                                 `title` varchar(128) DEFAULT NULL COMMENT '相关的事项标题',
-                                 `date` date DEFAULT NULL,
-                                 `time` int(11) UNSIGNED DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED DEFAULT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL,
+  `action` varchar(32) DEFAULT NULL COMMENT '动作说明,如 关闭了，创建了，修复了',
+  `content` varchar(1024) NOT NULL DEFAULT '' COMMENT '内容',
+  `type` enum('agile','user','issue','issue_comment','org','project') DEFAULT 'issue' COMMENT 'project,issue,user,agile,issue_comment',
+  `obj_id` int(11) UNSIGNED DEFAULT NULL,
+  `title` varchar(128) DEFAULT NULL COMMENT '相关的事项标题',
+  `date` date DEFAULT NULL,
+  `time` int(11) UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1556,11 +1538,11 @@ INSERT INTO `main_activity` (`id`, `user_id`, `project_id`, `action`, `content`,
 --
 
 CREATE TABLE `main_announcement` (
-                                     `id` int(10) UNSIGNED NOT NULL,
-                                     `content` varchar(255) DEFAULT NULL,
-                                     `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0为禁用,1为发布中',
-                                     `flag` int(11) DEFAULT '0' COMMENT '每次发布将自增该字段',
-                                     `expire_time` int(11) DEFAULT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) UNSIGNED DEFAULT 0 COMMENT '0为禁用,1为发布中',
+  `flag` int(11) DEFAULT 0 COMMENT '每次发布将自增该字段',
+  `expire_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1577,20 +1559,11 @@ INSERT INTO `main_announcement` (`id`, `content`, `status`, `flag`, `expire_time
 --
 
 CREATE TABLE `main_cache_key` (
-                                  `key` varchar(100) NOT NULL,
-                                  `module` varchar(64) DEFAULT NULL,
-                                  `datetime` datetime DEFAULT NULL,
-                                  `expire` int(10) UNSIGNED DEFAULT NULL
+  `key` varchar(100) NOT NULL,
+  `module` varchar(64) DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
+  `expire` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `main_cache_key`
---
-
-INSERT INTO `main_cache_key` (`key`, `module`, `datetime`, `expire`) VALUES
-('dict/description_template/getAll/0,*', 'dict/description_template', '2020-06-02 16:42:35', 1591087355),
-('dict/main/getAll/0,*', 'dict/main', '2020-06-02 17:00:02', 1591088402),
-('dict/project_permission/getAll/1,*', 'dict/project_permission', '2020-06-02 16:42:24', 1591087344);
 
 -- --------------------------------------------------------
 
@@ -1599,11 +1572,11 @@ INSERT INTO `main_cache_key` (`key`, `module`, `datetime`, `expire`) VALUES
 --
 
 CREATE TABLE `main_eventtype` (
-                                  `id` decimal(18,0) NOT NULL,
-                                  `template_id` decimal(18,0) DEFAULT NULL,
-                                  `name` varchar(255) DEFAULT NULL,
-                                  `description` text,
-                                  `event_type` varchar(60) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `template_id` decimal(18,0) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `event_type` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1613,14 +1586,14 @@ CREATE TABLE `main_eventtype` (
 --
 
 CREATE TABLE `main_group` (
-                              `id` int(11) NOT NULL,
-                              `name` varchar(255) DEFAULT NULL,
-                              `active` int(11) DEFAULT NULL,
-                              `created_date` datetime DEFAULT NULL,
-                              `updated_date` datetime DEFAULT NULL,
-                              `description` varchar(255) DEFAULT NULL,
-                              `group_type` varchar(60) DEFAULT NULL,
-                              `directory_id` decimal(18,0) DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `active` int(11) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `group_type` varchar(60) DEFAULT NULL,
+  `directory_id` decimal(18,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1641,13 +1614,13 @@ INSERT INTO `main_group` (`id`, `name`, `active`, `created_date`, `updated_date`
 --
 
 CREATE TABLE `main_mail_queue` (
-                                   `id` int(10) UNSIGNED NOT NULL,
-                                   `seq` varchar(32) DEFAULT NULL,
-                                   `title` varchar(100) DEFAULT NULL,
-                                   `address` varchar(200) DEFAULT NULL,
-                                   `status` varchar(10) DEFAULT NULL,
-                                   `create_time` int(11) UNSIGNED DEFAULT NULL,
-                                   `error` varchar(200) DEFAULT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `seq` varchar(32) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `address` varchar(200) DEFAULT NULL,
+  `status` varchar(10) DEFAULT NULL,
+  `create_time` int(11) UNSIGNED DEFAULT NULL,
+  `error` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1657,9 +1630,9 @@ CREATE TABLE `main_mail_queue` (
 --
 
 CREATE TABLE `main_notify_scheme` (
-                                      `id` int(11) NOT NULL,
-                                      `name` varchar(20) NOT NULL,
-                                      `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1676,13 +1649,13 @@ INSERT INTO `main_notify_scheme` (`id`, `name`, `is_system`) VALUES
 --
 
 CREATE TABLE `main_notify_scheme_data` (
-                                           `id` int(11) UNSIGNED NOT NULL,
-                                           `scheme_id` int(11) UNSIGNED NOT NULL,
-                                           `name` varchar(20) NOT NULL,
-                                           `flag` varchar(128) DEFAULT NULL,
-                                           `user` varchar(1024) NOT NULL DEFAULT '[]' COMMENT '项目成员,经办人,报告人,关注人',
-                                           `title_tpl` varchar(128) NOT NULL DEFAULT '',
-                                           `body_tpl` text NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `scheme_id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `flag` varchar(128) DEFAULT NULL,
+  `user` varchar(1024) NOT NULL DEFAULT '[]' COMMENT '项目成员,经办人,报告人,关注人',
+  `title_tpl` varchar(128) NOT NULL DEFAULT '',
+  `body_tpl` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1712,15 +1685,15 @@ INSERT INTO `main_notify_scheme_data` (`id`, `scheme_id`, `name`, `flag`, `user`
 --
 
 CREATE TABLE `main_org` (
-                            `id` int(11) NOT NULL,
-                            `path` varchar(64) NOT NULL DEFAULT '',
-                            `name` varchar(64) NOT NULL DEFAULT '',
-                            `description` text NOT NULL,
-                            `avatar` varchar(256) NOT NULL DEFAULT '',
-                            `create_uid` int(11) NOT NULL DEFAULT '0',
-                            `created` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                            `updated` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                            `scope` tinyint(2) NOT NULL DEFAULT '1' COMMENT '1 private, 2 internal , 3 public'
+  `id` int(11) NOT NULL,
+  `path` varchar(64) NOT NULL DEFAULT '',
+  `name` varchar(64) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
+  `avatar` varchar(256) NOT NULL DEFAULT '',
+  `create_uid` int(11) NOT NULL DEFAULT 0,
+  `created` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `updated` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `scope` tinyint(2) NOT NULL DEFAULT 1 COMMENT '1 private, 2 internal , 3 public'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1737,23 +1710,23 @@ INSERT INTO `main_org` (`id`, `path`, `name`, `description`, `avatar`, `create_u
 --
 
 CREATE TABLE `main_plugin` (
-                               `id` int(10) UNSIGNED NOT NULL,
-                               `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `title` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `index_page` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `version` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1已安装,2未安装,0无效(插件目录不存在)',
-                               `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `chmod_json` text COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `icon_file` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `company` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `install_time` int(10) UNSIGNED NOT NULL DEFAULT '0',
-                               `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0',
-                               `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-                               `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
-                               `is_display` tinyint(1) UNSIGNED NOT NULL DEFAULT '1'
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `index_page` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `version` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1已安装,2未安装,0无效(插件目录不存在)',
+  `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `chmod_json` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon_file` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `company` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `install_time` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `order_weight` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否启用',
+  `is_display` tinyint(1) UNSIGNED NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1772,17 +1745,17 @@ INSERT INTO `main_plugin` (`id`, `name`, `title`, `index_page`, `description`, `
 --
 
 CREATE TABLE `main_setting` (
-                                `id` int(11) NOT NULL,
-                                `_key` varchar(50) NOT NULL COMMENT '关键字',
-                                `title` varchar(64) NOT NULL COMMENT '标题',
-                                `module` varchar(20) NOT NULL DEFAULT '' COMMENT '所属模块,basic,advance,ui,datetime,languge,attachment可选',
-                                `order_weight` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重',
-                                `_value` varchar(100) NOT NULL,
-                                `default_value` varchar(100) DEFAULT '' COMMENT '默认值',
-                                `format` enum('string','int','float','json') NOT NULL DEFAULT 'string' COMMENT '数据类型',
-                                `form_input_type` enum('datetime','date','textarea','select','checkbox','radio','img','color','file','int','number','text') DEFAULT 'text' COMMENT '表单项类型',
-                                `form_optional_value` varchar(5000) DEFAULT NULL COMMENT '待选的值定义,为json格式',
-                                `description` varchar(200) DEFAULT ''
+  `id` int(11) NOT NULL,
+  `_key` varchar(50) NOT NULL COMMENT '关键字',
+  `title` varchar(64) NOT NULL COMMENT '标题',
+  `module` varchar(20) NOT NULL DEFAULT '' COMMENT '所属模块,basic,advance,ui,datetime,languge,attachment可选',
+  `order_weight` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '排序权重',
+  `_value` varchar(100) NOT NULL,
+  `default_value` varchar(100) DEFAULT '' COMMENT '默认值',
+  `format` enum('string','int','float','json') NOT NULL DEFAULT 'string' COMMENT '数据类型',
+  `form_input_type` enum('datetime','date','textarea','select','checkbox','radio','img','color','file','int','number','text') DEFAULT 'text' COMMENT '表单项类型',
+  `form_optional_value` varchar(5000) DEFAULT NULL COMMENT '待选的值定义,为json格式',
+  `description` varchar(200) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统配置表';
 
 --
@@ -1790,7 +1763,7 @@ CREATE TABLE `main_setting` (
 --
 
 INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_value`, `default_value`, `format`, `form_input_type`, `form_optional_value`, `description`) VALUES
-(1, 'title', '网站的页面标题', 'basic', 0, 'Masterlab', 'MasterLab', 'string', 'text', NULL, ''),
+(1, 'title', '网站的页面标题', 'basic', 0, 'Master', 'MasterLab', 'string', 'text', NULL, ''),
 (2, 'open_status', '启用状态', 'basic', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (3, 'max_login_error', '最大尝试验证登录次数', 'basic', 0, '4', '4', 'int', 'text', NULL, ''),
 (4, 'login_require_captcha', '登录时需要验证码', 'basic', 0, '0', '0', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
@@ -1825,10 +1798,10 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (56, 'mail_timeout', '发送超时', 'mail', 950, '10', '', 'int', 'text', NULL, ''),
 (57, 'page_layout', '页面布局', 'user_default', 0, 'float', 'fixed', 'string', 'radio', '{\"fixed\":\"固定\",\"float\":\"自适应\"}', ''),
 (58, 'project_view', '项目首页', 'user_default', 0, 'issues', 'issues', 'string', 'radio', '{\"issues\":\"事项列表\",\"summary\":\"项目摘要\",\"backlog\":\"待办事项\",\"sprints\":\"迭代列表\",\"board\":\"迭代看板\"}', ''),
-(59, 'company', '公司名称', 'basic', 0, 'name', '', 'string', 'text', NULL, ''),
+(59, 'company', '公司名称', 'basic', 0, 'Master', '', 'string', 'text', NULL, ''),
 (60, 'company_logo', '公司logo', 'basic', 0, 'logo', '', 'string', 'text', NULL, ''),
-(61, 'company_linkman', '联系人', 'basic', 0, '18002516775', '', 'string', 'text', NULL, ''),
-(62, 'company_phone', '联系电话', 'basic', 0, '135255256541', '', 'string', 'text', NULL, ''),
+(61, 'company_linkman', '联系人', 'basic', 0, 'Master', '', 'string', 'text', NULL, ''),
+(62, 'company_phone', '联系电话', 'basic', 0, '18002516775', '', 'string', 'text', NULL, ''),
 (63, 'enable_async_mail', '是否使用异步方式发送邮件', 'mail', 890, '0', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (64, 'enable_mail', '是否开启邮件推送', 'mail', 1024, '0', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (70, 'socket_server_host', 'MasterlabSocket服务器地址', 'mail', 880, '127.0.0.1', '127.0.0.1', 'string', 'text', NULL, ''),
@@ -1855,17 +1828,17 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 --
 
 CREATE TABLE `main_timeline` (
-                                 `id` int(11) UNSIGNED NOT NULL,
-                                 `uid` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                 `type` varchar(12) NOT NULL DEFAULT '',
-                                 `origin_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                 `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                 `issue_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                 `action` varchar(32) NOT NULL DEFAULT '',
-                                 `action_icon` varchar(64) NOT NULL DEFAULT '',
-                                 `content` text NOT NULL,
-                                 `content_html` text NOT NULL,
-                                 `time` int(11) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `uid` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `type` varchar(12) NOT NULL DEFAULT '',
+  `origin_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `project_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `issue_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `action` varchar(32) NOT NULL DEFAULT '',
+  `action_icon` varchar(64) NOT NULL DEFAULT '',
+  `content` text NOT NULL,
+  `content_html` text NOT NULL,
+  `time` int(11) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1902,14 +1875,14 @@ INSERT INTO `main_timeline` (`id`, `uid`, `type`, `origin_id`, `project_id`, `is
 --
 
 CREATE TABLE `main_webhook` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `event_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `secret_token` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
-                                `timeout` tinyint(2) UNSIGNED NOT NULL DEFAULT '10',
-                                `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `event_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret_token` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否启用',
+  `timeout` tinyint(2) UNSIGNED NOT NULL DEFAULT 10,
+  `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1927,19 +1900,19 @@ INSERT INTO `main_webhook` (`id`, `name`, `url`, `event_json`, `secret_token`, `
 --
 
 CREATE TABLE `main_widget` (
-                               `id` int(11) NOT NULL COMMENT '主键id',
-                               `name` varchar(255) DEFAULT NULL COMMENT '工具名称',
-                               `_key` varchar(64) NOT NULL,
-                               `method` varchar(64) NOT NULL DEFAULT '',
-                               `module` varchar(20) NOT NULL,
-                               `pic` varchar(255) NOT NULL,
-                               `type` enum('list','chart_line','chart_pie','chart_bar','text') DEFAULT NULL COMMENT '工具类型',
-                               `status` tinyint(2) DEFAULT '1' COMMENT '状态（1可用，0不可用）',
-                               `is_default` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-                               `required_param` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否需要参数才能获取数据',
-                               `description` varchar(512) DEFAULT '' COMMENT '描述',
-                               `parameter` varchar(1024) NOT NULL DEFAULT '{}' COMMENT '支持的参数说明',
-                               `order_weight` int(10) UNSIGNED NOT NULL
+  `id` int(11) NOT NULL COMMENT '主键id',
+  `name` varchar(255) DEFAULT NULL COMMENT '工具名称',
+  `_key` varchar(64) NOT NULL,
+  `method` varchar(64) NOT NULL DEFAULT '',
+  `module` varchar(20) NOT NULL,
+  `pic` varchar(255) NOT NULL,
+  `type` enum('list','chart_line','chart_pie','chart_bar','text') DEFAULT NULL COMMENT '工具类型',
+  `status` tinyint(2) DEFAULT 1 COMMENT '状态（1可用，0不可用）',
+  `is_default` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `required_param` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否需要参数才能获取数据',
+  `description` varchar(512) DEFAULT '' COMMENT '描述',
+  `parameter` varchar(1024) NOT NULL DEFAULT '{}' COMMENT '支持的参数说明',
+  `order_weight` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1979,22 +1952,22 @@ INSERT INTO `main_widget` (`id`, `name`, `_key`, `method`, `module`, `pic`, `typ
 --
 
 CREATE TABLE `mind_issue_attribute` (
-                                        `id` int(11) UNSIGNED NOT NULL,
-                                        `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                        `issue_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                        `source` varchar(20) NOT NULL DEFAULT '',
-                                        `group_by` varchar(20) NOT NULL DEFAULT '',
-                                        `layout` varchar(20) NOT NULL DEFAULT '',
-                                        `shape` varchar(20) NOT NULL DEFAULT '',
-                                        `color` varchar(20) NOT NULL DEFAULT '',
-                                        `icon` varchar(64) NOT NULL DEFAULT '',
-                                        `font_family` varchar(32) NOT NULL DEFAULT '',
-                                        `font_size` tinyint(2) NOT NULL DEFAULT '1',
-                                        `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-                                        `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-                                        `bg_color` varchar(16) NOT NULL,
-                                        `text_color` varchar(32) NOT NULL,
-                                        `side` varchar(16) NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `issue_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `source` varchar(20) NOT NULL DEFAULT '',
+  `group_by` varchar(20) NOT NULL DEFAULT '',
+  `layout` varchar(20) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `color` varchar(20) NOT NULL DEFAULT '',
+  `icon` varchar(64) NOT NULL DEFAULT '',
+  `font_family` varchar(32) NOT NULL DEFAULT '',
+  `font_size` tinyint(2) NOT NULL DEFAULT 1,
+  `font_bold` tinyint(1) NOT NULL DEFAULT 0,
+  `font_italic` tinyint(1) NOT NULL DEFAULT 0,
+  `bg_color` varchar(16) NOT NULL,
+  `text_color` varchar(32) NOT NULL,
+  `side` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2021,19 +1994,19 @@ INSERT INTO `mind_issue_attribute` (`id`, `project_id`, `issue_id`, `source`, `g
 --
 
 CREATE TABLE `mind_project_attribute` (
-                                          `id` int(11) UNSIGNED NOT NULL,
-                                          `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                          `layout` varchar(20) NOT NULL DEFAULT '',
-                                          `shape` varchar(20) NOT NULL DEFAULT '',
-                                          `color` varchar(20) NOT NULL DEFAULT '',
-                                          `icon` varchar(64) NOT NULL DEFAULT '',
-                                          `font_family` varchar(32) NOT NULL DEFAULT '',
-                                          `font_size` tinyint(2) NOT NULL DEFAULT '1',
-                                          `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-                                          `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-                                          `bg_color` varchar(16) NOT NULL,
-                                          `text_color` varchar(16) NOT NULL,
-                                          `side` varchar(16) NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `layout` varchar(20) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `color` varchar(20) NOT NULL DEFAULT '',
+  `icon` varchar(64) NOT NULL DEFAULT '',
+  `font_family` varchar(32) NOT NULL DEFAULT '',
+  `font_size` tinyint(2) NOT NULL DEFAULT 1,
+  `font_bold` tinyint(1) NOT NULL DEFAULT 0,
+  `font_italic` tinyint(1) NOT NULL DEFAULT 0,
+  `bg_color` varchar(16) NOT NULL,
+  `text_color` varchar(16) NOT NULL,
+  `side` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2050,22 +2023,22 @@ INSERT INTO `mind_project_attribute` (`id`, `project_id`, `layout`, `shape`, `co
 --
 
 CREATE TABLE `mind_second_attribute` (
-                                         `id` int(11) UNSIGNED NOT NULL,
-                                         `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                         `source` varchar(20) NOT NULL DEFAULT '',
-                                         `group_by` varchar(20) NOT NULL DEFAULT '',
-                                         `group_by_id` varchar(20) NOT NULL DEFAULT '',
-                                         `layout` varchar(20) NOT NULL DEFAULT '',
-                                         `shape` varchar(20) NOT NULL DEFAULT '',
-                                         `color` varchar(20) NOT NULL DEFAULT '',
-                                         `icon` varchar(64) NOT NULL DEFAULT '',
-                                         `font_family` varchar(32) NOT NULL DEFAULT '',
-                                         `font_size` tinyint(2) NOT NULL DEFAULT '1',
-                                         `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-                                         `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-                                         `bg_color` varchar(16) NOT NULL,
-                                         `text_color` varchar(16) NOT NULL,
-                                         `side` varchar(16) NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `source` varchar(20) NOT NULL DEFAULT '',
+  `group_by` varchar(20) NOT NULL DEFAULT '',
+  `group_by_id` varchar(20) NOT NULL DEFAULT '',
+  `layout` varchar(20) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `color` varchar(20) NOT NULL DEFAULT '',
+  `icon` varchar(64) NOT NULL DEFAULT '',
+  `font_family` varchar(32) NOT NULL DEFAULT '',
+  `font_size` tinyint(2) NOT NULL DEFAULT 1,
+  `font_bold` tinyint(1) NOT NULL DEFAULT 0,
+  `font_italic` tinyint(1) NOT NULL DEFAULT 0,
+  `bg_color` varchar(16) NOT NULL,
+  `text_color` varchar(16) NOT NULL,
+  `side` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2098,19 +2071,19 @@ INSERT INTO `mind_second_attribute` (`id`, `project_id`, `source`, `group_by`, `
 --
 
 CREATE TABLE `mind_sprint_attribute` (
-                                         `id` int(11) UNSIGNED NOT NULL,
-                                         `sprint_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                         `layout` varchar(20) NOT NULL DEFAULT '',
-                                         `shape` varchar(20) NOT NULL DEFAULT '',
-                                         `color` varchar(20) NOT NULL DEFAULT '',
-                                         `icon` varchar(64) NOT NULL DEFAULT '',
-                                         `font_family` varchar(32) NOT NULL DEFAULT '',
-                                         `font_size` tinyint(2) NOT NULL DEFAULT '1',
-                                         `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-                                         `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-                                         `bg_color` varchar(16) NOT NULL,
-                                         `text_color` varchar(16) NOT NULL,
-                                         `side` varchar(16) NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `sprint_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `layout` varchar(20) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `color` varchar(20) NOT NULL DEFAULT '',
+  `icon` varchar(64) NOT NULL DEFAULT '',
+  `font_family` varchar(32) NOT NULL DEFAULT '',
+  `font_size` tinyint(2) NOT NULL DEFAULT 1,
+  `font_bold` tinyint(1) NOT NULL DEFAULT 0,
+  `font_italic` tinyint(1) NOT NULL DEFAULT 0,
+  `bg_color` varchar(16) NOT NULL,
+  `text_color` varchar(16) NOT NULL,
+  `side` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2127,10 +2100,10 @@ INSERT INTO `mind_sprint_attribute` (`id`, `sprint_id`, `layout`, `shape`, `colo
 --
 
 CREATE TABLE `permission_default_role` (
-                                           `id` int(11) NOT NULL,
-                                           `name` varchar(64) DEFAULT NULL,
-                                           `description` varchar(256) DEFAULT NULL,
-                                           `project_id` int(11) UNSIGNED DEFAULT '0' COMMENT '如果为0表示系统初始化的角色，不为0表示某一项目特有的角色'
+  `id` int(11) NOT NULL,
+  `name` varchar(64) DEFAULT NULL,
+  `description` varchar(256) DEFAULT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT 0 COMMENT '如果为0表示系统初始化的角色，不为0表示某一项目特有的角色'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目角色表';
 
 --
@@ -2151,9 +2124,9 @@ INSERT INTO `permission_default_role` (`id`, `name`, `description`, `project_id`
 --
 
 CREATE TABLE `permission_default_role_relation` (
-                                                    `id` int(11) UNSIGNED NOT NULL,
-                                                    `role_id` int(11) UNSIGNED DEFAULT NULL,
-                                                    `perm_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `role_id` int(11) UNSIGNED DEFAULT NULL,
+  `perm_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2228,11 +2201,11 @@ INSERT INTO `permission_default_role_relation` (`id`, `role_id`, `perm_id`) VALU
 --
 
 CREATE TABLE `permission_global` (
-                                     `id` int(11) UNSIGNED NOT NULL,
-                                     `parent_id` int(11) UNSIGNED DEFAULT '0',
-                                     `name` varchar(64) DEFAULT NULL,
-                                     `description` varchar(255) DEFAULT NULL,
-                                     `_key` varchar(64) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `parent_id` int(11) UNSIGNED DEFAULT 0,
+  `name` varchar(64) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `_key` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
@@ -2253,9 +2226,9 @@ INSERT INTO `permission_global` (`id`, `parent_id`, `name`, `description`, `_key
 --
 
 CREATE TABLE `permission_global_group` (
-                                           `id` int(11) UNSIGNED NOT NULL,
-                                           `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
-                                           `group_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
+  `group_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2272,10 +2245,10 @@ INSERT INTO `permission_global_group` (`id`, `perm_global_id`, `group_id`) VALUE
 --
 
 CREATE TABLE `permission_global_role` (
-                                          `id` int(11) UNSIGNED NOT NULL,
-                                          `name` varchar(40) DEFAULT NULL,
-                                          `description` varchar(255) DEFAULT NULL,
-                                          `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED DEFAULT 0 COMMENT '是否是默认角色'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2297,10 +2270,10 @@ INSERT INTO `permission_global_role` (`id`, `name`, `description`, `is_system`) 
 --
 
 CREATE TABLE `permission_global_role_relation` (
-                                                   `id` int(11) UNSIGNED NOT NULL,
-                                                   `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
-                                                   `role_id` int(11) UNSIGNED DEFAULT NULL,
-                                                   `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否系统自带'
+  `id` int(11) UNSIGNED NOT NULL,
+  `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
+  `role_id` int(11) UNSIGNED DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED DEFAULT 0 COMMENT '是否系统自带'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户组拥有的全局权限';
 
 --
@@ -2321,9 +2294,9 @@ INSERT INTO `permission_global_role_relation` (`id`, `perm_global_id`, `role_id`
 --
 
 CREATE TABLE `permission_global_user_role` (
-                                               `id` int(11) UNSIGNED NOT NULL,
-                                               `user_id` int(11) UNSIGNED DEFAULT '0',
-                                               `role_id` int(11) UNSIGNED DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED DEFAULT 0,
+  `role_id` int(11) UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
@@ -2389,13 +2362,13 @@ INSERT INTO `permission_global_user_role` (`id`, `user_id`, `role_id`) VALUES
 --
 
 CREATE TABLE `project_catalog_label` (
-                                         `id` int(11) UNSIGNED NOT NULL,
-                                         `project_id` int(11) NOT NULL,
-                                         `name` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
-                                         `label_id_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
-                                         `font_color` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'blueviolet' COMMENT '字体颜色',
-                                         `description` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                                         `order_weight` int(11) UNSIGNED NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `name` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `label_id_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `font_color` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'blueviolet' COMMENT '字体颜色',
+  `description` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `order_weight` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='项目的分类定义';
 
 --
@@ -2429,10 +2402,10 @@ INSERT INTO `project_catalog_label` (`id`, `project_id`, `name`, `label_id_json`
 --
 
 CREATE TABLE `project_category` (
-                                    `id` int(18) UNSIGNED NOT NULL,
-                                    `name` varchar(255) DEFAULT NULL,
-                                    `description` text,
-                                    `color` varchar(20) DEFAULT ''
+  `id` int(18) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `color` varchar(20) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2442,11 +2415,11 @@ CREATE TABLE `project_category` (
 --
 
 CREATE TABLE `project_flag` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `project_id` int(11) UNSIGNED NOT NULL,
-                                `flag` varchar(64) NOT NULL,
-                                `value` text NOT NULL,
-                                `update_time` int(10) UNSIGNED NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `flag` varchar(64) NOT NULL,
+  `value` text NOT NULL,
+  `update_time` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2465,13 +2438,13 @@ INSERT INTO `project_flag` (`id`, `project_id`, `flag`, `value`, `update_time`) 
 --
 
 CREATE TABLE `project_gantt_setting` (
-                                         `id` int(11) UNSIGNED NOT NULL,
-                                         `project_id` int(11) UNSIGNED DEFAULT NULL,
-                                         `source_type` varchar(20) DEFAULT NULL COMMENT 'project,active_sprint',
-                                         `source_from` varchar(20) DEFAULT NULL,
-                                         `is_display_backlog` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在甘特图中显示待办事项',
-                                         `hide_issue_types` varchar(100) NOT NULL DEFAULT '' COMMENT '要隐藏的事项类型key以逗号分隔',
-                                         `work_dates` varchar(100) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL,
+  `source_type` varchar(20) DEFAULT NULL COMMENT 'project,active_sprint',
+  `source_from` varchar(20) DEFAULT NULL,
+  `is_display_backlog` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否在甘特图中显示待办事项',
+  `hide_issue_types` varchar(100) NOT NULL DEFAULT '' COMMENT '要隐藏的事项类型key以逗号分隔',
+  `work_dates` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
@@ -2497,17 +2470,17 @@ INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_
 --
 
 CREATE TABLE `project_issue_report` (
-                                        `id` int(10) UNSIGNED NOT NULL,
-                                        `project_id` int(11) UNSIGNED NOT NULL,
-                                        `date` date NOT NULL,
-                                        `week` tinyint(2) UNSIGNED DEFAULT NULL,
-                                        `month` varchar(20) DEFAULT NULL,
-                                        `done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-                                        `no_done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-                                        `done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-                                        `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-                                        `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-                                        `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
+  `id` int(10) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `week` tinyint(2) UNSIGNED DEFAULT NULL,
+  `month` varchar(20) DEFAULT NULL,
+  `done_count` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总完成的事项总数',
+  `no_done_count` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
+  `done_count_by_resolve` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
+  `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
+  `today_done_points` int(11) UNSIGNED DEFAULT 0 COMMENT '敏捷开发中的事项工作量或点数',
+  `today_done_number` int(11) UNSIGNED DEFAULT 0 COMMENT '当天完成的事项数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2517,9 +2490,9 @@ CREATE TABLE `project_issue_report` (
 --
 
 CREATE TABLE `project_issue_type_scheme_data` (
-                                                  `id` int(11) UNSIGNED NOT NULL,
-                                                  `issue_type_scheme_id` int(11) UNSIGNED DEFAULT NULL,
-                                                  `project_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `issue_type_scheme_id` int(11) UNSIGNED DEFAULT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2554,9 +2527,9 @@ INSERT INTO `project_issue_type_scheme_data` (`id`, `issue_type_scheme_id`, `pro
 --
 
 CREATE TABLE `project_key` (
-                               `id` decimal(18,0) NOT NULL,
-                               `project_id` decimal(18,0) DEFAULT NULL,
-                               `project_key` varchar(255) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `project_id` decimal(18,0) DEFAULT NULL,
+  `project_key` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2566,12 +2539,12 @@ CREATE TABLE `project_key` (
 --
 
 CREATE TABLE `project_label` (
-                                 `id` int(11) UNSIGNED NOT NULL,
-                                 `project_id` int(11) UNSIGNED NOT NULL,
-                                 `title` varchar(64) NOT NULL,
-                                 `color` varchar(20) NOT NULL,
-                                 `bg_color` varchar(20) NOT NULL DEFAULT '',
-                                 `description` varchar(256) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `title` varchar(64) NOT NULL,
+  `color` varchar(20) NOT NULL,
+  `bg_color` varchar(20) NOT NULL DEFAULT '',
+  `description` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2620,10 +2593,10 @@ INSERT INTO `project_label` (`id`, `project_id`, `title`, `color`, `bg_color`, `
 --
 
 CREATE TABLE `project_list_count` (
-                                      `id` int(10) UNSIGNED NOT NULL,
-                                      `project_type_id` smallint(5) UNSIGNED DEFAULT NULL,
-                                      `project_total` int(10) UNSIGNED DEFAULT NULL,
-                                      `remark` varchar(50) DEFAULT ''
+  `id` int(10) UNSIGNED NOT NULL,
+  `project_type_id` smallint(5) UNSIGNED DEFAULT NULL,
+  `project_total` int(10) UNSIGNED DEFAULT NULL,
+  `remark` varchar(50) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2633,31 +2606,31 @@ CREATE TABLE `project_list_count` (
 --
 
 CREATE TABLE `project_main` (
-                                `id` int(10) UNSIGNED NOT NULL,
-                                `org_id` int(11) NOT NULL DEFAULT '1',
-                                `org_path` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                                `name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                                `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                                `lead` int(11) UNSIGNED DEFAULT '0',
-                                `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                                `key` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                                `pcounter` decimal(18,0) DEFAULT NULL,
-                                `default_assignee` int(11) UNSIGNED DEFAULT '0',
-                                `assignee_type` int(11) DEFAULT NULL,
-                                `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                                `category` int(11) UNSIGNED DEFAULT NULL,
-                                `type` tinyint(2) DEFAULT '1',
-                                `type_child` tinyint(2) DEFAULT '0',
-                                `permission_scheme_id` int(11) UNSIGNED DEFAULT '0',
-                                `workflow_scheme_id` int(11) UNSIGNED NOT NULL,
-                                `create_uid` int(11) UNSIGNED DEFAULT '0',
-                                `create_time` int(11) UNSIGNED DEFAULT '0',
-                                `un_done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '未完成事项数',
-                                `done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '已经完成事项数',
-                                `closed_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                `archived` enum('Y','N') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT '已归档',
-                                `issue_update_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '事项最新更新时间',
-                                `is_display_issue_catalog` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否在事项列表显示分类'
+  `id` int(10) UNSIGNED NOT NULL,
+  `org_id` int(11) NOT NULL DEFAULT 1,
+  `org_path` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lead` int(11) UNSIGNED DEFAULT 0,
+  `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `key` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pcounter` decimal(18,0) DEFAULT NULL,
+  `default_assignee` int(11) UNSIGNED DEFAULT 0,
+  `assignee_type` int(11) DEFAULT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `category` int(11) UNSIGNED DEFAULT NULL,
+  `type` tinyint(2) DEFAULT 1,
+  `type_child` tinyint(2) DEFAULT 0,
+  `permission_scheme_id` int(11) UNSIGNED DEFAULT 0,
+  `workflow_scheme_id` int(11) UNSIGNED NOT NULL,
+  `create_uid` int(11) UNSIGNED DEFAULT 0,
+  `create_time` int(11) UNSIGNED DEFAULT 0,
+  `un_done_count` int(6) UNSIGNED NOT NULL DEFAULT 0 COMMENT '未完成事项数',
+  `done_count` int(6) UNSIGNED NOT NULL DEFAULT 0 COMMENT '已经完成事项数',
+  `closed_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `archived` enum('Y','N') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT '已归档',
+  `issue_update_time` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '事项最新更新时间',
+  `is_display_issue_catalog` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否在事项列表显示分类'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2675,9 +2648,9 @@ INSERT INTO `project_main` (`id`, `org_id`, `org_path`, `name`, `url`, `lead`, `
 --
 
 CREATE TABLE `project_main_extra` (
-                                      `id` int(10) UNSIGNED NOT NULL,
-                                      `project_id` int(10) UNSIGNED DEFAULT '0',
-                                      `detail` text
+  `id` int(10) UNSIGNED NOT NULL,
+  `project_id` int(10) UNSIGNED DEFAULT 0,
+  `detail` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 --
@@ -2702,10 +2675,10 @@ INSERT INTO `project_main_extra` (`id`, `project_id`, `detail`) VALUES
 --
 
 CREATE TABLE `project_mind_setting` (
-                                        `id` int(11) NOT NULL,
-                                        `project_id` int(11) NOT NULL,
-                                        `setting_key` varchar(32) NOT NULL,
-                                        `setting_value` varchar(64) NOT NULL
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `setting_key` varchar(32) NOT NULL,
+  `setting_value` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2734,14 +2707,14 @@ INSERT INTO `project_mind_setting` (`id`, `project_id`, `setting_key`, `setting_
 --
 
 CREATE TABLE `project_module` (
-                                  `id` int(11) UNSIGNED NOT NULL,
-                                  `project_id` int(11) UNSIGNED DEFAULT NULL,
-                                  `name` varchar(64) DEFAULT '',
-                                  `description` varchar(256) DEFAULT NULL,
-                                  `lead` int(11) UNSIGNED DEFAULT NULL,
-                                  `default_assignee` int(11) UNSIGNED DEFAULT NULL,
-                                  `ctime` int(10) UNSIGNED DEFAULT '0',
-                                  `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重'
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL,
+  `name` varchar(64) DEFAULT '',
+  `description` varchar(256) DEFAULT NULL,
+  `lead` int(11) UNSIGNED DEFAULT NULL,
+  `default_assignee` int(11) UNSIGNED DEFAULT NULL,
+  `ctime` int(10) UNSIGNED DEFAULT 0,
+  `order_weight` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '排序权重'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2763,11 +2736,11 @@ INSERT INTO `project_module` (`id`, `project_id`, `name`, `description`, `lead`,
 --
 
 CREATE TABLE `project_permission` (
-                                      `id` int(11) UNSIGNED NOT NULL,
-                                      `parent_id` int(11) UNSIGNED DEFAULT '0',
-                                      `name` varchar(64) DEFAULT NULL,
-                                      `description` varchar(255) DEFAULT NULL,
-                                      `_key` varchar(64) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `parent_id` int(11) UNSIGNED DEFAULT 0,
+  `name` varchar(64) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `_key` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
@@ -2801,11 +2774,11 @@ INSERT INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_ke
 --
 
 CREATE TABLE `project_role` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `project_id` int(11) UNSIGNED DEFAULT NULL,
-                                `name` varchar(40) DEFAULT NULL,
-                                `description` varchar(255) DEFAULT NULL,
-                                `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED DEFAULT 0 COMMENT '是否是默认角色'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2868,10 +2841,10 @@ INSERT INTO `project_role` (`id`, `project_id`, `name`, `description`, `is_syste
 --
 
 CREATE TABLE `project_role_relation` (
-                                         `id` int(11) UNSIGNED NOT NULL,
-                                         `project_id` int(11) UNSIGNED DEFAULT NULL,
-                                         `role_id` int(11) UNSIGNED DEFAULT NULL,
-                                         `perm_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL,
+  `role_id` int(11) UNSIGNED DEFAULT NULL,
+  `perm_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3067,10 +3040,10 @@ INSERT INTO `project_role_relation` (`id`, `project_id`, `role_id`, `perm_id`) V
 --
 
 CREATE TABLE `project_user_role` (
-                                     `id` int(11) UNSIGNED NOT NULL,
-                                     `user_id` int(11) UNSIGNED DEFAULT '0',
-                                     `project_id` int(11) UNSIGNED DEFAULT '0',
-                                     `role_id` int(11) UNSIGNED DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED DEFAULT 0,
+  `project_id` int(11) UNSIGNED DEFAULT 0,
+  `role_id` int(11) UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3108,16 +3081,16 @@ INSERT INTO `project_user_role` (`id`, `user_id`, `project_id`, `role_id`) VALUE
 --
 
 CREATE TABLE `project_version` (
-                                   `id` int(11) NOT NULL,
-                                   `project_id` int(11) UNSIGNED DEFAULT NULL,
-                                   `name` varchar(255) DEFAULT NULL,
-                                   `description` text,
-                                   `sequence` decimal(18,0) DEFAULT NULL,
-                                   `released` tinyint(10) UNSIGNED DEFAULT '0' COMMENT '0未发布 1已发布',
-                                   `archived` varchar(10) DEFAULT NULL,
-                                   `url` varchar(255) DEFAULT NULL,
-                                   `start_date` int(10) UNSIGNED DEFAULT NULL,
-                                   `release_date` int(10) UNSIGNED DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `project_id` int(11) UNSIGNED DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `sequence` decimal(18,0) DEFAULT NULL,
+  `released` tinyint(10) UNSIGNED DEFAULT 0 COMMENT '0未发布 1已发布',
+  `archived` varchar(10) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `start_date` int(10) UNSIGNED DEFAULT NULL,
+  `release_date` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3127,11 +3100,11 @@ CREATE TABLE `project_version` (
 --
 
 CREATE TABLE `project_workflows` (
-                                     `id` decimal(18,0) NOT NULL,
-                                     `workflowname` varchar(255) DEFAULT NULL,
-                                     `creatorname` varchar(255) DEFAULT NULL,
-                                     `descriptor` longtext,
-                                     `islocked` varchar(60) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `workflowname` varchar(255) DEFAULT NULL,
+  `creatorname` varchar(255) DEFAULT NULL,
+  `descriptor` longtext DEFAULT NULL,
+  `islocked` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3141,9 +3114,9 @@ CREATE TABLE `project_workflows` (
 --
 
 CREATE TABLE `project_workflow_status` (
-                                           `id` decimal(18,0) NOT NULL,
-                                           `status` varchar(255) DEFAULT NULL,
-                                           `parentname` varchar(255) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `parentname` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3153,17 +3126,17 @@ CREATE TABLE `project_workflow_status` (
 --
 
 CREATE TABLE `report_project_issue` (
-                                        `id` int(10) UNSIGNED NOT NULL,
-                                        `project_id` int(11) UNSIGNED NOT NULL,
-                                        `date` date NOT NULL,
-                                        `week` tinyint(2) UNSIGNED DEFAULT NULL,
-                                        `month` varchar(20) DEFAULT NULL,
-                                        `count_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-                                        `count_no_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-                                        `count_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-                                        `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-                                        `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-                                        `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
+  `id` int(10) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `week` tinyint(2) UNSIGNED DEFAULT NULL,
+  `month` varchar(20) DEFAULT NULL,
+  `count_done` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总完成的事项总数',
+  `count_no_done` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
+  `count_done_by_resolve` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
+  `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
+  `today_done_points` int(11) UNSIGNED DEFAULT 0 COMMENT '敏捷开发中的事项工作量或点数',
+  `today_done_number` int(11) UNSIGNED DEFAULT 0 COMMENT '当天完成的事项数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3173,17 +3146,17 @@ CREATE TABLE `report_project_issue` (
 --
 
 CREATE TABLE `report_sprint_issue` (
-                                       `id` int(10) UNSIGNED NOT NULL,
-                                       `sprint_id` int(11) UNSIGNED NOT NULL,
-                                       `date` date NOT NULL,
-                                       `week` tinyint(2) UNSIGNED DEFAULT NULL,
-                                       `month` varchar(20) DEFAULT NULL,
-                                       `count_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-                                       `count_no_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-                                       `count_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-                                       `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-                                       `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-                                       `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
+  `id` int(10) UNSIGNED NOT NULL,
+  `sprint_id` int(11) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `week` tinyint(2) UNSIGNED DEFAULT NULL,
+  `month` varchar(20) DEFAULT NULL,
+  `count_done` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总完成的事项总数',
+  `count_no_done` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
+  `count_done_by_resolve` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
+  `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT 0 COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
+  `today_done_points` int(11) UNSIGNED DEFAULT 0 COMMENT '敏捷开发中的事项工作量或点数',
+  `today_done_number` int(11) UNSIGNED DEFAULT 0 COMMENT '当天完成的事项数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3193,11 +3166,11 @@ CREATE TABLE `report_sprint_issue` (
 --
 
 CREATE TABLE `service_config` (
-                                  `id` decimal(18,0) NOT NULL,
-                                  `delaytime` decimal(18,0) DEFAULT NULL,
-                                  `clazz` varchar(255) DEFAULT NULL,
-                                  `servicename` varchar(255) DEFAULT NULL,
-                                  `cron_expression` varchar(255) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `delaytime` decimal(18,0) DEFAULT NULL,
+  `clazz` varchar(255) DEFAULT NULL,
+  `servicename` varchar(255) DEFAULT NULL,
+  `cron_expression` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -3207,15 +3180,15 @@ CREATE TABLE `service_config` (
 --
 
 CREATE TABLE `user_application` (
-                                    `id` decimal(18,0) NOT NULL,
-                                    `application_name` varchar(255) DEFAULT NULL,
-                                    `lower_application_name` varchar(255) DEFAULT NULL,
-                                    `created_date` datetime DEFAULT NULL,
-                                    `updated_date` datetime DEFAULT NULL,
-                                    `active` decimal(9,0) DEFAULT NULL,
-                                    `description` varchar(255) DEFAULT NULL,
-                                    `application_type` varchar(255) DEFAULT NULL,
-                                    `credential` varchar(255) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `application_name` varchar(255) DEFAULT NULL,
+  `lower_application_name` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  `active` decimal(9,0) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `application_type` varchar(255) DEFAULT NULL,
+  `credential` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3232,12 +3205,12 @@ INSERT INTO `user_application` (`id`, `application_name`, `lower_application_nam
 --
 
 CREATE TABLE `user_attributes` (
-                                   `id` decimal(18,0) NOT NULL,
-                                   `user_id` decimal(18,0) DEFAULT NULL,
-                                   `directory_id` decimal(18,0) DEFAULT NULL,
-                                   `attribute_name` varchar(255) DEFAULT NULL,
-                                   `attribute_value` varchar(255) DEFAULT NULL,
-                                   `lower_attribute_value` varchar(255) DEFAULT NULL
+  `id` decimal(18,0) NOT NULL,
+  `user_id` decimal(18,0) DEFAULT NULL,
+  `directory_id` decimal(18,0) DEFAULT NULL,
+  `attribute_name` varchar(255) DEFAULT NULL,
+  `attribute_value` varchar(255) DEFAULT NULL,
+  `lower_attribute_value` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3247,12 +3220,12 @@ CREATE TABLE `user_attributes` (
 --
 
 CREATE TABLE `user_email_active` (
-                                     `id` int(10) UNSIGNED NOT NULL,
-                                     `username` varchar(32) DEFAULT '',
-                                     `email` varchar(64) NOT NULL DEFAULT '',
-                                     `uid` int(11) UNSIGNED NOT NULL,
-                                     `verify_code` varchar(32) NOT NULL,
-                                     `time` int(10) UNSIGNED NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `username` varchar(32) DEFAULT '',
+  `email` varchar(64) NOT NULL DEFAULT '',
+  `uid` int(11) UNSIGNED NOT NULL,
+  `verify_code` varchar(32) NOT NULL,
+  `time` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3269,10 +3242,10 @@ INSERT INTO `user_email_active` (`id`, `username`, `email`, `uid`, `verify_code`
 --
 
 CREATE TABLE `user_email_find_password` (
-                                            `email` varchar(50) NOT NULL,
-                                            `uid` int(11) UNSIGNED NOT NULL,
-                                            `verify_code` varchar(32) NOT NULL,
-                                            `time` int(10) UNSIGNED NOT NULL
+  `email` varchar(50) NOT NULL,
+  `uid` int(11) UNSIGNED NOT NULL,
+  `verify_code` varchar(32) NOT NULL,
+  `time` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3289,14 +3262,14 @@ INSERT INTO `user_email_find_password` (`email`, `uid`, `verify_code`, `time`) V
 --
 
 CREATE TABLE `user_email_token` (
-                                    `id` bigint(20) UNSIGNED NOT NULL,
-                                    `email` varchar(255) NOT NULL,
-                                    `uid` int(10) UNSIGNED NOT NULL,
-                                    `token` varchar(255) NOT NULL,
-                                    `expired` int(10) UNSIGNED NOT NULL COMMENT '有效期',
-                                    `created_at` int(10) UNSIGNED NOT NULL,
-                                    `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT '1-有效，0-无效',
-                                    `used_model` varchar(255) NOT NULL DEFAULT '' COMMENT '用于哪个模型或功能'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `uid` int(10) UNSIGNED NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `expired` int(10) UNSIGNED NOT NULL COMMENT '有效期',
+  `created_at` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '1-有效，0-无效',
+  `used_model` varchar(255) NOT NULL DEFAULT '' COMMENT '用于哪个模型或功能'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3306,9 +3279,9 @@ CREATE TABLE `user_email_token` (
 --
 
 CREATE TABLE `user_group` (
-                              `id` int(11) UNSIGNED NOT NULL,
-                              `uid` int(11) UNSIGNED DEFAULT NULL,
-                              `group_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `uid` int(11) UNSIGNED DEFAULT NULL,
+  `group_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3365,12 +3338,12 @@ INSERT INTO `user_group` (`id`, `uid`, `group_id`) VALUES
 --
 
 CREATE TABLE `user_invite` (
-                               `id` int(11) NOT NULL,
-                               `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `project_id` int(11) UNSIGNED NOT NULL,
-                               `project_roles` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目的角色id，可以是多个以逗号,分隔',
-                               `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-                               `expire_time` int(11) UNSIGNED NOT NULL
+  `id` int(11) NOT NULL,
+  `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `project_roles` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目的角色id，可以是多个以逗号,分隔',
+  `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expire_time` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3380,10 +3353,10 @@ CREATE TABLE `user_invite` (
 --
 
 CREATE TABLE `user_ip_login_times` (
-                                       `id` int(11) NOT NULL,
-                                       `ip` varchar(20) NOT NULL DEFAULT '',
-                                       `times` int(11) NOT NULL DEFAULT '0',
-                                       `up_time` int(11) NOT NULL DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `ip` varchar(20) NOT NULL DEFAULT '',
+  `times` int(11) NOT NULL DEFAULT 0,
+  `up_time` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3393,10 +3366,10 @@ CREATE TABLE `user_ip_login_times` (
 --
 
 CREATE TABLE `user_issue_display_fields` (
-                                             `id` int(11) NOT NULL,
-                                             `user_id` int(11) UNSIGNED NOT NULL,
-                                             `project_id` int(11) UNSIGNED NOT NULL,
-                                             `fields` varchar(512) NOT NULL
+  `id` int(11) NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `project_id` int(11) UNSIGNED NOT NULL,
+  `fields` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3415,13 +3388,20 @@ INSERT INTO `user_issue_display_fields` (`id`, `user_id`, `project_id`, `fields`
 --
 
 CREATE TABLE `user_login_log` (
-                                  `id` int(11) NOT NULL,
-                                  `session_id` varchar(64) NOT NULL DEFAULT '',
-                                  `token` varchar(128) DEFAULT '',
-                                  `uid` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                  `time` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                  `ip` varchar(24) NOT NULL DEFAULT ''
+  `id` int(11) NOT NULL,
+  `session_id` varchar(64) NOT NULL DEFAULT '',
+  `token` varchar(128) DEFAULT '',
+  `uid` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `time` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `ip` varchar(24) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录日志表';
+
+--
+-- 转存表中的数据 `user_login_log`
+--
+
+INSERT INTO `user_login_log` (`id`, `session_id`, `token`, `uid`, `time`, `ip`) VALUES
+(1, 'non5s4mj17mjkmo9d512kpi84r', '', 1, 1591861428, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -3430,33 +3410,33 @@ CREATE TABLE `user_login_log` (
 --
 
 CREATE TABLE `user_main` (
-                             `uid` int(11) NOT NULL,
-                             `schema_source` varchar(12) NOT NULL DEFAULT 'inner' COMMENT '用户数据源: inner ldap wechat weibo github等',
-                             `directory_id` int(11) DEFAULT NULL,
-                             `phone` varchar(16) DEFAULT NULL,
-                             `username` varchar(255) DEFAULT NULL,
-                             `openid` varchar(32) NOT NULL,
-                             `status` tinyint(2) DEFAULT '1' COMMENT '0 审核中;1 正常; 2 禁用',
-                             `first_name` varchar(255) DEFAULT NULL,
-                             `last_name` varchar(255) DEFAULT NULL,
-                             `display_name` varchar(255) DEFAULT NULL,
-                             `email` varchar(255) DEFAULT NULL,
-                             `password` varchar(255) DEFAULT NULL,
-                             `sex` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '1男2女',
-                             `birthday` varchar(20) DEFAULT NULL,
-                             `create_time` int(11) UNSIGNED DEFAULT '0',
-                             `update_time` int(11) DEFAULT '0',
-                             `avatar` varchar(100) DEFAULT '',
-                             `source` varchar(20) DEFAULT '',
-                             `ios_token` varchar(128) DEFAULT NULL,
-                             `android_token` varchar(128) DEFAULT NULL,
-                             `version` varchar(20) DEFAULT NULL,
-                             `token` varchar(64) DEFAULT '',
-                             `last_login_time` int(11) UNSIGNED DEFAULT '0',
-                             `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否系统自带的用户,不可删除',
-                             `login_counter` int(11) UNSIGNED DEFAULT '0' COMMENT '登录次数',
-                             `title` varchar(32) DEFAULT NULL,
-                             `sign` varchar(64) DEFAULT NULL
+  `uid` int(11) NOT NULL,
+  `schema_source` varchar(12) NOT NULL DEFAULT 'inner' COMMENT '用户数据源: inner ldap wechat weibo github等',
+  `directory_id` int(11) DEFAULT NULL,
+  `phone` varchar(16) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `openid` varchar(32) NOT NULL,
+  `status` tinyint(2) DEFAULT 1 COMMENT '0 审核中;1 正常; 2 禁用',
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `display_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `sex` tinyint(1) UNSIGNED DEFAULT 0 COMMENT '1男2女',
+  `birthday` varchar(20) DEFAULT NULL,
+  `create_time` int(11) UNSIGNED DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  `avatar` varchar(100) DEFAULT '',
+  `source` varchar(20) DEFAULT '',
+  `ios_token` varchar(128) DEFAULT NULL,
+  `android_token` varchar(128) DEFAULT NULL,
+  `version` varchar(20) DEFAULT NULL,
+  `token` varchar(64) DEFAULT '',
+  `last_login_time` int(11) UNSIGNED DEFAULT 0,
+  `is_system` tinyint(1) UNSIGNED DEFAULT 0 COMMENT '是否系统自带的用户,不可删除',
+  `login_counter` int(11) UNSIGNED DEFAULT 0 COMMENT '登录次数',
+  `title` varchar(32) DEFAULT NULL,
+  `sign` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3464,7 +3444,7 @@ CREATE TABLE `user_main` (
 --
 
 INSERT INTO `user_main` (`uid`, `schema_source`, `directory_id`, `phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`, `update_time`, `avatar`, `source`, `ios_token`, `android_token`, `version`, `token`, `last_login_time`, `is_system`, `login_counter`, `title`, `sign`) VALUES
-(1, 'inner', 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '121642038@qq.com', '$2y$10$f/pmUWT5JFvLVtlq83lv..dhkDMM60Da80w.VidavER.vtCAZSBOS', 1, '2019-01-13', 0, 0, 'avatar/1.png?t=1579249493', '', NULL, NULL, NULL, NULL, 1590941857, 0, 0, '管理员', '简化项目管理，保障结果，快乐团队！'),
+(1, 'inner', 1, '18002516775', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '121642038@qq.com', '$2y$10$ZDqeif4i8x/DLMsKoPxVkeUsxLD4ErVMRwk7CMiD1iY1qWCURxuRW', 1, '2019-01-13', 0, 0, 'avatar/1.png?t=1579249493', '', NULL, NULL, NULL, NULL, 1591861428, 1, 0, '管理员', '简化项目管理，保障结果，快乐团队！'),
 (12164, 'inner', NULL, NULL, 'json', '87655dd189dc13a7eb36f62a3a8eed4c', 1, NULL, NULL, 'Json', '23335096@qq.com', '$2y$10$hW2HeFe4kUO/IDxGW5A68e7r.sERM6.VtP3VrYLXeyHVb0ZjXo2Sm', 0, NULL, 1579247721, 0, 'avatar/12164.png?t=1579247721', '', NULL, NULL, NULL, '', 0, 0, 0, 'Java开发工程师', NULL),
 (12165, 'inner', NULL, NULL, 'shelly', '74eb77b447ad46f0ba76dba8de3e8489', 1, NULL, NULL, 'Shelly', '460399316@qq.com', '$2y$10$RXindYr74f9I1GyaGtovE.KgD6pgcjE6Z9SZyqLO9UykzImG6n2kS', 0, NULL, 1579247769, 0, 'avatar/12165.png?t=1579247769', '', NULL, NULL, NULL, '', 1583827161, 0, 0, '软件测试工程师', NULL),
 (12166, 'inner', NULL, NULL, 'alex', '22778739b6553330c4f9e8a29d0e1d5f', 1, NULL, NULL, 'Alex', '2823335096@qq.com', '$2y$10$ENToGF7kfUrXm0i6DISJ6utmjq076tSCaVuEyeqQRdQocgUwxZKZ6', 0, NULL, 1579247886, 0, 'avatar/12166.png?t=1579247886', '', NULL, NULL, NULL, '', 0, 0, 0, '产品经理', NULL),
@@ -3481,16 +3461,16 @@ INSERT INTO `user_main` (`uid`, `schema_source`, `directory_id`, `phone`, `usern
 --
 
 CREATE TABLE `user_message` (
-                                `id` int(11) NOT NULL,
-                                `sender_uid` int(11) UNSIGNED NOT NULL,
-                                `sender_name` varchar(64) NOT NULL,
-                                `direction` smallint(4) UNSIGNED NOT NULL,
-                                `receiver_uid` int(11) UNSIGNED NOT NULL,
-                                `title` varchar(128) NOT NULL,
-                                `content` text NOT NULL,
-                                `readed` tinyint(1) UNSIGNED NOT NULL,
-                                `type` tinyint(2) UNSIGNED NOT NULL,
-                                `create_time` int(11) UNSIGNED NOT NULL
+  `id` int(11) NOT NULL,
+  `sender_uid` int(11) UNSIGNED NOT NULL,
+  `sender_name` varchar(64) NOT NULL,
+  `direction` smallint(4) UNSIGNED NOT NULL,
+  `receiver_uid` int(11) UNSIGNED NOT NULL,
+  `title` varchar(128) NOT NULL,
+  `content` text NOT NULL,
+  `readed` tinyint(1) UNSIGNED NOT NULL,
+  `type` tinyint(2) UNSIGNED NOT NULL,
+  `create_time` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3500,8 +3480,8 @@ CREATE TABLE `user_message` (
 --
 
 CREATE TABLE `user_password` (
-                                 `user_id` int(11) UNSIGNED NOT NULL,
-                                 `hash` varchar(72) DEFAULT '' COMMENT 'password_hash()值'
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `hash` varchar(72) DEFAULT '' COMMENT 'password_hash()值'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3511,8 +3491,8 @@ CREATE TABLE `user_password` (
 --
 
 CREATE TABLE `user_password_strategy` (
-                                          `id` int(1) UNSIGNED NOT NULL,
-                                          `strategy` tinyint(1) UNSIGNED DEFAULT NULL COMMENT '1允许所有密码;2不允许非常简单的密码;3要求强密码  关于安全密码策略'
+  `id` int(1) UNSIGNED NOT NULL,
+  `strategy` tinyint(1) UNSIGNED DEFAULT NULL COMMENT '1允许所有密码;2不允许非常简单的密码;3要求强密码  关于安全密码策略'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3529,10 +3509,10 @@ INSERT INTO `user_password_strategy` (`id`, `strategy`) VALUES
 --
 
 CREATE TABLE `user_phone_find_password` (
-                                            `id` int(11) NOT NULL,
-                                            `phone` varchar(20) NOT NULL,
-                                            `verify_code` varchar(128) NOT NULL DEFAULT '',
-                                            `time` int(11) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `verify_code` varchar(128) NOT NULL DEFAULT '',
+  `time` int(11) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='找回密码表';
 
 --
@@ -3549,10 +3529,10 @@ INSERT INTO `user_phone_find_password` (`id`, `phone`, `verify_code`, `time`) VA
 --
 
 CREATE TABLE `user_posted_flag` (
-                                    `id` int(11) NOT NULL,
-                                    `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                                    `_date` date NOT NULL,
-                                    `ip` varchar(32) NOT NULL
+  `id` int(11) NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `_date` date NOT NULL,
+  `ip` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3579,6 +3559,7 @@ INSERT INTO `user_posted_flag` (`id`, `user_id`, `_date`, `ip`) VALUES
 (33, 0, '2020-05-30', '127.0.0.1'),
 (36, 0, '2020-05-31', '127.0.0.1'),
 (37, 0, '2020-06-01', '127.0.0.1'),
+(41, 0, '2020-06-11', '127.0.0.1'),
 (1, 1, '2020-04-20', '127.0.0.1'),
 (4, 1, '2020-04-21', '127.0.0.1'),
 (6, 1, '2020-04-22', '127.0.0.1'),
@@ -3595,6 +3576,7 @@ INSERT INTO `user_posted_flag` (`id`, `user_id`, `_date`, `ip`) VALUES
 (32, 1, '2020-05-29', '127.0.0.1'),
 (34, 1, '2020-05-30', '127.0.0.1'),
 (40, 1, '2020-06-01', '127.0.0.1'),
+(42, 1, '2020-06-11', '127.0.0.1'),
 (35, 12255, '2020-05-30', '127.0.0.1'),
 (38, 12260, '2020-06-01', '127.0.0.1'),
 (39, 12261, '2020-06-01', '127.0.0.1');
@@ -3606,9 +3588,9 @@ INSERT INTO `user_posted_flag` (`id`, `user_id`, `_date`, `ip`) VALUES
 --
 
 CREATE TABLE `user_refresh_token` (
-                                      `uid` int(10) UNSIGNED NOT NULL,
-                                      `refresh_token` varchar(256) NOT NULL,
-                                      `expire` int(10) UNSIGNED NOT NULL
+  `uid` int(10) UNSIGNED NOT NULL,
+  `refresh_token` varchar(256) NOT NULL,
+  `expire` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户刷新的token表';
 
 -- --------------------------------------------------------
@@ -3618,10 +3600,10 @@ CREATE TABLE `user_refresh_token` (
 --
 
 CREATE TABLE `user_setting` (
-                                `id` int(11) UNSIGNED NOT NULL,
-                                `user_id` int(11) UNSIGNED NOT NULL,
-                                `_key` varchar(64) DEFAULT NULL,
-                                `_value` varchar(256) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `_key` varchar(64) DEFAULT NULL,
+  `_value` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3656,12 +3638,12 @@ INSERT INTO `user_setting` (`id`, `user_id`, `_key`, `_value`) VALUES
 --
 
 CREATE TABLE `user_token` (
-                              `id` int(10) UNSIGNED NOT NULL,
-                              `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户id',
-                              `token` varchar(255) NOT NULL DEFAULT '' COMMENT 'token',
-                              `token_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'token过期时间',
-                              `refresh_token` varchar(255) NOT NULL DEFAULT '' COMMENT '刷新token',
-                              `refresh_token_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '刷新token过期时间'
+  `id` int(10) UNSIGNED NOT NULL,
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户id',
+  `token` varchar(255) NOT NULL DEFAULT '' COMMENT 'token',
+  `token_time` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'token过期时间',
+  `refresh_token` varchar(255) NOT NULL DEFAULT '' COMMENT '刷新token',
+  `refresh_token_time` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '刷新token过期时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3684,13 +3666,13 @@ INSERT INTO `user_token` (`id`, `uid`, `token`, `token_time`, `refresh_token`, `
 --
 
 CREATE TABLE `user_widget` (
-                               `id` int(11) NOT NULL COMMENT '主键id',
-                               `user_id` int(11) UNSIGNED NOT NULL COMMENT '用户id',
-                               `widget_id` int(11) NOT NULL COMMENT 'main_widget主键id',
-                               `order_weight` int(11) UNSIGNED DEFAULT NULL COMMENT '工具顺序',
-                               `panel` varchar(40) NOT NULL,
-                               `parameter` varchar(1024) NOT NULL,
-                               `is_saved_parameter` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否保存了过滤参数'
+  `id` int(11) NOT NULL COMMENT '主键id',
+  `user_id` int(11) UNSIGNED NOT NULL COMMENT '用户id',
+  `widget_id` int(11) NOT NULL COMMENT 'main_widget主键id',
+  `order_weight` int(11) UNSIGNED DEFAULT NULL COMMENT '工具顺序',
+  `panel` varchar(40) NOT NULL,
+  `parameter` varchar(1024) NOT NULL,
+  `is_saved_parameter` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否保存了过滤参数'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3784,16 +3766,16 @@ INSERT INTO `user_widget` (`id`, `user_id`, `widget_id`, `order_weight`, `panel`
 --
 
 CREATE TABLE `workflow` (
-                            `id` int(11) UNSIGNED NOT NULL,
-                            `name` varchar(40) DEFAULT '',
-                            `description` varchar(100) DEFAULT '',
-                            `create_uid` int(11) UNSIGNED DEFAULT NULL,
-                            `create_time` int(11) UNSIGNED DEFAULT NULL,
-                            `update_uid` int(11) UNSIGNED DEFAULT NULL,
-                            `update_time` int(11) UNSIGNED DEFAULT NULL,
-                            `steps` tinyint(2) UNSIGNED DEFAULT NULL,
-                            `data` text,
-                            `is_system` tinyint(1) UNSIGNED DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(40) DEFAULT '',
+  `description` varchar(100) DEFAULT '',
+  `create_uid` int(11) UNSIGNED DEFAULT NULL,
+  `create_time` int(11) UNSIGNED DEFAULT NULL,
+  `update_uid` int(11) UNSIGNED DEFAULT NULL,
+  `update_time` int(11) UNSIGNED DEFAULT NULL,
+  `steps` tinyint(2) UNSIGNED DEFAULT NULL,
+  `data` text DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3812,13 +3794,13 @@ INSERT INTO `workflow` (`id`, `name`, `description`, `create_uid`, `create_time`
 --
 
 CREATE TABLE `workflow_block` (
-                                  `id` int(11) UNSIGNED NOT NULL,
-                                  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-                                  `status_id` int(11) UNSIGNED DEFAULT NULL,
-                                  `blcok_id` varchar(64) DEFAULT NULL,
-                                  `position_x` smallint(4) UNSIGNED DEFAULT NULL,
-                                  `position_y` smallint(4) UNSIGNED DEFAULT NULL,
-                                  `inner_html` varchar(200) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
+  `status_id` int(11) UNSIGNED DEFAULT NULL,
+  `blcok_id` varchar(64) DEFAULT NULL,
+  `position_x` smallint(4) UNSIGNED DEFAULT NULL,
+  `position_y` smallint(4) UNSIGNED DEFAULT NULL,
+  `inner_html` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3828,12 +3810,12 @@ CREATE TABLE `workflow_block` (
 --
 
 CREATE TABLE `workflow_connector` (
-                                      `id` int(11) UNSIGNED NOT NULL,
-                                      `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-                                      `connector_id` varchar(32) DEFAULT NULL,
-                                      `title` varchar(64) DEFAULT NULL,
-                                      `source_id` varchar(64) DEFAULT NULL,
-                                      `target_id` varchar(64) DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
+  `connector_id` varchar(32) DEFAULT NULL,
+  `title` varchar(64) DEFAULT NULL,
+  `source_id` varchar(64) DEFAULT NULL,
+  `target_id` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3843,10 +3825,10 @@ CREATE TABLE `workflow_connector` (
 --
 
 CREATE TABLE `workflow_scheme` (
-                                   `id` int(11) NOT NULL,
-                                   `name` varchar(128) DEFAULT NULL,
-                                   `description` varchar(256) DEFAULT NULL,
-                                   `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `name` varchar(128) DEFAULT NULL,
+  `description` varchar(256) DEFAULT NULL,
+  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3866,10 +3848,10 @@ INSERT INTO `workflow_scheme` (`id`, `name`, `description`, `is_system`) VALUES
 --
 
 CREATE TABLE `workflow_scheme_data` (
-                                        `id` int(11) UNSIGNED NOT NULL,
-                                        `scheme_id` int(11) UNSIGNED DEFAULT NULL,
-                                        `issue_type_id` int(11) UNSIGNED DEFAULT NULL,
-                                        `workflow_id` int(11) UNSIGNED DEFAULT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `scheme_id` int(11) UNSIGNED DEFAULT NULL,
+  `issue_type_id` int(11) UNSIGNED DEFAULT NULL,
+  `workflow_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3904,830 +3886,830 @@ INSERT INTO `workflow_scheme_data` (`id`, `scheme_id`, `issue_type_id`, `workflo
 -- 表的索引 `agile_board`
 --
 ALTER TABLE `agile_board`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `project_id` (`project_id`),
-    ADD KEY `weight` (`weight`),
-    ADD KEY `test` (`name`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `weight` (`weight`),
+  ADD KEY `test` (`name`) USING BTREE;
 
 --
 -- 表的索引 `agile_board_column`
 --
 ALTER TABLE `agile_board_column`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `board_id` (`board_id`),
-    ADD KEY `id_and_weight` (`id`,`weight`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `board_id` (`board_id`),
+  ADD KEY `id_and_weight` (`id`,`weight`) USING BTREE;
 
 --
 -- 表的索引 `agile_sprint`
 --
 ALTER TABLE `agile_sprint`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `agile_sprint_issue_report`
 --
 ALTER TABLE `agile_sprint_issue_report`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `sprint_id` (`sprint_id`),
-    ADD KEY `sprintIdAndDate` (`sprint_id`,`date`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sprint_id` (`sprint_id`),
+  ADD KEY `sprintIdAndDate` (`sprint_id`,`date`);
 
 --
 -- 表的索引 `field_custom_value`
 --
 ALTER TABLE `field_custom_value`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `unique_index` (`issue_id`,`project_id`,`custom_field_id`) USING BTREE,
-    ADD KEY `issue_id` (`issue_id`),
-    ADD KEY `issue_id_2` (`issue_id`,`project_id`),
-    ADD KEY `union_issue_custom` (`issue_id`,`custom_field_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_index` (`issue_id`,`project_id`,`custom_field_id`) USING BTREE,
+  ADD KEY `issue_id` (`issue_id`),
+  ADD KEY `issue_id_2` (`issue_id`,`project_id`),
+  ADD KEY `union_issue_custom` (`issue_id`,`custom_field_id`) USING BTREE;
 
 --
 -- 表的索引 `field_layout_default`
 --
 ALTER TABLE `field_layout_default`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `field_layout_project_custom`
 --
 ALTER TABLE `field_layout_project_custom`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `field_main`
 --
 ALTER TABLE `field_main`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `idx_fli_fieldidentifier` (`name`),
-    ADD KEY `order_weight` (`order_weight`),
-    ADD KEY `is_system` (`is_system`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_fli_fieldidentifier` (`name`),
+  ADD KEY `order_weight` (`order_weight`),
+  ADD KEY `is_system` (`is_system`);
 
 --
 -- 表的索引 `field_type`
 --
 ALTER TABLE `field_type`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `type` (`type`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `type` (`type`) USING BTREE;
 
 --
 -- 表的索引 `hornet_cache_key`
 --
 ALTER TABLE `hornet_cache_key`
-    ADD PRIMARY KEY (`key`),
-    ADD UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
-    ADD KEY `module` (`module`),
-    ADD KEY `expire` (`expire`);
+  ADD PRIMARY KEY (`key`),
+  ADD UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
+  ADD KEY `module` (`module`),
+  ADD KEY `expire` (`expire`);
 
 --
 -- 表的索引 `hornet_user`
 --
 ALTER TABLE `hornet_user`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `phone_unique` (`phone`) USING BTREE,
-    ADD KEY `phone` (`phone`,`password`),
-    ADD KEY `email` (`email`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `phone_unique` (`phone`) USING BTREE,
+  ADD KEY `phone` (`phone`,`password`),
+  ADD KEY `email` (`email`);
 
 --
 -- 表的索引 `issue_assistant`
 --
 ALTER TABLE `issue_assistant`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `issue_id` (`issue_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `issue_id` (`issue_id`);
 
 --
 -- 表的索引 `issue_description_template`
 --
 ALTER TABLE `issue_description_template`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_effect_version`
 --
 ALTER TABLE `issue_effect_version`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_extra_worker_day`
 --
 ALTER TABLE `issue_extra_worker_day`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_field_layout_project`
 --
 ALTER TABLE `issue_field_layout_project`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `idx_fli_fieldidentifier` (`fieldidentifier`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_fli_fieldidentifier` (`fieldidentifier`);
 
 --
 -- 表的索引 `issue_file_attachment`
 --
 ALTER TABLE `issue_file_attachment`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `attach_issue` (`issue_id`),
-    ADD KEY `uuid` (`uuid`),
-    ADD KEY `tmp_issue_id` (`tmp_issue_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `attach_issue` (`issue_id`),
+  ADD KEY `uuid` (`uuid`),
+  ADD KEY `tmp_issue_id` (`tmp_issue_id`);
 
 --
 -- 表的索引 `issue_filter`
 --
 ALTER TABLE `issue_filter`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `sr_author` (`author`),
-    ADD KEY `searchrequest_filternameLower` (`name_lower`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sr_author` (`author`),
+  ADD KEY `searchrequest_filternameLower` (`name_lower`);
 
 --
 -- 表的索引 `issue_fix_version`
 --
 ALTER TABLE `issue_fix_version`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_follow`
 --
 ALTER TABLE `issue_follow`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `issue_id` (`issue_id`,`user_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `issue_id` (`issue_id`,`user_id`);
 
 --
 -- 表的索引 `issue_holiday`
 --
 ALTER TABLE `issue_holiday`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_label`
 --
 ALTER TABLE `issue_label`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `issue_label_data`
 --
 ALTER TABLE `issue_label_data`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `issue_id` (`issue_id`),
-    ADD KEY `label_id` (`label_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `issue_id` (`issue_id`),
+  ADD KEY `label_id` (`label_id`);
 
 --
 -- 表的索引 `issue_main`
 --
 ALTER TABLE `issue_main`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `issue_created` (`created`),
-    ADD KEY `issue_updated` (`updated`),
-    ADD KEY `issue_duedate` (`due_date`),
-    ADD KEY `issue_assignee` (`assignee`),
-    ADD KEY `issue_reporter` (`reporter`),
-    ADD KEY `pkey` (`pkey`),
-    ADD KEY `summary` (`summary`),
-    ADD KEY `backlog_weight` (`backlog_weight`),
-    ADD KEY `sprint_weight` (`sprint_weight`),
-    ADD KEY `status` (`status`),
-    ADD KEY `gant_sprint_weight` (`gant_sprint_weight`),
-    ADD KEY `project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `issue_created` (`created`),
+  ADD KEY `issue_updated` (`updated`),
+  ADD KEY `issue_duedate` (`due_date`),
+  ADD KEY `issue_assignee` (`assignee`),
+  ADD KEY `issue_reporter` (`reporter`),
+  ADD KEY `pkey` (`pkey`),
+  ADD KEY `summary` (`summary`),
+  ADD KEY `backlog_weight` (`backlog_weight`),
+  ADD KEY `sprint_weight` (`sprint_weight`),
+  ADD KEY `status` (`status`),
+  ADD KEY `gant_sprint_weight` (`gant_sprint_weight`),
+  ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `issue_moved_issue_key`
 --
 ALTER TABLE `issue_moved_issue_key`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `idx_old_issue_key` (`old_issue_key`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `idx_old_issue_key` (`old_issue_key`);
 
 --
 -- 表的索引 `issue_priority`
 --
 ALTER TABLE `issue_priority`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `_key` (`_key`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `_key` (`_key`);
 
 --
 -- 表的索引 `issue_recycle`
 --
 ALTER TABLE `issue_recycle`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `issue_assignee` (`assignee`),
-    ADD KEY `summary` (`summary`),
-    ADD KEY `project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `issue_assignee` (`assignee`),
+  ADD KEY `summary` (`summary`),
+  ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `issue_resolve`
 --
 ALTER TABLE `issue_resolve`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `_key` (`_key`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `_key` (`_key`);
 
 --
 -- 表的索引 `issue_status`
 --
 ALTER TABLE `issue_status`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `key` (`_key`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `key` (`_key`);
 
 --
 -- 表的索引 `issue_type`
 --
 ALTER TABLE `issue_type`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `_key` (`_key`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `_key` (`_key`);
 
 --
 -- 表的索引 `issue_type_scheme`
 --
 ALTER TABLE `issue_type_scheme`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_type_scheme_data`
 --
 ALTER TABLE `issue_type_scheme_data`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `scheme_id` (`scheme_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `scheme_id` (`scheme_id`);
 
 --
 -- 表的索引 `issue_ui`
 --
 ALTER TABLE `issue_ui`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `issue_id` (`issue_type_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `issue_id` (`issue_type_id`) USING BTREE;
 
 --
 -- 表的索引 `log_base`
 --
 ALTER TABLE `log_base`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `uid` (`uid`),
-    ADD KEY `obj_id` (`obj_id`) USING BTREE,
-    ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `uid` (`uid`),
+  ADD KEY `obj_id` (`obj_id`) USING BTREE,
+  ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
 
 --
 -- 表的索引 `log_operating`
 --
 ALTER TABLE `log_operating`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `uid` (`uid`),
-    ADD KEY `obj_id` (`obj_id`) USING BTREE,
-    ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `uid` (`uid`),
+  ADD KEY `obj_id` (`obj_id`) USING BTREE,
+  ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
 
 --
 -- 表的索引 `log_runtime_error`
 --
 ALTER TABLE `log_runtime_error`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `file_line_unique` (`md5`),
-    ADD KEY `date` (`date`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `file_line_unique` (`md5`),
+  ADD KEY `date` (`date`);
 
 --
 -- 表的索引 `main_action`
 --
 ALTER TABLE `main_action`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `action_author_created` (`author`,`created`),
-    ADD KEY `action_issue` (`issueid`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `action_author_created` (`author`,`created`),
+  ADD KEY `action_issue` (`issueid`);
 
 --
 -- 表的索引 `main_activity`
 --
 ALTER TABLE `main_activity`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `user_id` (`user_id`),
-    ADD KEY `project_id` (`project_id`),
-    ADD KEY `date` (`date`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `date` (`date`);
 
 --
 -- 表的索引 `main_announcement`
 --
 ALTER TABLE `main_announcement`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_cache_key`
 --
 ALTER TABLE `main_cache_key`
-    ADD PRIMARY KEY (`key`),
-    ADD UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
-    ADD KEY `module` (`module`),
-    ADD KEY `expire` (`expire`);
+  ADD PRIMARY KEY (`key`),
+  ADD UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
+  ADD KEY `module` (`module`),
+  ADD KEY `expire` (`expire`);
 
 --
 -- 表的索引 `main_eventtype`
 --
 ALTER TABLE `main_eventtype`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_group`
 --
 ALTER TABLE `main_group`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `name` (`name`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- 表的索引 `main_mail_queue`
 --
 ALTER TABLE `main_mail_queue`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `seq` (`seq`) USING BTREE,
-    ADD KEY `status` (`status`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `seq` (`seq`) USING BTREE,
+  ADD KEY `status` (`status`);
 
 --
 -- 表的索引 `main_notify_scheme`
 --
 ALTER TABLE `main_notify_scheme`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_notify_scheme_data`
 --
 ALTER TABLE `main_notify_scheme_data`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_org`
 --
 ALTER TABLE `main_org`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `path` (`path`),
-    ADD KEY `name` (`name`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `path` (`path`),
+  ADD KEY `name` (`name`);
 
 --
 -- 表的索引 `main_plugin`
 --
 ALTER TABLE `main_plugin`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `name` (`name`),
-    ADD KEY `order_weight` (`order_weight`),
-    ADD KEY `type` (`type`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `order_weight` (`order_weight`),
+  ADD KEY `type` (`type`);
 
 --
 -- 表的索引 `main_setting`
 --
 ALTER TABLE `main_setting`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `_key` (`_key`),
-    ADD KEY `module` (`module`) USING BTREE,
-    ADD KEY `module_2` (`module`,`order_weight`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `_key` (`_key`),
+  ADD KEY `module` (`module`) USING BTREE,
+  ADD KEY `module_2` (`module`,`order_weight`);
 
 --
 -- 表的索引 `main_timeline`
 --
 ALTER TABLE `main_timeline`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_webhook`
 --
 ALTER TABLE `main_webhook`
-    ADD UNIQUE KEY `id` (`id`),
-    ADD KEY `enable` (`enable`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `enable` (`enable`);
 
 --
 -- 表的索引 `main_widget`
 --
 ALTER TABLE `main_widget`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `_key` (`_key`) USING BTREE,
-    ADD KEY `order_weight` (`order_weight`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `_key` (`_key`) USING BTREE,
+  ADD KEY `order_weight` (`order_weight`);
 
 --
 -- 表的索引 `mind_issue_attribute`
 --
 ALTER TABLE `mind_issue_attribute`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `project_id_2` (`project_id`,`issue_id`,`source`,`group_by`),
-    ADD KEY `project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `project_id_2` (`project_id`,`issue_id`,`source`,`group_by`),
+  ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `mind_project_attribute`
 --
 ALTER TABLE `mind_project_attribute`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `mind_second_attribute`
 --
 ALTER TABLE `mind_second_attribute`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `mind_unique` (`project_id`,`source`,`group_by`,`group_by_id`) USING BTREE,
-    ADD KEY `project_id` (`project_id`),
-    ADD KEY `source_group_by` (`project_id`,`source`,`group_by`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `mind_unique` (`project_id`,`source`,`group_by`,`group_by_id`) USING BTREE,
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `source_group_by` (`project_id`,`source`,`group_by`) USING BTREE;
 
 --
 -- 表的索引 `mind_sprint_attribute`
 --
 ALTER TABLE `mind_sprint_attribute`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `sprint_id` (`sprint_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `sprint_id` (`sprint_id`);
 
 --
 -- 表的索引 `permission_default_role`
 --
 ALTER TABLE `permission_default_role`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `permission_default_role_relation`
 --
 ALTER TABLE `permission_default_role_relation`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `default_role_id` (`role_id`),
-    ADD KEY `role_id-and-perm_id` (`role_id`,`perm_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `default_role_id` (`role_id`),
+  ADD KEY `role_id-and-perm_id` (`role_id`,`perm_id`);
 
 --
 -- 表的索引 `permission_global`
 --
 ALTER TABLE `permission_global`
-    ADD PRIMARY KEY (`id`) USING BTREE,
-    ADD KEY `permission_global_key_idx` (`_key`) USING BTREE;
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD KEY `permission_global_key_idx` (`_key`) USING BTREE;
 
 --
 -- 表的索引 `permission_global_group`
 --
 ALTER TABLE `permission_global_group`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `perm_global_id` (`perm_global_id`),
-    ADD KEY `group_id` (`group_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `perm_global_id` (`perm_global_id`),
+  ADD KEY `group_id` (`group_id`);
 
 --
 -- 表的索引 `permission_global_role`
 --
 ALTER TABLE `permission_global_role`
-    ADD PRIMARY KEY (`id`) USING BTREE;
+  ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
 -- 表的索引 `permission_global_role_relation`
 --
 ALTER TABLE `permission_global_role_relation`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `unique` (`perm_global_id`,`role_id`) USING BTREE,
-    ADD KEY `perm_global_id` (`perm_global_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique` (`perm_global_id`,`role_id`) USING BTREE,
+  ADD KEY `perm_global_id` (`perm_global_id`);
 
 --
 -- 表的索引 `permission_global_user_role`
 --
 ALTER TABLE `permission_global_user_role`
-    ADD PRIMARY KEY (`id`) USING BTREE,
-    ADD UNIQUE KEY `unique` (`user_id`,`role_id`) USING BTREE,
-    ADD KEY `uid` (`user_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD UNIQUE KEY `unique` (`user_id`,`role_id`) USING BTREE,
+  ADD KEY `uid` (`user_id`) USING BTREE;
 
 --
 -- 表的索引 `project_catalog_label`
 --
 ALTER TABLE `project_catalog_label`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `project_id` (`project_id`),
-    ADD KEY `project_id_2` (`project_id`,`order_weight`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `project_id_2` (`project_id`,`order_weight`);
 
 --
 -- 表的索引 `project_category`
 --
 ALTER TABLE `project_category`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `idx_project_category_name` (`name`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_project_category_name` (`name`);
 
 --
 -- 表的索引 `project_flag`
 --
 ALTER TABLE `project_flag`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `project_id` (`project_id`,`flag`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `project_id` (`project_id`,`flag`);
 
 --
 -- 表的索引 `project_gantt_setting`
 --
 ALTER TABLE `project_gantt_setting`
-    ADD PRIMARY KEY (`id`) USING BTREE,
-    ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_issue_report`
 --
 ALTER TABLE `project_issue_report`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `project_id` (`project_id`),
-    ADD KEY `projectIdAndDate` (`project_id`,`date`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `projectIdAndDate` (`project_id`,`date`);
 
 --
 -- 表的索引 `project_issue_type_scheme_data`
 --
 ALTER TABLE `project_issue_type_scheme_data`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE,
-    ADD KEY `issue_type_scheme_id` (`issue_type_scheme_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE,
+  ADD KEY `issue_type_scheme_id` (`issue_type_scheme_id`) USING BTREE;
 
 --
 -- 表的索引 `project_key`
 --
 ALTER TABLE `project_key`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `idx_all_project_keys` (`project_key`),
-    ADD KEY `idx_all_project_ids` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `idx_all_project_keys` (`project_key`),
+  ADD KEY `idx_all_project_ids` (`project_id`);
 
 --
 -- 表的索引 `project_label`
 --
 ALTER TABLE `project_label`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `project_list_count`
 --
 ALTER TABLE `project_list_count`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `project_main`
 --
 ALTER TABLE `project_main`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `idx_project_key` (`key`),
-    ADD UNIQUE KEY `name` (`name`) USING BTREE,
-    ADD KEY `uid` (`create_uid`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `idx_project_key` (`key`),
+  ADD UNIQUE KEY `name` (`name`) USING BTREE,
+  ADD KEY `uid` (`create_uid`);
 
 --
 -- 表的索引 `project_main_extra`
 --
 ALTER TABLE `project_main_extra`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_mind_setting`
 --
 ALTER TABLE `project_mind_setting`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `project_id` (`project_id`,`setting_key`),
-    ADD KEY `project_id_2` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `project_id` (`project_id`,`setting_key`),
+  ADD KEY `project_id_2` (`project_id`);
 
 --
 -- 表的索引 `project_module`
 --
 ALTER TABLE `project_module`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `project_id` (`project_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_permission`
 --
 ALTER TABLE `project_permission`
-    ADD PRIMARY KEY (`id`) USING BTREE,
-    ADD KEY `project_permission_key_idx` (`_key`) USING BTREE;
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD KEY `project_permission_key_idx` (`_key`) USING BTREE;
 
 --
 -- 表的索引 `project_role`
 --
 ALTER TABLE `project_role`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `p[roject_id` (`project_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `p[roject_id` (`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_role_relation`
 --
 ALTER TABLE `project_role_relation`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `role_id` (`role_id`),
-    ADD KEY `role_id-and-perm_id` (`role_id`,`perm_id`),
-    ADD KEY `unique_data` (`project_id`,`role_id`,`perm_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `role_id` (`role_id`),
+  ADD KEY `role_id-and-perm_id` (`role_id`,`perm_id`),
+  ADD KEY `unique_data` (`project_id`,`role_id`,`perm_id`);
 
 --
 -- 表的索引 `project_user_role`
 --
 ALTER TABLE `project_user_role`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`) USING BTREE,
-    ADD KEY `uid` (`user_id`) USING BTREE,
-    ADD KEY `uid_project` (`user_id`,`project_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`) USING BTREE,
+  ADD KEY `uid` (`user_id`) USING BTREE,
+  ADD KEY `uid_project` (`user_id`,`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_version`
 --
 ALTER TABLE `project_version`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `project_name_unique` (`project_id`,`name`) USING BTREE,
-    ADD KEY `idx_version_project` (`project_id`),
-    ADD KEY `idx_version_sequence` (`sequence`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `project_name_unique` (`project_id`,`name`) USING BTREE,
+  ADD KEY `idx_version_project` (`project_id`),
+  ADD KEY `idx_version_sequence` (`sequence`);
 
 --
 -- 表的索引 `project_workflows`
 --
 ALTER TABLE `project_workflows`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `project_workflow_status`
 --
 ALTER TABLE `project_workflow_status`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `idx_parent_name` (`parentname`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_parent_name` (`parentname`);
 
 --
 -- 表的索引 `report_project_issue`
 --
 ALTER TABLE `report_project_issue`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `projectIdAndDate` (`project_id`,`date`) USING BTREE,
-    ADD KEY `project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `projectIdAndDate` (`project_id`,`date`) USING BTREE,
+  ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `report_sprint_issue`
 --
 ALTER TABLE `report_sprint_issue`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `sprintIdAndDate` (`sprint_id`,`date`) USING BTREE,
-    ADD KEY `sprint_id` (`sprint_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `sprintIdAndDate` (`sprint_id`,`date`) USING BTREE,
+  ADD KEY `sprint_id` (`sprint_id`);
 
 --
 -- 表的索引 `service_config`
 --
 ALTER TABLE `service_config`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_application`
 --
 ALTER TABLE `user_application`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `uk_application_name` (`lower_application_name`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_application_name` (`lower_application_name`);
 
 --
 -- 表的索引 `user_attributes`
 --
 ALTER TABLE `user_attributes`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `uk_user_attr_name_lval` (`user_id`,`attribute_name`),
-    ADD KEY `idx_user_attr_dir_name_lval` (`directory_id`,`attribute_name`(240),`lower_attribute_value`(240)) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `uk_user_attr_name_lval` (`user_id`,`attribute_name`),
+  ADD KEY `idx_user_attr_dir_name_lval` (`directory_id`,`attribute_name`(240),`lower_attribute_value`(240)) USING BTREE;
 
 --
 -- 表的索引 `user_email_active`
 --
 ALTER TABLE `user_email_active`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `email` (`email`,`verify_code`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `email` (`email`,`verify_code`);
 
 --
 -- 表的索引 `user_email_find_password`
 --
 ALTER TABLE `user_email_find_password`
-    ADD PRIMARY KEY (`email`),
-    ADD UNIQUE KEY `email` (`email`,`verify_code`);
+  ADD PRIMARY KEY (`email`),
+  ADD UNIQUE KEY `email` (`email`,`verify_code`);
 
 --
 -- 表的索引 `user_email_token`
 --
 ALTER TABLE `user_email_token`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_group`
 --
 ALTER TABLE `user_group`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `unique` (`uid`,`group_id`) USING BTREE,
-    ADD KEY `uid` (`uid`),
-    ADD KEY `group_id` (`group_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique` (`uid`,`group_id`) USING BTREE,
+  ADD KEY `uid` (`uid`),
+  ADD KEY `group_id` (`group_id`);
 
 --
 -- 表的索引 `user_invite`
 --
 ALTER TABLE `user_invite`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `email` (`email`),
-    ADD KEY `token` (`token`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `token` (`token`);
 
 --
 -- 表的索引 `user_ip_login_times`
 --
 ALTER TABLE `user_ip_login_times`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `ip` (`ip`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ip` (`ip`);
 
 --
 -- 表的索引 `user_issue_display_fields`
 --
 ALTER TABLE `user_issue_display_fields`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `user_fields` (`user_id`,`project_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_fields` (`user_id`,`project_id`) USING BTREE;
 
 --
 -- 表的索引 `user_login_log`
 --
 ALTER TABLE `user_login_log`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `uid` (`uid`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `uid` (`uid`);
 
 --
 -- 表的索引 `user_main`
 --
 ALTER TABLE `user_main`
-    ADD PRIMARY KEY (`uid`),
-    ADD UNIQUE KEY `openid` (`openid`),
-    ADD UNIQUE KEY `email` (`email`) USING BTREE,
-    ADD UNIQUE KEY `username` (`username`) USING BTREE;
+  ADD PRIMARY KEY (`uid`),
+  ADD UNIQUE KEY `openid` (`openid`),
+  ADD UNIQUE KEY `email` (`email`) USING BTREE,
+  ADD UNIQUE KEY `username` (`username`) USING BTREE;
 
 --
 -- 表的索引 `user_message`
 --
 ALTER TABLE `user_message`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_password`
 --
 ALTER TABLE `user_password`
-    ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- 表的索引 `user_password_strategy`
 --
 ALTER TABLE `user_password_strategy`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_phone_find_password`
 --
 ALTER TABLE `user_phone_find_password`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `username` (`phone`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`phone`);
 
 --
 -- 表的索引 `user_posted_flag`
 --
 ALTER TABLE `user_posted_flag`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `user_id` (`user_id`,`_date`,`ip`),
-    ADD KEY `user_id_2` (`user_id`,`_date`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`,`_date`,`ip`),
+  ADD KEY `user_id_2` (`user_id`,`_date`);
 
 --
 -- 表的索引 `user_refresh_token`
 --
 ALTER TABLE `user_refresh_token`
-    ADD PRIMARY KEY (`uid`),
-    ADD KEY `refresh_token` (`refresh_token`(255));
+  ADD PRIMARY KEY (`uid`),
+  ADD KEY `refresh_token` (`refresh_token`(255));
 
 --
 -- 表的索引 `user_setting`
 --
 ALTER TABLE `user_setting`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `user_id` (`user_id`,`_key`),
-    ADD KEY `uid` (`user_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`,`_key`),
+  ADD KEY `uid` (`user_id`);
 
 --
 -- 表的索引 `user_token`
 --
 ALTER TABLE `user_token`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_widget`
 --
 ALTER TABLE `user_widget`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `user_id` (`user_id`,`widget_id`),
-    ADD KEY `order_weight` (`order_weight`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`,`widget_id`),
+  ADD KEY `order_weight` (`order_weight`);
 
 --
 -- 表的索引 `workflow`
 --
 ALTER TABLE `workflow`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `workflow_block`
 --
 ALTER TABLE `workflow_block`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `workflow_id` (`workflow_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workflow_id` (`workflow_id`);
 
 --
 -- 表的索引 `workflow_connector`
 --
 ALTER TABLE `workflow_connector`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `workflow_id` (`workflow_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workflow_id` (`workflow_id`);
 
 --
 -- 表的索引 `workflow_scheme`
 --
 ALTER TABLE `workflow_scheme`
-    ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `workflow_scheme_data`
 --
 ALTER TABLE `workflow_scheme_data`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `workflow_scheme` (`scheme_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workflow_scheme` (`scheme_id`);
 
 --
 -- 在导出的表使用AUTO_INCREMENT
@@ -4737,559 +4719,559 @@ ALTER TABLE `workflow_scheme_data`
 -- 使用表AUTO_INCREMENT `agile_board`
 --
 ALTER TABLE `agile_board`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `agile_board_column`
 --
 ALTER TABLE `agile_board_column`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint`
 --
 ALTER TABLE `agile_sprint`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint_issue_report`
 --
 ALTER TABLE `agile_sprint_issue_report`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `field_custom_value`
 --
 ALTER TABLE `field_custom_value`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- 使用表AUTO_INCREMENT `field_main`
 --
 ALTER TABLE `field_main`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- 使用表AUTO_INCREMENT `field_type`
 --
 ALTER TABLE `field_type`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- 使用表AUTO_INCREMENT `hornet_user`
 --
 ALTER TABLE `hornet_user`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- 使用表AUTO_INCREMENT `issue_assistant`
 --
 ALTER TABLE `issue_assistant`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- 使用表AUTO_INCREMENT `issue_description_template`
 --
 ALTER TABLE `issue_description_template`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `issue_effect_version`
 --
 ALTER TABLE `issue_effect_version`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `issue_extra_worker_day`
 --
 ALTER TABLE `issue_extra_worker_day`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `issue_file_attachment`
 --
 ALTER TABLE `issue_file_attachment`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- 使用表AUTO_INCREMENT `issue_filter`
 --
 ALTER TABLE `issue_filter`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `issue_fix_version`
 --
 ALTER TABLE `issue_fix_version`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `issue_follow`
 --
 ALTER TABLE `issue_follow`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `issue_holiday`
 --
 ALTER TABLE `issue_holiday`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=698;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=698;
 
 --
 -- 使用表AUTO_INCREMENT `issue_label`
 --
 ALTER TABLE `issue_label`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `issue_label_data`
 --
 ALTER TABLE `issue_label_data`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- 使用表AUTO_INCREMENT `issue_main`
 --
 ALTER TABLE `issue_main`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
 
 --
 -- 使用表AUTO_INCREMENT `issue_priority`
 --
 ALTER TABLE `issue_priority`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `issue_recycle`
 --
 ALTER TABLE `issue_recycle`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `issue_resolve`
 --
 ALTER TABLE `issue_resolve`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
 
 --
 -- 使用表AUTO_INCREMENT `issue_status`
 --
 ALTER TABLE `issue_status`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type`
 --
 ALTER TABLE `issue_type`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type_scheme`
 --
 ALTER TABLE `issue_type_scheme`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type_scheme_data`
 --
 ALTER TABLE `issue_type_scheme_data`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=484;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=484;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui`
 --
 ALTER TABLE `issue_ui`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2188;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2225;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- 使用表AUTO_INCREMENT `log_base`
 --
 ALTER TABLE `log_base`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `log_operating`
 --
 ALTER TABLE `log_operating`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `log_runtime_error`
 --
 ALTER TABLE `log_runtime_error`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `main_activity`
 --
 ALTER TABLE `main_activity`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=278;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=278;
 
 --
 -- 使用表AUTO_INCREMENT `main_group`
 --
 ALTER TABLE `main_group`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `main_mail_queue`
 --
 ALTER TABLE `main_mail_queue`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `main_notify_scheme`
 --
 ALTER TABLE `main_notify_scheme`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `main_notify_scheme_data`
 --
 ALTER TABLE `main_notify_scheme_data`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `main_org`
 --
 ALTER TABLE `main_org`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- 使用表AUTO_INCREMENT `main_plugin`
 --
 ALTER TABLE `main_plugin`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- 使用表AUTO_INCREMENT `main_setting`
 --
 ALTER TABLE `main_setting`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- 使用表AUTO_INCREMENT `main_timeline`
 --
 ALTER TABLE `main_timeline`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- 使用表AUTO_INCREMENT `main_webhook`
 --
 ALTER TABLE `main_webhook`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- 使用表AUTO_INCREMENT `main_widget`
 --
 ALTER TABLE `main_widget`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=25;
 
 --
 -- 使用表AUTO_INCREMENT `mind_issue_attribute`
 --
 ALTER TABLE `mind_issue_attribute`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- 使用表AUTO_INCREMENT `mind_project_attribute`
 --
 ALTER TABLE `mind_project_attribute`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- 使用表AUTO_INCREMENT `mind_second_attribute`
 --
 ALTER TABLE `mind_second_attribute`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
 
 --
 -- 使用表AUTO_INCREMENT `mind_sprint_attribute`
 --
 ALTER TABLE `mind_sprint_attribute`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- 使用表AUTO_INCREMENT `permission_default_role`
 --
 ALTER TABLE `permission_default_role`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10007;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10007;
 
 --
 -- 使用表AUTO_INCREMENT `permission_default_role_relation`
 --
 ALTER TABLE `permission_default_role_relation`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global`
 --
 ALTER TABLE `permission_global`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_group`
 --
 ALTER TABLE `permission_global_group`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_role`
 --
 ALTER TABLE `permission_global_role`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_role_relation`
 --
 ALTER TABLE `permission_global_role_relation`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_user_role`
 --
 ALTER TABLE `permission_global_user_role`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5664;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5664;
 
 --
 -- 使用表AUTO_INCREMENT `project_catalog_label`
 --
 ALTER TABLE `project_catalog_label`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- 使用表AUTO_INCREMENT `project_category`
 --
 ALTER TABLE `project_category`
-    MODIFY `id` int(18) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(18) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_flag`
 --
 ALTER TABLE `project_flag`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- 使用表AUTO_INCREMENT `project_gantt_setting`
 --
 ALTER TABLE `project_gantt_setting`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- 使用表AUTO_INCREMENT `project_issue_report`
 --
 ALTER TABLE `project_issue_report`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_issue_type_scheme_data`
 --
 ALTER TABLE `project_issue_type_scheme_data`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- 使用表AUTO_INCREMENT `project_label`
 --
 ALTER TABLE `project_label`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
 
 --
 -- 使用表AUTO_INCREMENT `project_list_count`
 --
 ALTER TABLE `project_list_count`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_main`
 --
 ALTER TABLE `project_main`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- 使用表AUTO_INCREMENT `project_main_extra`
 --
 ALTER TABLE `project_main_extra`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- 使用表AUTO_INCREMENT `project_mind_setting`
 --
 ALTER TABLE `project_mind_setting`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
 
 --
 -- 使用表AUTO_INCREMENT `project_module`
 --
 ALTER TABLE `project_module`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `project_permission`
 --
 ALTER TABLE `project_permission`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10909;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10909;
 
 --
 -- 使用表AUTO_INCREMENT `project_role`
 --
 ALTER TABLE `project_role`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
 
 --
 -- 使用表AUTO_INCREMENT `project_role_relation`
 --
 ALTER TABLE `project_role_relation`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2614;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2614;
 
 --
 -- 使用表AUTO_INCREMENT `project_user_role`
 --
 ALTER TABLE `project_user_role`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- 使用表AUTO_INCREMENT `project_version`
 --
 ALTER TABLE `project_version`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `report_project_issue`
 --
 ALTER TABLE `report_project_issue`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `report_sprint_issue`
 --
 ALTER TABLE `report_sprint_issue`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_email_active`
 --
 ALTER TABLE `user_email_active`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `user_email_token`
 --
 ALTER TABLE `user_email_token`
-    MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_group`
 --
 ALTER TABLE `user_group`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- 使用表AUTO_INCREMENT `user_invite`
 --
 ALTER TABLE `user_invite`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_ip_login_times`
 --
 ALTER TABLE `user_ip_login_times`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_issue_display_fields`
 --
 ALTER TABLE `user_issue_display_fields`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- 使用表AUTO_INCREMENT `user_login_log`
 --
 ALTER TABLE `user_login_log`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `user_main`
 --
 ALTER TABLE `user_main`
-    MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12262;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12262;
 
 --
 -- 使用表AUTO_INCREMENT `user_message`
 --
 ALTER TABLE `user_message`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `user_phone_find_password`
 --
 ALTER TABLE `user_phone_find_password`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `user_posted_flag`
 --
 ALTER TABLE `user_posted_flag`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- 使用表AUTO_INCREMENT `user_refresh_token`
 --
 ALTER TABLE `user_refresh_token`
-    MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_setting`
 --
 ALTER TABLE `user_setting`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=571;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=571;
 
 --
 -- 使用表AUTO_INCREMENT `user_token`
 --
 ALTER TABLE `user_token`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用表AUTO_INCREMENT `user_widget`
 --
 ALTER TABLE `user_widget`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=2681;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=2681;
 
 --
 -- 使用表AUTO_INCREMENT `workflow`
 --
 ALTER TABLE `workflow`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_block`
 --
 ALTER TABLE `workflow_block`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_connector`
 --
 ALTER TABLE `workflow_connector`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_scheme`
 --
 ALTER TABLE `workflow_scheme`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10104;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10104;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_scheme_data`
 --
 ALTER TABLE `workflow_scheme_data`
-    MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
