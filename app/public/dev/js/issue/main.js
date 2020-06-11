@@ -354,6 +354,7 @@ var IssueMain = (function () {
         let sort_by = $('#adv_sort_by').val();
         let sort_field = $('#adv_sort_field').val();
 
+
         btn_adv_sumit.addClass('disabled');
         $.ajax({
             type: 'get',
