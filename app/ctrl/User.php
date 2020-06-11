@@ -606,7 +606,7 @@ class User extends BaseUserCtrl
         if (!empty($_FILES['avatar_img']['tmp_name'])) {
             $userId = UserAuth::getInstance()->getId();
             $saveRet = UploadLogic::normalAvatarFile('avatar_img', PUBLIC_PATH . 'attachment/avatar/', $userId);
-            if ($saveRet !== false) {
+            if ($saveRet) {
                 $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
             }
         } else {
