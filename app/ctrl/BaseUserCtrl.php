@@ -152,7 +152,7 @@ class BaseUserCtrl extends BaseCtrl
                 $userSettings[$item['_key']] = $item['_value'];
             }
             $this->addGVar('G_Preferences', $userSettings);
-
+            // 每次都查询，可以优化
             $assigneeCount = IssueFilterLogic::getUnResolveCountByAssignee(UserAuth::getId());
             if ($assigneeCount <= 0) {
                 $assigneeCount = '0';
@@ -255,7 +255,7 @@ class BaseUserCtrl extends BaseCtrl
                 $userModel = UserModel::getInstance($userToken['uid']);
                 $user = $userModel->getByUid($userToken['uid']);
                 $userAuth = UserAuth::getInstance();
-                $cookieLifetime = getConfigVar('session')['session.cookie_lifetime'];
+                $cookieLifetime = getCommonConfigVar('session')['session.cookie_lifetime'];
                 $userAuth->login($user, $cookieLifetime);
             }
 

@@ -757,7 +757,7 @@ class IssueFilterLogic
     }
 
     /**
-     * 所有项目未解决的事项数量
+     * 获取用户在所有项目未解决的事项数量
      * @param $userId
      * @param $projectId
      * @return int
