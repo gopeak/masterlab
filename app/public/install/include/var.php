@@ -6,7 +6,9 @@ $dirfile_items = array(
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/public/attachment')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../upgrade')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/storage')),
-    array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../../config.yml')),
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/storage/session')),
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/storage/tmp')),
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/storage/log/slow')),
     array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../../bin/config.toml')),
     array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../../bin/cron.json')),
 );

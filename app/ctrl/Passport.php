@@ -305,7 +305,7 @@ class Passport extends BaseCtrl
             unset($user['password']);
         }
         // $_SESSION[UserAuth::SESSION_UID_KEY] = $user['uid'];
-        $cookieLifetime = getConfigVar('session')['session.cookie_lifetime'];
+        $cookieLifetime = getCommonConfigVar('session')['session.cookie_lifetime'];
         $this->auth->login($user, $cookieLifetime);
         $_SESSION['user_info'] = $user;
 

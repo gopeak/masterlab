@@ -24,32 +24,6 @@ class SearchLogic
     public static $mysqlVersion = 0;
 
     /**
-     *
-     * @param $keyword
-     * @param int $page
-     * @param int $pageSize
-     * @return array
-     */
-    public static function getIssueBySphinx($keyword, $page = 1, $pageSize = 50)
-    {
-        require_once APP_PATH . '../lib/SphinxClient.php';
-        $mailConfig = getConfigVar('sphinx');
-        $host = $mailConfig['server']['host'] ;
-        $port = $mailConfig['server']['port'] ;
-        $s = new \SphinxClient;
-        $s->setServer($host, $port);
-
-        $start = $pageSize * ($page - 1);
-        $s->setMaxQueryTime(30);
-        $s->SetLimits($start, $pageSize);
-        $queryRet = $s->Query($keyword, 'issue');
-        $err = $s->GetLastError();
-        $matches = !empty($queryRet['matches']) ? $queryRet['matches'] : [];
-        $s->close();
-        return [$err, $queryRet, $matches];
-    }
-
-    /**
      * 通过id从数据库查询数据
      * @param $issueIdArr
      * @return array
