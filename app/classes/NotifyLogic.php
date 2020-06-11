@@ -267,7 +267,7 @@ class NotifyLogic
             $row = $sprintModel->getById($sourceId);
             $tplArr['sprint_id'] = $row['id'];
             $tplArr['sprint_title'] = $row['name'];
-            $tplArr['sprint_start_date'] = $row['name'];
+            $tplArr['sprint_start_date'] = $row['start_date'];
             $tplArr['sprint_end_date'] = $row['end_date'];
         }
         //print_r($tplArr);

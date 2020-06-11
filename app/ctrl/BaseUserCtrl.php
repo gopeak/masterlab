@@ -152,7 +152,7 @@ class BaseUserCtrl extends BaseCtrl
                 $userSettings[$item['_key']] = $item['_value'];
             }
             $this->addGVar('G_Preferences', $userSettings);
-
+            // 每次都查询，可以优化
             $assigneeCount = IssueFilterLogic::getUnResolveCountByAssignee(UserAuth::getId());
             if ($assigneeCount <= 0) {
                 $assigneeCount = '0';
