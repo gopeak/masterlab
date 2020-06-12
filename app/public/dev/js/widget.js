@@ -167,7 +167,7 @@ var Widgets = (function () {
                     var activitys = [];
                     for(var i=0; i<resp.data.activity.length;  i++) {
                         var user_id = resp.data.activity[i].user_id;
-                        resp.data.activity[i].user = getValueByKey(_issueConfig.users,user_id);
+                        resp.data.activity[i].user = getArrayValue(_issueConfig.users, 'uid',user_id);
                     }
 
                     var source = $('#'+_key+'_tpl').html();

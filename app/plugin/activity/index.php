@@ -75,7 +75,7 @@ class Index extends BasePluginCtrl
             }
         }
         $userModel = new UserModel();
-        $users = $userModel->getAll();
+        $users = $userModel->getAll(false);
         foreach ($users as &$user) {
             $user = UserLogic::format($user);
         }

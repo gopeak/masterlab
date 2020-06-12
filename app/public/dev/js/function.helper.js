@@ -54,9 +54,9 @@ function getObjectValue(objs, id) {
 
 function getUser(users, uid) {
     var obj = null;
-    for (var i in users) {
-        if (parseInt(users[i].uid) === parseInt(uid)) {
-            return users[i];
+    for (let user of users) {
+        if (parseInt(user.uid) === parseInt(uid)) {
+            return user;
         }
     }
     return obj;

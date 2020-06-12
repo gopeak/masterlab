@@ -547,7 +547,7 @@ var IssueMain = (function () {
                 var module_list = _issueConfig.issue_module;
                 //console.log(module_list);
                 var html = "";
-                for (var value of Object.values(module_list)) {
+                for (let value of  module_list) {
                     html += `<li data-name="${value.name}" data-value="${value.k}"><span class="prepend-left-5">${value.name}</span></li>`;
                 }
                 list_box.html(html);
@@ -1472,9 +1472,9 @@ var IssueMain = (function () {
         var desc_tpl_value = '';
         if (!is_edit && _description_templates != null) {
             var issue_type = null;
-            for (var obj_key in _issueConfig.issue_types) {
-                if (_issueConfig.issue_types[obj_key].id == issue_type_id) {
-                    issue_type = _issueConfig.issue_types[obj_key];
+            for (let arr of _issueConfig.issue_types) {
+                if (arr.id == issue_type_id) {
+                    issue_type = arr;
                 }
             }
             //console.log( issue_type);

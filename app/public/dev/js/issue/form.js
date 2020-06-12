@@ -426,7 +426,7 @@ var IssueForm = (function () {
 
         if (default_value !== null) {
             for (var i = 0; i < default_value.length; i++) {
-                var item_value = getValueByKey(_issueConfig.issue_labels, default_value[i]);
+                var item_value = getArrayValue(_issueConfig.issue_labels, 'id', default_value[i]);
                 item_value['id'] = default_value[i];
                 if (item_value) {
                     edit_data.push(item_value);
@@ -614,7 +614,7 @@ var IssueForm = (function () {
         }
         var user = null;
         if (default_value != '') {
-            user = getValueByKey(_issueConfig.users, field.default_value);
+            user = getArrayValue(_issueConfig.users, 'id',field.default_value);
             if (!objIsEmpty(user)) {
                 display_name = user.display_name;
             }
@@ -948,9 +948,9 @@ var IssueForm = (function () {
             required_html = '<span class="required"> *</span>';
         }
         var html = '';
-        var module = IssueForm.prototype.getModule(_issueConfig.issue_module, default_value);
+        var module = getArrayValue(_issueConfig.issue_module, 'id',default_value);
         var module_title = display_name;
-        if (module.hasOwnProperty("name")) {
+        if (!is_empty(module)) {
             module_title = module.name;
         }
         if (default_value == null || default_value == 'null') {
@@ -1205,9 +1205,9 @@ var IssueForm = (function () {
 
     IssueForm.prototype.getObjectValue = function (objs, id) {
         var obj = null;
-        for (var i in objs) {
-            if (parseInt(objs[i].id) === parseInt(id)) {
-                return objs[i];
+        for (let obj of objs) {
+            if (parseInt(obj.id) === parseInt(id)) {
+                return obj;
             }
         }
         return obj;

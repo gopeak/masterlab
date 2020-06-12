@@ -98,8 +98,8 @@ var BoardSetting = (function () {
         //console.log(modules, id_arr)
         let range_modules = $('#range_modules');
         range_modules.empty();
-        for (let key in modules) {
-            let row = modules[key];
+        for (let i = 0; i < modules.length; i++) {
+            let row = modules[i];
             let id = row.k;
             let title = row.name;
             let selected = '';
@@ -114,8 +114,8 @@ var BoardSetting = (function () {
         console.log(issue_types, id_arr)
         let range_issue_type = $('#range_issue_types');
         range_issue_type.empty();
-        for (let key in issue_types) {
-            let row = issue_types[key];
+        for (let i = 0; i < issue_types.length; i++) {
+            let row = issue_types[i];
             let id = row._key;
             let title = row.name;
             let selected = '';
@@ -329,8 +329,7 @@ var BoardSetting = (function () {
                     selects[source] = $('#select_' + source + '_column_' + i);
                     selects[source].empty();
                     let select_datas = window._issueConfig.issue_status;
-                    for (let _k in select_datas) {
-                        let row = select_datas[_k];
+                    for (let row of select_datas) {
                         let value = row._key;
                         let title = row.name;
                         let selected = '';
@@ -347,8 +346,7 @@ var BoardSetting = (function () {
                     selects[source] = $('#select_' + source + '_column_' + i);
                     selects[source].empty();
                     let select_datas = window._issueConfig.issue_resolve;
-                    for (let _k in select_datas) {
-                        let row = select_datas[_k];
+                    for (let row of select_datas) {
                         let value = row._key;
                         let title = row.name;
                         let selected = '';
@@ -367,8 +365,7 @@ var BoardSetting = (function () {
                     let select_datas = window._issueConfig.issue_labels;
 
                     if (select_datas.length !== 0) {
-                        for (let _k in select_datas) {
-                            let row = select_datas[_k];
+                        for (let row of select_datas) {
                             let value = _k;
                             let title = row.title;
                             let selected = '';
@@ -387,8 +384,7 @@ var BoardSetting = (function () {
                     selects[source] = $('#select_' + source + '_column_' + i);
                     selects[source].empty();
                     let select_datas = window._issueConfig.users;
-                    for (let _k in select_datas) {
-                        let row = select_datas[_k];
+                    for (let row in select_datas) {
                         let value = row.uid;
                         let title = row.display_name;
                         let avatar = row.avatar;

@@ -249,7 +249,7 @@ var Gantt = (function () {
                     $('#user_dropdown-toggle-text').html(user.display_name);
                 }
 
-                let sprint = getObjectValue(window._issueConfig.sprint, issue.sprint);
+                let sprint = getArrayValue(window._issueConfig.sprint, 'id', issue.sprint);
                 if(is_empty(sprint.id)){
                     $('#sprint_name').html('待办事项');
                 }else{
@@ -291,7 +291,7 @@ var Gantt = (function () {
         if(!_is_admin_gantt){
             return;
         }
-        let sprint = getObjectValue(_issueConfig.sprint,task.sprint_id);
+        let sprint = getArrayValue(_issueConfig.sprint, 'id',  task.sprint_id);
         let start_date = timestampToDate(task.start,'Y-m-d');
         let due_date = timestampToDate(task.end,'Y-m-d');
         if(!is_empty(sprint) && is_empty(start_date)){
@@ -406,7 +406,7 @@ var Gantt = (function () {
                     let code = "#"+id;
                     let sprint_id = $('#gantt_sprint').val();
                     let sprint_name = $('#sprint_name').html();
-                    let sprint = getObjectValue(window._issueConfig.sprint, sprint_id);
+                    let sprint = getArrayValue(window._issueConfig.sprint, 'id',sprint_id);
                     let start_date = $('#gantt_start_date').val().replace(/-/g, '/');// 把所有-转化成/
                     let startTime = 0;
                     if(start_date==="" && !isUndefined(sprint.start_date)){

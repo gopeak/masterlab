@@ -112,9 +112,9 @@ var BoardColumn = (function () {
                             var myOption = document.createElement("option");
                             myOption.value = targetStatus.status[i];
                             myOption.text = targetStatus.status[i];
-                            for (var skey in issue_status) {
-                                if (issue_status[skey]._key == targetStatus.status[i]) {
-                                    myOption.text = issue_status[skey].name;
+                            for (let status of issue_status) {
+                                if (status._key == targetStatus.status[i]) {
+                                    myOption.text = status.name;
                                     break;
                                 }
                             }

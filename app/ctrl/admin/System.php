@@ -169,7 +169,7 @@ class System extends BaseAdminCtrl
         $data['left_nav_active'] = 'global_permission';
 
         $userModel = new UserModel();
-        $users = $userModel->getAll();
+        $users = $userModel->getAll(false);
         foreach ($users as &$user) {
             $user = UserLogic::format($user);
         }
