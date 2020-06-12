@@ -292,7 +292,10 @@ class IssueFilterLogic
         if (strpos($sysFilter, 'label_') === 0) {
             list(, $labelId) = explode('label_', $sysFilter);
             $labelIssueIdArr = IssueLabelDataModel::getInstance()->getIssueIdArrById($labelId);
-            if ($labelIssueIdArr) {
+            if (empty($labelIssueIdArr)) {
+                $sql .= " AND id in ( 0 )";
+            }else{
+
                 $issueIdStr = implode(',', $labelIssueIdArr);
                 unset($issueIdArr);
                 $sql .= " AND id in ({$issueIdStr})";

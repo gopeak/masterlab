@@ -399,11 +399,11 @@
                                     <label class="control-label col-sm-2" for="issue_label_ids">标签:</label>
                                     <div class="col-sm-10">
                                         {{#issue.labels_names}}
-                                        <a class="label-link" href="/issue/main/?label={{name}}">
+                                        <a class="label-link" href="{% endverbatim %}{{project_root_url}}{% verbatim %}?sys_filter=label_{{id}}">
                                             <span class="label color-label has-tooltip"
                                                   style="background-color: {{bg_color}}; color: {{color}}"
                                                   title="" data-container="body"
-                                                  data-original-title="red waring">{{title}}</span>
+                                                  data-original-title="{{description}}">{{title}}</span>
                                         </a>
                                         {{/issue.labels_names}}
                                     </div>
