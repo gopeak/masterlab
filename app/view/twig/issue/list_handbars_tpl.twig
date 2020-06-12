@@ -595,8 +595,8 @@
          {% verbatim %}
 			<script type="text/html" id="adv_query_display_tpl">
 				{{#tableList}}
-				    {{#if_eq start_braces ""}} {{else}} {{start_braces}} {{/if_eq}}
 				    {{#if_eq @index 0}} {{else}} {{logic}} {{/if_eq}}
+				    {{#if_eq start_braces ""}} {{else}} {{start_braces}} {{/if_eq}}
 				    <a class="ss-item" title="{{field_title}}"   data-index="{{@index}}"  href="#"   style="color: #666; text-decoration: none;">
                         <b>{{field_title}} {{opt}}</b>
                         <em>{{display_html}} </em>
