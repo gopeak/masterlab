@@ -168,13 +168,15 @@ class Passport extends BaseCtrl
      * 注销
      */
     public function pageLogout()
-    { 		UserAuth::getInstance()->logout();
+    {
+        UserAuth::getInstance()->logout();
         $this->pagelogin();
 		$event = new CommonPlacedEvent($this, UserModel::getInstance()->getByUid(UserAuth::getId()));
         $this->dispatcher->dispatch($event,  Events::onUserlogout);
 
-        header("location: /passport/login");
-        die;    }
+        @header("location: /passport/login");
+        die;
+    }
 
     /**
      * 登录

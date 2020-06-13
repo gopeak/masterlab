@@ -25,7 +25,7 @@ var Profile = (function() {
     };
 
     Profile.prototype.fetchUserById = function( user_id) {
-        var user = getArrayValue(_issueConfig.users, 'id', user_id);
+        var user = getArrayValue(_issueConfig.users, 'uid', user_id);
         //console.log(users);
         return user;
     }

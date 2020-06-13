@@ -159,7 +159,7 @@ $(function () {
         if (uid == null || uid == undefined || uid == '') {
             return '';
         }
-        var user = getArrayValue(_issueConfig.users, 'k', uid);
+        var user = getArrayValue(_issueConfig.users, 'uid', uid);
         if (user == null) {
             return '';
         }

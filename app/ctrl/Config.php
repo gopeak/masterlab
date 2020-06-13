@@ -36,11 +36,7 @@ class Config extends BaseCtrl
         if (isset($data['project_id'])) {
             $projectId = $data['project_id'];
         }
-        $primaryKey = false;
-        if (isset($data['primary_key'])) {
-            $primaryKey = $data['primary_key'];
-        }
-
+  
         list(, $data['settings']) = SettingsLogic::getsByModule();
         $unsetKeyArr = ['mail_password', 'company_phone', 'socket_server_host', 'socket_server_port'];
         if (!empty($data['settings'])) {

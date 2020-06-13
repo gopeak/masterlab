@@ -24,6 +24,14 @@ function getValueByKey($map, $key) {
     return value;
 }
 
+/**
+ * @todo
+ * 从二维数组中查找某个记录
+ * @param arr
+ * @param $key
+ * @param value
+ * @returns {null|*}
+ */
 function getArrayValue(arr, $key, value ) {
     for (var i = 0; i < arr.length; i++) {
         if (value === arr[i][$key]) {

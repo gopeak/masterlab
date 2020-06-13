@@ -614,7 +614,7 @@ var IssueForm = (function () {
         }
         var user = null;
         if (default_value != '') {
-            user = getArrayValue(_issueConfig.users, 'id',field.default_value);
+            user = getArrayValue(_issueConfig.users, 'uid',field.default_value);
             if (!objIsEmpty(user)) {
                 display_name = user.display_name;
             }

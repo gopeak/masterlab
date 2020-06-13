@@ -1042,13 +1042,20 @@ GanttMaster.prototype.indentCurrentTask = function () {
 
 GanttMaster.prototype.showAddBelowCurrentTask = function () {
     var self = this;
-    console.debug("showAddBelowCurrentTask",self.currentTask)
-
+    var parent = null;
+    if (!self.currentTask) {
+      let last_task = null;
+      if(self.tasks.length>0){
+        parent = self.tasks[self.tasks.length-1];
+        self.currentTask = parent;
+      }
+    }else{
+       parent = self.currentTask.getParent();
+    }
     //check permissions
-    if ((self.currentTask.getParent() && !self.currentTask.getParent().canAdd) ){
+    if ((parent && !parent.canAdd) ){
         return;
     }
-    var parent = self.currentTask.getParent();
 
     if(parent!=null && parent.level!=0){
         $("#master_issue_id").val(parent.id);
@@ -1105,7 +1112,10 @@ GanttMaster.prototype.addBelowCurrentTask = function (id, name, code, startTime,
 GanttMaster.prototype.showAddAboveCurrentTask = function () {
     var self = this;
     // console.debug("addAboveCurrentTask",self.currentTask)
-
+    if (!self.currentTask) {
+        self.showAddBelowCurrentTask();
+        return;
+    }
     //check permissions
     if ((self.currentTask.getParent() && !self.currentTask.getParent().canAdd) ){
         return;

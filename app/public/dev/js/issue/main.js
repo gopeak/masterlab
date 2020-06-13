@@ -185,11 +185,11 @@ var IssueMain = (function () {
         var elm = $('#edit_issue_types_select');
         elm.empty();
         var first_issue_type = {};
-        for (var i in issue_types) {
-            if (issue_type_id == issue_types[i].id) {
-                first_issue_type = issue_types[i];
+        for (let issue_type of issue_types) {
+            if (issue_type_id == issue_type.id) {
+                first_issue_type = issue_type;
             }
-            elm.append("<option value='" + issue_types[i].id + "'>" + issue_types[i].name + "</option>");
+            elm.append("<option value='" + issue_type.id + "'>" + issue_type.name + "</option>");
         }
 
         if (issue_type_id) {
@@ -513,8 +513,8 @@ var IssueMain = (function () {
 
                 var priority_list = _issueConfig.priority;
                 var html = "";
-                for (let i in priority_list) {
-                    html += `<li data-color="${priority_list[i].status_color}" data-value="${priority_list[i].id}"><span style="color:${priority_list[i].status_color}" class="prepend-left-5">${priority_list[i].name}</span></li>`;
+                for (let priority of priority_list) {
+                    html += `<li data-color="${priority.status_color}" data-value="${priority.id}"><span style="color:${priority.status_color}" class="prepend-left-5">${priority.name}</span></li>`;
                 }
                 list_box.html(html);
 
@@ -643,10 +643,11 @@ var IssueMain = (function () {
                 list_box.slideDown(100);
 
                 var resolve_list = _issueConfig.issue_resolve;
+                console.log(resolve_list);
                 var html = "";
-                for (let i in resolve_list) {
-                    //console.log(resolve_list[i]);
-                    html += `<li data-color="${resolve_list[i].color}" data-value="${resolve_list[i].id}"><span style="color:${resolve_list[i].color}" class="prepend-left-5">${resolve_list[i].name}</span></li>`;
+                for (let resolve of resolve_list) {
+                    console.log(resolve_list[i]);
+                    html += `<li data-color="${resolve.color}" data-value="${resolve.id}"><span style="color:${resolve.color}" class="prepend-left-5">${resolve.name}</span></li>`;
                 }
                 list_box.html(html);
 

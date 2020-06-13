@@ -12,8 +12,8 @@ var Gantt = (function () {
         var issue_types_select = document.getElementById('gantt_issue_type');
         $('#gantt_issue_type').empty();
 
-        for (var _key in  issue_types) {
-            issue_types_select.options.add(new Option(issue_types[_key].name, issue_types[_key].id));
+        for (let issue_type of  issue_types) {
+            issue_types_select.options.add(new Option(issue_type.name, issue_type.id));
         }
         // console.log(issue_types_select);
         $('.selectpicker').selectpicker('refresh');
@@ -24,8 +24,8 @@ var Gantt = (function () {
         var issue_types_select = document.getElementById('priority');
         $('#gantt_priority').empty();
 
-        for (var _key in  prioritys) {
-            var row = prioritys[_key];
+        for (var priority of  prioritys) {
+            var row = priority;
             var id = row.id;
             var title = row.name;
             var color = row.status_color;
@@ -40,9 +40,7 @@ var Gantt = (function () {
         //console.log(status)
         var issue_types_select = document.getElementById('gantt_status');
         $('#gantt_status').empty();
-
-        for (var _key in  status) {
-            var row = status[_key];
+        for (let row of  status) {
             var id = row.id;
             var title = row.name;
             var color = row.color;
