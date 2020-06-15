@@ -56,8 +56,27 @@ class Index extends BasePluginCtrl
         $data['plugin_name'] = $this->dirName;
         $data['nav_links_active'] = 'document';
         $data = RewriteUrl::setProjectData($data);
-        $data['current_user']  = UserModel::getInstance()->getByUid(UserAuth::getId());
+        $data['current_user'] = $user  = UserModel::getInstance()->getByUid(UserAuth::getId());
 
+        // http://masterlab.ink/kod_index.php?user/loginSubmit&isAjax=1&getToken=1&name=admin&password=testtest
+        $docAdmin = 'admin';
+        $docPassword = 'admin';
+        $url = sprintf("http://masterlab.ink/kod_index.php?user/loginSubmit&isAjax=1&getToken=1&name=&password=", $docAdmin, $docPassword);
+
+        require_once realpath(__DIR__).'/kod/config/setting_user.php';
+        $loginToken = base64_encode('admin').'|'.md5('admin'.$GLOBALS['config']['settings']['apiLoginTonken']);
+
+        $url = sprintf(ROOT_URL."kod_index.php?user/loginSubmit&isAjax=1&getToken=1&login_token=%s", $loginToken);
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $url);
+        $statusCode =  $response->getStatusCode(); // 200
+        if($statusCode==200){
+            $bodyArr =  json_decode($response->getBody(), true);
+            //print_r($bodyArr);
+            //die;
+        }
+        $iframeUrl = sprintf(ROOT_URL."kod_index.php?user/loginSubmit&login_token=%s", $loginToken);
+        $data['iframe_url'] = $iframeUrl;
         $this->twigRender('index.twig', $data);
         //header("location:/kod_index.php?user/login&kod=1");
         //require_once realpath(__DIR__).'/kod/index.php';

@@ -471,7 +471,7 @@ class user extends Controller{
 			show_json($msg,$success);
 		}else{
 			if($success){
-				$href = './';
+				$href = './kod_index.php';
 				if(isset($this->in['link'])){
 					$href = rawurldecode($this->in['link']);
 				}
