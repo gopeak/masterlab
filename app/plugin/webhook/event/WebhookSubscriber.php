@@ -253,4 +253,46 @@ class WebhookSubscriber implements EventSubscriberInterface
         return [$ret, $msg];
     }
 
+    private function requestByGuzzleHttp($webhook, $dataArr)
+    {
+        $dataStr = http_build_query($dataArr);
+        $pushArr = [];
+        $pushArr['project_id'] = $webhook['project_id'];
+        $pushArr['webhook_id'] = $webhook['id'];
+        $pushArr['event_name'] = $dataArr['event_name'];
+        $pushArr['url'] = $webhook['url'];
+        $pushArr['data'] = $dataStr;
+        $pushArr['status'] = WebHookLogModel::STATUS_READY;
+        $pushArr['time'] = time();
+        $pushArr['user_id'] = UserAuth::getId();
+        $pushArr['err_msg'] = '';
+
+        // 0准备;1执行成功;2队列中;3出队列后执行失败
+        $webhooklogModel = new WebHookLogModel();
+        list($logRet, $logId) = $webhooklogModel->insert($pushArr);
+        if($logRet){
+            $pushArr['log_id'] = (int)$logId;
+        }else{
+            $pushArr['log_id'] = 0;
+        }
+
+
+        $client = new \GuzzleHttp\Client();
+
+        // Send an asynchronous request.
+        $request = new \GuzzleHttp\Psr7\Request('GET', $pushArr['url']);
+        $promise = $client->sendAsync($request)->then(function ($response) {
+            $statusCode = $response->getStatusCode(); // 200
+            $body =  $response->getBody(); // '{"id": 1420053, "name": "guzzle", ...}'
+            if ($statusCode==200) {
+                $webhooklogModel = new WebHookLogModel();
+                //$webhooklogModel->updateById($logId, ['err_msg' => $msg, 'status' => WebHookLogModel::STATUS_ASYNC_FAILED]);
+            }
+        });
+
+        $promise->wait();
+
+        return [true, '异步执行'];
+    }
+
 }
