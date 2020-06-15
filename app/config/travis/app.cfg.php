@@ -10,7 +10,7 @@ define('ROOT_URL', 'http://masterlab.ci:8888/');
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 当前版本号
-define('MASTERLAB_VERSION', '2.1.6');
+define('MASTERLAB_VERSION', '2.1.7');
 
 // 设置缓存的存储引擎,由3个值可选：Membase,Redis,APC
 define('CACHE_HANDLER', 'Redis');
