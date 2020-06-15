@@ -261,12 +261,13 @@ function isVideoUrl($url)
  */
 function getCookieHost()
 {
-    if (preg_match('/([^.]+)\.(\D+)$/sim', $_SERVER['HTTP_HOST'], $regs)) {
-        $arr = explode('.', $_SERVER['HTTP_HOST']);
+    if (preg_match('/([^.]+)\.(\D+)$/sim', $_SERVER['SERVER_NAME'], $regs)) {
+        $arr = explode('.', $_SERVER['SERVER_NAME']);
         $cookieDomain = '.' . $arr[count($arr) - 2] . '.' . $arr[count($arr) - 1];
     } else {
-        $cookieDomain = $_SERVER['HTTP_HOST'];
+        $cookieDomain = $_SERVER['SERVER_NAME'];
     }
+    //var_dump($cookieDomain);
     return $cookieDomain;
 }
 
