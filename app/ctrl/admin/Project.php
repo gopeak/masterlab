@@ -3,20 +3,25 @@
 namespace main\app\ctrl\admin;
 
 use main\app\classes\PermissionGlobal;
+use main\app\classes\SettingsLogic;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
+use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
+use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionLogic;
+use main\app\service\ProjectService;
 
 /**
  * 后台的项目管理模块
@@ -201,5 +206,164 @@ class Project extends BaseAdminCtrl
 
         $model->db->commit();
         $this->ajaxSuccess('操作成功');
+    }
+
+
+    /**
+     * 克隆项目接口
+     * @throws \Exception
+     */
+    public function clone()
+    {
+        $projectId = null;
+
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $uid = UserAuth::getId();
+        $projectModel = new ProjectModel($uid);
+        $settingLogic = new SettingsLogic;
+        $maxLengthProjectName = $settingLogic->maxLengthProjectName();
+        $maxLengthProjectKey = $settingLogic->maxLengthProjectKey();
+
+        $projectName = '';
+        if (isset($_POST['project_name']) && !empty($_POST['project_name'])) {
+            $projectName = trim($_POST['project_name']);
+            if (strlen($projectName) == 0) {
+                $this->ajaxFailed('参数错误', '项目名不能为空');
+            }
+            if (strlen($projectName) > $maxLengthProjectName) {
+                $this->ajaxFailed('参数错误', '项目名长度太长,长度应该小于' . $maxLengthProjectName);
+            }
+            if ($projectModel->checkNameExist($projectName)) {
+                $this->ajaxFailed('参数错误', '项目名已存在，请还一个。');
+            }
+        } else {
+            $this->ajaxFailed('参数错误', '需要项目名称');
+        }
+
+        $projectKey = '';
+        if (isset($_POST['project_key']) && !empty($_POST['project_key'])) {
+            $projectKey = trim($_POST['project_key']);
+            if (empty(trimStr($projectKey))) {
+                $this->ajaxFailed('参数错误', '项目KEY不能为空');
+            }
+            if (strlen($projectKey) > $maxLengthProjectKey) {
+                $this->ajaxFailed('参数错误', '项目KEY长度太长,长度应该小于' . $maxLengthProjectKey);
+            }
+            if (!preg_match("/^[a-zA-Z]+$/", $projectKey)) {
+                $this->ajaxFailed('参数错误', '项目KEY必须全部为英文字母,不能包含空格和特殊字符');
+            }
+            if ($projectModel->checkKeyExist($projectKey)) {
+                $this->ajaxFailed('参数错误', '项目KEY已经被使用了,请更换一个吧');
+            }
+        } else {
+            $this->ajaxFailed('参数错误', '需要项目KEY');
+        }
+
+        $projectModel = new ProjectModel($uid);
+        //$projectModel->beginTransaction();
+
+        $cloneRawData = ProjectLogic::getRawProjectRelatedRows($projectId);
+
+        unset($cloneRawData['project_row']['id']);
+        $cloneRawData['project_row']['name'] = $projectName;
+        $cloneRawData['project_row']['key'] = $projectKey;
+        $cloneRawData['project_row']['description'] =  $projectName . ' 是一个克隆项目';
+        $cloneRawData['project_row']['create_time'] = time();
+        $cloneRawData['project_row']['un_done_count'] = 0;
+        $cloneRawData['project_row']['done_count'] = 0;
+        $cloneRawData['project_row']['closed_count'] = 0;
+
+        list($ret, $newProjectId) = $projectModel->insert($cloneRawData['project_row']);
+
+        if (!$ret) {
+            $this->ajaxFailed('异常', '克隆项目失败.');
+        }
+
+        if (!empty($cloneRawData['sprint_rows'])) {
+            foreach ($cloneRawData['sprint_rows'] as $key=>$item) {
+                unset($cloneRawData['sprint_rows'][$key]['id']);
+                $cloneRawData['sprint_rows'][$key]['project_id'] = $newProjectId;
+            }
+            $model = new SprintModel();
+            $model->insertRows($cloneRawData['sprint_rows']);
+        }
+
+
+        if (!empty($cloneRawData['version_rows'])) {
+            foreach ($cloneRawData['version_rows'] as $key=>$item) {
+                unset($cloneRawData['version_rows'][$key]['id']);
+                $cloneRawData['version_rows'][$key]['project_id'] = $newProjectId;
+            }
+            $model = new ProjectVersionModel();
+            $model->insertRows($cloneRawData['version_rows']);
+        }
+
+        if (!empty($cloneRawData['module_rows'])) {
+            foreach ($cloneRawData['module_rows'] as $key=>$item) {
+                unset($cloneRawData['module_rows'][$key]['id']);
+                unset($cloneRawData['module_rows'][$key]['k']);
+                $cloneRawData['module_rows'][$key]['project_id'] = $newProjectId;
+            }
+            $model = new ProjectModuleModel();
+            $model->insertRows($cloneRawData['module_rows']);
+        }
+
+        if (!empty($cloneRawData['label_rows'])) {
+            foreach ($cloneRawData['label_rows'] as $key=>$item) {
+                unset($cloneRawData['label_rows'][$key]['id']);
+                $cloneRawData['label_rows'][$key]['project_id'] = $newProjectId;
+            }
+            $model = new ProjectLabelModel();
+            $model->insertRows($cloneRawData['label_rows']);
+        }
+
+        if (!empty($cloneRawData['catalog_label_rows'])) {
+            foreach ($cloneRawData['catalog_label_rows'] as $key=>$item) {
+                unset($cloneRawData['catalog_label_rows'][$key]['id']);
+                $cloneRawData['catalog_label_rows'][$key]['project_id'] = $newProjectId;
+            }
+            $model = new ProjectCatalogLabelModel();
+            $model->insertRows($cloneRawData['catalog_label_rows']);
+        }
+
+        if (!empty($cloneRawData['role_rows'])) {
+            foreach ($cloneRawData['role_rows'] as $key=>$item) {
+                unset($cloneRawData['role_rows'][$key]['id']);
+                $cloneRawData['role_rows'][$key]['project_id'] = $newProjectId;
+            }
+            $model = new ProjectRoleModel();
+            $model->insertRows($cloneRawData['role_rows']);
+        }
+
+        if (!empty($cloneRawData['role_relation_rows'])) {
+            foreach ($cloneRawData['role_relation_rows'] as $key=>$item) {
+                unset($cloneRawData['role_relation_rows'][$key]['id']);
+                $cloneRawData['role_relation_rows'][$key]['project_id'] = $newProjectId;
+            }
+            $model = new ProjectRoleRelationModel();
+            $model->insertRows($cloneRawData['role_relation_rows']);
+        }
+
+        if (!empty($cloneRawData['user_role_rows'])) {
+            foreach ($cloneRawData['user_role_rows'] as $key=>$item) {
+                unset($cloneRawData['user_role_rows'][$key]['id']);
+                $cloneRawData['user_role_rows'][$key]['project_id'] = $newProjectId;
+            }
+            $model = new ProjectUserRoleModel();
+            $model->insertRows($cloneRawData['user_role_rows']);
+        }
+
+        $this->ajaxSuccess('项目克隆成功', $cloneRawData);
+
+
     }
 }

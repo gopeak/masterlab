@@ -3,6 +3,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\agile\SprintModel;
 use main\app\model\permission\DefaultRoleModel;
 use main\app\model\permission\DefaultRoleRelationModel;
 use main\app\model\project\ProjectCatalogLabelModel;
@@ -16,6 +17,7 @@ use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\project\ProjectVersionModel;
 
 /**
  *
@@ -696,4 +698,96 @@ class ProjectLogic
         return $map;
     }
 
+    /**
+     * 获取项目克隆需要的原始数据
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public static function getRawProjectRelatedRows($projectId)
+    {
+        $configuration = [];
+        // 项目信息
+        $model = new ProjectModel();
+        $configuration['project_row'] = $model->getById($projectId);
+
+        // 迭代
+        $sprintModel = new SprintModel();
+        $configuration['sprint_rows'] = $sprintModel->getItemsByProject($projectId);
+        // 版本
+        $projectVersionModel = new ProjectVersionModel();
+        $configuration['version_rows'] = $projectVersionModel->getByProjectPrimaryKey($projectId);
+        // 模块
+        $projectModuleModel = new ProjectModuleModel();
+        $configuration['module_rows'] = $projectModuleModel->getByProject($projectId);
+        // 标签
+        $projectLabelModel = new ProjectLabelModel();
+        $configuration['label_rows'] = $projectLabelModel->getByProject($projectId);
+        // 分类
+        $model = new ProjectCatalogLabelModel();
+        $configuration['catalog_label_rows'] = $model->getByProject($projectId);
+        // 项目角色
+        $model = new ProjectRoleModel();
+        $configuration['role_rows'] = $model->getsByProject($projectId);
+        // 项目角色关系
+        $model = new ProjectRoleRelationModel();
+        $configuration['role_relation_rows'] = $model->getRowsByProjectId($projectId);
+
+        // 项目用户角色
+        $model = new ProjectUserRoleModel();
+        $configuration['user_role_rows'] = $model->getByProjectId($projectId);
+
+        return $configuration;
+    }
+
+    /**
+     * 项目基本信息
+     * @param $projectId
+     * @return array|\stdClass
+     * @throws \Exception
+     */
+    public function info($projectId)
+    {
+        $projectModel = new ProjectModel();
+        $project = $projectModel->getById($projectId);
+        if (empty($project)) {
+            $project = new \stdClass();
+            return $project;
+        }
+
+        $projectMainExtraModel = new ProjectMainExtraModel();
+        $projectExtraInfo = $projectMainExtraModel->getByProjectId($projectId);
+        if (empty($projectExtraInfo)) {
+            $project['detail'] = '';
+        } else {
+            $project['detail'] = $projectExtraInfo['detail'];
+        }
+
+        $project['count'] = IssueFilterLogic::getCount($projectId);
+        $project['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
+        $sprintModel = new SprintModel();
+        $project['sprint_count'] = $sprintModel->getCountByProject($projectId);
+        $project = ProjectLogic::formatProject($project);
+
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
+        $userIdArr = $userLogic->getUserIdArrByProject($projectId);
+
+        $userArr = [];
+        foreach ($userIdArr as $userId => $hasRoles) {
+            if (isset($users[$userId])) {
+                $user = $users[$userId];
+                $user['is_leader'] = false;
+                if ($userId == $project['lead']) {
+                    $user['is_leader'] = true;
+                }
+                $userArr[] = $user;
+            }
+        }
+
+        $project['lead_user_info'] = isset($users[$project['lead']])?$users[$project['lead']]:[];
+        $project['join_users'] = $userArr;
+
+        return $project;
+    }
 }
