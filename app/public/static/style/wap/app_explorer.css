@@ -340,8 +340,8 @@ a.button:focus { outline: none;}
 .x-evo,.x-divx,.x-3gp,.x-3g2,.x-asf,.x-ogv,.x-webmv,
 .x-cue,.x-hd,.x-hdmov,.x-mov,.x-mp4v,.x-mpeg,.x-ogm,.x-qt,
 .x-spx,.x-vob,.x-wmv,.x-xvid,.x-webm,.x-m4v,
-.x-mts,.x-mpe,.x-m2ts,.x-mpv,.x-cue,{
-	background-image: url("icon_file","../../images/file_icon/icon_file/movie/movie.png");
+.x-mts,.x-mpe,.x-m2ts,.x-mpv,.x-cue{
+	background-image: url("../../images/file_icon/icon_file/movie/movie.png");
 }
 .x-flv,.x-f4v{background-image: url("../../images/file_icon/icon_file/movie/flv.png");}
 .x-rmvb{background-image: url("../../images/file_icon/icon_file/movie/rmvb.png");}

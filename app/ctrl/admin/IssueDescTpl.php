@@ -118,7 +118,6 @@ class IssueDescTpl extends BaseAdminCtrl
         $issueTypeModel = new IssueTypeModel();
         $issueTypes = $issueTypeModel->getAllItems(false);
         $issueTypesTplIdArr = [];
-        //print_r($issueTypes);
         foreach ($issueTypes as $issueType) {
             if ($issueType['form_desc_tpl_id']==$id) {
                 $issueTypesTplIdArr[] = $issueType['id'];

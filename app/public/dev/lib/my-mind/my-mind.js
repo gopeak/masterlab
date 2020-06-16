@@ -1156,7 +1156,7 @@ MM.Item.prototype._updateIssuePriorityLabel = function () {
 
 	var issue_priority_id = this._issue_priority;
 	if (issue_priority_id) {
-		var issue_priority_row = window._issueConfig.issue_priority[issue_priority_id];
+		var issue_priority_row = getArrayValue(window._issueConfig.issue_priority, 'id', [issue_priority_id]);
 		// console.log(issue_status_row);
 		if (issue_priority_row) {
 			this._dom.issue_priority_label.innerHTML = issue_priority_row.name.replace(/\s*/g, "");
@@ -1183,7 +1183,7 @@ MM.Item.prototype._updateIssueStatuslabel = function () {
 
 	var issue_status_id = this._issue_status;
 	if (issue_status_id) {
-		var issue_status_row = window._issueConfig.issue_status[issue_status_id];
+		var issue_status_row = getArrayValue( window._issueConfig.issue_status, 'id', issue_status_id);
 		// console.log(issue_status_row);
 		if (issue_status_row) {
 			this._dom.issue_status_label.innerHTML = issue_status_row.name.replace(/\s*/g, "");
@@ -1210,7 +1210,7 @@ MM.Item.prototype._updateIssueAssigneeImg = function () {
 
 	var issue_assignee_id = this._issue_assignee;
 	if (issue_assignee_id) {
-		var user_row = window._issueConfig.users[issue_assignee_id];
+		var user_row = getArrayValue( window._issueConfig.users, 'uid', issue_assignee_id);
 		// console.log(user_row);
 		if (user_row) {
 			this._dom.issue_assignee_img.src = user_row.avatar;

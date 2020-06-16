@@ -12,7 +12,7 @@
     "katzgrau/klogger": "v1.2.1",
     "endroid/qr-code": "3.4.0",
     "php-curl-class/php-curl-class": "v7.3.0",
-    "hornet/framework": "1.0.5",
+    "hornet/framework": "1.0.7",
     "phpoffice/phpspreadsheet": "1.9.0",
     "twig/twig": "v2.12.2",
     "adldap2/adldap2": "10.2",

@@ -46,14 +46,14 @@ http://demo.masterlab.vip
 [Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
 [Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
 
-本质上的安装步骤如下:  
+通用安装步骤如下:  
 
  1. 搭建php的运行环境 
      ```
      - Web Server : Nginx 或 Apache
      
      - Php
-       - 版本 >= 7.0
+       - 版本 >= 7.1
        - 必备扩展 ：curl,mysqlnd,pdo,mysqli,mbstring
        - php.ini   修改 upload_max_filesize = 8M
        - php.ini   修改 post_max_size = 8M
@@ -69,6 +69,7 @@ http://demo.masterlab.vip
      ```
  2. 下载代码，将根目录的运行依赖库`vendor.zip`解压出来  
        ```text
+         # 解压后的vendor目录结构
          - masterlab
            - vendor
                - autoload.php 
@@ -163,18 +164,18 @@ http://demo.masterlab.vip
  4. 重启web服务器  
 
  5. 运行 masterlab_socket  
-    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,该步骤可省略, 下载地址 https://github.com/gopeak/masterlab_socket/releases  
+    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,下载地址 https://github.com/gopeak/masterlab_socket/releases  
     
      Windows操作系统的
      ```text
     # 在masterlab目录直接运行
-    bin/masterlab_socket.exe
+    bin/masterlab_socket.exe start -d 
     ```
      Linux操作系统的
      ```text
     # 在masterlab目录直接运行
-    chmod +x bin/masterlab_socket
-    ./bin/masterlab_socket
+    chmod +x bin/masterlab_socket 
+    ./bin/masterlab_socket start -d
     ```
      其他操作系统 参考 https://github.com/gopeak/masterlab_socket 的文档自行编译  
      

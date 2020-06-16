@@ -3,12 +3,16 @@
 namespace main\app\plugin\webhook;
 
 use Doctrine\Common\Inflector\Inflector;
+use Doctrine\DBAL\ParameterType;
+use main\app\classes\ActivityLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\event\Events;
+use main\app\model\ActivityModel;
 use main\app\model\PluginModel;
 use main\app\model\user\UserModel;
 use main\app\plugin\BasePluginCtrl;
+use main\app\plugin\webhook\model\WebHookLogModel;
 use main\app\plugin\webhook\model\WebHookModel;
 
 /**
@@ -24,6 +28,8 @@ class Index extends BasePluginCtrl
     public $dirName = '';
 
     public $pluginMethod = 'pageIndex';
+
+    public $eventArr = [];
 
     public function __construct()
     {
@@ -60,6 +66,41 @@ class Index extends BasePluginCtrl
         $data['sub_nav_active'] = 'plugin';
         $data['plugin_name'] = $this->dirName;
 
+
+
+        $data['default_hook_event_arr'] = [
+            Events::onIssueCreateAfter,
+            Events::onIssueUpdateAfter,
+            Events::onIssueDelete,
+            Events::onIssueClose,
+            Events::onIssueAddComment
+            ];
+        $data['hook_event_arr'] =  $this->getEventArr();
+        $this->twigRender('index.twig', $data);
+    }
+
+    public function log()
+    {
+        $data = [];
+        $data['title'] = 'Webhook执行日志';
+        $data['nav_links_active'] = 'webhook';
+        $data['sub_nav_active'] = 'plugin';
+        $data['plugin_name'] = $this->dirName;
+        $data['hook_event_arr'] =  $this->getEventArr();
+        $model = new WebHookModel();
+        $webhooks = $model->getAllItem();
+        $data = [];
+        $data['webhook_arr'] = $webhooks;
+        $data['hook_event_arr'] =  $this->getEventArr();
+        $this->twigRender('log.twig', $data);
+    }
+
+    /**
+     * 获取事件名称
+     * @return mixed
+     */
+    private function getEventArr()
+    {
         $arr['事项'] = [
             Events::onIssueCreateBefore=>'创建事项之前',
             Events::onIssueCreateAfter=>'创建事项之后',
@@ -165,15 +206,95 @@ class Index extends BasePluginCtrl
             Events::onOrgUpdate=>'编辑组织',
             Events::onOrgDelete=>'删除组织',
         ];
-        $data['default_hook_event_arr'] = [
-            Events::onIssueCreateAfter,
-            Events::onIssueUpdateAfter,
-            Events::onIssueDelete,
-            Events::onIssueClose,
-            Events::onIssueAddComment
-            ];
-        $data['hook_event_arr'] = $arr;
-        $this->twigRender('index.twig', $data);
+        return $arr;
+    }
+
+    /**
+     * 获取webhook执行日志
+     * @throws \Exception
+     */
+    public function fetchLogs()
+    {
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = $_GET['project_id'];
+        }
+
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
+        }
+        list($logsArr, $total) = self::filterLogs($projectId, $page, $pageSize);
+        $model = new WebHookModel();
+        $webhooks = $model->getAllItem();
+        $webhooksArr = array_column($webhooks, 'name','id');
+        $labelArr = [];
+        $labelArr[WebHookLogModel::STATUS_READY] = 'label-info';
+        $labelArr[WebHookLogModel::STATUS_SUCCESS] = 'label-success';
+        $labelArr[WebHookLogModel::STATUS_ASYNC_FAILED] = 'label-danger';
+        $labelArr[WebHookLogModel::STATUS_FAILED] = 'label-danger';
+        $labelArr[WebHookLogModel::STATUS_PENDING] = 'label-warning';
+        foreach ($logsArr as &$row) {
+            $row['webhook_name'] = $webhooksArr[$row['webhook_id']];
+            $row['status_text'] = WebHookLogModel::$statusArr[$row['status']];
+            $row['time_text'] = format_unix_time($row['time']);
+            $row['time_full'] = format_unix_time($row['time'], time(), 'full_datetime_format');
+            $row['status_bg'] = $labelArr[$row['status']];
+
+        }
+        $data['total'] = $total;
+        $data['logs_arr'] = $logsArr;
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    public static function filterLogs($projectId, $page = 1, $pageSize = 50)
+    {
+        $start = $pageSize * ($page - 1);
+
+        $model = new WebHookLogModel();
+        $table = $model->getTable();
+        $queryBuilder = $model->db->createQueryBuilder();
+        $queryBuilder->select('*')->from($table);
+        if(!empty($projectId)){
+            $queryBuilder->andWhere('project_id =:project_id')->setParameter('project_id', $projectId,ParameterType::INTEGER);
+        }
+
+        if (isset($_GET['event_name'])  && !empty($_GET['event_name'])) {
+            $queryBuilder->andWhere('event_name =:event_name')->setParameter('event_name', strval($_GET['event_name']),ParameterType::STRING);
+        }
+        if (isset($_GET['webhook_id']) && !empty($_GET['webhook_id'])) {
+            $queryBuilder->andWhere('webhook_id =:webhook_id')->setParameter('webhook_id', intval($_GET['webhook_id']),ParameterType::INTEGER);
+        }
+        if (isset($_GET['start_datetime']) && !empty($_GET['start_datetime']) ) {
+            $queryBuilder->andWhere('time >=:start_time')->setParameter('start_time', strtotime($_GET['start_datetime']),ParameterType::INTEGER);
+        }
+        if (isset($_GET['end_datetime'])  && !empty($_GET['end_datetime'])) {
+            $queryBuilder->andWhere('time <=:end_time')->setParameter('end_time', strtotime($_GET['end_datetime']),ParameterType::INTEGER);
+        }
+
+        $count = (int)$queryBuilder->select('count(*) as cc')->execute()->fetchColumn();
+
+        $queryBuilder->select('*');
+        $orderBy = 'id';
+        if (isset($_GET['sort_field'])) {
+            $orderBy = trimStr($_GET['sort_field']);
+        }
+        $sortBy = 'DESC';
+        if (isset($_GET['sort_by'])) {
+            $sortBy = trimStr($_GET['sort_by']);
+        }
+
+        $queryBuilder->orderBy($orderBy, $sortBy)->setFirstResult($start)->setMaxResults($pageSize);
+        // echo $queryBuilder->getSQL();
+        $rows =  $queryBuilder->execute()->fetchAll();
+
+        return [$rows, $count];
     }
 
 
@@ -183,7 +304,6 @@ class Index extends BasePluginCtrl
      */
     public function fetchAll()
     {
-
         $model = new WebHookModel();
         $webhooks = $model->getAllItem();
         $data = [];

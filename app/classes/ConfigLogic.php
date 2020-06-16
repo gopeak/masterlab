@@ -38,16 +38,16 @@ class ConfigLogic
             $projectId = $data['project_id'];
         }
 
-        $data['priority'] = self::getPriority(true);
-        $data['issue_types'] = self::getTypes(true);
-        $data['issue_status'] = self::getStatus(true);
-        $data['issue_resolve'] = self::getResolves(true);
-        $data['users'] = self::getAllUser(true);
+        $data['priority'] = self::getPriority();
+        $data['issue_types'] = self::getTypes();
+        $data['issue_status'] = self::getStatus();
+        $data['issue_resolve'] = self::getResolves();
+        $data['users'] = self::getAllUser();
         $data['projects'] = self::getAllProjects();
         $data['project_users'] = self::getProjectUsers($projectId);
-        $data['project_modules'] = self::getModules($projectId, true);
-        $data['project_versions'] = self::getVersions($projectId, true);
-        $data['project_labels'] = self::getLabels($projectId, true);
+        $data['project_modules'] = self::getModules($projectId );
+        $data['project_versions'] = self::getVersions($projectId);
+        $data['project_labels'] = self::getLabels($projectId);
         $logic = new IssueTypeLogic();
         $data['project_issue_types'] = $logic->getIssueType($projectId);
     }

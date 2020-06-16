@@ -25,7 +25,7 @@ var UserSetting = (function() {
     };
 
     UserSetting.prototype.fetchUserById = function( user_id) {
-        var user = getValueByKey(_issueConfig.users,user_id);
+        var user = getArrayValue(_issueConfig.users, 'uid',user_id);
         //console.log(users);
         return user;
     }
