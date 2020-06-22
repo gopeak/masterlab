@@ -27,6 +27,13 @@ function fetchList(url, tpl_id, render_id, page, is_archived)
                 //取消分页
                 //$('#ampagination-bootstrap').bootstrapPaginator(options);
 
+
+                $(".clone_config").click(function () {
+
+                    cloneForm($(this).data("project_id"));
+                });
+
+
             } else {
                 var emptyHtml = defineStatusHtml({
                     message : '暂无数据',
@@ -38,6 +45,57 @@ function fetchList(url, tpl_id, render_id, page, is_archived)
             }
         },
         error: function(res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
+
+function cloneForm(project_id) {
+    var method = 'get';
+    var url = '/admin/project/get/?project_id=' + project_id;
+    $('#modal_form_project_id').val(project_id);
+    $.ajax({
+        type: method,
+        dataType: "json",
+        async: true,
+        url: url,
+        data: {},
+        success: function (resp) {
+            auth_check(resp);
+            $("#modal-project_clone").modal();
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+
+}
+
+function doClone(project_id) {
+
+    var method = 'post';
+    var url = '/admin/project/clone/?project_id=' + project_id;
+    var params = $('#form-project_clone').serialize();
+    $.ajax({
+        type: method,
+        dataType: "json",
+        async: true,
+        url: url,
+        data: params,
+        success: function (resp) {
+            auth_check(resp);
+            if (!form_check(resp)) {
+                return;
+            }
+            if (resp.ret === '200') {
+                fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 0);
+                notify_success(resp.msg, '克隆成功');
+                $('#modal-project_clone').modal('hide');
+            } else {
+                notify_error('克隆失败,' + resp.msg);
+            }
+        },
+        error: function (res) {
             notify_error("请求数据错误" + res);
         }
     });

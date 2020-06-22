@@ -78,6 +78,19 @@ class Project extends BaseAdminCtrl
     }
 
     /**
+     * 管理后台查询项目信息
+     * @param $project_id
+     * @throws \Exception
+     */
+    public function get($project_id)
+    {
+        $projectLogic = new ProjectLogic();
+        $project = $projectLogic->info($project_id);
+
+        $this->ajaxSuccess('ok', $project);
+    }
+
+    /**
      * 项目查询
      * @param int $page
      * @param int $is_archived
@@ -388,7 +401,7 @@ class Project extends BaseAdminCtrl
                 }
             }
         }
-        
+
         $this->ajaxSuccess('项目克隆成功', $cloneRawData);
     }
 }
