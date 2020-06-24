@@ -267,6 +267,10 @@ function getCookieHost()
     } else {
         $cookieDomain = $_SERVER['SERVER_NAME'];
     }
+    $arr = explode('.', $_SERVER['SERVER_NAME']);
+    if( count($arr) > 3 ){
+        $cookieDomain = $_SERVER['SERVER_NAME'];
+    }
     //var_dump($cookieDomain);
     return $cookieDomain;
 }
