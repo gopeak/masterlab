@@ -108,6 +108,8 @@ class Passport extends BaseCtrl
             }
         }
         //print_r($_SERVER);
+        $data['default_user'] = isset($_GET['demo_user']) ? $_GET['demo_user']:'';
+        $data['default_password'] = isset($_GET['demo_password']) ? $_GET['demo_password']:'';
         $this->render('gitlab/passport/login.php', $data);
     }
 

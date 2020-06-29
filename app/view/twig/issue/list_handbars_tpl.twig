@@ -31,7 +31,7 @@
 									<td class="width_6">
 										<div class="checkbox">
 											<label>
-												<input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
+												<input class="no_float_event" name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
 												{{#if_in_array 'issue_num'  ../display_fields}}
 													#{{issue_num}}
 												{{/if_in_array}}
@@ -381,7 +381,7 @@
 									<div class="issuable-info-container display-flex">
 										<div class="checkbox">
 											<label style="padding-top: 15%;">
-												<input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}"/>
+												<input class="no_float_event" name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}"/>
 											</label>
 										</div>
 										<div class="issuable-main-info">

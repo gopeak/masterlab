@@ -1298,8 +1298,18 @@
                         }
                     });
 
-                    el_list_render_id.on("click", ".tree-item", function() {
+                    el_list_render_id.on("click", ".tree-item", function(e) {
+
                         if (isFloatPart) {
+                            var el_target = $(e.target);
+                            if(el_target.hasClass('no_float_event')
+                            || el_target.hasClass('commit-id')
+                            || el_target.hasClass('label')
+                            || el_target.hasClass('prepend-left-5')
+                            || el_target.parent().hasClass('resolve-select')
+                            ){
+                                return;
+                            }
                             var dataId = $(this).data("id");
                             var dataSummary = $(this).data("summary") || "";
                             $(this).addClass("active").siblings(".tree-item").removeClass("active");
@@ -1318,9 +1328,10 @@
                     });
 
                     $('#detail_render_id').on('click', '.issue-box', function (e) {
+                        //console.log(e);
                         var dataId = $(this).data('id');
                         var dataSummary = $(this).data("summary") || "";
-                        if (!$(e.target).attr('type') && !$(e.target).hasClass('commit-id') && !$(e.target).hasClass('label') && !$(e.target).hasClass('prepend-left-5') && !$(e.target).parent().hasClass('resolve-select')) {
+                        if ( !$(e.target).attr('type') && !$(e.target).hasClass('commit-id') && !$(e.target).hasClass('label') && !$(e.target).hasClass('prepend-left-5') && !$(e.target).parent().hasClass('resolve-select')) {
                             $(this).addClass('issue-box-active').siblings('.issue-box').removeClass('issue-box-active');
                             if (isFloatPart) {
                                 showFloatDetail(dataId, dataSummary);
