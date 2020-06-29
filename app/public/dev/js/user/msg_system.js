@@ -111,6 +111,27 @@ var MsgSystem = (function() {
         });
     }
 
+    MsgSystem.prototype.fetchUnReadCount = function( id ) {
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: '/user/fetchUnreadCount',
+            success: function (resp) {
+                auth_check(resp);
+                //alert(resp.msg);
+                if( resp.ret=='200'){
+                    if(resp.data>0){
+                        $('#unread-msg-count').html(''+resp.data+'');
+                    }
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
 
 
     return MsgSystem;

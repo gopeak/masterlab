@@ -91,7 +91,7 @@
                         <a title="系统消息" aria-label="Open issue" class="shortcuts-todos" data-toggle="tooltip"
                            data-placement="bottom"
                            data-container="body" href="/user/msg_system">
-                            <i class="fa fa-envelope-o fa-fw"></i> {% if ( _unread_count>0 ) %}<span class="badge merge-requests-count">{{_unread_count}}</span>{% endif %}
+                            <i class="fa fa-envelope-o fa-fw"></i> <span id="unread-msg-count" class="badge merge-requests-count">{% if ( _unread_count>0 ) %}{{_unread_count}}{% endif %}</span>
                         </a>
                     </li>
 

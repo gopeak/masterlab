@@ -157,6 +157,9 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/user_filters.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageMsgSystem()
     {
         $data = [];
@@ -166,6 +169,23 @@ class User extends BaseUserCtrl
         $this->render('twig/user/msg_system.twig', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function fetchUnreadCount()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $conditionArr = [];
+        $conditionArr['receiver_uid'] = $userId;
+        $model = new UserMessageModel();
+        $conditionArr['readed'] = '0';
+        $unreadCount = $model->getUnreadCountByfilter($conditionArr);
+        $this->ajaxSuccess('ok', $unreadCount);
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function fetchMsgSystems()
     {
         $userId = UserAuth::getInstance()->getId();
