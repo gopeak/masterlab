@@ -101,12 +101,7 @@ if (!function_exists('currentHttpDomain')) {
      */
     function currentHttpDomain()
     {
-        if(@$_SERVER["SERVER_PORT"]=='80'){
-            $port = '';
-        }else{
-            $port = ':'.@$_SERVER["SERVER_PORT"];
-        }
-        $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['SERVER_NAME'].$port.'/';
+        $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['HTTP_HOST'].'/';
         return $uri;
     }
 }
@@ -261,16 +256,17 @@ function isVideoUrl($url)
  */
 function getCookieHost()
 {
-    if (preg_match('/([^.]+)\.(\D+)$/sim', $_SERVER['SERVER_NAME'], $regs)) {
-        $arr = explode('.', $_SERVER['SERVER_NAME']);
+    if (preg_match('/([^.]+)\.(\D+)$/sim', $_SERVER['HTTP_HOST'], $regs)) {
+        $arr = explode('.', $_SERVER['HTTP_HOST']);
         $cookieDomain = '.' . $arr[count($arr) - 2] . '.' . $arr[count($arr) - 1];
     } else {
-        $cookieDomain = $_SERVER['SERVER_NAME'];
+        $cookieDomain = $_SERVER['HTTP_HOST'];
     }
-    $arr = explode('.', $_SERVER['SERVER_NAME']);
+    $arr = explode('.', $_SERVER['HTTP_HOST']);
     if( count($arr) > 3 ){
-        $cookieDomain = $_SERVER['SERVER_NAME'];
+        list($cookieDomain) = $_SERVER['HTTP_HOST'];
     }
+    list($cookieDomain) = explode(':',$_SERVER['HTTP_HOST']);
     //var_dump($cookieDomain);
     return $cookieDomain;
 }

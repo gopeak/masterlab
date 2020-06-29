@@ -107,6 +107,7 @@ class Passport extends BaseCtrl
                 die;
             }
         }
+        //print_r($_SERVER);
         $this->render('gitlab/passport/login.php', $data);
     }
 
@@ -165,6 +166,7 @@ class Passport extends BaseCtrl
         $source = 0
     )
     {
+        // print_r($_SERVER);
         if (empty($username)) {
             $this->ajaxFailed('错误', '参数错误,username 不能为空');
         }

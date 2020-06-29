@@ -101,7 +101,7 @@ class Main extends BaseUserCtrl
                 die;
             }
         }
-
+        print_r(ini_get('session.save_path'));
         $data['is_adv_filter'] = '0';
         $data['adv_filter_json'] = '[]';
 

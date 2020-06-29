@@ -6,6 +6,7 @@ error_reporting(E_ERROR);
 // 主程序URL地址，可手动设置
 define('ROOT_URL', currentHttpDomain());
 
+
 //
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
