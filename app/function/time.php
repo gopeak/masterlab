@@ -22,6 +22,11 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_dat
     if (empty($formatSystem)) {
         $formatSystem = 'full_datetime_format';
     }
+
+    if (isApp()) {
+        $formatSystem = 'app_week_format';
+    }
+
     $str_time = '';
     $settingLogic = new \main\app\classes\SettingsLogic();
 

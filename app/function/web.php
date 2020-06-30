@@ -150,12 +150,22 @@ function make_select_options($arr, $selected_value)
     return $html;
 }
 
+/**
+ * 是否是APP请求
+ * @return bool
+ */
+function isApp()
+{
+    if (isset($_SERVER['HTTP_MASTERLAB_APP']) && !empty($_SERVER['HTTP_MASTERLAB_APP'])) {
+        return true;
+    }
+    return false;
+}
 
 /**
  * 是否是AJAx提交的
  * @return bool
  */
-
 function isAjax()
 {
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
