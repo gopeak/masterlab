@@ -40,6 +40,7 @@ http://demo.masterlab.vip
 
 ## **安装**
 
+非精通PHP的精神小伙请勿使用master分支的代码，建议到官方网站 http://www.masterlab.vip/ 下载最新的完整包。
 详细的安装示例  
 
 [Windows安装教程](http://www.masterlab.vip/help.php?md=install-windows "Windows安装教程")  
