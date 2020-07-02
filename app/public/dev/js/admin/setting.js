@@ -179,7 +179,7 @@ function fetchPermissionGlobal(url, tpl_id, parent_id)
 function permissionGlobalAdd()
 {
     var method = 'post';
-    var url = root_url+'admin/system/global_permission_group_add';
+    var url = root_url+'admin/permission/global_permission_group_add';
     var params = $('#form_add').serialize();
     $.ajax({
         type: method,
@@ -208,7 +208,7 @@ function permissionGlobalDelete(id)
     }
 
     var method = 'GET';
-    var url = root_url+'admin/system/global_permission_group_delete/?id='+id;
+    var url = root_url+'admin/permission/global_permission_group_delete/?id='+id;
     $.ajax({
         type: method,
         dataType: "json",
@@ -229,7 +229,7 @@ function permissionGlobalDelete(id)
 
 function globalPermEdit(global_role_id, name)
 {
-    var ajaxUrl = "/admin/system/perm_tree?role_id=" + global_role_id;
+    var ajaxUrl = "/admin/permission/perm_tree?role_id=" + global_role_id;
     $("#modal-permission_edit").modal();
     $('#perm_role_id').val(global_role_id);
     $("#perm_role_name").val(name);
@@ -265,7 +265,7 @@ function globalRoleDelete(global_role_id)
         return false;
     }
 
-    var ajaxUrl = "/admin/system/global_permission_role_delete?role_id=" + global_role_id;
+    var ajaxUrl = "/admin/permission/global_permission_role_delete?role_id=" + global_role_id;
     var method = 'GET';
     $.ajax({
         type: method,
@@ -287,7 +287,7 @@ function globalRoleDelete(global_role_id)
 
 function globalRoleEdit(global_role_id)
 {
-    var ajaxUrl = "/admin/system/get_global_permission_role?role_id=" + global_role_id;
+    var ajaxUrl = "/admin/permission/get_global_permission_role?role_id=" + global_role_id;
     var method = 'get';
     $.ajax({
         type: method,
@@ -324,7 +324,7 @@ function globalRoleUserEdit(global_role_id)
         type: method,
         dataType: "json",
         async: true,
-        url: "/admin/system/fetch_global_perm_role_users",
+        url: "/admin/permission/fetch_global_perm_role_users",
         data: {role_id: global_role_id},
         success: function (resp) {
             auth_check(resp);
@@ -361,7 +361,7 @@ function addGlobalPermRoleUser()
         type: method,
         dataType: "json",
         async: true,
-        url: "/admin/system/addGlobalPermRoleUser",
+        url: "/admin/permission/addGlobalPermRoleUser",
         data: {role_id: roleId, user_id: userId},
         success: function (resp) {
             auth_check(resp);
@@ -396,7 +396,7 @@ function deleteGlobalPermRoleUser(id, user_id, role_id)
         type: method,
         dataType: "json",
         data: {id: id, user_id: user_id, role_id: role_id},
-        url: "/admin/system/deleteGlobalPermRoleUser",
+        url: "/admin/permission/deleteGlobalPermRoleUser",
         success: function (resp) {
             auth_check(resp);
             notify_success(resp.msg);
@@ -494,7 +494,7 @@ $(function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/admin/system/global_permission_role_add",
+            url: "/admin/permission/global_permission_role_add",
             data: params,
             success: function (resp) {
                 auth_check(resp);
@@ -515,7 +515,7 @@ $(function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/admin/system/global_permission_role_update",
+            url: "/admin/permission/global_permission_role_update",
             data: $('#form_edit').serialize(),
             success: function (resp) {
                 auth_check(resp);
