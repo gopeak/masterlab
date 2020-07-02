@@ -160,7 +160,7 @@ class TestSystem extends BaseAppTestCase
     public function testGlobalPermissionFetch()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/system/global_permission_fetch?format=json');
+        $curl->get(ROOT_URL . 'admin/permission/global_permission_fetch?format=json');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -179,7 +179,7 @@ class TestSystem extends BaseAppTestCase
         $reqInfo['params']['group_id'] = $groupId;
 
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/system/global_permission_group_add', $reqInfo);
+        $curl->post(ROOT_URL . 'admin/permission/global_permission_group_add', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -189,7 +189,7 @@ class TestSystem extends BaseAppTestCase
 
         $id = self::$permissionGroup['id'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/system/globalPermissionGroupDelete?id=' . $id);
+        $curl->get(ROOT_URL . 'admin/permission/globalPermissionGroupDelete?id=' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
