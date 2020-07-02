@@ -58,23 +58,63 @@ class Index extends BasePluginCtrl
         $data = RewriteUrl::setProjectData($data);
         $data['current_user'] = $user  = UserModel::getInstance()->getByUid(UserAuth::getId());
 
-        // http://masterlab.ink/kod_index.php?user/loginSubmit&isAjax=1&getToken=1&name=admin&password=testtest
+        if(!$data['project_id']){
+            echo '获取项目id失败';
+            return;
+        }
+
         $docAdmin = 'admin';
         $docPassword = 'admin';
-        $url = sprintf("http://masterlab.ink/kod_index.php?user/loginSubmit&isAjax=1&getToken=1&name=&password=", $docAdmin, $docPassword);
-
-        require_once realpath(__DIR__).'/kod/config/setting_user.php';
-        $loginToken = base64_encode('admin').'|'.md5('admin'.$GLOBALS['config']['settings']['apiLoginTonken']);
-
-        $url = sprintf(ROOT_URL."kod_index.php?user/loginSubmit&isAjax=1&getToken=1&login_token=%s", $loginToken);
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', $url);
-        $statusCode =  $response->getStatusCode(); // 200
-        if($statusCode==200){
-            $bodyArr =  json_decode($response->getBody(), true);
-            //print_r($bodyArr);
-            //die;
+        $kodSdk = new KodSdk();
+        list($ret, $accessToken) =  $kodSdk->getAccessToken($docAdmin);
+        if(!$ret){
+            echo '文档模块集成失败,请联系管理员';
+            return;
         }
+        list($ret, $kodUsers) = $kodSdk->getUsers($accessToken);
+        if(!$ret){
+            echo '文档模块获取用户信息失败,请联系管理员';
+            return;
+        }
+        list($ret, $kodRoles) = $kodSdk->getRoles($accessToken);
+        if(!$ret){
+            echo '文档模块获取角色信息失败,请联系管理员';
+            return;
+        }
+
+        $expectProjectDocUsername = 'project'.$data['project_id'];
+        $actUserArr = null;
+        foreach ($kodUsers as $kodUser) {
+            if($kodUser['name']== $expectProjectDocUsername){
+                $actUserArr = $kodUser;
+            }
+        }
+        if(empty($actUserArr) ){
+            if(count($kodUsers)>15){
+                echo '文档模块获取用户信息失败,请联系管理员';
+                return;
+            }
+            $dataArr = [];
+            $dataArr['name'] = $expectProjectDocUsername;
+            $dataArr['password'] = md5($expectProjectDocUsername);
+            $dataArr['sizeMax'] = 5;
+            $dataArr['role'] = 2;
+            $dataArr['groupInfo'] = json_encode(['1'=>'write']);
+            $homePath = STORAGE_PATH.'document/'.$expectProjectDocUsername;
+            @mkdir($homePath);
+            $dataArr['homePath'] = STORAGE_PATH.'document/'.$expectProjectDocUsername;
+            list($ret) = $kodSdk->createUser($dataArr, $accessToken);
+            if(!$ret){
+                echo '文档模块创建用户信息失败,请联系管理员';
+                return;
+            }
+        }
+
+        // print_r($actUserArr);
+        // die;
+        //base64Encode('admin')+'|'+md5('admin'+'aabbcckod')
+        require_once realpath(__DIR__).'/kod/config/setting_user.php';
+        $loginToken = base64_encode($expectProjectDocUsername).'|'.md5($expectProjectDocUsername.$GLOBALS['config']['settings']['apiLoginTonken']);
         $iframeUrl = sprintf(ROOT_URL."kod_index.php?user/loginSubmit&login_token=%s", $loginToken);
         $data['iframe_url'] = $iframeUrl;
         $this->twigRender('index.twig', $data);
