@@ -102,11 +102,6 @@ if (!function_exists('currentHttpDomain')) {
     function currentHttpDomain()
     {
         $uri = 'http://localhost/';
-        if(@$_SERVER["SERVER_PORT"]=='80'){
-            $port = '';
-        }else{
-            $port = ':'.@$_SERVER["SERVER_PORT"];
-        }
         if(preg_match("/cli/i", php_sapi_name()) ){
             if(in_array(APP_STATUS, ['development','deploy','test'])){
                 $uri = 'http://masterlab.ink/';
@@ -115,7 +110,7 @@ if (!function_exists('currentHttpDomain')) {
                 $uri = 'http://masterlab.ci:8888/';
             }
         }else{
-            $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['SERVER_NAME'].$port.'/';
+            $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['HTTP_HOST'].'/';
         }
 
         return $uri;
@@ -272,15 +267,10 @@ function isVideoUrl($url)
  */
 function getCookieHost()
 {
-    if (preg_match('/([^.]+)\.(\D+)$/sim', $_SERVER['SERVER_NAME'], $regs)) {
-        $arr = explode('.', $_SERVER['SERVER_NAME']);
-        $cookieDomain = '.' . $arr[count($arr) - 2] . '.' . $arr[count($arr) - 1];
-    } else {
-        $cookieDomain = $_SERVER['SERVER_NAME'];
-    }
-    //var_dump($cookieDomain);
+    list($cookieDomain) = explode(':',$_SERVER['HTTP_HOST']);
     return $cookieDomain;
 }
+
 
 
 

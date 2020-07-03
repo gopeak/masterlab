@@ -240,9 +240,9 @@ class WebhookSubscriber implements EventSubscriberInterface
         // 0准备;1执行成功;2队列中;3出队列后执行失败
         $webhooklogModel = new WebHookLogModel();
         list($logRet, $logId) = $webhooklogModel->insert($pushArr);
-        if($logRet){
+        if ($logRet) {
             $pushArr['log_id'] = (int)$logId;
-        }else{
+        } else {
             $pushArr['log_id'] = 0;
         }
 
@@ -253,6 +253,13 @@ class WebhookSubscriber implements EventSubscriberInterface
         return [$ret, $msg];
     }
 
+    /**
+     * @param $webhook
+     * @param $dataArr
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     private function requestByGuzzleHttp($webhook, $dataArr)
     {
         $dataStr = http_build_query($dataArr);
@@ -270,27 +277,23 @@ class WebhookSubscriber implements EventSubscriberInterface
         // 0准备;1执行成功;2队列中;3出队列后执行失败
         $webhooklogModel = new WebHookLogModel();
         list($logRet, $logId) = $webhooklogModel->insert($pushArr);
-        if($logRet){
+        if ($logRet) {
             $pushArr['log_id'] = (int)$logId;
-        }else{
+        } else {
             $pushArr['log_id'] = 0;
         }
 
-
         $client = new \GuzzleHttp\Client();
-
         // Send an asynchronous request.
-        $request = new \GuzzleHttp\Psr7\Request('GET', $pushArr['url']);
-        $promise = $client->sendAsync($request)->then(function ($response) {
-            $statusCode = $response->getStatusCode(); // 200
-            $body =  $response->getBody(); // '{"id": 1420053, "name": "guzzle", ...}'
-            if ($statusCode==200) {
-                $webhooklogModel = new WebHookLogModel();
-                //$webhooklogModel->updateById($logId, ['err_msg' => $msg, 'status' => WebHookLogModel::STATUS_ASYNC_FAILED]);
-            }
-        });
-
-        $promise->wait();
+        $response = $client->post($pushArr['url'], ['form_params' => $dataArr]);
+        $statusCode = $response->getStatusCode(); // 200
+        $webhooklogModel = new WebHookLogModel();
+        if ($statusCode == 200) {
+            $webhooklogModel->updateById($logId, ['err_msg' => '', 'status' => WebHookLogModel::STATUS_SUCCESS]);
+        }else{
+            $body = $response->getBody();
+            $webhooklogModel->updateById($logId, ['err_msg' => 'Response status code:'.$statusCode." \r\n".$body, 'status' => WebHookLogModel::STATUS_FAILED]);
+        }
 
         return [true, '异步执行'];
     }
