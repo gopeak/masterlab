@@ -49,7 +49,7 @@ let Label = (function () {
     };
 
     Label.prototype.delete = function (project_id, label_id) {
-        $.post(root_url+"project/label/delete",{project_id: project_id, label_id:label_id},function (result) {
+        $.post(root_url+"project/label/delete",{project_id: project_id, id:label_id},function (result) {
             if (result.ret == 200) {
                 notify_success('删除成功');
                 $('#project_label_'+label_id).remove();

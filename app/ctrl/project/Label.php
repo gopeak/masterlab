@@ -183,18 +183,21 @@ class Label extends BaseUserCtrl
     }
 
     /**
-     * @param $project_id
-     * @param $label_id
      * @throws \Exception
      */
-    public function delete($project_id, $label_id)
+    public function delete()
     {
+        $labelId = null;
+        if (isset($_POST['id'])) {
+            $labelId = (int)$_POST['id'];
+        }
         $projectLabelModel = new ProjectLabelModel();
-        $info = $projectLabelModel->getById($label_id);
-        if ($info['project_id'] != $project_id) {
+        $info = $projectLabelModel->getById($labelId);
+        if ($info['project_id'] != $this->projectId) {
             $this->ajaxFailed('参数错误,非当前项目的标签无法删除');
         }
-        $projectLabelModel->deleteItem($label_id);
+
+        $projectLabelModel->deleteItem($labelId);
         $currentUid = $this->getCurrentUid();
 
 
@@ -213,9 +216,9 @@ class Label extends BaseUserCtrl
         $logData['remark'] = '删除标签';
         $logData['pre_data'] = $info;
         $logData['cur_data'] = $info2;
-        LogOperatingLogic::add($currentUid, $project_id, $logData);
+        LogOperatingLogic::add($currentUid, $this->projectId, $logData);
 
-        $info['id'] = $label_id;
+        $info['id'] = $labelId;
         $event = new CommonPlacedEvent($this, $info);
         $this->dispatcher->dispatch($event,  Events::onLabelDelete);
         $this->ajaxSuccess('success');

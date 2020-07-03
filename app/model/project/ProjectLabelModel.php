@@ -39,6 +39,11 @@ class ProjectLabelModel extends BaseDictionaryModel
         return self::$instance[$index];
     }
 
+    /**
+     * @param $id
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getById($id)
     {
         return $this->getRowById($id);
