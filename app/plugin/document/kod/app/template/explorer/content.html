@@ -48,8 +48,8 @@
 
 					<div class="role-label-box"></div>
 				</div><!-- /header-middle end-->		
-				<div class='header-right'>
-					<input type="text" name="seach" class="btn-left-radius"/>
+				<div class='header-right' style="margin-right: 200px">
+					<input type="text" name="seach" class="btn-left-radius" style="width:140px"/>
 					<button class="btn btn-default btn-right-radius" id='search' title='<?php echo LNG('search');?>' type="button">
 						<i class="font-icon icon-search"></i>
 					</button>
@@ -77,7 +77,7 @@
 					<?php } ?>
 					<!-- 全局设置语言则不再显示 -->
 
-					<div class="menu-group">
+					<div class="menu-group"  style="display: none">
 						<a href="#" id='topbar-user' data-toggle="dropdown" class="topbar-menu">
 							<i class="font-icon icon-user"></i>
 							<?php
@@ -228,7 +228,7 @@
 							<i class="font-icon icon-columns"></i>
 						</button>
 
-						<div class="btn-group btn-group-sm menu-theme-list">
+						<div class="btn-group btn-group-sm menu-theme-list" style="display: none">
 						<button data-action="set-theme" title="<?php echo LNG('setting_theme');?>" type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
 						  <i class="font-icon icon-dashboard"></i>&nbsp;&nbsp;<span class="caret"></span>
 						</button>

@@ -230,10 +230,9 @@ class explorer extends Controller{
 	}
 
 	public function pathList(){
-		$userPath = $this->in['path'];
+        $userPath = $this->in['path'];
 		if ($userPath=="")  $userPath='/';
 		$list=$this->_path($this->path);
-
 		//自己的根目录
 		if($this->path== MYHOME || $this->path==HOME){
 			$this->_selfRootLoad($list['folderList']);
@@ -440,9 +439,9 @@ class explorer extends Controller{
 			}
 		}
 		// 原来的代码
-		//$listRoot  = $this->_path(_DIR(MYHOME),$checkFile,true);
-        $projectPath = 'C:/www/masterlab/app/plugin/document/kod/data/project/1/home/';
-        $listRoot  = $this->_path(_DIR($projectPath),$checkFile,true);
+		$listRoot  = $this->_path(_DIR(MYHOME),$checkFile,true);
+        //$projectPath = 'C:/www/masterlab/app/plugin/document/kod/data/project/1/home/';
+        $listRoot  = $this->_path(_DIR($listRoot),$checkFile,true);
 		if ($checkFile) {//编辑器
 			$root = array_merge($listRoot['folderList'],$listRoot['fileList']);
 			$public = array_merge($listPublic['folderList'],$listPublic['fileList']);
@@ -455,28 +454,46 @@ class explorer extends Controller{
 		$rootIsparent = count($root)>0?true:false;
 		$publicIsparent = count($public)>0?true:false;
 		$treeData = array(
+            'myHome'=>array(
+                'name'		=> LNG('project_root_path'),
+                'menuType'  => "menu-tree-root",
+                'ext' 		=> "tree-self",
+                'children'  => $root,
+                'path' 		=> MYHOME,
+                'type'      => 'folder',
+                'open'      => true,
+                'isParent'  => true
+            ),
 			'fav'=>array(
 				'name'      => LNG('fav'),
 				'ext' 		=> "tree-fav",
 				'menuType'  => "menu-tree-fav-root",
 				'children'  => $fav,
-
 				'path' 		=> KOD_USER_FAV,
 				'type'      => 'folder',
 				'open'      => true,
 				'isParent'  => count($fav)>0?true:false
 			),
-			'myHome'=>array(
-				'name'		=> LNG('root_path'),
-				'menuType'  => "menu-tree-root",
-				'ext' 		=> "tree-self",
-				'children'  => $root,
-
-				'path' 		=> MYHOME,
-				'type'      => 'folder',
-				'open'      => true,
-				'isParent'  => $rootIsparent
-			),
+            'myRecycle'=>array(
+                'name'		=> '回收站',
+                'menuType'  => "menu-tree-root",
+                'ext' 		=> "tree-self",
+                'children'  =>  $this->_path(USER_RECYCLE,$checkFile,true),
+                'path' 		=> '{userRecycle}/',
+                'type'      => 'folder',
+                'open'      => false,
+                'isParent'  => true
+            ),
+            'myShare'=>array(
+                'name'		=> '分 享',
+                'menuType'  => "menu-tree-root",
+                'ext' 		=> "tree-self",
+                'children'  =>  [],
+                'path' 		=> '{userShare}:'.$this->user['userID'].'/',
+                'type'      => 'folder',
+                'open'      => false,
+                'isParent'  => false
+            ),
 
 			'public'=>array(
 				'name'		=> $groupRootName,
@@ -512,19 +529,21 @@ class explorer extends Controller{
 				'isParent'  => true
 			),
 		);
-
+        /*
         $treeData = array(
             'myHome'=>array(
                 'name'		=> LNG('project_root_path'),
                 'menuType'  => "menu-tree-root",
                 'ext' 		=> "tree-self",
                 'children'  => $root,
-                'path' 		=> $projectPath,
+                'path' 		=> MYHOME,
                 'type'      => 'folder',
                 'open'      => true,
                 'isParent'  => $rootIsparent
             ),
         );
+        */
+
 
 		//编辑器简化树目录
 		if($app == 'editor' || defined("KODFILE")){

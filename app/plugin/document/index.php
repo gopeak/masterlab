@@ -7,6 +7,7 @@ use main\app\classes\UserAuth;
 use main\app\model\PluginModel;
 use main\app\model\user\UserModel;
 use main\app\plugin\BasePluginCtrl;
+use main\lib\FileUtil;
 
 /**
  *
@@ -76,6 +77,7 @@ class Index extends BasePluginCtrl
             echo '文档模块获取用户信息失败,请联系管理员';
             return;
         }
+        //print_r($kodUsers);
         list($ret, $kodRoles) = $kodSdk->getRoles($accessToken);
         if(!$ret){
             echo '文档模块获取角色信息失败,请联系管理员';
@@ -100,14 +102,15 @@ class Index extends BasePluginCtrl
             $dataArr['sizeMax'] = 5;
             $dataArr['role'] = 2;
             $dataArr['groupInfo'] = json_encode(['1'=>'write']);
-            $homePath = STORAGE_PATH.'document/'.$expectProjectDocUsername;
-            @mkdir($homePath);
-            $dataArr['homePath'] = STORAGE_PATH.'document/'.$expectProjectDocUsername;
+            //$homePath = STORAGE_PATH.'document/'.$expectProjectDocUsername;
+            //@mkdir($homePath);
+            //$dataArr['homePath'] = $homePath;
             list($ret) = $kodSdk->createUser($dataArr, $accessToken);
             if(!$ret){
                 echo '文档模块创建用户信息失败,请联系管理员';
                 return;
             }
+            FileUtil::copyDir(APP_PATH.'plugin/document/kod/data/User/project0', APP_PATH.'plugin/document/kod/data/User/'.$expectProjectDocUsername);
         }
 
         // print_r($actUserArr);
