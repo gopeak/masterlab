@@ -143,6 +143,7 @@ class Index extends BasePluginCtrl
             Events::onProjectUpdate=>'编辑项目',
             Events::onProjectDelete=>'删除项目',
             Events::onProjectArchive=>'归档项目',
+            Events::onProjectRecover=>'恢复项目',
         ];
 
         $arr['迭代管理'] = [

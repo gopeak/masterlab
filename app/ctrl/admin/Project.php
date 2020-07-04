@@ -154,6 +154,33 @@ class Project extends BaseAdminCtrl
     }
 
     /**
+     * 恢复项目归档
+     * @throws \Exception
+     */
+    public function doRecoverArchived()
+    {
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '参数错误');
+        }
+
+        $model = new ProjectModel();
+        $ret = $model->updateById(['archived' => 'N'], $projectId);
+
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '更新数据失败');
+        } else {
+            // 分发事件
+            $event = new CommonPlacedEvent($this, $project=$model->getById($projectId));
+            $this->dispatcher->dispatch($event,  Events::onProjectRecover);
+            $this->ajaxSuccess('项目恢复成功');
+        }
+    }
+
+    /**
      * 删除项目
      * @throws \Exception
      */

@@ -111,19 +111,12 @@
 							</a>
 						</td>
 						<td>
-							<a class="btn btn-transparent " style="padding: 6px 2px;" onclick="adminDoArchived({{id}}, '{{name}}')">归档
+							<a class="js_admin_do_archived btn btn-transparent " style="padding: 6px 2px;" data-id="{{id}}" data-name="{{name}}" >归档</a>
+							<a class="btn btn-transparent " href="/{{path}}/{{key}}/settings" data-project_id="{{id}}" style="padding: 6px 2px;" target="_blank">编辑</a>
+							<a class="js_clone_config btn btn-transparent" href="javascript:;" data-project_id="{{id}}" style="padding: 6px 2px;">克隆</a>
+							<a class="js_admin_do_delete btn btn-transparent" style="padding: 6px 2px;" data-project_id="{{id}}" data-type="{{type}}" data-name="{{name}}" >
+								<i class="fa fa-trash"></i><span class="sr-only">Remove</span>
 							</a>
-
-							<a class="btn btn-transparent " href="/{{path}}/{{key}}/settings" data-project_id="{{id}}" style="padding: 6px 2px;" target="_blank">编辑
-							</a>
-
-							<a class="clone_config btn btn-transparent" href="javascript:;" data-project_id="{{id}}" style="padding: 6px 2px;">克隆 </a>
-
-							<a class="user_for_delete btn btn-transparent" style="padding: 6px 2px;" onclick="admindDoDelete({{id}}, {{type}}, '{{name}}')">
-								<i class="fa fa-trash"></i>
-								<span class="sr-only">Remove</span>
-							</a>
-
 						</td>
 					</tr>
 				{{/rows}}
@@ -269,9 +262,13 @@
 
 
 		<script>
+			var project = null;
+			var options = {
 
+			};
 			$(function () {
-                fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 0);
+				project = new Project(options);
+				project.fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 0);
 
 				$("#modal-project_clone").on('show.bs.modal', function () {
 					keyMaster.addKeys([
@@ -290,41 +287,10 @@
 				});
 
 				$("#btn-do_project_clone").click(function(){
-					doClone($('#modal_form_project_id').val());
+					project.doClone($('#modal_form_project_id').val());
 				});
 
             });
-
-
-            function adminDoArchived(projectId, projectName) {
-                var message = "确认是否归档项目: " + projectName;
-
-                if (window.confirm(message + "？")) {
-                    projectArchived(projectId);
-                    fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 0);
-                } else { // 取消
-                }
-            }
-
-			function randomNumber(min, max) {
-				return parseInt(Math.random() * (max - min) + min);
-			}
-
-            function admindDoDelete(projectId, projectTypeId, projectName) {
-                let message = "确认是否删除项目: " + projectName+"? 删除操作将不可逆转，请谨慎操作!";
-                if (window.confirm(message)) {
-                	let a = randomNumber(10, 20);
-					let b = randomNumber(2, 20);
-                	let question = a + " + " + b +" = ?"
-                	let ret = window.prompt(question);
-                	if(parseInt(ret)===(a+b)){
-						projectRemove(projectId, projectTypeId);
-						fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, false);
-					}else{
-                		alert('回答错误');
-					}
-                }
-            }
 		</script>
 
 		<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
