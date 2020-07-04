@@ -147,19 +147,6 @@ class System extends BaseAdminCtrl
     /**
      * @throws \Exception
      */
-    public function globalPermissionBak()
-    {
-        $data = [];
-        $data['title'] = 'System';
-        $data['nav_links_active'] = 'system';
-        $data['sub_nav_active'] = 'security';
-        $data['left_nav_active'] = 'global_permission_bak';
-        $this->render('twig/admin/system/system_global_permission_bak.twig', $data);
-    }
-
-    /**
-     * @throws \Exception
-     */
     public function globalPermission()
     {
         $data = [];

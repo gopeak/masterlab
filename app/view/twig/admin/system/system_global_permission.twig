@@ -4,6 +4,7 @@
 
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/js/admin/setting.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/global_permission.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
@@ -356,8 +357,13 @@
     var _issueConfig = {
         users:{{users|json_encode()|raw}}
     };
+    var globalPermission = null;
+    var options = {
+
+    };
     $(function() {
-        fetchPermissionGlobalRole('/admin/permission/fetch_global_permission_role','render_tpl','render');
+        globalPermission = new GlobalPermission(options);
+        globalPermission.fetchPermissionGlobalRole('/admin/permission/fetch_global_permission_role','render_tpl','render');
     });
 
 </script>
