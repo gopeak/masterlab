@@ -101,6 +101,13 @@ if (!function_exists('currentHttpDomain')) {
      */
     function currentHttpDomain()
     {
+        if ((! empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https')
+            || (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+            || (! empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ) {
+            $_SERVER['REQUEST_SCHEME'] = 'https';
+        } else {
+            $_SERVER['REQUEST_SCHEME'] = 'http';
+        }
         $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['HTTP_HOST'].'/';
         return $uri;
     }
