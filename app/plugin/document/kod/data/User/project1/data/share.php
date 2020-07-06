@@ -13,5 +13,20 @@
         "notDownload": "",
         "numDownload": 0,
         "numView": 1
+    },
+    "9unMB8gq": {
+        "mtime": 1594038716,
+        "sid": "9unMB8gq",
+        "type": "file",
+        "path": "\/我的文档\/patch.zip",
+        "name": "patch.zip",
+        "showName": "patch.zip",
+        "timeTo": "",
+        "sharePassword": "test",
+        "codeRead": "",
+        "canUpload": "",
+        "notDownload": "",
+        "numDownload": 2,
+        "numView": 1
     }
 }

@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class KodSdk
 {
 
-    public $subscribersArr = [];
+    public $rootUrl = ROOT_URL . "kod_index.php";
 
     /**
      * KodSdk constructor.
