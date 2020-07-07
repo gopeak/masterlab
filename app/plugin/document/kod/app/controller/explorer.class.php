@@ -83,6 +83,7 @@ class explorer extends Controller{
 				$GLOBALS['auth']["explorer.fileDownload"]==1 ||
 				isset($this->in['viewPage'])){
 				$data['downloadPath'] = _make_file_proxy($file);
+                $data['downloadPath'] = str_replace('index.php?','kod_index.php?', $data['downloadPath']);
 			}
 			//所在部门，下载权限检测
 			if($GLOBALS['kodPathRoleGroupAuth'] && !$GLOBALS['kodPathRoleGroupAuth']['explorer.fileDownload']){
@@ -410,7 +411,6 @@ class explorer extends Controller{
 					'children'	=>$project,
 					'menuType'  => "menu-tree-root",
 					'ext' 		=> "folder",
-
 					'path' 		=> $this->in['project'],
 					'type'      => 'folder',
 					'open'      => true,
@@ -441,7 +441,7 @@ class explorer extends Controller{
 		// 原来的代码
 		$listRoot  = $this->_path(_DIR(MYHOME),$checkFile,true);
         //$projectPath = 'C:/www/masterlab/app/plugin/document/kod/data/project/1/home/';
-        $listRoot  = $this->_path(_DIR($listRoot),$checkFile,true);
+        //$listRoot  = $this->_path(_DIR($listRoot),$checkFile,true);
 		if ($checkFile) {//编辑器
 			$root = array_merge($listRoot['folderList'],$listRoot['fileList']);
 			$public = array_merge($listPublic['folderList'],$listPublic['fileList']);
@@ -477,7 +477,7 @@ class explorer extends Controller{
             'myRecycle'=>array(
                 'name'		=> '回收站',
                 'menuType'  => "menu-tree-root",
-                'ext' 		=> "tree-self",
+                'ext' 		=> "recycle",
                 'children'  =>  $this->_path(USER_RECYCLE,$checkFile,true),
                 'path' 		=> '{userRecycle}/',
                 'type'      => 'folder',
@@ -487,7 +487,7 @@ class explorer extends Controller{
             'myShare'=>array(
                 'name'		=> '分 享',
                 'menuType'  => "menu-tree-root",
-                'ext' 		=> "tree-self",
+                'ext' 		=> "path-self-share",
                 'children'  =>  [],
                 'path' 		=> '{userShare}:'.$this->user['userID'].'/',
                 'type'      => 'folder',
@@ -543,6 +543,9 @@ class explorer extends Controller{
             ),
         );
         */
+        if(count($treeData['myRecycle']['children'])<=0){
+            $treeData['myRecycle']['ext'] = 'recycle-full';
+        }
 
 
 		//编辑器简化树目录
@@ -1301,7 +1304,7 @@ class explorer extends Controller{
 	}
 
 	//我的收藏根目录
-	private function _pathFav(&$list){
+	private function _pathFav(&$list,$checkFile = false){
 		$favData=new FileCache(USER.'data/fav.php');
 		$favList = $favData->get();
 		$GLOBALS['kodPathAuthCheck'] = true;//组权限发生变更。导致访问groupPath 无权限退出问题

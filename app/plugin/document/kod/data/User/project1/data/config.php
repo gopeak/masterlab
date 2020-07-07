@@ -2,7 +2,7 @@
     "listType": "icon",
     "listSortField": "name",
     "listSortOrder": "up",
-    "fileIconSize": "57",
+    "fileIconSize": "99",
     "animateOpen": "1",
     "soundOpen": "0",
     "theme": "win10",
