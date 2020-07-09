@@ -28,5 +28,20 @@
         "notDownload": "",
         "numDownload": 2,
         "numView": 1
+    },
+    "tTb2ys75": {
+        "mtime": 1594209847,
+        "sid": "tTb2ys75",
+        "type": "file",
+        "path": "\/事件.txt",
+        "name": "事件.txt",
+        "showName": "事件.txt",
+        "timeTo": "",
+        "sharePassword": "LHk1B",
+        "codeRead": "",
+        "canUpload": "",
+        "notDownload": "",
+        "numDownload": 0,
+        "numView": 1
     }
 }

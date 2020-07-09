@@ -443,8 +443,8 @@ class Org extends BaseUserCtrl
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];
         }
-        if (isset($_REQUEST['id'])) {
-            $id = (int)$_REQUEST['id'];
+        if (isset($_POST['id'])) {
+            $id = (int)$_POST['id'];
         }
 
         if (!$id) {

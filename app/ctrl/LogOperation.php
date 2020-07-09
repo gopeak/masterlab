@@ -23,8 +23,8 @@ class LogOperation extends BaseUserCtrl
     public function fetchByUser()
     {
         $userId = UserAuth::getId();
-        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
-            $userId = $_REQUEST['user_id'];
+        if (isset($_GET['user_id']) && !empty($_GET['user_id'])) {
+            $userId = $_GET['user_id'];
         }
         $page = 1;
         $pageSize = 20;

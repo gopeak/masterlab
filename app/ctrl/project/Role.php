@@ -180,8 +180,8 @@ class Role extends BaseUserCtrl
         if (isset($_GET['_target'][3])) {
             $id = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['id'])) {
-            $id = (int)$_REQUEST['id'];
+        if (isset($_POST['id'])) {
+            $id = (int)$_POST['id'];
         }
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
@@ -256,8 +256,8 @@ class Role extends BaseUserCtrl
         if (isset($_GET['_target'][3])) {
             $id = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['id'])) {
-            $id = (int)$_REQUEST['id'];
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id'];
         }
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
@@ -394,8 +394,8 @@ class Role extends BaseUserCtrl
         if (isset($_GET['_target'][3])) {
             $roleId = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['role_id'])) {
-            $roleId = (int)$_REQUEST['role_id'];
+        if (isset($_GET['role_id'])) {
+            $roleId = (int)$_GET['role_id'];
         }
         if (!$roleId) {
             //$this->ajaxFailed('参数错误', 'role_id不能为空');
@@ -451,18 +451,18 @@ class Role extends BaseUserCtrl
         if (isset($_GET['_target'][3])) {
             $roleId = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['role_id'])) {
-            $roleId = (int)$_REQUEST['role_id'];
+        if (isset($_POST['role_id'])) {
+            $roleId = (int)$_POST['role_id'];
         }
         if (!$roleId) {
             $this->ajaxFailed('参数错误', 'role_id不能为空');
         }
         $roleId = intval($roleId);
-        if (!isset($_REQUEST['permission_ids'])) {
+        if (!isset($_POST['permission_ids'])) {
             $this->ajaxFailed(' 参数错误 ', 'permission_Ids不能为空');
         }
 
-        $permissionIds = $_REQUEST['permission_ids'];
+        $permissionIds = $_POST['permission_ids'];
         $permIdsList = explode(',', $permissionIds);
         if (!is_array($permIdsList)) {
             $this->ajaxFailed(' 参数错误 ', '获取权限数据失败');
@@ -523,8 +523,8 @@ class Role extends BaseUserCtrl
         if (isset($_GET['_target'][3])) {
             $roleId = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['role_id'])) {
-            $roleId = (int)$_REQUEST['role_id'];
+        if (isset($_GET['role_id'])) {
+            $roleId = (int)$_GET['role_id'];
         }
         if (!$roleId) {
             $this->ajaxFailed('参数错误', 'role_id不能为空');

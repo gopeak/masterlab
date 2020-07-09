@@ -181,8 +181,8 @@ class Permission extends BaseAdminCtrl
     public function globalPermissionRoleUpdate($params = [])
     {
         $globalRoleId = null;
-        if (isset($_REQUEST['id'])) {
-            $globalRoleId = (int)$_REQUEST['id'];
+        if (isset($_POST['id'])) {
+            $globalRoleId = (int)$_POST['id'];
         }
         if (!$globalRoleId) {
             $this->ajaxFailed('参数错误', 'ID不能为空');
@@ -237,8 +237,8 @@ class Permission extends BaseAdminCtrl
     {
         $globalRoleId = null;
 
-        if (isset($_REQUEST['role_id'])) {
-            $globalRoleId = (int)$_REQUEST['role_id'];
+        if (isset($_GET['role_id'])) {
+            $globalRoleId = (int)$_GET['role_id'];
         }
         if (!$globalRoleId) {
             //$this->ajaxFailed('参数错误', 'role_id不能为空');
@@ -291,18 +291,18 @@ class Permission extends BaseAdminCtrl
     {
         $globalRoleId = null;
 
-        if (isset($_REQUEST['role_id'])) {
-            $globalRoleId = (int)$_REQUEST['role_id'];
+        if (isset($_POST['role_id'])) {
+            $globalRoleId = (int)$_POST['role_id'];
         }
         if (!$globalRoleId) {
             $this->ajaxFailed('参数错误', 'role_id不能为空');
         }
         $globalRoleId = intval($globalRoleId);
-        if (!isset($_REQUEST['permission_ids'])) {
+        if (!isset($_POST['permission_ids'])) {
             $this->ajaxFailed(' 参数错误 ', 'permission_Ids不能为空');
         }
 
-        $permissionIds = $_REQUEST['permission_ids'];
+        $permissionIds = $_POST['permission_ids'];
         $permIdsList = explode(',', $permissionIds);
         if (!is_array($permIdsList)) {
             $this->ajaxFailed(' 参数错误 ', '获取权限数据失败');
@@ -346,8 +346,8 @@ class Permission extends BaseAdminCtrl
     public function globalPermissionRoleDelete()
     {
         $globalRoleId = null;
-        if (isset($_REQUEST['role_id'])) {
-            $globalRoleId = (int)$_REQUEST['role_id'];
+        if (isset($_GET['role_id'])) {
+            $globalRoleId = (int)$_GET['role_id'];
         }
         if (!$globalRoleId) {
             $this->ajaxFailed('参数错误', 'ID不能为空');
@@ -386,8 +386,8 @@ class Permission extends BaseAdminCtrl
     public function fetchGlobalPermRoleUsers()
     {
         $globalRoleId = null;
-        if (isset($_REQUEST['role_id'])) {
-            $globalRoleId = (int)$_REQUEST['role_id'];
+        if (isset($_GET['role_id'])) {
+            $globalRoleId = (int)$_GET['role_id'];
         }
         if (!$globalRoleId) {
             $this->ajaxFailed('参数错误', 'ID不能为空');
@@ -422,8 +422,8 @@ class Permission extends BaseAdminCtrl
     public function addGlobalPermRoleUser()
     {
         $roleId = null;
-        if (isset($_REQUEST['role_id'])) {
-            $roleId = (int)$_REQUEST['role_id'];
+        if (isset($_POST['role_id'])) {
+            $roleId = (int)$_POST['role_id'];
         }
         if (!$roleId) {
             $this->ajaxFailed('参数错误', 'ID不能为空');
@@ -431,8 +431,8 @@ class Permission extends BaseAdminCtrl
         $roleId = intval($roleId);
 
         $userId = null;
-        if (isset($_REQUEST['user_id'])) {
-            $userId = (int)$_REQUEST['user_id'];
+        if (isset($_POST['user_id'])) {
+            $userId = (int)$_POST['user_id'];
         }
         if (!$userId) {
             $this->ajaxFailed('参数错误', 'ID不能为空');
