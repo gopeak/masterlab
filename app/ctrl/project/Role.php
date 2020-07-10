@@ -556,8 +556,8 @@ class Role extends BaseUserCtrl
         if (isset($_GET['_target'][3])) {
             $roleId = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['role_id'])) {
-            $roleId = (int)$_REQUEST['role_id'];
+        if (isset($_POST['role_id'])) {
+            $roleId = (int)$_POST['role_id'];
         }
         if (!$roleId) {
             $this->ajaxFailed('参数错误', 'role_id不能为空');
@@ -565,8 +565,8 @@ class Role extends BaseUserCtrl
         $roleId = intval($roleId);
 
         $userId = null;
-        if (isset($_REQUEST['user_id'])) {
-            $userId = (int)$_REQUEST['user_id'];
+        if (isset($_POST['user_id'])) {
+            $userId = (int)$_POST['user_id'];
         }
         if (!$userId) {
             $this->ajaxFailed('参数错误', 'user_id不能为空');
