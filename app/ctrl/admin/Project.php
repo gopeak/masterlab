@@ -133,8 +133,8 @@ class Project extends BaseAdminCtrl
     public function doArchived()
     {
         $projectId = null;
-        if (isset($_REQUEST['project_id'])) {
-            $projectId = (int)$_REQUEST['project_id'];
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
         }
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '参数错误');
@@ -192,16 +192,16 @@ class Project extends BaseAdminCtrl
         if (isset($_GET['_target'][3])) {
             $projectId = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['project_id'])) {
-            $projectId = (int)$_REQUEST['project_id'];
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
         }
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
 
-        if (isset($_REQUEST['project_type_id'])) {
-            $projectTypeId = (int)$_REQUEST['project_type_id'];
+        if (isset($_GET['project_type_id'])) {
+            $projectTypeId = (int)$_GET['project_type_id'];
         }
         if (empty($projectTypeId)) {
             $this->ajaxFailed('参数错误', '项目类型id不能为空');

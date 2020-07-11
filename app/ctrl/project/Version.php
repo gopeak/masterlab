@@ -86,7 +86,7 @@ class Version extends BaseUserCtrl
     {
         if (isPost()) {
             $uid = $this->getCurrentUid();
-            $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
+            $project_id = intval($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
             $projectVersionModel = new ProjectVersionModel($uid);
             $this->paramValid($projectVersionModel, $project_id, $name);
 
@@ -133,7 +133,7 @@ class Version extends BaseUserCtrl
     public function release($version_id)
     {
         $uid = $this->getCurrentUid();
-        $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        $project_id = intval($_POST[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $projectVersionModel = new ProjectVersionModel($uid);
         $version = $projectVersionModel->getRowById($version_id);
 

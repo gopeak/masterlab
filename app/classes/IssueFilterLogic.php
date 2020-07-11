@@ -445,7 +445,7 @@ class IssueFilterLogic
 
             $sql .= ' ' . $order . $limit;
             //print_r($params);
-            // echo $sql;die;
+            //echo $sql;die;
 
             $arr = $model->db->fetchAll($sql, $params);
             $idArr = [];
