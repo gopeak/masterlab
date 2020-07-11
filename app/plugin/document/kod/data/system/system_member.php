@@ -14,7 +14,7 @@
         },
         "createTime": 1589187576,
         "status": 1,
-        "lastLogin": 1594211262
+        "lastLogin": 1594456426
     },
     "100": {
         "userID": "100",
@@ -31,14 +31,14 @@
         },
         "path": "project1",
         "status": 1,
-        "lastLogin": 1594211265,
+        "lastLogin": 1594452716,
         "createTime": 1593834068
     },
     "101": {
         "userID": "101",
-        "name": "project36",
-        "nickName": "project36",
-        "password": "772cd77852207e51167d8ab45a9fb1b5",
+        "name": "project",
+        "nickName": "project",
+        "password": "e5c10703c769a4a718372931fd5c7e97",
         "role": "2",
         "config": {
             "sizeMax": 5,
@@ -47,9 +47,9 @@
         "groupInfo": {
             "1": "write"
         },
-        "path": "project36",
+        "path": "project",
         "status": 1,
-        "lastLogin": 1594209723,
-        "createTime": 1594209722
+        "lastLogin": "",
+        "createTime": 1594451027
     }
 }

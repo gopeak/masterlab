@@ -31,7 +31,7 @@ class KodSdk
     public function getAutoLoginUrl($user)
     {
         $loginToken = base64_encode($user) . '|' . md5($user . $GLOBALS['config']['settings']['apiLoginTonken']);
-        $url = sprintf(ROOT_URL . "kod_index.php?user/loginSubmit&login_token=%s", $loginToken);
+        $url = sprintf($this->rootUrl . "?user/loginSubmit&login_token=%s", $loginToken);
         return $url;
     }
 
@@ -43,7 +43,7 @@ class KodSdk
     public function getAccessToken($user)
     {
         $loginToken = base64_encode($user) . '|' . md5($user . $GLOBALS['config']['settings']['apiLoginTonken']);
-        $url = sprintf(ROOT_URL . "kod_index.php?user/loginSubmit&isAjax=1&getToken=1&login_token=%s", $loginToken);
+        $url = sprintf($this->rootUrl  . "?user/loginSubmit&isAjax=1&getToken=1&login_token=%s", $loginToken);
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', $url);
         $statusCode = $response->getStatusCode(); // 200
@@ -69,7 +69,7 @@ class KodSdk
      */
     public function createUser($dataArr, $accessToken)
     {
-        $url = sprintf(ROOT_URL . "kod_index.php?systemMember/add&accessToken=".$accessToken);
+        $url = sprintf($this->rootUrl . "?systemMember/add&accessToken=".$accessToken);
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', $url,['form_params' => $dataArr]);
         $statusCode = $response->getStatusCode();
@@ -78,14 +78,54 @@ class KodSdk
         }
         $bodyArr = json_decode($response->getBody(), true);
         if (!$bodyArr['code']) {
-            return [false, "获取kod access token 失败\r\n" . $response->getBody()];
+            return [false, "创建用户失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];
     }
 
+    public function getUser($userName, $accessToken)
+    {
+        $url = sprintf($this->rootUrl . "?systemMember/getByName&name={$userName}&accessToken=".$accessToken);
+        $client = new \GuzzleHttp\Client();
+        $dataArr['name'] = $userName;
+        $response = $client->request('POST', $url,['form_params' => $dataArr]);
+        $statusCode = $response->getStatusCode();
+        if ($statusCode != 200) {
+            return [false, 'response status:' . $statusCode];
+        }
+        $bodyArr = json_decode($response->getBody(), true);
+        if (!$bodyArr['code']) {
+            return [false, "获取用户{$userName}信息失败\r\n" . $response->getBody()];
+        }
+        return [true, $bodyArr['data']];
+    }
+
+    public function deleteUser($userId, $accessToken)
+    {
+        $url = sprintf($this->rootUrl . '?systemMember/doAction&accessToken='.$accessToken);
+        $client = new \GuzzleHttp\Client();
+        $dataArr['action'] = 'del';
+        $dataArr['userID'] = json_encode([$userId]);
+        $response = $client->request('POST', $url,['form_params' => $dataArr]);
+        $statusCode = $response->getStatusCode();
+        if ($statusCode != 200) {
+            return [false, 'response status:' . $statusCode];
+        }
+        $bodyArr = json_decode($response->getBody(), true);
+        if (!$bodyArr['code']) {
+            return [false, "删除用户失败\r\n" . $response->getBody()];
+        }
+        return [true, $bodyArr['data']];
+    }
+
+
+    /**
+     * @param $accessToken
+     * @return array
+     */
     public function getUsers($accessToken)
     {
-        $url = sprintf(ROOT_URL . "kod_index.php?systemMember/get&accessToken=".$accessToken);
+        $url = sprintf($this->rootUrl . "?systemMember/get&accessToken=".$accessToken);
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', $url);
         $statusCode = $response->getStatusCode();
@@ -94,14 +134,14 @@ class KodSdk
         }
         $bodyArr = json_decode($response->getBody(), true);
         if (!$bodyArr['code']) {
-            return [false, "获取kod access token 失败\r\n" . $response->getBody()];
+            return [false, "获取用户列表失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];
     }
 
     public function getRoles($accessToken)
     {
-        $url = sprintf(ROOT_URL . "kod_index.php?systemRole/get&accessToken=".$accessToken);
+        $url = sprintf($this->rootUrl . "?systemRole/get&accessToken=".$accessToken);
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', $url);
         $statusCode = $response->getStatusCode();
@@ -110,7 +150,7 @@ class KodSdk
         }
         $bodyArr = json_decode($response->getBody(), true);
         if (!$bodyArr['code']) {
-            return [false, "获取kod access token 失败\r\n" . $response->getBody()];
+            return [false, "获取角色列表失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];
     }
