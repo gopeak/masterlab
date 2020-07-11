@@ -26,7 +26,8 @@
     "ext-ldap": "*",
     "ext-pdo": "*",
     "ext-curl": "*",
-    "ext-redis": "*"
+    "ext-redis": "*",
+    "lcobucci/jwt": "^3.3"
   },
   "require-dev": {
     "phpunit/phpunit": "7.0",

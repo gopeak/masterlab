@@ -20,13 +20,17 @@ class BaseApi
      * */
     protected static $method_type = array('get', 'post', 'put', 'patch', 'delete');
 
+    protected $requestMethod = null;
+
     /**
      * 参数处理
      */
     public function __construct()
     {
-
+        $this->requestMethod = strtolower($_SERVER['REQUEST_METHOD']);
     }
+
+
 
 
     protected function validateRestfulHandler( )
