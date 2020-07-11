@@ -14,7 +14,7 @@
         },
         "createTime": 1589187576,
         "status": 1,
-        "lastLogin": 1594454133
+        "lastLogin": 1594456426
     },
     "100": {
         "userID": "100",
@@ -51,23 +51,5 @@
         "status": 1,
         "lastLogin": "",
         "createTime": 1594451027
-    },
-    "102": {
-        "userID": "102",
-        "name": "project47",
-        "nickName": "project47",
-        "password": "8f44de56e4a8ba156e5e15df20a14040",
-        "role": "2",
-        "config": {
-            "sizeMax": 5,
-            "sizeUse": 1048576
-        },
-        "groupInfo": {
-            "1": "write"
-        },
-        "path": "project47",
-        "status": 1,
-        "lastLogin": 1594451060,
-        "createTime": 1594451060
     }
 }

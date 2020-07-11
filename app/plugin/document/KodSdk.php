@@ -78,14 +78,14 @@ class KodSdk
         }
         $bodyArr = json_decode($response->getBody(), true);
         if (!$bodyArr['code']) {
-            return [false, "获取kod access token 失败\r\n" . $response->getBody()];
+            return [false, "创建用户失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];
     }
 
     public function getUser($userName, $accessToken)
     {
-        $url = sprintf($this->rootUrl . "?systemMember/getByName&accessToken=".$accessToken);
+        $url = sprintf($this->rootUrl . "?systemMember/getByName&name={$userName}&accessToken=".$accessToken);
         $client = new \GuzzleHttp\Client();
         $dataArr['name'] = $userName;
         $response = $client->request('POST', $url,['form_params' => $dataArr]);
@@ -95,7 +95,7 @@ class KodSdk
         }
         $bodyArr = json_decode($response->getBody(), true);
         if (!$bodyArr['code']) {
-            return [false, "获取kod access token 失败\r\n" . $response->getBody()];
+            return [false, "获取用户{$userName}信息失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];
     }
@@ -113,7 +113,7 @@ class KodSdk
         }
         $bodyArr = json_decode($response->getBody(), true);
         if (!$bodyArr['code']) {
-            return [false, "获取kod access token 失败\r\n" . $response->getBody()];
+            return [false, "删除用户失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];
     }
@@ -134,7 +134,7 @@ class KodSdk
         }
         $bodyArr = json_decode($response->getBody(), true);
         if (!$bodyArr['code']) {
-            return [false, "获取kod access token 失败\r\n" . $response->getBody()];
+            return [false, "获取用户列表失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];
     }
@@ -150,7 +150,7 @@ class KodSdk
         }
         $bodyArr = json_decode($response->getBody(), true);
         if (!$bodyArr['code']) {
-            return [false, "获取kod access token 失败\r\n" . $response->getBody()];
+            return [false, "获取角色列表失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];
     }
