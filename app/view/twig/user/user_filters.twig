@@ -52,10 +52,10 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th class="js-pipeline-info pipeline-info">过滤器名称</th>
-                                        <th class="js-pipeline-info pipeline-info">所属项目</th>
+                                        <th class="js-pipeline-info pipeline-info" style="min-width:150px">过滤器名称</th>
+                                        <th class="js-pipeline-info pipeline-info" style="min-width:150px">所属项目</th>
                                         <th class="js-pipeline-stages pipeline-info">过滤条件</th>
-                                        <th class="pipeline-info" >操作</th>
+                                        <th class="pipeline-info" style="min-width:100px">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">
@@ -80,10 +80,10 @@
 {% verbatim %}<script type="text/html"  id="list_tpl">
     {{#filters}}
         <tr class="commit">
-            <td>
+            <td >
                 <strong><a style="color: #1890ff;" href="/issue/main?fav_filter={{id}}">{{name}}</a> </strong>
             </td>
-            <td>
+            <td  >
                 {{make_project projectid}}
             </td>
             <td>

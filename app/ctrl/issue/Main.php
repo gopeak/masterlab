@@ -629,70 +629,91 @@ class Main extends BaseUserCtrl
         if (isset($_GET['page'])) {
             $page = max(1, intval($_GET['page']));
         }
+        if (isset($_GET['fav_filter'])) {
+            $favFilterId = $_GET['fav_filter'];
+            $filterModel = IssueFilterModel::getInstance();
+            $favArr = $filterModel->getRowById($favFilterId);
+            if($favArr['is_adv_query']=='1'){
+                $_GET['adv_query_json'] = $favArr['filter'];
+                $this->advFilter();
+                return;
+            }
 
+        }
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
-            // 获取标签的关联数据
-            $issueIdArr = array_column($data['issues'], 'id');
-            $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
-            $labelDataArr = [];
-            foreach ($labelDataRows as $labelData) {
-                $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
-            }
-            // 获取自定义字段值
-            $fieldsArr = (new FieldModel())->getCustomFields();
-            if ($fieldsArr) {
-                $fieldsArr = array_column($fieldsArr, null, 'id');
-                $customFieldIdArr = array_column($fieldsArr, 'id');
-                $customValuesArr = (new FieldCustomValueModel())->getsByIssueIdArr($issueIdArr, $customFieldIdArr);
-                $customValuesIssueArr = [];
-                foreach ($customValuesArr as $customValue) {
-                    $key = $customValue['value_type'] . '_value';
-                    $issueId = $customValue['issue_id'];
-                    $fieldId = $customValue['custom_field_id'];
-                    $fieldArr = $fieldsArr[$fieldId];
-                    if (isset($fieldArr['name'])) {
-                        $fieldValue = !isset($customValue[$key]) ? $customValue['string_value'] : $customValue[$key];
-                        $fieldName = $fieldArr['name'];
-                        $customValuesIssueArr[$issueId][$fieldName] = $fieldValue;
-                    }
-                }
-            }
-
-            $userLogic = new UserLogic();
-            $users = $userLogic->getAllUser();
-            foreach ($data['issues'] as &$issue) {
-                $issueId = $issue['id'];
-                IssueFilterLogic::formatIssue($issue);
-                if (isset($labelDataArr[$issueId])) {
-                    $arr = array_unique($labelDataArr[$issueId]);
-                    sort($arr);
-                    $issue['label_id_arr'] = $arr;
-                } else {
-                    $issue['label_id_arr'] = [];
-                }
-                if (isset($customValuesIssueArr[$issueId])) {
-                    $customValueArr = $customValuesIssueArr[$issueId];
-                    $issue = array_merge($customValueArr, $issue);
-                }
-                $emptyObj = new \stdClass();
-                $issue['creator_info'] = isset($users[$issue['creator']])?$users[$issue['creator']]:$emptyObj;
-                $issue['modifier_info'] = isset($users[$issue['modifier']])?$users[$issue['modifier']]:$emptyObj;
-                $issue['reporter_info'] = isset($users[$issue['reporter']])?$users[$issue['reporter']]:$emptyObj;
-                $issue['assignee_info'] = isset($users[$issue['assignee']])?$users[$issue['assignee']]:$emptyObj;
-            }
-
-            $data['total'] = (int)$total;
-            $data['pages'] = ceil($total / $pageSize);
-            $data['page_size'] = $pageSize;
-            $data['page'] = $page;
-            $_SESSION['filter_current_page'] = $page;
-            $_SESSION['filter_pages'] = $data['pages'];
-            $_SESSION['filter_page_size'] = $pageSize;
-            $this->ajaxSuccess('success', $data);
+            $this->response($data, $total, $page, $pageSize);
         } else {
             $this->ajaxFailed('failed', $data['issues']);
         }
+    }
+
+    /**
+     * @param $issues
+     * @param $total
+     * @throws \Exception
+     */
+    private function response($data, $total, $page, $pageSize)
+    {
+        // 获取标签的关联数据
+        $issueIdArr = array_column($data['issues'], 'id');
+        $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
+        $labelDataArr = [];
+        foreach ($labelDataRows as $labelData) {
+            $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
+        }
+        // 获取自定义字段值
+        $fieldsArr = (new FieldModel())->getCustomFields();
+        if ($fieldsArr) {
+            $fieldsArr = array_column($fieldsArr, null, 'id');
+            $customFieldIdArr = array_column($fieldsArr, 'id');
+            $customValuesArr = (new FieldCustomValueModel())->getsByIssueIdArr($issueIdArr, $customFieldIdArr);
+            $customValuesIssueArr = [];
+            foreach ($customValuesArr as $customValue) {
+                $key = $customValue['value_type'] . '_value';
+                $issueId = $customValue['issue_id'];
+                $fieldId = $customValue['custom_field_id'];
+                $fieldArr = $fieldsArr[$fieldId];
+                if (isset($fieldArr['name'])) {
+                    $fieldValue = !isset($customValue[$key]) ? $customValue['string_value'] : $customValue[$key];
+                    $fieldName = $fieldArr['name'];
+                    $customValuesIssueArr[$issueId][$fieldName] = $fieldValue;
+                }
+            }
+        }
+
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
+        foreach ($data['issues'] as &$issue) {
+            $issueId = $issue['id'];
+            IssueFilterLogic::formatIssue($issue);
+            if (isset($labelDataArr[$issueId])) {
+                $arr = array_unique($labelDataArr[$issueId]);
+                sort($arr);
+                $issue['label_id_arr'] = $arr;
+            } else {
+                $issue['label_id_arr'] = [];
+            }
+            if (isset($customValuesIssueArr[$issueId])) {
+                $customValueArr = $customValuesIssueArr[$issueId];
+                $issue = array_merge($customValueArr, $issue);
+            }
+            $emptyObj = new \stdClass();
+            $issue['creator_info'] = isset($users[$issue['creator']]) ? $users[$issue['creator']] : $emptyObj;
+            $issue['modifier_info'] = isset($users[$issue['modifier']]) ? $users[$issue['modifier']] : $emptyObj;
+            $issue['reporter_info'] = isset($users[$issue['reporter']]) ? $users[$issue['reporter']] : $emptyObj;
+            $issue['assignee_info'] = isset($users[$issue['assignee']]) ? $users[$issue['assignee']] : $emptyObj;
+        }
+
+        $data['total'] = (int)$total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $_SESSION['filter_current_page'] = $page;
+        $_SESSION['filter_pages'] = $data['pages'];
+        $_SESSION['filter_page_size'] = $pageSize;
+        $this->ajaxSuccess('success', $data);
+
     }
 
     /**
@@ -712,17 +733,7 @@ class Main extends BaseUserCtrl
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getAdvQueryList($page, $pageSize);
         if ($ret) {
-            foreach ($data['issues'] as &$issue) {
-                IssueFilterLogic::formatIssue($issue);
-            }
-            $data['total'] = (int)$total;
-            $data['pages'] = ceil($total / $pageSize);
-            $data['page_size'] = $pageSize;
-            $data['page'] = $page;
-            $_SESSION['filter_current_page'] = $page;
-            $_SESSION['filter_pages'] = $data['pages'];
-            $_SESSION['filter_page_size'] = $pageSize;
-            $this->ajaxSuccess('success', $data);
+            $this->response($data, $total, $page, $pageSize);
         } else {
             $this->ajaxFailed('failed', $data['issues']);
         }
