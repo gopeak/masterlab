@@ -28,7 +28,8 @@ class Auth extends BaseApi
 
         $jwt = JWTLogic::getInstance();
         $accessToken = $jwt->publish($user['uid'], $account);
-        
+        $accessToken = strval($accessToken);
+        // var_dump($accessToken);
         return self::returnHandler('授权成功' .$accessToken, [
             'account' => $account,
             'api_access_token' => $accessToken,
