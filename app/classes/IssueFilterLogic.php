@@ -112,6 +112,8 @@ class IssueFilterLogic
             if (!empty($userJoinProjectIdArr)) {
                 $projectIdStr = implode(',', $userJoinProjectIdArr);
                 $sql .= " AND  project_id IN ({$projectIdStr}) ";
+            } else {
+                return [true, [], 0];
             }
         }
         $assigneeUid = null;

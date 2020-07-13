@@ -101,6 +101,13 @@ if (!function_exists('currentHttpDomain')) {
      */
     function currentHttpDomain()
     {
+        if ((! empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https')
+            || (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+            || (! empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ) {
+            $_SERVER['REQUEST_SCHEME'] = 'https';
+        } else {
+            $_SERVER['REQUEST_SCHEME'] = 'http';
+        }
         $uri = @$_SERVER['REQUEST_SCHEME'].'://'.@$_SERVER['HTTP_HOST'].'/';
         return $uri;
     }
@@ -150,12 +157,22 @@ function make_select_options($arr, $selected_value)
     return $html;
 }
 
+/**
+ * 是否是APP请求
+ * @return bool
+ */
+function isApp()
+{
+    if (isset($_SERVER['HTTP_MASTERLAB_APP']) && !empty($_SERVER['HTTP_MASTERLAB_APP'])) {
+        return true;
+    }
+    return false;
+}
 
 /**
  * 是否是AJAx提交的
  * @return bool
  */
-
 function isAjax()
 {
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {

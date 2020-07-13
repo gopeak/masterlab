@@ -22,6 +22,11 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_dat
     if (empty($formatSystem)) {
         $formatSystem = 'full_datetime_format';
     }
+
+    if (isApp()) {
+        $formatSystem = 'app_week_format';
+    }
+
     $str_time = '';
     $settingLogic = new \main\app\classes\SettingsLogic();
 
@@ -34,13 +39,13 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_dat
     if ($formatSystem == 'full_datetime_format') {
         return date($settingLogic->fullDatetimeFormat(), $formatTime);
     }
-    if ($formatSystem == 'app_week_format' && $formatTime > strtotime('-1 week')) {
-        $weekNumArr = array('日', '一', '二', '三', '四', '五', '六');
-        return '星期' . $weekNumArr[date('w', $formatTime)];
-    }
 
     $time = $startTime - $formatTime;
     if ($time >= 86400) {
+        if ($formatSystem == 'app_week_format' && $formatTime > strtotime('-1 week')) {
+            $weekNumArr = array('日', '一', '二', '三', '四', '五', '六');
+            return '星期' . $weekNumArr[date('w', $formatTime)];
+        }
         return $str_time = date($settingLogic->datetimeFormat(), $formatTime);
     }
     if ($time >= 3600) {
