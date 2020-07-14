@@ -531,14 +531,14 @@
                 <script type="text/html" id="content_table_adv_tpl">
                     {{#tableList}}
                         <tr data-index="{{@index}}">
-                            <td scope="row">
+                            <td scope="row" title="可上下拖拽移动条件的顺序">
                                 <i class="fa fa-arrows"></i>
                             </td>
-                            <td>
+                            <td title="双击可修改">
                                 <span class="table-text" data-type="select" data-source="logic" data-filed="logic" data-title="关系" data-content="{{logic}}">{{logic}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
-                            <td>
+                            <td title="双击可修改起始括号">
                                 <span class="table-text" data-type="select" data-source="brace" data-filed="start_braces" data-title="请选择" data-content="{{start_braces}}">{{start_braces}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
@@ -546,7 +546,7 @@
                                 <span class="table-text" data-type="select" data-source="field" data-filed="field" data-title="字段" data-content="{{field_title}}">{{field_title}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
-                            <td>
+                            <td  title="双击可修改运算符">
                                 <span class="table-text" data-type="select" data-source="opt" data-filed="opt" data-title="运算符" data-content="{{opt}}">{{opt}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
@@ -556,14 +556,14 @@
                                 </span>
                                 <div class="table-form hidden"></div>
                             </td>
-                            <td>
+                            <td  title="双击可修改结束括号">
                                 <span class="table-text" data-type="select" data-source="brace" data-title="请选择" data-filed="end_braces" data-content="{{end_braces}}">
                                 {{end_braces}}
                                 </span>
                                 <div class="table-form hidden"></div>
                             </td>
                             <td>
-                                <a href="javascript:;" onclick="deleteAdvQuery('{{@index}}')">删除</a>
+                                <a title="移除此条件" href="javascript:;" onclick="deleteAdvQuery('{{@index}}')">移除</a>
                             </td>
                         </tr>
                 {{/tableList}}

@@ -1259,6 +1259,11 @@
                         $('#tips_panel').modal('hide');
                     });
 
+                    // 点击高级查询按钮
+                    $('#modal-adv_query').on('shown.bs.modal', function () {
+                        IssueAdvQuery.prototype.renderAdvQuery(adv_details);
+                        clearAdvSearchQuery();
+                    });
 
                     // 添加bottom的textare的focus事件
                     $('.bottom-part textarea').on('focus', function () {
