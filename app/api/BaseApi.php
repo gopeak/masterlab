@@ -30,7 +30,15 @@ class BaseApi
         $this->requestMethod = strtolower($_SERVER['REQUEST_METHOD']);
     }
 
+    protected static function returnHandler($msg = '', $body = [], $code = Constants::HTTP_OK)
+    {
+        $ret = [];
+        $ret['msg'] = $msg;
+        $ret['code'] = $code;
+        $ret['body'] = $body;
 
+        return $ret;
+    }
 
 
     protected function validateRestfulHandler( )
