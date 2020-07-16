@@ -34,9 +34,11 @@ class TestProjects extends BaseTestCase
     public function testGet()
     {
         $accessToken = '';
-        $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/api/projects/v1/1?access_token=' . $accessToken);
-        $respArr = json_decode($curl->rawResponse, true);
+        $url = ROOT_URL.'/api/projects/v1/1?access_token=' . $accessToken;
+        $client = new \GuzzleHttp\Client();
+        $response = $client->get($url);
+        $rawResponse = $response->getBody()->getContents();
+        $respArr = json_decode($rawResponse, true);
 
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
@@ -48,6 +50,15 @@ class TestProjects extends BaseTestCase
 
     public function testPost()
     {
+        $client = new \GuzzleHttp\Client();
+        $res = $client->request('POST', ROOT_URL.'/api/projects/v1/1?access_token=', [
+            'auth' => ['user', 'pass']
+        ]);
+        echo $res->getStatusCode();
+        // "200"
+        echo $res->getHeader('content-type');
+        // 'application/json; charset=utf8'
+        echo $res->getBody();
     }
 
 }
