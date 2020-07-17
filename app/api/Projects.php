@@ -14,8 +14,14 @@ use main\app\classes\UserLogic;
 use main\app\ctrl\BaseCtrl;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
+use main\app\model\issue\IssueModel;
 use main\app\model\OrgModel;
+use main\app\model\project\ProjectCatalogLabelModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectModuleModel;
+use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\project\ProjectVersionModel;
 use main\app\model\user\UserModel;
 
 class Projects extends BaseAuth
@@ -108,6 +114,64 @@ class Projects extends BaseAuth
     }
 
     /**
+     * Restful DELETE ,删除某个项目
+     * {{API_URL}}/api/projects/v1/36?access_token==xyz
+     * @return array
+     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \Exception
+     */
+    private static function deleteHandler( )
+    {
+        $uid = 1;
+        $projectId = 0;
+        if (isset($_GET['_target'][3])) {
+            $projectId = intval($_GET['_target'][3]);
+        }
+        if ($projectId == 0) {
+            return self::returnHandler('需要有项目ID', [], Constants::HTTP_BAD_REQUEST);
+        }
+
+        $model = new ProjectModel($uid);
+
+        $model->db->beginTransaction();
+
+        $retDelProject = $model->deleteById($projectId);
+        if ($retDelProject) {
+            // 删除对应的事项
+            $issueModel = new IssueModel();
+            $issueModel->deleteItemsByProjectId($projectId);
+
+            // 删除版本
+            $projectVersionModel = new ProjectVersionModel($uid);
+            $projectVersionModel->deleteByProject($projectId);
+
+            // 删除模块
+            $projectModuleModel = new ProjectModuleModel($uid);
+            $projectModuleModel->deleteByProject($projectId);
+
+            // 删除标签
+            $projectLabelModel = new ProjectLabelModel();
+            $projectLabelModel->deleteByProject($projectId);
+
+            // 删除分类
+            $projectCatalogLabelModel = new ProjectCatalogLabelModel();
+            $projectCatalogLabelModel->deleteByProject($projectId);
+
+            // 删除初始化的角色
+            $projectUserRoleModel = new ProjectUserRoleModel();
+            $projectUserRoleModel->deleteByProject($projectId);
+
+        }
+
+        $model->db->commit();
+
+        return self::returnHandler('操作成功');
+    }
+
+
+    /**
      * Restful POST 创建项目
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
@@ -123,8 +187,7 @@ class Projects extends BaseAuth
         $maxLengthProjectKey = $settingLogic->maxLengthProjectKey();
 
         $params = [];
-        $reqData = file_get_contents('php://input');
-        parse_str($reqData, $params);
+        $params = $_POST;
 
         if (!isset($params['name'])) {
             $err['project_name'] = '名称不存在';
@@ -194,7 +257,7 @@ class Projects extends BaseAuth
         $info['org_id'] = $params['org_id'];
         $info['key'] = $params['key'];
         $info['lead'] = $params['lead'];
-        $info['description'] = $params['description'];
+        $info['description'] = isset($params['description'])?$params['description']:'';
         $info['type'] = $params['type'];
         $info['category'] = 0;
         $info['url'] = isset($params['url']) ? $params['url'] : '';
@@ -211,11 +274,7 @@ class Projects extends BaseAuth
 
         $info['org_path'] = $orgInfo['path'];
 
-        // todo 检查$ret的问题
         $ret = ProjectLogic::create($info, $uid);
-
-
-
 
         //$ret['errorCode'] = 0;
         $final = array(
