@@ -33,7 +33,7 @@ class Projects extends BaseAuth
     {
         if (in_array($this->requestMethod, self::$method_type)) {
             $handleFnc = $this->requestMethod . 'Handler';
-            return self::$handleFnc();
+            return $this->$handleFnc();
         }
         return self::returnHandler('api方法错误');
     }
@@ -45,7 +45,7 @@ class Projects extends BaseAuth
      * @return array
      * @throws \Exception
      */
-    private static function getHandler()
+    private function getHandler()
     {
         $projectId = 0;
         if (isset($_GET['_target'][3])){
@@ -78,19 +78,17 @@ class Projects extends BaseAuth
      * @return array
      * @throws \Exception
      */
-    private static function patchHandler()
+    private function patchHandler()
     {
         $projectId = 0;
         if (isset($_GET['_target'][3])) {
             $projectId = intval($_GET['_target'][3]);
         }
         if ($projectId == 0) {
-            return self::returnHandler('需要有项目ID');
+            return self::returnHandler('需要有项目ID', [], Constants::HTTP_BAD_REQUEST);
         }
 
-        $reqDataArr = [];
-        $reqData = file_get_contents('php://input');
-        parse_str($reqData, $reqDataArr);
+        $reqDataArr = self::_PATCH();
         $fields = ['name', 'description'];
 
         $row = [];
@@ -101,7 +99,7 @@ class Projects extends BaseAuth
         }
 
         if (empty($row)) {
-            return self::returnHandler('更新项目失败.');
+            return self::returnHandler('更新项目失败.', [], Constants::HTTP_BAD_REQUEST);
         }
         $projectModel = new ProjectModel();
         $ret = $projectModel->update($row, array('id' => $projectId));
@@ -110,7 +108,7 @@ class Projects extends BaseAuth
             return self::returnHandler('更新项目成功');
         }
 
-        return self::returnHandler('更新项目失败');
+        return self::returnHandler('更新项目失败', [], Constants::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -122,9 +120,9 @@ class Projects extends BaseAuth
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      * @throws \Exception
      */
-    private static function deleteHandler( )
+    private function deleteHandler( )
     {
-        $uid = 1;
+        $uid = $this->masterUid;
         $projectId = 0;
         if (isset($_GET['_target'][3])) {
             $projectId = intval($_GET['_target'][3]);
@@ -177,10 +175,10 @@ class Projects extends BaseAuth
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    private static function postHandler()
+    private function postHandler()
     {
         $err = [];
-        $uid = 1;
+        $uid = $this->masterUid;
         $projectModel = new ProjectModel($uid);
         $settingLogic = new SettingsLogic;
         $maxLengthProjectName = $settingLogic->maxLengthProjectName();

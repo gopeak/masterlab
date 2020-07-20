@@ -74,6 +74,13 @@ class ProjectModuleModel extends CacheModel
         return $row;
     }
 
+    /**
+     * @param $projectId
+     * @param $id
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     */
     public function removeById($projectId, $id)
     {
         $where = ['project_id' => $projectId, 'id' => $id];
@@ -91,6 +98,7 @@ class ProjectModuleModel extends CacheModel
      * @param $projectId
      * @param $name
      * @return bool
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function checkNameExist($projectId, $name)
     {
@@ -108,6 +116,7 @@ class ProjectModuleModel extends CacheModel
      * @param $projectId
      * @param $name
      * @return bool
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function checkNameExistExcludeCurrent($id, $projectId, $name)
     {
@@ -124,6 +133,7 @@ class ProjectModuleModel extends CacheModel
      * 通过id获取记录
      * @param $id
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getById($id)
     {
@@ -134,6 +144,7 @@ class ProjectModuleModel extends CacheModel
      * 通过名称获取记录
      * @param $name
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getByName($name)
     {
@@ -147,6 +158,7 @@ class ProjectModuleModel extends CacheModel
      * @param $projectId
      * @param $name
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getByProjectAndName($projectId, $name)
     {
