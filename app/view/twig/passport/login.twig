@@ -22,7 +22,7 @@
                 url: '/passport/do_login',
                 data: $('#new_user').serialize(),
                 success: function (resp) {
-                    if (resp.ret == 200) {
+                    if (resp.ret == '200') {
                         window.location.href = '/';
                     } else {
                         notify_error(resp.msg, resp.data);
@@ -171,14 +171,14 @@
                                                    autocorrect="off"
                                                    required="required" title="This field is required." type="text"
                                                    name="username" id="user_login"
-                                                   value=""
+                                                   value="{{default_user}}"
                                             />
                                         </div>
                                         <div class="form-group">
                                             <label for="user_password">密 码</label>
                                             <input class="form-control bottom" required="required"
                                                    title="This field is required."
-                                                   type="password" name="password" id="user_password" value=""/>
+                                                   type="password" name="password" id="user_password" value="{{default_password}}"/>
                                         </div>
                                         {% if login_require_captcha %}
                                             <div class="form-group">

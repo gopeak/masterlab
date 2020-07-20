@@ -241,8 +241,8 @@
     <li data-id="{{id}}" id="project_label_{{id}}">
         <span class="label-row">
             <span class="label-name">
-                <a href="/issue/main">
-                    <span class="label color-label " style="background-color: {{bg_color}}; color: {{color}}" title="" data-container="body">{{title}}</span>
+                <a href="{% endverbatim %}{{project_root_url}}{% verbatim %}?sys_filter=label_{{id}}">
+                    <span class="label color-label " style="background-color: {{bg_color}}; color: {{color}}" title="{{description}}" data-container="body">{{title}}</span>
                 </a>
             </span>
             <span class="label-type">

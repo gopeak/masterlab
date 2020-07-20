@@ -53,9 +53,11 @@ class Activity extends BaseUserCtrl
 
         list($data['activity_list'], $total) = ActivityLogic::filterByUser($userId, $page, $pageSize);
         foreach ($data['activity_list'] as &$item) {
+            $item['is_delete'] = 'N';
             $item['title_original'] = $item['title'];
             if (($item['action'] == '删除了事项') || (strpos($item['content'], '标题 变更为') !== false)) {
                 $item['title'] = '<span style="text-decoration: line-through;">' . $item['title'] . '</span>';
+                $item['is_delete'] = 'Y';
             }
             $item['user'] = $users[$item['user_id']];
         }

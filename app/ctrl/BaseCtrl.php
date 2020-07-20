@@ -192,6 +192,18 @@ class BaseCtrl
     }
 
     /**
+     * 是否是APP请求
+     * @return bool
+     */
+    public function isApp()
+    {
+        if (isset($_SERVER['HTTP_MASTERLAB_APP']) && !empty($_SERVER['HTTP_MASTERLAB_APP'])) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 添加类全局变量
      * @param $key
      * @param $value
@@ -543,7 +555,7 @@ class BaseCtrl
             $ip = getIp();
             $userPostedFlagModel->deleteSettingByDate($userId, $date);
             $userPostedFlagModel->insertDateIp($userId, $date, $ip);
-            //echo $curl->rawResponse;
+            echo $curl->rawResponse;
         }
     }
 

@@ -5,7 +5,7 @@
  * 格式化时间戳为中文时间格式
  * @param int $formatTime 时间戳
  * @param int $startTime 起始时间
- * @param string $formatSystem 系统设置的时间格式key  datetime_format|time_format|week_format|full_datetime_format
+ * @param string $formatSystem 系统设置的时间格式key  datetime_format|time_format|week_format|full_datetime_format|app_week_format
  * @return false|string
  * @throws Exception
  */
@@ -22,6 +22,11 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_dat
     if (empty($formatSystem)) {
         $formatSystem = 'full_datetime_format';
     }
+
+    if (isApp()) {
+        $formatSystem = 'app_week_format';
+    }
+
     $str_time = '';
     $settingLogic = new \main\app\classes\SettingsLogic();
 
@@ -37,6 +42,10 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_dat
 
     $time = $startTime - $formatTime;
     if ($time >= 86400) {
+        if ($formatSystem == 'app_week_format' && $formatTime > strtotime('-1 week')) {
+            $weekNumArr = array('日', '一', '二', '三', '四', '五', '六');
+            return '星期' . $weekNumArr[date('w', $formatTime)];
+        }
         return $str_time = date($settingLogic->datetimeFormat(), $formatTime);
     }
     if ($time >= 3600) {

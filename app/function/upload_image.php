@@ -281,17 +281,19 @@ function uploadImageAndMakeThumbnail(
 
 /**
  * 上传任意格式文件
- * @param file $file            上传的文件，来自$_FILES
+ * @param string $fieldName            上传的文件，来自$_FILES的名字
  * @param string $uploadDir     上传路径
  * @param string $filename      要保存为的文件名，不含路径
  * @param array $fileTypesArray 允许的文件类型数组，如array('jpg','JPG')
  * @return mixed
  */
-function uploadFile($file, $uploadDir = '', $filename = '', $fileTypesArray = array(), $maxFileSize = 0)
+function uploadFile($fieldName, $uploadDir = '', $filename = '', $fileTypesArray = array(), $maxFileSize = 0)
 {
     if (empty($fileTypesArray)) {
         $fileTypesArray = array('jpg', 'gif', 'png', 'jpeg', 'mid', 'txt', 'aac', 'amr', 'mp3', 'wav');
     }
+
+    $file = $_FILES[$fieldName];
 
     if ($file['error'] != UPLOAD_ERR_OK) {
         return array(false, '文件上传错误');
@@ -322,6 +324,8 @@ function uploadFile($file, $uploadDir = '', $filename = '', $fileTypesArray = ar
 
     if (empty($filename)) {
         $filename = getUniqueId() . '.' . $fileExt;
+    } else {
+        $filename = $filename . '.' . $fileExt;
     }
 
     if (!is_dir($uploadDir)) {

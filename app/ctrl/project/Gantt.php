@@ -305,7 +305,7 @@ class Gantt extends BaseUserCtrl
         $sourceType = 'project';
         $sourceArr = ['project', 'active_sprint', 'module'];
         if (in_array($ganttSetting['source_type'], $sourceArr)) {
-            $sourceType = $sourceType = $ganttSetting['source_type'];
+            $sourceType = $ganttSetting['source_type'];
         }
         $isDisplayBacklog = '1';
         if (isset($ganttSetting['is_display_backlog'])) {
@@ -350,7 +350,7 @@ class Gantt extends BaseUserCtrl
 
             // 只有事项的才进行过滤
             if ($task['type'] != 'sprint') {
-                $issueTypeKey = isset($issueTypeIdArr[$task['type']]) ? $issueTypeIdArr[$task['type']]['_key'] : null;
+                $issueTypeKey = isset($issueTypeIdArr[$task['typeId']]) ? $issueTypeIdArr[$task['typeId']]['_key'] : null;
                 if (empty($task['gant_hide']) && !in_array($issueTypeKey, $hideIssueTypeKeyArr)) {
                     $filteredArr[] = $task;
                 }
@@ -359,7 +359,7 @@ class Gantt extends BaseUserCtrl
             }
 
         }
-        unset($users);
+        unset($users);unset($task);
         $data['tasks'] = $filteredArr;
         $data['selectedRow'] = 2;
         $data['deletedTaskIds'] = [];

@@ -1056,15 +1056,30 @@ GanttMaster.prototype.showAddBelowCurrentTask = function () {
     if ((parent && !parent.canAdd) ){
         return;
     }
-
-    if(parent!=null && parent.level!=0){
-        $("#master_issue_id").val(parent.id);
+  var self = this;
+  var parent = null;
+  if (!self.currentTask) {
+    let last_task = null;
+    if(self.tasks.length>0){
+      parent = self.tasks[self.tasks.length-1];
+      self.currentTask = parent;
     }
+  }else{
+    parent = self.currentTask.getParent();
+  }
+  //check permissions
+  if ((parent && !parent.canAdd) ){
+    return;
+  }
 
-    $("#below_id").val(self.currentTask.id);
-    $("#add_gantt_dir").val('addBelowCurrentTask');
-    $('#modal-create-issue').modal('show');
-    window.$_gantAjax.initEditIssueForm(self.currentTask);
+  if(parent!=null && parent.level!=0){
+    $("#master_issue_id").val(parent.id);
+  }
+
+  $("#below_id").val(self.currentTask.id);
+  $("#add_gantt_dir").val('addBelowCurrentTask');
+  $('#modal-create-issue').modal('show');
+  window.$_gantAjax.initEditIssueForm(self.currentTask);
 }
 
 GanttMaster.prototype.addBelowCurrentTask = function (id, name, code, startTime, endTime, duration, sprint_id, sprint_name, progress, assigneeObj) {
@@ -1112,10 +1127,11 @@ GanttMaster.prototype.addBelowCurrentTask = function (id, name, code, startTime,
 GanttMaster.prototype.showAddAboveCurrentTask = function () {
     var self = this;
     // console.debug("addAboveCurrentTask",self.currentTask)
-    if (!self.currentTask) {
-        self.showAddBelowCurrentTask();
-        return;
-    }
+
+   if (!self.currentTask) {
+      self.showAddBelowCurrentTask();
+      return;
+   }
     //check permissions
     if ((self.currentTask.getParent() && !self.currentTask.getParent().canAdd) ){
         return;

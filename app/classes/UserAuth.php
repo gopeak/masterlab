@@ -178,7 +178,7 @@ class UserAuth
      * @param bool $absolute 有效期是否是绝对的, 如果是false，用户如果在有效期内有活动，有效期会重新计算。如果设置为true，那么不管是否活动，到期后都会退出登录。
      * @return bool
      */
-    public function login($user, $duration = 0, $absolute = true)
+    public function login($user, $duration = 3600*4, $absolute = true)
     {
         $_SESSION[self::SESSION_UID_KEY] = $user['uid'];
         $_SESSION[self::SESSION_USER_INFO_KEY] = $user;
@@ -208,7 +208,8 @@ class UserAuth
         //echo  '---';
         //echo $md5;
         if ($token == $md5) {
-            $this->login($user);
+            $cookieLifetime = getCommonConfigVar('session')['session.cookie_lifetime'];
+            $this->login($user, $cookieLifetime);
             return true;
         }
         return false;
