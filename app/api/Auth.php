@@ -10,8 +10,30 @@ use main\app\model\user\UserModel;
 
 class Auth extends BaseApi
 {
-
     public function index()
+    {
+        if ($this->requestMethod != 'get') {
+            return self::returnHandler('授权失败.');
+        }
+        $account = $_GET['account'];
+        $password = $_GET['password'];
+        $accountId = 0;
+
+        if ($account != 'api_master' || $password != 'testtest') {
+            return self::returnHandler('授权失败. 账号&密码错误');
+        }
+
+        $jwt = JWTLogic::getInstance();
+        $accessToken = $jwt->publish($accountId, $account);
+        $accessToken = strval($accessToken);
+        // var_dump($accessToken);
+        return self::returnHandler('授权成功' .$accessToken, [
+            'account' => $account,
+            'api_access_token' => $accessToken,
+        ]);
+    }
+
+    public function index2()
     {
         if ($this->requestMethod != 'get') {
             return self::returnHandler('授权失败.');
@@ -36,11 +58,4 @@ class Auth extends BaseApi
         ]);
     }
 
-    private static function returnHandler($msg = '', $body = [])
-    {
-        $ret = [];
-        $ret['body'] = $body;
-        $ret['msg'] = $msg;
-        return $ret;
-    }
 }
