@@ -18,7 +18,7 @@ $(function () {
         for (i = 0; i < uid_arr.length; i++) {
 
             var uid = parseInt(uid_arr[i]);
-            var user = getValueByKey(_issueConfig.users, uid);
+            var user = getArrayValue(_issueConfig.users, 'uid', uid);
             console.log(user);
             if (user == null) {
                 return '';
@@ -37,7 +37,7 @@ $(function () {
         if (uid == null || uid == undefined || uid == '') {
             return '';
         }
-        var user = getValueByKey(_issueConfig.users, uid);
+        var user = getArrayValue(_issueConfig.users, 'uid', uid);
         //console.log(users);
         if (user == null) {
             return '';
@@ -59,7 +59,7 @@ $(function () {
         var html = '';
         for (i = 0; i < uid_arr.length; i++) {
             var uid = parseInt(uid_arr[i]);
-            var user = getValueByKey(_issueConfig.users, uid);
+            var user = getArrayValue(_issueConfig.users, 'uid', uid);
             console.log(user);
             if (user == null) {
                 return '';
@@ -76,7 +76,7 @@ $(function () {
         if ( is_empty(priority_id) ) {
             return '';
         }
-        var priority_row = getValueByKey(_issueConfig.priority, priority_id);
+        var priority_row = getArrayValue(_issueConfig.priority, 'id', priority_id);
         if (priority_row == null) {
             return '';
         }
@@ -89,7 +89,7 @@ $(function () {
         if ( is_empty(status_id) ) {
             return '';
         }
-        var status_row = getValueByKey(_issueConfig.issue_status, status_id);
+        var status_row = getArrayValue(_issueConfig.issue_status, 'id', status_id);
         if (status_row == null) {
             return '';
         }
@@ -104,7 +104,7 @@ $(function () {
         if ( is_empty(resolve_id) ) {
             return '';
         }
-        var resolve = getValueByKey(_issueConfig.issue_resolve, resolve_id);
+        var resolve = getArrayValue(_issueConfig.issue_resolve, 'id', resolve_id);
         if (resolve == null) {
             return '';
         }

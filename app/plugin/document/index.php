@@ -7,6 +7,7 @@ use main\app\classes\UserAuth;
 use main\app\model\PluginModel;
 use main\app\model\user\UserModel;
 use main\app\plugin\BasePluginCtrl;
+use main\lib\FileUtil;
 
 /**
  *
@@ -56,8 +57,69 @@ class Index extends BasePluginCtrl
         $data['plugin_name'] = $this->dirName;
         $data['nav_links_active'] = 'document';
         $data = RewriteUrl::setProjectData($data);
-        $data['current_user']  = UserModel::getInstance()->getByUid(UserAuth::getId());
+        $data['current_user'] = $user  = UserModel::getInstance()->getByUid(UserAuth::getId());
 
+        if(!$data['project_id']){
+            echo '获取项目id失败';
+            return;
+        }
+
+        $docAdmin = 'admin';
+        $docPassword = 'admin';
+        $kodSdk = new KodSdk();
+        list($ret, $accessToken) =  $kodSdk->getAccessToken($docAdmin);
+        if(!$ret){
+            echo '文档模块集成失败,请联系管理员';
+            return;
+        }
+        list($ret, $kodUsers) = $kodSdk->getUsers($accessToken);
+        if(!$ret){
+            echo '文档模块获取用户信息失败,请联系管理员';
+            return;
+        }
+        //print_r($kodUsers);
+        list($ret, $kodRoles) = $kodSdk->getRoles($accessToken);
+        if(!$ret){
+            echo '文档模块获取角色信息失败,请联系管理员';
+            return;
+        }
+
+        $expectProjectDocUsername = 'project'.$data['project_id'];
+        $actUserArr = null;
+        foreach ($kodUsers as $kodUser) {
+            if($kodUser['name']== $expectProjectDocUsername){
+                $actUserArr = $kodUser;
+            }
+        }
+        if(empty($actUserArr) ){
+            if(count($kodUsers)>15){
+                echo '文档模块获取用户信息失败,请联系管理员';
+                return;
+            }
+            $dataArr = [];
+            $dataArr['name'] = $expectProjectDocUsername;
+            $dataArr['password'] = md5($expectProjectDocUsername);
+            $dataArr['sizeMax'] = 5;
+            $dataArr['role'] = 2;
+            $dataArr['groupInfo'] = json_encode(['1'=>'write']);
+            //$homePath = STORAGE_PATH.'document/'.$expectProjectDocUsername;
+            //@mkdir($homePath);
+            //$dataArr['homePath'] = $homePath;
+            list($ret) = $kodSdk->createUser($dataArr, $accessToken);
+            if(!$ret){
+                echo '文档模块创建用户信息失败,请联系管理员';
+                return;
+            }
+            FileUtil::copyDir(APP_PATH.'plugin/document/kod/data/User/project0', APP_PATH.'plugin/document/kod/data/User/'.$expectProjectDocUsername);
+        }
+
+        // print_r($actUserArr);
+        // die;
+        //base64Encode('admin')+'|'+md5('admin'+'aabbcckod')
+        require_once realpath(__DIR__).'/kod/config/setting_user.php';
+        $loginToken = base64_encode($expectProjectDocUsername).'|'.md5($expectProjectDocUsername.$GLOBALS['config']['settings']['apiLoginTonken']);
+        $iframeUrl = sprintf(ROOT_URL."kod_index.php?user/loginSubmit&login_token=%s", $loginToken);
+        $data['iframe_url'] = $iframeUrl;
         $this->twigRender('index.twig', $data);
         //header("location:/kod_index.php?user/login&kod=1");
         //require_once realpath(__DIR__).'/kod/index.php';

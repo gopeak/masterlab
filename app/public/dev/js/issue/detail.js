@@ -277,7 +277,7 @@ var IssueDetail = (function () {
                     var type = obj.type;
                     var action = obj.action;
 
-                    obj['user'] = _issueConfig.users[uid];
+                    obj['user'] = getArrayValue(_issueConfig.users, 'uid', uid);
                     obj['is_cur_user'] = false;
                     if (uid == _cur_uid) {
                         obj['is_cur_user'] = true;
@@ -429,7 +429,7 @@ var IssueDetail = (function () {
                     var activitys = [];
                     for (var i = 0; i < resp.data.activity.length; i++) {
                         var user_id = resp.data.activity[i].user_id;
-                        resp.data.activity[i].user = getValueByKey(_issueConfig.users, user_id);
+                        resp.data.activity[i].user = getValueByKey(_issueConfig.users, 'uid',user_id);
                     }
 
                     var source = $('#' + _key + '_tpl').html();

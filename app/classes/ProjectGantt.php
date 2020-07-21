@@ -326,7 +326,7 @@ class ProjectGantt
             // echo $sql;
             $sprintRows[$sprint['id']]  = $issueModel->db->fetchAll($sql);
             $sprintIssueArr = [];
-           // print_r($sprintRows[$sprint['id']]);
+            // dump($sprintRows[$sprint['id']], true);exit;
             // 计算迭代的用时
             $holidays = (new HolidayModel())->getDays($projectId);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
@@ -349,7 +349,7 @@ class ProjectGantt
                     }
                 }
             }
-            // print_r($treeArr);
+            //dump($treeArr, true);exit;
             foreach ($treeArr as $item) {
                 if(!isset($item['children']) &&  intval($item['have_children'])<=0){
                     $finalArr[] = $item;

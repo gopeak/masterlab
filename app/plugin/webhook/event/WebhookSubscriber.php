@@ -2,6 +2,7 @@
 
 namespace main\app\plugin\webhook\event;
 
+use main\app\classes\MasterlabSocketClient;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\event\CommonPlacedEvent;
@@ -9,6 +10,7 @@ use main\app\model\CacheModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\user\UserModel;
+use main\app\plugin\webhook\model\WebHookLogModel;
 use main\app\plugin\webhook\model\WebHookModel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use main\app\event\Events;
@@ -98,6 +100,10 @@ class WebhookSubscriber implements EventSubscriberInterface
         //print_r($resArr);
         foreach ($webhooks as $i => $webhook) {
             $url = $webhook['url'];
+            $webhook['project_id'] = 0;
+            if (isset($event->pluginDataArr['project_id'])) {
+                $webhook['project_id'] = (int)$event->pluginDataArr['project_id'];
+            }
             $hookEventsArr = json_decode($webhook['hook_event_json'], true);
             if (empty($hookEventsArr)) {
                 $hookEventsArr = [];
@@ -106,7 +112,7 @@ class WebhookSubscriber implements EventSubscriberInterface
                 continue;
             }
             $postData['secret_token'] = $webhook['secret_token'];
-            $this->requestByRedis($url, $postData, (int)$webhook['timeout']);
+            $this->requestByMasterlabSocket($webhook, $postData);
             //$this->fsockopenPost($url, $postData, (int)$webhook['timeout']);
         }
     }
@@ -208,6 +214,88 @@ class WebhookSubscriber implements EventSubscriberInterface
         $ret = $issueModel->cache->redis->rPush($key, $pushArr);
         //var_dump($ret);
 
+    }
+
+    /**
+     * 通过masterlab异步发送webhook请求
+     * @param array $webhook
+     * @param array $dataArr
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function requestByMasterlabSocket($webhook, $dataArr)
+    {
+        $dataStr = http_build_query($dataArr);
+        $pushArr = [];
+        $pushArr['project_id'] = $webhook['project_id'];
+        $pushArr['webhook_id'] = $webhook['id'];
+        $pushArr['event_name'] = $dataArr['event_name'];
+        $pushArr['url'] = $webhook['url'];
+        $pushArr['data'] = $dataStr;
+        $pushArr['status'] = WebHookLogModel::STATUS_READY;
+        $pushArr['time'] = time();
+        $pushArr['user_id'] = UserAuth::getId();
+        $pushArr['err_msg'] = '';
+
+        // 0准备;1执行成功;2队列中;3出队列后执行失败
+        $webhooklogModel = new WebHookLogModel();
+        list($logRet, $logId) = $webhooklogModel->insert($pushArr);
+        if ($logRet) {
+            $pushArr['log_id'] = (int)$logId;
+        } else {
+            $pushArr['log_id'] = 0;
+        }
+
+        list($ret, $msg) = MasterlabSocketClient::send("WebhookPost", $pushArr);
+        if (!$ret && $logRet) {
+            $webhooklogModel->updateById($logId, ['err_msg' => $msg, 'status' => WebHookLogModel::STATUS_ASYNC_FAILED]);
+        }
+        return [$ret, $msg];
+    }
+
+    /**
+     * @param $webhook
+     * @param $dataArr
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    private function requestByGuzzleHttp($webhook, $dataArr)
+    {
+        $dataStr = http_build_query($dataArr);
+        $pushArr = [];
+        $pushArr['project_id'] = $webhook['project_id'];
+        $pushArr['webhook_id'] = $webhook['id'];
+        $pushArr['event_name'] = $dataArr['event_name'];
+        $pushArr['url'] = $webhook['url'];
+        $pushArr['data'] = $dataStr;
+        $pushArr['status'] = WebHookLogModel::STATUS_READY;
+        $pushArr['time'] = time();
+        $pushArr['user_id'] = UserAuth::getId();
+        $pushArr['err_msg'] = '';
+
+        // 0准备;1执行成功;2队列中;3出队列后执行失败
+        $webhooklogModel = new WebHookLogModel();
+        list($logRet, $logId) = $webhooklogModel->insert($pushArr);
+        if ($logRet) {
+            $pushArr['log_id'] = (int)$logId;
+        } else {
+            $pushArr['log_id'] = 0;
+        }
+
+        $client = new \GuzzleHttp\Client();
+        // Send an asynchronous request.
+        $response = $client->post($pushArr['url'], ['form_params' => $dataArr]);
+        $statusCode = $response->getStatusCode(); // 200
+        $webhooklogModel = new WebHookLogModel();
+        if ($statusCode == 200) {
+            $webhooklogModel->updateById($logId, ['err_msg' => '', 'status' => WebHookLogModel::STATUS_SUCCESS]);
+        }else{
+            $body = $response->getBody();
+            $webhooklogModel->updateById($logId, ['err_msg' => 'Response status code:'.$statusCode." \r\n".$body, 'status' => WebHookLogModel::STATUS_FAILED]);
+        }
+
+        return [true, '异步执行'];
     }
 
 }

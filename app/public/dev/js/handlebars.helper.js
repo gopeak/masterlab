@@ -126,7 +126,7 @@ $(function () {
         var project_name = '';
         var org_path = 'default';
         var project_key = '';
-        for (var skey in projects) {
+        for (var skey = 0; skey < projects.length; skey++) {
             if (projects[skey].id == project_id) {
                 project_name = projects[skey].name;
                 org_path = projects[skey].org_path;
@@ -159,8 +159,7 @@ $(function () {
         if (uid == null || uid == undefined || uid == '') {
             return '';
         }
-        var user = getValueByKey(_issueConfig.users, uid);
-        //console.log(users);
+        var user = getArrayValue(_issueConfig.users, 'uid', uid);
         if (user == null) {
             return '';
         }
@@ -174,7 +173,7 @@ $(function () {
         if (uid == null || uid == undefined || uid == '') {
             return '';
         }
-        var user = getValueByKey(_issueConfig.users, uid);
+        var user = getArrayValue(_issueConfig.users, 'uid', uid);
         //console.log(users);
         if (user == null) {
             return '';
@@ -195,7 +194,7 @@ $(function () {
         for (i = 0; i < uid_arr.length; i++) {
 
             var uid = parseInt(uid_arr[i]);
-            var user = getValueByKey(_issueConfig.users, uid);
+            var user = getArrayValue(_issueConfig.users, 'uid', uid);
             console.log(user);
             if (user == null) {
                 return '';
@@ -210,7 +209,7 @@ $(function () {
         if (uid == null || uid == undefined || uid == '') {
             return '';
         }
-        var user = getValueByKey(_issueConfig.users, uid);
+        var user = getArrayValue(_issueConfig.users, 'uid', uid);
         //console.log(users);
         if (user == null) {
             return '';
@@ -226,7 +225,7 @@ $(function () {
         for (i = 0; i < uid_arr.length; i++) {
 
             var uid = parseInt(uid_arr[i]);
-            var user = getValueByKey(_issueConfig.users, uid);
+            var user = getArrayValue(_issueConfig.users, 'uid', uid);
             console.log(user);
             if (user == null) {
                 return '';
@@ -243,7 +242,7 @@ $(function () {
         var html = '';
         for (i = 0; i < uid_arr.length; i++) {
             var uid = parseInt(uid_arr[i]);
-            var user = getValueByKey(_issueConfig.users, uid);
+            var user = getArrayValue(_issueConfig.users, 'uid', uid);
             console.log(user);
             if (user == null) {
                 return '';
@@ -261,7 +260,7 @@ $(function () {
         if(label_id_arr){
             for (i = 0; i < label_id_arr.length; i++) {
                 var id = parseInt(label_id_arr[i]);
-                var row = getValueByKey(_issueConfig.issue_labels, id);
+                var row = getArrayValue(_issueConfig.issue_labels, 'id',id);
                 //console.log(row);
                 if (row == null) {
                     return '';
@@ -282,7 +281,7 @@ $(function () {
         if (is_empty(version_id)) {
             return '';
         }
-        var version_row = getValueByKey(_issueConfig.version, version_id);
+        var version_row = getArrayValue(_issueConfig.version, 'id', version_id);
         if (version_row == null) {
             return '';
         }
@@ -295,7 +294,7 @@ $(function () {
         if (is_empty(priority_id)) {
             return '';
         }
-        var priority_row = getValueByKey(_issueConfig.priority, priority_id);
+        var priority_row = getArrayValue(_issueConfig.priority, 'id', priority_id);
         if (priority_row == null) {
             return '';
         }
@@ -308,7 +307,7 @@ $(function () {
         if (is_empty(status_id)) {
             return '';
         }
-        var status_row = getValueByKey(_issueConfig.issue_status, status_id);
+        var status_row = getArrayValue(_issueConfig.issue_status, 'id', status_id);
         if (status_row == null) {
             return '';
         }
@@ -322,7 +321,7 @@ $(function () {
         if (is_empty(resolve_id)) {
             return '';
         }
-        var resolve = getValueByKey(_issueConfig.issue_resolve, resolve_id);
+        var resolve = getArrayValue(_issueConfig.issue_resolve, 'id',resolve_id);
         if (resolve == null) {
             html = '<span>一</span>';
             return new Handlebars.SafeString(html);
@@ -338,7 +337,7 @@ $(function () {
             return '';
         }
 
-        var module = getValueByKey(_issueConfig.issue_module, module_id);
+        var module = getArrayValue(_issueConfig.issue_module, 'id', module_id);
         if (module == null) {
             html += '<a href="javascript:;" class="commit-id monospace"></a>';
         } else {
@@ -371,7 +370,7 @@ $(function () {
         if (is_empty(issue_type_id)) {
             return '';
         }
-        var issue_type = getValueByKey(issue_types, issue_type_id);
+        var issue_type = getArrayValue(issue_types, 'id',issue_type_id);
         if (issue_type == null) {
             return '';
         }
@@ -385,7 +384,7 @@ $(function () {
         if (is_empty(issue_type_id)) {
             return '';
         }
-        var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
+        var issue_type = getArrayValue(_issueConfig.issue_types, 'id', issue_type_id);
         if (issue_type == null) {
             return '';
         }
@@ -399,7 +398,7 @@ $(function () {
         if (is_empty(issue_type_id)) {
             return '';
         }
-        var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
+        var issue_type = getArrayValue(_issueConfig.issue_types, 'id',issue_type_id);
         if (issue_type == null) {
             return '';
         }
@@ -413,7 +412,7 @@ $(function () {
         if (is_empty(issue_type_id)) {
             return '';
         }
-        var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
+        var issue_type = getArrayValue(_issueConfig.issue_types, 'id', issue_type_id);
         if (issue_type == null) {
             return '';
         }
@@ -426,7 +425,7 @@ $(function () {
         if (is_empty(issue_type_id)) {
             return '';
         }
-        var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
+        var issue_type = getArrayValue(_issueConfig.issue_types, 'id',issue_type_id);
         if (issue_type == null) {
             return '';
         }
@@ -438,7 +437,7 @@ $(function () {
         if (is_empty(uid)) {
             return '';
         }
-        var user = getValueByKey(_issueConfig.users, uid);
+        var user = getArrayValue(_issueConfig.users, 'uid', uid);
         //console.log(users);
         if (user == null) {
             return '';

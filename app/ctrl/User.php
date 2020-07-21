@@ -159,6 +159,9 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/user_filters.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageMsgSystem()
     {
         $data = [];
@@ -168,6 +171,23 @@ class User extends BaseUserCtrl
         $this->render('twig/user/msg_system.twig', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function fetchUnreadCount()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $conditionArr = [];
+        $conditionArr['receiver_uid'] = $userId;
+        $model = new UserMessageModel();
+        $conditionArr['readed'] = '0';
+        $unreadCount = $model->getUnreadCountByfilter($conditionArr);
+        $this->ajaxSuccess('ok', $unreadCount);
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function fetchMsgSystems()
     {
         $userId = UserAuth::getInstance()->getId();
@@ -428,7 +448,14 @@ class User extends BaseUserCtrl
         }
         $user = $userModel->getUser();
         $user = UserLogic::formatUserInfo($user);
-        $this->ajaxSuccess('ok', ['user' => $user]);
+
+        $issueInfo['my_issue_count'] = IssueFilterLogic::getCountByAssignee($userModel->uid);
+        $issueInfo['my_issue_resolve_count'] = IssueFilterLogic::getResolveCountByAssignee($userModel->uid);
+        $issueInfo['my_issue_unresolve_count'] = IssueFilterLogic::getUnResolveCountByAssignee($userModel->uid);
+        $this->ajaxSuccess('ok', [
+            'user' => $user,
+            'issue_info' => $issueInfo
+        ]);
     }
 
     /**
@@ -554,6 +581,11 @@ class User extends BaseUserCtrl
             }
             unset($_POST['image'], $base64_string);
         }
+
+        if (isset($_POST['avatar_img'])) {
+            $userInfo['avatar'] = $_POST['avatar_img'];
+        }
+
         // print_r($userInfo);
         $ret = false;
         $preUserRow = $userModel->getByUid($userId);
@@ -583,6 +615,25 @@ class User extends BaseUserCtrl
         $this->dispatcher->dispatch($event,  Events::onUserUpdateProfile);
 
         $this->ajaxSuccess('保存成功', $ret);
+    }
+
+    /**
+     * 用户头像上传接口，应用于移动端
+     * @throws \Exception
+     */
+    public function setProfileAvatar()
+    {
+        $userInfo['avatar'] = '';
+        if (!empty($_FILES['avatar_img']['tmp_name'])) {
+            $userId = UserAuth::getInstance()->getId();
+            $saveRet = UploadLogic::normalAvatarFile('avatar_img', PUBLIC_PATH . 'attachment/avatar/', $userId);
+            if ($saveRet) {
+                $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
+            }
+        } else {
+            $this->ajaxFailed('错误', '没有上传头像文件');
+        }
+        $this->ajaxSuccess('上传成功', $userInfo['avatar']);
     }
 
     /**

@@ -297,8 +297,8 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['_target'][2])) {
             $sprintId = (int)$_GET['_target'][2];
         }
-        if (isset($_REQUEST['sprint_id'])) {
-            $sprintId = (int)$_REQUEST['sprint_id'];
+        if (isset($_GET['sprint_id'])) {
+            $sprintId = (int)$_GET['sprint_id'];
         }
         if (empty($sprintId)) {
             $this->ajaxFailed('参数错误', '迭代id不能为空');
@@ -452,8 +452,8 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['_target'][2])) {
             $sprintId = (int)$_GET['_target'][2];
         }
-        if (isset($_REQUEST['sprint_id'])) {
-            $sprintId = (int)$_REQUEST['sprint_id'];
+        if (isset($_POST['sprint_id'])) {
+            $sprintId = (int)$_POST['sprint_id'];
         }
         if (empty($sprintId)) {
             $this->ajaxFailed('参数错误', '迭代id不能为空');
@@ -515,8 +515,8 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['_target'][2])) {
             $sprintId = (int)$_GET['_target'][2];
         }
-        if (isset($_REQUEST['sprint_id'])) {
-            $sprintId = (int)$_REQUEST['sprint_id'];
+        if (isset($_POST['sprint_id'])) {
+            $sprintId = (int)$_POST['sprint_id'];
         }
         if (empty($sprintId)) {
             $this->ajaxFailed('参数错误', '迭代id不能为空');
@@ -1102,8 +1102,8 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['_target'][2])) {
             $boardId = (int)$_GET['_target'][2];
         }
-        if (isset($_REQUEST['board_id'])) {
-            $boardId = (int)$_REQUEST['board_id'];
+        if (isset($_POST['board_id'])) {
+            $boardId = (int)$_POST['board_id'];
         }
         if (empty($boardId)) {
             $this->ajaxFailed('参数错误', '看板id不能为空');

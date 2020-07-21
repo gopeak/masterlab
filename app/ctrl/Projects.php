@@ -212,18 +212,18 @@ class Projects extends BaseUserCtrl
     public function upload()
     {
         $uuid = '';
-        if (isset($_REQUEST['qquuid'])) {
-            $uuid = $_REQUEST['qquuid'];
+        if (isset($_POST['qquuid'])) {
+            $uuid = $_POST['qquuid'];
         }
 
         $originName = '';
-        if (isset($_REQUEST['qqfilename'])) {
-            $originName = $_REQUEST['qqfilename'];
+        if (isset($_POST['qqfilename'])) {
+            $originName = $_POST['qqfilename'];
         }
 
         $fileSize = 0;
-        if (isset($_REQUEST['qqtotalfilesize'])) {
-            $fileSize = (int)$_REQUEST['qqtotalfilesize'];
+        if (isset($_POST['qqtotalfilesize'])) {
+            $fileSize = (int)$_POST['qqtotalfilesize'];
         }
 
         $uploadLogic = new UploadLogic();

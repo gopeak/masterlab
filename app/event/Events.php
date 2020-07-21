@@ -59,6 +59,7 @@ final class Events
     public const onProjectUpdate = 'onProjectUpdate';
     public const onProjectDelete = 'onProjectDelete';
     public const onProjectArchive = 'onProjectArchive';
+    public const onProjectRecover = 'onProjectRecover';
 
     /**
      * 事项事件

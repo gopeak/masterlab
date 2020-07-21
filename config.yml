@@ -1,6 +1,6 @@
 # Masterlab主配置文件
 app_url: ''
-version: '2.2'
+version: '3.0'
 error_reporting: 'E_ERROR'
 xdebug: false
 trace: false
@@ -23,9 +23,10 @@ cache:
 session:
   handle: file
   cache_expire: 86400
-  gc_maxlifetime: 24*60*7*3600
-  cookie_lifetime: 24*60*7*3600
+  gc_maxlifetime: 36288000
+  cookie_lifetime: 36288000
   gc_probability: 1
+  gc_divisor: 1
   no_session_cmd:
     - '/version/gets'
 

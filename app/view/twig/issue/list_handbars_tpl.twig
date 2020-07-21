@@ -31,7 +31,7 @@
 									<td class="width_6">
 										<div class="checkbox">
 											<label>
-												<input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
+												<input class="no_float_event" name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
 												{{#if_in_array 'issue_num'  ../display_fields}}
 													#{{issue_num}}
 												{{/if_in_array}}
@@ -53,8 +53,6 @@
 										</td>
 									{{/if_in_array}}
 
-
-
 									{% endverbatim %}
                                         {% if (is_all_issues or 'project_id'in display_fields) %}
                                             {% verbatim %}
@@ -64,8 +62,6 @@
                                             {% endverbatim %}
                                         {% endif %}
                                     {% verbatim %}
-
-
 
 									{{#if_in_array 'module'  ../display_fields}}
 										<td class="width_6"  title="双击可直接修改">
@@ -385,7 +381,7 @@
 									<div class="issuable-info-container display-flex">
 										<div class="checkbox">
 											<label style="padding-top: 15%;">
-												<input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}"/>
+												<input class="no_float_event" name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}"/>
 											</label>
 										</div>
 										<div class="issuable-main-info">
@@ -535,14 +531,14 @@
                 <script type="text/html" id="content_table_adv_tpl">
                     {{#tableList}}
                         <tr data-index="{{@index}}">
-                            <td scope="row">
+                            <td scope="row" title="可上下拖拽移动条件的顺序">
                                 <i class="fa fa-arrows"></i>
                             </td>
-                            <td>
+                            <td title="双击可修改">
                                 <span class="table-text" data-type="select" data-source="logic" data-filed="logic" data-title="关系" data-content="{{logic}}">{{logic}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
-                            <td>
+                            <td title="双击可修改起始括号">
                                 <span class="table-text" data-type="select" data-source="brace" data-filed="start_braces" data-title="请选择" data-content="{{start_braces}}">{{start_braces}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
@@ -550,7 +546,7 @@
                                 <span class="table-text" data-type="select" data-source="field" data-filed="field" data-title="字段" data-content="{{field_title}}">{{field_title}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
-                            <td>
+                            <td  title="双击可修改运算符">
                                 <span class="table-text" data-type="select" data-source="opt" data-filed="opt" data-title="运算符" data-content="{{opt}}">{{opt}}</span>
                                 <div class="table-form hidden"></div>
                             </td>
@@ -560,14 +556,14 @@
                                 </span>
                                 <div class="table-form hidden"></div>
                             </td>
-                            <td>
+                            <td  title="双击可修改结束括号">
                                 <span class="table-text" data-type="select" data-source="brace" data-title="请选择" data-filed="end_braces" data-content="{{end_braces}}">
                                 {{end_braces}}
                                 </span>
                                 <div class="table-form hidden"></div>
                             </td>
                             <td>
-                                <a href="javascript:;" onclick="deleteAdvQuery('{{@index}}')">删除</a>
+                                <a title="移除此条件" href="javascript:;" onclick="deleteAdvQuery('{{@index}}')">移除</a>
                             </td>
                         </tr>
                 {{/tableList}}
@@ -595,12 +591,13 @@
          {% verbatim %}
 			<script type="text/html" id="adv_query_display_tpl">
 				{{#tableList}}
-				 <a class="ss-item" title="{{field_title}}"   data-index="{{@index}}"  href="#"   style="color: #666; text-decoration: none;">
+				    {{#if_eq @index 0}} {{else}} {{logic}} {{/if_eq}}
+				    {{#if_eq start_braces ""}} {{else}} {{start_braces}} {{/if_eq}}
+				    <a class="ss-item" title="{{field_title}}"   data-index="{{@index}}"  href="#"   style="color: #666; text-decoration: none;">
                         <b>{{field_title}} {{opt}}</b>
                         <em>{{display_html}} </em>
                     </a>
-
-                    {{#if_eq @index ../length}} {{else}} {{logic}} {{/if_eq}}
+                    {{#if_eq end_braces ""}} {{else}} {{end_braces}} {{/if_eq}}
                  {{/tableList}}
 			</script>
 		{% endverbatim %}

@@ -53,8 +53,7 @@ class LabelSubscriber implements EventSubscriberInterface
 
     public function onLabelDelete(CommonPlacedEvent $event)
     {
-        $id = $event->pluginDataArr['id'];
-        $label = (new ProjectLabelModel())->getById($id);
+        $label = $event->pluginDataArr;
         $activityModel = new ActivityModel();
         $activityInfo = [];
         $activityInfo['action'] = '删除了标签';

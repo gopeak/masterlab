@@ -22,6 +22,7 @@ class ProjectSubscriber implements EventSubscriberInterface
             Events::onProjectUpdate => 'onProjectUpdate',
             Events::onProjectDelete => 'onProjectDelete',
             Events::onProjectArchive => 'onProjectArchive',
+            Events::onProjectRecover => 'onProjectRecover',
         ];
     }
 
@@ -91,5 +92,18 @@ class ProjectSubscriber implements EventSubscriberInterface
         $activityInfo['title'] = $project['name'];
         $activityModel->insertItem(UserAuth::getId(), $project['id'], $activityInfo);
     }
+
+    public function onProjectRecover(CommonPlacedEvent $event)
+    {
+        $project = $event->pluginDataArr;
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '恢复了项目';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $project['id'];
+        $activityInfo['title'] = $project['name'];
+        $activityModel->insertItem(UserAuth::getId(), $project['id'], $activityInfo);
+    }
+
 
 }

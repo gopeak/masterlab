@@ -153,6 +153,7 @@ var IssueAdvQuery = (function () {
                 auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
+                    window.location.reload();
                     $('#modal-adv_query').modal('hide');
                     window.qtipApi.hide();
                     $('#btn-save_adv_filter').qtip('api').toggle(false);

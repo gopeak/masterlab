@@ -168,13 +168,15 @@ class Passport extends BaseCtrl
      * 注销
      */
     public function pageLogout()
-    { 		UserAuth::getInstance()->logout();
+    {
+        UserAuth::getInstance()->logout();
         $this->pagelogin();
 		$event = new CommonPlacedEvent($this, UserModel::getInstance()->getByUid(UserAuth::getId()));
         $this->dispatcher->dispatch($event,  Events::onUserlogout);
 
-        header("location: /passport/login");
-        die;    }
+        @header("location: /passport/login");
+        die;
+    }
 
     /**
      * 登录
@@ -347,7 +349,8 @@ class Passport extends BaseCtrl
             unset($user['password']);
         }
         // $_SESSION[UserAuth::SESSION_UID_KEY] = $user['uid'];
-        $this->auth->login($user);
+        $cookieLifetime = getCommonConfigVar('session')['session.cookie_lifetime'];
+        $this->auth->login($user, $cookieLifetime);
         $_SESSION['user_info'] = $user;
 
         $userLogic = new UserLogic();
@@ -472,7 +475,7 @@ class Passport extends BaseCtrl
         $password = trimStr($_POST['password']);
         $displayName = trimStr(safeStr($_POST['display_name']));
         $avatar = isset($_POST['avatar']) ? safeStr($_POST['avatar']) : "";
-        if (strlen($password) > 20) {
+        if (strlen($password) > 40) {
             $err['password'] = '密码长度太长了';
         }
         // 检查参数是否正确

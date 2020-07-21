@@ -78,6 +78,19 @@ class Project extends BaseAdminCtrl
     }
 
     /**
+     * 管理后台查询项目信息
+     * @param $project_id
+     * @throws \Exception
+     */
+    public function get($project_id)
+    {
+        $projectLogic = new ProjectLogic();
+        $project = $projectLogic->info($project_id);
+
+        $this->ajaxSuccess('ok', $project);
+    }
+
+    /**
      * 项目查询
      * @param int $page
      * @param int $is_archived
@@ -120,8 +133,8 @@ class Project extends BaseAdminCtrl
     public function doArchived()
     {
         $projectId = null;
-        if (isset($_REQUEST['project_id'])) {
-            $projectId = (int)$_REQUEST['project_id'];
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
         }
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '参数错误');
@@ -141,6 +154,33 @@ class Project extends BaseAdminCtrl
     }
 
     /**
+     * 恢复项目归档
+     * @throws \Exception
+     */
+    public function doRecoverArchived()
+    {
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '参数错误');
+        }
+
+        $model = new ProjectModel();
+        $ret = $model->updateById(['archived' => 'N'], $projectId);
+
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '更新数据失败');
+        } else {
+            // 分发事件
+            $event = new CommonPlacedEvent($this, $project=$model->getById($projectId));
+            $this->dispatcher->dispatch($event,  Events::onProjectRecover);
+            $this->ajaxSuccess('项目恢复成功');
+        }
+    }
+
+    /**
      * 删除项目
      * @throws \Exception
      */
@@ -152,16 +192,16 @@ class Project extends BaseAdminCtrl
         if (isset($_GET['_target'][3])) {
             $projectId = (int)$_GET['_target'][3];
         }
-        if (isset($_REQUEST['project_id'])) {
-            $projectId = (int)$_REQUEST['project_id'];
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
         }
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
 
-        if (isset($_REQUEST['project_type_id'])) {
-            $projectTypeId = (int)$_REQUEST['project_type_id'];
+        if (isset($_GET['project_type_id'])) {
+            $projectTypeId = (int)$_GET['project_type_id'];
         }
         if (empty($projectTypeId)) {
             $this->ajaxFailed('参数错误', '项目类型id不能为空');
@@ -288,82 +328,107 @@ class Project extends BaseAdminCtrl
             $this->ajaxFailed('异常', '克隆项目失败.');
         }
 
-        if (!empty($cloneRawData['sprint_rows'])) {
-            foreach ($cloneRawData['sprint_rows'] as $key=>$item) {
-                unset($cloneRawData['sprint_rows'][$key]['id']);
-                $cloneRawData['sprint_rows'][$key]['project_id'] = $newProjectId;
+        if (isset($_POST['sprint_selected']) && $_POST['sprint_selected'] == 1) {
+            if (!empty($cloneRawData['sprint_rows'])) {
+                foreach ($cloneRawData['sprint_rows'] as $key=>$item) {
+                    unset($cloneRawData['sprint_rows'][$key]['id']);
+                    $cloneRawData['sprint_rows'][$key]['project_id'] = $newProjectId;
+                }
+                $model = new SprintModel();
+                $model->insertRows($cloneRawData['sprint_rows']);
             }
-            $model = new SprintModel();
-            $model->insertRows($cloneRawData['sprint_rows']);
         }
 
-
-        if (!empty($cloneRawData['version_rows'])) {
-            foreach ($cloneRawData['version_rows'] as $key=>$item) {
-                unset($cloneRawData['version_rows'][$key]['id']);
-                $cloneRawData['version_rows'][$key]['project_id'] = $newProjectId;
+        if (isset($_POST['version_selected']) && $_POST['version_selected'] == 1) {
+            if (!empty($cloneRawData['version_rows'])) {
+                foreach ($cloneRawData['version_rows'] as $key=>$item) {
+                    unset($cloneRawData['version_rows'][$key]['id']);
+                    $cloneRawData['version_rows'][$key]['project_id'] = $newProjectId;
+                }
+                $model = new ProjectVersionModel();
+                $model->insertRows($cloneRawData['version_rows']);
             }
-            $model = new ProjectVersionModel();
-            $model->insertRows($cloneRawData['version_rows']);
         }
 
-        if (!empty($cloneRawData['module_rows'])) {
-            foreach ($cloneRawData['module_rows'] as $key=>$item) {
-                unset($cloneRawData['module_rows'][$key]['id']);
-                unset($cloneRawData['module_rows'][$key]['k']);
-                $cloneRawData['module_rows'][$key]['project_id'] = $newProjectId;
+        if (isset($_POST['module_selected']) && $_POST['module_selected'] == 1) {
+            if (!empty($cloneRawData['module_rows'])) {
+                foreach ($cloneRawData['module_rows'] as $key=>$item) {
+                    unset($cloneRawData['module_rows'][$key]['id']);
+                    unset($cloneRawData['module_rows'][$key]['k']);
+                    $cloneRawData['module_rows'][$key]['project_id'] = $newProjectId;
+                }
+                $model = new ProjectModuleModel();
+                $model->insertRows($cloneRawData['module_rows']);
             }
-            $model = new ProjectModuleModel();
-            $model->insertRows($cloneRawData['module_rows']);
         }
 
-        if (!empty($cloneRawData['label_rows'])) {
-            foreach ($cloneRawData['label_rows'] as $key=>$item) {
-                unset($cloneRawData['label_rows'][$key]['id']);
-                $cloneRawData['label_rows'][$key]['project_id'] = $newProjectId;
+        if (isset($_POST['label_selected']) && $_POST['label_selected'] == 1) {
+            if (!empty($cloneRawData['label_rows'])) {
+                foreach ($cloneRawData['label_rows'] as $key=>$item) {
+                    unset($cloneRawData['label_rows'][$key]['id']);
+                    $cloneRawData['label_rows'][$key]['project_id'] = $newProjectId;
+                }
+                $model = new ProjectLabelModel();
+                $model->insertRows($cloneRawData['label_rows']);
             }
-            $model = new ProjectLabelModel();
-            $model->insertRows($cloneRawData['label_rows']);
         }
 
-        if (!empty($cloneRawData['catalog_label_rows'])) {
-            foreach ($cloneRawData['catalog_label_rows'] as $key=>$item) {
-                unset($cloneRawData['catalog_label_rows'][$key]['id']);
-                $cloneRawData['catalog_label_rows'][$key]['project_id'] = $newProjectId;
+        if (isset($_POST['catalog_label_selected']) && $_POST['catalog_label_selected'] == 1) {
+            if (!empty($cloneRawData['catalog_label_rows'])) {
+                foreach ($cloneRawData['catalog_label_rows'] as $key=>$item) {
+                    unset($cloneRawData['catalog_label_rows'][$key]['id']);
+                    $cloneRawData['catalog_label_rows'][$key]['project_id'] = $newProjectId;
+                }
+                $model = new ProjectCatalogLabelModel();
+                $model->insertRows($cloneRawData['catalog_label_rows']);
             }
-            $model = new ProjectCatalogLabelModel();
-            $model->insertRows($cloneRawData['catalog_label_rows']);
         }
+
 
         if (!empty($cloneRawData['role_rows'])) {
+            $projectRoleModel = new ProjectRoleModel();
+            $projectRoleRelationModel = new ProjectRoleRelationModel();
+            $projectUserRoleModel = new ProjectUserRoleModel();
             foreach ($cloneRawData['role_rows'] as $key=>$item) {
+                $previousRoleId = $cloneRawData['role_rows'][$key]['id'];
                 unset($cloneRawData['role_rows'][$key]['id']);
                 $cloneRawData['role_rows'][$key]['project_id'] = $newProjectId;
-            }
-            $model = new ProjectRoleModel();
-            $model->insertRows($cloneRawData['role_rows']);
-        }
+                list($bool, $newRoleId) = $projectRoleModel->insert($cloneRawData['role_rows'][$key]);
 
-        if (!empty($cloneRawData['role_relation_rows'])) {
-            foreach ($cloneRawData['role_relation_rows'] as $key=>$item) {
-                unset($cloneRawData['role_relation_rows'][$key]['id']);
-                $cloneRawData['role_relation_rows'][$key]['project_id'] = $newProjectId;
-            }
-            $model = new ProjectRoleRelationModel();
-            $model->insertRows($cloneRawData['role_relation_rows']);
-        }
+                if (!empty($cloneRawData['role_relation_rows'])) {
+                    $tempRoleRelationRows = [];
+                    foreach ($cloneRawData['role_relation_rows'] as $roleRelationRow) {
+                        if ($previousRoleId == $roleRelationRow['role_id']) {
+                            $roleRelationRow['project_id'] = $newProjectId;
+                            $roleRelationRow['role_id'] = $newRoleId;
+                            unset($roleRelationRow['id']);
+                            $tempRoleRelationRows[] = $roleRelationRow;
+                        }
+                    }
+                    if (!empty($tempRoleRelationRows)) {
+                        $projectRoleRelationModel->insertRows($tempRoleRelationRows);
+                        //print_r($tempRoleRelationRows);
+                    }
+                }
 
-        if (!empty($cloneRawData['user_role_rows'])) {
-            foreach ($cloneRawData['user_role_rows'] as $key=>$item) {
-                unset($cloneRawData['user_role_rows'][$key]['id']);
-                $cloneRawData['user_role_rows'][$key]['project_id'] = $newProjectId;
+                if (!empty($cloneRawData['user_role_rows'])) {
+                    $tempUserRoleRows = [];
+                    foreach ($cloneRawData['user_role_rows'] as $userRoleRow) {
+                        if ($previousRoleId == $userRoleRow['role_id']) {
+                            $userRoleRow['project_id'] = $newProjectId;
+                            $userRoleRow['role_id'] = $newRoleId;
+                            unset($userRoleRow['id']);
+                            $tempUserRoleRows[] = $userRoleRow;
+                        }
+                    }
+                    if (!empty($tempUserRoleRows)) {
+                        $projectUserRoleModel->insertRows($tempUserRoleRows);
+                        //print_r($tempUserRoleRows);
+                    }
+                }
             }
-            $model = new ProjectUserRoleModel();
-            $model->insertRows($cloneRawData['user_role_rows']);
         }
 
         $this->ajaxSuccess('项目克隆成功', $cloneRawData);
-
-
     }
 }

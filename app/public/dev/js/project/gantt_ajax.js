@@ -12,8 +12,8 @@ var Gantt = (function () {
         var issue_types_select = document.getElementById('gantt_issue_type');
         $('#gantt_issue_type').empty();
 
-        for (var _key in  issue_types) {
-            issue_types_select.options.add(new Option(issue_types[_key].name, issue_types[_key].id));
+        for (let issue_type of  issue_types) {
+            issue_types_select.options.add(new Option(issue_type.name, issue_type.id));
         }
         // console.log(issue_types_select);
         $('.selectpicker').selectpicker('refresh');
@@ -24,8 +24,8 @@ var Gantt = (function () {
         var issue_types_select = document.getElementById('priority');
         $('#gantt_priority').empty();
 
-        for (var _key in  prioritys) {
-            var row = prioritys[_key];
+        for (var priority of  prioritys) {
+            var row = priority;
             var id = row.id;
             var title = row.name;
             var color = row.status_color;
@@ -40,9 +40,7 @@ var Gantt = (function () {
         //console.log(status)
         var issue_types_select = document.getElementById('gantt_status');
         $('#gantt_status').empty();
-
-        for (var _key in  status) {
-            var row = status[_key];
+        for (let row of  status) {
             var id = row.id;
             var title = row.name;
             var color = row.color;
@@ -249,7 +247,7 @@ var Gantt = (function () {
                     $('#user_dropdown-toggle-text').html(user.display_name);
                 }
 
-                let sprint = getObjectValue(window._issueConfig.sprint, issue.sprint);
+                let sprint = getArrayValue(window._issueConfig.sprint, 'id', issue.sprint);
                 if(is_empty(sprint.id)){
                     $('#sprint_name').html('待办事项');
                 }else{
@@ -291,7 +289,7 @@ var Gantt = (function () {
         if(!_is_admin_gantt){
             return;
         }
-        let sprint = getObjectValue(_issueConfig.sprint,task.sprint_id);
+        let sprint = getArrayValue(_issueConfig.sprint, 'id',  task.sprint_id);
         let start_date = timestampToDate(task.start,'Y-m-d');
         let due_date = timestampToDate(task.end,'Y-m-d');
         if(!is_empty(sprint) && is_empty(start_date)){
@@ -406,7 +404,7 @@ var Gantt = (function () {
                     let code = "#"+id;
                     let sprint_id = $('#gantt_sprint').val();
                     let sprint_name = $('#sprint_name').html();
-                    let sprint = getObjectValue(window._issueConfig.sprint, sprint_id);
+                    let sprint = getArrayValue(window._issueConfig.sprint, 'id',sprint_id);
                     let start_date = $('#gantt_start_date').val().replace(/-/g, '/');// 把所有-转化成/
                     let startTime = 0;
                     if(start_date==="" && !isUndefined(sprint.start_date)){

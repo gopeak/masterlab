@@ -3,6 +3,7 @@
  * Hornet-framework bootstrap file
  */
 
+ini_set('session.auto_start', 'Off');
 require_once '../globals.php';
 require_once '../../../hornet-framework/src/framework/bootstrap.php';
 // 初始化开发框架基本设置

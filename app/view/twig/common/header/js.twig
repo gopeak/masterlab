@@ -102,6 +102,32 @@
             }
 
         });
+
+        var unreadTimer = setInterval(function(){
+           // console.log("每60秒执行一次");
+            if(window.current_uid ==''){
+                return;
+            }
+            $.ajax({
+                type: 'get',
+                dataType: "json",
+                async: true,
+                url: '/user/fetchUnreadCount',
+                success: function (resp) {
+                    if( resp.ret=='200'){
+                        var count = resp.data;
+                        if(parseInt(resp.data)<=0){
+                            count = '';
+                        }
+                        $('#unread-msg-count').html(''+count+'');
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        },60000);
+        //window.clearInterval(unreadTimer);
     })
 </script>
 <input type="hidden" id="csrf_token" value="{{csrf_token}}">
