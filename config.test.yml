@@ -1,6 +1,6 @@
 # Masterlab主配置文件
-app_url: ''
-version: '2.2'
+app_url: 'http://masterlab.ink/'
+version: '3.0'
 error_reporting: 'E_ERROR'
 xdebug: false
 trace: false
@@ -32,11 +32,15 @@ session:
 
 database:
   default:
-    host: 'localhost'
+#    host: 'localhost'
+    host: '192.168.10.10'
     port: '3306'
-    user: 'root'
-    password: ''
-    db_name: 'masterlab22'
+#    user: 'root'
+#    password: ''
+#    db_name: 'masterlab22'
+    user: 'homestead'
+    password: 'secret'
+    db_name: 'masterlab_dev'
     charset: 'utf8'
     timeout: 10
     show_field_info: false

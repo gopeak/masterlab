@@ -4,14 +4,13 @@
 namespace main\app\api;
 
 
-use main\app\classes\ProjectLogic;
-use main\app\classes\ProjectModuleFilterLogic;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
-use main\app\model\project\ProjectModuleModel;
 
-class Modules extends BaseAuth
+class Labels extends BaseAuth
 {
     /**
+     * 项目标签接口
      * @return array
      */
     public function v1()
@@ -24,9 +23,9 @@ class Modules extends BaseAuth
     }
 
     /**
-     * Restful GET , 获取模块列表 | 单个模块信息
-     * 获取模块列表: {{API_URL}}/api/modules/v1/?project_id=1&access_token==xyz
-     * 获取单个模块: {{API_URL}}/api/modules/v1/36?access_token==xyz
+     * Restful GET , 获取标签列表 | 单个标签信息
+     * 获取模块列表: {{API_URL}}/api/labels/v1/?project_id=1&access_token==xyz
+     * 获取单个模块: {{API_URL}}/api/labels/v1/36?access_token==xyz
      * @return array
      * @throws \Exception
      */
@@ -34,14 +33,14 @@ class Modules extends BaseAuth
     {
         $uid = $this->masterUid;
         $projectId = 0;
-        $moduleId = 0;
+        $labelId = 0;
 
         if (isset($_GET['project_id'])) {
             $projectId = intval($_GET['project_id']);
         }
 
         if (isset($_GET['_target'][3])){
-            $moduleId = intval($_GET['_target'][3]);
+            $labelId = intval($_GET['_target'][3]);
         }
 
         $final = [];
@@ -51,11 +50,12 @@ class Modules extends BaseAuth
         $projectModel = new ProjectModel();
         $projectList = $projectModel->getAll2();
 
-        $model = new ProjectModuleModel();
-        if ($moduleId > 0) {
-            $row = $model->getById($moduleId);
+        $model = new ProjectLabelModel();
+
+        if ($labelId > 0) {
+            $row = $model->getById($labelId);
         } else {
-            // 全部模块
+            // 全部标签
             if ($projectId > 0) {
                 $list = $model->getByProject($projectId, true);
             } else {
@@ -64,8 +64,8 @@ class Modules extends BaseAuth
         }
 
         if (!empty($list)) {
-            foreach ($list as &$module) {
-                $module['project_name'] = $projectList[$module['project_id']]['name'];
+            foreach ($list as &$label) {
+                $label['project_name'] = $projectList[$label['project_id']]['name'];
             }
             $final = $list;
         }
@@ -78,9 +78,10 @@ class Modules extends BaseAuth
         return self::returnHandler('OK', $final);
     }
 
+
     /**
-     * Restful POST 添加模块
-     * {{API_URL}}/api/modules/v1/?project_id=1&access_token==xyz
+     * Restful POST 添加标签
+     * {{API_URL}}/api/labels/v1/?project_id=1&access_token==xyz
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
@@ -94,41 +95,40 @@ class Modules extends BaseAuth
             $projectId = intval($_GET['project_id']);
         }
 
-        if (!isset($_POST['module_name'])) {
-            return self::returnHandler('需要模块名.', [], Constants::HTTP_BAD_REQUEST);
+        if (!isset($_POST['label_name'])) {
+            return self::returnHandler('需要标签名.', [], Constants::HTTP_BAD_REQUEST);
         }
-        $moduleName = trim($_POST['module_name']);
+        $labelName = trim($_POST['label_name']);
 
         if (!isset($_POST['description'])) {
             $_POST['description'] = '';
         }
 
-        $projectModuleModel = new ProjectModuleModel($uid);
+        $projectLabelModel = new ProjectLabelModel($uid);
 
-        if ($projectModuleModel->checkNameExist($projectId, $moduleName)) {
+        if ($projectLabelModel->checkNameExist($projectId, $labelName)) {
             return self::returnHandler('name is exist.', [], Constants::HTTP_BAD_REQUEST);
         }
 
         $row = [];
         $row['project_id'] = $projectId;
-        $row['name'] = $moduleName;
+        $row['title'] = $labelName;
+        $row['color'] = '#FFFFFF';
+        $row['bg_color'] = '#428BCA';
         $row['description'] = $_POST['description'];
-        $row['lead'] = 0;
-        $row['default_assignee'] = 0;
-        $row['ctime'] = time();
 
-        $ret = $projectModuleModel->insert($row);
+        $ret = $projectLabelModel->insert($row);
 
         if ($ret[0]) {
             return self::returnHandler('操作成功', ['id' => $ret[1]]);
         } else {
-            return self::returnHandler('添加模块失败.', [], Constants::HTTP_BAD_REQUEST);
+            return self::returnHandler('添加标签失败.', [], Constants::HTTP_BAD_REQUEST);
         }
     }
 
     /**
-     * Restful DELETE ,删除某个项目模块
-     * {{API_URL}}/api/modules/v1/36?access_token==xyz
+     * Restful DELETE ,删除某个项目标签
+     * {{API_URL}}/api/labels/v1/36?access_token==xyz
      * @return array
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
@@ -138,14 +138,14 @@ class Modules extends BaseAuth
     private function deleteHandler()
     {
         $uid = $this->masterUid;
-        $moduleId = 0;
+        $labelId = 0;
         $projectId = 0;
 
         if (isset($_GET['_target'][3])) {
-            $moduleId = intval($_GET['_target'][3]);
+            $labelId = intval($_GET['_target'][3]);
         }
-        if ($moduleId == 0) {
-            return self::returnHandler('需要有模块ID', [], Constants::HTTP_BAD_REQUEST);
+        if ($labelId == 0) {
+            return self::returnHandler('需要有标签ID', [], Constants::HTTP_BAD_REQUEST);
         }
 
         if (isset($_GET['project_id'])) {
@@ -155,29 +155,29 @@ class Modules extends BaseAuth
             return self::returnHandler('需要有项目ID', [], Constants::HTTP_BAD_REQUEST);
         }
 
-        $projectModuleModel = new ProjectModuleModel();
-        $projectModuleModel->removeById($projectId, $moduleId);
+        $projectLabelModel = new ProjectLabelModel();
+        $projectLabelModel->removeById($projectId, $labelId);
 
         return self::returnHandler('操作成功');
     }
 
     /**
-     * Restful PATCH ,更新模块
-     * {{API_URL}}/api/modules/v1/36?access_token==xyz
+     * Restful PATCH ,更新标签
+     * {{API_URL}}/api/labels/v1/36?access_token==xyz
      * @return array
      * @throws \Exception
      */
     private function patchHandler()
     {
         $uid = $this->masterUid;
-        $moduleId = 0;
+        $labelId = 0;
         $projectId = 0;
 
         if (isset($_GET['_target'][3])) {
-            $moduleId = intval($_GET['_target'][3]);
+            $labelId = intval($_GET['_target'][3]);
         }
-        if ($moduleId == 0) {
-            return self::returnHandler('需要有模块ID', [], Constants::HTTP_BAD_REQUEST);
+        if ($labelId == 0) {
+            return self::returnHandler('需要有标签ID', [], Constants::HTTP_BAD_REQUEST);
         }
 
         if (isset($_GET['project_id'])) {
@@ -190,19 +190,18 @@ class Modules extends BaseAuth
         $patch = self::_PATCH();
 
         $row = [];
-        if (isset($patch['module_name']) && !empty($patch['module_name'])) {
-            $row['name'] = $patch['module_name'];
+        if (isset($patch['label_name']) && !empty($patch['label_name'])) {
+            $row['title'] = $patch['label_name'];
         } else {
             return self::returnHandler('需要有模块名', [], Constants::HTTP_BAD_REQUEST);
         }
-
 
         if (isset($patch['description']) && !empty($patch['description'])) {
             $row['description'] = $patch['description'];
         }
 
-        $projectModuleModel = new ProjectModuleModel();
-        $ret = $projectModuleModel->updateById($moduleId, $row);
+        $projectLabelModel = new ProjectLabelModel();
+        $ret = $projectLabelModel->updateById($labelId, $row);
 
         return self::returnHandler('修改成功');
 
