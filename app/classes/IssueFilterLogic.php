@@ -798,7 +798,7 @@ class IssueFilterLogic
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND   " . self::getDoneSql();
-        $count = $model->db->getOne($sql, $params);
+        $count = $model->getFieldBySql($sql, $params);
         return intval($count);
     }
 
