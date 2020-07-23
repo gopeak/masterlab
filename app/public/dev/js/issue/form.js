@@ -434,44 +434,24 @@ var IssueForm = (function () {
             }
         }
 
-        var value_title = '';
-        if ( edit_data.length > 0) {
-            let data_legth = edit_data.length;
-            if (data_legth === 1) {
-                value_title = edit_data[0].title;
-            }
-            if (data_legth === 2) {
-                value_title = edit_data[0].title + '，' + edit_data[1].title;
-            }
-            if (data_legth === 3) {
-                value_title = edit_data[0].title + '，' + edit_data[1].title+ '，' + edit_data[2].title;
-            }
-            if (data_legth > 3) {
-                value_title = edit_data[0].title + '，' + edit_data[1].title+ '，' + edit_data[2].title+ ' +';
-            }
-        }
-        var is_default = 'is-default';
-        if (edit_data.length > 0) {
-            is_default = '';
-        }
-        console.log(edit_data);
         var data = {
-            project_id: _cur_form_project_id,
-            project_key: _cur_project_key,
             display_name: display_name,
             default_value: default_value,
             field_name: field_name,
-            edit_data: edit_data,
-            value_title: value_title,
-            is_default: is_default,
             name: field.name,
-            id: ui_type + "_issue_labels_" + name,
-            project_root_url: _issueConfig.project_root_url
+            id: ui_type + "_label_" + name,
+            list_data:_issueConfig.issue_labels,
+            edit_data:edit_data,
+            project_root_url: _issueConfig.project_root_url,
+            project_id: project_id,
+            project_key: _cur_project_key,
         };
-
         var source = $('#labels_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
+
+        $("#"+data.id).val(default_value);
+        $('.selectpicker').selectpicker('refresh');
 
         return IssueForm.prototype.wrapField(config, field, html);
     }
@@ -551,48 +531,23 @@ var IssueForm = (function () {
             required_html = '<span class="required"> *</span>';
         }
         var html = '';
-        var edit_data = [];
-        if (default_value != null) {
-            for (var i = 0; i < default_value.length; i++) {
-                var item_value = IssueForm.prototype.getObjectValue(_issueConfig.issue_version, default_value[i]);
-                if (item_value) {
-                    edit_data.push(item_value);
-                }
-            }
-        } else {
-            default_value = '';
-        }
-
-        var value_title = '';
-        if (edit_data.length > 0) {
-            if (edit_data.length == 1) {
-                value_title = edit_data[0].name;
-            }
-            if (edit_data.length == 2) {
-                value_title = edit_data[0].name + ',' + edit_data[1].name;
-            }
-            if (edit_data.length > 2) {
-                value_title = edit_data[0].name + '+';
-            }
-        }
-        var is_default = 'is-default';
-        if (edit_data.length > 0) {
-            is_default = '';
-        }
         var data = {
-            project_id: _cur_form_project_id,
             display_name: display_name,
             default_value: default_value,
-            is_default: is_default,
-            edit_data: edit_data,
-            value_title: value_title,
             field_name: field_name,
             name: field.name,
-            id: ui_type + "_issue_version_" + name
+            id: ui_type + "_version_" + name,
+            list_data:_issueConfig.issue_version,
+            project_root_url: _issueConfig.project_root_url,
+            project_id: project_id,
+            project_key: _cur_project_key,
         };
         var source = $('#version_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
+
+        $("#"+data.id).val(default_value);
+        $('.selectpicker').selectpicker('refresh');
         //console.log( html );
         return IssueForm.prototype.wrapField(config, field, html);
     }
@@ -613,31 +568,32 @@ var IssueForm = (function () {
             default_value = '';
         }
         var user = null;
-        if (default_value != '') {
-            user = getArrayValue(_issueConfig.users, 'uid',field.default_value);
-            if (!objIsEmpty(user)) {
-                display_name = user.display_name;
-            }
+        if (default_value=='') {
+            default_value = window.current_uid;
+        }
+        user = getArrayValue(_issueConfig.users, 'uid',default_value);
+        if (!objIsEmpty(user)) {
+            display_name = user.display_name;
         }
         var project_id = '';
         if (typeof window._cur_project_id != 'undefined') {
             project_id = _cur_project_id
         }
-        var html = '';
         // html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'"  />';
         var data = {
             display_name: display_name,
             default_value: default_value,
             field_name: field_name,
             name: field.name,
-            project_id: project_id,
-            id: ui_type + "_issue_user_" + name
+            id: ui_type + "_issue_user_" + name,
+            project_users:window._issueConfig.project_users
         };
-
         var source = $('#user_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
 
+        $("#"+ui_type + "_issue_user_" + name).val(default_value);
+        $('.selectpicker').selectpicker('refresh');
         return IssueForm.prototype.wrapField(config, field, html);
     }
     // 协助人
@@ -962,21 +918,25 @@ var IssueForm = (function () {
         }
         project_id = _cur_form_project_id;
 
+
         var data = {
-            project_id: project_id,
-            project_key: _cur_project_key,
             display_name: display_name,
-            module_title: module_title,
             default_value: default_value,
             field_name: field_name,
             name: field.name,
-            id: ui_type + "_issue_" + name,
-            project_root_url: _issueConfig.project_root_url
+            id: ui_type + "_module_" + name,
+            list_data:_issueConfig.issue_module,
+            project_root_url: _issueConfig.project_root_url,
+            project_id: project_id,
+            project_key: _cur_project_key,
+            module_title: module_title,
         };
-
         var source = $('#module_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
+
+        $("#"+data.id).val(default_value);
+        $('.selectpicker').selectpicker('refresh');
 
         return IssueForm.prototype.wrapField(config, field, html);
     }
