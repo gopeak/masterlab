@@ -203,7 +203,7 @@ class Labels extends BaseAuth
         $projectLabelModel = new ProjectLabelModel();
         $ret = $projectLabelModel->updateById($labelId, $row);
 
-        return self::returnHandler('修改成功');
+        return self::returnHandler('修改成功', array_merge($row, ['id' => $labelId]));
 
     }
 }

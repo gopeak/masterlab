@@ -57,7 +57,7 @@ class BaseApi
         return $reqDataArr;
     }
 
-    protected function validateRestfulHandler( )
+    protected function validateRestfulHandler()
     {
         foreach( self::$method_type as $method ) {
             if(  !method_exists( $this,$method . 'Handler') ) {

@@ -21,6 +21,16 @@ class ProjectVersionModel extends CacheModel
         $this->uid = $uid;
     }
 
+    /**
+     * @param $id
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getById($id)
+    {
+        return $this->getRowById($id);
+    }
+
     public function getAll($primaryKey = true)
     {
         $table = $this->getTable();

@@ -204,7 +204,7 @@ class Modules extends BaseAuth
         $projectModuleModel = new ProjectModuleModel();
         $ret = $projectModuleModel->updateById($moduleId, $row);
 
-        return self::returnHandler('修改成功');
+        return self::returnHandler('修改成功', array_merge($row, ['id' => $moduleId]));
 
     }
 }
