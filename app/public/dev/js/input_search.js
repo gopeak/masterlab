@@ -491,6 +491,7 @@ var InputSearch = (function () {
             });
         } else {
             var tempData = [];
+            console.log(dataArr);
             dataArr.forEach(function (item) {
                 if ((item.name).indexOf(tempKeyword) >= 0) {
                     tempData.push(item);

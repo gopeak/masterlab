@@ -43,9 +43,12 @@ var IssueMain = (function () {
     function IssueMain(options) {
         _options = options;
 
+        IssueMain.prototype.initProjectSelect();
         $("#btn-issue_type_add").click(function () {
             IssueMain.prototype.add();
         });
+
+        // project_select
 
         $("#btn-issue_type_update").click(function () {
             IssueMain.prototype.update();
@@ -147,6 +150,25 @@ var IssueMain = (function () {
 
     }
 
+    IssueMain.prototype.initProjectSelect = function () {
+
+        var $selectObj = $('#create_project_select');
+        $selectObj.empty();
+
+        for (var i = 0; i < window._issueConfig.projects.length; i++) {
+            let project = window._issueConfig.projects[i];
+            let content = '<img width="26px" height="26px" class= "float-none" style="border-radius: 50%;" src="' + project.avatar + '" >' + project.name + ''
+            let opt = "<option data-key='"+project.key+"' data-content='" + content + "' value='" + project.id + "'>" + project.name + "</option>";
+            $selectObj.append(opt);
+        }
+
+        $('.selectpicker').selectpicker('refresh');
+
+        $selectObj.bind("change", function () {
+            IssueMain.prototype.onChangeCreateProjectSelected($(this).val(), $(this).data('key'));
+        });
+
+    }
 
     IssueMain.prototype.initCreateIssueType = function (issue_types, on_change) {
 
@@ -1361,7 +1383,7 @@ var IssueMain = (function () {
                 }
                 if (resp.ret == '200') {
                     notify_success(resp.msg);
-                    window.location.reload();
+                    //window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }
@@ -1510,9 +1532,6 @@ var IssueMain = (function () {
                 toolbarIcons: "custom"
             });
         });
-        new UsersSelect();
-        new LabelsSelect();
-        new MilestoneSelect();
         IssueForm.prototype.bindNavTabClick();
         var deleteFileEnabled = true;
         if (is_edit) {

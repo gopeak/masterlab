@@ -433,7 +433,6 @@ var IssueForm = (function () {
                 }
             }
         }
-
         var data = {
             display_name: display_name,
             default_value: default_value,
@@ -441,7 +440,7 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_label_" + name,
             list_data:_issueConfig.issue_labels,
-            edit_data:edit_data,
+            edit_data:default_value,
             project_root_url: _issueConfig.project_root_url,
             project_id: project_id,
             project_key: _cur_project_key,
@@ -530,6 +529,10 @@ var IssueForm = (function () {
         if (required) {
             required_html = '<span class="required"> *</span>';
         }
+       // console.log(field)
+        if(is_empty(default_value)){
+            default_value = [];
+        }
         var html = '';
         var data = {
             display_name: display_name,
@@ -538,16 +541,15 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_version_" + name,
             list_data:_issueConfig.issue_version,
+            edit_data:default_value,
             project_root_url: _issueConfig.project_root_url,
             project_id: project_id,
             project_key: _cur_project_key,
+            extra_attr:field.extra_attr
         };
         var source = $('#version_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
-
-        $("#"+data.id).val(default_value);
-        $('.selectpicker').selectpicker('refresh');
         //console.log( html );
         return IssueForm.prototype.wrapField(config, field, html);
     }

@@ -300,10 +300,6 @@
                             {% include 'twig/issue/form.twig' %}
 
                             <script>
-                                new UsersSelect();
-                                new LabelsSelect();
-                                new MilestoneSelect();
-                                new IssueStatusSelect();
                                 var filteredSearchManager = null;
                                 $(document).off('page:restore').on('page:restore', function (event) {
                                     if (gl.FilteredSearchManager) {

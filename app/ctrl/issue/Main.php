@@ -1144,6 +1144,11 @@ class Main extends BaseUserCtrl
             $model = new IssueFixVersionModel();
             $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
         }
+        // effect version
+        if (isset($params['effect_version'])) {
+            $model = new IssueEffectVersionModel();
+            $issueLogic->addChildData($model, $issueId, $params['effect_version'], 'version_id');
+        }
         // labels
         if (isset($params['labels'])) {
             $model = new IssueLabelDataModel();
