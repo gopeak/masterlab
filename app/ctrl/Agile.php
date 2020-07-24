@@ -422,7 +422,7 @@ class Agile extends BaseUserCtrl
         if (isset($_POST['params']['start_date'])) {
             $info['start_date'] = $_POST['params']['start_date'];
         }
-        if (isset($_POST['params']['start_date'])) {
+        if (isset($_POST['params']['end_date'])) {
             $info['end_date'] = $_POST['params']['end_date'];
         }
         $sprintModel = new SprintModel();

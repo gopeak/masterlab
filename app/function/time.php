@@ -1,5 +1,17 @@
 <?php
 
+/**
+ *
+ * @param string $date
+ * @return bool
+ */
+function is_datetime_format($date = '2020-04-16')
+{
+    if (date('Y-m-d H:i:s', strtotime($date)) == $date) {
+        return true;
+    }
+    return false;
+}
 
 /**
  * 格式化时间戳为中文时间格式
