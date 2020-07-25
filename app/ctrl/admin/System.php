@@ -155,11 +155,8 @@ class System extends BaseAdminCtrl
         $data['sub_nav_active'] = 'security';
         $data['left_nav_active'] = 'global_permission';
 
-        $userModel = new UserModel();
-        $users = $userModel->getAll(false);
-        foreach ($users as &$user) {
-            $user = UserLogic::format($user);
-        }
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser(10000, false);
         $data['users'] = $users;
 
         $this->render('twig/admin/system/system_global_permission.twig', $data);

@@ -106,7 +106,6 @@ var Role = (function () {
 
     Role.prototype.editRoleUser = function (id) {
 
-        new UsersSelect();
         $("#modal-role_user").modal();
         $("#role_user-role_id").val(id);
         $('#role_user_list_render_id').html('');
@@ -143,7 +142,7 @@ var Role = (function () {
 
 
         var roleId = $('#role_user-role_id').val();
-        var userId =  $("input[name='params[select_user]']").val();
+        var userId =  $("#role_user_selected_user_id").val();
 
         if(is_empty(userId) || userId==0){
             return false;

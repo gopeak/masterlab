@@ -5,8 +5,7 @@
 function addGlobalPermRoleUser()
 {
     var roleId = $('#role_user-role_id').val();
-    var userId =  $("input[name='params[select_user]']").val();
-
+    var userId =  $("#role_user_selected_user_id").val();
     if (is_empty(userId) || userId==0) {
         return false;
     }
@@ -179,7 +178,6 @@ var GlobalPermission = (function () {
 
     GlobalPermission.prototype.globalRoleUserEdit = function (global_role_id)
     {
-        //new UsersSelect();
         $("#modal-role_user").modal();
         $("#role_user-role_id").val(global_role_id);
         $('#role_user_list_render_id').html('');

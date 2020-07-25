@@ -51,7 +51,7 @@ class Member extends BaseUserCtrl
             $user = UserLogic::format($user);
         }
         $data['project_users'] = $projectUsers;
-
+        $data['not_project_users'] = $userLogic->getNotProjectUser($data['project_id']);
         $projectRolemodel = new ProjectRoleModel();
         $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
 

@@ -3,8 +3,6 @@
 <head>
     {% include 'twig/common/header/include.twig' %}
 
-    <script src="/gitlab/assets/webpack/common_vue.bundle.js"></script>
-
     <script src="/dev/lib/jquery.form.js"></script>
     <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
@@ -67,10 +65,7 @@
         <div class="container-fluid container-limited">
 
             <div class="content" id="content-body">
-
                 <div class="row prepend-top-default">
-
-
                     <div class="col-lg-3 settings-sidebar">
                         <h4 class="prepend-top-0">
                             项目成员
@@ -86,43 +81,15 @@
                             <form class="users-project-form clearfix users-project-form-role" id="new_project_member" action="/project/role/add_project_member_roles" accept-charset="UTF-8" method="post">
 
                                 <div class="form-group col-md-4">
-                                    <div class="issuable-form-select-holder">
-                                        <input type="hidden" name="user_id" />
-                                        <div class="dropdown">
-                                            <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
-                                                    data-project-id="{{project_id}}"
-                                                    data-field-type="project_except"
-                                                    data-first-user="sven"
-                                                    data-null-user="true"
-                                                    data-current-user="true"
-                                                    data-project-id=""
-                                                    data-selected="null"
-                                                    data-field-name="user_id"
-                                                    data-default-label="Assignee"
-                                                    data-toggle="dropdown">
-                                                <span class="dropdown-toggle-text is-default">选择项目成员</span>
-                                                <i class="fa fa-chevron-down"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
-                                                <div class="dropdown-title">
-                                                    <span>选择用户</span>
-                                                    <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                                                        <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="dropdown-input">
-                                                    <input type="search" id="" class="dropdown-input-field" placeholder="Search" autocomplete="off" />
-                                                    <i class="fa fa-search dropdown-input-search"></i>
-                                                    <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                                </div>
-                                                <div class="dropdown-content "></div>
-                                                <div class="dropdown-loading">
-                                                    <i class="fa fa-spinner fa-spin"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a class="assign-to-me-link hide" href="#">选择自己</a>
+                                    <select id="project-user-select" name="user_id"
+                                            class="selectpicker"  data-live-search="true"
+                                            data-project-id="{{project_id}}"
+                                    >
+                                        <option value="">选择成员</option>
+                                        {% for user in not_project_users %}
+                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='{{user.avatar}}'> {{user.display_name}}" value="{{user.uid}}">{{user.display_name}}</option>
+                                        {% endfor %}
+                                    </select>
 
                                 </div>
 

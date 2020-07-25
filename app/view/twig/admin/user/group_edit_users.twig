@@ -6,8 +6,9 @@
     <script src="/dev/js/admin/group.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="/dev/lib/bootstrap-select/js/i18n/defaults-zh_CN.min.js"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
 
     <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
 
@@ -47,17 +48,20 @@
                             <form class="users-project-form" id="form_add" action="/admin/group/add_user" accept-charset="UTF-8" method="post">
                                 <input type="hidden" name="group_id" id="user_group_id" value="{{group_id}}">
                                 <div class="form-group">
-                                    <input type="hidden" name="user_ids" id="user_ids" value=""
-                                           class="ajax-users-select multiselect input-clamp "
-                                           data-placeholder="通过用户名,名称,Email查询用户,归属到用户组."
-                                           data-group-id="-{{group_id}}"
-                                           data-null-user="false"
-                                           data-any-user="false"
-                                           data-email-user="true"
-                                           data-first-user="false"
-                                           data-current-user="false"
-                                           data-author-id=""
-                                           data-skip-users="null" />
+
+                                    <select id="user_ids"
+                                            name="user_ids[]"
+                                            title="选择用户"
+                                            class="selectpicker"
+                                            data-live-search="true"
+                                            multiple
+                                            data-project-id="{{project_id}}"
+                                    >
+                                        <option value="">选择成员</option>
+                                        {% for user in  users %}
+                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='{{user.avatar}}'> {{user.display_name}}" value="{{user.uid}}">{{user.display_name}}</option>
+                                        {% endfor %}
+                                    </select>
                                     <div class="help-block append-bottom-10"></div>
 
                                 </div>
@@ -120,10 +124,8 @@
 </script>
 
 <script type="text/javascript">
-    new UsersSelect();
     var $group = null;
     $(function() {
-
         var options = {
             group_users_list_render_id:"list_render_id",
             group_users_list_tpl_id:"list_tpl",
