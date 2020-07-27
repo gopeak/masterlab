@@ -40,7 +40,7 @@ class Modules extends BaseAuth
             $projectId = intval($_GET['project_id']);
         }
 
-        if (isset($_GET['_target'][3])){
+        if (isset($_GET['_target'][3])) {
             $moduleId = intval($_GET['_target'][3]);
         }
 
