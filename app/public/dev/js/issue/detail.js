@@ -166,7 +166,7 @@ var IssueDetail = (function () {
                     markdown: resp.data.issue.description
                 });
                 $('#description-view').html(IssueDetail.prototype.imgTagAddStyle($('#description-view').html()));
-                source = '{{make_assistants issue.assistants_arr users}}';
+                source = '{{make_assistants issue.assistants_arr}}';
                 template = Handlebars.compile(source);
                 result = template(resp.data);
                 $('#assistants_div').html(result);
@@ -252,10 +252,10 @@ var IssueDetail = (function () {
         var regex1 = new RegExp("(i?)(\<img)(?!(.*?style=['\"](.*)['\"])[^\>]+\>)", 'gmi')
         htmlstr = htmlstr.replace(regex1, '$1  $2 style="" onclick="window.open(this.src);" $3 ');
 
-        console.log('增加style=""后的html字符串：' + htmlstr)
+       // console.log('增加style=""后的html字符串：' + htmlstr)
         var regex2 = new RegExp("(i?)(\<img.*?style=['\"])([^\>]+\>)", 'gmi')
         htmlstr = htmlstr.replace(regex2, '$2max-width:600px; height:auto; cursor:pointer$3')
-        console.log('在img标签的style里面增加样式后的html字符串：' + htmlstr)
+        // console.log('在img标签的style里面增加样式后的html字符串：' + htmlstr)
         return htmlstr
     }
 
@@ -569,6 +569,28 @@ var IssueDetail = (function () {
                     auth_check(resp);
                     if (resp.ret == '200') {
                         window.location.reload();
+                    } else {
+                        notify_error(resp.msg);
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        }
+
+        IssueDetail.prototype.updateIssueAssignee = function (issue_id,assignee_id) {
+            var method = 'post';
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: root_url + "issue/main/update/",
+                data: { issue_id: issue_id, params: { assignee: assignee_id } },
+                success: function (resp) {
+                    auth_check(resp);
+                    if (resp.ret === '200') {
+                        notify_success('操作成功');
                     } else {
                         notify_error(resp.msg);
                     }

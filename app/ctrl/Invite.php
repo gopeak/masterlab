@@ -42,6 +42,9 @@ class Invite extends BaseCtrl
         $this->auth = UserAuth::getInstance();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function send()
     {
         $projectId = null;
@@ -90,8 +93,6 @@ class Invite extends BaseCtrl
                 $url = ROOT_URL . 'invite/setting?email=' . $email . '&token=' . $token;
                 $args['{{url}}'] = $url;
                 $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['invite_email']);
-                echo $body;
-                die;
                 $systemLogic = new SystemLogic();
                 list($ret, $errMsg) = $systemLogic->mail($email, '邀请加入项目' . $project['name'], $body);
                 if (!$ret) {

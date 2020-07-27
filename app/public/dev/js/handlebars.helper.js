@@ -218,9 +218,9 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
-    Handlebars.registerHelper('make_assistants', function (uid_arr, users) {
+    Handlebars.registerHelper('make_assistants', function (uid_arr) {
         //console.log(uid_arr);
-        console.log(users);
+        //console.log(users);
         var html = '';
         for (i = 0; i < uid_arr.length; i++) {
 

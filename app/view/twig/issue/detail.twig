@@ -4,9 +4,6 @@
 
     {% include 'twig/common/header/include.twig' %}
 
-    <script src="/gitlab/assets/webpack/common_vue.bundle.js"></script>
-    <script src="/gitlab/assets/webpack/issuable.bundle.js"></script>
-
     <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
@@ -28,7 +25,7 @@
     <link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
     <script src="/dev/lib/simplemde/dist/simplemde.min.js"></script>
-    <link rel="stylesheet" href="/dev/lib//simplemde/dist/simplemde.min.css">
+    <link rel="stylesheet" href="/dev/lib/simplemde/dist/simplemde.min.css">
 
     <!-- Fine Uploader jQuery JS file-->
     <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
@@ -152,6 +149,66 @@
             display: block;
             margin-right: 16px;
         }
+
+        .item-list-select {
+            position: relative;
+            -moz-user-select:none; /*火狐*/
+            -webkit-user-select:none; /*webkit浏览器*/
+            -ms-user-select:none; /*IE10*/
+            user-select:none;
+        }
+
+        .item-list-select .item-data-list {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 9;
+            margin-top: 2px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: normal;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 160px;
+            min-width: 140px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .item-list-select > span,
+        .item-list-select a {
+            display: inline-block;
+            content: "";
+            min-width: 20px;
+            min-height: 20px;
+        }
+
+        .item-list-select .item-data-list li {
+            line-height: 30px;
+            padding: 0 20px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .item-list-select .item-data-list li img.assignee-img {
+            display: inline-block;
+            overflow: hidden;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        .item-list-select .item-data-list li:hover{
+            background: #f6fafd;
+        }
+
     </style>
 
 </head>
@@ -599,148 +656,57 @@
 
                                 <div class="block assignee">
 
-                                    <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body"
+                                    <div class="sidebar-collapsed-icon sidebar-collapsed-user " data-container="body"
                                          data-placement="left" data-toggle="tooltip"
-                                         title="{{issue['assignee_info']['display_name']}}">
-
-                                        {% if (issue['assignee_info']) %}
-                                            <a class="author_link  " href="/user/profile/{{issue['assignee']}}">
-                                                <img width="24" class="avatar avatar-inline s24 " alt=""
-                                                     src="{{issue['assignee_info']['avatar']}}">
-                                                <span class="author ">{{issue['assignee_info']['display_name']}}</span>
-                                            </a>
-                                        {% endif %}
+                                         title="双击可以直接更换经办人"
+                                    >
 
                                     </div>
-                                    <div class="title hide-collapsed">经办人
-                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                         <a class="edit-link pull-right" href="#">编辑</a>
+                                    <div class="title hide-collapsed"  title="双击可以直接更换经办人">经办人
                                     </div>
 
-                                    <div class="value hide-collapsed">
+                                    <div class="value hide-collapsed assignee-select"  title="双击可以直接更换经办人">
 
                                         {% if (issue['assignee_info'])  %}
-                                        <a class="author_link bold " href="/user/profile/{{issue['assignee']}}">
-                                            <img width="32" class="avatar avatar-inline s32 " alt=""
-                                                 src="{{issue['assignee_info']['avatar']}}">
-                                            <span class="author ">{{issue['assignee_info']['display_name']}}</span>
-                                            <span class="username">{{issue['assignee_info']['username']}}</span></a>
+                                        <a id="assignee-a"
+                                           data-issue_id="{{issue['id']}}"
+                                           class="author_link bold "
+                                           href="/user/profile/{{issue['assignee']}}"
+                                           title="双击可以直接更换经办人"
+                                        >
+                                            <img id="assignee-img" width="32" class="avatar avatar-inline s32 " alt=""  src="{{issue['assignee_info']['avatar']}}">
+                                            <span id="assignee-display_name" class="author ">{{issue['assignee_info']['display_name']}}</span>
+                                            <span id="assignee-username" class="username">{{issue['assignee_info']['username']}}</span></a>
                                         {% endif  %}
-
-                                    </div>
-                                    <div class="selectbox hide-collapsed">
-                                        <input value="15" id="issue_assignee_id" type="hidden" name="issue[assignee_id]"/>
-                                        <div class="dropdown ">
-                                            <button class="dropdown-menu-toggle js-user-search js-author-search"
-                                                    type="button"
-                                                    data-first-user="{{issue['assignee_info']['username']}}"
-                                                    data-current-user="true"
-                                                    data-project-id="{{project_id}}"
-                                                    data-author-id="{{issue['assignee_info']['uid']}}"
-                                                    data-field-name="assignee_id"
-                                                    data-issue-update="/issue/main/patch/{{issue_id}}"
-                                                    data-ability-name="issue"
-                                                    data-null-user="true"
-                                                    data-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                <span class="dropdown-toggle-text ">选择经办人</span>
-                                                <i class="fa fa-chevron-down"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author">
-                                                <div class="dropdown-title">
-                                                    <span>分配给</span>
-                                                    <button class="dropdown-title-button dropdown-menu-close"
-                                                            aria-label="Close" type="button">
-                                                        <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="dropdown-input">
-                                                    <input type="search" id="" class="dropdown-input-field"
-                                                           placeholder="Search users" autocomplete="off"/>
-                                                    <i class="fa fa-search dropdown-input-search"></i>
-                                                    <i role="button"
-                                                       class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                                </div>
-                                                <div class="dropdown-content "></div>
-                                                <div class="dropdown-loading">
-                                                    <i class="fa fa-spinner fa-spin"></i>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <select id="project-user-select" name="project-user-select"
+                                                class="selectpicker"  data-live-search="true"
+                                                data-project-id="{{project_id}}"
+                                        >
+                                            <option value="">选择成员</option>
+                                            {% for user in project_users %}
+                                                <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='{{user.avatar}}'> {{user.display_name}}" value="{{user.uid}}">{{user.display_name}}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
 
-                                </div>
-
-                                <div class="block milestone hide">
-                                    <div class="sidebar-collapsed-icon">
-                                        <i aria-hidden="true" class="fa fa-clock-o"></i>
-                                        <small>None</small>
-                                    </div>
-                                    <div class="title hide-collapsed "><span class="bold">Milestone</span>
-                                        <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                        <a class="edit-link pull-right" href="#">
-                                            编辑
-                                        </a></div>
-                                    <div class="value hide-collapsed">
-                                        <small class="no-value">None</small>
-                                    </div>
-                                    <div class="selectbox hide-collapsed">
-                                        <input type="hidden" name="issue[milestone_id]"/>
-                                        <div class="dropdown ">
-                                            <button class="dropdown-menu-toggle js-milestone-select js-extra-options"
-                                                    type="button"
-                                                    data-show-no="true"
-                                                    data-field-name="issue[milestone_id]"
-                                                    data-project-id="{{project_id}}"
-                                                    data-issuable-id="{{issue_id}}"
-                                                    data-milestones="/api/v4/milestones.json"
-                                                    data-ability-name="issue"
-                                                    data-issue-update="/issue/main/patch/{{issue_id}}"
-                                                    data-use-id="true"
-                                                    data-toggle="dropdown">
-                                                <span class="dropdown-toggle-text ">Milestone</span>
-                                                <i class="fa fa-chevron-down"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-select dropdown-menu-selectable">
-                                                <div class="dropdown-title">
-                                                    <span>Assign milestone</span>
-                                                    <button class="dropdown-title-button dropdown-menu-close"
-                                                            aria-label="Close" type="button">
-                                                        <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="dropdown-input">
-                                                    <input type="search" id="" class="dropdown-input-field"
-                                                           placeholder="Search milestones" autocomplete="off"/>
-                                                    <i class="fa fa-search dropdown-input-search"></i>
-                                                    <i role="button"
-                                                       class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                                </div>
-                                                <div class="dropdown-content "></div>
-                                                <div class="dropdown-loading">
-                                                    <i class="fa fa-spinner fa-spin"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div class="title hide-collapsed margin-t"><span class="bold">时间</span>
                                 </div>
-                                <div class="block due_date due_date_first">
-                                    <div class="sidebar-collapsed-icon">
+                                <div class="block due_date due_date_first"  title="点击操作可直接修改"  onmouseover="$('#a_start_date_edit').show();" onmouseout="$('#a_start_date_edit').hide();">
+                                    <div class="sidebar-collapsed-icon" title="点击操作可直接修改">
                                         <i aria-hidden="true" class="fa fa-calendar"></i>
                                         <span class="js-due-date-sidebar-value">{{ issue['start_date'] == '0000-00-00' ? '' : issue['start_date'] }}</span></div>
                                     <div class="title hide-collapsed">
                                         <small>开始时间</small>
                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                         <a class="edit-link2 pull-right" href="#">
-                                            <small id="a_start_date_edit">编辑</small>
+                                            <small id="a_start_date_edit" class="hide">修改</small>
                                         </a>
 
                                     </div>
-                                    <div class="value hide-collapsed">
-                                        <span class="value-content">
+                                    <div class="value hide-collapsed"  title="点击操作可直接修改">
+                                        <span class="value-content"  title="点击操作可直接修改">
                                                 <small class="no-value"
                                                        id="small_start_date">{{ issue['start_date'] == '0000-00-00' ? '' : issue['start_date'] }}</small>
 
@@ -751,7 +717,7 @@
                                     </div>
 
                                 </div>
-                                <div class="block due_date">
+                                <div class="block due_date" onmouseover="$('#a_due_date_edit').show();" onmouseout="$('#a_due_date_edit').hide();">
                                     <div class="sidebar-collapsed-icon">
                                         <i aria-hidden="true" class="fa fa-calendar"></i>
                                         <small class="js-due-date-sidebar-value">{{ issue['due_date'] == '0000-00-00' ? '' : issue['due_date'] }}</small>
@@ -760,8 +726,9 @@
                                         <small>截止时间</small>
                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                         <a class="edit-link2 pull-right" href="#">
-                                            <small id="a_due_date_edit">编辑</small>
-                                        </a></div>
+                                            <small id="a_due_date_edit"  class="hide" >修改</small>
+                                        </a>
+                                    </div>
                                     <div class="value hide-collapsed">
                                       <span class="value-content">
                                         <small class="no-value" id="small_due_date">{{ issue['due_date'] == '0000-00-00' ? '' : issue['due_date'] }}</small>
@@ -1249,20 +1216,7 @@
     </script>
     <div id="fine-uploader-gallery" style="display: none"></div>
     {% include 'twig/issue/form.twig' %}
-    <script>
 
-        //var notes = new Notes("/api/v4/notes.json", [111, 112, 113], 1509550115, "inline")
-    </script>
-    <script>IssuableContext.prototype.PARTICIPANTS_ROW_COUNT = 7;</script>
-
-    <script>
-        gl.IssuableResource = new gl.SubbableResource('/api/v4/issue_1.json');
-        new gl.IssuableTimeTracking("{\"id\":1,\"iid\":1,\"assignee_id\":15,\"author_id\":15,\"description\":\"拼写错误\",\"lock_version\":null,\"milestone_id\":null,\"position\":0,\"state\":\"closed\",\"title\":\"InWord\",\"updated_by_id\":15,\"created_at\":\"2017-10-19T10:56:27.764Z\",\"updated_at\":\"2017-10-31T08:59:27.604Z\",\"deleted_at\":null,\"time_estimate\":0,\"total_time_spent\":0,\"human_time_estimate\":null,\"human_total_time_spent\":null,\"branch_name\":null,\"confidential\":false,\"due_date\":null,\"moved_to_id\":null,\"project_id\":31,\"milestone\":null,\"labels\":[]}");
-        new MilestoneSelect('{"full_path":"ismond/xphp"}');
-        gl.Subscription.bindAll('.subscription');
-        new IssuableContext('{\"id\":{{user['uid']}},\"name\":\"{{user['display_name']}}\",\"username\":\"{{user['username']}}\"}');
-        window.sidebar = new Sidebar();
-    </script>
 
     <script type="text/template" id="qq-simple-thumbnails-template">
         <div class="qq-uploader">
@@ -1363,6 +1317,46 @@
                 }
             });
 
+            $(".assignee-select  > a").on("click", function(e){
+                if(e.preventDefault){
+                    e.preventDefault();
+                }else{
+                    e.returnValue = false;
+                }
+            });
+            $('#project-user-select').selectpicker('hide');
+            $('#project-user-select').bind('change',function(e){
+                var id = $(this).val();
+                var user  = getArrayValue(_issueConfig.users, 'uid',id);
+                $('#assignee-display_name').html(user.display_name);
+                $('#assignee-username').html(user.username);
+                $('#assignee-a').attr("href", "/user/profile/" + id);
+                $('#assignee-img').attr('src', user.avatar);
+                $('#project-user-select').selectpicker('refresh');
+                IssueDetail.prototype.updateIssueAssignee(window._issue_id, id);
+
+                //$('#project-user-select').selectpicker('hide');
+            });
+            $(".assignee-select > a").bind("dblclick", function () {
+
+                if(cur_project_id ===''){
+                    notify_warn('提示','需要进入项目才能修改');
+                    return false;
+                }
+                var $self = $(this);
+                var issue_id = $self.data('issue_id');
+                if(!issue_id){
+                    return false;
+                }
+                $('#project-user-select').selectpicker('show');
+               // $('#project-user-select').selectpicker('render');
+
+
+                $(document).on("click", function () {
+                    $('#project-user-select').selectpicker('refresh');
+                    $('#project-user-select').selectpicker('hide');
+                });
+            });
             keyMaster.addKeys([
                 {
                     key: 'ctrl+enter',
