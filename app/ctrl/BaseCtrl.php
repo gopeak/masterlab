@@ -608,7 +608,7 @@ class BaseCtrl
                 //var_dump($pluginFile);
                 if (file_exists($pluginFile)) {
                     require_once($pluginFile);
-                    $pluginClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, $pluginClassName);
+                    $pluginClass = sprintf("main\\plugin\\%s\\%s",  $pluginName, $pluginClassName);
                     if (class_exists($pluginClass)) {
                         $this->_plugins[$pluginName] = new $pluginClass($this->dispatcher, $pluginName);
                         $this->dispatcher->addSubscriber($this->_plugins[$pluginName]);

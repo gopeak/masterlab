@@ -3,8 +3,6 @@
 	<head prefix="og: http://ogp.me/ns#">
 		{% include 'twig/common/header/include.twig' %}
 
-		<!--<script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>-->
-
 		<script src="/dev/lib/moment.js"></script>
 		<script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 		<script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
@@ -18,8 +16,6 @@
 
 		<script>
 			window.description_templates = {{ description_templates|json_encode()|raw }};
-            window.project_uploads_path = "/issue/main/upload?project_id=  {{ project_id }}";
-            window.preview_markdown_path = "/issue/main/preview_markdown";
 		</script>
 
 		<script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>

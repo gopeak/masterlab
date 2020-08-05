@@ -1248,7 +1248,12 @@ class Main extends BaseUserCtrl
         }
     }
 
-    private function initAddGanttWeight($params = [], &$info)
+    /**
+     * @param array $params
+     * @param $info
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function initAddGanttWeight($params, &$info)
     {
         // 如果是不在甘特图提交的
         $fieldWeight = 'gant_sprint_weight';
@@ -1875,8 +1880,7 @@ class Main extends BaseUserCtrl
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-
-        $event = new CommonPlacedEvent($this, $issueId);
+        $event = new CommonPlacedEvent($this, $issue);
         $this->dispatcher->dispatch($event,  Events::onIssueFollow);
         $this->ajaxSuccess('success', $ret);
     }
