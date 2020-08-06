@@ -1,0 +1,37 @@
+
+{% if ( left_nav_active is not defined ) %}
+    {% set left_nav_active = '' %}
+{% endif %}
+{% if ( sub_nav_active is not defined ) %}
+    {% set sub_nav_active = '' %}
+{% endif %}
+
+
+<aside aria-live="polite" class="js-right-sidebar left-sidebar right-sidebar-expanded affix-top"
+       data-spy="affix" tabindex="0"  >
+    <div class="issuable-sidebar">
+
+        <div class="admin-menu-links">
+            <div class="aui-nav-heading   {% if (sub_nav_active == 'plugin') %} {{ 'active' }}{% endif %}"><strong>插件类型</strong></div>
+            <ul class="aui-nav" resolved="">
+                <li data-type="all" class="li_plugin_type {% if (left_nav_active == 'all') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >全部</a>
+                </li>
+                <li data-type="project_module" class="li_plugin_type {% if (left_nav_active == 'project_module') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >项目模块</a>
+                </li>
+                <li data-type="admin_module" class="li_plugin_type {% if (left_nav_active == 'admin_module') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >管理模块</a>
+                </li>
+                <li data-type="theme" class="li_plugin_type {% if (left_nav_active == 'theme') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >主题</a>
+                </li>
+                <li data-type="app" class="li_plugin_type {% if (left_nav_active == 'app') %} {{ 'active' }}{% endif %}">
+                    <a href="#" >应用程序</a>
+                </li>
+
+            </ul>
+            <hr>
+        </div>
+    </div>
+</aside>

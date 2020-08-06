@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+
+    <link rel="stylesheet" href="/dev/lib/jsplumb/css/main.css">
+    <link rel="stylesheet" href="/dev/lib/jsplumb/css/jsplumbtoolkit-defaults.css">
+    <link rel="stylesheet" href="/dev/lib/jsplumb/css/jsplumbtoolkit-demo.css">
+    <link rel="stylesheet" href="/dev/lib/jsplumb/demo/statemachine/demo.css">
+</head>
+
+<body class="" data-demo-id="statemachine">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body system-page">
+{% include 'twig/common/body/header-content.twig' %}
+
+<script>
+    var findFileURL = "";
+</script>
+<div class="page-with-sidebar">
+    {% include 'twig/admin/common-page-nav-admin.twig' %}
+
+
+    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+        <div class="alert-wrapper">
+            <div class="flash-container flash-container-page">
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="content" id="content-body">
+                {% include 'twig/admin/common_issue_left_nav.twig' %}
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">查看状态流</a>
+                                </li>
+                            </ul>
+
+                            <div class="nav-controls">
+                                <a class="btn has-tooltip" title="" href="/admin/workflow" data-original-title="返回列表">
+                                    <i class="fa fa-reply-all"></i> 返回列表
+                                </a>
+                                    <a class="btn  " href="/admin/workflow/edit/{{id}}"  >
+                                        <i class="fa fa-edit"></i>
+                                        编辑
+                                    </a>
+                            </div>
+                        </div>
+                        <div class="content-list">
+                            <div class="jtk-demo-main">
+                                <!-- demo -->
+                                <div class="jtk-demo-canvas canvas-wide statemachine-demo jtk-surface jtk-surface-nopan" id="canvas">
+
+                                </div>
+                                <!-- /demo -->
+                            </div>
+
+
+
+                            <div>
+                                <span>Data:</span><br>
+
+                                <textarea cols="120" rows="20" id="workflow_json" name="workflow_json" style="margin-left: 80px">
+
+                                </textarea>
+                            </div>
+                            <div class="gl-pagination" id="pagination">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</section>
+<!-- <script src="/dev/lib/jquery.min.js"></script> -->
+<script src="/dev/lib/jsplumb/js/jsplumb.min.js"></script>
+
+<script src="/dev/js/admin/workflow_design.js?v={{_version}}"></script>
+<script type="text/javascript">
+
+    var $Workflow = null;
+    var workflow_data = {{data|raw}};
+    $(function() {
+
+
+
+
+    });
+
+</script>
+</body>
+</html>

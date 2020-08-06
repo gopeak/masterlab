@@ -1,0 +1,38 @@
+
+<div class="scrolling-tabs-container sub-nav-scroll">
+    <div class="fade-left">
+        <i class="fa fa-angle-left"></i>
+    </div>
+    <div class="fade-right">
+        <i class="fa fa-angle-right"></i>
+    </div>
+
+    <div class="nav-links sub-nav scrolling-tabs is-initialized">
+        <ul class="container-fluid">
+            <li class=" {% if (sub_nav_active == 'setting') %} {{ 'active' }}{% endif %}">
+                <a title="设置" href="/admin/system">
+                    <span>设置</span>
+                </a></li>
+            <li class=" {% if (sub_nav_active == 'security') %} {{ 'active' }}{% endif %}">
+                <a title="安全" href="/admin/system/security"><span>安全</span>
+                </a>
+            </li>
+            <li class=" {% if (sub_nav_active == 'ui') %} {{ 'active' }}{% endif %}">
+                <a title="用户界面" href="/admin/system/ui_setting"><span>用户界面</span>
+                </a>
+            </li>
+            <li class=" {% if (sub_nav_active == 'email') %} {{ 'active' }}{% endif %}">
+                <a title="邮件" href="/admin/system/smtp_config"><span>邮件</span>
+                </a>
+            </li>
+            <li class=" {% if (sub_nav_active == 'export_import') %} {{ 'active' }}{% endif %}">
+                <a title="导入与导出" href="/admin/system/export_import"><span>导入与导出</span>
+                </a>
+            </li>
+            <li class=" {% if (sub_nav_active == 'advance') %} {{ 'active' }}{% endif %}">
+                <a title="高级" href="/admin/system/advance"><span>高级</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

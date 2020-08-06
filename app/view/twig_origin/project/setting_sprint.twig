@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head>
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/lib/jquery.form.js"></script>
+    <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/sprint.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
+
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body">
+{% include 'twig/common/body/header-content.twig' %}
+
+<script>
+    var findFileURL = "";
+</script>
+<div class="page-with-sidebar">
+    {% include 'twig/project/common-page-nav-project.twig' %}
+
+    {% include 'twig/project/common-setting-nav-links-sub-nav.twig' %}
+
+    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+        <div class="alert-wrapper">
+
+            <div class="flash-container flash-container-page">
+            </div>
+
+        </div>
+        <div class="container-fluid container-limited">
+
+            <div class="content" id="content-body">
+
+                <div class="row prepend-top-default">
+                    <div class="col-lg-3 settings-sidebar">
+                        <h4 class="prepend-top-0">
+                            迭代
+                        </h4>
+                        <p>
+                            迭代一般指项目迭代的生产过程，是一次冲刺的过程，包括从需求分析到测试完成。
+                            迭代是重复反馈过程的活动，其目的通常是为了逼近所需目标或结果。
+                        </p>
+                        <p>
+                            注：已经归档的迭代将不会出现在事项表单中，删除的迭代将无法找回，所属事项也会被归入待办事项或已关闭事项
+                        </p>
+                    </div>
+                    <div class="col-lg-9">
+                        <form id="form_add_action" class="setting-form clearfix" action="/agile/addSprint?project_id={{project_id}}" accept-charset="UTF-8" method="post">
+                            <input name="utf8" type="hidden" value="✓">
+                            <input type="hidden" name="authenticity_token" value="">
+                            <input type="hidden" name="format" id="format" value="json">
+                            <input type="hidden" name="project_id" id="project_id" value="{{ project_id }}">
+                            <div class="form-group  col-md-2">
+                                <input style="margin-left: -15px;" type="text" name="params[name]" id="add_name" placeholder="迭代名称" required="required" tabindex="1"  class="form-control">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <div class="clearable-input">
+                                    <input type="text" name="params[start_date]" id="add_start_date" class="form-control js-access-expiration-date-groups" tabindex="2" placeholder="开始日期" autocomplete="off">
+                                    <i class="clear-icon js-clear-input"></i>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <div class="clearable-input">
+                                    <input type="text" name="params[end_date]" id="add_end_date" class="form-control js-access-expiration-date-groups" tabindex="3" placeholder="截止日期"  autocomplete="off">
+                                    <i class="clear-icon js-clear-input"></i>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input type="text" name="params[description]" id="add_description" placeholder="描述"  tabindex="4"  class="form-control">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <input type="button"  id="btn_sprint_add"  value="添 加" class="btn btn-create" >
+                            </div>
+                        </form>
+                        <div class="panel panel-form panel-default margin-t-lg">
+                            <div class="panel-heading">
+                                <strong>迭代</strong>
+                            </div>
+                            <ul class="flex-list content-list" id="list_render_id">
+
+                            </ul>
+                        </div>
+                        <div class="gl-pagination border-0" id="ampagination-bootstrap">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="modal-edit-sprint">
+    <form class="form-horizontal" id="form_edit_action"  action="/agile/updateSprint" accept-charset="UTF-8"  method="post">
+        <input name="utf8" type="hidden" value="✓">
+        <input type="hidden" name="authenticity_token" value="">
+        <input type="hidden" name="sprint_id" id="edit_id" value="" />
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-header-title">编辑迭代 </h3>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="form-group">
+                        <label class="control-label" for="edit_name">迭代</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="edit_name" name="params[name]" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_status_1">状态</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio"  value="1" id="edit_status_1" name="params[status]">正 常
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio"  value="2" id="edit_status_2" name="params[status]">已完成
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio"  value="3" id="edit_status_3" name="params[status]">已归档
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_start_date">开始日期</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control js-access-expiration-date-groups" id="edit_start_date" name="params[start_date]" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_end_date">结束日期</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control js-access-expiration-date-groups" id="edit_end_date" name="params[end_date]" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="edit_description">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="edit_description" name="params[description]"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="btn-edit_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+    </div>
+</section>
+{% verbatim %}<script type="text/html"  id="list_tpl">
+    {{#sprints}}
+    <li class="flex-row" id="li_data_id_{{id}}">
+        <div class="row-main-content str-truncated">
+            <span class="item-title" {{#if_eq active 1}} style="color:blue" {{/if_eq}} >
+                <i class="fa fa-rocket"></i> {{name}} {{#if_eq active 1}} （当前进行中） {{else}}    {{/if_eq}}
+            </span>
+            <div class="block-truncated">
+                <div class="branch-commit">
+                    <div class="icon-container commit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 18" enable-background="new 0 0 36 18"><path d="m34 7h-7.2c-.9-4-4.5-7-8.8-7s-7.9 3-8.8 7h-7.2c-1.1 0-2 .9-2 2 0 1.1.9 2 2 2h7.2c.9 4 4.5 7 8.8 7s7.9-3 8.8-7h7.2c1.1 0 2-.9 2-2 0-1.1-.9-2-2-2m-16 7c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5"></path></svg>
+                    </div>
+                    <small class="">
+                        {{#if_eq status 1}}  正 常 {{/if_eq}}
+                        {{#if_eq status 2}}  已完成 {{/if_eq}}
+                        {{#if_eq status 3}}  已归档 {{/if_eq}}
+                        ·
+                        {{start_date}} -  {{end_date}}
+
+                        {{#if description}}
+                           · <span>{{description}}</span>
+                        {{/if}}
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="pull-left hidden-xs hidden-sm hidden-md">
+            {{#if_eq active 0}}
+            <a  class="btn  btn-transparent  list_for_set_active" title="设置为进行中" data-id="{{id}}" href="javascript:void(0);">
+                    <i class="fa  fa-play-circle"></i>
+            </a>
+            {{/if_eq}}
+            <a class="btn btn-transparent btn-action list_for_edit" title="编辑迭代"  href="javascript:void(0);"  data-id="{{id}}">
+                <i class="fa fa-pencil-square-o"></i>
+            </a>
+            <a class="btn btn-transparent btn-action list_for_delete" title="删除迭代"  class="list_for_delete" data-id="{{id}}"  href="javascript:void(0)">
+                <i class="fa fa-trash-o"></i>
+            </a>
+
+        </div>
+    </li>
+    {{/sprints}}
+</script>{% endverbatim %}
+
+<script>
+    let query_str = '{{query_str}}';
+    let urls = parseURL(window.location.href);
+
+    $(function() {
+        lay('.js-access-expiration-date-groups').each(function(){
+            laydate.render({
+                elem: this
+                ,trigger: 'click'
+            });
+        });
+
+        let options = {
+            query_str: window.query_str,
+            query_param_obj: urls.searchObject,
+            list_render_id:"list_render_id",
+            list_tpl_id:"list_tpl",
+            filter_url:"/agile/fetchSprints?project_id={{project_id}}"
+        };
+        window.$sprint = new Sprint( options );
+        window.$sprint.fetchAll();
+
+        $('#btn_sprint_add').click(function () {
+            window.$sprint.add();
+        });
+
+        $('#btn-edit_save').click(function () {
+            window.$sprint.update();
+        });
+    });
+
+</script>
+</body>
+</html>

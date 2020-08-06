@@ -1,0 +1,131 @@
+<script src="/dev/vendor/get-browser-info.js"></script>
+
+{% if is_login_page %}
+<script type="text/javascript">
+    window.onload = function () {
+            // var cookieFlag = getCookie('check_browser_flag');
+            //if (typeof(cookieFlag) === 'undefined' || !cookieFlag) {
+                var brName = getExploreName();
+                //判断浏览器类型
+                if (brName === 'IE' || brName === 'Edge' || brName === 'IE>=11' || brName === 'Unkonwn') {
+                    window.location.href = '/dev/html/check_brower/index.html';
+                }
+            //}
+     }
+</script>
+{% endif %}
+
+<script src="/dev/lib/jquery.min.js"></script>
+<script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
+<script src="/dev/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+<!--
+-->
+<script src="/dev/js/browser_info.js?v={{_version}}"></script>
+<script src="/dev/js/upgrade.js?v={{_version}}"></script>
+<script src="/dev/lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
+<!-- recoding -->
+
+<!-- end -->
+<script src="/dev/js/logo.js"></script>
+<script src="/dev/js/function.helper.js?v={{_version}}"></script>
+<script src="/dev/vendor/define-loading.js"></script>
+<script src="/dev/vendor/define-status-html.js"></script>
+
+<script src="/dev/vendor/key-master.js"></script>
+<script src="/dev/lib/moment.js"></script>
+
+<script src="/dev/js/key_master.js?v={{_version}}"></script>
+<!--script src="/dev/js/csrf.js?v={{_version}}"></script-->
+<script>
+    $(function () {
+
+        var upgradeObj = new Upgrade(current_version);
+
+        function csrfSafeMethod(method) {
+            // 匹配method的请求模式
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("ML-CSRFToken", "{{csrf_token}}");
+                }
+
+            }
+        });
+
+        /*ajax预处理缓存*/
+        var ajaxRequestList = {};
+
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            if (Object.prototype.toString.call(options.data) == "[object FormData]") {
+                options.data.append("_csrftoken", "{{csrf_token}}");
+            } else if (Object.prototype.toString.call(options.data) == "[object String]") {
+                if (Object.prototype.toString.call(originalOptions.data) == "[object Object]") {
+                    options.data = $.param($.extend(originalOptions.data || {}, {
+                        _csrftoken: "{{csrf_token}}"
+                    }));
+                } else if (Object.prototype.toString.call(originalOptions.data) == "[object String]") {
+                    options.data = options.data + "&_csrftoken=" + "{{csrf_token}}";
+                }
+            }
+            //console.log(options.headers);
+            /*
+                 判断唯一标识,同一个ajax只能同时存在一次
+                 single(string): 唯一标识
+                 mine(boolean): 如果ajax标识重复则用自身(true)还是原来的
+                 once(boolean): 是否唯一，唯一(true)则只会请求成功一次
+             */
+            if (typeof originalOptions.single === 'string') {
+                if (!ajaxRequestList[originalOptions.single]) {
+                    ajaxRequestList[originalOptions.single] = jqXHR;
+                    if (originalOptions.once === true) {
+                        jqXHR.fail(function () {
+                            delete ajaxRequestList[originalOptions.single];
+                        });
+                    } else {
+                        jqXHR.always(function () {
+                            delete ajaxRequestList[originalOptions.single];
+                        });
+                    }
+                } else {
+                    if (originalOptions.mine === true) {
+                        ajaxRequestList[originalOptions.single].abort();
+                    } else {
+                        jqXHR.abort();
+                    }
+                }
+            }
+
+        });
+
+        var unreadTimer = setInterval(function(){
+           // console.log("每60秒执行一次");
+            if(window.current_uid ==''){
+                return;
+            }
+            $.ajax({
+                type: 'get',
+                dataType: "json",
+                async: true,
+                url: '/user/fetchUnreadCount',
+                success: function (resp) {
+                    if( resp.ret=='200'){
+                        var count = resp.data;
+                        if(parseInt(resp.data)<=0){
+                            count = '';
+                        }
+                        $('#unread-msg-count').html(''+count+'');
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        },60000);
+        //window.clearInterval(unreadTimer);
+    })
+</script>
+<input type="hidden" id="csrf_token" value="{{csrf_token}}">

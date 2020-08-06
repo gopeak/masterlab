@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="/dev/css/sidebar-left.css?v={{_version}}"/>
+<link rel="stylesheet" type="text/css" href="/dev/css/sidebar-left.css?v=<?=_version?>"/>
 
 <aside class="main-sidebar">
     <div class="main-logo">
@@ -13,24 +13,24 @@
     </div>
 
     <ul class="sidebar-menu">
-        <li class="menu-item  {% if (top_menu_active == 'index') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'index') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/dashboard">
                 <i class="fa fa-dashboard"></i> <span>首页</span>
             </a>
         </li>
-        <li class="menu-item  {% if (top_menu_active == 'org') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'org') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/org">
                 <i class="fa fa-sitemap"></i>
                 <span>组织</span>
             </a>
         </li>
-        <li class="menu-item  {% if (top_menu_active == 'project') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'project') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/projects">
                 <i class="fa fa-product-hunt"></i> <span>项目</span>
             </a>
         </li>
         {% if ( is_admin ) %}
-        <li class="menu-item  {% if (top_menu_active == 'system') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'system') %} <?= 'menu-open' ?>{% endif %}">
             <!--a href="/admin/system">
                 <i class="fa fa-wrench"></i> <span>管理</span>
             </a-->
@@ -40,7 +40,7 @@
         </li>
         {% endif %}
 
-        <li class="menu-item  {% if (top_menu_active == 'help') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'help') %} <?= 'menu-open' ?>{% endif %}">
             <a href="http://www.masterlab.vip/help.php" target="_blank">
                 <i class="fa fa-question-circle"></i> <span>帮助</span>
             </a>

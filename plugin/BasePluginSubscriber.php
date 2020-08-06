@@ -48,7 +48,7 @@ class BasePluginSubscriber implements EventSubscriberInterface
                 $subClassPath = str_replace('/', "\\", $subClassPath);
                 //var_dump($subClassPath);
                 $file = pathinfo($file);
-                if ($file['extension'] = 'php'
+                if ($file['extension'] == 'php'
                     && !in_array($file['basename'], ['BaseModel', 'DbModel'])
                     && $file['basename']!='.'
                     && $file['basename']!='..'

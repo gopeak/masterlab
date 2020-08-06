@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head>
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+<script src="/dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body system-page">
+        {% include 'twig/common/body/header-content.twig' %}
+
+
+        <div class="page-with-sidebar">
+
+            {% include 'twig/admin/common-page-nav-admin.twig' %}
+
+
+            <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+                <div class="alert-wrapper">
+
+                    <div class="flash-container flash-container-page">
+                    </div>
+
+                </div>
+                <div class="container-fluid ">
+
+                    <div class="content" id="content-body">
+
+                        {% include 'twig/admin/common_system_left_nav.twig' %}
+
+                        <div class="row has-side-margin-left">
+                            <div class="col-lg-12">
+                                <div class="top-area">
+                                    <ul class="nav-links">
+                                        <li class="active">
+                                            <a href="#">缓 存</a>
+                                        </li>
+                                        <li>
+                                            <span class="hint">启用缓存可以提高服务器的响应速度</span>
+                                        </li>
+                                    </ul>
+                                    <div class="nav-controls">
+                                        <div class="btn-group" role="group">
+                                            <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" data-target="#modal-edit_cache_config" data-toggle="modal" href="#modal-edit_cache_config">
+                                                <i class="fa fa-edit"></i> 修改
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content-list prepend-top-default">
+                                    <form class="form-horizontal" id="new_announce" action="#" accept-charset="UTF-8"
+                                          method="post">
+                                            <div class="form-group">
+                                                <label class="control-label"></label>
+                                                <div class="col-sm-5">
+                                                    是否开启:&nbsp;&nbsp;{{redis_is_used}}
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        {% for redis_config in redis_configs %}
+                                            <div class="form-group">
+                                                <label class="control-label"></label>
+                                                <div class="col-sm-5">
+                                                    Redis 主机: {{redis_config[0]}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label"></label>
+                                                <div class="col-sm-5">
+                                                    Redis 端口: {{redis_config[1]}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label"></label>
+                                                <div class="col-sm-5">
+                                                    Redis 密码: {{redis_config[2]}}
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        {% endfor %}
+                                        <div class="form-group">
+                                            <label class="control-label"></label>
+                                            <div class="col-sm-5">
+                                                <div class="form-group">
+                                                    <a class="btn  btn-default" id="btn-redis_clear" href="#">清除数据</a>
+                                                    <span style="font-size: 10px">升级补丁或数据异常时需要清除缓存</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group hidden">
+                                            <label class="control-label"></label>
+                                            <div class="col-sm-5">
+                                                <div class="form-group">
+                                                    <a class="btn  btn-default" id="btn-compute_issue" href="#">同步数据</a>
+                                                   <span style="font-size: 10px">升级1.2版本时，需同步事项的关注和评论数</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<div class="modal" id="modal-edit_cache_config">
+    <div class="modal-dialog">
+        <div class="modal-content modal-middle">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" href="#">×</a>
+                <h3 class="modal-header-title">修改缓存配置</h3>
+            </div>
+            <div class="modal-body">
+                <form id="js_form_submit" class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/system/setting_cache_config"   accept-charset="UTF-8" method="post">
+                    <div id="form_id">
+
+                    </div>
+
+                    <div class="form-actions modal-footer">
+                        <button name="submit" type="submit" class="btn btn-save js-key-enter" data-dismiss="modal" id="submit-all">保存</button>
+                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% verbatim %}<script type="text/html"  id="settings_form_tpl">
+    <div class="form-group">
+        <label class="control-label col-sm-3">开启缓存:</label>
+        <div class="col-sm-8">
+            <div class="form-group">
+                <div class="display-flex">
+                    <div class="radio prepend-left-10">
+                        <label>
+                            <input type="radio" value="1" {{#if_eq redis_is_used '1'}}checked="checked"{{/if_eq}} name="params[enable]">
+                            开启
+                        </label>
+                    </div>
+                    <div class="radio prepend-left-10">
+                        <label>
+                            <input type="radio" value="0" {{#if_eq redis_is_used '0'}}checked="checked"{{/if_eq}} name="params[enable]">
+                            关闭
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {{#redis_configs}}
+        {{#if_eq ../show_cache_group '1'}}
+    <div class="form-group">
+        <label class="control-label">配置{{@index}}</label>
+    </div>
+        {{/if_eq}}
+    <div class="form-group">
+        <label class="control-label col-sm-3">Redis 主机: </label>
+        <div class="col-sm-8">
+            <div class="form-group">
+                <input type="text" class="form-control" name="params[redis][{{@index}}][0]" value="{{this.[0]}}" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-3">Redis 端口: </label>
+        <div class="col-sm-8">
+            <div class="form-group">
+                <input type="text" class="form-control" name="params[redis][{{@index}}][1]" value="{{this.[1]}}" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-3">Redis 密码: </label>
+        <div class="col-sm-8">
+            <div class="form-group">
+                <input type="text" class="form-control" name="params[redis][{{@index}}][2]" value="{{this.[2]}}" />
+            </div>
+        </div>
+    </div>
+    {{/redis_configs}}
+
+</script>{% endverbatim %}
+
+
+<link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+<script src="/dev/lib/laydate/laydate.js"></script>
+
+<script>
+    window.onload = function () {
+        laydate.render({
+            elem: '.laydate_input_date'
+            , type: 'datetime'
+            , trigger: 'click'
+        });
+    };
+
+    $(function () {
+        if ("undefined" != typeof Handlebars.registerHelper) {
+            Handlebars.registerHelper('if_eq', function (v1, v2, opts) {
+                if (v1 == v2) {
+                    return opts.fn(this);
+                } else {
+                    return opts.inverse(this);
+                }
+
+            });
+
+            // 是否在数组中
+            Handlebars.registerHelper('if_in_array', function (element, arr, options) {
+                for (v of arr) {
+                    if (v === element) {
+                        //则包含该元素
+                        return options.fn(this);
+                    }
+                }
+                return options.inverse(this);
+            });
+        }
+
+        fetchCacheSetting();
+
+        $("#btn-redis_clear").click(function () {
+            var method = 'post';
+            var url = '/admin/system/flushCache';
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: url,
+                data: {},
+                success: function (resp) {
+                    auth_check(resp);
+                    if (resp.ret == "200") {
+                        notify_success(resp.msg);
+                    } else {
+                        notify_error(resp.msg, resp.data);
+                    }
+                },
+                error: function (resp) {
+                    // alert("请求数据错误" + res);
+                    notify_error('请求数据错误: ' + resp);
+                }
+            });
+
+        });
+
+        $("#btn-compute_issue").click(function () {
+
+            loading.show('body', "请稍等");
+            var method = 'post';
+            var url = '/admin/system/computeIssueData';
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: url,
+                data: {},
+                success: function (resp) {
+                    loading.closeAll();
+                    auth_check(resp);
+                    if (resp.ret == "200") {
+                        notify_success(resp.msg);
+                    } else {
+                        notify_error(resp.msg, resp.data);
+                    }
+                },
+                error: function (resp) {
+                    loading.closeAll();
+                    // alert("请求数据错误" + res);
+                    notify_error('请求数据错误: ' + resp);
+                }
+            });
+
+        });
+
+        $("#submit-all").on("click", function () {
+            /*
+            setTimeout(function () {
+                window.location.reload();
+            }, 300);
+
+             */
+
+            method =  $('#js_form_submit').attr('method') ;
+            url =  $('#js_form_submit').attr('action') ;
+            var params = $('#js_form_submit').serialize();
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: url,
+                data: params ,
+                success: function (resp) {
+                    auth_check(resp);
+                    if (resp.ret == "200") {
+                        notify_success(resp.msg);
+                        setTimeout("window.location.reload();", 2000)
+                    } else {
+                        notify_error(resp.msg, resp.data);
+                    }
+                },
+                error: function (resp) {
+                    console.log('=====================',resp);
+                    notify_error("请求数据错误" + resp);
+                }
+            });
+        });
+
+    });
+
+    function fetchCacheSetting()
+    {
+        var url = "/admin/system/fetchCacheConfig";
+        var params = {};
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: url,
+            data: params ,
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret == "200") {
+                    var source = $('#settings_form_tpl').html();
+                    var template = Handlebars.compile(source);
+
+                    Handlebars.registerHelper("equal", function (v1, v2, options) {
+                        if (v1 == v2) {
+                            return options.fn(this);
+                        } else {
+                            return options.inverse(this);
+                        }
+                    });
+
+                    var result = template(resp.data);
+
+                    $('#form_id').html(result);
+                } else {
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#' + parent_id,
+                        message : '数据为空',
+                        type: 'image'
+                    });
+                }
+            },
+            error: function (resp) {
+                notify_error("请求数据错误" + resp);
+            }
+        });
+    }
+
+
+</script>
+
+
+</body>
+</html>

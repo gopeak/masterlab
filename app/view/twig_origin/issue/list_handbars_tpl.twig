@@ -1,0 +1,603 @@
+{% verbatim %}
+                <script type="text/html" id="save_filter_tpl">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="text" id="save_filter_text" placeholder="请输入过滤器名称" name="save_filter_text" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <a class="btn btn-sm" id="save_filter_btn" onclick="IssueMain.prototype.saveFilter($('#save_filter_text').val())" href="#">确定</a>
+                        </div>
+                    </div>
+                </script>
+
+                <script type="text/html" id="save_adv_filter_tpl">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="text" id="save_adv_filter_text" placeholder="请输入过滤器名称" name="save_adv_filter_text" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <a class="btn btn-sm" id="save_adv_filter_btn" onclick="IssueAdvQuery.prototype.saveAdvQuery($('#save_adv_filter_text').val())" href="#">确定</a>
+                        </div>
+                    </div>
+                </script>
+{% endverbatim %}
+
+            <div id="fine-uploader-gallery" style="display: none"></div>
+
+            {% verbatim %}
+						<script type="text/html" id="list_tpl">
+							{{#issues}}
+								<tr class="tree-item " data-id="{{id}}"  data-have_children="{{have_children}}"  data-summary="{{summary}}">
+									<td class="width_6">
+										<div class="checkbox">
+											<label>
+												<input class="no_float_event" name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
+												{{#if_in_array 'issue_num'  ../display_fields}}
+													#{{issue_num}}
+												{{/if_in_array}}
+											</label>
+										</div>
+									</td>
+									{{#if_in_array 'issue_type'  ../display_fields}}
+										<td class="width_3_6"  title="双击可直接修改">
+											{{issue_type_short_html issue_type}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'priority'  ../display_fields}}
+										<td class="width_5"  title="双击可直接修改">
+                                            <div class="item-list-select priority-select" data-issue_id="{{id}}" id="priority-list-{{id}}">
+												{{priority_html priority }}
+												<ul class="item-data-list priority-list"></ul>
+											</div>
+										</td>
+									{{/if_in_array}}
+
+									{% endverbatim %}
+                                        {% if (is_all_issues or 'project_id'in display_fields) %}
+                                            {% verbatim %}
+                                                <td class="width_8">
+                                                    {{make_project project_id}}
+                                                </td>
+                                            {% endverbatim %}
+                                        {% endif %}
+                                    {% verbatim %}
+
+									{{#if_in_array 'module'  ../display_fields}}
+										<td class="width_6"  title="双击可直接修改">
+                                            <div class="item-list-select module-select" data-issue_id="{{id}}" id="module-list-{{id}}">
+												{{module_html module }}
+												<ul class="item-data-list module-list"></ul>
+											</div>
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'sprint'  ../display_fields}}
+										<td class="width_6"  title="双击可直接修改">
+                                            <div class="item-list-select sprint-select" data-issue_id="{{id}}" id="sprint-list-{{id}}">
+												{{make_issue_sprint sprint }}
+												<ul class="item-data-list sprint-list"></ul>
+											</div>
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'summary'  ../display_fields}}
+										<td class="show-tooltip width_35" title="快捷键 E 可呼出当前事项的编辑界面">
+											<a href="/issue/detail/index/{{id}}" class="commit-row-message">
+												{{lightSearch summary '{{search}}'}}
+											</a>
+											{{#if_in_array 'label'  ../display_fields}}
+                                                {{make_label_html label_id_arr}}
+                                            {{/if_in_array}}
+
+											{{#if_eq warning_delay 1 }}
+												<span style="color:#fc9403" title="即将延期">即将延期</span>
+											{{/if_eq}}
+
+											{{#if_eq postponed 1 }}
+												<span style="color:#db3b21" title="逾期">逾期</span>
+											{{/if_eq}}
+
+											{{#if_eq have_children '0'}}
+												{{^}}
+												<a href="#" style="color:#FF33FF" data-id="{{id}}" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
+												 data-have_children="{{have_children}}"
+												 class="have_children prepend-left-5 has-tooltip" data-original-title="该事项拥有{{have_children}}项子任务">
+													<span class="badge">{{have_children}}</span>子任务
+												</a>
+											{{/if_eq}}
+
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'weight'  ../display_fields}}
+										<td class="width_5">
+											{{weight}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'assignee'  ../display_fields}}
+										<td class="width_5"  title="双击可直接修改">
+                                            <div class="item-list-select assignee-select" data-issue_id="{{id}}" id="assignee-list-{{id}}">
+												{{user_html assignee}}
+												<ul class="item-data-list assignee-list"></ul>
+											</div>
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'reporter'  ../display_fields}}
+										<td class="width_4">
+											{{user_html reporter}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'assistants'  ../display_fields}}
+										<td class="width_5">
+											{{issue_assistants_avatar assistants}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'status'  ../display_fields}}
+										<td class="width_6_1" title="双击可直接修改">
+											<div class="item-list-select status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
+												{{status_html status }}
+												<ul class="item-data-list status-list"></ul>
+											</div>
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'resolve'  ../display_fields}}
+										<td class="width_7_9"  title="双击可直接修改">
+											<div class="item-list-select resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+												{{resolve_html resolve }}
+												<ul class="item-data-list resolve-list"></ul>
+											</div>
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'environment'  ../display_fields}}
+										<td class="width_6_1">
+											{{environment}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'plan_date'  ../display_fields}}
+										<td class="width_8"  title="双击可直接修改">
+											<small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;cursor:pointer;">{{show_date_range}}
+											</small>
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'resolve_date'  ../display_fields}}
+										<td class="width_5">
+											{{resolve_date}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'modifier'  ../display_fields}}
+										<td class="width_5">
+											{{user_html modifier}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'master_id'  ../display_fields}}
+										<td class="width_5">
+											{{#if_eq have_children '0'}}
+												否
+												{{^}}
+												是
+											{{/if_eq}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'created'  ../display_fields}}
+										<td class="width_5">
+											{{created_text}}
+										</td>
+									{{/if_in_array}}
+
+									{{#if_in_array 'updated'  ../display_fields}}
+										<td class="width_5">
+											{{updated_text}}
+										</td>
+									{{/if_in_array}}
+                                    {% endverbatim %}
+                                    {% for item in displayCustomFieldArr %}
+                                        <td class="width_5">
+                                            {% verbatim %}{{{% endverbatim %}{{item.name}}{% verbatim %}}}{% endverbatim %}
+                                        </td>
+                                    {% endfor %}
+                                    {% verbatim %}
+
+									<td class="pipeline-actions width_4">
+										<div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
+
+											<div class="js-notification-toggle-btns">
+												<div class="">
+													<a class="dropdown-new  notifications-btn " style="color: #8b8f94;" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">
+														...
+														<i class="fa fa-caret-down"></i>
+													</a>
+
+													<ul class="dropdown dropdown-menu dropdown-menu-no-wrap dropdown-menu-selectable" style="left:-120px;width:160px;min-width:140px; ">
+
+														<li class="aui-list-item active">
+															<a href="javascript:;" class="issue_edit_href" data-issue_id="{{id}}">
+																编辑
+															</a>
+														</li>
+														<li class="aui-list-item">
+															<a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}" data-issuekey="{{issue_num}}">复制</a>
+														</li>
+														{{#if_eq sprint '0' }}
+															<li class="aui-list-item">
+																<a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}" data-issuekey="{{issue_num}}">添加到迭代</a>
+															</li>
+														{{else}}
+															<li class="aui-list-item ">
+																<a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}" data-issuekey="{{issue_num}}">转换为待办事项</a>
+															</li>
+														{{/if_eq}}
+														<li class="aui-list-item">
+															<a href="javascript:;" class="issue_create_child" data-issue_id="{{id}}" data-title="{{summary}}" data-issuekey="{{issue_num}}">创建子任务</a>
+														</li>
+														{{#if_eq master_id '0' }}
+															<li class="aui-list-item">
+																<a href="javascript:;" class="issue_convert_child_href" data-issue_id="{{id}}" data-issuekey="{{issue_num}}">转换为子任务</a>
+															</li>
+														{{/if_eq}}
+
+                                                         {% endverbatim %}
+
+                                                        {% if (projectPermArr['DELETE_ISSUES'] is defined) %}
+                                                            <li class="aui-list-item">
+                                                                {% verbatim %}<a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"  data-issuekey="{{issue_num}}">删除</a>{% endverbatim %}
+                                                            </li>
+                                                        {% endif %}
+
+                                                        {% verbatim %}
+													</ul>
+
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+
+								<!--新增一个tr当他们点击子【更多子任务】的时候-->
+								{{#if_eq have_children '0'}}
+
+									{{else}}
+										<tr id="tr_subtask_{{id}}" class='pop_subtack hide' data-master_id="{{id}}">
+											<td colspan="12">
+												<div class="td-block">
+													<h5>子任务:</h5>
+													<div class="event-body">
+														<ul id="ul_subtask_{{id}}" class="well-list event_commits"></ul>
+													</div>
+												</div>
+											</td>
+										</tr>
+								{{/if_eq}}
+
+							{{/issues}}
+
+						</script>
+					{% endverbatim %}
+
+            {% verbatim %}
+						<script type="text/html" id="responsive_tpl">
+							{{#issues}}
+								<li class="issue-item" data-id="{{id}}" data-summary="{{summary}}" id="li_issue_{{id}}" url="/issue/detail/index/{{id}}">
+									<div class="issuable-avatar">
+										{{user_html assignee}}
+									</div>
+									<div class="issuable-main-info">
+										<div class="issue-title title">
+											<span class="issue-title-text" dir="auto">
+
+												<a class="responsive_title" href="/issue/detail/index/{{id}}">
+													{{lightSearch summary '{{search}}'}}
+												</a>
+												{{#if_in_array 'label'  ../display_fields}}
+                                                    {{make_label_html label_id_arr}}
+                                                {{/if_in_array}}
+												{{#if_eq warning_delay 1 }}
+													<span style="color:#fc9403;font-size: 10px" title="即将延期">即将延期</span>
+												{{/if_eq}}
+
+												{{#if_eq postponed 1 }}
+													<span style="color:#db3b21;font-size: 10px" title="逾期">逾期</span>
+												{{/if_eq}}
+
+												{{#if_eq have_children '0'}}
+													{{^}}
+													<a href="#" style="color:#f0ad4e;font-size: 10px" data-issue_id="{{id}}" data-issue_type="{{issue_type}}" class="have_children prepend-left-5 has-tooltip" data-original-title="该事项拥有{{have_children}}项子任务">子任务
+														<span class="badge">{{have_children}}</span>
+													</a>
+												{{/if_eq}}
+
+											</span>
+										</div>
+										<div class="issuable-info" style="font-size:12px;font-weight: 400;color:#707070;">
+
+											<span class="issuable-reference">
+												#{{issue_num}}
+											</span>
+											&nbsp;
+											{{issue_type_short_html issue_type}}
+											&nbsp;
+											{{float_priority priority }}
+											&nbsp;
+											<span class="issuable-authored">
+												·
+												{{float_user_account_html reporter}}
+												<span style="color:#ad93ac" data-toggle="tooltip" data-placement="top" title="{{created_full}}">{{created_text}}</span>
+
+											</span>
+											&nbsp;
+											{{float_issue_sprint sprint}}
+											&nbsp;
+											{{float_status status }}
+											&nbsp;
+											{{float_resolve resolve }}
+
+										</div>
+									</div>
+									<div class="issuable-meta">
+										<ul class="controls" style="font-size:12px;font-weight: 400;color:#707070;">
+											{{float_assistants_avatar assistants}}
+
+											<li class="issuable-upvotes d-none d-sm-block has-tooltip" title="" data-original-title="关注人数">
+												<i aria-hidden="true" data-hidden="true" class="fa fa-bookmark"></i>
+												{{followed_count}}
+											</li>
+											<li class="issuable-comments d-none d-sm-block">
+												<a class="has-tooltip " title="评论数" style="color:#707070;" href="/issue/detail/index/{{id}}">
+													<i aria-hidden="true" data-hidden="true" class="fa fa-comments"></i>
+													{{comment_count}}
+												</a>
+											</li>
+										</ul>
+										<div class="float-right issuable-updated-at d-none d-sm-inline-block">
+											<span style="font-size:12px;font-weight: 400;color:#707070;">最后更新
+												<span data-toggle="tooltip" data-placement="top" title="{{updated_full}}">
+													{{updated_text}}
+												</span>
+											</span>
+										</div>
+									</div>
+								</li>
+
+							{{/issues}}
+
+						</script>
+					{% endverbatim %}
+
+            {% verbatim %}
+						<script type="text/html" id="list_tpl_detail">
+							{{#issues}}
+								<div class="issue-box" class="display-flex" data-id="{{id}}" data-summary="{{summary}}">
+									<div class="issuable-info-container display-flex">
+										<div class="checkbox">
+											<label style="padding-top: 15%;">
+												<input class="no_float_event" name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}"/>
+											</label>
+										</div>
+										<div class="issuable-main-info">
+											<div class="checkbox show-tooltip" data-id="{{id}}">
+												<span class="issue-title-text">
+													<a href="/issue/detail/index/{{id}}">{{lightSearch summary '{{search}}'}}</a>
+												</span>
+												{{priority_html priority }}
+											</div>
+											<div class="issue-titles">
+												<div data-issue_id="{{id}}" id="status-list-{{id}}">
+													#{{issue_num}}
+													{{created_text_html created created_text created_full}}
+													{{user_name_html reporter}}
+													{{issue_type_html issue_type}}
+													<div class="item-list-select status-select" style="display: inline-block;" data-issue_id="{{id}}" id="status-list-{{id}}">
+														{{status_html status }}
+														<ul class="item-data-list status-list"></ul>
+													</div>
+													<div class="item-list-select resolve-select" style="display: inline-block;" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+														{{resolve_html resolve }}
+														<ul class="item-data-list resolve-list"></ul>
+													</div>
+												</div>
+
+											</div>
+										</div>
+										<div class="issuable-metas display-flex">
+											<div class="issuable-right display-flex">
+												{{user_html assignee}}
+												<div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
+
+													<div class="js-notification-toggle-btns">
+														<div class="">
+															<a class="dropdown-new  notifications-btn " style="color: #8b8f94;" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">
+																...
+																<i class="fa fa-caret-down"></i>
+															</a>
+
+															<ul class="dropdown dropdown-menu dropdown-menu-no-wrap dropdown-menu-selectable" style="left:-120px;width:160px;min-width:140px; ">
+
+																<li class="aui-list-item active">
+																	<a href="javascript:;" class="issue_edit_href" data-issue_id="{{id}}">
+																		编辑
+																	</a>
+																</li>
+																<li class="aui-list-item">
+																	<a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}" data-issuekey="IP-524">复制</a>
+																</li>
+																{{#if_eq sprint '0' }}
+																	<li class="aui-list-item">
+																		<a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}" data-issuekey="IP-524">添加到迭代</a>
+																	</li>
+																{{else}}
+																	<li class="aui-list-item ">
+																		<a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}" data-issuekey="IP-524">转换为待办事项</a>
+																	</li>
+																{{/if_eq}}
+																{{#if_eq master_id '0' }}
+																	<li class="aui-list-item">
+																		<a href="javascript:;" class="issue_convert_child_href" data-issue_id="{{id}}" data-issuekey="IP-524">转换为子任务</a>
+																	</li>
+																{{/if_eq}}
+
+																<li class="aui-list-item">
+																	<a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}" data-issuekey="IP-524">删除</a>
+																</li>
+															</ul>
+
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="issuable-updated-at">
+												<small class="edited-text">
+													<span>更新于
+													</span>
+													<time class="js-timeago issue_edited_ago js-timeago-render-my" title="" datetime="{{updated}}" data-toggle="tooltip" data-placement="bottom" data-container="body" data-original-title="{{updated_text}}"></time>
+												</small>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							{{/issues}}
+
+						</script>
+					{% endverbatim %}
+
+            {% verbatim %}
+						<script type="text/html" id="main_children_list_tpl">
+							{{#children}}
+								<li class="commits-stat">
+									{{user_html assignee}}
+									<a href="/issue/detail/index/{{id}}" target="_blank" style="margin-left:5px;top: 3px;">#{{id}}
+										{{summary}}
+									</a>
+								</li>
+							{{/children}}
+						</script>
+
+						<script type="text/html" id="wrap_field">
+							<div class="form-group">
+								<div class="col-sm-1"></div>
+								<div class="col-sm-2">{{display_name}}:{{required_html}}</div>
+								<div class="col-sm-9">{field_html}</div>
+							</div>
+						</script>
+
+						<script type="text/html" id="li_tab_tpl">
+							<div role="tabpanel" class="tab-pane " id="{{id}}">
+								<div id="{{type}}_ui_config_{{id}}" style="min-height: 200px"></div>
+							</div>
+						</script>
+
+						<script type="text/html" id="nav_tab_li_tpl">
+							<li role="presentation" class="active">
+								<a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
+									<span id="span_{{id}}">{{title}}&nbsp;</span>
+								</a>
+							</li>
+						</script>
+
+						<script type="text/html" id="content_tab_tpl">
+							<div role="tabpanel" class="tab-pane " id="{{id}}">
+								<div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px"></div>
+							</div>
+						</script>
+			 {% endverbatim %}
+
+            <script type="text/tpl" id="custom-filter-tpl">
+			  {% for f in otherFavFilters %}
+                 {% set active = '' %}
+                 {% set class = '' %}
+                 {% if (f['id'] == active_id) %}
+                    {% set active = ' √' %}
+                    {% set class = 'label deploy-project-label' %}
+                 {% endif %}
+                    <a  style="color:#fc9403" class=" {{ class }} " id="fav_filter-{{ f['id'] }}" href="?fav_filter={{ f['id'] }}">
+                        {{ f['name'] }}{{ active }}
+                    </a><br>
+			  {% endfor %}
+
+            </script>
+
+          {% verbatim %}
+                <script type="text/html" id="content_table_adv_tpl">
+                    {{#tableList}}
+                        <tr data-index="{{@index}}">
+                            <td scope="row" title="可上下拖拽移动条件的顺序">
+                                <i class="fa fa-arrows"></i>
+                            </td>
+                            <td title="双击可修改">
+                                <span class="table-text" data-type="select" data-source="logic" data-filed="logic" data-title="关系" data-content="{{logic}}">{{logic}}</span>
+                                <div class="table-form hidden"></div>
+                            </td>
+                            <td title="双击可修改起始括号">
+                                <span class="table-text" data-type="select" data-source="brace" data-filed="start_braces" data-title="请选择" data-content="{{start_braces}}">{{start_braces}}</span>
+                                <div class="table-form hidden"></div>
+                            </td>
+                            <td>
+                                <span class="table-text" data-type="select" data-source="field" data-filed="field" data-title="字段" data-content="{{field_title}}">{{field_title}}</span>
+                                <div class="table-form hidden"></div>
+                            </td>
+                            <td  title="双击可修改运算符">
+                                <span class="table-text" data-type="select" data-source="opt" data-filed="opt" data-title="运算符" data-content="{{opt}}">{{opt}}</span>
+                                <div class="table-form hidden"></div>
+                            </td>
+                            <td>
+                                <span class="table-text" data-type="{{data_type}}" data-source="{{data_source}}" data-title="{{data_title}}" data-filed="value" data-content="{{value}}">
+                                   {{#if avatar}}<img width="26px" height="26px" class="float-none" style="border-radius: 50%;" src="{{avatar}}">{{/if}} {{display_html}}
+                                </span>
+                                <div class="table-form hidden"></div>
+                            </td>
+                            <td  title="双击可修改结束括号">
+                                <span class="table-text" data-type="select" data-source="brace" data-title="请选择" data-filed="end_braces" data-content="{{end_braces}}">
+                                {{end_braces}}
+                                </span>
+                                <div class="table-form hidden"></div>
+                            </td>
+                            <td>
+                                <a title="移除此条件" href="javascript:;" onclick="deleteAdvQuery('{{@index}}')">移除</a>
+                            </td>
+                        </tr>
+                {{/tableList}}
+            </script>
+          {% endverbatim %}
+
+		{% verbatim %}
+			<script type="text/html" id="adv_query_form_tpl">
+				<select name="{{field_name}}{{#if index}}-{{index}}{{/if}}" class="selectpicker {{#if_eq index ""}}form-control{{/if_eq}}" data-index="{{index}}" data-name="{{field_name}}" dropdownAlignRight="true" title="{{title}}">
+				{{#data}}
+					<option value="{{value}}"
+					    {{#if avatar}} data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='{{avatar}}' > {{name}}"
+					    data-avatar="{{avatar}}"
+					    {{/if}}
+					    data-display_html="{{#if name}}{{name}}{{else}}{{value}}{{/if}}"
+					    {{#if type}} data-type="{{type}}" data-source="{{source}}" data-title="{{title}}" {{/if}}
+					    {{#if_eq value ../value}} selected="selected" {{/if_eq}}>
+					    {{#if name}}{{name}} {{else}} {{value}} {{/if}}
+                    </option>
+				{{/data}}
+				</select>
+			</script>
+		{% endverbatim %}
+
+         {% verbatim %}
+			<script type="text/html" id="adv_query_display_tpl">
+				{{#tableList}}
+				    {{#if_eq @index 0}} {{else}} {{logic}} {{/if_eq}}
+				    {{#if_eq start_braces ""}} {{else}} {{start_braces}} {{/if_eq}}
+				    <a class="ss-item" title="{{field_title}}"   data-index="{{@index}}"  href="#"   style="color: #666; text-decoration: none;">
+                        <b>{{field_title}} {{opt}}</b>
+                        <em>{{display_html}} </em>
+                    </a>
+                    {{#if_eq end_braces ""}} {{else}} {{end_braces}} {{/if_eq}}
+                 {{/tableList}}
+			</script>
+		{% endverbatim %}

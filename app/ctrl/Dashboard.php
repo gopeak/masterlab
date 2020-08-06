@@ -75,7 +75,7 @@ class Dashboard extends BaseUserCtrl
         }
         ConfigLogic::getAllConfigs($data);
 
-        $this->render('gitlab/dashboard.php', $data);
+        $this->render('gitlab/dashboard.twig', $data);
     }
 
     /**

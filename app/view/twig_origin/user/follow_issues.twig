@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+    {% include 'twig/common/header/include.twig' %}
+
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body background-white">
+
+<header class="navbar navbar-gitlab">
+    <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
+    <div class="container-fluid">
+        {% include 'twig/common/body/header-content.twig' %}
+    </div>
+</header>
+
+<div class="page-with-sidebar">
+
+    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+        <div class="alert-wrapper">
+
+            <div class="flash-container flash-container-page">
+            </div>
+
+        </div>
+        <div class=" ">
+            <div class="content padding-0" id="content-body">
+                <div class="user-profile">
+                    <div class="cover-block user-cover-block">
+                        <div class="cover-controls">
+                            <a class="btn btn-gray has-tooltip" title="Edit profile" aria-label="Edit profile" href="/user/profile_edit">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </div>
+
+                        {% include 'twig/user/common-profile-header.twig' %}
+
+                        <div class="scrolling-tabs-container">
+                            <div class="fade-left">
+                                <i class="fa fa-angle-left"></i>
+                            </div>
+                            <div class="fade-right">
+                                <i class="fa fa-angle-right"></i>
+                            </div>
+
+                            {% set profile_nav='followed_issues' %}
+                            {% include  'twig/user/common-profile-nav.twig' %}
+                        </div>
+                    </div>
+                    <div class="container-fluid container-limited">
+                        <div class="tab-content">
+                            <div class="tab-pane" id="activity">
+
+                                <div class="loading hide">
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="groups"></div>
+                            <div class="tab-pane active" id="projects">
+                                <div class="js-projects-list-holder">
+                                    <ul id="follow_issue_list" class="projects-list">
+
+                                    </ul>
+                                </div>
+
+                                <div id="more_follow" class="loading hide">
+                                    <a class="text-plain" href="#" style="font-size: 14px">更多</a>
+                                </div>
+                                <div class="loading hide">
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="snippets"></div>
+                        </div>
+                        <div class="loading-status">
+                            <div class="loading hide">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</section>
+
+{% verbatim %}<script id="follow_issue_tpl" type="text/html" >
+{{#issues}}
+    <li class="project-row">
+        <div class="s40">
+            <a href="/user/profile/{{assignee}}" class="avatar-image-container">
+                <img src="/attachment/avatar/{{assignee}}.png" style="border-radius: 50%;" class="avatar has-tooltip s40">
+            </a>
+        </div>
+        <div class="project-details">
+            <h3 class="prepend-top-0 append-bottom-0">
+                <a class="text-plain" href="/issue/detail/index/{{id}}">
+                    <span class="project-full-name">
+                        <span class="project-name">{{pkey}}{{issue_num}}</span>&nbsp;&nbsp;
+                        <span>
+                            {{summary}}
+                            {{#if_eq warning_delay 1 }}
+                                <span style="color:#fc9403" title="即将延期">即将延期</span>
+                            {{/if_eq}}
+                            {{#if_eq postponed 1 }}
+                            <span style="color:#db3b21" title="逾期">逾期</span>
+                            {{/if_eq}}
+                            {{status_html status }}
+                        </span>
+                    </span>
+                </a>
+
+            </h3>
+            <div class="description prepend-top-5">
+                <p dir="auto"><time class="js-timeago js-timeago-render-my" title=""
+                      datetime="{{updated}}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      data-container="body"
+                      data-original-title="{{updated_text}}" data-tid="51">{{updated_text}}</time></p></div>
+        </div>
+        <div class="controls">
+            <div class="prepend-top-0">
+                <span class="prepend-left-10"></span>
+                </span>
+            </div>
+            <div class="prepend-top-0"></div>
+        </div>
+    </li>
+    {{/issues}}
+
+</script>{% endverbatim %}
+
+<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
+<script src="/dev/js/user/follow_issues.js"></script>
+<script type="text/javascript">
+    var _issueConfig = {
+        "priority":{{priority|json_encode()|raw}},
+        "issue_types":{{issue_types|json_encode()|raw}},
+        "issue_status":{{issue_status|json_encode()|raw}},
+        "issue_resolve":{{issue_resolve|json_encode()|raw}},
+        "issue_module":{{project_modules|json_encode()|raw}},
+        "issue_version":{{project_versions|json_encode()|raw}},
+        "issue_labels":{{project_labels|json_encode()|raw}},
+        "users":{{users|json_encode()|raw}},
+        "project_users":{{project_users|json_encode()|raw}},
+        "projects":{{projects|json_encode()|raw}},
+        "sprint":{{sprints|json_encode()|raw}}
+    };
+
+    var $follow_issues = null;
+    var _cur_page = 1;
+    var _user_id = '{{user_id}}';
+    $(function() {
+        var options = {
+            user_id:_user_id
+        }
+        window.$follow_issues = new FollowIssues( options );
+        window.$follow_issues.fetchByUser( window._cur_page );
+
+        $('#more_follow').bind('click', function(){
+            window.$follow_issues.fetchByUser( window._cur_page +1 );
+        })
+    });
+</script>
+
+</body>
+</html>
+

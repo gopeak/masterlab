@@ -36,6 +36,13 @@ class BaseCtrl
      */
     protected $tpl;
 
+
+    /**
+     * 模板引擎对象2,自定义twig标记
+     * @var
+     */
+    protected $tpl2;
+
     /**
      * 模板引擎加载器
      * @var
@@ -92,7 +99,7 @@ class BaseCtrl
      */
     public function __construct()
     {
-        static $siteName, $twigLoader, $twigTpl;
+        static $siteName, $twigLoader, $twigTpl, $twigTpl2;
         //print_r($_SESSION);
         $this->dispatcher = new EventDispatcher();
         $this->loadPlugin();
@@ -125,6 +132,9 @@ class BaseCtrl
             });
             $twigTpl->addFunction($function);
             $twigTpl->addExtension(new \Twig\Extension\DebugExtension());
+            $options = ['tag_variable'=>['<?=', '?>']];
+            $lexer = new \Twig\Lexer($twigTpl, $options);
+            $twigTpl->setLexer($lexer);
         }
         $this->tpl = $twigTpl;
 
@@ -256,7 +266,13 @@ class BaseCtrl
             }
         } else {
             $tpl = str_replace(['gitlab', '.php'], ['twig', '.twig'], $tpl);
-            echo $this->tpl->render($tpl, $dataArr);
+            $extension = pathinfo($tpl)['extension'] ?? 'twig';
+            if($extension=='twig2'){
+                echo $this->tpl2->render($tpl, $dataArr);
+            }else{
+                echo $this->tpl->render($tpl, $dataArr);
+            }
+
         }
         echo ob_get_clean();
     }

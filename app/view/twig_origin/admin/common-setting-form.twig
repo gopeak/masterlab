@@ -1,0 +1,68 @@
+<div class="modal" id="modal-setting">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          id="form-setting"
+          action="/admin/system/basic_setting_update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content modal-middle">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">修改设置</h3>
+                </div>
+                <div class="modal-body" style="min-height: 200px">
+                    <div id="form_id">
+
+                    </div>
+                    <div class="form-actions modal-footer">
+                        <button name="submit" type="button" data-dismiss="modal" class="btn btn-save btn-setting_save js-key-enter" data-dismiss="modal"  id="btn-setting_save">保存</button>
+                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% verbatim %}
+<script type="text/html"  id="setting_form_tpl">
+    {{#settings}}
+    <div class="form-group">
+        <label class="control-label col-lg-4" for="date_format">{{title}}:</label>
+        <div class="col-lg-5">
+            <div class="form-group">
+                {{#if_eq form_input_type 'text'}}
+                    <input type="text" class="form-control" name="params[{{_key}}]" id="id_{{_key}}"  value="{{_value}}" />
+                {{/if_eq}}
+                {{#if_eq form_input_type 'select'}}
+                    <div class="display-flex">
+                    <select id="id_{{_key}}" name="params[{{_key}}]" title="{{title}}" class=" form-control selectpicker" >
+                    {{#each form_optional_value }}
+                       <option  value="{{@key}}"  {{#if_eq ../_value @key}}selected{{/if_eq}} >{{this}}</option>
+                    {{/each}}
+                    </select>
+                    </div>
+                {{/if_eq}}
+                 {{#if_eq form_input_type 'radio'}}
+                    {{#each form_optional_value }}
+                        <label style=" font-weight: 200;  ">
+                            <input type="radio" value="{{@key}}" {{#if_eq ../_value @key}}checked="checked"{{/if_eq}} name="params[{{../_key}}]" id="id_{{../_key}}">
+                            {{this}}
+                        </label>
+                    {{/each}}
+                {{/if_eq}}
+                 {{#if_eq form_input_type 'checkbox'}}
+                    {{#each form_optional_value }}
+                        <label style=" font-weight: 200;  ">
+                            <input type="checkbox" value="{{@key}}" {{#if_eq ../_value @key}}checked="checked"{{/if_eq}} name="params[{{../_key}}]" id="id_{{../_key}}">
+                            {{this}}
+                        </label>
+                    {{/each}}
+                {{/if_eq}}
+            </div>
+        </div>
+    </div>
+    {{/settings}}
+
+</script>
+{% endverbatim %}
