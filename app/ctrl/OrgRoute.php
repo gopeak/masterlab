@@ -93,10 +93,9 @@ class OrgRoute extends BaseUserCtrl
         $pluginName = $_GET['_target'][2];
 
         $pluginFile = PLUGIN_PATH . $pluginName . "/index.php";
-        //var_dump($pluginFile);
         if (file_exists($pluginFile)) {
             require_once($pluginFile);
-            $pluginIndexClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, 'Index');
+            $pluginIndexClass = sprintf("main\\plugin\\%s\\%s",  $pluginName, 'Index');
             if (class_exists($pluginIndexClass)) {
                 $indexCtrl = new $pluginIndexClass($this->dispatcher);
 
@@ -117,7 +116,7 @@ class OrgRoute extends BaseUserCtrl
         //var_dump($pluginFile);
         if (file_exists($pluginFile)) {
             require_once($pluginFile);
-            $pluginIndexClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, 'Index');
+            $pluginIndexClass = sprintf("main\\plugin\\%s\\%s",  $pluginName, 'Index');
             if (class_exists($pluginIndexClass)) {
                 $indexCtrl = new $pluginIndexClass($this->dispatcher);
                 if(method_exists($indexCtrl,'main')){

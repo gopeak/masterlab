@@ -4,11 +4,11 @@
     {% include 'twig/common/header/include.twig' %}
 
     <script src="/dev/lib/jquery.form.js"></script>
-    <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/project/role.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/project/member.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/role.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/member.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
 
@@ -72,7 +72,7 @@
                         </h4>
                         <p>
                             添加一个新成员到
-                            <strong>{{project['name']}}</strong>
+                            <strong><?=project['name']?></strong>
                         </p>
                     </div>
 
@@ -83,11 +83,11 @@
                                 <div class="form-group col-md-4">
                                     <select id="project-user-select" name="user_id"
                                             class="selectpicker"  data-live-search="true"
-                                            data-project-id="{{project_id}}"
+                                            data-project-id="<?=project_id?>"
                                     >
                                         <option value="">选择成员</option>
                                         {% for user in not_project_users %}
-                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='{{user.avatar}}'> {{user.display_name}}" value="{{user.uid}}">{{user.display_name}}</option>
+                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='<?=user.avatar?>'> <?=user.display_name?>" value="<?=user.uid?>"><?=user.display_name?></option>
                                         {% endfor %}
                                     </select>
 
@@ -96,13 +96,13 @@
                                 <div class="form-group col-md-3">
                                     <select class="selectpicker form-control" id="role_select" multiple name="role_id[]">
                                         {% for role in roles %}
-                                            <option value="{{role['id']}}">{{role['name']}}</option>
+                                            <option value="<?=role['id']?>"><?=role['name']?></option>
                                         {% endfor %}
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-1 help-block append-bottom-10 hide">
-                                    <a class="vlink" href="{{project_root_url}}/settings_project_role">权限管理</a>
+                                    <a class="vlink" href="<?=project_root_url?>/settings_project_role">权限管理</a>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -116,35 +116,35 @@
                                 {% for user in project_users %}
                                     <li class="group_member member" id="group_member_1">
                                     <span class="list-item-name">
-                                        <img class="avatar s40" alt="" src=" {{ user['avatar']}}">
+                                        <img class="avatar s40" alt="" src=" <?= user['avatar']?>">
                                         <strong>
-                                        <a href="/user/profile/{{ user['uid']}}">{{ user['display_name']}}</a>
+                                        <a href="/user/profile/<?= user['uid']?>"><?= user['display_name']?></a>
                                         </strong>
-                                        <span class="cgray">  {{ user['username']}}</span>
+                                        <span class="cgray">  <?= user['username']?></span>
                                         {% if (current_uid == user['uid']) %}
                                             <span class="label label-success prepend-left-5">It's you</span>
                                         {% endif %}
                                         ·
-                                        <span> {{ user['title']}}</span>
+                                        <span> <?= user['title']?></span>
                                         <div class="hidden-xs cgray">
                                             {% if (user['create_time_text'] is not empty) %}
-                                                <time> {{ user['create_time_text']}}</time>
+                                                <time> <?= user['create_time_text']?></time>
 
                                             {% endif %}
                                         </div>
                                     </span>
                                         <div class="controls member-controls">
-                                            <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_{{ user['uid']}}" data-select_id="selectpicker_uid_{{ user['uid']}}" data-ids="{{ user['have_roles_ids']}}">
+                                            <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_<?= user['uid']?>" data-select_id="selectpicker_uid_<?= user['uid']?>" data-ids="<?= user['have_roles_ids']?>">
                                                 {% for role in roles %}
-                                                    <option value="{{ role['id']}}">{{ role['name']}}</option>
+                                                    <option value="<?= role['id']?>"><?= role['name']?></option>
                                                 {% endfor %}
                                             </select>
 
-                                            <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$member.saveMemberRole( {{ user['uid']}},  {{ project_id}});'>
+                                            <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$member.saveMemberRole( <?= user['uid']?>,  <?= project_id?>);'>
                                                 <span class="visible-xs-block">保存</span>
                                                 <i class="fa fa-floppy-o hidden-xs"></i>
                                             </a>
-                                            <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$member.delMember( {{ user['uid']}},  {{ project_id}}, " {{ user['display_name']}}", " {{ project['name']}}");'>
+                                            <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$member.delMember( <?= user['uid']?>,  <?= project_id?>, " <?= user['display_name']?>", " <?= project['name']?>");'>
                                                 <span class="sr-only">移出</span>
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
@@ -176,7 +176,7 @@
 
 <script type="text/javascript">
     let urls = parseURL(window.location.href);
-    let project_root_url = '{{project_root_url}}';
+    let project_root_url = '<?=project_root_url?>';
     var $member = null;
     $(function() {
         let options = {

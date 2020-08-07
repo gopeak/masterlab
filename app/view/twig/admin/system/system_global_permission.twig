@@ -3,10 +3,10 @@
 <head  >
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/admin/setting.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/admin/global_permission.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/setting.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/global_permission.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
 
@@ -240,7 +240,7 @@
                                     >
                                         <option value="">选择用户</option>
                                         {% for user in users %}
-                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='{{user.avatar}}'> {{user.display_name}}" value="{{user.uid}}">{{user.display_name}}</option>
+                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='<?=user.avatar?>'> <?=user.display_name?>" value="<?=user.uid?>"><?=user.display_name?></option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -327,7 +327,7 @@
 
 <script type="text/javascript">
     var _issueConfig = {
-        users:{{users|json_encode()|raw}}
+        users:<?=users|json_encode()|raw?>
     };
     var globalPermission = null;
     var options = {

@@ -24,14 +24,9 @@ function getEventSubscriberFile($dir)
             ) {
                 $viewFile[] = $filePath = $dir . $file;
                 $source = file_get_contents($filePath);
-                /*
-                preg_match_all('/\{\%\s*verbatim\s*\%\}(.+?)\{\%\s*endverbatim\s*\%\}/sU', $source, $result, PREG_PATTERN_ORDER);
-                $forntSource = $result[1];
-                echo $forntSource[0] ?? '';
-                */
                 $exp = '/\{\%\s*verbatim\s*\%\}(.+)?\{\%\s*endverbatim\s*\%\}/sU';
                 $result = preg_replace_callback($exp, function ($matches) {
-                    return '{% verbatim %}' . base64_encode($matches[1]) . '{% endverbatim %}';
+                    return '{% verbatim %}' . base64_decode($matches[1]) . '{% endverbatim %}';
                 }, $source);
                 $ret = file_put_contents($filePath, $result);
                 if (!$ret) {

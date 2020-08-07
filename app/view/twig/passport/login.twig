@@ -2,7 +2,7 @@
 <html class="devise-layout-html">
 <head>
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/vendor/jquery.cookie.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/vendor/jquery.cookie.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <script type="text/javascript">
@@ -171,14 +171,14 @@
                                                    autocorrect="off"
                                                    required="required" title="This field is required." type="text"
                                                    name="username" id="user_login"
-                                                   value="{{default_user}}"
+                                                   value="<?=default_user?>"
                                             />
                                         </div>
                                         <div class="form-group">
                                             <label for="user_password">密 码</label>
                                             <input class="form-control bottom" required="required"
                                                    title="This field is required."
-                                                   type="password" name="password" id="user_password" value="{{default_password}}"/>
+                                                   type="password" name="password" id="user_password" value="<?=default_password?>"/>
                                         </div>
                                         {% if login_require_captcha %}
                                             <div class="form-group">
@@ -189,7 +189,7 @@
                                             </div>
                                             <div>
                                                 <img id="img_login_vcode"
-                                                     src="/passport/output_captcha?mode=login&n={{ random(100, 999) }}">
+                                                     src="/passport/output_captcha?mode=login&n=<?= random(100, 999) ?>">
                                                 <a id="refresh_login_vcode" href="javascript:void(0);">换一张</a>
                                             </div>
                                         {% endif %}
@@ -281,7 +281,7 @@
                                             </div>
                                             <div>
                                                 <img id="img_reg_vcode"
-                                                     src="/passport/output_captcha?mode=reg&n={{ random(100, 999) }}">
+                                                     src="/passport/output_captcha?mode=reg&n=<?= random(100, 999) ?>">
                                                 <a id="refresh_reg_vcode" href="javascript:void(0);">换一张</a>
                                             </div>
                                         {% endif %}

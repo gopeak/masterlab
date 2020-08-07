@@ -11,19 +11,19 @@
                 <li class="project-row">
 
                     <a href="#" class="avatar-image-container">
-                        <img src="{{ user['avatar'] }}" class="avatar has-tooltip s40">
+                        <img src="<?= user['avatar'] ?>" class="avatar has-tooltip s40">
                     </a>
 
                     <div class="project-details">
                         <h3 class="prepend-top-0 append-bottom-0">
-                            <a class="text-plain" href="/user/profile/{{ user['uid'] }}">
+                            <a class="text-plain" href="/user/profile/<?= user['uid'] ?>">
                                 <span class="project-full-name">
-                                    <span class="project-name"> {{ user_display_name |raw}} </span>
+                                    <span class="project-name"> <?= user_display_name |raw?> </span>
                                 </span>
                             </a>
                         </h3>
                         <div class="description prepend-top-5">
-                            <p dir="auto"> {{ user_username |raw}}  {{ user_email|raw }}</p>
+                            <p dir="auto"> <?= user_username |raw?>  <?= user_email|raw ?></p>
                         </div>
                     </div>
                     <div class="controls">
@@ -31,10 +31,10 @@
                         <div class="prepend-top-0">
                             创建于
                             <time class="js-timeago js-timeago-render-my" title=""
-                                  datetime=" {{ user['create_time_origin'] }}"
+                                  datetime=" <?= user['create_time_origin'] ?>"
                                   data-toggle="tooltip" data-placement="top" data-container="body"
-                                  data-original-title=" {{ user['create_time_origin'] }}"
-                                  data-tid="10"> {{ user['create_time_text'] }}
+                                  data-original-title=" <?= user['create_time_origin'] ?>"
+                                  data-tid="10"> <?= user['create_time_text'] ?>
                             </time>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
 
             <li class="page-item prev">
                 <a rel="prev" class="page-link"
-                   href="/search?page={{pre_page}}&scope={{scope}}&amp;keyword={{keyword}}">上一页</a>
+                   href="/search?page=<?=pre_page?>&scope=<?=scope?>&amp;keyword=<?=keyword?>">上一页</a>
             </li>
         {% endif %}
         {% set next_page = 1 %}
@@ -66,7 +66,7 @@
 
             <li class="page-item next">
                 <a rel="next" class="page-link"
-                   href="/search?page={{next_page}}&scope={{scope}}&amp;keyword={{keyword}}">下一页</a>
+                   href="/search?page=<?=next_page?>&scope=<?=scope?>&amp;keyword=<?=keyword?>">下一页</a>
             </li>
 
         {% endif %}

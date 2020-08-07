@@ -6,7 +6,7 @@
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
-    <script src="/dev/js/user/profile.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/user/profile.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="profiles:show" data-project="">
@@ -154,7 +154,7 @@
 
     var $activity = null;
     var _cur_page = 1;
-    var _user_id = '{{user_id}}';
+    var _user_id = '<?=user_id?>';
     $(function() {
 
 

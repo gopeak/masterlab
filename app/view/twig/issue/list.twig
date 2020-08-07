@@ -4,24 +4,24 @@
 		{% include 'twig/common/header/include.twig' %}
 
 		<script src="/dev/lib/moment.js"></script>
-		<script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-		<script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-		<script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-		<script src="/dev/js/issue/adv_query.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-		<script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-		<script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/js/admin/issue_ui.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/js/issue/form.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/js/issue/adv_query.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/js/issue/detail.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/js/issue/main.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 		<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 		<link href="/dev/lib/video-js/video-js.min.css" rel="stylesheet">
 		<script src="/dev/lib/video-js/video.min.js"></script>
 
 		<script>
-			window.description_templates = {{ description_templates|json_encode()|raw }};
+			window.description_templates = <?= description_templates|json_encode()|raw ?>;
 		</script>
 
 		<script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
 		<link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}" type="text/javascript"></script>
+		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>" type="text/javascript"></script>
 		<script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
@@ -32,7 +32,7 @@
 		<link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
 		<link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
 		<script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
-		<script src="/dev/lib/fine-uploader/jquery.fine-uploader.js?v={{_version}}"></script>
+		<script src="/dev/lib/fine-uploader/jquery.fine-uploader.js?v=<?=_version?>"></script>
 
 		<link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
 		<script src="/dev/lib/laydate/laydate.js"></script>
@@ -54,7 +54,7 @@
 		<script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
 		<link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
-		<link rel="stylesheet" href="/dev/css/issue/list.css?v={{_version}}"/>
+		<link rel="stylesheet" href="/dev/css/issue/list.css?v=<?=_version?>"/>
         <style type="text/css">
             .active_underline a{
                 text-decoration: underline;
@@ -118,10 +118,10 @@
                                             {% if ('issue_type'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="issue_type"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         类型
                                                         {% if sort_field == 'issue_type' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -130,10 +130,10 @@
                                             {% if ('priority'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="priority"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         优先级
                                                         {% if sort_field == 'priority' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -147,10 +147,10 @@
                                             {% if ('module'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="module"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         模 块
                                                         {% if sort_field == 'module' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -159,11 +159,11 @@
                                             {% if ('sprint'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="sprint"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         迭
                                                         代
                                                         {% if sort_field == 'sprint' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -176,11 +176,11 @@
                                             {% if ('weight'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="weight"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         权
                                                         重
                                                         {% if sort_field == 'weight' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -189,10 +189,10 @@
                                             {% if ('assignee'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="assignee"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         经办人
                                                         {% if sort_field == 'assignee' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -213,11 +213,11 @@
                                             {% if ('status'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="status"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         状
                                                         态
                                                         {% if sort_field == 'status' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -226,10 +226,10 @@
                                             {% if ('resolve'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="resolve"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         解决结果
                                                         {% if sort_field == 'resolve' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -244,10 +244,10 @@
                                             {% if ('plan_date'in display_fields) %}
                                                 <th class="js-pipeline-date pipeline-date">
                                                     <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc' }}" href="#">
+                                                       data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         计划时间
                                                         {% if sort_field == 'due_date' %}
-                                                            <i class="fa fa-sort-{{ sort_by }}"></i>
+                                                            <i class="fa fa-sort-<?= sort_by ?>"></i>
                                                         {% endif %}
                                                     </a>
                                                 </th>
@@ -286,7 +286,7 @@
 
                                             {% for item in displayCustomFieldArr %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
-                                                    {{item.title}}
+                                                    <?=item.title?>
                                                 </th>
                                             {% endfor %}
 
@@ -332,8 +332,8 @@
                                                         {% for item in issue_resolve %}
                                                             <li>
                                                                 <a class="btn_batch_update" data-field="resolve"
-                                                                   data-id="{{ item['id'] }}" href="#"
-                                                                   style="color:{{ item['color'] }}">{{ item['name'] }}</a>
+                                                                   data-id="<?= item['id'] ?>" href="#"
+                                                                   style="color:<?= item['color'] ?>"><?= item['name'] ?></a>
                                                             </li>
                                                         {% endfor %}
 
@@ -351,7 +351,7 @@
                                                         {% for key,item in project_modules %}
                                                             <li>
                                                                 <a class="btn_batch_update" data-field="module"
-                                                                   data-id="{{ key }}" href="#">{{ item['name'] }}</a>
+                                                                   data-id="<?= key ?>" href="#"><?= item['name'] ?></a>
                                                             </li>
                                                         {% endfor %}
 
@@ -369,8 +369,8 @@
                                                         {% for item in sprints %}
                                                             <li>
                                                                 <a class="btn_batch_update" data-field="sprint"
-                                                                   data-id="{{ item['id'] }}"
-                                                                   href="#">{{ item['name'] }}</a>
+                                                                   data-id="<?= item['id'] ?>"
+                                                                   href="#"><?= item['name'] ?></a>
                                                             </li>
                                                         {% endfor %}
 
@@ -422,55 +422,55 @@
             {% include 'twig/issue/list_handbars_tpl.twig' %}
 
 
-            <script src="/dev/js/handlebars.helper.js?v={{ _version }}"></script>
-            <script src="/dev/js/handlebars.responsive.helper.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
-            <!--script src="/dev/js/websocket.js?v={{ _version }}"></script-->
+            <script src="/dev/js/handlebars.helper.js?v=<?= _version ?>"></script>
+            <script src="/dev/js/handlebars.responsive.helper.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
+            <!--script src="/dev/js/websocket.js?v=<?= _version ?>"></script-->
             <script src="/dev/lib/sortable/Sortable.js"></script>
             <script src="/dev/lib/sortable/Sortable.js"></script>
             {% include 'twig/issue/list_adv_query.twig' %}
 
             <script type="text/javascript">
                 var _issueConfig = {
-                    "priority": {{ priority|json_encode()|raw }},
-                    "issue_types": {{ issue_types|json_encode()|raw }},
-                    "issue_status": {{ issue_status|json_encode()|raw }},
-                    "issue_resolve": {{ issue_resolve|json_encode()|raw }},
-                    "issue_module": {{ project_modules|json_encode()|raw }},
-                    "issue_version": {{ project_versions|json_encode()|raw }},
-                    "issue_labels": {{ project_labels|json_encode()|raw }},
-                    "users": {{ users|json_encode()|raw }},
-                    "project_users": {{ project_users|json_encode()|raw }},
-                    "projects": {{ projects|json_encode()|raw }},
-                    "sprint": {{ sprints|json_encode()|raw }},
-                    "project_root_url": "{{ project_root_url }}"
+                    "priority": <?= priority|json_encode()|raw ?>,
+                    "issue_types": <?= issue_types|json_encode()|raw ?>,
+                    "issue_status": <?= issue_status|json_encode()|raw ?>,
+                    "issue_resolve": <?= issue_resolve|json_encode()|raw ?>,
+                    "issue_module": <?= project_modules|json_encode()|raw ?>,
+                    "issue_version": <?= project_versions|json_encode()|raw ?>,
+                    "issue_labels": <?= project_labels|json_encode()|raw ?>,
+                    "users": <?= users|json_encode()|raw ?>,
+                    "project_users": <?= project_users|json_encode()|raw ?>,
+                    "projects": <?= projects|json_encode()|raw ?>,
+                    "sprint": <?= sprints|json_encode()|raw ?>,
+                    "project_root_url": "<?= project_root_url ?>"
                 };
 
-                var _project_issue_types = {{ project_issue_types|json_encode()|raw }};
+                var _project_issue_types = <?= project_issue_types|json_encode()|raw ?>;
 
                 var _simplemde = {};
 
                 var _fineUploaderFile = {};
                 var _fineImportExcelUploader = null;
                 var _issue_id = null;
-                var _cur_project_id = '{{ project_id }}';
-                var _active_sprint_id = '{{ active_sprint['id'] }}';
+                var _cur_project_id = '<?= project_id ?>';
+                var _active_sprint_id = '<?= active_sprint['id'] ?>';
                 var _cur_uid = null;
                 var _editor_md = null;
-                var _description_templates = {{ description_templates|json_encode()|raw }};
+                var _description_templates = <?= description_templates|json_encode()|raw ?>;
                 var _is_create_sprint_issue = false;
 
                 var $IssueMain = null;
                 var $IssueAdvQuery = null;
                 var $IssueDetail = null;
-                var query_str = '{{ query_str }}';
+                var query_str = '<?= query_str ?>';
                 var urls = parseURL(window.location.href);
-                var $sort_field = '{{ sort_field }}';
-                var $sort_by = '{{ sort_by }}';
-                var is_all_issues = '{{ is_all_issues }}';
+                var $sort_field = '<?= sort_field ?>';
+                var $sort_by = '<?= sort_by ?>';
+                var is_all_issues = '<?= is_all_issues ?>';
 
-                var display_fields = {{ display_fields|json_encode()|raw }};
-                var uiDisplayFields = {{ uiDisplayFields|json_encode()|raw }};
-                var advFields = {{ advFields|json_encode()|raw }};
+                var display_fields = <?= display_fields|json_encode()|raw ?>;
+                var uiDisplayFields = <?= uiDisplayFields|json_encode()|raw ?>;
+                var advFields = <?= advFields|json_encode()|raw ?>;
 
                 var is_save_filter = '0';
 
@@ -487,10 +487,10 @@
                 var adv_details = [];
                 var sort_adv_temp_item = {};
 
-                var adv_filter_json = {{ adv_filter_json|raw }}
-                var is_adv_filter = '{{ is_adv_filter }}';
+                var adv_filter_json = <?= adv_filter_json|raw ?>
+                var is_adv_filter = '<?= is_adv_filter ?>';
 
-                var issue_view = '{{ issue_view }}';
+                var issue_view = '<?= issue_view ?>';
                 var list_render_id = 'list_render_id';
                 var list_tpl_id = 'list_tpl';
                 if (issue_view === 'responsive') {
@@ -522,7 +522,7 @@
                         list_render_id: list_render_id, // list_render_id detail_render_id
                         list_tpl_id: list_tpl_id, // list_tpl list_tpl_detail
                         filter_form_id: "filter_form",
-                        filter_url: "/issue/main/filter?project={{ project_id }}",
+                        filter_url: "/issue/main/filter?project=<?= project_id ?>",
                         get_url: "/issue/main/get",
                         update_url: "/issue/main/update",
                         add_url: "/issue/main/add",

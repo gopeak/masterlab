@@ -22,8 +22,8 @@
 
 <script type="text/javascript">
 
-    var qr_code = '{{qr_token}}';
-    var tmp_issue_id = '{{tmp_issue_id}}';
+    var qr_code = '<?=qr_token?>';
+    var tmp_issue_id = '<?=tmp_issue_id?>';
 
     Dropzone.autoDiscover = false;
     var myDropzone = new Dropzone("#myDropzone", {

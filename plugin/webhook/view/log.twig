@@ -3,16 +3,14 @@
 <head>
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/admin/webhook_log.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/webhook_log.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
     <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
-
-
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -59,19 +57,19 @@
                                     <select  id="id_webhook_id" name="webhook_id" class="selectpicker show-tick"  title="webhook名称"   data-width="auto" >
                                         <option value="">请选择</option>
                                         {% for key,webhook in webhook_arr %}
-                                            <option value="{{webhook.id}}">{{webhook.name}}</option>
+                                            <option value="<?=webhook.id?>"><?=webhook.name?></option>
                                         {% endfor %}
                                     </select>
                                     <select name="event_name" id="id_event_name" title="事件" class="selectpicker show-tick"  data-width="auto"  >
                                         <option value="">请选择</option>
                                         {% for key, events in hook_event_arr %}
-                                            <optgroup label="{{key}}">
+                                            <optgroup label="<?=key?>">
                                                 {% for event_key,event_name in events %}
                                                     {% set selected = '' %}
                                                     {% if event_key  in default_hook_event_arr %}
                                                         {% set selected = 'selected' %}
                                                     {% endif %}
-                                                    <option  value="{{event_key}}" {{selected}} data-subtext="{{event_key}}">{{event_name}}</option>
+                                                    <option  value="<?=event_key?>" <?=selected?> data-subtext="<?=event_key?>"><?=event_name?></option>
                                                 {% endfor %}
                                             </optgroup>
                                         {% endfor %}
@@ -124,59 +122,50 @@
     </div>
 </section>
 
-
-
-
-{% verbatim %}
-
-
-{% verbatim %}
-
-
 <script id="logs_tpl" type="text/html">
-    {{#logs_arr}}
+    <?=#logs_arr?>
     <tr class="commit">
             <td>
-             {{webhook_name}}
+             <?=webhook_name?>
             </td>
             <td>
-               {{event_name}}
+               <?=event_name?>
             </td>
             <td>
-              {{url}}
+              <?=url?>
             </td>
             <td>
-            {{time_text}}
+            <?=time_text?>
             </td>
             <td>
-                {{{err_msg}}}
+                <?={err_msg?>}
             </td>
             <td>
-                 <span class="label {{status_bg}}"  > {{status_text}} </span>
+                 <span class="label <?=status_bg?>"  > <?=status_text?> </span>
             </td>
             <td  >
                 <div class="controls member-controls " >
-                    {{#if_eq status '4'}}
-                        <a class="user_for_active btn btn-transparent " data-uid="{{uid}}"   href="#"  >
+                    <?=#if_eq status '4'?>
+                        <a class="user_for_active btn btn-transparent " data-uid="<?=uid?>"   href="#"  >
                             重新发送
                         </a>
-                    {{/if_eq}}
-                    {{#if_eq is_system '0'}}
-                        {{#if_eq myself '0'}}
-                            <a class="user_for_delete btn btn-transparent"   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
+                    <?=/if_eq?>
+                    <?=#if_eq is_system '0'?>
+                        <?=#if_eq myself '0'?>
+                            <a class="user_for_delete btn btn-transparent"   href="javascript:userDelete(<?=uid?>);" style="padding: 6px 2px;">
                                 <i class="fa fa-trash"></i>
                                 <span class="sr-only">删除</span>
                             </a>
-                        {{/if_eq}}
-                    {{/if_eq}}
+                        <?=/if_eq?>
+                    <?=/if_eq?>
                 </div>
 
             </td>
         </tr>
-    {{/logs_arr}}
+    <?=/logs_arr?>
     <div class="text-center" style="margin-top: .8em;">
         <span class="text-center">
-                总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
+                总数:<span id="issue_count"><?=total?></span> 每页显示:<span id="page_size"><?=page_size?></span>
         </span>
     </div>
     <div class="gl-pagination" id="ampagination-bootstrap" style="  border-top: 0px solid #e5e5e5; ">
@@ -184,9 +173,8 @@
     </div>
 </script>
 
-{% endverbatim %}
 
-<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
     var $webhookLogAjax = null;

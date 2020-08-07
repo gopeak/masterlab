@@ -99,12 +99,12 @@
     {{/filters}}
 </script>{% endverbatim %}
 
-<script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
-<script src="/dev/js/user/filters.js?v={{_version}}"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
+<script src="/dev/js/user/filters.js?v=<?=_version?>"></script>
 <script type="text/javascript">
 
     var _issueConfig = {
-        "projects":{{projects|json_encode()|raw}}
+        "projects":<?=projects|json_encode()|raw?>
     };
 
     var $obi = null;

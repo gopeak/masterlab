@@ -4,13 +4,9 @@ namespace main\plugin\webhook;
 
 use Doctrine\Common\Inflector\Inflector;
 use Doctrine\DBAL\ParameterType;
-use main\app\classes\ActivityLogic;
-use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\event\Events;
-use main\app\model\ActivityModel;
 use main\app\model\PluginModel;
-use main\app\model\user\UserModel;
 use main\plugin\BasePluginCtrl;
 use main\plugin\webhook\model\WebHookLogModel;
 use main\plugin\webhook\model\WebHookModel;
@@ -35,7 +31,6 @@ class Index extends BasePluginCtrl
     {
         parent::__construct();
 
-
         // 当前插件目录名
         $this->dirName = basename(pathinfo(__FILE__)['dirname']);
 
@@ -51,7 +46,6 @@ class Index extends BasePluginCtrl
             $this->pluginMethod = $pluginMethod;
             $this->$pluginMethod();
         }
-
     }
 
     /**
@@ -65,8 +59,6 @@ class Index extends BasePluginCtrl
         $data['nav_links_active'] = 'webhook';
         $data['sub_nav_active'] = 'plugin';
         $data['plugin_name'] = $this->dirName;
-
-
 
         $data['default_hook_event_arr'] = [
             Events::onIssueCreateAfter,

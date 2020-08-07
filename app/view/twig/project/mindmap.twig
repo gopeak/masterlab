@@ -5,17 +5,17 @@
     {% include 'twig/common/header/include.twig' %}
 
     <script src="/dev/lib/moment.js"></script>
-    <script src="/dev/lib/url_param.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
-    <script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
-    <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
-    <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
-    <script src="/dev/js/project/mind.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/url_param.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/issue_ui.js?v=<?=_version?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/form.js?v=<?=_version?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/detail.js?v=<?=_version?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/main.js?v=<?=_version?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/project/mind.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
     
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <!-- <script src="/dev/js/admin/issue_ui.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script> -->
-    <script src="/dev/js/issue/form.js?v={{ _version }}" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="/dev/js/admin/issue_ui.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script> -->
+    <script src="/dev/js/issue/form.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
     
 
 
@@ -39,13 +39,13 @@
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
 
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{ _version }}" type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= _version ?>" type="text/javascript"></script>
     <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
 
     <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
-    <link href="/gitlab/assets/application.css?v={{ _version }}">
+    <link href="/gitlab/assets/application.css?v=<?= _version ?>">
 
     <script src="/dev/lib/my-mind/my-mind.js"></script>
 
@@ -111,7 +111,7 @@
                                             <select id="source_range" name="source_range"  class="selectpicker">
                                                 <option value="all"  >整个项目</option>
                                                 {% for sprint in sprints %}
-                                                    <option value="{{ sprint['id'] }}"  >{{ sprint['name'] }}</option>
+                                                    <option value="<?= sprint['id'] ?>"  ><?= sprint['name'] ?></option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -277,7 +277,7 @@
                                                     <div style="flex: 1; padding-left: 4px;">
                                                         <select id="format_font_size"  data-width="64px"  title="字号" class="selectpicker form-control">
                                                             {% for size in fontSizes %}
-                                                                <option value="{{ size }}">{{ size }}</option>
+                                                                <option value="<?= size ?>"><?= size ?></option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>
@@ -286,7 +286,7 @@
                                                             {% for row in fonts %}
                                                                 {% set  name = row['name'] %}
                                                                 {% set  value = row['value'] %}
-                                                                <option data-content="<span>{{ name }}</span>" value="{{ value }}">{{name}}</option>
+                                                                <option data-content="<span><?= name ?></span>" value="<?= value ?>"><?=name?></option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>
@@ -312,7 +312,7 @@
                                                         {% for type in issue_types %}
                                                             {% set  font_awesome = type['font_awesome'] %}
                                                             {% set  type_name = type['name'] %}
-                                                            <option origin-id="{{ type['id'] }}" data-content="<i class='fa {{font_awesome}}'></i> {{type_name}}" value="{{font_awesome}}">{{type_name}}</option>
+                                                            <option origin-id="<?= type['id'] ?>" data-content="<i class='fa <?=font_awesome?>'></i> <?=type_name?>" value="<?=font_awesome?>"><?=type_name?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -324,7 +324,7 @@
                                                         {% for type in issue_types %}
                                                             {% set  font_awesome = type['font_awesome'] %}
                                                             {% set  type_name = type['name'] %}
-                                                            <option origin-id="{{ type['id'] }}"  data-icon="fa {{font_awesome}}" value="{{font_awesome}}">{{type_name}}</option>
+                                                            <option origin-id="<?= type['id'] ?>"  data-icon="fa <?=font_awesome?>" value="<?=font_awesome?>"><?=type_name?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -335,7 +335,7 @@
                                                     <select id="format_issue_assignee" title="经办人" class="selectpicker">
                                                         {% for row in project_users %}
                                                             {% set  display_name = row['display_name'] %}
-                                                            <option value="{{row.uid}}"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{row.uid}}.png' > {{display_name}}"  >{{display_name}}</option>
+                                                            <option value="<?=row.uid?>"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/<?=row.uid?>.png' > <?=display_name?>"  ><?=display_name?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -347,10 +347,10 @@
                                                         {% set  status_color = row['status_color'] %}
                                                         {% set  row_name = row['name'] %}
                                                         <label class="btn btn-sm btn-default"
-                                                               data-value="{{row.id}}"
-                                                            data-color="{{status_color}}"
-                                                            style=" color: {{status_color}}">
-                                                            {{row_name}}
+                                                               data-value="<?=row.id?>"
+                                                            data-color="<?=status_color?>"
+                                                            style=" color: <?=status_color?>">
+                                                            <?=row_name?>
                                                         </label>
                                                     {% endfor %}
                                                 </div>
@@ -362,7 +362,7 @@
                                                         {% for row in issue_status %}
                                                             {% set  text_color = row['text_color'] %}
                                                             {% set  row_name = row['name'] %}
-                                                            <label class="btn btn-xs btn-default" style="color:{{text_color}};font-size:8px;  margin-bottom: 5px;" data-status_value="{{row.id}}"  >{{row_name}}</label>
+                                                            <label class="btn btn-xs btn-default" style="color:<?=text_color?>;font-size:8px;  margin-bottom: 5px;" data-status_value="<?=row.id?>"  ><?=row_name?></label>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
@@ -374,7 +374,7 @@
                                                         {% for row in issue_resolve %}
                                                             {% set  text_color = row['color'] %}
                                                             {% set  row_name = row['name'] %}
-                                                            <label class="btn btn-xs btn-default" style="color:{{text_color}}; font-size:8px; margin-bottom: 5px;" >{{row_name}}</label>
+                                                            <label class="btn btn-xs btn-default" style="color:<?=text_color?>; font-size:8px; margin-bottom: 5px;" ><?=row_name?></label>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
@@ -548,7 +548,7 @@
                 </div>
                 <div id="setting-modal-body" class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="project_id" id="setting_project_id" value="{{project_id}}">
+                    <input type="hidden" name="project_id" id="setting_project_id" value="<?=project_id?>">
 
                     <div class="form-group">
                         <label class="control-label"  >默认数据源：</label>
@@ -565,7 +565,7 @@
                                 <div id="default_source_id_container" class="dropdown inline hide">
                                     <select id="default_source_id" name="default_source_id"  class="selectpicker">
                                         {% for board in sprints %}
-                                            <option value="{{ board['id'] }}">{{ board['name'] }}</option>
+                                            <option value="<?= board['id'] ?>"><?= board['name'] ?></option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -712,7 +712,7 @@
 {% endverbatim %}
 
 
-<script src="/dev/js/handlebars.helper.js?v={{ _version }}"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?= _version ?>"></script>
 
 
 <script type="text/javascript">
@@ -721,31 +721,31 @@
     var _fineUploaderFile = {};
     var _fineUploader = null;
     
-    var _project_issue_types = {{project_issue_types|json_encode()|raw}};
-    var mind_setting = {{ mind_setting|json_encode()|raw }};
+    var _project_issue_types = <?=project_issue_types|json_encode()|raw?>;
+    var mind_setting = <?= mind_setting|json_encode()|raw ?>;
     var _issue_id = null;
-    var _cur_project_id = '{{project_id}}';
-    var _active_sprint_id = '{{ active_sprint_id }}';
+    var _cur_project_id = '<?=project_id?>';
+    var _active_sprint_id = '<?= active_sprint_id ?>';
     var $IssueMain = null;
-    var _description_templates = {{ description_templates|json_encode()|raw }};
-    var _perm_kanban = {{ perm_kanban ? 1:0 }};
+    var _description_templates = <?= description_templates|json_encode()|raw ?>;
+    var _perm_kanban = <?= perm_kanban ? 1:0 ?>;
     var $mindAjax= null;
     var color_pickr = null;
 
     var _issueConfig = {
-        "priority":{{ priority|json_encode()|raw }},
-        "issue_priority":{{ priority|json_encode()|raw }},
-        "issue_types":{{ issue_types|json_encode()|raw }},
-        "issue_status":{{ issue_status|json_encode()|raw }},
-        "issue_resolve":{{ issue_resolve|json_encode()|raw }},
-        "issue_module":{{ project_modules|json_encode()|raw }},
-        "issue_version":{{ project_versions|json_encode()|raw }},
-        "issue_labels":{{ project_labels|json_encode()|raw }},
-        "users":{{ users|json_encode()|raw }},
-        "project_users":{{ project_users|json_encode()|raw }},
-        "project_sprints":{{ sprints|json_encode()|raw }},
-        "projects":{{ projects|json_encode()|raw }},
-        "sprint":{{sprints|json_encode()|raw}}
+        "priority":<?= priority|json_encode()|raw ?>,
+        "issue_priority":<?= priority|json_encode()|raw ?>,
+        "issue_types":<?= issue_types|json_encode()|raw ?>,
+        "issue_status":<?= issue_status|json_encode()|raw ?>,
+        "issue_resolve":<?= issue_resolve|json_encode()|raw ?>,
+        "issue_module":<?= project_modules|json_encode()|raw ?>,
+        "issue_version":<?= project_versions|json_encode()|raw ?>,
+        "issue_labels":<?= project_labels|json_encode()|raw ?>,
+        "users":<?= users|json_encode()|raw ?>,
+        "project_users":<?= project_users|json_encode()|raw ?>,
+        "project_sprints":<?= sprints|json_encode()|raw ?>,
+        "projects":<?= projects|json_encode()|raw ?>,
+        "sprint":<?=sprints|json_encode()|raw?>
     };
     window.onload = function() {
         MM.App.init(13, 14);

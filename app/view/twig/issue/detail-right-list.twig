@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/dev/css/issue/detail-list.css?v={{_version}}"/>
+<link rel="stylesheet" href="/dev/css/issue/detail-list.css?v=<?=_version?>"/>
 <div class="float-right-side">
     <div class="issuable-header clearfix" id="issuable-header">
 
@@ -188,7 +188,7 @@
                     <label class="control-label col-sm-3" for="issue_label_ids">标签:</label>
                     <div class="col-sm-9">
                         {{#issue.labels_names}}
-                        <a class="label-link" href="{% endverbatim %}{{project_root_url}}{% verbatim %}?sys_filter=label_{{id}}">
+                        <a class="label-link" href="{% endverbatim %}<?=project_root_url?>{% verbatim %}?sys_filter=label_{{id}}">
                                                     <span class="label color-label has-tooltip"
                                                           style="background-color: {{bg_color}}; color: {{color}}"
                                                           title="" data-container="body"
@@ -202,7 +202,7 @@
     </div>
 
     <div class="issue-detail detail-page-description">
-        <!--                            <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>-->
+        <!--                            <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="<?=issue.summary?>"></div>-->
         <div id="detail-page-description">
 
         </div>
@@ -444,8 +444,8 @@
                 <li class="timeline-entry">
                     <div class="flash-container timeline-content"></div>
                     <div class="timeline-icon hidden-xs hidden-sm">
-                        <a class="author_link" href="/{{user['username']}}">
-                            <img alt="@{{user['username']}}" class="avatar s40" src="{{user['avatar']}}" /></a>
+                        <a class="author_link" href="/<?=user['username']?>">
+                            <img alt="@<?=user['username']?>" class="avatar s40" src="<?=user['avatar']?>" /></a>
                     </div>
 
                     <div class="timeline-content timeline-content-form">

@@ -225,7 +225,7 @@ class Main extends Base
         //var_dump($pluginFile);
         if (file_exists($pluginFile)) {
             require_once($pluginFile);
-            $pluginIndexClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, 'Index');
+            $pluginIndexClass = sprintf("main\\plugin\\%s\\%s",  $pluginName, 'Index');
             if (class_exists($pluginIndexClass)) {
                 $indexCtrl = new $pluginIndexClass($this->dispatcher);
                 if(method_exists($indexCtrl,'main')){

@@ -30,7 +30,7 @@ if(GLOBAL_DEBUG){
 header("Content-type: text/html; charset=utf-8");
 define('BASIC_PATH',str_replace('\\','/',dirname(dirname(__FILE__))).'/');
 define('LIB_DIR',       BASIC_PATH .'app/');     	//系统库目录
-define('PLUGIN_DIR',    APP_PATH .'public/plugin/document/plugins/');	//插件目录
+define('PLUGIN_DIR',    BASIC_PATH .'plugins/');	//插件目录
 define('CONTROLLER_DIR',LIB_DIR .'controller/'); 	//控制器目录
 define('MODEL_DIR',     LIB_DIR .'model/');  		//模型目录
 define('TEMPLATE',      LIB_DIR .'template/');   	//模版文件路径

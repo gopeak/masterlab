@@ -142,26 +142,26 @@
 </script>{% endverbatim %}
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
 <script src="/dev/js/user/follow_issues.js"></script>
 <script type="text/javascript">
     var _issueConfig = {
-        "priority":{{priority|json_encode()|raw}},
-        "issue_types":{{issue_types|json_encode()|raw}},
-        "issue_status":{{issue_status|json_encode()|raw}},
-        "issue_resolve":{{issue_resolve|json_encode()|raw}},
-        "issue_module":{{project_modules|json_encode()|raw}},
-        "issue_version":{{project_versions|json_encode()|raw}},
-        "issue_labels":{{project_labels|json_encode()|raw}},
-        "users":{{users|json_encode()|raw}},
-        "project_users":{{project_users|json_encode()|raw}},
-        "projects":{{projects|json_encode()|raw}},
-        "sprint":{{sprints|json_encode()|raw}}
+        "priority":<?=priority|json_encode()|raw?>,
+        "issue_types":<?=issue_types|json_encode()|raw?>,
+        "issue_status":<?=issue_status|json_encode()|raw?>,
+        "issue_resolve":<?=issue_resolve|json_encode()|raw?>,
+        "issue_module":<?=project_modules|json_encode()|raw?>,
+        "issue_version":<?=project_versions|json_encode()|raw?>,
+        "issue_labels":<?=project_labels|json_encode()|raw?>,
+        "users":<?=users|json_encode()|raw?>,
+        "project_users":<?=project_users|json_encode()|raw?>,
+        "projects":<?=projects|json_encode()|raw?>,
+        "sprint":<?=sprints|json_encode()|raw?>
     };
 
     var $follow_issues = null;
     var _cur_page = 1;
-    var _user_id = '{{user_id}}';
+    var _user_id = '<?=user_id?>';
     $(function() {
         var options = {
             user_id:_user_id

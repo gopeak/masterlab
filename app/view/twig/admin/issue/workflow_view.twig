@@ -47,7 +47,7 @@
                                 <a class="btn has-tooltip" title="" href="/admin/workflow" data-original-title="返回列表">
                                     <i class="fa fa-reply-all"></i> 返回列表
                                 </a>
-                                    <a class="btn  " href="/admin/workflow/edit/{{id}}"  >
+                                    <a class="btn  " href="/admin/workflow/edit/<?=id?>"  >
                                         <i class="fa fa-edit"></i>
                                         编辑
                                     </a>
@@ -88,11 +88,11 @@
 <!-- <script src="/dev/lib/jquery.min.js"></script> -->
 <script src="/dev/lib/jsplumb/js/jsplumb.min.js"></script>
 
-<script src="/dev/js/admin/workflow_design.js?v={{_version}}"></script>
+<script src="/dev/js/admin/workflow_design.js?v=<?=_version?>"></script>
 <script type="text/javascript">
 
     var $Workflow = null;
-    var workflow_data = {{data|raw}};
+    var workflow_data = <?=data|raw?>;
     $(function() {
 
 

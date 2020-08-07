@@ -4,9 +4,9 @@
 
     {% include 'twig/common/header/include.twig' %}
 
-    <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript"
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript"
             charset="utf-8"></script>
-    <script src="/dev/js/org/org.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/org/org.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
@@ -52,7 +52,7 @@
                               enctype="multipart/form-data" action="/org/add" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
-                            <input type="hidden" name="id" value="{{id}}">
+                            <input type="hidden" name="id" value="<?=id?>">
                             <div class="form-group">
                                 <label class="control-label" for="group_path">组织关键字 <span class="required"> *</span>
                                 </label>
@@ -73,7 +73,7 @@
                                         <p class="gl-field-info ">
                                             以下为系统关键字，不可用:
                                             {% for unUseName in ctrlKeyArr %}
-                                                {{ unUseName }}
+                                                <?= unUseName ?>
                                             {% endfor %}
                                         </p>
                                     {% endif %}
@@ -260,15 +260,15 @@
 
     var _issueConfig = {};
     var _fineUploader = null;
-    var _cur_uid = '{{user['uid']}}';
+    var _cur_uid = '<?=user['uid']?>';
     var $org = null;
 
-    var action = '{{action}}';
+    var action = '<?=action?>';
     $(function () {
         window.$org = new Org({});
 
         if (action == 'edit') {
-            window.$org.fetch( {{id}} );
+            window.$org.fetch( <?=id?> );
         }
         $('#btn-save').bind('click', function () {
             if (action == 'edit') {

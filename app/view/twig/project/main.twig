@@ -3,11 +3,11 @@
 <head>
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/project/project.js?v={{_version}}" type="text/javascript"   charset="utf-8"></script>
+    <script src="/dev/js/project/project.js?v=<?=_version?>" type="text/javascript"   charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 
-    <link rel="stylesheet" href="/dev/css/project/main.css?v={{_version}}">
+    <link rel="stylesheet" href="/dev/css/project/main.css?v=<?=_version?>">
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
@@ -36,10 +36,10 @@
                                 <ul class="nav-links issues-state-filters">
                                     {% for key,item in type_list %}
                                         <li class="" {% if (key == 0)  %} id="js-masterlab-project-type-tab-main" {% endif %}>
-                                            <a title="{{item['display_name']}}"
+                                            <a title="<?=item['display_name']?>"
                                                href="javascript:void(0);"
-                                               onclick="selectByType({{key}}, this)"><span> {{item['display_name']}} </span>
-                                                <!--span class="badge">{{item['count']}}</span-->
+                                               onclick="selectByType(<?=key?>, this)"><span> <?=item['display_name']?> </span>
+                                                <!--span class="badge"><?=item['count']?></span-->
                                             </a>
                                         </li>
                                     {% endfor %}
@@ -47,7 +47,7 @@
 
                                 <div class="nav-controls row-fixed-content">
                                     <input type="search" name="name" id="project-filter-form-field" placeholder="通过项目名搜索" class="form-control input-short" spellcheck="false" tabindex="2">
-                                    <input type="hidden" name="sort" id="project-filter-sort" value="{% if (projects_sort) %}{{ projects_sort }}{% else %}created_desc{% endif %}">
+                                    <input type="hidden" name="sort" id="project-filter-sort" value="{% if (projects_sort) %}<?= projects_sort ?>{% else %}created_desc{% endif %}">
                                     <!--form class="project-filter-form qa-project-filter-form" id="project-filter-form" action="/projects" accept-charset="UTF-8" method="get">
                                         <input name="utf8" type="hidden" value="✓">
                                         <input type="search" name="name" id="project-filter-form-field" placeholder="通过项目名搜索" class="form-control input-short" spellcheck="false" tabindex="2">
@@ -193,15 +193,15 @@
 
     var $projects = null;
     var _issueConfig = {
-        "priority":{{priority|json_encode()|raw}},
-        "issue_types":{{issue_types|json_encode()|raw}},
-        "issue_status":{{issue_status|json_encode()|raw}},
-        "issue_resolve":{{issue_resolve|json_encode()|raw}},
-        "issue_module":{{project_modules|json_encode()|raw}},
-        "issue_version":{{project_versions|json_encode()|raw}},
-        "issue_labels":{{project_labels|json_encode()|raw}},
-        "users":{{users|json_encode()|raw}},
-        "projects":{{projects|json_encode()|raw}}
+        "priority":<?=priority|json_encode()|raw?>,
+        "issue_types":<?=issue_types|json_encode()|raw?>,
+        "issue_status":<?=issue_status|json_encode()|raw?>,
+        "issue_resolve":<?=issue_resolve|json_encode()|raw?>,
+        "issue_module":<?=project_modules|json_encode()|raw?>,
+        "issue_version":<?=project_versions|json_encode()|raw?>,
+        "issue_labels":<?=project_labels|json_encode()|raw?>,
+        "users":<?=users|json_encode()|raw?>,
+        "projects":<?=projects|json_encode()|raw?>
     };
 
 

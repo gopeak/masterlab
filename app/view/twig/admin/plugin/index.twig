@@ -3,7 +3,7 @@
 <head>
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/admin/plugin_manager.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/plugin_manager.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
@@ -149,7 +149,7 @@
                             <div class="form-group">
                                 <select  id="id_type" name="type" class="selectpicker"  title="请选择" >
                                     {% for key,type in type_arr %}
-                                        <option value="{{key}}">{{type}}</option>
+                                        <option value="<?=key?>"><?=type?></option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -367,7 +367,7 @@
 </script>{% endverbatim %}
 
 
-<script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
 <script type="text/javascript">
 
     var $pluginManager = null;

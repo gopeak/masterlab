@@ -4,11 +4,11 @@
 
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/lib/jquery.form.js"></script>
-    <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/project/catalog.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/catalog.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
 
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"   charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
@@ -81,8 +81,8 @@
         </div>
 
         <div class="modal" id="modal-form-catalog">
-            <form class="form-horizontal label-form" id="form-catalog" action="/project/catalog/add?project_id={{project_id}}" accept-charset="UTF-8" method="post">
-                <input type="hidden" name="project_id" value="{{_project_id}}">
+            <form class="form-horizontal label-form" id="form-catalog" action="/project/catalog/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
+                <input type="hidden" name="project_id" value="<?=_project_id?>">
                 <input type="hidden" id="action" name="action" value="">
                 <input type="hidden" id="catalog_id" name="id" value="">
 
@@ -205,13 +205,13 @@
 {% endverbatim %}
 
 <script>
-    var query_str = '{{query_str}}';
+    var query_str = '<?=query_str?>';
     var urls = parseURL(window.location.href);
-    var project_root_url = '{{project_root_url}}';
-    var _project_id = '{{project_id}}';
+    var project_root_url = '<?=project_root_url?>';
+    var _project_id = '<?=project_id?>';
 
     var _issueConfig = {
-        "issue_labels": {{ project_labels|json_encode()|raw }},
+        "issue_labels": <?= project_labels|json_encode()|raw ?>,
     };
 
     $(function() {
@@ -220,7 +220,7 @@
             query_param_obj: urls.searchObject,
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/project/catalog/fetchAll?project_id={{project_id}}"
+            filter_url:"/project/catalog/fetchAll?project_id=<?=project_id?>"
         };
         window.$catalogAjax= new Catalog(options);
         window.$catalogAjax.fetchAll();
@@ -228,7 +228,7 @@
         $('#btn-create').click(function () {
             $('#form-catalog').resetForm();
             $('#action').val('add');
-            $('#project_id').val('{{project_id}}');
+            $('#project_id').val('<?=project_id?>');
             window.$catalogAjax.initProjectLabel([]);
             $('#modal-form-catalog').modal('show');
         });

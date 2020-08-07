@@ -128,7 +128,7 @@
                                         type="button"
                                         data-copy-id="btn-parent_select_issue"
                                         data-current-user="false"
-                                        data-project-id="{{project_id}}"
+                                        data-project-id="<?=project_id?>"
                                         data-selected=""
                                         data-field-name="parent_select_issue_id"
                                         data-default-label="请选择事项"
@@ -203,7 +203,7 @@
                 </div>
                 <div class="modal-body issue-modal-body">
                     <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="params[project_id]" id="project_id" value="{{project_id}}"/>
+                    <input type="hidden" name="params[project_id]" id="project_id" value="<?=project_id?>"/>
 					<input type="hidden" name="params[master_issue_id]" id="master_issue_id" value=""/>
                     <input type="hidden" name="authenticity_token" value="">
                     {% set projectSeelctTitle = '请选择项目' %}

@@ -4,10 +4,10 @@
     {% include 'twig/common/header/include.twig' %}
 
     <script src="/dev/lib/jquery.form.js"></script>
-    <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/project/role.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/role.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
 
@@ -77,9 +77,9 @@
                     </div>
 
                     <div class="col-lg-9">
-                        <form id="form_add_role" class="setting-form clearfix" action="/project/role/add?project_id={{project_id}}" accept-charset="UTF-8" method="post">
+                        <form id="form_add_role" class="setting-form clearfix" action="/project/role/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
-                            <input type="hidden" name="project_id" value="{{project_id}}">
+                            <input type="hidden" name="project_id" value="<?=project_id?>">
                             <div class="form-group col-md-3">
                                 <input style="margin-left: -15px;" type="text" name="params[name]" id="role_name" placeholder="角色名称" required="required" class="form-control">
 
@@ -125,7 +125,7 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
-                    <input type="hidden" name="project_id" value="{{project_id}}">
+                    <input type="hidden" name="project_id" value="<?=project_id?>">
 
                     <div class="form-group">
                         <label class="control-label" >名称:</label>
@@ -208,7 +208,7 @@
           accept-charset="UTF-8"
           method="post">
         <input type="hidden" name="role_id" id="role_user-role_id" value="">
-        <input type="hidden" name="project_id" id="role_user-project_id" value="{{project_id}}">
+        <input type="hidden" name="project_id" id="role_user-project_id" value="<?=project_id?>">
         <input type="hidden" name="format" id="format" value="json">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -227,11 +227,11 @@
                                 <div class="issuable-form-select-holder">
                                     <select id="role_user_selected_user_id" name="params[select_user]"
                                             class="selectpicker"  data-live-search="true"
-                                            data-project-id="{{project_id}}"
+                                            data-project-id="<?=project_id?>"
                                     >
                                         <option value="">选择成员</option>
                                         {% for user in  users %}
-                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='{{user.avatar}}'> {{user.display_name}}" value="{{user.uid}}">{{user.display_name}}</option>
+                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='<?=user.avatar?>'> <?=user.display_name?>" value="<?=user.uid?>"><?=user.display_name?></option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -330,7 +330,7 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        users:{{users|json_encode()|raw}}
+        users:<?=users|json_encode()|raw?>
     };
     //console.log(_issueConfig.users);
     window.$role = null;
@@ -339,14 +339,14 @@
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/project/role/fetchAll?project_id={{project_id}}",
+            filter_url:"/project/role/fetchAll?project_id=<?=project_id?>",
             get_url:"/project/role/get",
             role_user_fetch_url:"/project/role/fetchRoleUser",
             role_user_add_url:"/project/role/addRoleUser",
             tree_url: "/project/role/perm_tree",
             update_url:"/project/role/update",
             update_perm_url:"/project/role/update_perm",
-            add_url:"/project/role/add?project_id={{project_id}}",
+            add_url:"/project/role/add?project_id=<?=project_id?>",
             delete_url:"/project/role/delete",
             delete_role_user_url:"/project/role/deleteRoleUser"
         }

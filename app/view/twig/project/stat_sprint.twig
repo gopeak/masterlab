@@ -10,8 +10,8 @@
     <script src="/dev/lib/chart.js/samples/utils.js"></script>
 
     <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-    <link href="/dev/css/dashboard.css?v={{_version}}" rel="stylesheet">
-    <link href="/dev/css/statistics.css?v={{_version}}" rel="stylesheet">
+    <link href="/dev/css/dashboard.css?v=<?=_version?>" rel="stylesheet">
+    <link href="/dev/css/statistics.css?v=<?=_version?>" rel="stylesheet">
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
@@ -355,26 +355,26 @@
 </section>
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/lib/sortable/Sortable.js"></script>
 
 <script type="text/javascript">
 
-    var _cur_project_id = '{{project_id}}';
-    var _active_sprint_id = '{{active_sprint_id}}';
+    var _cur_project_id = '<?=project_id?>';
+    var _active_sprint_id = '<?=active_sprint_id?>';
 
     var _issueConfig = {
-        "priority":{{priority|json_encode()|raw}},
-        "issue_types":{{issue_types|json_encode()|raw}},
-        "issue_status":{{issue_status|json_encode()|raw}},
-        "issue_resolve":{{issue_resolve|json_encode()|raw}},
-        "issue_module":{{project_modules|json_encode()|raw}},
-        "issue_version":{{project_versions|json_encode()|raw}},
-        "issue_labels":{{project_labels|json_encode()|raw}},
-        "users":{{users|json_encode()|raw}},
-        "project_users":{{project_users|json_encode()|raw}},
-        "projects":{{projects|json_encode()|raw}}
+        "priority":<?=priority|json_encode()|raw?>,
+        "issue_types":<?=issue_types|json_encode()|raw?>,
+        "issue_status":<?=issue_status|json_encode()|raw?>,
+        "issue_resolve":<?=issue_resolve|json_encode()|raw?>,
+        "issue_module":<?=project_modules|json_encode()|raw?>,
+        "issue_version":<?=project_versions|json_encode()|raw?>,
+        "issue_labels":<?=project_labels|json_encode()|raw?>,
+        "users":<?=users|json_encode()|raw?>,
+        "project_users":<?=project_users|json_encode()|raw?>,
+        "projects":<?=projects|json_encode()|raw?>
     };
 
     var $panel = null;

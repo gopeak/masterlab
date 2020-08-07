@@ -11,40 +11,40 @@
                     {% if (project['avatar_exist']) %}
 
                         <a href="#" class="avatar-image-container">
-                            <img src="{{ project['avatar'] }}" class="avatar has-tooltip s40">
+                            <img src="<?= project['avatar'] ?>" class="avatar has-tooltip s40">
                         </a>
                     {% else %}
 
                         <div class="avatar-container s40" style="display: block">
-                            <a class="project" href="/{{project['path']}}/{{project['key']}}">
+                            <a class="project" href="/<?=project['path']?>/<?=project['key']?>">
                                 <div class="avatar project-avatar s40 identicon"
-                                     style="background-color: #E0F2F1; color: #555">{{ project['first_word'] }}</div>
+                                     style="background-color: #E0F2F1; color: #555"><?= project['first_word'] ?></div>
                             </a>
                         </div>
                     {% endif %}
                     <div class="project-details">
                         <h3 class="prepend-top-0 append-bottom-0">
-                            <a class="text-plain" href="/{{project['path']}}/{{project['key']}}">
+                            <a class="text-plain" href="/<?=project['path']?>/<?=project['key']?>">
                                 <span class="project-full-name">
-                                    <span class="namespace-name">{{ project['path'] }}/</span>
-                                    <span class="project-name">{{ project_name|raw }}</span>
-                                    <code>{{ project['type_name'] }}</code>
+                                    <span class="namespace-name"><?= project['path'] ?>/</span>
+                                    <span class="project-name"><?= project_name|raw ?></span>
+                                    <code><?= project['type_name'] ?></code>
                                 </span>
                             </a>
 
                         </h3>
                         <div class="description prepend-top-5">
 
-                            <p dir="auto">{{ project['description'] }}</p>
+                            <p dir="auto"><?= project['description'] ?></p>
                         </div>
                     </div>
                     <div class="controls">
 
                         <div class="prepend-top-0">
                             创建于
-                            <time class="js-timeago js-timeago-render-my" title="" datetime="{{ project['create_time_origin'] }}"
+                            <time class="js-timeago js-timeago-render-my" title="" datetime="<?= project['create_time_origin'] ?>"
                                   data-toggle="tooltip" data-placement="top" data-container="body"
-                                  data-original-title="{{ project['create_time_origin'] }}"  >{{ project['create_time_text'] }}
+                                  data-original-title="<?= project['create_time_origin'] ?>"  ><?= project['create_time_text'] ?>
                             </time>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
 
             <li class="page-item prev">
                 <a rel="prev" class="page-link"
-                   href="/search?page={{pre_page}}&scope={{scope}}&amp;keyword={{keyword}}">上一页</a>
+                   href="/search?page=<?=pre_page?>&scope=<?=scope?>&amp;keyword=<?=keyword?>">上一页</a>
             </li>
         {% endif %}
         {% set next_page = 1 %}
@@ -76,7 +76,7 @@
 
             <li class="page-item next">
                 <a rel="next" class="page-link"
-                   href="/search?page={{next_page}}&scope={{scope}}&amp;keyword={{keyword}}">下一页</a>
+                   href="/search?page=<?=next_page?>&scope=<?=scope?>&amp;keyword=<?=keyword?>">下一页</a>
             </li>
         {% endif %}
     </ul>

@@ -4,11 +4,11 @@
 
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/lib/jquery.form.js"></script>
-    <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/project/module.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/module.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
     <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 </head>
@@ -49,7 +49,7 @@
                         </p>
                     </div>
                     <div class="col-lg-9">
-                        <form id="form_add_action" class="setting-form clearfix" action="/project/module/add?project_id={{project_id}}" accept-charset="UTF-8" method="post">
+                        <form id="form_add_action" class="setting-form clearfix" action="/project/module/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
 
                             <div class="form-group  col-md-2">
                                 <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
@@ -180,7 +180,7 @@
 </script>{% endverbatim %}
 <script>
 
-    let query_str = '{{query_str}}';
+    let query_str = '<?=query_str?>';
     let urls = parseURL(window.location.href);
 
     $(function() {
@@ -190,7 +190,7 @@
             query_param_obj: urls.searchObject,
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/project/module/filter_search?project_id={{project_id}}"
+            filter_url:"/project/module/filter_search?project_id=<?=project_id?>"
         };
         window.$modules = new Module( options );
         window.$modules.fetchAll();
@@ -261,7 +261,7 @@
             },
             function(isConfirm){
                 if (isConfirm) {
-                    window.$modules.delete({{project_id}}, module_id);
+                    window.$modules.delete(<?=project_id?>, module_id);
                     swal.close();
                 }else{
                     swal.close();

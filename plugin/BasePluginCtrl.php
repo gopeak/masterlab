@@ -9,11 +9,7 @@ use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
-use main\app\model\DbModel;
 use main\app\model\PluginModel;
-use main\app\model\project\ProjectCatalogLabelModel;
-use main\app\model\project\ProjectRoleModel;
-use main\app\model\ActivityModel;
 use main\app\model\user\UserModel;
 
 /**
@@ -113,6 +109,9 @@ class BasePluginCtrl extends BaseUserCtrl
         if($debug){
             $twigTpl->addExtension(new \Twig\Extension\DebugExtension());
         }
+        $options = ['tag_variable'=>['<?=', '?>'],'tag_comment' => ['{!', '!}']];
+        $lexer = new \Twig\Lexer($twigTpl, $options);
+        $twigTpl->setLexer($lexer);
         echo $twigTpl->render($tpl, $dataArr);
         echo ob_get_clean();
     }

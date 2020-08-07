@@ -195,29 +195,29 @@
                                 <button id="btn-sort_field"
                                         title="排序字段"
                                         style="height: 38.5px; width: 110px;"
-                                        data-sort_field="{{ sort_field }}"
+                                        data-sort_field="<?= sort_field ?>"
                                         class="btn btn-default dropdown-menu-toggle"
                                         data-display="static"
                                         data-toggle="dropdown"
                                         type="button">
-                                    {{ avl_sort_fields[sort_field] }}
+                                    <?= avl_sort_fields[sort_field] ?>
                                     <i aria-hidden="true" data-hidden="true"
                                        class="fa fa-chevron-down"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
                                     <li>
                                         {% for avl_sort_field,field_name in avl_sort_fields %}
-                                            <a class="sort_select {{ sort_field == avl_sort_field ? 'is-active' : '' }}"
-                                               data-field="{{ avl_sort_field }}" href="#">
-                                                {{ field_name }}
+                                            <a class="sort_select <?= sort_field == avl_sort_field ? 'is-active' : '' ?>"
+                                               data-field="<?= avl_sort_field ?>" href="#">
+                                                <?= field_name ?>
                                             </a>
                                         {% endfor %}
                                     </li>
                                 </ul>
                             </div>
-                            <a id="btn_sort_by" type="button" data-sortby="{{ sort_by }}"
+                            <a id="btn_sort_by" type="button" data-sortby="<?= sort_by ?>"
                                class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
-                               title="{{ sort_by == 'desc' ? '降序' : '升序' }}"
+                               title="<?= sort_by == 'desc' ? '降序' : '升序' ?>"
                                style="height:38.5px" href="#">
                                 {% if (sort_by == '' or sort_by == 'desc') %}
                                     <svg class="s16">
@@ -360,7 +360,7 @@
             <span  id="adv_query_diplay" class="adv-query-diplay-item">
 
                                                 </span>
-            <a class="clear-adv-query" onclick="window.location = '{{project_root_url}}'" href="#">清空筛选</a>
+            <a class="clear-adv-query" onclick="window.location = '<?=project_root_url?>'" href="#">清空筛选</a>
         </div>
         <style type="text/css">
             .selector-set .ss-item {

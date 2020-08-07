@@ -132,7 +132,7 @@ class BaseCtrl
             });
             $twigTpl->addFunction($function);
             $twigTpl->addExtension(new \Twig\Extension\DebugExtension());
-            $options = ['tag_variable'=>['<?=', '?>']];
+            $options = ['tag_variable'=>['<?=', '?>'],'tag_comment' => ['{!', '!}']];
             $lexer = new \Twig\Lexer($twigTpl, $options);
             $twigTpl->setLexer($lexer);
         }

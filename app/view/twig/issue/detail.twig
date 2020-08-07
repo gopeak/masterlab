@@ -4,12 +4,12 @@
 
     {% include 'twig/common/header/include.twig' %}
 
-    <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/issue/main.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/issue/form.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/issue/detail.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}" type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>" type="text/javascript"></script>
     <link href="/dev/lib/video-js/video-js.min.css" rel="stylesheet">
     <script src="/dev/lib/video-js/video.min.js"></script>
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"   charset="utf-8"></script>
@@ -25,7 +25,7 @@
     <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
     <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
-    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js?v={{_version}}"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js?v=<?=_version?>"></script>
 
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
@@ -42,7 +42,7 @@
     <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
-    <link rel="stylesheet" href="/dev/css/issue/detail.css?v={{_version}}"/>
+    <link rel="stylesheet" href="/dev/css/issue/detail.css?v=<?=_version?>"/>
 
     <style>
 
@@ -349,7 +349,7 @@
                         <div id="detail-page-description" class="content-block detail-page-description"
                              style="margin-left: 15px">
                             <div class="issue-title-data hidden" data-endpoint="#"
-                                 data-initial-title="{{issue.summary}}"></div>
+                                 data-initial-title="<?=issue.summary?>"></div>
                             {% verbatim %}<script type="text/html" id="detail-page-description_tpl">
                                 <label>描述:</label>
                                 <div class="description js-task-list-container is-task-list-enabled">
@@ -450,7 +450,7 @@
                                     <label class="control-label col-sm-2" for="issue_label_ids">标签:</label>
                                     <div class="col-sm-10">
                                         {{#issue.labels_names}}
-                                        <a class="label-link" href="{% endverbatim %}{{project_root_url}}{% verbatim %}?sys_filter=label_{{id}}">
+                                        <a class="label-link" href="{% endverbatim %}<?=project_root_url?>{% verbatim %}?sys_filter=label_{{id}}">
                                             <span class="label color-label has-tooltip"
                                                   style="background-color: {{bg_color}}; color: {{color}}"
                                                   title="" data-container="body"
@@ -519,13 +519,13 @@
                                                 {% set display_editor = 'display: none' %}
                                             {% endif %}
 
-                                            <ul class="notes notes-form timeline"  style="{{display_editor}}">
+                                            <ul class="notes notes-form timeline"  style="<?=display_editor?>">
                                                 <li class="timeline-entry">
                                                     <div class="flash-container timeline-content"></div>
                                                     <div class="timeline-icon hidden-xs hidden-sm">
-                                                        <a class="author_link" href="/{{user['username']}}">
-                                                            <img alt="@{{user['username']}}" class="avatar s40"
-                                                                 src="{{user['avatar']}}"/></a>
+                                                        <a class="author_link" href="/<?=user['username']?>">
+                                                            <img alt="@<?=user['username']?>" class="avatar s40"
+                                                                 src="<?=user['avatar']?>"/></a>
                                                     </div>
 
                                                     <div class="timeline-content timeline-content-form">
@@ -636,7 +636,7 @@
                                    role="button">
                                     <i aria-hidden="true" class="fa fa-angle-double-right"></i>
                                 </a>
-                                <a href="{{project_root_url}}/issues" aria-label="Back issue list"
+                                <a href="<?=project_root_url?>/issues" aria-label="Back issue list"
                                    class="btn btn-default issuable-header-btn  pull-left" title="Back issue list">
                                     <i aria-hidden="true" class="fa fa-arrow-left"></i><span
                                             class="issuable-todo-inner js-issuable-todo-inner">返回事项列表</span>
@@ -663,22 +663,22 @@
 
                                         {% if (issue['assignee_info'])  %}
                                         <a id="assignee-a"
-                                           data-issue_id="{{issue['id']}}"
+                                           data-issue_id="<?=issue['id']?>"
                                            class="author_link bold "
-                                           href="/user/profile/{{issue['assignee']}}"
+                                           href="/user/profile/<?=issue['assignee']?>"
                                            title="双击可以直接更换经办人"
                                         >
-                                            <img id="assignee-img" width="32" class="avatar avatar-inline s32 " alt=""  src="{{issue['assignee_info']['avatar']}}">
-                                            <span id="assignee-display_name" class="author ">{{issue['assignee_info']['display_name']}}</span>
-                                            <span id="assignee-username" class="username">{{issue['assignee_info']['username']}}</span></a>
+                                            <img id="assignee-img" width="32" class="avatar avatar-inline s32 " alt=""  src="<?=issue['assignee_info']['avatar']?>">
+                                            <span id="assignee-display_name" class="author "><?=issue['assignee_info']['display_name']?></span>
+                                            <span id="assignee-username" class="username"><?=issue['assignee_info']['username']?></span></a>
                                         {% endif  %}
                                         <select id="project-user-select" name="project-user-select"
                                                 class="selectpicker"  data-live-search="true"
-                                                data-project-id="{{project_id}}"
+                                                data-project-id="<?=project_id?>"
                                         >
                                             <option value="">选择成员</option>
                                             {% for user in project_users %}
-                                                <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='{{user.avatar}}'> {{user.display_name}}" value="{{user.uid}}">{{user.display_name}}</option>
+                                                <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='<?=user.avatar?>'> <?=user.display_name?>" value="<?=user.uid?>"><?=user.display_name?></option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -690,7 +690,7 @@
                                 <div class="block due_date due_date_first"  title="点击操作可直接修改"  onmouseover="$('#a_start_date_edit').show();" onmouseout="$('#a_start_date_edit').hide();">
                                     <div class="sidebar-collapsed-icon" title="点击操作可直接修改">
                                         <i aria-hidden="true" class="fa fa-calendar"></i>
-                                        <span class="js-due-date-sidebar-value">{{ issue['start_date'] == '0000-00-00' ? '' : issue['start_date'] }}</span></div>
+                                        <span class="js-due-date-sidebar-value"><?= issue['start_date'] == '0000-00-00' ? '' : issue['start_date'] ?></span></div>
                                     <div class="title hide-collapsed">
                                         <small>开始时间</small>
                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
@@ -702,7 +702,7 @@
                                     <div class="value hide-collapsed"  title="点击操作可直接修改">
                                         <span class="value-content"  title="点击操作可直接修改">
                                                 <small class="no-value"
-                                                       id="small_start_date">{{ issue['start_date'] == '0000-00-00' ? '' : issue['start_date'] }}</small>
+                                                       id="small_start_date"><?= issue['start_date'] == '0000-00-00' ? '' : issue['start_date'] ?></small>
 
                                         </span>
                                         <span class="hidden js-remove-due-date-holder no-value">-
@@ -714,7 +714,7 @@
                                 <div class="block due_date" onmouseover="$('#a_due_date_edit').show();" onmouseout="$('#a_due_date_edit').hide();">
                                     <div class="sidebar-collapsed-icon">
                                         <i aria-hidden="true" class="fa fa-calendar"></i>
-                                        <small class="js-due-date-sidebar-value">{{ issue['due_date'] == '0000-00-00' ? '' : issue['due_date'] }}</small>
+                                        <small class="js-due-date-sidebar-value"><?= issue['due_date'] == '0000-00-00' ? '' : issue['due_date'] ?></small>
                                     </div>
                                     <div class="title hide-collapsed">
                                         <small>截止时间</small>
@@ -725,7 +725,7 @@
                                     </div>
                                     <div class="value hide-collapsed">
                                       <span class="value-content">
-                                        <small class="no-value" id="small_due_date">{{ issue['due_date'] == '0000-00-00' ? '' : issue['due_date'] }}</small>
+                                        <small class="no-value" id="small_due_date"><?= issue['due_date'] == '0000-00-00' ? '' : issue['due_date'] ?></small>
                                       </span>
                                         <span class="hidden js-remove-due-date-holder no-value">-
                                             <a class="js-remove-due-date" href="#" role="button">remove due date</a>
@@ -1223,38 +1223,38 @@
         </div>
 
     </script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
     <script type="text/javascript">
         var _issueConfig = {
-            "priority":{{priority|json_encode()|raw}},
-            "issue_types":{{issue_types|json_encode()|raw}},
-            "issue_status":{{issue_status|json_encode()|raw}},
-            "issue_resolve":{{issue_resolve|json_encode()|raw}},
-            "issue_module":{{project_modules|json_encode()|raw}},
-            "issue_version":{{project_versions|json_encode()|raw}},
-            "issue_labels":{{project_labels|json_encode()|raw}},
-            "users":{{users|json_encode()|raw}},
-            "project_users":{{project_users|json_encode()|raw}},
-            "projects":{{projects|json_encode()|raw}},
-            "sprint":{{sprints|json_encode()|raw}}
+            "priority":<?=priority|json_encode()|raw?>,
+            "issue_types":<?=issue_types|json_encode()|raw?>,
+            "issue_status":<?=issue_status|json_encode()|raw?>,
+            "issue_resolve":<?=issue_resolve|json_encode()|raw?>,
+            "issue_module":<?=project_modules|json_encode()|raw?>,
+            "issue_version":<?=project_versions|json_encode()|raw?>,
+            "issue_labels":<?=project_labels|json_encode()|raw?>,
+            "users":<?=users|json_encode()|raw?>,
+            "project_users":<?=project_users|json_encode()|raw?>,
+            "projects":<?=projects|json_encode()|raw?>,
+            "sprint":<?=sprints|json_encode()|raw?>
         };
 
         var _simplemde = {};
         var _editor_md = null;
         var _fineUploaderFile = {};
-        var _issue_id = '{{issue_id}}';
-		var _summary='{{issue['summary']}}';
-        var _cur_project_id = '{{project_id}}';
-        var _active_sprint_id = '{{active_sprint['id']}}';
-        var _cur_uid = '{{user['uid']}}';
+        var _issue_id = '<?=issue_id?>';
+		var _summary='<?=issue['summary']?>';
+        var _cur_project_id = '<?=project_id?>';
+        var _active_sprint_id = '<?=active_sprint['id']?>';
+        var _cur_uid = '<?=user['uid']?>';
         var _timelineEditormd;
-        var _description_templates = {{description_templates|json_encode()|raw}};
+        var _description_templates = <?=description_templates|json_encode()|raw?>;
 
         var _fineUploader = null;
 
         var $IssueDetail = null;
         var $IssueMain = null;
-        var query_str = '{{query_str}}';
+        var query_str = '<?=query_str?>';
         var urls = parseURL(window.location.href);
 
         var temp_issues = [];

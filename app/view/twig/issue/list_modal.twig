@@ -1,7 +1,7 @@
 <div class="modal" id="modal-export_excel">
     <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-export_excel"
           action="/project/export/issue" accept-charset="UTF-8" method="POST">
-        <input type="hidden" name="cur_project_id" value="{{ project_id }}">
+        <input type="hidden" name="cur_project_id" value="<?= project_id ?>">
         <div class="modal-dialog">
             <div class="modal-content modal-middle">
                 <div class="modal-header">
@@ -410,7 +410,7 @@
 <div class="modal" id="modal-setting_columns">
     <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-setting_columns"
           action="/issue/main/setting_columns" accept-charset="UTF-8" method="POST">
-        <input type="hidden" name="cur_project_id" value="{{ project_id }}">
+        <input type="hidden" name="cur_project_id" value="<?= project_id ?>">
         <div class="modal-dialog">
             <div class="modal-content modal-middle">
                 <div class="modal-header">
@@ -448,13 +448,13 @@
                                             <td scope="row">
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input {{ checked }} type="checkbox"
+                                                        <input <?= checked ?> type="checkbox"
                                                                              name="display_fields[]"
-                                                                             value="{{ field }}">
+                                                                             value="<?= field ?>">
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td>{{ fieldName }}</td>
+                                            <td><?= fieldName ?></td>
                                         </tr>
 
                                     {% endfor %}
@@ -484,7 +484,7 @@
                                                                                                   action="/issue/main/import_excel"
                                                                                                   accept-charset="UTF-8"
                                                                                                   method="POST">-->
-    <input type="hidden" name="project_id" value="{{ project_id }}">
+    <input type="hidden" name="project_id" value="<?= project_id ?>">
     <div class="modal-dialog">
         <div class="modal-content modal-middle">
             <div class="modal-header">
@@ -559,7 +559,7 @@
 
 <div class="modal adv-modal" id="modal-adv_query">
     <div class="form-horizontal" id="form-adv-query">
-        <input type="hidden" name="project_id" value="{{ project_id }}">
+        <input type="hidden" name="project_id" value="<?= project_id ?>">
 
         <div class="modal-dialog">
             <div class="modal-content modal-middle">
@@ -587,10 +587,10 @@
                             <select id="adv_field" name="params[field]" class="selectpicker form-control"
                                     dropdownalignright="true" title="字段">
                                 {% for key ,field in advFields %}
-                                    <option value="{{ key }}" data-type="{{ field.type }}"
-                                            data-source="{{ field.source }}"
-                                            data-content="{{ field.title }}">
-                                        {{ field.title }}
+                                    <option value="<?= key ?>" data-type="<?= field.type ?>"
+                                            data-source="<?= field.source ?>"
+                                            data-content="<?= field.title ?>">
+                                        <?= field.title ?>
                                     </option>
                                 {% endfor %}
                             </select>
@@ -693,24 +693,24 @@
                                     class="selectpicker form-control" dropdownalignright="true"
                                     title="排序字段">
                                 {% for avl_sort_field,field_name in avl_sort_fields %}
-                                    <option value="{{ avl_sort_field }}" data-content="{{ field_name }}">
-                                        {{ field_name }}"
+                                    <option value="<?= avl_sort_field ?>" data-content="<?= field_name ?>">
+                                        <?= field_name ?>"
                                     </option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <input type="hidden" id="adv_sort_by" name="sort_by" value="{{ sort_by }}">
+                            <input type="hidden" id="adv_sort_by" name="sort_by" value="<?= sort_by ?>">
                             <a id="btn_adv_sort_by" type="button"
                                class="btn btn-default reverse-sort-btn qa-reverse-sort"
-                               title="{{ sort_by == 'desc' ? '升序' : '降序' }}" style="height:35px"
+                               title="<?= sort_by == 'desc' ? '升序' : '降序' ?>" style="height:35px"
                                href="javascript:">
-                                <svg class="s16 adv-sort-img {{ sort_by == 'asc' ? '' : 'hidden' }}"
+                                <svg class="s16 adv-sort-img <?= sort_by == 'asc' ? '' : 'hidden' ?>"
                                      id="adv-sort-by-desc">
                                     <use style="stroke: rgba(245, 245, 245, 0.85);"
                                          xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
                                 </svg>
-                                <svg class="s16 {{ sort_by == 'asc' ? 'hidden' : '' }} adv-sort-img"
+                                <svg class="s16 <?= sort_by == 'asc' ? 'hidden' : '' ?> adv-sort-img"
                                      id="adv-sort-by-asc">
                                     <use style="stroke: rgba(245, 245, 245, 0.85);"
                                          xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
