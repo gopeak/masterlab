@@ -538,6 +538,20 @@
                         }
                     }
 
+                    !function checkoutProject() {
+                        if(_issueConfig.projects && Array.isArray(_issueConfig.projects)){
+                            var projects = _issueConfig.projects;
+                            var $content = $(".js-dropdown-menu-projects .dropdown-content");
+                            var $ul = $("<ul></ul>");
+                            projects.forEach(function(item){
+                                $ul.append("<li><a href='/" + item.org_path + '/' + item.key + "'>" + item.org_path + " / " + item.key + "</a><li>")
+                            })
+                            $content.append($ul);
+                        }
+                    }()
+
+                    
+
                     window.$IssueMain = new IssueMain(options);
 //                    window.$FilteredSearch = new FilteredSearch(urls.searchObject, _issueConfig, _cur_project_id);
                     if(is_adv_filter==='0' || is_empty(adv_filter_json)){
