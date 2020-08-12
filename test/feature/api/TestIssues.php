@@ -4,6 +4,7 @@
 namespace main\test\featrue\api;
 
 
+use main\app\api\Constants;
 use main\test\BaseApiTestCase;
 
 class TestIssues extends BaseApiTestCase
@@ -114,25 +115,7 @@ class TestIssues extends BaseApiTestCase
         $this->assertNotEmpty($respData);
     }
 
-    /**
-     *
-     * @throws \Exception
-     */
-    public function testDelete()
-    {
-        $projectId = self::$projectId;
-        $accessToken = '';
 
-        $ret = $this->addModule();
-        $newLabelId = $ret['id'];
-
-        $client = new \GuzzleHttp\Client();
-        $url = ROOT_URL . 'api/modules/v1/' . $newLabelId . '?access_token=' . $accessToken. '&project_id=' . $projectId;
-        $response = $client->delete($url);
-        $rawResponse = $response->getBody()->getContents();
-        $respArr = json_decode($rawResponse, true);
-        $this->assertNotEmpty($respArr, '接口请求失败');
-    }
 
     /**
      * @throws \Exception
@@ -142,15 +125,22 @@ class TestIssues extends BaseApiTestCase
         $projectId = self::$projectId;
         $accessToken = '';
 
-        $ret = $this->addModule();
-        $newLabelId = $ret['id'];
+        $ret = $this->addIssue();
+        $newId = $ret['id'];
 
         $client = new \GuzzleHttp\Client();
-        $url = ROOT_URL . 'api/modules/v1/' . $newLabelId . '?access_token=' . $accessToken. '&project_id=' . $projectId;
+        $url = ROOT_URL . 'api/issue/issues/v1/' . $newId . '?access_token=' . $accessToken;
         $response = $client->patch($url, [
             'form_params' => [
-                'module_name' => 'new' . quickRandomStr(50),
-                'description' => 'new描述1：' . quickRandomStr(),
+                'params' => [
+                    'project_id' => $projectId,
+                    'summary' => 'new' . quickRandomStr(50),
+                    'issue_type' => 1,
+                    'priority' => 1,
+                    'description' => 'issue描述：' . quickRandomStr(),
+                    'assignee' => 1,
+                    'reporter' => 1,
+                ]
             ]
         ]);
         //$response = $client->request('PUT', $url, ['body' => 'foo']);
@@ -159,5 +149,27 @@ class TestIssues extends BaseApiTestCase
         $this->assertNotEmpty($respArr, '接口请求失败');
     }
 
+    /**
+     *
+     * @throws \Exception
+     */
+    public function testDelete()
+    {
+        $projectId = self::$projectId;
+        $accessToken = '';
+
+        $ret = $this->addIssue();
+        $newId = $ret['id'];
+
+        $client = new \GuzzleHttp\Client();
+        $url = ROOT_URL . 'api/issue/issues/v1/' . $newId . '?access_token=' . $accessToken;
+        $response = $client->delete($url);
+        $rawResponse = $response->getBody()->getContents();
+        $respArr = json_decode($rawResponse, true);
+
+        $this->assertNotEmpty($respArr, '接口请求失败');
+        $this->assertTrue(isset($respArr['data']['code']));
+        $this->assertTrue($respArr['data']['code'] == Constants::HTTP_OK);
+    }
 
 }

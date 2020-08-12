@@ -10,6 +10,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueLogic;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\NotifyLogic;
+use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectGantt;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
@@ -28,6 +29,7 @@ use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
+use main\app\model\issue\IssueRecycleModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
@@ -85,6 +87,71 @@ class Issues extends BaseAuth
         return self::returnHandler('OK', $final);
     }
 
+    /**
+     * @return array
+     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     */
+    private function deleteHandler()
+    {
+        $uid = $this->masterUid;
+        $issueId = null;
+
+        if (isset($_GET['_target'][4])) {
+            $issueId = intval($_GET['_target'][4]);
+        }
+        if (empty($issueId)) {
+            return self::returnHandler('事项id不能为空', [], Constants::HTTP_BAD_REQUEST);
+        }
+
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if (empty($issue)) {
+            return self::returnHandler('参数错误:事项不存在', [], Constants::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $issueModel->db->beginTransaction();
+            $ret = $issueModel->deleteById($issueId);
+            if ($ret) {
+                // 将子任务的关系清除
+                $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+                // 将父任务的 have_children 减 1
+                if (!empty($issue['master_id'])) {
+                    $masterId = $issue['master_id'];
+                    $issueModel->dec('have_children', $masterId, 'id', 1);
+                }
+                unset($issue['id']);
+                $issue['delete_user_id'] = $uid;
+                $issueRecycleModel = new IssueRecycleModel();
+                $info = [];
+                $info['issue_id'] = $issueId;
+                $info['project_id'] = $issue['project_id'];
+                $info['delete_user_id'] = $uid;
+                $info['summary'] = $issue['summary'];
+                $info['data'] = json_encode($issue);
+                $info['time'] = time();
+                list($deleteRet, $msg) = $issueRecycleModel->insert($info);
+                unset($info);
+                if (!$deleteRet) {
+                    $issueModel->db->rollBack();
+                    return self::returnHandler('服务器错误 新增删除的数据失败,详情:' . $msg, [], Constants::HTTP_BAD_REQUEST);
+                }
+            }
+            $issueModel->db->commit();
+        } catch (\PDOException $e) {
+            $issueModel->db->rollBack();
+            return self::returnHandler('服务器错误 数据库异常,详情:' . $e->getMessage(), [], Constants::HTTP_BAD_REQUEST);
+        } catch (\Exception $e) {
+        }
+        $issue['id'] = $issueId;
+        $event = new CommonPlacedEvent($this, $issue);
+        $this->dispatcher->dispatch($event,  Events::onIssueDelete);
+
+
+        return self::returnHandler('删除成功');
+    }
 
     /**
      * Restful PATCH ,更新事项
@@ -97,7 +164,7 @@ class Issues extends BaseAuth
         $uid = $this->masterUid;
         $issueId = null;
 
-        if (isset($_GET['_target'][4])){
+        if (isset($_GET['_target'][4])) {
             $issueId = intval($_GET['_target'][4]);
         }
         if (empty($issueId)) {
