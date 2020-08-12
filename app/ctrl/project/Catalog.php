@@ -223,13 +223,10 @@ class Catalog extends BaseUserCtrl
         }
     }
 
-
     /**
-     * @param $project_id
-     * @param $label_id
      * @throws \Exception
      */
-    public function delete($project_id, $label_id)
+    public function delete()
     {
         $id = null;
         if (isset($_POST['id'])) {
@@ -261,7 +258,7 @@ class Catalog extends BaseUserCtrl
         $logData['remark'] = '删除分类';
         $logData['pre_data'] = $info;
         $logData['cur_data'] = $info2;
-        LogOperatingLogic::add(UserAuth::getId(), $project_id, $logData);
+        LogOperatingLogic::add(UserAuth::getId(), $this->projectId, $logData);
 
         $event = new CommonPlacedEvent($this, $info);
         $this->dispatcher->dispatch($event,  Events::onCatalogDelete);

@@ -14,6 +14,7 @@ use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
@@ -38,16 +39,16 @@ class ConfigLogic
             $projectId = $data['project_id'];
         }
 
-        $data['priority'] = self::getPriority(true);
-        $data['issue_types'] = self::getTypes(true);
-        $data['issue_status'] = self::getStatus(true);
-        $data['issue_resolve'] = self::getResolves(true);
-        $data['users'] = self::getAllUser(true);
-        $data['projects'] = self::getAllProjects();
+        $data['priority'] = self::getPriority();
+        $data['issue_types'] = self::getTypes();
+        $data['issue_status'] = self::getStatus();
+        $data['issue_resolve'] = self::getResolves();
+        $data['users'] = self::getAllUser();
+        $data['projects'] = self::getJoinProjects();
         $data['project_users'] = self::getProjectUsers($projectId);
-        $data['project_modules'] = self::getModules($projectId, true);
-        $data['project_versions'] = self::getVersions($projectId, true);
-        $data['project_labels'] = self::getLabels($projectId, true);
+        $data['project_modules'] = self::getModules($projectId );
+        $data['project_versions'] = self::getVersions($projectId);
+        $data['project_labels'] = self::getLabels($projectId);
         $logic = new IssueTypeLogic();
         $data['project_issue_types'] = $logic->getIssueType($projectId);
     }
@@ -155,6 +156,19 @@ class ConfigLogic
     }
 
     /**
+     * @param null $projectId
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getProjectRoles($projectId = null, $primaryKey = false)
+    {
+        $model = new ProjectRoleModel();
+        $rows = $model->getsByProject($projectId, $primaryKey);
+        return $rows;
+    }
+
+    /**
      * @param bool $primaryKey
      * @return array
      * @throws \Exception
@@ -166,17 +180,29 @@ class ConfigLogic
     }
 
     /**
-     * @param $projectId
+     * @param bool $primaryKey
      * @return array
      * @throws \Exception
      */
-    public static function getSprints($projectId)
+    public static function getJoinProjects($primaryKey = false)
+    {
+        $widgetLogic = new WidgetLogic();
+        return $widgetLogic->getUserHaveJoinProjects(1000);
+    }
+
+    /**
+     * @param null $projectId
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getSprints($projectId = null, $primaryKey = false)
     {
         if (empty($projectId)) {
             return [];
         }
         $model = new SprintModel();
-        $rows = $model->getItemsByProject($projectId);
+        $rows = $model->getItemsByProject($projectId, $primaryKey);
         foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];

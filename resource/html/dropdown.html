@@ -1,0 +1,314 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="width=device-width,initial-scale=1.0" name="viewport">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<script src="../../public/dev/lib/jquery.min.3.1.1.js"></script>
+		<script src="../../public/dev/lib/jquery-ui/jquery-ui.min.js"></script>
+		<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="../../public/gitlab/assets/application.css">
+		<title>input下拉</title>
+	</head>
+	<body>
+		<div class="issues-filters">
+			<div class="filtered-search-block issues-details-filters row-content-block second-block" v-pre="false">
+				<form id="filter-form" class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get" >
+					<input name="utf8" type="hidden" value="&#x2713;"/>
+					<input name="page" id="filter_page" type="hidden" value="1">
+					<div class="issues-other-filters filtered-search-wrapper">
+						<div class="filtered-search-box" title="按回车键提交查询或点击搜索按钮">
+							<div class="dropdown filtered-search-history-dropdown-wrapper" id="history-dropdown">
+								<button class="dropdown-menu-toggle filtered-search-history-dropdown-toggle-button" type="button" data-toggle="dropdown">
+																	<span class="dropdown-toggle-text">
+																		<i class="fa fa-history"></i>
+																	</span>
+									<i class="fa fa-chevron-down"></i>
+								</button>
+								<div class="dropdown-menu dropdown-select filtered-search-history-dropdown">
+									<div class="dropdown-title">
+										<span>历史搜索</span>
+										<button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+											<i class="fa fa-times dropdown-menu-close-icon"></i>
+										</button>
+									</div>
+									<div class="dropdown-content filtered-search-history-dropdown-content">
+										<ul class="js-filtered-search-history-dropdown"></ul>
+									</div>
+									<div class="dropdown-loading">
+										<i class="fa fa-spinner fa-spin"></i>
+									</div>
+								</div>
+							</div>
+							<div class="filtered-search-box-input-container">
+								<div class="scroll-container">
+									<ul class="tokens-container list-unstyled">
+										<li class="input-token">
+											<input class="form-control filtered-search" data-base-endpoint="/ismond/xphp" data-project-id="31" data-username-params="[]" id="filtered-search-issues" placeholder="搜索或过滤结果..." autocomplete="off">
+										</li>
+									</ul>
+									<i class="fa fa-filter"></i>
+									<button class="clear-search hidden" type="button">
+										<i class="fa fa-times"></i>
+									</button>
+								</div>
+								<div class="filtered-search-input-dropdown-menu dropdown-menu hint-dropdown" id="js-dropdown-hint">
+									<ul data-dropdown>
+										<li class="filter-dropdown-item" data-action="submit">
+											<button class="btn btn-link">
+												<i class="fa fa-search"></i>
+												<span>提示:按"回车键"进行查询</span>
+											</button>
+										</li>
+									</ul>
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link">
+												<i class="fa {{icon}}"></i>
+												<span class="js-filter-hint">{{hint}}</span>
+												<span class="js-filter-tag dropdown-light-content">{{tag}}</span>
+											</button>
+										</li>
+									</ul>
+								</div>
+
+								<div class="filtered-search-input-dropdown-menu dropdown-menu hint-dropdown" id="js-dropdown-operator">
+									<ul class="filter-dropdown" data-dropdown="" data-dynamic="">
+										<li class="filter-dropdown-item" data-value="{{value}}">
+											<button class="btn btn-link" type="button">
+												<span class="value">{{value}}</span>
+												<span class="btn-helptext name">
+													{{name}}
+												</span>
+											</button>
+										</li>
+									</ul>
+								</div>
+
+								<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="报告人" id="js-dropdown-author">
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link dropdown-user">
+												<img alt="{{name}}&#39;s avatar" class="avatar" data-src="{{avatar_url}}" width="30">
+												<div class="dropdown-user-details">
+													<span class="name">{{name}}</span>
+													<span class="dropdown-light-content value">@{{username}}</span>
+												</div>
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="经办人" id="js-dropdown-assignee">
+									<ul data-dropdown>
+										<li class="filter-dropdown-item" data-value="none">
+											<button class="btn btn-link">
+												--
+											</button>
+										</li>
+										<li class="divider"></li>
+									</ul>
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link dropdown-user">
+												<img alt="{{name}}&#39;s avatar" class="avatar" data-src="{{avatar_url}}" width="30">
+												<div class="dropdown-user-details">
+													<span class="name">{{name}}</span>
+													<span class="dropdown-light-content value">@{{username}}</span>
+												</div>
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="迭代" data-type="input" id="js-dropdown-sprint">
+									<ul data-dropdown>
+										<li class="filter-dropdown-item" data-value="none">
+											<button class="btn btn-link">
+												--
+											</button>
+										</li>
+										<li class="divider"></li>
+									</ul>
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link">
+												<span class="label-title js-data-value value">{{name}}</span>
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="模块" data-type="input" id="js-dropdown-module">
+									<ul data-dropdown>
+										<li class="filter-dropdown-item" data-value="none">
+											<button class="btn btn-link">
+												--
+											</button>
+										</li>
+										<li class="divider"></li>
+									</ul>
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link">
+												<span class="label-title js-data-value value">{{name}}</span>
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="状态" data-type="input" id="js-dropdown-status">
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link">
+												<span class="label label-{{color}} js-data-value value">{{name}}</span>
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="解决结果" data-type="input" id="js-dropdown-resolve">
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link">
+												<span style="color:{{color}}" class="label-title js-data-value value">{{name}}</span>
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="优先级" data-type="input" id="js-dropdown-priority">
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link">
+												<span style="color:{{status_color}}" class="label-title js-data-value value">{{name}}</span>
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div class="filtered-search-input-dropdown-menu dropdown-menu" data-hint="类型" data-type="input" id="js-dropdown-issue_type">
+									<ul class="filter-dropdown" data-dropdown data-dynamic>
+										<li class="filter-dropdown-item">
+											<button class="btn btn-link">
+												<span  class="label-title js-data-value value">{{name}}</span>
+											</button>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<button class="dropdown-toggle" id="btn-go_search" type="submit"
+								title="请求数据" style="margin-left: -1px;">
+							<i class="fa fa-search "></i>
+							搜 索
+						</button>
+						<button class="dropdown-toggle btn-adv-search" id="save_filter-btn" type="button"
+								title="保存搜索的条件"  >
+							<i class="fa fa-save "></i>
+							保 存
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<script src="../../public/dev/js/input_search.js"></script>
+
+		<script type="text/javascript">
+			$(function(){
+			    var usersList = [
+					{
+                        avatar_url: "http://pm.888zb.com/attachment/avatar/25.jpeg?t=1586945812",
+                        id: "25",
+                        name: "施晓梅",
+                        username: "sxm1125@qq.com"
+					},
+					{
+                        avatar_url: "http://pm.888zb.com/attachment/avatar/24.jpeg?t=1584936256",
+                        id: "24",
+                        name: "赖少丽",
+                        username: "laishaoli"
+					},
+					{
+                        avatar_url: "http://pm.888zb.com/attachment/avatar/23.jpeg?t=1583834493",
+                        id: "23",
+                        name: "黄佳璇",
+                        username: "caiwu"
+					}
+				];
+
+                var _searches =  [
+                    {
+                        key: "报告人",
+                        name: "author",
+						icon: "pencil",
+                        jsonData: usersList,
+                        symbol: "@"
+                    },
+                    {
+                        key: "经办人",
+                        name: "assignee",
+                        icon: "user",
+                        jsonData: usersList,
+                        symbol: "@"
+                    },
+                    {
+                        key: "迭代",
+                        name: "sprint",
+						icon: "rocket",
+                        api: "/config/sprint?project_id={{project_id}}",
+                        symbol: ""
+                    },
+                    {
+                        key: "模块",
+                        name: "module",
+                        icon: "square",
+                        api: "/config/module?project_id={{project_id}}",
+                        symbol: ""
+                    },
+                    {
+                        key: "状态",
+                        name: "status",
+                        icon: "info",
+                        api: "/config/status",
+                        symbol: ""
+                    },
+                    {
+                        key: "解决结果",
+                        name: "resolve",
+                        icon: "info",
+                        api: "/config/resolve",
+                        symbol: ""
+                    },
+					{
+                        key: "优先级",
+                        name: "priority",
+						icon: "info",
+                        api: "/config/priority",
+                        symbol: ""
+                    },
+                    {
+                        key: "类型",
+                        name: "issue_type",
+                        icon: "info",
+                        api: "/config/issueType?project_id={{project_id}}",
+                        symbol: ""
+                    }];
+
+                var operators = [
+					{
+					    name: "is",
+						value: "="
+					},
+					{
+					    name: "is not",
+						value: "!="
+					}
+				];
+
+                new InputSearch(_searches, operators);
+
+                var str = "{{fds}} span {{user}}";
+                var regex = /[^{{}}]+(?=\}})/g;
+                var str1 = str.match(regex);
+			});
+		</script>
+	</body>
+</html>

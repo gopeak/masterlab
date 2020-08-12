@@ -2,7 +2,6 @@
 <html class="" lang="en">
 <head  >
     {% include 'twig/common/header/include.twig' %}
-
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
@@ -82,7 +81,6 @@
                         </div>
                     </div>
                 </div>
-
 
             </div>
         </div>
@@ -168,10 +166,8 @@
 
     var $activity = null;
     var _cur_page = 1;
-    var _user_id = '{{user_id}}';
+    var _user_id = '<?=user_id?>';
     $(function() {
-
-
         var options = {
             user_id:_user_id
         }

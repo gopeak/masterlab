@@ -33,12 +33,12 @@ class Config extends BaseCtrl
     {
         $data = [];
         $projectId = null;
-        if (isset($data['project_id'])) {
-            $projectId = $data['project_id'];
+        if (isset($_GET['project_id'])) {
+            $projectId = $_GET['project_id'];
         }
         $primaryKey = false;
-        if (isset($data['primary_key'])) {
-            $primaryKey = $data['primary_key'];
+        if (isset($_GET['primary_key'])) {
+            $primaryKey = boolval($_GET['primary_key']);
         }
 
         list(, $data['settings']) = SettingsLogic::getsByModule();
@@ -50,15 +50,15 @@ class Config extends BaseCtrl
                 }
             }
         }
-        $data['priority'] = ConfigLogic::getPriority($primaryKey);
-        $data['issue_types'] = ConfigLogic::getTypes($primaryKey);
-        $data['issue_status'] = ConfigLogic::getStatus($primaryKey);
-        $data['issue_resolve'] = ConfigLogic::getResolves($primaryKey);
-        $data['users'] = ConfigLogic::getAllUser($primaryKey);
-        $data['projects'] = ConfigLogic::getAllProjects($primaryKey);
-        $data['project_modules'] = ConfigLogic::getModules($projectId, $primaryKey);
-        $data['project_versions'] = ConfigLogic::getVersions($projectId, $primaryKey);
-        $data['project_labels'] = ConfigLogic::getLabels($projectId, $primaryKey);
+        $data['priority'] = ConfigLogic::getPriority();
+        $data['issue_types'] = ConfigLogic::getTypes();
+        $data['issue_status'] = ConfigLogic::getStatus();
+        $data['issue_resolve'] = ConfigLogic::getResolves();
+        $data['users'] = ConfigLogic::getAllUser();
+        $data['projects'] = ConfigLogic::getAllProjects();
+        $data['project_modules'] = ConfigLogic::getModules($projectId);
+        $data['project_versions'] = ConfigLogic::getVersions($projectId);
+        $data['project_labels'] = ConfigLogic::getLabels($projectId);
         header('Content-Type:application/json');
         $this->ajaxSuccess('ok', $data);
         die;

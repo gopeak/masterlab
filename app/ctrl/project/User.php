@@ -43,7 +43,7 @@ class User extends BaseUserCtrl
         $data['sub_nav_active'] = 'project_role';
         $data = RewriteUrl::setProjectData($data);
         $userModel = new UserModel();
-        $users = $userModel->getAll();
+        $users = $userModel->getAll(false);
         foreach ($users as &$user) {
             $user = UserLogic::format($user);
         }

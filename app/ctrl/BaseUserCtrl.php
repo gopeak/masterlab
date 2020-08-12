@@ -152,7 +152,7 @@ class BaseUserCtrl extends BaseCtrl
                 $userSettings[$item['_key']] = $item['_value'];
             }
             $this->addGVar('G_Preferences', $userSettings);
-
+            // 每次都查询，可以优化
             $assigneeCount = IssueFilterLogic::getUnResolveCountByAssignee(UserAuth::getId());
             if ($assigneeCount <= 0) {
                 $assigneeCount = '0';
@@ -209,7 +209,7 @@ class BaseUserCtrl extends BaseCtrl
     public function checkUpdate()
     {
         if ($this->isAdmin) {
-            $checkVersionFile = STORAGE_PATH . 'tmp/' . date('Y-m-d-H') . '.-check-version.log';
+            $checkVersionFile = STORAGE_PATH . 'tmp/' . date('Y-m-d') . '.-check-version.log';
             if (!file_exists($checkVersionFile)) {
                 $sourceHost = 'http://www.masterlab.vip/';
                 $url = $sourceHost . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
@@ -262,7 +262,8 @@ class BaseUserCtrl extends BaseCtrl
                 $userModel = UserModel::getInstance($userToken['uid']);
                 $user = $userModel->getByUid($userToken['uid']);
                 $userAuth = UserAuth::getInstance();
-                $userAuth->login($user);
+                $cookieLifetime = getCommonConfigVar('session')['session.cookie_lifetime'];
+                $userAuth->login($user, $cookieLifetime);
             }
 
         }

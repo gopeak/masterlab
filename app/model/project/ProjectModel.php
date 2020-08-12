@@ -50,6 +50,15 @@ class ProjectModel extends CacheModel
         return $this->getRows($fields, array('archived' => 'N'), null, 'id', 'desc', null, $primaryKey);
     }
 
+    public function getAll2($primaryKey = true,  $fields = '*')
+    {
+        if ($fields == '*') {
+            $table = $this->getTable();
+            $fields = " id as k,{$table}.*";
+        }
+        return $this->getRows($fields, [], null, null, null, null, $primaryKey);
+    }
+
     public function filterByType($typeId, $primaryKey = false, $fields = '*')
     {
         if ($fields == '*') {

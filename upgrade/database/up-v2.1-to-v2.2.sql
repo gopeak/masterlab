@@ -93,3 +93,6 @@ ALTER TABLE `main_webhook`
 -- 使用表AUTO_INCREMENT `main_webhook`
 --
 ALTER TABLE `main_webhook`  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+
+ALTER TABLE `main_webhook` ADD `hook_event_json` TEXT NULL DEFAULT NULL COMMENT '定义触发哪些事件' AFTER `description`;

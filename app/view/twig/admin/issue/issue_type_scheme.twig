@@ -3,7 +3,7 @@
 <head  >
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/admin/issue_type_scheme.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/issue_type_scheme.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
@@ -217,7 +217,7 @@
 
 </script>{% endverbatim %}
 
-<script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
 <script type="text/javascript">
 
     var $IssueTypeScheme = null;

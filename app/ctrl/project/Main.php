@@ -31,6 +31,7 @@ use main\app\classes\SettingsLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\user\UserModel;
+use main\app\service\ProjectService;
 
 /**
  * 项目
@@ -224,7 +225,7 @@ class Main extends Base
         //var_dump($pluginFile);
         if (file_exists($pluginFile)) {
             require_once($pluginFile);
-            $pluginIndexClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, 'Index');
+            $pluginIndexClass = sprintf("main\\plugin\\%s\\%s",  $pluginName, 'Index');
             if (class_exists($pluginIndexClass)) {
                 $indexCtrl = new $pluginIndexClass($this->dispatcher);
                 if(method_exists($indexCtrl,'main')){
@@ -689,46 +690,9 @@ class Main extends Base
                 $this->ajaxFailed('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
             }
         }
-        $projectModel = new ProjectModel();
-        $project = $projectModel->getById($id);
-        if (empty($project)) {
-            $project = new \stdClass();
-            $this->ajaxSuccess('ok', $project);
-        }
 
-        $projectMainExtraModel = new ProjectMainExtraModel();
-        $projectExtraInfo = $projectMainExtraModel->getByProjectId($id);
-        if (empty($projectExtraInfo)) {
-            $project['detail'] = '';
-        } else {
-            $project['detail'] = $projectExtraInfo['detail'];
-        }
-
-        $project['count'] = IssueFilterLogic::getCount($id);
-        $project['no_done_count'] = IssueFilterLogic::getNoDoneCount($id);
-        $sprintModel = new SprintModel();
-        $project['sprint_count'] = $sprintModel->getCountByProject($id);
-        $project = ProjectLogic::formatProject($project);
-
-
-        $userLogic = new UserLogic();
-        $users = $userLogic->getAllNormalUser();
-        $userIdArr = $userLogic->getUserIdArrByProject($id);
-
-        $userArr = [];
-        foreach ($userIdArr as $userId => $hasRoles) {
-            if (isset($users[$userId])) {
-                $user = $users[$userId];
-                $user['is_leader'] = false;
-                if ($userId == $project['lead']) {
-                    $user['is_leader'] = true;
-                }
-                $userArr[] = $user;
-            }
-        }
-
-        $project['lead_user_info'] = isset($users[$project['lead']])?$users[$project['lead']]:[];
-        $project['join_users'] = $userArr;
+        $projectLogic = new ProjectLogic();
+        $project = $projectLogic->info($id);
 
         $this->ajaxSuccess('ok', $project);
     }

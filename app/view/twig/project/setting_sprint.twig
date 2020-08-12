@@ -5,11 +5,11 @@
     <script src="/dev/lib/jquery.form.js"></script>
     <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/project/sprint.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/sprint.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
 
     <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
@@ -57,11 +57,11 @@
                         </p>
                     </div>
                     <div class="col-lg-9">
-                        <form id="form_add_action" class="setting-form clearfix" action="/agile/addSprint?project_id={{project_id}}" accept-charset="UTF-8" method="post">
+                        <form id="form_add_action" class="setting-form clearfix" action="/agile/addSprint?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
                             <input type="hidden" name="format" id="format" value="json">
-                            <input type="hidden" name="project_id" id="project_id" value="{{ project_id }}">
+                            <input type="hidden" name="project_id" id="project_id" value="<?= project_id ?>">
                             <div class="form-group  col-md-2">
                                 <input style="margin-left: -15px;" type="text" name="params[name]" id="add_name" placeholder="迭代名称" required="required" tabindex="1"  class="form-control">
                             </div>
@@ -217,7 +217,7 @@
 </script>{% endverbatim %}
 
 <script>
-    let query_str = '{{query_str}}';
+    let query_str = '<?=query_str?>';
     let urls = parseURL(window.location.href);
 
     $(function() {
@@ -233,7 +233,7 @@
             query_param_obj: urls.searchObject,
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/agile/fetchSprints?project_id={{project_id}}"
+            filter_url:"/agile/fetchSprints?project_id=<?=project_id?>"
         };
         window.$sprint = new Sprint( options );
         window.$sprint.fetchAll();

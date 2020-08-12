@@ -216,8 +216,12 @@ class ProjectGantt
             } else {
                 $key = $count + $weight;
             }
+            if(isset($tmp[$key])){
+                $key = $key + $count;
+            }
             $tmp[$key] = $row;
         }
+        //print_r($tmp);
         krsort($tmp);
         if (intval($first['gant_sprint_weight']) == 0) {
             $w = 100000 * count($tmp);
@@ -235,6 +239,7 @@ class ProjectGantt
      * @param $rows
      * @param $levelRow
      * @param $level
+     * @throws \Exception
      */
     public function recurIssue(&$rows, &$levelRow, $level, $sprint, $sprintDuration)
     {
@@ -321,7 +326,7 @@ class ProjectGantt
             // echo $sql;
             $sprintRows[$sprint['id']]  = $issueModel->db->fetchAll($sql);
             $sprintIssueArr = [];
-            //print_r($sprintRows[$sprint['id']]);
+            // dump($sprintRows[$sprint['id']], true);exit;
             // 计算迭代的用时
             $holidays = (new HolidayModel())->getDays($projectId);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
@@ -344,7 +349,7 @@ class ProjectGantt
                     }
                 }
             }
-            //print_r($treeArr);
+            //dump($treeArr, true);exit;
             foreach ($treeArr as $item) {
                 if(!isset($item['children']) &&  intval($item['have_children'])<=0){
                     $finalArr[] = $item;

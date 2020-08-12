@@ -6,8 +6,8 @@
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}" type="text/javascript"></script>
-    <script src="/dev/js/admin/log_slow_sql.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>" type="text/javascript"></script>
+    <script src="/dev/js/admin/log_slow_sql.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 
 </head>
 
@@ -56,7 +56,7 @@
                                             <li><a href="#"> 没有日志文件 </a></li>
                                         {% else %}
                                             {% for log_file in log_files %}
-                                                <li class="action_li" data-filename="{{log_file}}"><a href="#"> slow-{{log_file}} </a></li>
+                                                <li class="action_li" data-filename="<?=log_file?>"><a href="#"> slow-<?=log_file?> </a></li>
                                             {% endfor %}
                                         {% endif %}
                                     </ul>

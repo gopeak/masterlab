@@ -23,6 +23,16 @@ class ProjectRoleRelationModel extends BaseDictionaryModel
     }
 
     /**
+     * 获取项目ID下的所有行
+     * @param $projectId
+     * @return array
+     */
+    public function getRowsByProjectId($projectId)
+    {
+        return $this->getRows('*', ['project_id' => $projectId]);
+    }
+
+    /**
      * 获取某个角色权限id列表
      * @param $roleId
      * @return array

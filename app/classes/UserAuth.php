@@ -68,8 +68,8 @@ class UserAuth
 
     /**
      * 创建一个自身的单例对象
-     * @throws \PDOException
      * @return self
+     * @throws \PDOException
      */
     public static function getInstance()
     {
@@ -178,7 +178,7 @@ class UserAuth
      * @param bool $absolute 有效期是否是绝对的, 如果是false，用户如果在有效期内有活动，有效期会重新计算。如果设置为true，那么不管是否活动，到期后都会退出登录。
      * @return bool
      */
-    public function login($user, $duration = 0, $absolute = true)
+    public function login($user, $duration = 3600*4, $absolute = true)
     {
         $_SESSION[self::SESSION_UID_KEY] = $user['uid'];
         $_SESSION[self::SESSION_USER_INFO_KEY] = $user;
@@ -191,14 +191,39 @@ class UserAuth
     }
 
     /**
+     * 进行自动登录
+     * @param $uid
+     * @param $token
+     * @return bool
+     * @throws \Exception
+     */
+    public function autoLogin($uid, $token)
+    {
+        $user = UserModel::getInstance($uid)->getByUid($uid);
+        //print_r($user);
+        //echo $token."--------";
+        //echo UserAuth::createToken($user['password']);
+        $md5 = md5($user['password'] . '@@##' . $user['uid']);
+       // echo $token;
+        //echo  '---';
+        //echo $md5;
+        if ($token == $md5) {
+            $cookieLifetime = getCommonConfigVar('session')['session.cookie_lifetime'];
+            $this->login($user, $cookieLifetime);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 自动登录操作
      * @param $user
      */
-    public function autoLogin($user)
+    public function setAutoLogin($user)
     {
         // 自动登录处理
-        if (isset($_POST['auto_login']) && $_POST['auto_login'] == "true") {
-            $setToken = UserAuth::createToken($user['password']);
+        if (isset($_POST['auto_login']) && $_POST['auto_login']) {
+            $setToken = md5($user['password'] . '@@##' . $user['uid']);
             setcookie(UserAuth::SESSION_UID_KEY, $user['uid'], time() + 3600 * 7 * 24, '/', getCookieHost());
             setcookie(UserAuth::SESSION_TOKEN_KEY, $setToken, time() + 3600 * 7 * 24, '/', getCookieHost());
         } else {
@@ -221,8 +246,8 @@ class UserAuth
                 unset($_SESSION[$v]);
             }
         }
-        @setcookie(self::SESSION_UID_KEY, '', time() + 3600 * 4, '/', getCookieHost());
-        @setcookie(self::SESSION_TOKEN_KEY, '', time() + 3600 * 4, '/', getCookieHost());
+        @setcookie(self::SESSION_UID_KEY, '', time() - 3600 * 4, '/', getCookieHost());
+        @setcookie(self::SESSION_TOKEN_KEY, '', time() - 3600 * 4, '/', getCookieHost());
     }
 
     /**
@@ -413,36 +438,35 @@ class UserAuth
         $userModel = UserModel::getInstance('');
         $user = $originUser = $userModel->getByUsername($account);
         $ldapLogic = new LdapLogic();
-        list($ret, $ldapUserInfo) =  $ldapLogic->auth($account, $password);
-        if(!$ret){
+        list($ret, $ldapUserInfo) = $ldapLogic->auth($account, $password);
+        if (!$ret) {
             return array(UserModel::LOGIN_CODE_ERROR, $ldapUserInfo);
         }
-        if(!empty($ldapUserInfo) && empty($originUser)){
+        if (!empty($ldapUserInfo) && empty($originUser)) {
             $userModel->addUser($ldapUserInfo);
             $user = $userModel->getByUsername($account);
         }
-        if(!empty($ldapUserInfo) && !empty($originUser)){
+        if (!empty($ldapUserInfo) && !empty($originUser)) {
             $updateArr = [];
-            if($ldapUserInfo['avatar']!=''){
-                $source = PUBLIC_PATH.'/attachment/'.$ldapUserInfo['avatar'];
-                $dest = PUBLIC_PATH.'/attachment/avatar/'.$originUser['uid'].'.jpeg';
-                if(@copy($source,$dest)){
-                    $ldapUserInfo['avatar'] = 'avatar/'.$originUser['uid'].'.jpeg';
+            if ($ldapUserInfo['avatar'] != '') {
+                $source = PUBLIC_PATH . '/attachment/' . $ldapUserInfo['avatar'];
+                $dest = PUBLIC_PATH . '/attachment/avatar/' . $originUser['uid'] . '.jpeg';
+                if (@copy($source, $dest)) {
+                    $ldapUserInfo['avatar'] = 'avatar/' . $originUser['uid'] . '.jpeg';
                     @unlink($source);
                 }
                 $updateArr['avatar'] = $ldapUserInfo['avatar'];
             }
-            if($originUser['display_name']!=$ldapUserInfo['display_name']){
+            if ($originUser['display_name'] != $ldapUserInfo['display_name']) {
                 $updateArr['display_name'] = $ldapUserInfo['display_name'];
             }
-            if(!empty($updateArr)){
+            if (!empty($updateArr)) {
                 $userModel->updateById($originUser['uid'], $updateArr);
             }
         }
 
         return array(UserModel::LOGIN_CODE_OK, $user);
     }
-
 
 
     /**

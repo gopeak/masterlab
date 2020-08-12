@@ -153,7 +153,7 @@
         </a>
     </div>
 </script>
- 
+
 <script id="assignee_my_tpl" type="text/html">
     {{#issues}}
     <tr>
@@ -877,18 +877,18 @@
 <script id="panel_tpl" type="text/html">
     <div class="panel-heading tile__name " data-force="25" draggable="false">
         <h3 class="panel-heading-title" id="{{widget._key}}-panel-heading-title">{{widget.config_widget.title}}</h3>
-        <div class="panel-heading-extra">
-            <div class="panel-action">
-                <i class="fa fa-angle-down"></i>
-                <ul>
-                    {{#if widget.config_widget.required_param}}
+    </div>
+    <div class="panel-heading-extra">
+        <div class="panel-action">
+            <i class="fa fa-angle-down"></i>
+            <ul>
+                {{#if widget.config_widget.required_param}}
 
-                    <li class="panel-edit" onclick="show_form('{{widget._key}}')">编辑</li>
+                <li class="panel-edit" data-key="{{widget._key}}">编辑</li>
 
-                    {{/if}}
-                    <li class="panel-delete" onclick="removeWidget('{{widget._key}}')">删除</li>
-                </ul>
-            </div>
+                {{/if}}
+                <li class="panel-delete" data-key="{{widget._key}}">删除</li>
+            </ul>
         </div>
     </div>
     <div class="panel-body" id="toolform_{{widget._key}}">

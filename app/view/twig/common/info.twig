@@ -12,9 +12,9 @@
 <html>
 <head>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
-    <title>{{siteName}}</title>
+    <title><?=siteName?></title>
     <script src="/dev/js/logo.js"></script>
-    <link rel="stylesheet" media="all" href="/gitlab/assets/application.css"/>
+    <link rel="stylesheet" media="all" href="/dev/lib/bootstrap-3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/dev/css/not_found.css">
 </head>
 
@@ -26,16 +26,16 @@
         </div>
         <div class="text">
             <div class="type"></div>
-            <div class="info">{{_title|raw}}</div>
-            <div class="detail">{{_content|raw}}</div>
+            <div class="" ><p><?=_title|raw?></p></div>
+            <div class=" alert  <?=_color_type?>" role="alert"><?=_content|raw?></div>
             <!--
             {% if (message is defined) %}
-                {{ message }}
+                <?= message ?>
              {% endif %} -->
             <div class="you-can">
                 您可以：
                 <a class="btn btn-success" onclick="history.back()">返回上一页</a>
-                <a class="btn btn-default" href="{{link}}">{{_links.title}}</a>
+                <a class="btn btn-default" href="<?=link?>"><?=_links.title?></a>
             </div>
         </div>
     </div>

@@ -3,8 +3,8 @@
 	<head>
 		{% include 'twig/common/header/include.twig' %}
 		<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}" type="text/javascript"></script>
-		<script src="/dev/js/admin/project.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>" type="text/javascript"></script>
+		<script src="/dev/js/admin/project.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 		{% include 'twig/common/body/script.twig' %}
@@ -100,11 +100,10 @@
 							</a>
 						</td>
 						<td>
-							<a class="user_for_delete btn btn-transparent" style="padding: 6px 2px;" onclick="admindDoDelete({{id}}, {{type}}, '{{name}}')">
-								<i class="fa fa-trash"></i>
-								<span class="sr-only">Remove</span>
+							<a class="ja_admin_recover_archived btn btn-transparent " style="padding: 6px 2px;" data-project_id="{{id}}" data-name="{{name}}">恢复</a>
+							<a class="js_admin_do_delete_archived btn btn-transparent" style="padding: 6px 2px;" data-project_id="{{id}}" data-type="{{type}}" data-name="{{name}}">
+								<i class="fa fa-trash"></i><span class="sr-only">Remove</span>
 							</a>
-
 						</td>
 					</tr>
 				{{/rows}}
@@ -113,19 +112,15 @@
 		{% endverbatim %}
 
 		<script>
+			var project = null;
+			var options = {
 
+			};
 			$(function () {
-				fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 1);
+				project = new Project(options);
+				project.fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 1);
 			});
-			function admindDoDelete(projectId, projectTypeId, projectName) {
-				var message = "确认是否删除项目: " + projectName;
 
-				if (window.confirm(message + "？")) {
-					projectRemove(projectId, projectTypeId);
-					fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 1);
-				} else { // 取消
-				}
-			}
 		</script>
 
 		<div class="modal fade" tabindex="-1" role="dialog" id="myModal">

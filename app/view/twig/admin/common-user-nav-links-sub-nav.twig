@@ -9,11 +9,11 @@
 
     <div class="nav-links sub-nav scrolling-tabs is-initialized">
         <ul class="container-fluid">
-            <li class=" {% if (sub_nav_active == 'user') %} {{ 'active' }}{% endif %}">
+            <li class=" {% if (sub_nav_active == 'user') %} <?= 'active' ?>{% endif %}">
                 <a title="用户" href="/admin/user">
                     <span>用户</span>
                 </a></li>
-            <li class=" {% if (sub_nav_active == 'group') %} {{ 'active' }}{% endif %}">
+            <li class=" {% if (sub_nav_active == 'group') %} <?= 'active' ?>{% endif %}">
                 <a title="用户组" href="/admin/user/group"><span>用户组</span>
                 </a>
             </li>

@@ -56,6 +56,7 @@ class SprintModel extends BaseDictionaryModel
      * @param $projectId
      * @param $name
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getByProjectAndName($projectId, $name)
     {
@@ -72,6 +73,7 @@ class SprintModel extends BaseDictionaryModel
      * 获取当前进行中的迭代数据
      * @param $projectId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getActive($projectId)
     {

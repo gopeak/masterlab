@@ -3,8 +3,8 @@
 	<head>
 		{% include 'twig/common/header/include.twig' %}
 		<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}" type="text/javascript"></script>
-		<script src="/dev/js/admin/project.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>" type="text/javascript"></script>
+		<script src="/dev/js/admin/project.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 		{% include 'twig/common/body/script.twig' %}
@@ -111,17 +111,12 @@
 							</a>
 						</td>
 						<td>
-							<a class="user_for_edit btn btn-transparent " style="padding: 6px 2px;" onclick="adminDoArchived({{id}}, '{{name}}')">归档
+							<a class="js_admin_do_archived btn btn-transparent " style="padding: 6px 2px;" data-id="{{id}}" data-name="{{name}}" >归档</a>
+							<a class="btn btn-transparent " href="/{{path}}/{{key}}/settings" data-project_id="{{id}}" style="padding: 6px 2px;" target="_blank">编辑</a>
+							<a class="js_clone_config btn btn-transparent" href="javascript:;" data-project_id="{{id}}" style="padding: 6px 2px;">克隆</a>
+							<a class="js_admin_do_delete btn btn-transparent" style="padding: 6px 2px;" data-project_id="{{id}}" data-type="{{type}}" data-name="{{name}}" >
+								<i class="fa fa-trash"></i><span class="sr-only">Remove</span>
 							</a>
-
-							<a class="user_for_edit btn btn-transparent " href="/{{path}}/{{key}}/settings" data-uid="{{uid}}" style="padding: 6px 2px;" target="_blank">编辑
-							</a>
-
-							<a class="user_for_delete btn btn-transparent" style="padding: 6px 2px;" onclick="admindDoDelete({{id}}, {{type}}, '{{name}}')">
-								<i class="fa fa-trash"></i>
-								<span class="sr-only">Remove</span>
-							</a>
-
 						</td>
 					</tr>
 				{{/rows}}
@@ -129,38 +124,173 @@
 			</script>
 		{% endverbatim %}
 
+
+
+
+		<div class="modal" id="modal-project_clone">
+			<form class="js-quick-submit js-upload-blob-form form-horizontal"
+				  action="/admin/project"
+				  accept-charset="UTF-8"
+				  method="post"
+				  id="form-project_clone">
+				<input type="hidden" name="project_id" id="modal_form_project_id" value="">
+				<div class="modal-dialog">
+					<div class="modal-content modal-middle">
+						<div class="modal-header">
+							<a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
+							<h3 class="modal-header-title">克隆项目</h3>
+						</div>
+
+						<div class="modal-body">
+							<div class="form-group">
+								<label class="control-label" for="project_name">新项目名称:<span class="required"> *</span></label>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<input type="text" class="form-control" name="project_name" id="project_name" value=""/>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="project_key">新项目KEY:<span class="required"> *</span></label>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<input type="text" class="form-control" name="project_key" id="project_key" value=""/>
+									</div>
+								</div>
+							</div>
+
+							<hr>
+
+							<div class="form-group">
+								<label class="control-label" for="label_selected">成员&角色:</label>
+								<div class="col-sm-5">
+									<div class="form-group">
+										<div class="checkbox">
+											<label for="project_printing_merge_request_link_enabled">
+												<input type="checkbox" disabled checked>
+												<strong>克隆项目成员和角色</strong>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="sprint_selected">迭代:</label>
+								<div class="col-sm-5">
+									<div class="form-group">
+										<div class="checkbox">
+											<label for="project_printing_merge_request_link_enabled">
+												<input type="checkbox" value="1" name="sprint_selected" id="sprint_selected" >
+												<strong>克隆项目迭代</strong>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="version_selected">版本:</label>
+								<div class="col-sm-5">
+									<div class="form-group">
+										<div class="checkbox">
+											<label for="project_printing_merge_request_link_enabled">
+												<input type="checkbox" value="1" name="version_selected" id="version_selected" >
+												<strong>克隆项目版本</strong>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="module_selected">模块:</label>
+								<div class="col-sm-5">
+									<div class="form-group">
+										<div class="checkbox">
+											<label for="project_printing_merge_request_link_enabled">
+												<input type="checkbox" value="1" name="module_selected" id="module_selected" >
+												<strong>克隆项目模块</strong>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="catalog_label_selected">分类:</label>
+								<div class="col-sm-5">
+									<div class="form-group">
+										<div class="checkbox">
+											<label for="project_printing_merge_request_link_enabled">
+												<input type="checkbox" value="1" name="catalog_label_selected" id="catalog_label_selected" >
+												<strong>克隆项目分类</strong>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="label_selected">标签:</label>
+								<div class="col-sm-5">
+									<div class="form-group">
+										<div class="checkbox">
+											<label for="project_printing_merge_request_link_enabled">
+												<input type="checkbox" value="1" name="label_selected" id="label_selected" >
+												<strong>克隆项目标签</strong>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+
+						</div>
+
+						<div class="modal-footer">
+							<button name="submit" type="button" class="btn btn-save js-key-modal-enter2" id="btn-do_project_clone">确定</button>
+							<a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+						</div>
+
+					</div>
+				</div>
+			</form>
+		</div>
+
+
 		<script>
+			var project = null;
+			var options = {
 
+			};
 			$(function () {
-                fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 0);
-            });
-            function adminDoArchived(projectId, projectName) {
-                var message = "确认是否归档项目: " + projectName;
+				project = new Project(options);
+				project.fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 0);
 
-                if (window.confirm(message + "？")) {
-                    projectArchived(projectId);
-                    fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, 0);
-                } else { // 取消
-                }
-            }
-			function randomNumber(min, max) {
-				return parseInt(Math.random() * (max - min) + min);
-			}
-            function admindDoDelete(projectId, projectTypeId, projectName) {
-                let message = "确认是否删除项目: " + projectName+"? 删除操作将不可逆转，请谨慎操作!";
-                if (window.confirm(message)) {
-                	let a = randomNumber(10, 20);
-					let b = randomNumber(2, 20);
-                	let question = a + " + " + b +" = ?"
-                	let ret = window.prompt(question);
-                	if(parseInt(ret)===(a+b)){
-						projectRemove(projectId, projectTypeId);
-						fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, false);
-					}else{
-                		alert('回答错误');
-					}
-                }
-            }
+				$("#modal-project_clone").on('show.bs.modal', function () {
+					keyMaster.addKeys([
+						{
+							key: ['command+enter', 'ctrl+enter'],
+							'trigger-element': '.js-key-modal-enter2',
+							trigger: 'click'
+						},
+						{
+							key: 'esc',
+							'trigger-element': '.js-key-modal-close2',
+							trigger: 'click'
+						}
+					])
+
+				});
+
+				$("#btn-do_project_clone").click(function(){
+					project.doClone($('#modal_form_project_id').val());
+				});
+
+            });
 		</script>
 
 		<div class="modal fade" tabindex="-1" role="dialog" id="myModal">

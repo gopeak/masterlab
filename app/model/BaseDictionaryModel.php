@@ -49,7 +49,7 @@ class BaseDictionaryModel extends CacheModel
      */
     public function getItemById($id)
     {
-        $key = 'dict/' . $this->table . '/' . __FUNCTION__ . '/' . $id;
+        $key = 'dict/' . $this->getTable() . '/' . __FUNCTION__ . '/' . $id;
         $cacheRet = $this->cache->get($key);
         if ($cacheRet !== false) {
             return $cacheRet;
@@ -67,7 +67,7 @@ class BaseDictionaryModel extends CacheModel
      */
     public function getItemByName($name, $fields = '')
     {
-        $key = 'dict/' . $this->table . '/' . __FUNCTION__ . '/' . $name . ',' . $fields;
+        $key = 'dict/' . $this->getTable() . '/' . __FUNCTION__ . '/' . $name . ',' . $fields;
         $cacheRet = $this->cache->get($key);
         if ($cacheRet !== false) {
             return $cacheRet;
@@ -90,7 +90,7 @@ class BaseDictionaryModel extends CacheModel
      */
     public function getAll($primaryKey = true, $fields = '*')
     {
-        $key = 'dict/' . $this->table . '/' . __FUNCTION__ . '/' . strval(intval($primaryKey)) . ',' . $fields;
+        $key = 'dict/' . $this->getTable() . '/' . __FUNCTION__ . '/' . strval(intval($primaryKey)) . ',' . $fields;
         $cacheRet = $this->cache->get($key);
         if ($cacheRet !== false) {
             return $cacheRet;

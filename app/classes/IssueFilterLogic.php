@@ -112,6 +112,8 @@ class IssueFilterLogic
             if (!empty($userJoinProjectIdArr)) {
                 $projectIdStr = implode(',', $userJoinProjectIdArr);
                 $sql .= " AND  project_id IN ({$projectIdStr}) ";
+            } else {
+                return [true, [], 0];
             }
         }
         $assigneeUid = null;
@@ -292,7 +294,10 @@ class IssueFilterLogic
         if (strpos($sysFilter, 'label_') === 0) {
             list(, $labelId) = explode('label_', $sysFilter);
             $labelIssueIdArr = IssueLabelDataModel::getInstance()->getIssueIdArrById($labelId);
-            if ($labelIssueIdArr) {
+            if (empty($labelIssueIdArr)) {
+                $sql .= " AND id in ( 0 )";
+            }else{
+
                 $issueIdStr = implode(',', $labelIssueIdArr);
                 unset($issueIdArr);
                 $sql .= " AND id in ({$issueIdStr})";
@@ -445,7 +450,7 @@ class IssueFilterLogic
 
             $sql .= ' ' . $order . $limit;
             //print_r($params);
-            // echo $sql;die;
+            //echo $sql;die;
 
             $arr = $model->db->fetchAll($sql, $params);
             $idArr = [];
@@ -757,7 +762,7 @@ class IssueFilterLogic
     }
 
     /**
-     * 所有项目未解决的事项数量
+     * 获取用户在所有项目未解决的事项数量
      * @param $userId
      * @param $projectId
      * @return int
@@ -773,6 +778,26 @@ class IssueFilterLogic
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND   " . self::getUnDoneSql();
+        $count = $model->getFieldBySql($sql, $params);
+        return intval($count);
+    }
+
+    /**
+     * 所有项目已解决的事项数量
+     * @param $userId
+     * @return int
+     * @throws \Exception
+     */
+    public static function getResolveCountByAssignee($userId)
+    {
+        if (empty($userId)) {
+            return 0;
+        }
+        $params = [];
+        $params['assignee'] = $userId;
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = " SELECT count(*) as cc FROM  {$table}  WHERE  assignee=:assignee AND   " . self::getDoneSql();
         $count = $model->getFieldBySql($sql, $params);
         return intval($count);
     }

@@ -5,9 +5,9 @@
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/project/module.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/module.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
@@ -74,7 +74,7 @@
     {{#modules}}
     <li class="flex-row" id="li_data_id_{{id}}">
         <div class="row-main-content str-truncated">
-            <a href="{{project_root_url}}/issues?模块={{name}}">
+            <a href="{{../project_path.project_root_url}}/issues?模块={{name}}">
                 <span class="item-title">
                     <i class="fa fa-th-large" ></i> {{name}}
                 </span>
@@ -105,7 +105,7 @@
 
 <script>
 
-    let query_str = '{{query_str}}';
+    let query_str = '<?=query_str?>';
     let urls = parseURL(window.location.href);
 
     $(function() {
@@ -115,7 +115,7 @@
             query_param_obj: urls.searchObject,
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/project/module/filter_search?project_id={{project_id}}"
+            filter_url:"/project/module/filter_search?project_id=<?=project_id?>"
         };
         window.$modules = new Module( options );
         window.$modules.fetchAll();

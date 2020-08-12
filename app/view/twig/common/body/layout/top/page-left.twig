@@ -10,30 +10,30 @@
     </div>
 
     <ul class="sidebar-menu">
-        <li class="menu-item  {% if (top_menu_active == 'index') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'index') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/dashboard">
                 <i class="fa fa-dashboard"></i> <span>首页</span>
             </a>
         </li>
-        <li class="menu-item  {% if (top_menu_active == 'org') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'org') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/org">
                 <i class="fa fa-files-o"></i>
                 <span>组织</span>
             </a>
         </li>
-        <li class="menu-item  {% if (top_menu_active == 'project') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'project') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/projects">
                 <i class="fa fa-th"></i> <span>项目</span>
             </a>
         </li>
-        <!--<li class="menu-item  {% if (top_menu_active == 'issue') %} {{ 'menu-open' }}{% endif %}">
+        <!--<li class="menu-item  {% if (top_menu_active == 'issue') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/issue/main">
                 <i class="fa fa-th"></i> <span>所有事项</span>
             </a>
         </li>-->
         {% if ( is_admin ) %}
 
-        <li class="menu-item  {% if (top_menu_active == 'system') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'system') %} <?= 'menu-open' ?>{% endif %}">
             <a href="javascript:;">
                 <i class="fa fa-laptop"></i>
                 <span>管理</span>
@@ -46,7 +46,7 @@
             </ul>
         </li>
         {% endif %}
-        <li class="menu-item  {% if (top_menu_active == 'help') %} {{ 'menu-open' }}{% endif %}">
+        <li class="menu-item  {% if (top_menu_active == 'help') %} <?= 'menu-open' ?>{% endif %}">
             <a href="http://www.masterlab.vip/help.php" target="_blank">
                 <i class="fa fa-edit"></i> <span>帮助</span>
             </a>

@@ -5,11 +5,11 @@
     <script src="/dev/lib/jquery.form.js"></script>
     <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/project/version.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/project/version.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
 
     <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
@@ -57,7 +57,7 @@
                         </p>
                     </div>
                     <div class="col-lg-9">
-                        <form id="form_add_action" class="setting-form clearfix" action="/project/version/add?project_id={{project_id}}" accept-charset="UTF-8" method="post">
+                        <form id="form_add_action" class="setting-form clearfix" action="/project/version/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
                             <div class="form-group  col-md-2">
@@ -231,7 +231,7 @@
 
 
 <script>
-    let query_str = '{{query_str}}';
+    let query_str = '<?=query_str?>';
     let urls = parseURL(window.location.href);
 
 
@@ -251,7 +251,7 @@
             query_param_obj: urls.searchObject,
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/project/version/filter_search?project_id={{project_id}}"
+            filter_url:"/project/version/filter_search?project_id=<?=project_id?>"
         };
         window.$versions = new Version( options );
         window.$versions.fetchAll();
@@ -301,7 +301,7 @@
     });
 
     function requestRelease(versionId) {
-        window.$versions.release({{project_id}}, versionId);
+        window.$versions.release(<?=project_id?>, versionId);
     }
 
     function requestRemove(versionId) {
@@ -319,7 +319,7 @@
             },
             function(isConfirm){
                 if (isConfirm) {
-                    window.$versions.delete({{project_id}}, versionId);
+                    window.$versions.delete(<?=project_id?>, versionId);
                     swal.close();
                 }else{
                     swal.close();

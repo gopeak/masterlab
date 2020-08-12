@@ -36,6 +36,13 @@ class BaseCtrl
      */
     protected $tpl;
 
+
+    /**
+     * 模板引擎对象2,自定义twig标记
+     * @var
+     */
+    protected $tpl2;
+
     /**
      * 模板引擎加载器
      * @var
@@ -92,7 +99,7 @@ class BaseCtrl
      */
     public function __construct()
     {
-        static $siteName, $twigLoader, $twigTpl;
+        static $siteName, $twigLoader, $twigTpl, $twigTpl2;
         //print_r($_SESSION);
         $this->dispatcher = new EventDispatcher();
         $this->loadPlugin();
@@ -125,6 +132,9 @@ class BaseCtrl
             });
             $twigTpl->addFunction($function);
             $twigTpl->addExtension(new \Twig\Extension\DebugExtension());
+            $options = ['tag_variable'=>['<?=', '?>'],'tag_comment' => ['{!', '!}']];
+            $lexer = new \Twig\Lexer($twigTpl, $options);
+            $twigTpl->setLexer($lexer);
         }
         $this->tpl = $twigTpl;
 
@@ -192,6 +202,18 @@ class BaseCtrl
     }
 
     /**
+     * 是否是APP请求
+     * @return bool
+     */
+    public function isApp()
+    {
+        if (isset($_SERVER['HTTP_MASTERLAB_APP']) && !empty($_SERVER['HTTP_MASTERLAB_APP'])) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 添加类全局变量
      * @param $key
      * @param $value
@@ -244,7 +266,13 @@ class BaseCtrl
             }
         } else {
             $tpl = str_replace(['gitlab', '.php'], ['twig', '.twig'], $tpl);
-            echo $this->tpl->render($tpl, $dataArr);
+            $extension = pathinfo($tpl)['extension'] ?? 'twig';
+            if($extension=='twig2'){
+                echo $this->tpl2->render($tpl, $dataArr);
+            }else{
+                echo $this->tpl->render($tpl, $dataArr);
+            }
+
         }
         echo ob_get_clean();
     }
@@ -414,7 +442,8 @@ class BaseCtrl
         $title = '信息提示',
         $content = '',
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页'],
-        $icon = 'icon-font-ok'
+        $icon = 'icon-font-ok',
+        $colorType = 'alert-info'
     )
     {
         $arr = [];
@@ -423,8 +452,10 @@ class BaseCtrl
         $arr['_links'] = $links;
         $arr['_content'] = $content;
         $arr['_icon'] = $icon;
-        $this->render('gitlab/common/info.php', $arr);
+        $arr['_color_type'] = $colorType;
+        $this->render('twig/common/info.twig', $arr);
     }
+
 
     /**
      * 跳转至警告页面
@@ -439,7 +470,7 @@ class BaseCtrl
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
     )
     {
-        $this->info('<span style="color:orange">' . $title . '</span>', $content, $links, 'icon-font-fail');
+        $this->info( $title , $content, $links, 'icon-font-fail', 'alert-warning');
     }
 
     /**
@@ -455,7 +486,7 @@ class BaseCtrl
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
     )
     {
-        $this->info('<span style="color:red">' . $title . '</span>', $content, $links, 'icon-font-fail');
+        $this->info( $title , $content, $links, 'icon-font-fail','alert-danger');
     }
 
 
@@ -540,7 +571,7 @@ class BaseCtrl
             $ip = getIp();
             $userPostedFlagModel->deleteSettingByDate($userId, $date);
             $userPostedFlagModel->insertDateIp($userId, $date, $ip);
-            //echo $curl->rawResponse;
+            echo $curl->rawResponse;
         }
     }
 
@@ -593,7 +624,7 @@ class BaseCtrl
                 //var_dump($pluginFile);
                 if (file_exists($pluginFile)) {
                     require_once($pluginFile);
-                    $pluginClass = sprintf("main\\app\\plugin\\%s\\%s",  $pluginName, $pluginClassName);
+                    $pluginClass = sprintf("main\\plugin\\%s\\%s",  $pluginName, $pluginClassName);
                     if (class_exists($pluginClass)) {
                         $this->_plugins[$pluginName] = new $pluginClass($this->dispatcher, $pluginName);
                         $this->dispatcher->addSubscriber($this->_plugins[$pluginName]);

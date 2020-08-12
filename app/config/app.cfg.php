@@ -44,5 +44,10 @@ define('SECURITY_MAP_ENABLE', (boolean)$appConfig['security_map']);
 //时区设置
 date_default_timezone_set($appConfig['date_default_timezone']);
 
+// api使用JWT
+define("JWT_KEY", $appConfig['encrypy_key']);
+define("JWT_TOKEN_EXPIRED", 3600*24);
+define("JWT_REFRESH_TOKEN_EXPIRED", 3600*24*30);
+
 // 销毁该全局变量
 unset($appConfig);

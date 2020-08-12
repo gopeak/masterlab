@@ -60,12 +60,17 @@ class Upgrade extends BaseUserCtrl
         }
 
         $host = isset($_GET['source']) ? trim($_GET['source']) : 'http://www.masterlab.vip/';
+        if(!is_allowed_url($host)){
+            $this->showLine('source地址不合法, 必须为http协议,且不能为内网地址');
+            die;
+        }
         if (!preg_match('/\/$/', $host)) {
             $host .= '/';
         }
         $url = $host . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
 
         $curl = new \Curl\Curl();
+        $curl->setOpt(CURLOPT_FOLLOWLOCATION, false);
         $curl->get($url);
         $response = $curl->rawResponse;
         $response = json_decode($response);

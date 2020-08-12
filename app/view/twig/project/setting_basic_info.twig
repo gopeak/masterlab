@@ -60,7 +60,7 @@
                             </div>
                             <div class="panel-body">
                                 <div>
-                                    <form id="save_project" action="/project/setting/save_settings_profile?project_id={{project_id}}" accept-charset="UTF-8" method="post" class="form-horizontal">
+                                    <form id="save_project" action="/project/setting/save_settings_profile?project_id=<?=project_id?>" accept-charset="UTF-8" method="post" class="form-horizontal">
                                         <input name="utf8" type="hidden" value="✓">
                                         <input type="hidden" name="authenticity_token" value="">
 
@@ -69,7 +69,7 @@
                                                 <span>项目名称 <i class="required">*</i></span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input value="{{info['name']}}" placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus" required="required" type="text" name="params[name]" id="project_name" disabled>
+                                                <input value="<?=info['name']?>" placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus" required="required" type="text" name="params[name]" id="project_name" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -78,12 +78,12 @@
                                             </label>
                                             <div class="col-sm-10">
                                                 {% if (not is_admin) %}
-                                                    <input value="{{info['org_name']}}" class="form-control" type="text" disabled>
+                                                    <input value="<?=info['org_name']?>" class="form-control" type="text" disabled>
                                                 {% else %}
                                                     <div class="select2-container">
                                                         <select class="selectpicker" data-live-search="true" name="params[org_id]">
                                                             {% for org in org_list %}
-                                                                <option data-tokens="{{org['name']}}" data-org_path="{{org['path']}}" value="{{org['id']}}">{{org['name']}}</option>
+                                                                <option data-tokens="<?=org['name']?>" data-org_path="<?=org['path']?>" value="<?=org['id']?>"><?=org['name']?></option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>
@@ -95,7 +95,7 @@
                                                 <span>项目KEY <i class="required">*</i></span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input value="{{info['key']}}" placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"required="required" type="text" name="params[key]" id="project_key" disabled>
+                                                <input value="<?=info['key']?>" placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"required="required" type="text" name="params[key]" id="project_key" disabled>
                                             </div>
                                         </div>
 
@@ -107,10 +107,10 @@
                                                 {% for type_id,type_item in full_type %}
                                                     <div class="radio">
                                                         <label>
-                                                            <input type="radio" name="params[type]" value="{{type_id}}" {% if (type_id == info['type']) %}{{ 'checked' }}{% endif %} >
-                                                            <i class="{{type_item['type_face']}}"></i> <span style="font-weight: bolder;">{{type_item['type_name']}}</span>
+                                                            <input type="radio" name="params[type]" value="<?=type_id?>" {% if (type_id == info['type']) %}<?= 'checked' ?>{% endif %} >
+                                                            <i class="<?=type_item['type_face']?>"></i> <span style="font-weight: bolder;"><?=type_item['type_name']?></span>
                                                             <div style="color:#999999;">
-                                                                {{type_item['type_desc']}}
+                                                                <?=type_item['type_desc']?>
                                                             </div>
                                                         </label>
                                                     </div>
@@ -126,7 +126,7 @@
                                                 <div class="select2-container">
                                                     <select class="selectpicker" data-live-search="true" name="params[issue_type_scheme_id]" id="issue_type_scheme_id">
                                                         {% for scheme in issue_type_schemes %}
-                                                            <option value="{{scheme['id']}}">{{scheme['name']}}</option>
+                                                            <option value="<?=scheme['id']?>"><?=scheme['name']?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -141,7 +141,7 @@
                                                 <div class="select2-container">
                                                     <select class="selectpicker" data-live-search="true" name="params[workflow_scheme_id]" id="workflow_scheme_id">
                                                         {% for scheme in workflow_schemes %}
-                                                            <option value="{{scheme['id']}}">{{scheme['name']}}</option>
+                                                            <option value="<?=scheme['id']?>"><?=scheme['name']?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -152,7 +152,7 @@
                                             <label class="control-label" for="issue_assignee_id">项目负责人 <i style="color:red;">*</i></label>
                                             <div class="col-sm-10">
                                                 <div class="issuable-form-select-holder">
-                                                    <input type="hidden" name="params[lead]" id="issue_assignee_id" value="{{info['lead']}}"/>
+                                                    <input type="hidden" name="params[lead]" id="issue_assignee_id" value="<?=info['lead']?>"/>
                                                     <div class="dropdown ">
                                                         <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
                                                                 data-first-user="sven"
@@ -163,7 +163,7 @@
                                                                 data-field-name="params[lead]"
                                                                 data-default-label="Assignee"
                                                                 data-toggle="dropdown">
-                                                            <span class="dropdown-toggle-text is-default">{{lead_display_name}}</span>
+                                                            <span class="dropdown-toggle-text is-default"><?=lead_display_name?></span>
                                                             <i class="fa fa-chevron-down"></i>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
@@ -191,7 +191,7 @@
                                         <div class="form-group">
                                             <label class="control-label" for="project_description">项目描述</label>
                                             <div class="col-sm-10">
-                                                <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description">{{info['description']}}</textarea>
+                                                <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description"><?=info['description']?></textarea>
                                             </div>
                                         </div>
 
@@ -199,7 +199,7 @@
                                             <label class="control-label" for="project_detail">项目详情</label>
                                             <div class="col-sm-10">
                                                 <div id="editor_md">
-                                                    <textarea style="display:none;" name="params[detail]" id="project_detail">{{info['detail']}}</textarea>
+                                                    <textarea style="display:none;" name="params[detail]" id="project_detail"><?=info['detail']?></textarea>
                                                 </div>
                                                 <div class="help-block"><a href="https://zh.wikipedia.org/wiki/Markdown" target="_blank">help</a></div>
                                             </div>
@@ -210,7 +210,7 @@
                                                 <span>URL</span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input value="{{info['url']}}" placeholder="URL" class="form-control"  type="text" name="params[url]" id="project_url">
+                                                <input value="<?=info['url']?>" placeholder="URL" class="form-control"  type="text" name="params[url]" id="project_url">
                                             </div>
                                         </div>
 
@@ -219,8 +219,8 @@
                                                 <span>头像</span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <img id="avatar_display" class="avatar s40" alt="" src="{{attachment_url}}{{info['avatar']}}">
-                                                <input type="hidden"  name="params[avatar_relate_path]" id="avatar"  value="{{info['avatar']}}" />
+                                                <img id="avatar_display" class="avatar s40" alt="" src="<?=attachment_url?><?=info['avatar']?>">
+                                                <input type="hidden"  name="params[avatar_relate_path]" id="avatar"  value="<?=info['avatar']?>" />
                                                 <div id="fine-uploader-gallery"></div>
                                                 <div class="help-block">图片大小被限制为500KB.</div>
                                             </div>
@@ -242,14 +242,14 @@
                             </div>
                             <div class="panel-body">
                                 <div>
-                                    <form id="update_key_from" action="/project/setting/update_project_key?project_id={{project_id}}" accept-charset="UTF-8" method="post" class="form-horizontal">
+                                    <form id="update_key_from" action="/project/setting/update_project_key?project_id=<?=project_id?>" accept-charset="UTF-8" method="post" class="form-horizontal">
                                         <input name="utf8" type="hidden" value="✓">
                                         <input type="hidden" name="_method" value="patch">
                                         <input type="hidden" name="authenticity_token" value="qGi0NPGi5k0taFq/z4qSkPLv23LTIN8106xSE+XR0JfrqvSBZINwUkRX3DTB+12SGo41k/n2lqBcZ2oiLkbTSQ==">
                                         <div class="form-group project_name_holder">
                                             <label class="control-label" for="project_name">原KEY</label>
                                             <div class="col-sm-10">
-                                                <input class="form-control" type="text" value="{{info['key']}}" name="params[key]">
+                                                <input class="form-control" type="text" value="<?=info['key']?>" name="params[key]">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -369,11 +369,11 @@
 
 <script>
     // 初始化组织值
-    $(".selectpicker").selectpicker('val', {{project['org_id']}});
+    $(".selectpicker").selectpicker('val', <?=project['org_id']?>);
     // 初始化事项类型方案
-    $("#issue_type_scheme_id").selectpicker('val', {{ issue_type_scheme_id }});
+    $("#issue_type_scheme_id").selectpicker('val', <?= issue_type_scheme_id ?>);
     // 初始化状态刘方案
-    $("#workflow_scheme_id").selectpicker('val', {{ project['workflow_scheme_id'] }});
+    $("#workflow_scheme_id").selectpicker('val', <?= project['workflow_scheme_id'] ?>);
 
     var editor = editormd({
         id   : "editor_md",
