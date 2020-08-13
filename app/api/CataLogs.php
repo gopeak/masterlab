@@ -99,15 +99,18 @@ class CataLogs extends BaseAuth
         }
     }
 
-    private function getHandler() {
+    private function getHandler()
+    {
 
     }
 
-    private function patchHandler() {
+    private function patchHandler()
+    {
 
     }
 
-    private function deleteHandler() {
+    private function deleteHandler()
+    {
 
     }
 }
