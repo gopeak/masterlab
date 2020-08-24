@@ -161,7 +161,7 @@ var IssueMain = (function () {
             let opt = "<option data-key='"+project.key+"' data-content='" + content + "' value='" + project.id + "'>" + project.name + "</option>";
             $selectObj.append(opt);
         }
-
+        $selectObj.val(window.cur_project_id);
         $('.selectpicker').selectpicker('refresh');
 
         $selectObj.bind("change", function () {

@@ -1,14 +1,14 @@
 <?php
 $env_items = array();
 $dirfile_items = array(
-    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/public/install/data')),
-    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/public/install')),
-    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/public/attachment')),
-    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../upgrade')),
-    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/storage')),
-    array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../../config.yml')),
-    array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../../bin/config.toml')),
-    array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../../bin/cron.json')),
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../public/install/data')),
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../public/install')),
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../public/attachment')),
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../upgrade')),
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../storage')),
+    array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../config.yml')),
+    array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../bin/config.toml')),
+    array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../bin/cron.json')),
 );
 if (ini_get('session.save_handler') == 'files') {
     $sessionPath = session_save_path();

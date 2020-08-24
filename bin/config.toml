@@ -18,11 +18,11 @@ single_mode	=	true
     auth_cmds = ["Auth","Authorize"]
 
 [mysql]
-    database 	=	"masterlab22test"
+    database 	=	"masterl30"
     host        =   "localhost"
     port		=	"3306"
-    user 		= 	"root"
-    password 	= 	""
+    user 		= 	"masterl30"
+    password 	= 	"123456"
     charset	    =	"utf8mb4_unicode_ci"
     timeout	    =	"10"
     max_open_conns = 2000
