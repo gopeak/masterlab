@@ -540,7 +540,7 @@ class BaseCtrl
             $ip = getIp();
             $userPostedFlagModel->deleteSettingByDate($userId, $date);
             $userPostedFlagModel->insertDateIp($userId, $date, $ip);
-            echo $curl->rawResponse;
+            //echo $curl->rawResponse;
         }
     }
 }
