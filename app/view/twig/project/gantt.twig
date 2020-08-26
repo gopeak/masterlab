@@ -6,12 +6,12 @@
     {% include 'twig/common/header/include.twig' %}
 
     <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
-    <script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
-    <script src="/dev/js/issue/detail.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
-    <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/admin/issue_ui.js?v=<?=_version?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/form.js?v=<?=_version?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/detail.js?v=<?=_version?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/issue/main.js?v=<?=_version?>" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
 
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
@@ -376,7 +376,7 @@
                 </div>
                 <div id="modal-body" class="modal-body issue-modal-body form-horizontal" style="padding: 15px 50px;">
                     <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="params[project_id]" id="project_id" value="{{project_id}}">
+                    <input type="hidden" name="params[project_id]" id="project_id" value="<?=project_id?>">
                     <input type="hidden" name="action" id="action" value="">
                     <input type="hidden" name="issue_id" id="issue_id" value="">
                     <input type="hidden" name="params[master_issue_id]" id="gantt_master_issue_id" value="">
@@ -431,7 +431,7 @@
                             <select id="gantt_assignee" name="params[assignee]" title="经办人" class="selectpicker">
                                 {% for row in project_users %}
                                     {% set  display_name = row['display_name'] %}
-                                    <option value="{{row.uid}}"  data-content="<img width='20px' height='20px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/{{row.uid}}.png' > {{display_name}}"  >{{display_name}}</option>
+                                    <option value="<?=row.uid?>"  data-content="<img width='20px' height='20px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/<?=row.uid?>.png' > <?=display_name?>"  ><?=display_name?></option>
                                 {% endfor %}
                             </select>
                             <p id="tip-assignee" class="gl-field-error hide"></p>
@@ -526,7 +526,7 @@
                 </div>
                 <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="params[project_id]" id="project_id" value="{{project_id}}">
+                    <input type="hidden" name="params[project_id]" id="project_id" value="<?=project_id?>">
 
                     <div class="form-group">
                         <label class="control-label"  >数据源：</label>
@@ -574,7 +574,7 @@
                                 <select id="hide_issue_types" name="hide_issue_types" title="事项类型" class="selectpicker" multiple>
                                     {% for row in issue_types %}
                                         {% set  display_name = row['display_name'] %}
-                                        <option value="{{row._key}}"  data-content="<i class='fa {{ row.font_awesome }}'  ></i> {{row.name}}"  >{{row.name}}</option>
+                                        <option value="<?=row._key?>"  data-content="<i class='fa <?= row.font_awesome ?>'  ></i> <?=row.name?>"  ><?=row.name?></option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -677,7 +677,7 @@
                 </div>
                 <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="params[project_id]" id="project_id" value="{{project_id}}">
+                    <input type="hidden" name="params[project_id]" id="project_id" value="<?=project_id?>">
 
                     <div class="form-group">
                         <label class="control-label"  ></label>
@@ -694,7 +694,7 @@
                             <div class="form-group col-md-4">
                                 <select class="selectpicker form-control" id="role_select" multiple name="role_id[]">
                                     {% for role in roles %}
-                                        <option value="{{role['id']}}">{{role['name']}}</option>
+                                        <option value="<?=role['id']?>"><?=role['name']?></option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -816,7 +816,7 @@
                     data-ids="{{have_roles_ids}}">
 {% endverbatim %}
                 {% for role in roles %}
-                    <option value="{{role['id']}}">{{role['name']}}</option>
+                    <option value="<?=role['id']?>"><?=role['name']?></option>
                 {% endfor %}
 {% verbatim %}
             </select>
@@ -837,41 +837,41 @@
 </script>{% endverbatim %}
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/project/member.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/member.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     // JqueryGantt的全局变量实例
     var ge;
 
     // 后端传递给页面的全局变量
-    var _cur_project_id = '{{project_id}}';
-    var _cur_uid = '{{G_uid}}';
+    var _cur_project_id = '<?=project_id?>';
+    var _cur_uid = '<?=G_uid?>';
     var _gantt_editor_md = null;
     var $_gantAjax = null;
     var _issueConfig = {
-        "priority":{{priority|json_encode()|raw}},
-        "issue_types":{{issue_types|json_encode()|raw}},
-        "issue_status":{{issue_status|json_encode()|raw}},
-        "issue_resolve":{{issue_resolve|json_encode()|raw}},
-        "issue_module":{{project_modules|json_encode()|raw}},
-        "issue_version":{{project_versions|json_encode()|raw}},
-        "issue_labels":{{project_labels|json_encode()|raw}},
-        "users":{{users|json_encode()|raw}},
-        "project_users":{{project_users|json_encode()|raw}},
-        "projects":{{projects|json_encode()|raw}},
-        "sprint":{{sprints|json_encode()|raw}}
+        "priority":<?=priority|json_encode()|raw?>,
+        "issue_types":<?=issue_types|json_encode()|raw?>,
+        "issue_status":<?=issue_status|json_encode()|raw?>,
+        "issue_resolve":<?=issue_resolve|json_encode()|raw?>,
+        "issue_module":<?=project_modules|json_encode()|raw?>,
+        "issue_version":<?=project_versions|json_encode()|raw?>,
+        "issue_labels":<?=project_labels|json_encode()|raw?>,
+        "users":<?=users|json_encode()|raw?>,
+        "project_users":<?=project_users|json_encode()|raw?>,
+        "projects":<?=projects|json_encode()|raw?>,
+        "sprint":<?=sprints|json_encode()|raw?>
     };
-    var _project_issue_types = {{project_issue_types|json_encode()|raw}};
-    var _work_dates = {{work_dates|json_encode()|raw}};
-    var _holidays = {{holidays|json_encode()|raw}};
-    var _extra_holidays = {{extra_holidays|json_encode()|raw}};
+    var _project_issue_types = <?=project_issue_types|json_encode()|raw?>;
+    var _work_dates = <?=work_dates|json_encode()|raw?>;
+    var _holidays = <?=holidays|json_encode()|raw?>;
+    var _extra_holidays = <?=extra_holidays|json_encode()|raw?>;
 
 </script>
 
-<script src="/dev/js/project/gantt_ajax.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/project/gantt_origin.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/project/gantt_ready.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/project/gantt_date.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/gantt_ajax.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/gantt_origin.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/gantt_ready.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/gantt_date.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>
 

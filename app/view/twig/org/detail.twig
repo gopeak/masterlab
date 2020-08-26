@@ -5,11 +5,11 @@
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/js/org/org.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 
-    <link href="/dev/css/dashboard.css?v={{_version}}" rel="stylesheet">
-    <link href="/dev/css/statistics.css?v={{_version}}" rel="stylesheet">
-    <link href="/dev/css/organizations.css?v={{_version}}" rel="stylesheet">
+    <link href="/dev/css/dashboard.css?v=<?=_version?>" rel="stylesheet">
+    <link href="/dev/css/statistics.css?v=<?=_version?>" rel="stylesheet">
+    <link href="/dev/css/organizations.css?v=<?=_version?>" rel="stylesheet">
 
 </head>
 
@@ -150,15 +150,15 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        priority:{{priority|json_encode()|raw}},
-        issue_types:{{issue_types|json_encode()|raw}},
-        issue_status:{{issue_status|json_encode()|raw}},
-        issue_resolve:{{issue_resolve|json_encode()|raw}},
-        issue_module:{{project_modules|json_encode()|raw}},
-        issue_version:{{project_versions|json_encode()|raw}},
-        issue_labels:{{project_labels|json_encode()|raw}},
-        users:{{users|json_encode()|raw}},
-        projects:{{projects|json_encode()|raw}}
+        priority:<?=priority|json_encode()|raw?>,
+        issue_types:<?=issue_types|json_encode()|raw?>,
+        issue_status:<?=issue_status|json_encode()|raw?>,
+        issue_resolve:<?=issue_resolve|json_encode()|raw?>,
+        issue_module:<?=project_modules|json_encode()|raw?>,
+        issue_version:<?=project_versions|json_encode()|raw?>,
+        issue_labels:<?=project_labels|json_encode()|raw?>,
+        users:<?=users|json_encode()|raw?>,
+        projects:<?=projects|json_encode()|raw?>
     };
 
     var $org = null;
@@ -175,8 +175,8 @@
             pagination_id:"pagination"
         }
         window.$org = new Org( options );
-        window.$org.detail( '{{id}}');
-        window.$org.fetchProjects( '{{id}}');
+        window.$org.detail( '<?=id?>');
+        window.$org.fetchProjects( '<?=id?>');
 
     });
 

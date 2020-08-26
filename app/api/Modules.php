@@ -40,7 +40,7 @@ class Modules extends BaseAuth
             $projectId = intval($_GET['project_id']);
         }
 
-        if (isset($_GET['_target'][3])){
+        if (isset($_GET['_target'][3])) {
             $moduleId = intval($_GET['_target'][3]);
         }
 
@@ -52,13 +52,13 @@ class Modules extends BaseAuth
         $projectList = $projectModel->getAll2();
 
         $model = new ProjectModuleModel();
-        if ($projectId > 0) {
-            $list = $model->getByProject($projectId, true);
+        if ($moduleId > 0) {
+            $row = $model->getById($moduleId);
         } else {
-            if ($moduleId > 0) {
-                $row = $model->getById($moduleId);
+            // 全部模块
+            if ($projectId > 0) {
+                $list = $model->getByProject($projectId, true);
             } else {
-                // 全部模块
                 $list = $model->getAll();
             }
         }
@@ -120,7 +120,7 @@ class Modules extends BaseAuth
         $ret = $projectModuleModel->insert($row);
 
         if ($ret[0]) {
-            return self::returnHandler('操作成功');
+            return self::returnHandler('操作成功', ['id' => $ret[1]]);
         } else {
             return self::returnHandler('添加模块失败.', [], Constants::HTTP_BAD_REQUEST);
         }
@@ -204,7 +204,7 @@ class Modules extends BaseAuth
         $projectModuleModel = new ProjectModuleModel();
         $ret = $projectModuleModel->updateById($moduleId, $row);
 
-        return self::returnHandler('修改成功');
+        return self::returnHandler('修改成功', array_merge($row, ['id' => $moduleId]));
 
     }
 }

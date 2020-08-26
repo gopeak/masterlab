@@ -380,6 +380,23 @@ class UserLogic
     }
 
     /**
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function fetchProjectRoleUserIdArr($projectId)
+    {
+        $userProjectRoleModel = new ProjectUserRoleModel();
+        $userIdArr = [];
+        $rows = $userProjectRoleModel->getRows('user_id', ['project_id' => $projectId]);
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $userIdArr[] = $row['user_id'];
+            }
+        }
+        return $userIdArr;
+    }
+    /**
      * @param $groupId
      * @return string
      * @throws \Exception
@@ -501,14 +518,12 @@ class UserLogic
      */
     public function getNotProjectUser($projectId)
     {
-        $inProjectUserIds = $this->fetchProjectRoleUserIds($projectId);
-        if (!empty($inProjectUserIds)) {
-            $skip_users = $inProjectUserIds;
-        } else {
-            $skip_users = null;
-        }
-        $users = $this->selectUserFilter(null, 200, true, null, null, $skip_users);
+        $inProjectUserIdArr = $this->fetchProjectRoleUserIdArr($projectId);
+        $users = $this->getAllNormalUser();
         foreach ($users as $k => &$row) {
+            if(in_array($row['uid'], $inProjectUserIdArr)){
+                unset($users[$k]);
+            }
             $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
         }
         sort($users);
@@ -572,6 +587,28 @@ class UserLogic
         return $users;
     }
 
+    /**
+     * 获取非加入项目的用户
+     * @param $project_id
+     * @throws \Exception
+     */
+    public function getNotProjectUsers($project_id){
+
+        $users = [];
+        $inProjectUserIds = $this->fetchProjectRoleUserIds($project_id);
+        if (!empty($inProjectUserIds)) {
+            $skip_users = $inProjectUserIds;
+        } else {
+            $skip_users = null;
+        }
+        $users = $this->selectUserFilter();
+        foreach ($users as $k => &$row) {
+            $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
+
+        }
+        sort($users);
+        return $users;
+    }
 
     /**
      * 更新用户所属的组

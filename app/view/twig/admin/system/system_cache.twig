@@ -15,11 +15,6 @@
     <div class="page-layout page-content-body system-page">
         {% include 'twig/common/body/header-content.twig' %}
 
-        <script>
-            var findFileURL = "";
-            window.project_uploads_path = "/issue/main/upload";
-            window.preview_markdown_path = "/api/v4/preview_markdown.json";
-        </script>
 
         <div class="page-with-sidebar">
 
@@ -64,7 +59,7 @@
                                             <div class="form-group">
                                                 <label class="control-label"></label>
                                                 <div class="col-sm-5">
-                                                    是否开启:&nbsp;&nbsp;{{redis_is_used}}
+                                                    是否开启:&nbsp;&nbsp;<?=redis_is_used?>
                                                 </div>
                                             </div>
                                             <hr>
@@ -72,19 +67,19 @@
                                             <div class="form-group">
                                                 <label class="control-label"></label>
                                                 <div class="col-sm-5">
-                                                    Redis 主机: {{redis_config[0]}}
+                                                    Redis 主机: <?=redis_config[0]?>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label"></label>
                                                 <div class="col-sm-5">
-                                                    Redis 端口: {{redis_config[1]}}
+                                                    Redis 端口: <?=redis_config[1]?>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label"></label>
                                                 <div class="col-sm-5">
-                                                    Redis 密码: {{redis_config[2]}}
+                                                    Redis 密码: <?=redis_config[2]?>
                                                 </div>
                                             </div>
                                             <hr>

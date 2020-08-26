@@ -3,7 +3,6 @@
 <head  >
 
     {% include 'twig/common/header/include.twig' %}
-    <!--script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script-->
     <script src="/dev/lib/jquery.form.js"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -30,7 +29,7 @@
                         添加标签
                     </h3>
                     <hr>
-                    <form class="form-horizontal label-form js-quick-submit js-requires-input" id="form_add_action" action="/project/label/add?project_id={{project_id}}" accept-charset="UTF-8" method="post">
+                    <form class="form-horizontal label-form js-quick-submit js-requires-input" id="form_add_action" action="/project/label/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
                         <input name="utf8" type="hidden" value="✓">
                         <input type="hidden" name="authenticity_token" value="PnuoZcfpzkVXlVTW9dc8g5AhtYYvnvkxOcEk+aApfsuTCCBRXrdeZlYJ8IZiZw8bIul1XFTzKlgj8NEPjuwesw==">
                         <div class="form-group">
@@ -78,7 +77,7 @@
                         </div>
                         <div class="form-actions text-right">
                             <input type="submit" name="commit" value="创建" class="btn btn-create js-save-button disabled" disabled="disabled">
-                            <a class="btn btn-cancel" href="{{project_root_url}}/settings_label">取消</a>
+                            <a class="btn btn-cancel" href="<?=project_root_url?>/settings_label">取消</a>
                         </div>
                     </form>
                 </div>
@@ -102,7 +101,7 @@
             },
             success: function (data, textStatus, jqXHR, $form) {
                 if(data.ret == 200){
-                    location.href = "{{project_root_url}}/settings_label";
+                    location.href = "<?=project_root_url?>/settings_label";
                 }else{
                     notify_error('保存失败'+data.msg);
                 }

@@ -2,8 +2,8 @@
 <html class="" lang="en">
 <head  >
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v={{_version}}"  type="text/javascript"></script>
-    <link rel="stylesheet" href="/dev/css/issue/msg-list.css?v={{_version}}"/>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
+    <link rel="stylesheet" href="/dev/css/issue/msg-list.css?v=<?=_version?>"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
@@ -218,13 +218,13 @@
 </style>
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/user/msg_system.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/lib/moment.js" charset="utf-8"></script>
 <script type="text/javascript">
 
     var $msgSystemAjax = null;
-    var _user_id = '{{user_id}}';
+    var _user_id = '<?=user_id?>';
     $(function() {
         $msgSystemAjax = new MsgSystem( {} );
         $msgSystemAjax.filter(  '/user/fetchMsgSystems', 'msg_tpl',  'ul_msgs' );

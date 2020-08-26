@@ -12,43 +12,43 @@
     <div class="issuable-sidebar">
 
         <div class="admin-menu-links">
-            <div class="admin_left_header aui-nav-heading   {% if (sub_nav_active == 'issue_type') %} {{ 'active' }}{% endif %}"><strong>事项类型</strong></div>
+            <div class="admin_left_header aui-nav-heading   {% if (sub_nav_active == 'issue_type') %} <?= 'active' ?>{% endif %}"><strong>事项类型</strong></div>
             <ul class="aui-nav" resolved="">
-                <li class=" {% if (left_nav_active == 'type') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'type') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/issue_type" id="left_issue_type">事项类型</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'type_scheme') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'type_scheme') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/issue_type_scheme" id="left_issue_type_scheme">事项类型方案</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'type_tpl') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'type_tpl') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/issue_desc_tpl" id="left_issue_desc_tpl">事项描述模板</a>
                 </li>
             </ul>
             <hr>
-            <div  class="admin_left_header aui-nav-heading  {% if (sub_nav_active == 'issue_attribute') %} {{ 'active' }}{% endif %}">事项属性</div>
+            <div  class="admin_left_header aui-nav-heading  {% if (sub_nav_active == 'issue_attribute') %} <?= 'active' ?>{% endif %}">事项属性</div>
             <ul class="aui-nav" resolved="">
-                <li class=" {% if (left_nav_active == 'status') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'status') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/issue_status" id="left_status">状态</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'workflow') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'workflow') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/workflow" id="left_worker_flow">状态流</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'user_default_setting') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'user_default_setting') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/workflow_scheme" id="left_worker_flow_scheme">状态流方案</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'resolve') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'resolve') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/issue_resolve" id="left_resolve">解决结果</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'priority') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'priority') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/issue_priority" id="left_priority">优先级</a>
                 </li>
             </ul>
-            <div  class="admin_left_header aui-nav-heading  {% if (sub_nav_active == 'ui') %} {{ 'active' }}{% endif %}">事项界面</div>
+            <div  class="admin_left_header aui-nav-heading  {% if (sub_nav_active == 'ui') %} <?= 'active' ?>{% endif %}">事项界面</div>
             <ul class="aui-nav" resolved="">
-                <li class=" {% if (left_nav_active == 'field') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'field') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/field" id="left_field_custom">字段配置</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'issue_ui') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'issue_ui') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/issue_ui" id="left_issue_ui">界面配置</a>
                 </li>
             </ul>

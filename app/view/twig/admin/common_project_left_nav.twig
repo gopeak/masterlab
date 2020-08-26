@@ -13,12 +13,12 @@
     <div class="issuable-sidebar">
 
         <div class="admin-menu-links">
-            <div class="aui-nav-heading   {% if (sub_nav_active == 'setting') %} {{ 'active' }}{% endif %}"><strong>项目</strong></div>
+            <div class="aui-nav-heading   {% if (sub_nav_active == 'setting') %} <?= 'active' ?>{% endif %}"><strong>项目</strong></div>
             <ul class="aui-nav" resolved="">
-                <li class=" {% if (left_nav_active == 'list') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'list') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/project/index" id="general_configuration">项目列表</a>
                 </li>
-                <li class=" {% if (left_nav_active == 'archived') %} {{ 'active' }}{% endif %}">
+                <li class=" {% if (left_nav_active == 'archived') %} <?= 'active' ?>{% endif %}">
                     <a href="/admin/project/archived" id="system_info">项目归档</a>
                 </li>
             </ul>

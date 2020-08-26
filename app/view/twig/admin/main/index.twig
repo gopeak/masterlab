@@ -4,7 +4,7 @@
 
 		{% include 'twig/common/header/include.twig' %}
 		<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-		<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+		<script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 
 		<style type="text/css">
 			.td_title{
@@ -59,19 +59,19 @@
 													<td  class="td_title">
 														<strong>主页 URL</strong>
 													</td>
-													<td>{{ sys_domain }}</td>
+													<td><?= sys_domain ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>当前工作目录</strong>
 													</td>
-													<td>{{ sys_workpath }}</td>
+													<td><?= sys_workpath ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>版本</strong>
 													</td>
-													<td>{{ masterlab_version }}</td>
+													<td><?= masterlab_version ?></td>
 												</tr>
 												<!--<tr class="commit">
 													<td  class="td_title">
@@ -105,13 +105,13 @@
 													<td  class="td_title">
 														<strong>系统时间</strong>
 													</td>
-													<td>{{ sys_datetime }}</td>
+													<td><?= sys_datetime ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>系统时区</strong>
 													</td>
-													<td>{{ sys_timezone }}</td>
+													<td><?= sys_timezone ?></td>
 												</tr>
 												</tbody>
 											</table>
@@ -138,25 +138,25 @@
 													<td  class="td_title">
 														<strong>服务器地址</strong>
 													</td>
-													<td>{{setting_mail.socket_server_host}}</td>
+													<td><?=setting_mail.socket_server_host?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>服务器端口</strong>
 													</td>
-													<td>{{setting_mail.socket_server_port}}</td>
+													<td><?=setting_mail.socket_server_port?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>启用异步邮件推送</strong>
 													</td>
-													<td>{{ setting_mail.enable_async_mail }}</td>
+													<td><?= setting_mail.enable_async_mail ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>连接状态</strong>
 													</td>
-													<td>{{ setting_mail.socket_server_connect_msg|raw }}</td>
+													<td><?= setting_mail.socket_server_connect_msg|raw ?></td>
 												</tr>
 												</tbody>
 											</table>
@@ -183,19 +183,19 @@
 													<td  class="td_title">
 														<strong>操作系统</strong>
 													</td>
-													<td>{{ sys_os }}</td>
+													<td><?= sys_os ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>Web应用服务器</strong>
 													</td>
-													<td>{{ sys_web_engine }}</td>
+													<td><?= sys_web_engine ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>服务器主机名</strong>
 													</td>
-													<td>{{ sys_hostname }}</td>
+													<td><?= sys_hostname ?></td>
 												</tr>
 
 												</tbody>
@@ -223,27 +223,27 @@
 														<td  class="td_title">
 															<strong>PHP版本</strong>
 														</td>
-														<td>{{ sys_php_version }}</td>
+														<td><?= sys_php_version ?></td>
 													</tr>
 													<tr class="commit">
 														<td  class="td_title">
 															<strong>PHP用户</strong>
 														</td>
-														<td>{{ sys_php_user }}</td>
+														<td><?= sys_php_user ?></td>
 													</tr>
 													<tr class="commit">
 														<td  class="td_title">
 															<strong>phpinfo</strong>
 														</td>
 														<td>
-															<a href="{{ sys_domain }}p.php" , target="_blank" style="color:blue">{{ sys_domain }}p.php</a>
+															<a href="<?= sys_domain ?>p.php" , target="_blank" style="color:blue"><?= sys_domain ?>p.php</a>
 														</td>
 													</tr>
 													<tr class="commit">
 														<td  class="td_title">
 															<strong>PHP已加载扩展</strong>
 														</td>
-														<td>{{ extListFormat }}</td>
+														<td><?= extListFormat ?></td>
 													</tr>
 
 												</tbody>
@@ -276,31 +276,31 @@
 													<td  class="td_title">
 														<strong>数据库版本</strong>
 													</td>
-													<td>{{ sys_mysql_version }}</td>
+													<td><?= sys_mysql_version ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>数据库地址</strong>
 													</td>
-													<td>{{ sys_mysql_host }}</td>
+													<td><?= sys_mysql_host ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>数据库端口</strong>
 													</td>
-													<td>{{ sys_mysql_port }}</td>
+													<td><?= sys_mysql_port ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>当前数据库名称</strong>
 													</td>
-													<td>{{ sys_mysql_dbname }}</td>
+													<td><?= sys_mysql_dbname ?></td>
 												</tr>
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>当前数据库用户</strong>
 													</td>
-													<td>{{ sys_mysql_use_user }}</td>
+													<td><?= sys_mysql_use_user ?></td>
 												</tr>
 
 												</tbody>

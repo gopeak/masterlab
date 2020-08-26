@@ -3,12 +3,16 @@
 <head  >
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/admin/setting.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/admin/global_permission.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/setting.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/global_permission.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
+
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="/dev/lib/bootstrap-select/js/i18n/defaults-zh_CN.min.js"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
     <style>
         .text-muted {
             color: #777777;
@@ -231,52 +235,20 @@
                             <div class="col-md-6">
 
                                 <div class="issuable-form-select-holder">
-                                    <input type="hidden" value="" name="params[select_user]" id="role_user_selected_user_id" />
-                                    <div class="dropdown ">
-                                        <button class="dropdown-menu-toggle js-multiselect  js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search"
-                                                type="button"
-                                                data-onSelectedFnc="addGlobalPermRoleUser"
-                                                data-first-user="{{user['username']}}"
-                                                data-null-user="true"
-                                                data-current-user="true"
-                                                data-project-id=""
-                                                data-field-name="params[select_user]"
-                                                data-default-label=""
-                                                data-selected=""
-                                                data-toggle="dropdown">
-                                            <span class="dropdown-toggle-text is-default">点击选择用户</span>
-                                            <i class="fa fa-chevron-down"></i>
-                                        </button>
-
-                                        <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
-                                            <div class="dropdown-title">
-                                                <span>选择用户</span>
-                                                <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                                                    <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                                </button>
-                                            </div>
-                                            <div class="dropdown-input">
-                                                <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee" autocomplete="off" />
-                                                <i class="fa fa-search dropdown-input-search"></i>
-                                                <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                            </div>
-                                            <div class="dropdown-content "></div>
-                                            <div class="dropdown-loading">
-                                                <i class="fa fa-spinner fa-spin"></i>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <select id="role_user_selected_user_id" name="params[select_user]"
+                                            class="selectpicker"  data-live-search="true"
+                                    >
+                                        <option value="">选择用户</option>
+                                        {% for user in users %}
+                                            <option  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='<?=user.avatar?>'> <?=user.display_name?>" value="<?=user.uid?>"><?=user.display_name?></option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
-                                <a class="assign-to-me-link " href="#">选择自己</a>
-
-                                <script>
-                                    new UsersSelect();
-                                </script>
 
                             </div>
-                            <!--<div class="col-md-3">
+                            <div class="col-md-3">
                                 <button id="btn-role_user_save" name="btn-role_user_save" type="button" class="btn " >添 加</button>
-                            </div>-->
+                            </div>
                         </div>
                     </div>
 
@@ -355,7 +327,7 @@
 
 <script type="text/javascript">
     var _issueConfig = {
-        users:{{users|json_encode()|raw}}
+        users:<?=users|json_encode()|raw?>
     };
     var globalPermission = null;
     var options = {
@@ -364,6 +336,11 @@
     $(function() {
         globalPermission = new GlobalPermission(options);
         globalPermission.fetchPermissionGlobalRole('/admin/permission/fetch_global_permission_role','render_tpl','render');
+
+        $('#btn-role_user_save').bind('click',function (e){
+            addGlobalPermRoleUser();
+        } );
+
     });
 
 </script>

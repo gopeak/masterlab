@@ -3,7 +3,6 @@
 <head  >
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/gitlab/assets/webpack/profile.56fab56f950907c5b67a.bundle.js"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
@@ -100,12 +99,12 @@
     {{/filters}}
 </script>{% endverbatim %}
 
-<script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
-<script src="/dev/js/user/filters.js?v={{_version}}"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
+<script src="/dev/js/user/filters.js?v=<?=_version?>"></script>
 <script type="text/javascript">
 
     var _issueConfig = {
-        "projects":{{projects|json_encode()|raw}}
+        "projects":<?=projects|json_encode()|raw?>
     };
 
     var $obi = null;

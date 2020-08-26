@@ -21,7 +21,7 @@ define('CTRL_PATH', APP_PATH . 'ctrl/');
 define('MODEL_PATH', APP_PATH . 'model/');
 
 // 插件目录
-define('PLUGIN_PATH', APP_PATH . 'plugin/');
+define('PLUGIN_PATH', PRE_APP_PATH . 'plugin/');
 
 // 项目程序服务文件所在根目录（文件系统）
 define('API_PATH', APP_PATH . 'api/');
@@ -32,10 +32,10 @@ define('SERVICE_PATH', API_PATH);
 define('VIEW_PATH', APP_PATH . 'view/');
 
 // 项目程序视图文件所在根目录（文件系统）
-define('PUBLIC_PATH', APP_PATH . 'public/');
+define('PUBLIC_PATH', PRE_APP_PATH . 'public/');
 
 // 项目程序上传目录（文件系统）
-define('STORAGE_PATH', APP_PATH . 'storage/');
+define('STORAGE_PATH', PRE_APP_PATH . 'storage/');
 
 // 临时文件存储目录
 define('TMP_PATH', STORAGE_PATH . 'tmp/');

@@ -2,6 +2,7 @@
 
 namespace main\app\api;
 
+use framework\protocol\Api;
 use main\app\classes\B2bcrypt;
 use main\app\classes\Sign;
 use main\app\model\user\UserModel;
@@ -46,6 +47,22 @@ class BaseApi
     }
 
     /**
+     * 直接输出restful结果
+     * @param string $msg
+     * @param array $data
+     * @param int $code
+     */
+    protected static function echoJson($msg = '', $data = [], $code = Constants::HTTP_OK)
+    {
+        $data = self::returnHandler($msg, $data, $code);
+        $apiProtocol = new Api();
+        $apiProtocol->builder('200', $data);
+        $jsonStr = $apiProtocol->getResponse();
+        echo $jsonStr;exit;
+    }
+
+
+    /**
      * 模拟PATCH请求方法
      * @return array
      */
@@ -57,7 +74,7 @@ class BaseApi
         return $reqDataArr;
     }
 
-    protected function validateRestfulHandler( )
+    protected function validateRestfulHandler()
     {
         foreach( self::$method_type as $method ) {
             if(  !method_exists( $this,$method . 'Handler') ) {

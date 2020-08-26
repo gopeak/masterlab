@@ -44,7 +44,7 @@ class ConfigLogic
         $data['issue_status'] = self::getStatus();
         $data['issue_resolve'] = self::getResolves();
         $data['users'] = self::getAllUser();
-        $data['projects'] = self::getAllProjects();
+        $data['projects'] = self::getJoinProjects();
         $data['project_users'] = self::getProjectUsers($projectId);
         $data['project_modules'] = self::getModules($projectId );
         $data['project_versions'] = self::getVersions($projectId);
@@ -177,6 +177,17 @@ class ConfigLogic
     {
         $projectModel = new ProjectModel();
         return $projectModel->getAll($primaryKey);
+    }
+
+    /**
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getJoinProjects($primaryKey = false)
+    {
+        $widgetLogic = new WidgetLogic();
+        return $widgetLogic->getUserHaveJoinProjects(1000);
     }
 
     /**

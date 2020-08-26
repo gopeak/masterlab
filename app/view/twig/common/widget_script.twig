@@ -1,6 +1,6 @@
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-<script src="/dev/js/widget.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/widget.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/lib/sortable/Sortable.js"></script>
 <script src="/dev/lib/chart.js/Chart.bundle.js"></script>
 <script src="/dev/lib/chart.js/samples/utils.js"></script>
@@ -9,28 +9,28 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        "priority":{{priority|json_encode()|raw}},
-        "issue_types":{{issue_types|json_encode()|raw}},
-        "issue_status":{{issue_status|json_encode()|raw}},
-        "issue_resolve":{{issue_resolve|json_encode()|raw}},
-        "issue_module":{{project_modules|json_encode()|raw}},
-        "issue_version":{{project_versions|json_encode()|raw}},
-        "issue_labels":{{project_labels|json_encode()|raw}},
-        "users":{{users|json_encode()|raw}},
-        "projects":{{projects|json_encode()|raw}}
+        "priority":<?=priority|json_encode()|raw?>,
+        "issue_types":<?=issue_types|json_encode()|raw?>,
+        "issue_status":<?=issue_status|json_encode()|raw?>,
+        "issue_resolve":<?=issue_resolve|json_encode()|raw?>,
+        "issue_module":<?=project_modules|json_encode()|raw?>,
+        "issue_version":<?=project_versions|json_encode()|raw?>,
+        "issue_labels":<?=project_labels|json_encode()|raw?>,
+        "users":<?=users|json_encode()|raw?>,
+        "projects":<?=projects|json_encode()|raw?>
     };
 
 
     // 可用的工具列表
-    var _widgets = {{widgets|json_encode()|raw}};
+    var _widgets = <?=widgets|json_encode()|raw?>;
     console.log("_widgets", _widgets);
 
     // 用户布局方式
-    var _layout = '{{user_layout}}';
+    var _layout = '<?=user_layout?>';
 
     // 用户自定义布局配置
-    var _user_widgets = {{user_widgets|json_encode()|raw}};
-    var _last_widgets = {{user_widgets|json_encode()|raw}};
+    var _user_widgets = <?=user_widgets|json_encode()|raw?>;
+    var _last_widgets = <?=user_widgets|json_encode()|raw?>;
 
     var _old_index = {
         parent_index: 0,
@@ -38,17 +38,17 @@
     };
 
     // 用户参与的项目列表
-    var _user_in_projects = {{user_in_projects|json_encode()|raw}};
+    var _user_in_projects = <?=user_in_projects|json_encode()|raw?>;
     console.log(_user_in_projects);
 
     // 用户可选的迭代列表
-    var _user_in_sprints = {{user_in_sprints|json_encode()|raw}};
+    var _user_in_sprints = <?=user_in_sprints|json_encode()|raw?>;
     console.log(_user_in_sprints);
 
     var $panel = null;
     var _cur_page = 1;
     var _temp_obj = {};
-    var layout = "{{ user_layout }}";
+    var layout = "<?= user_layout ?>";
 
     var $widgetsAjax = null;
 

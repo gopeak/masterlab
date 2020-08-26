@@ -1,20 +1,20 @@
 <div class="title-container">
 
     {% if G_project.avatar_exist is defined and G_project.avatar_exist %}
-            <span class="project-logo"><img style="max-height: 24px;" src="{{G_project.avatar}}" alt=''></span>
+            <span class="project-logo"><img style="max-height: 24px;" src="<?=G_project.avatar?>" alt=''></span>
     {% else %}
         <div class="avatar-container s40" style="display: block;width: 24px;height: 24px;">
             <div class="avatar project-avatar s40 identicon"
                  style="background-color: #E0F2F1; color: #555;line-height: 22px;">
                 {% if G_project.first_word  %}
-                    {{G_project.first_word}}
+                    <?=G_project.first_word?>
                 {% else %}
                  All
                 {% endif %}
             </div>
         </div>
     {% endif %}
-    <span class="group-title project-name">{{G_project.name}}</span>
+    <span class="group-title project-name"><?=G_project.name?></span>
 
 
     <h1 class="title">
@@ -45,12 +45,12 @@
         {% set header_title_link = site_url~'admin/system' %}
         {% endif %}
         <span class="group-title">
-            <a class="group-path" href="{{header_title_link}}">
-                {{header_title}}
+            <a class="group-path" href="<?=header_title_link?>">
+                <?=header_title?>
             </a>
         </span>
         {% if project_root_url is defined and pro_key  is defined %}
-        /<a class="project-item-select-holder" href="{{project_root_url}}">{{pro_key}}</a>
+        /<a class="project-item-select-holder" href="<?=project_root_url?>"><?=pro_key?></a>
         {% endif %}
 
         {% if project_id is defined  %}

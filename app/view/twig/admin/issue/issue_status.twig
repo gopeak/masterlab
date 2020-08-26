@@ -3,7 +3,7 @@
 <head  >
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/js/admin/issue_status.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/issue_status.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="/dev/lib/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js" type="text/javascript" charset="utf-8"></script>
@@ -123,7 +123,7 @@
                                 <select   id="id_color" name="params[color]" class="selectpicker"  title="请选择"   >
 
                                     {% for color in colors %}
-                                        <option value="{{color}}"  data-content="<span class='label label-{{color}}'>{{color}}</span>">{{color}}</option>
+                                        <option value="<?=color?>"  data-content="<span class='label label-<?=color?>'><?=color?></span>"><?=color?></option>
                                     {% endfor %}
 
                                 </select>
@@ -199,7 +199,7 @@
                             <div class="form-group">
                                 <select   id="edit_color" name="params[color]" class="selectpicker"  title="请选择"   >
                                     {% for color in colors %}
-                                        <option value="{{color}}"  data-content="<span class='label label-{{color}}'>{{color}}</span>">{{color}}</option>
+                                        <option value="<?=color?>"  data-content="<span class='label label-<?=color?>'><?=color?></span>"><?=color?></option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -271,7 +271,7 @@
 </script>{% endverbatim %}
 
 
-<script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
 <script type="text/javascript">
 
     var $IssueStatus = null;

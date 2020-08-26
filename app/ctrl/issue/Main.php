@@ -1144,6 +1144,11 @@ class Main extends BaseUserCtrl
             $model = new IssueFixVersionModel();
             $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
         }
+        // effect version
+        if (isset($params['effect_version'])) {
+            $model = new IssueEffectVersionModel();
+            $issueLogic->addChildData($model, $issueId, $params['effect_version'], 'version_id');
+        }
         // labels
         if (isset($params['labels'])) {
             $model = new IssueLabelDataModel();
@@ -1243,7 +1248,12 @@ class Main extends BaseUserCtrl
         }
     }
 
-    private function initAddGanttWeight($params = [], &$info)
+    /**
+     * @param array $params
+     * @param $info
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function initAddGanttWeight($params, &$info)
     {
         // 如果是不在甘特图提交的
         $fieldWeight = 'gant_sprint_weight';
@@ -1870,8 +1880,7 @@ class Main extends BaseUserCtrl
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-
-        $event = new CommonPlacedEvent($this, $issueId);
+        $event = new CommonPlacedEvent($this, $issue);
         $this->dispatcher->dispatch($event,  Events::onIssueFollow);
         $this->ajaxSuccess('success', $ret);
     }

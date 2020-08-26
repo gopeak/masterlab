@@ -130,8 +130,8 @@
 
 <script>
 
-    var _cur_project_id = '{{project_id}}';
-    var _active_sprint_id = '{{activeSprint['id']}}';
+    var _cur_project_id = '<?=project_id?>';
+    var _active_sprint_id = '<?=activeSprint['id']?>';
 
     var ctx_sprint_pie = document.getElementById('sprint_pie').getContext('2d');
     var ctx_sprint_bar = document.getElementById('sprint_bar').getContext('2d');
@@ -170,7 +170,7 @@
 
 <script type="text/javascript">
     $(function () {
-        var sprint_end_date = '{{count_down_date}}';
+        var sprint_end_date = '<?=count_down_date?>';
         $('#getting-started').countdown(sprint_end_date, function (event) {
             $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
         });

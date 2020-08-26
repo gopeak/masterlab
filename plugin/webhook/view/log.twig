@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head>
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/js/admin/webhook_log.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>"  type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
+</head>
+
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body system-page">
+    {% include 'twig/common/body/header-content.twig' %}
+
+
+    <div class="page-with-sidebar">
+    {% include 'twig/admin/common-page-nav-admin.twig' %}
+
+
+    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+        <div class="alert-wrapper">
+            <div class="flash-container flash-container-page">
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="content" id="content-body">
+                <div class="row  ">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+
+                            <ul class="nav-links">
+                                <li id="state-list"  class="state_li " data-value="list">
+                                    <a  title="Webhook列表" href="/admin/plugin/webhook/" ><span> Url列表 </span>
+                                    </a>
+                                </li>
+                                <li id="state-log"  class="state_li active" data-value="log">
+                                    <a  title="执行日志" href="/admin/plugin/webhook/log" ><span> 执行日志 </span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <form id="filter_form" action="" onsubmit="return false" accept-charset="UTF-8" method="get">
+                                    <input name="page" id="filter_page" type="hidden" value="1">
+                                    <input name="sort_by" id="filter_sort_by" type="hidden" value="desc">
+                                    <input name="sort_field" id="filter_sort_field" type="hidden" value="id">
+                                    <!--<input type="search" name="content" id="filter_content" placeholder="内 容" class="form-control search-text-input input-short" spellcheck="false" value="" />-->
+                                    <select  id="id_webhook_id" name="webhook_id" class="selectpicker show-tick"  title="webhook名称"   data-width="auto" >
+                                        <option value="">请选择</option>
+                                        {% for key,webhook in webhook_arr %}
+                                            <option value="<?=webhook.id?>"><?=webhook.name?></option>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="event_name" id="id_event_name" title="事件" class="selectpicker show-tick"  data-width="auto"  >
+                                        <option value="">请选择</option>
+                                        {% for key, events in hook_event_arr %}
+                                            <optgroup label="<?=key?>">
+                                                {% for event_key,event_name in events %}
+                                                    {% set selected = '' %}
+                                                    {% if event_key  in default_hook_event_arr %}
+                                                        {% set selected = 'selected' %}
+                                                    {% endif %}
+                                                    <option  value="<?=event_key?>" <?=selected?> data-subtext="<?=event_key?>"><?=event_name?></option>
+                                                {% endfor %}
+                                            </optgroup>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="text" class="laydate_input_date form-control"  name="start_datetime" id="start_datetime" value="" placeholder="起始时间" autocomplete="off" lay-key="1">
+                                    <input type="text" class="laydate_input_date form-control" name="end_datetime" id="end_datetime" value="" placeholder="截止时间" autocomplete="off" lay-key="2">
+
+                                    <div class="btn-group">
+                                        <a class="btn btn-gray" id="btn-filter" href="#">
+                                            <i class="fa fa-filter"></i> 筛 选
+                                        </a>
+                                        <a class="btn"  href="#"  id="btn-reset"    >
+                                            <i class="fa fa-undo"></i> 重 置
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="content-list">
+
+                            <div class="table-holder">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="js-pipeline-commit pipeline-commit">Webhook名称</th>
+                                        <th class="js-pipeline-commit pipeline-commit">事件</th>
+                                        <th class="js-pipeline-stages pipeline-info">Url</th>
+                                        <th class="js-pipeline-stages pipeline-info">事件</th>
+                                        <th class="js-pipeline-date pipeline-date">执行信息</th>
+                                        <th class="js-pipeline-date pipeline-date">状态</th>
+                                        <th >操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="logs_wrap">
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </div>
+</section>
+
+<script id="logs_tpl" type="text/html">
+    <?=#logs_arr?>
+    <tr class="commit">
+            <td>
+             <?=webhook_name?>
+            </td>
+            <td>
+               <?=event_name?>
+            </td>
+            <td>
+              <?=url?>
+            </td>
+            <td>
+            <?=time_text?>
+            </td>
+            <td>
+                <?={err_msg?>}
+            </td>
+            <td>
+                 <span class="label <?=status_bg?>"  > <?=status_text?> </span>
+            </td>
+            <td  >
+                <div class="controls member-controls " >
+                    <?=#if_eq status '4'?>
+                        <a class="user_for_active btn btn-transparent " data-uid="<?=uid?>"   href="#"  >
+                            重新发送
+                        </a>
+                    <?=/if_eq?>
+                    <?=#if_eq is_system '0'?>
+                        <?=#if_eq myself '0'?>
+                            <a class="user_for_delete btn btn-transparent"   href="javascript:userDelete(<?=uid?>);" style="padding: 6px 2px;">
+                                <i class="fa fa-trash"></i>
+                                <span class="sr-only">删除</span>
+                            </a>
+                        <?=/if_eq?>
+                    <?=/if_eq?>
+                </div>
+
+            </td>
+        </tr>
+    <?=/logs_arr?>
+    <div class="text-center" style="margin-top: .8em;">
+        <span class="text-center">
+                总数:<span id="issue_count"><?=total?></span> 每页显示:<span id="page_size"><?=page_size?></span>
+        </span>
+    </div>
+    <div class="gl-pagination" id="ampagination-bootstrap" style="  border-top: 0px solid #e5e5e5; ">
+
+    </div>
+</script>
+
+
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+    var $webhookLogAjax = null;
+
+    $(function() {
+        let options = {
+            list_render_id:"logs_wrap",
+            list_tpl_id:"logs_tpl",
+            filter_url: "/admin/plugin/webhook/fetchLogs"
+        };
+        $webhookLogAjax = new WebhookLog(options);
+        $webhookLogAjax.fetchLogs();
+
+        $("#btn-filter").click(function(){
+            $webhookLogAjax.fetchLogs()
+        });
+
+        $("#btn-reset").click(function(){
+            $webhookLogAjax.resetFormData()
+        });
+
+
+        laydate.render({
+            elem: '#start_datetime'
+            , type: 'datetime'
+            , trigger: 'click'
+        });
+        laydate.render({
+            elem: '#end_datetime'
+            , type: 'datetime'
+            , trigger: 'click'
+        });
+
+    });
+
+</script>
+</body>
+</html>

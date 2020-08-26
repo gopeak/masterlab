@@ -16,3 +16,4 @@ env.ini
 /app/public/develop
 app/public/install/lock
 /app/config/deploy/cache.cfg.php
+config.test.yml

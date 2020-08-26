@@ -67,6 +67,8 @@ class Group extends BaseAdminCtrl
             $this->error('参数错误', '用户组id为空');
             die;
         }
+        $userLogic = new UserLogic();
+        $data['users'] = $userLogic->getAllNormalUser(10000, false);
         $this->render('twig/admin/user/group_edit_users.twig', $data);
     }
 
