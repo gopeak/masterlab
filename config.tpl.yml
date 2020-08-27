@@ -23,9 +23,10 @@ cache:
 session:
   handle: file
   cache_expire: 86400
-  gc_maxlifetime: 24*60*7*3600
-  cookie_lifetime: 24*60*7*3600
+  gc_maxlifetime: 864000
+  cookie_lifetime: 864000
   gc_probability: 1
+  gc_divisor: 100
   no_session_cmd:
     - '/version/gets'
 
