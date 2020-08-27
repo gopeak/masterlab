@@ -3,17 +3,17 @@
 namespace main\app\model;
 
 /**
- *  项目模板模型
+ *  ProjectTemplateDisplayCategoryModel 模型
  */
-class ProjectTemplateModel extends CacheModel
+class ProjectTemplateDisplayCategoryModel extends CacheModel
 {
-    public $prefix = 'project_';
+    public $prefix = 'project_template_';
 
-    public $table = 'template';
+    public $table = 'display_category';
 
     public $fields = '*';
 
-    const   DATA_KEY = 'project_tamplate';
+    const   DATA_KEY = 'project_template_display_category';
 
     /**
      * WidgetModel constructor.
@@ -43,9 +43,9 @@ class ProjectTemplateModel extends CacheModel
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getByKey($key)
+    public function getByName($name)
     {
-        $row = $this->getRow($this->fields, ['_key' => $key]);
+        $row = $this->getRow($this->fields, ['name' => $name]);
         return $row;
     }
 
@@ -58,6 +58,11 @@ class ProjectTemplateModel extends CacheModel
         return $this->getRows('*', [], null, 'order_weight', 'desc');
     }
 
+
+    /**
+     * @param $categoryId
+     * @return array
+     */
     public function getItems($categoryId=null)
     {
         $conditionArr = [];

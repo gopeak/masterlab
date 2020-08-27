@@ -14,6 +14,7 @@ use main\app\classes\UserLogic;
 use main\app\classes\SettingsLogic;
 use main\app\classes\ConfigLogic;
 use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\ProjectTemplateDisplayCategoryModel;
 use main\app\model\ProjectTemplateModel;
 use main\app\model\user\UserModel;
 use main\app\classes\UploadLogic;
@@ -54,23 +55,37 @@ class ProjectTpl extends BaseAdminCtrl
         $data = [];
         $data['title'] = '项目';
         $data['sub_nav_active'] = 'project_tpl';
-
-        $outProjectTypeList = [];
-        $data['type_list'] = $outProjectTypeList;
-
+        $data['left_nav_active'] = 'all';
+        $data['category_id'] = isset($_GET['category_id']) ? $_GET['category_id'] :'';
+        $categoryModel = new ProjectTemplateDisplayCategoryModel();
+        $data['category_arr'] = $categoryModel->getAllItems();
         $data['projects'] = ConfigLogic::getJoinProjects();
-
-        $this->render('gitlab/admin/project_tpl/list.twig', $data);
+        $this->render('gitlab/admin/project_tpl/index.twig', $data);
     }
 
+    public function pageDetail()
+    {
+        $userId = UserAuth::getId();
+
+        $data = [];
+        $data['title'] = '项目';
+        $data['sub_nav_active'] = 'project_tpl';
+        $data['left_nav_active'] = 'all';
+
+        $categoryModel = new ProjectTemplateDisplayCategoryModel();
+        $data['category_arr'] = $categoryModel->getAllItems();
+        $data['projects'] = ConfigLogic::getJoinProjects();
+        $this->render('gitlab/admin/project_tpl/index.twig', $data);
+    }
     /**
      * @param int $typeId
      * @throws \Exception
      */
     public function fetchAll()
     {
+        $categoryId = isset($_GET['category_id']) && !empty($_GET['category_id']) ? $_GET['category_id'] :null;
         $projectTplModel = new ProjectTemplateModel();
-        $projectTpls = $projectTplModel->getAllItems();
+        $projectTpls = $projectTplModel->getItems( $categoryId );
         $data['project_tpls'] = $projectTpls;
 
         $this->ajaxSuccess('success', $data);
