@@ -2,13 +2,16 @@
 
 namespace main\app\ctrl\admin;
 
+use Doctrine\Common\Inflector\Inflector;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\ctrl\BaseCtrl;
 use main\app\model\issue\IssueModel;
 use main\app\model\OrgModel;
+use main\app\model\PluginModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;
 use main\app\classes\SettingsLogic;
@@ -63,20 +66,197 @@ class ProjectTpl extends BaseAdminCtrl
         $this->render('gitlab/admin/project_tpl/index.twig', $data);
     }
 
-    public function pageDetail()
+    /**
+     * @throws \Exception
+     */
+    public function pageEdit()
     {
-        $userId = UserAuth::getId();
-
         $data = [];
         $data['title'] = '项目';
         $data['sub_nav_active'] = 'project_tpl';
         $data['left_nav_active'] = 'all';
-
+        $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
+        $model = new ProjectTemplateModel();
+        $tpl = $model->getById($data['id']);
+        $data['tpl'] = $tpl;
+        $data['action'] = 'update';
         $data['category_arr'] = $categoryModel->getAllItems();
-        $data['projects'] = ConfigLogic::getJoinProjects();
-        $this->render('gitlab/admin/project_tpl/index.twig', $data);
+        $this->render('gitlab/admin/project_tpl/form.twig', $data);
     }
+
+    public function pageDetail()
+    {
+        $data = [];
+        $data['title'] = '项目';
+        $data['sub_nav_active'] = 'project_tpl';
+        $data['left_nav_active'] = 'all';
+        $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
+        $categoryModel = new ProjectTemplateDisplayCategoryModel();
+        $model = new ProjectTemplateModel();
+        $tpl = $model->getById($data['id']);
+        $data['tpl'] = $tpl;
+        $data['action'] = 'update';
+        $data['category_arr'] = $categoryModel->getAllItems();
+        $this->render('gitlab/admin/project_tpl/detail.twig', $data);
+    }
+
+    public function pageCopy()
+    {
+        $data = [];
+        $data['title'] = '项目';
+        $data['sub_nav_active'] = 'project_tpl';
+        $data['left_nav_active'] = 'all';
+        $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
+        $categoryModel = new ProjectTemplateDisplayCategoryModel();
+        $model = new ProjectTemplateModel();
+        $tpl = $model->getById($data['id']);
+        $data['tpl'] = $tpl;
+        $data['action'] = 'add';
+        $data['category_arr'] = $categoryModel->getAllItems();
+        $this->render('gitlab/admin/project_tpl/form.twig', $data);
+    }
+
+
+    /**
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public function add()
+    {
+        if (empty($_POST)) {
+            $this->ajaxFailed('错误', '没有提交表单数据');
+        }
+        $_POST['name'] = trimStr($_POST['name']);
+        if (isset($_POST['name']) && empty($_POST['name'])) {
+            $errorMsg['name'] = '名称不能为空';
+        }
+        if (isset($_POST['category_id']) && empty($_POST['category_id'])) {
+            $errorMsg['category_id'] = '类型不能为空';
+        }
+        $model = new ProjectTemplateModel();
+        if (isset($model->getByName($_POST['name'])['id'])) {
+            $errorMsg['name'] = '名称已经被使用';
+        }
+
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+        $name = trimStr($_POST['name']);
+        $info = [];
+        $info['name'] = $name;
+        $info['category_id'] = $_POST['category_id'];
+        $info['is_system'] = '0';
+        if (isset($_POST['description'])) {
+            $info['description'] = $_POST['description'];
+        }
+        if (isset($_POST['image_bg'])) {
+            $info['image_bg'] = $_POST['image_bg'];
+        }
+        list($ret ,$msg) = $model->insertItem($info);
+        if ($ret) {
+            $this->ajaxSuccess('操作成功');
+        } else {
+            $this->ajaxFailed('服务器错误:', $msg);
+        }
+    }
+
+    /**
+     * 更新插件数据
+     * @param $id
+     * @param $params
+     * @throws \Exception
+     */
+    public function update()
+    {
+        $id = null;
+        if (isset($_POST['id'])) {
+            $id = (int)$_POST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+        $errorMsg = [];
+        if (isset($_POST['title']) && empty($_POST['title'])) {
+            $errorMsg['title'] = '标题不能为空';
+        }
+        if (isset($_POST['type']) && empty($_POST['type'])) {
+            $errorMsg['type'] = '类型不能为空';
+        }
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
+
+        $id = (int)$id;
+        $model = new PluginModel();
+        $row = $model->getById($id);
+        if (!isset($row['id'])) {
+            $this->ajaxFailed('参数错误,数据不存在');
+        }
+        unset($row);
+
+        $info = [];
+        if (isset($_POST['title'])) {
+            $info['title'] = $_POST['title'];
+        }
+        if (isset($_POST['type'])) {
+            $info['type'] = $_POST['type'];
+        }
+        if (isset($_POST['url'])) {
+            $info['url'] = $_POST['url'];
+        }
+        if (isset($_POST['version'])) {
+            $info['version'] = $_POST['version'];
+        }
+        if (isset($_POST['description'])) {
+            $info['description'] = $_POST['description'];
+        }
+        if (isset($_POST['icon'])) {
+            $info['icon_file'] = $_POST['icon'];
+        }
+        if (isset($_POST['company'])) {
+            $info['company'] = $_POST['company'];
+        }
+        if (!empty($info)) {
+            $model->updateById($id, $info);
+        }
+        $this->ajaxSuccess('操作成功');
+    }
+
+    /**
+     * 删除插件，包括插件目录,谨慎操作
+     * @param $id
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        $name = null;
+        if (isset($_POST['name'])) {
+            $name = trimStr($_POST['name']);
+        }
+        if (!$name) {
+            $this->ajaxFailed('参数错误', '名称不能为空');
+        }
+        $model = new PluginModel();
+        $pluginRow = $model->getByName($name);
+        if (!empty($pluginRow)) {
+            //$errorMsg['name'] = '插件已卸载或不存在';
+            if($pluginRow['is_system']=='1'){
+                $this->ajaxFailed('参数错误', '系统自带的插件不能删除');
+            }
+
+            $model->deleteById($pluginRow['id']);
+        }
+        $pluginDirName = PLUGIN_PATH . $name;
+        $this->rrmdir($pluginDirName);
+
+
+        $this->ajaxSuccess('操作成功');
+
+    }
+
     /**
      * @param int $typeId
      * @throws \Exception

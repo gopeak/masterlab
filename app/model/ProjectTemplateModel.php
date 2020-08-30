@@ -37,6 +37,31 @@ class ProjectTemplateModel extends CacheModel
         return $this->getRowById($id);
     }
 
+
+    /**
+     * @param $name
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getByName($name)
+    {
+        $where = ['name' => trim($name)];
+        $row = $this->getRow("*", $where);
+        return $row;
+    }
+
+
+    /**
+     * @param $name
+     * @return false|mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getIdByName($name)
+    {
+        $where = ['name' => trim($name)];
+        $id = $this->getField("id", $where);
+        return $id;
+    }
     /**
      * 通过 key 获取面板
      * @param $key

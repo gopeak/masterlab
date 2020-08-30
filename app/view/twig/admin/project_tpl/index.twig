@@ -102,7 +102,7 @@
                                 </ul>
                                 <div class="nav-controls">
                                     <div class="btn-group" role="group">
-                                        <a class="btn btn-new js-key-create"  id="btn-create_plugin">
+                                        <a class="btn btn-new js-key-create"  id="btn-create_project_tpl">
                                             <i class="fa fa-plus"></i>
                                             创建模板
                                         </a>
@@ -129,7 +129,7 @@
     </div>
 </div>
 
-    <div class="modal" id="modal-plugin">
+    <div class="modal" id="modal-project_tpl">
     <form class="js-quick-submit js-upload-blob-form form-horizontal"
           id="form-plugin"
           action="/admin/plugin_manager/add"
@@ -155,51 +155,20 @@
                             </div>
                         </div>
                         <div class="col-sm-4">
-                                <span id="tip_name">名称只能以英文字母开始，不能包含特殊字符和中文</span>
+                                <span id="tip_name"></span>
                         </div>
 
                     </div>
+
                     <div class="form-group">
-                        <label class="control-label" for="id_title">标题:<span class="required"> *</span></label>
+                        <label class="control-label" for="id_category">类型:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="title" id="id_title"  value="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_type">类型:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <select  id="id_type" name="type" class="selectpicker"  title="请选择" >
-                                    {% for key,type in type_arr %}
-                                        <option value="<?=key?>"><?=type?></option>
+                                <select  id="id_category" name="category_id" class="selectpicker"  title="请选择" >
+                                    {% for index,category in category_arr %}
+                                        <option value="<?=category.id?>"><?=category.name?></option>
                                     {% endfor %}
                                 </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_version">版本:<span class="required"> </span></label>
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="version" id="id_version"  value="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_url">URL:<span class="required"> </span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="url" id="id_url"  value="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_company">提供方:<span class="required"> </span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="company" id="id_company"  value="" />
                             </div>
                         </div>
                     </div>
@@ -214,13 +183,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_icon">
-                            <span>图标</span>
+                        <label class="control-label" for="id_image_bg">
+                            <span>图片</span>
                         </label>
                         <div class="col-sm-6">
-                            <input type="hidden" name="icon" id="id_icon" value=""/>
+                            <input type="hidden" name="image_bg" id="id_image_bg" value=""/>
                             <div id="fine-uploader-gallery"></div>
-                            <div class="help-block">图片大小被限制为100KB.</div>
+                            <div class="help-block">用做显示的背景图,图片大小不能超过100K</div>
                         </div>
 
                     </div>
@@ -230,8 +199,8 @@
                     <button name="submit"
                             type="button"
                             class="btn btn-create js-key-modal-enter1"
-                            id="btn-plugin_save"
-                            title="在app/plugin下取模板名称作为目录名，为模板源码目录">提 交</button>
+                            id="btn-project_tpl_save"
+                            title="保存并进一步配置数据">保存并下一步配置</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
@@ -351,10 +320,10 @@
             <h3>{{name}}</h3>
             <p style="min-height: 30px;max-height: 40px">{{description}}</p>
             <p style="float: right">
-            <a href="#" class="gray" role="button">详情</a>
-            <a href="#" class="gray" role="button">编辑</a>
-            <a href="#" class="gray" role="button">复制</a>
-            <a href="#" class="gray"  >删除</a>
+            <a href="/admin/project_tpl/detail" class="gray" role="button">详情</a>
+            <a href="/admin/project_tpl/edit?id={{id}}" class="gray" role="button">编辑</a>
+            <a href="/admin/project_tpl/copy?id={{id}}" class="gray" role="button">复制</a>
+            <a href="javascript:;" class="gray"  >删除</a>
             </p>
           </div>
         </div>
@@ -407,7 +376,7 @@
         });
 
 
-        $("#modal-plugin").on('show.bs.modal', function (e) {
+        $("#modal-project_tpl").on('show.bs.modal', function (e) {
 
             keyMaster.addKeys([
                 {
@@ -440,7 +409,7 @@
                 onComplete: function (id, fileName, responseJSON) {
                     console.log(responseJSON);
                     if (responseJSON.error === '') {
-                        $('#id_icon').val('/attachment/'+responseJSON.relate_path);
+                        $('#id_image_bg').val('/attachment/'+responseJSON.relate_path);
                     }
                 }
             }

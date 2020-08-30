@@ -6,14 +6,14 @@ var PluginTemplate = (function() {
     // constructor
     function PluginTemplate( options ) {
         _options = options;
-        $("#btn-plugin_save").click(function(){
+        $("#btn-project_tpl_save").click(function(){
             if($('#id_action').val()==='add'){
                 PluginTemplate.prototype.add();
             }else{
                 PluginTemplate.prototype.update();
             }
         });
-        $("#btn-create_plugin").click(function(){
+        $("#btn-create_project_tpl").click(function(){
             PluginTemplate.prototype.create();
         });
 
@@ -83,15 +83,15 @@ var PluginTemplate = (function() {
 
 
     PluginTemplate.prototype.create = function( ) {
-        $("#modal-plugin").modal('show');
+        $("#modal-project_tpl").modal('show');
         $('#modal-header-title').html('创建模板');
         $('#form-plugin')[0].reset();
         $("#id_action").val('add');
         $("#id_name").attr('readonly', false);
         $('#tip_name').show();
-        $("#id_icon").val('');
-        $("#id_type").val('module');
-        $("#id_type").selectpicker('refresh');
+        $("#id_image_bg").val('');
+        $("#id_category").val('');
+        $("#id_category").selectpicker('refresh');
         console.log(window.uploader)
         window.uploader.reset();
 
@@ -99,7 +99,7 @@ var PluginTemplate = (function() {
 
     PluginTemplate.prototype.edit = function(id ) {
 
-        $("#modal-plugin").modal('show');
+        $("#modal-project_tpl").modal('show');
         $('#modal-header-title').html('编辑模板');
         $("#id_action").val('update');
         loading.show('#modal-body');
@@ -115,15 +115,10 @@ var PluginTemplate = (function() {
                 auth_check(resp);
                 $("#edit_id").val(resp.data.id);
                 $("#id_name").val(resp.data.name);
-                $("#id_name").attr('readonly', true);
                 $('#tip_name').hide();
-                $("#id_title").val(resp.data.title);
-                $("#id_type").val(resp.data.type);
-                $("#id_version").val(resp.data.version);
-                $("#id_url").val(resp.data.url);
-                $("#id_company").val(resp.data.company);
+                $("#id_category").val(resp.data.type);
                 $("#id_description").text(resp.data.description);
-                $("#id_icon").val(resp.data.icon_file);
+                $("#id_image_bg").val(resp.data.image_bg);
 
                 $('.selectpicker').selectpicker('refresh');
             },
@@ -148,7 +143,7 @@ var PluginTemplate = (function() {
             success: function (resp) {
                 auth_check(resp);
                 if( resp.ret ==='200'  ){
-                    window.location.reload();
+                    alert('保存成功,跳转下一页');
                 }else{
                     notify_error( resp.msg ,resp.data);
                 }

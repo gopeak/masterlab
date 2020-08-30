@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head>
+
+    {% include 'twig/common/header/include.twig' %}
+
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="/dev/js/org/project_tpl.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+
+    <!-- Fine Uploader jQuery JS file-->
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
+
+    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
+
+
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body background-white">
+        {% include 'twig/common/body/header-content.twig' %}
+
+        <div class="page-with-sidebar">
+
+            <div class="content-wrapper page-with-layout-nav ">
+                <div class="alert-wrapper">
+
+                    <div class="flash-container flash-container-page">
+                    </div>
+
+                </div>
+                <div class="container-fluid container-limited">
+                    <div class="content" id="content-body">
+                        <h3 class="page-title"><?=tpl.name?>--配置</h3>
+                        <p><?=tpl.description?></p>
+                        <hr>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="top-area">
+                                    <ul class="nav-links">
+                                        <li id="state-ui"  class="state_li active" data-value="">
+                                            <a  title="界面方案" href="#" ><span> 界面方案 </span>
+                                            </a>
+                                        </li>
+                                        <li id="state-issue"  class="state_li" data-value="<?=status_normal?>">
+                                            <a title="事项方案" href="#"><span> 事项方案 </span>
+                                            </a>
+                                        </li>
+                                        <li id="state-subsystem" class="state_li" data-value="<?=status_disabled?>">
+                                            <a  title="项目拥有的子系统" href="#"><span>子系统</span></a>
+                                        </li>
+                                        <li id="state-role" class="state_li" data-value="<?=status_disabled?>">
+                                            <a  title="项目也有的子系统" href="#"><span>角色权限</span></a>
+                                        </li>
+                                        <li id="state-module" class="state_li" data-value="<?=status_disabled?>">
+                                            <a  title="初始模块" href="#"><span>初始模块</span></a>
+                                        </li>
+                                        <li id="state-label" class="state_li" data-value="<?=status_disabled?>">
+                                            <a  title="初始标签&分类" href="#"><span>初始标签&分类</span></a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <div class="content-list">
+                                    <div class="table-holder">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th class="js-pipeline-commit pipeline-commit">账号</th>
+                                                <th class="js-pipeline-commit pipeline-commit">Email</th>
+                                                <th class="js-pipeline-stages pipeline-info">最近登录时间</th>
+                                                <th class="js-pipeline-stages pipeline-info">用户组</th>
+                                                <th class="js-pipeline-date pipeline-date">创建时间</th>
+                                                <th class="js-pipeline-date pipeline-date">状态</th>
+                                                <th >操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="render_id">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="gl-pagination" id="ampagination-bootstrap">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- Fine Uploader Gallery template
+   ====================================================================== -->
+
+<script type="text/javascript">
+
+    var _issueConfig = {};
+    var _fineUploader = null;
+    var $org = null;
+
+    $(function () {
+
+
+    });
+
+</script>
+
+</body>
+</html>
