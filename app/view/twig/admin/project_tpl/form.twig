@@ -3,16 +3,19 @@
 <head>
 
     {% include 'twig/common/header/include.twig' %}
-
-    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript"
-            charset="utf-8"></script>
-    <script src="/dev/js/org/project_tpl.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+    <script src="/dev/lib/jquery.gridly/javascripts/jquery.gridly.js" type="text/javascript"></script>
+    <script src="/dev/lib/jquery.gridly/javascripts/rainbow.js" type="text/javascript"></script>
+    <link href="/dev/lib/jquery.gridly/stylesheets/jquery.gridly.css" rel="stylesheet" type="text/css" />
+    <link href="/dev/lib/jquery.gridly/stylesheets/sample.css" rel="stylesheet" type="text/css" />
 
     <!-- Fine Uploader jQuery JS file-->
     <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
@@ -32,70 +35,247 @@
         {% include 'twig/common/body/header-content.twig' %}
 
         <div class="page-with-sidebar">
-
+            {% include 'twig/admin/common-page-nav-admin.twig' %}
             <div class="content-wrapper page-with-layout-nav ">
                 <div class="alert-wrapper">
-
                     <div class="flash-container flash-container-page">
                     </div>
-
                 </div>
                 <div class="container-fluid container-limited">
                     <div class="content" id="content-body">
+                        {% include 'twig/admin/common_project_tpl_left_nav.twig' %}
                         <h3 class="page-title"><?=tpl.name?>--配置</h3>
                         <p><?=tpl.description?></p>
-                        <hr>
+
                         <div class="row">
-                            <div class="col-lg-12">
-                                <div class="top-area">
-                                    <ul class="nav-links">
-                                        <li id="state-ui"  class="state_li active" data-value="">
-                                            <a  title="界面方案" href="#" ><span> 界面方案 </span>
+                            <div class="content-list">
+                                   <ul class="nav-links" role="tablist">
+                                        <li  role="presentation"    class="active" >
+                                            <a title="界面方案"  href="#ui" id="ui-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span> 界面方案 </span>
                                             </a>
                                         </li>
-                                        <li id="state-issue"  class="state_li" data-value="<?=status_normal?>">
-                                            <a title="事项方案" href="#"><span> 事项方案 </span>
+                                        <li  role="presentation"   class="" >
+                                            <a title="事项方案"  href="#issue" id="issue-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span> 事项方案 </span>
                                             </a>
                                         </li>
-                                        <li id="state-subsystem" class="state_li" data-value="<?=status_disabled?>">
-                                            <a  title="项目拥有的子系统" href="#"><span>子系统</span></a>
+                                        <li  role="presentation"   class="">
+                                            <a  title="项目拥有的子系统"  href="#subsystem" id="subsystem-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>子系统</span></a>
                                         </li>
-                                        <li id="state-role" class="state_li" data-value="<?=status_disabled?>">
-                                            <a  title="项目也有的子系统" href="#"><span>角色权限</span></a>
+                                        <li  role="presentation"  class="">
+                                            <a  title="项目也有的子系统"  href="#role" id="role-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>角色权限</span></a>
                                         </li>
-                                        <li id="state-module" class="state_li" data-value="<?=status_disabled?>">
-                                            <a  title="初始模块" href="#"><span>初始模块</span></a>
+                                        <li  role="presentation"   class="" >
+                                            <a  title="初始模块"  href="#module" id="module-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始模块</span></a>
                                         </li>
-                                        <li id="state-label" class="state_li" data-value="<?=status_disabled?>">
-                                            <a  title="初始标签&分类" href="#"><span>初始标签&分类</span></a>
+                                        <li  role="presentation"   class="">
+                                            <a  title="初始标签&分类"  href="#label" id="label-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始标签&分类</span></a>
                                         </li>
                                     </ul>
 
-                                </div>
-                                <div class="content-list">
-                                    <div class="table-holder">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th class="js-pipeline-commit pipeline-commit">账号</th>
-                                                <th class="js-pipeline-commit pipeline-commit">Email</th>
-                                                <th class="js-pipeline-stages pipeline-info">最近登录时间</th>
-                                                <th class="js-pipeline-stages pipeline-info">用户组</th>
-                                                <th class="js-pipeline-date pipeline-date">创建时间</th>
-                                                <th class="js-pipeline-date pipeline-date">状态</th>
-                                                <th >操作</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="render_id">
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="ui">
+                                            <div class="col-lg-9">
+                                                <div class="form-group">
 
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="gl-pagination" id="ampagination-bootstrap">
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <label class="label-light" for="layout">页面布局:</label>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <select class="form-control" name="params[page_layout]" id="page_layout">
+                                                                <option selected="selected" value="fixed">固定</option>
+                                                                <option value="fluid">自适应</option></select>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="help-block">在固定（最大1200 px）和自适应（100%）应用程序布局之间进行选择。</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <label class="label-light" for="project_view">项目首页显示:</label>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <select class="form-control" name="params[project_view]" id="project_view">
+                                                                <option selected="selected" value="issues">事项列表</option>
+                                                                <option value="summary">项目概要</option>
+                                                                <option value="backlog">待办事项</option>
+                                                                <option value="sprints">迭代列表</option>
+                                                                <option value="board">迭代看板</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="help-block">在项目概览页面中选择您希望看到的内容。</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <label class="label-light" for="issue_view">事项显示:</label>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <select class="form-control" name="params[issue_view]" id="issue_view">
+                                                                <option selected="selected" value="list">表格视图</option>
+                                                                <option value="detail">左右视图</option>
+                                                                <option value="responsive">响应式视图</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="help-block">在项目概览页面中选择您希望看到的内容。</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <input id="commit" type="button" name="commit" value="保存" class="btn btn-save js-key-enter">
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div role="tabpanel" class="tab-pane " id="issue">
+                                            <form id="form_add_action" class="form-horizontal  " action="/project/main/create" accept-charset="UTF-8" method="post">
+                                            <div class="form-group">
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="id_category">事项类型方案:<span class="required"> *</span></label>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <select  id="issue_type_scheme_id" name="issue_type_scheme_id" class="selectpicker"  title="请选择" >
+                                                            {% for index,category in category_arr %}
+                                                                <option value="<?=category.id?>"><?=category.name?></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="id_category">事项状态流方案:<span class="required"> *</span></label>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <select  id="issue_workflow_scheme_id" name="issue_workflow_scheme_id" class="selectpicker"  title="请选择" >
+                                                            {% for index,category in category_arr %}
+                                                                <option value="<?=category.id?>"><?=category.name?></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="id_category">事项表单流方案:<span class="required"> *</span></label>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <select  id="issue_ui_scheme_id" name="issue_ui_scheme_id" class="selectpicker"  title="请选择" >
+                                                            {% for index,category in category_arr %}
+                                                                <option value="<?=category.id?>"><?=category.name?></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </form>
+
+                                        </div>
+
+                                        <div role="tabpanel" class="tab-pane" id="subsystem">
+
+                                                <h1>jQuery Gridly</h1>
+                                                <p>Gridly is a jQuery plugin to enable dragging and dropping as well as resizing on a grids. In the example below try tapping or dragging any of the bricks.</p>
+                                                <h2>Example</h2>
+                                                <section class='example'>
+                                                    <div class='gridly'>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                        <div class='brick small'>
+                                                            <a class='delete' href='#'>&times;</a>
+                                                        </div>
+                                                    </div>
+                                                    <p class='actions'>
+                                                        <a class='add button' href='#'>Add</a>
+                                                    </p>
+                                                </section>
+                                                <h2>Installation</h2>
+                                                <p>To install download one of these packages and include the jquery.gridly.js and jquery.gridly.css files in your head with the following:</p>
+                                                <section class='formats'>
+                                                    <div class='format'>
+                                                        <a class='zip' href='packages/jquery.gridly.zip'></a>
+                                                    </div>
+                                                    <div class='format'>
+                                                        <a class='tar' href='packages/jquery.gridly.tar'></a>
+                                                    </div>
+                                                </section>
+
+
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="role">...</div>
+                                        <div role="tabpanel" class="tab-pane" id="module">...</div>
+                                        <div role="tabpanel" class="tab-pane" id="label">...</div>
                                     </div>
+
                                 </div>
-                            </div>
                         </div>
 
                     </div>
@@ -112,11 +292,55 @@
 
     var _issueConfig = {};
     var _fineUploader = null;
-    var $org = null;
+
+    // Generated by CoffeeScript 2.5.1
+    (function() {
+        $(function() {
+            var brick;
+            brick = "<div class='brick small'><div class='delete'>&times;</div></div>";
+            $(document).on("click touchend", ".gridly .brick", function(event) {
+                var $this, size;
+                event.preventDefault();
+                event.stopPropagation();
+                $this = $(this);
+                $this.toggleClass('small');
+                $this.toggleClass('large');
+                if ($this.hasClass('small')) { // HACK
+                    size = 140;
+                }
+                if ($this.hasClass('large')) { // HACK
+                    size = 300;
+                }
+                $this.data('width', size);
+                $this.data('height', size);
+                return $('.gridly').gridly('layout');
+            });
+            $(document).on("click", ".gridly .delete", function(event) {
+                var $this;
+                event.preventDefault();
+                event.stopPropagation();
+                $this = $(this);
+                $this.closest('.brick').remove();
+                return $('.gridly').gridly('layout');
+            });
+            $(document).on("click", ".add", function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                $('.gridly').append(brick);
+                return $('.gridly').gridly();
+            });
+            return $('.gridly').gridly();
+        });
+
+    }).call(this);
 
     $(function () {
 
-
+        $('.gridly').gridly({
+            base: 60, // px
+            gutter: 20, // px
+            columns: 12
+        });
     });
 
 </script>
