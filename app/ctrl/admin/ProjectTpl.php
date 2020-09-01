@@ -251,8 +251,6 @@ class ProjectTpl extends BaseAdminCtrl
         }
         $pluginDirName = PLUGIN_PATH . $name;
         $this->rrmdir($pluginDirName);
-
-
         $this->ajaxSuccess('操作成功');
 
     }

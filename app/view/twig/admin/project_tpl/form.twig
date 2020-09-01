@@ -4,6 +4,9 @@
 
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/js/admin/project_tpl.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl_role.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl_module.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
@@ -22,7 +25,6 @@
     <script src="/dev/lib/laydate/laydate.js"></script>
 
     <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
-
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -270,8 +272,78 @@
 
 
                                         </div>
-                                        <div role="tabpanel" class="tab-pane" id="role">...</div>
-                                        <div role="tabpanel" class="tab-pane" id="module">...</div>
+                                        <div role="tabpanel" class="tab-pane" id="role">
+
+                                            <div class="col-lg-12" style="margin-top: 40px">
+                                                <form id="form_add_role" class="setting-form clearfix" action="/project/role/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
+                                                    <input name="utf8" type="hidden" value="✓">
+                                                    <div class="form-group">
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <input style="margin-left: -15px;" type="text" name="params[name]" id="role_name" placeholder="角色名称" required="required" class="form-control">
+
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <input type="text" name="params[description]" id="role_description" placeholder="描 述" required="required" class="form-control">
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <input id="btn-role_add" type="button"   value="添 加" class="btn btn-create" >
+                                                    </div>
+                                                </form>
+
+                                                <div class="panel panel-default margin-t-lg">
+                                                    <div class="panel-heading">
+                                                        <strong>角色</strong>
+                                                    </div>
+                                                    <ul class="flex-list well-list content-list" id="role_list_render_id">
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="module">
+                                            <div class="col-lg-12" style="margin-top: 40px">
+                                                <form id="form_add_action" class="setting-form clearfix" action="/project/module/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
+
+                                                    <div class="form-group">
+
+                                                    </div>
+                                                    <div class="form-group  col-md-2">
+                                                        <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
+                                                               tabindex="1" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-md-4">
+                                                        <input type="text" name="description" id="description"  placeholder="说明"  class="form-control">
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <input type="submit" name="commit" value="添加模块" class="btn btn-create">
+                                                    </div>
+                                                    <input name="utf8" type="hidden" value="✓">
+                                                    <input type="hidden" name="authenticity_token" value="">
+                                                </form>
+
+                                                <div class="panel panel-form panel-default margin-t-lg">
+                                                    <div class="panel-heading">
+                                                        <strong>模块</strong>
+                                                        <div class="input-group member-search-form">
+                                                            <input type="search" name="search" id="search_input" placeholder="搜索模块" class="form-control" value="">
+                                                        </div>
+                                                    </div>
+                                                    <ul class="flex-list content-list" id="list_render_id">
+
+                                                    </ul>
+                                                </div>
+                                                <input name="page" id="filter_page" type="hidden" value="1">
+                                                <div class="gl-pagination border-0" id="ampagination-bootstrap">
+
+                                                </div>
+                                            </div>
+
+                                        </div>
                                         <div role="tabpanel" class="tab-pane" id="label">...</div>
                                     </div>
 
@@ -288,10 +360,228 @@
 <!-- Fine Uploader Gallery template
    ====================================================================== -->
 
+
+<div class="modal" id="modal-role_edit">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"
+          action="#"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑项目角色</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="edit_id" value="">
+                    <input type="hidden" name="format" id="format" value="json">
+                    <input type="hidden" name="project_id" value="<?=project_id?>">
+
+                    <div class="form-group">
+                        <label class="control-label" >名称:</label>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="" name="params[name]" id="edit_name" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" >描述:</label>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="params[description]" id="edit_description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button name="edit_role_save" type="button" class="btn  btn-create " id="btn-update">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="modal-permission_edit" data-keyboard=true role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_permission_edit"
+          action="#"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">权限分配</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="role_id" id="perm_role_id" value="">
+                    <input type="hidden" name="permission_ids" id="permission_ids" value="">
+
+                    <div class="form-group">
+                        <label class="control-label">角色名称:</label>
+                        <div class="col-sm-5">
+                            <div class="form-group" >
+                                <input type="text" class="form-control" disabled placeholder="" name="perm_role_name" id="perm_role_name" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_font_icon">权限分配:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group" style="margin-top: 7px;">
+                                <span class="text-muted"><input type="checkbox" name="" id="checkall"> <label for="checkall"><small>选中全部</small></label></span>
+                                <div id="container">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="btn-permission_update" type="button" class="btn btn-save" id="btn-permission_update">保存</button>
+                    <a  class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal" id="modal-edit-module-href">
+    <form class="form-horizontal"
+          id="form_edit_action"
+          action="/project/module/update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-edit-issue_title" class="modal-header-title">编辑模块 </h3>
+                </div>
+
+                <div class="modal-body">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="authenticity_token" value="">
+                    <input type="hidden" name="id" id="mod_form_id" value="" />
+
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">模块</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="mod_form_name" name="name" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">排序权重</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="mod_form_weight" name="weight" value="0" maxlength="6">
+                            <div class="help-block edited-text">数值越大权重越高</div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="mod_form_description" name="description"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="mod_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% verbatim %}
+<script type="text/html"  id="role_list_tpl">
+    {{#roles}}
+        <li>
+            <div class="pull-left append-right-10 hidden-xs">
+                <i class="fa fa-users key-icon"></i>
+            </div>
+            <div class="deploy-key-content key-list-item-info">
+                <strong class="title">
+                    {{name}}{{#if_eq is_system '1'}}
+                    {{^}}
+                    <span class="badge color-label " style="background-color: #428bca; color: #FFFFFF" >自定义</span>
+                    {{/if_eq}}
+                </strong>
+                <div class="description">
+                    {{description}}
+                </div>
+            </div>
+
+            <div class="deploy-key-content">
+                <div class="visible-xs-block visible-sm-block"></div>
+                    {{#if_eq is_system '1'}}
+                    {{^}}
+                    <a class="list_for_edit prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
+                        编 辑
+                    </a>
+                    <a class="list_for_delete prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
+                        删 除
+                    </a>
+                    {{/if_eq}}
+                    <a class="list_edit_perm prepend-left-10" rel="nofollow" data-id="{{id}}" data-name="{{name}}"  href="#">
+                        权 限
+                    </a>
+            </div>
+        </li>
+    {{/roles}}
+</script>
+<script type="text/x-handlebars-template" id="module_list_tpl">
+    {{#each modules}}
+    <li class="flex-row" id="li_data_id_{{id}}">
+        <div class="row-main-content ">
+            <a  href="{{../project_path.project_root_url}}/issues?模块={{name}}">
+                <span class="item-title">
+                    <i class="fa fa-th-large" ></i> {{name}}
+                </span>
+            </a>
+            <div class="block-truncated">
+                <div class="branch-commit">
+                    <div class="icon-container commit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 18" enable-background="new 0 0 36 18"><path d="m34 7h-7.2c-.9-4-4.5-7-8.8-7s-7.9 3-8.8 7h-7.2c-1.1 0-2 .9-2 2 0 1.1.9 2 2 2h7.2c.9 4 4.5 7 8.8 7s7.9-3 8.8-7h7.2c1.1 0 2-.9 2-2 0-1.1-.9-2-2-2m-16 7c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5"></path></svg>
+                    </div>
+                    <small class="edited-text">
+                        {{#if description}}
+                        <span>{{description}}</span>
+                        {{else}}
+                        <span>无描述</span>
+                        {{/if}}
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="pull-left hidden-xs hidden-sm hidden-md">
+            <a class="btn btn-transparent btn-action project_module_edit_click" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
+                <i class="fa fa-pencil-square-o"></i>
+            </a>
+            <a class="btn btn-transparent btn-action remove-row" title="删除模块" id="mod_remove" onclick="remove({{id}})" href="javascript:void(0)">
+                <i class="fa fa-trash-o"></i>
+            </a>
+        </div>
+
+    </li>
+    {{/each}}
+</script>
+{% endverbatim %}
 <script type="text/javascript">
 
     var _issueConfig = {};
     var _fineUploader = null;
+    var $modules = null;
+    var $role = null;
+
 
     // Generated by CoffeeScript 2.5.1
     (function() {
@@ -335,7 +625,6 @@
     }).call(this);
 
     $(function () {
-
         $('.gridly').gridly({
             base: 60, // px
             gutter: 20, // px
@@ -344,6 +633,35 @@
     });
 
 </script>
+
+<script>
+
+    $(function() {
+
+        let role_options = {
+            list_render_id:"role_list_render_id",
+            list_tpl_id:"role_list_tpl",
+            filter_url:"/admin/ProjectTplRole/fetchAll?id=<?=id?>"
+        };
+        window.$role = new ProjectTplRole( role_options );
+        window.$role.fetchAll();
+
+        let module_options = {
+            list_render_id:"module_list_render_id",
+            list_tpl_id:"module_list_tpl",
+            filter_url:"/admin/ProjectTplModule/fetchAll?id=<?=id?>"
+        };
+        window.$modules = new ProjectTplModule( module_options );
+        window.$modules.fetchAll();
+
+
+
+    });
+
+
+
+</script>
+
 
 </body>
 </html>

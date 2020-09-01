@@ -1,26 +1,26 @@
 
-let Module = (function() {
+let ProjectTplModule = (function() {
 
     let _options = {};
 
     // constructor
-    function Module (options) {
+    function ProjectTplModule (options) {
         _options = options;
     };
 
-    Module.prototype.getOptions = function () {
+    ProjectTplModule.prototype.getOptions = function () {
         return _options;
     };
 
-    Module.prototype.fetch = function (id) {
+    ProjectTplModule.prototype.fetch = function (id) {
 
     };
 
-    Module.prototype.add = function () {
+    ProjectTplModule.prototype.add = function () {
 
     };
 
-    Module.prototype.delete = function (project_id, module_id) {
+    ProjectTplModule.prototype.delete = function (project_id, module_id) {
         swal({
                 title: "您确定删除吗?",
                 text: "你将无法恢复它",
@@ -54,7 +54,7 @@ let Module = (function() {
 
     };
 
-    Module.prototype.edit = function (module_id) {
+    ProjectTplModule.prototype.edit = function (module_id) {
         $.ajax({
             type: 'GET',
             dataType: "json",
@@ -80,7 +80,7 @@ let Module = (function() {
         });
     };
 
-    Module.prototype.doedit = function (module_id, name, weight, description) {
+    ProjectTplModule.prototype.doedit = function (module_id, name, weight, description) {
         $.ajax({
             type: 'POST',
             dataType: "json",
@@ -92,7 +92,7 @@ let Module = (function() {
                 if (resp.ret == 200) {
                     $('#modal-edit-module-href').on('hidden.bs.modal', function (e) {
                         notify_success('操作成功');
-                        Module.prototype.fetchAll();
+                        ProjectTplModule.prototype.fetchAll();
                     });
                     $('#modal-edit-module-href').modal('hide');
                 } else {
@@ -108,17 +108,14 @@ let Module = (function() {
 
 
 
-    Module.prototype.fetchAll = function (module_name_keyword='') {
-        if (module_name_keyword != '') {
-            _options.query_param_obj["page"] = 1;
-        }
-        _options.query_param_obj["name"] = module_name_keyword;
+    ProjectTplModule.prototype.fetchAll = function ( ) {
+
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: _options.filter_url,
-            data: _options.query_param_obj,
+            data: {},
             success: function (resp) {
                 auth_check(resp);
                 if (resp.data.modules.length) {
@@ -136,18 +133,18 @@ let Module = (function() {
                                 console.log("Page item clicked, type: " + type + " page: " + page);
                                 $("#filter_page").val(page);
                                 _options.query_param_obj["page"] = page;
-                                Module.prototype.fetchAll();
+                                ProjectTplModule.prototype.fetchAll();
                             }
                         };
                         $('#ampagination-bootstrap').bootstrapPaginator(options);
                     }
 
                     $(".list_for_delete").click(function () {
-                        Module.prototype.delete($(this).data("id"));
+                        ProjectTplModule.prototype.delete($(this).data("id"));
                     });
 
                     $(".project_module_edit_click").bind("click", function () {
-                        Module.prototype.edit($(this).data('module_id'));
+                        ProjectTplModule.prototype.edit($(this).data('module_id'));
                     });
                 } else {
                     defineStatusHtml({
@@ -163,6 +160,6 @@ let Module = (function() {
         });
     };
 
-    return Module;
+    return ProjectTplModule;
 })();
 

@@ -1,0 +1,178 @@
+<?php
+
+namespace main\app\model;
+
+use main\app\model\CacheModel;
+
+/**
+ *   项目模块模型
+ */
+class ProjectTplModuleModel extends CacheModel
+{
+    public $prefix = 'project_tpl_';
+
+    public $table = 'module';
+
+    const   DATA_KEY = 'project_tpl_module/';
+
+    /**
+     * 用于实现单例模式
+     * @var self
+     */
+    protected static $instance;
+
+    /**
+     * 创建一个自身的单例对象
+     * @param bool $persistent
+     * @return self
+     * @throws \Exception
+     */
+    public static function getInstance($persistent = false)
+    {
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($persistent);
+        }
+        return self::$instance[$index];
+    }
+
+    public function __construct($uid = '', $persistent = false)
+    {
+        parent::__construct($uid, $persistent);
+
+        $this->uid = $uid;
+    }
+
+    /**
+     * @param bool $primaryKey
+     * @return array
+     */
+    public function getAll($primaryKey = true)
+    {
+        $table = $this->getTable();
+        return $this->getRows($fields = "id as k,{$table}.*", $conditions = [], $append = null, $ordryBy = 'id',
+            $sort = 'asc', $limit = null, $primaryKey);
+    }
+
+    /**
+     * @param $projectId
+     * @param bool $primaryKey
+     * @return array
+     */
+    public function getByProject($projectId, $primaryKey = false)
+    {
+        $fields = "*,{$this->primaryKey} as k";
+        $params = ['project_tpl_id' => (int)$projectId];
+        $rows = $this->getRows($fields, $params,$append = null, 'order_weight', 'DESC', $limit = null, $primaryKey );
+        return $rows;
+    }
+
+    public function deleteByProject($projectId)
+    {
+        $where = ['project_tpl_id' => $projectId];
+        $row = $this->delete($where);
+        return $row;
+    }
+
+    /**
+     * @param $projectId
+     * @param $id
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     */
+    public function removeById($projectId, $id)
+    {
+        $where = ['project_tpl_id' => $projectId, 'id' => $id];
+        $row = $this->delete($where);
+        return $row;
+    }
+
+    /**
+     * @param $projectId
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getAllCount($projectId)
+    {
+        return $this->getCount(array('project_tpl_id' => $projectId));
+    }
+
+    /**
+     * 检查名称是否已经存在
+     * @param $projectId
+     * @param $name
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function checkNameExist($projectId, $name)
+    {
+        $table = $this->getTable();
+        $conditions['project_tpl_id'] = $projectId;
+        $conditions['name'] = $name;
+        $sql = "SELECT count(*) as cc  FROM {$table} Where project_tpl_id=:project_tpl_id AND name=:name  ";
+        $count = (int)$this->getFieldBySql($sql, $conditions);
+        return $count > 0;
+    }
+
+    /**
+     * 检查名称是否已经存在，除了指定的记录id
+     * @param $id
+     * @param $projectId
+     * @param $name
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function checkNameExistExcludeCurrent($id, $projectId, $name)
+    {
+        $table = $this->getTable();
+        $conditions['id'] = $id;
+        $conditions['project_tpl_id'] = $projectId;
+        $conditions['name'] = $name;
+        $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND  project_tpl_id=:project_tpl_id AND name=:name  ";
+        $count = $this->getFieldBySql($sql, $conditions);
+        return $count > 0;
+    }
+
+    /**
+     * 通过id获取记录
+     * @param $id
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getById($id)
+    {
+        return $this->getRowById($id);
+    }
+
+    /**
+     * 通过名称获取记录
+     * @param $name
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getByName($name)
+    {
+        $conditions['name'] = trim($name);
+        $row = $this->getRow('*', $conditions);
+        return $row;
+    }
+
+    /**
+     * 通过项目id和名称获取记录
+     * @param $projectId
+     * @param $name
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getByProjectAndName($projectId, $name)
+    {
+        $conditions = [];
+        if (!empty($projectId)) {
+            $conditions['project_tpl_id'] = $projectId;
+        }
+        $conditions['name'] = trim($name);
+        $row = $this->getRow('*', $conditions);
+        return $row;
+    }
+}
