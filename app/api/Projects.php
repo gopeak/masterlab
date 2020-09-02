@@ -48,7 +48,7 @@ class Projects extends BaseAuth
     private function getHandler()
     {
         $projectId = 0;
-        if (isset($_GET['_target'][3])){
+        if (isset($_GET['_target'][3])) {
             $projectId = intval($_GET['_target'][3]);
         }
 
@@ -120,7 +120,7 @@ class Projects extends BaseAuth
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      * @throws \Exception
      */
-    private function deleteHandler( )
+    private function deleteHandler()
     {
         $uid = $this->masterUid;
         $projectId = 0;
@@ -287,7 +287,10 @@ class Projects extends BaseAuth
             ProjectLogic::initLabelAndCatalog($ret['data']['project_id']);
 
             // 把项目负责人赋予该项目的管理员权限
-            list($flagAssignAdminRole) = ProjectLogic::assignAdminRoleForProjectLeader($ret['data']['project_id'], $info['lead']);
+            list($flagAssignAdminRole) = ProjectLogic::assignAdminRoleForProjectLeader(
+                $ret['data']['project_id'],
+                $info['lead']
+            );
             // 把项目创建人添加到该项目，并赋予项目角色-普通用户
             if ($uid != $info['lead']) {
                 ProjectLogic::assignProjectRoleForUser($ret['data']['project_id'], $uid, 'Users');
@@ -305,7 +308,4 @@ class Projects extends BaseAuth
             return self::returnHandler('添加失败,错误详情 :' . $ret['msg'], [], Constants::HTTP_BAD_REQUEST);
         }
     }
-
-
-
 }

@@ -58,7 +58,8 @@ class BaseApi
         $apiProtocol = new Api();
         $apiProtocol->builder('200', $data);
         $jsonStr = $apiProtocol->getResponse();
-        echo $jsonStr;exit;
+        echo $jsonStr;
+        exit;
     }
 
 
@@ -76,11 +77,12 @@ class BaseApi
 
     protected function validateRestfulHandler()
     {
-        foreach( self::$method_type as $method ) {
-            if(  !method_exists( $this,$method . 'Handler') ) {
-                throw new \Exception( 'Restful '.$method . 'Handler not exists',500 );
+        foreach (self::$method_type as $method) {
+            if (!method_exists($this, $method . 'Handler')) {
+                throw new \Exception('Restful '. $method . 'Handler not exists', 500);
             }
         }
     }
 
 }
+

@@ -39,7 +39,7 @@ class Labels extends BaseAuth
             $projectId = intval($_GET['project_id']);
         }
 
-        if (isset($_GET['_target'][3])){
+        if (isset($_GET['_target'][3])) {
             $labelId = intval($_GET['_target'][3]);
         }
 
@@ -204,6 +204,5 @@ class Labels extends BaseAuth
         $ret = $projectLabelModel->updateById($labelId, $row);
 
         return self::returnHandler('修改成功', array_merge($row, ['id' => $labelId]));
-
     }
 }

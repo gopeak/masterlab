@@ -61,7 +61,6 @@ class Sprints extends BaseAuth
         }
 
         return self::returnHandler('api方法错误.');
-
     }
 
     /**
@@ -237,7 +236,6 @@ class Sprints extends BaseAuth
         }
 
         return self::returnHandler('修改成功.', array_merge($row, ['id' => $sprintId]));
-
     }
 
 

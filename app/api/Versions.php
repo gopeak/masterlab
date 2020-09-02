@@ -39,7 +39,7 @@ class Versions extends BaseAuth
             $projectId = intval($_GET['project_id']);
         }
 
-        if (isset($_GET['_target'][3])){
+        if (isset($_GET['_target'][3])) {
             $versionId = intval($_GET['_target'][3]);
         }
 
@@ -205,7 +205,10 @@ class Versions extends BaseAuth
             $row['start_date'] = strtotime($patch['start_date']);
         }
 
-        if (isset($patch['release_date']) && !empty($patch['release_date']) && is_datetime_format($patch['release_date'])) {
+        if (isset($patch['release_date'])
+            && !empty($patch['release_date'])
+            && is_datetime_format($patch['release_date'])
+        ) {
             $row['release_date'] = strtotime($patch['release_date']);
         }
 
@@ -213,7 +216,5 @@ class Versions extends BaseAuth
         $ret = $projectModuleModel->updateById($versionId, $row);
 
         return self::returnHandler('修改成功', array_merge($row, ['id' => $versionId]));
-
     }
-
 }
