@@ -24,8 +24,8 @@ class Versions extends BaseAuth
 
     /**
      * Restful GET , 获取项目版本列表 | 单个版本信息
-     * 获取模块列表: {{API_URL}}/api/versions/v1/?project_id=1&access_token==xyz
-     * 获取单个模块: {{API_URL}}/api/versions/v1/36?access_token==xyz
+     * 获取版本列表: {{API_URL}}/api/versions/v1/?project_id=1&access_token==xyz
+     * 获取单个版本: {{API_URL}}/api/versions/v1/36?access_token==xyz
      * @return array
      * @throws \Exception
      */

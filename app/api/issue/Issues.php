@@ -59,8 +59,8 @@ class Issues extends BaseAuth
 
     /**
      * Restful GET , 获取事项列表 | 单个事项信息
-     * 获取模块列表: {{API_URL}}/api/issue/issues/v1/?project=1&access_token==xyz
-     * 获取单个模块: {{API_URL}}/api/issue/issues/v1/36?access_token==xyz
+     * 获取列表: {{API_URL}}/api/issue/issues/v1/?project=1&access_token==xyz
+     * 获取单个: {{API_URL}}/api/issue/issues/v1/36?access_token==xyz
      * @return array
      * @throws \Exception
      */

@@ -102,8 +102,8 @@ class CataLogs extends BaseAuth
 
     /**
      * Restful GET , 获取项目分类列表 | 单个分类信息
-     * 获取分类列表: {{API_URL}}/api/cata_logs/v1/?project_id=1&access_token==xyz
-     * 获取单个分类: {{API_URL}}/api/cata_logs/v1/36?access_token==xyz
+     * 获取列表: {{API_URL}}/api/cata_logs/v1/?project_id=1&access_token==xyz
+     * 获取单个: {{API_URL}}/api/cata_logs/v1/36?access_token==xyz
      * @return array
      * @throws \Exception
      */

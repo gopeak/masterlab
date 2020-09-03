@@ -122,8 +122,8 @@ class Sprints extends BaseAuth
 
     /**
      * Restful GET , 获取迭代列表 | 单个迭代信息
-     * 获取模块列表: {{API_URL}}/api/sprints/v1/?project_id=1&access_token==xyz
-     * 获取单个模块: {{API_URL}}/api/sprints/v1/36?access_token==xyz
+     * 获取迭代列表: {{API_URL}}/api/sprints/v1/?project_id=1&access_token==xyz
+     * 获取单个迭代: {{API_URL}}/api/sprints/v1/36?access_token==xyz
      * @return array
      * @throws \Exception
      */

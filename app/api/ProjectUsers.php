@@ -1,12 +1,8 @@
 <?php
-
-
 namespace main\app\api;
 
-
 use main\app\classes\LogOperatingLogic;
-use main\app\classes\PermissionLogic;
-use main\app\classes\UserAuth;
+use main\app\classes\UserLogic;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
 use main\app\model\project\ProjectRoleModel;
@@ -94,8 +90,76 @@ class ProjectUsers extends BaseAuth
         $event = new CommonPlacedEvent($this, ['user_id' => $userId, 'role_id' => $roleId]);
         $this->dispatcher->dispatch($event, Events::onProjectRoleAddUser);
         unset($model);
-        return self::returnHandler('用户添加成功');
+        return self::returnHandler('用户添加成功', ['id' => $ret[1]]);
     }
 
+    /**
+     * Restful GET , 获取项目用户列表
+     * 获取列表: {{API_URL}}/api/project_users/v1/?project_id=1&access_token==xyz
+     * 获取单个: {{API_URL}}/api/project_users/v1/36?access_token==xyz
+     * @return array
+     * @throws \Exception
+     */
+    private function getHandler()
+    {
+        $uid = $this->masterUid;
+        $projectId = 0;
 
+        if (isset($_GET['project_id'])) {
+            $projectId = intval($_GET['project_id']);
+        }
+
+        if (!$projectId) {
+            return self::returnHandler('项目id不能为空.', [], Constants::HTTP_BAD_REQUEST);
+        }
+
+        $final = [];
+
+        $userLogic = new UserLogic();
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
+        foreach ($projectUsers as &$user) {
+            $user = UserLogic::format($user);
+        }
+        $final['project_users'] = $projectUsers;
+        $final['not_project_users'] = $userLogic->getNotProjectUser($projectId);
+        $projectRolemodel = new ProjectRoleModel();
+        $final['roles'] = $projectRolemodel->getsByProject($projectId);
+
+        return self::returnHandler('OK', $final);
+    }
+
+    /**
+     * Restful DELETE ,删除项目用户
+     * {{API_URL}}/api/project_users/v1/?project_id=1&user_id=9999&access_token==xyz
+     * @return array
+     * @throws \Exception
+     */
+    private function deleteHandler()
+    {
+        $uid = $this->masterUid;
+
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            return self::returnHandler('项目id不能为空.', [], Constants::HTTP_BAD_REQUEST);
+        }
+
+        $delUserId = 0;
+        if (isset($_GET['project_id'])) {
+            $delUserId = intval($_GET['user_id']);
+        }
+        if (!$delUserId) {
+            return self::returnHandler('user_id不能为空.', [], Constants::HTTP_BAD_REQUEST);
+        }
+
+        $model = new ProjectUserRoleModel();
+        $model->delProjectUser($projectId, $delUserId);
+
+        $event = new CommonPlacedEvent($this, ['user_id' => $delUserId, 'project_id' => $projectId]);
+        $this->dispatcher->dispatch($event, Events::onProjectUserRemove);
+
+        return self::returnHandler('操作成功');
+    }
 }
