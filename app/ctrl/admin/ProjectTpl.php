@@ -31,6 +31,18 @@ use main\app\model\user\UserSettingModel;
 class ProjectTpl extends BaseAdminCtrl
 {
 
+    public static  $defaultSubSystem = [
+        'issue'=>['title'=>'事项','fix'=>true,'color'=>'blue','is_system'=>'1'],
+        'gantt'=>['title'=>'甘特图','fix'=>false,'color'=>'red','is_system'=>'1'],
+        'mind'=>['title'=>'事项分解','fix'=>false,'color'=>'gray','is_system'=>'1'],
+        'backlog'=>['title'=>'待办事项','fix'=>false,'color'=>'gray','is_system'=>'1'],
+        'sprint'=>['title'=>'冲刺','fix'=>false,'color'=>'red','is_system'=>'1'],
+        'kanban'=>['title'=>'看板','fix'=>false,'color'=>'blue','is_system'=>'1'],
+        'chart'=>['title'=>'图表','fix'=>false,'color'=>'blue','is_system'=>'1'],
+        'stat'=>['title'=>'统计','fix'=>false,'color'=>'blue','is_system'=>'1'],
+
+    ];
+
     /**
      * Projects constructor.
      * @throws \Exception
@@ -79,9 +91,30 @@ class ProjectTpl extends BaseAdminCtrl
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
         $model = new ProjectTemplateModel();
         $tpl = $model->getById($data['id']);
+        if($tpl){
+            $tpl['subsystem_json'] = json_decode($tpl['subsystem_json'], true);
+        }
         $data['tpl'] = $tpl;
         $data['action'] = 'update';
         $data['category_arr'] = $categoryModel->getAllItems();
+
+        $subSystemArr = self::$defaultSubSystem;
+        $model = new PluginModel();
+        $pluginArr = $model->getEnableItem();
+        foreach ($pluginArr as $item) {
+            $subSystemArr[$item['name']] = $item;
+        }
+        $noSubSystemArr = [];
+        $addedSubSystemArr = [];
+        foreach ($tpl['subsystem_json'] as $subsystem) {
+            if(isset($subSystemArr[$subsystem])){
+                $addedSubSystemArr[$subsystem] = $subSystemArr[$subsystem];
+                unset($subSystemArr[$subsystem]);
+            }
+        }
+        $data['no_subsystem'] = $subSystemArr;
+        $data['added_subsystem'] = $addedSubSystemArr;
+
         $this->render('gitlab/admin/project_tpl/form.twig', $data);
     }
 
@@ -242,15 +275,8 @@ class ProjectTpl extends BaseAdminCtrl
         $model = new PluginModel();
         $pluginRow = $model->getByName($name);
         if (!empty($pluginRow)) {
-            //$errorMsg['name'] = '插件已卸载或不存在';
-            if($pluginRow['is_system']=='1'){
-                $this->ajaxFailed('参数错误', '系统自带的插件不能删除');
-            }
-
             $model->deleteById($pluginRow['id']);
         }
-        $pluginDirName = PLUGIN_PATH . $name;
-        $this->rrmdir($pluginDirName);
         $this->ajaxSuccess('操作成功');
 
     }
