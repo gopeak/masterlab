@@ -90,13 +90,12 @@ class ProjectUsers extends BaseAuth
         $event = new CommonPlacedEvent($this, ['user_id' => $userId, 'role_id' => $roleId]);
         $this->dispatcher->dispatch($event, Events::onProjectRoleAddUser);
         unset($model);
-        return self::returnHandler('用户添加成功', ['id' => $ret[1]]);
+        return self::returnHandler('用户添加成功', ['id' => $msg]);
     }
 
     /**
      * Restful GET , 获取项目用户列表
      * 获取列表: {{API_URL}}/api/project_users/v1/?project_id=1&access_token==xyz
-     * 获取单个: {{API_URL}}/api/project_users/v1/36?access_token==xyz
      * @return array
      * @throws \Exception
      */

@@ -84,7 +84,7 @@ class ProjectRoles extends BaseAuth
             $info['id'] = $msg;
             $event = new CommonPlacedEvent($this, $info);
             $this->dispatcher->dispatch($event, Events::onProjectRoleAdd);
-            return self::returnHandler('项目角色添加成功', ['id' => $ret[1]]);
+            return self::returnHandler('项目角色添加成功', ['id' => $msg]);
         } else {
             return self::returnHandler('数据库插入失败,详情 :' . $msg, [], Constants::HTTP_BAD_REQUEST);
         }
