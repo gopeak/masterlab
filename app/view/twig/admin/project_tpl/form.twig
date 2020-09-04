@@ -24,6 +24,9 @@
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
 
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
+
     <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
 
 </head>
@@ -189,93 +192,34 @@
 
                                         <div role="tabpanel" class="tab-pane" id="subsystem">
 
-                                                <h1>jQuery Gridly</h1>
+                                                <h4>初始的子系统</h4>
                                                 <p>Gridly is a jQuery plugin to enable dragging and dropping as well as resizing on a grids. In the example below try tapping or dragging any of the bricks.</p>
-                                                <h2>Example</h2>
                                                 <section class='example'>
                                                     <div class='gridly'>
-                                                        <div class='brick small'>
+                                                        {% for item in added_subsystem %}
+                                                        <div class='brick small' data-name="<?=item.name?>">
+                                                            <?=item.title?>
                                                             <a class='delete' href='#'>&times;</a>
                                                         </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
-                                                        <div class='brick small'>
-                                                            <a class='delete' href='#'>&times;</a>
-                                                        </div>
+                                                        {% endfor %}
+
                                                     </div>
+                                                    <h4>可添加的子系统</h4>
+                                                    <p> 添加便可加入</p>
                                                     <p class='actions'>
-                                                        <a class='add button' href='#'>Add</a>
+                                                        {% for item in no_subsystem %}
+                                                        <a class='add button' href='#'><?=item.title?></a>
+                                                        {% endfor %}
                                                     </p>
                                                 </section>
-                                                <h2>Installation</h2>
-                                                <p>To install download one of these packages and include the jquery.gridly.js and jquery.gridly.css files in your head with the following:</p>
-                                                <section class='formats'>
-                                                    <div class='format'>
-                                                        <a class='zip' href='packages/jquery.gridly.zip'></a>
-                                                    </div>
-                                                    <div class='format'>
-                                                        <a class='tar' href='packages/jquery.gridly.tar'></a>
-                                                    </div>
-                                                </section>
+
 
 
                                         </div>
                                         <div role="tabpanel" class="tab-pane" id="role">
 
                                             <div class="col-lg-12" style="margin-top: 40px">
-                                                <form id="form_add_role" class="setting-form clearfix" action="/project/role/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
+                                                <form id="form_add_role" class="setting-form clearfix" action="/project/role/add?project_id=<?=id?>" accept-charset="UTF-8" method="post">
                                                     <input name="utf8" type="hidden" value="✓">
                                                     <div class="form-group">
 
@@ -306,21 +250,21 @@
                                         </div>
                                         <div role="tabpanel" class="tab-pane" id="module">
                                             <div class="col-lg-12" style="margin-top: 40px">
-                                                <form id="form_add_action" class="setting-form clearfix" action="/project/module/add?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
+                                                <form id="form_add_module" class="setting-form clearfix" action="/admin/project_tpl_module/add?project_id=<?=id?>" accept-charset="UTF-8" method="post">
 
                                                     <div class="form-group">
 
                                                     </div>
                                                     <div class="form-group  col-md-2">
-                                                        <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
+                                                        <input style="margin-left: -15px;" type="text" name="params[name]" id="module_name"  placeholder="模块" required="required"
                                                                tabindex="1" class="form-control">
                                                     </div>
 
                                                     <div class="form-group col-md-4">
-                                                        <input type="text" name="description" id="description"  placeholder="说明"  class="form-control">
+                                                        <input type="text" name="params[description]" id="module_description"  placeholder="说明"  class="form-control">
                                                     </div>
                                                     <div class="form-group col-md-2">
-                                                        <input type="submit" name="commit" value="添加模块" class="btn btn-create">
+                                                        <input type="button" name="commit" id="btn-module_add" value="添加模块" class="btn btn-create">
                                                     </div>
                                                     <input name="utf8" type="hidden" value="✓">
                                                     <input type="hidden" name="authenticity_token" value="">
@@ -330,10 +274,9 @@
                                                     <div class="panel-heading">
                                                         <strong>模块</strong>
                                                         <div class="input-group member-search-form">
-                                                            <input type="search" name="search" id="search_input" placeholder="搜索模块" class="form-control" value="">
                                                         </div>
                                                     </div>
-                                                    <ul class="flex-list content-list" id="list_render_id">
+                                                    <ul class="flex-list content-list" id="module_list_render_id">
 
                                                     </ul>
                                                 </div>
@@ -376,7 +319,7 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
-                    <input type="hidden" name="project_id" value="<?=project_id?>">
+                    <input type="hidden" name="project_id" value="<?=id?>">
 
                     <div class="form-group">
                         <label class="control-label" >名称:</label>
@@ -399,7 +342,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button name="edit_role_save" type="button" class="btn  btn-create " id="btn-update">保存</button>
+                    <button name="edit_role_save" type="button" class="btn  btn-create " id="btn-role-update">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
@@ -453,9 +396,9 @@
     </form>
 </div>
 
-<div class="modal" id="modal-edit-module-href">
+<div class="modal" id="modal-mudule_edit">
     <form class="form-horizontal"
-          id="form_edit_action"
+          id="form-module_edit"
           action="/project/module/update"
           accept-charset="UTF-8"
           method="post">
@@ -493,7 +436,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-save" id="mod_save">保存</button>
+                    <button type="button" class="btn btn-save" id="btn-module-update">保存</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
             </div>
@@ -502,41 +445,34 @@
 </div>
 
 {% verbatim %}
-<script type="text/html"  id="role_list_tpl">
-    {{#roles}}
+<script type="text/x-handlebars-template"  id="role_list_tpl">
+    {{#each roles}}
         <li>
             <div class="pull-left append-right-10 hidden-xs">
                 <i class="fa fa-users key-icon"></i>
             </div>
             <div class="deploy-key-content key-list-item-info">
                 <strong class="title">
-                    {{name}}{{#if_eq is_system '1'}}
-                    {{^}}
-                    <span class="badge color-label " style="background-color: #428bca; color: #FFFFFF" >自定义</span>
-                    {{/if_eq}}
+                    {{name}}
                 </strong>
                 <div class="description">
                     {{description}}
                 </div>
             </div>
-
             <div class="deploy-key-content">
                 <div class="visible-xs-block visible-sm-block"></div>
-                    {{#if_eq is_system '1'}}
-                    {{^}}
                     <a class="list_for_edit prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
                         编 辑
                     </a>
                     <a class="list_for_delete prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
                         删 除
                     </a>
-                    {{/if_eq}}
                     <a class="list_edit_perm prepend-left-10" rel="nofollow" data-id="{{id}}" data-name="{{name}}"  href="#">
                         权 限
                     </a>
             </div>
         </li>
-    {{/roles}}
+    {{/each}}
 </script>
 <script type="text/x-handlebars-template" id="module_list_tpl">
     {{#each modules}}
@@ -563,10 +499,10 @@
             </div>
         </div>
         <div class="pull-left hidden-xs hidden-sm hidden-md">
-            <a class="btn btn-transparent btn-action project_module_edit_click" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
+            <a class="btn btn-transparent btn-action module_list_for_edit" title="编辑模块"   data-id="{{id}}">
                 <i class="fa fa-pencil-square-o"></i>
             </a>
-            <a class="btn btn-transparent btn-action remove-row" title="删除模块" id="mod_remove" onclick="remove({{id}})" href="javascript:void(0)">
+            <a class="btn btn-transparent btn-action module_list_for_delete" title="删除模块" data-id="{{id}}"  >
                 <i class="fa fa-trash-o"></i>
             </a>
         </div>
@@ -593,6 +529,7 @@
                 event.preventDefault();
                 event.stopPropagation();
                 $this = $(this);
+                /*
                 $this.toggleClass('small');
                 $this.toggleClass('large');
                 if ($this.hasClass('small')) { // HACK
@@ -603,6 +540,7 @@
                 }
                 $this.data('width', size);
                 $this.data('height', size);
+                */
                 return $('.gridly').gridly('layout');
             });
             $(document).on("click", ".gridly .delete", function(event) {
@@ -628,7 +566,7 @@
         $('.gridly').gridly({
             base: 60, // px
             gutter: 20, // px
-            columns: 12
+            columns: 16
         });
     });
 
@@ -638,18 +576,27 @@
 
     $(function() {
 
-        let role_options = {
+        var role_options = {
             list_render_id:"role_list_render_id",
             list_tpl_id:"role_list_tpl",
-            filter_url:"/admin/ProjectTplRole/fetchAll?id=<?=id?>"
+            filter_url:"/admin/ProjectTplRole/fetchAll?id=<?=id?>",
+            get_url:"/admin/ProjectTplRole/get",
+            add_url:"/admin/ProjectTplRole/add?id=<?=id?>",
+            update_url:"/admin/ProjectTplRole/update",
+            tree_url: "/admin/ProjectTplRole/perm_tree",
+            update_perm_url:"/admin/ProjectTplRole/update_perm",
         };
         window.$role = new ProjectTplRole( role_options );
         window.$role.fetchAll();
 
-        let module_options = {
+        var module_options = {
             list_render_id:"module_list_render_id",
             list_tpl_id:"module_list_tpl",
-            filter_url:"/admin/ProjectTplModule/fetchAll?id=<?=id?>"
+            filter_url:"/admin/ProjectTplModule/fetchAll?project_tpl_id=<?=id?>",
+            get_url:"/admin/ProjectTplModule/get",
+            add_url:"/admin/ProjectTplModule/add?project_tpl_id=<?=id?>",
+            update_url:"/admin/ProjectTplModule/update",
+            delete_url:"/admin/ProjectTplModule/delete",
         };
         window.$modules = new ProjectTplModule( module_options );
         window.$modules.fetchAll();

@@ -10,7 +10,7 @@ var ProjectTplRole = (function () {
             ProjectTplRole.prototype.add();
         });
 
-        $("#btn-update").click(function () {
+        $("#btn-role-update").click(function () {
             ProjectTplRole.prototype.update();
         });
 
@@ -35,6 +35,7 @@ var ProjectTplRole = (function () {
     ProjectTplRole.prototype.fetchAll = function () {
 
         // url,  list_tpl_id, list_render_id
+        // alert(_options.filter_url);
         var params = {format: 'json'};
         $.ajax({
             type: "GET",
@@ -48,6 +49,7 @@ var ProjectTplRole = (function () {
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
+                    console.log(result);
                     $('#' + _options.list_render_id).html(result);
 
                     $(".list_edit_perm").click(function () {
@@ -75,7 +77,7 @@ var ProjectTplRole = (function () {
     }
 
     ProjectTplRole.prototype.edit = function (id) {
-
+        $("#modal-role_edit").modal();
         var method = 'get';
         $.ajax({
             type: method,
@@ -86,7 +88,6 @@ var ProjectTplRole = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret == 200) {
-                    $("#modal-role_edit").modal();
                     $("#edit_id").val(resp.data.id);
                     $("#edit_name").val(resp.data.name);
                     $("#edit_description").text(resp.data.description);
@@ -245,7 +246,10 @@ var ProjectTplRole = (function () {
                 auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
-                    window.location.reload();
+                   // window.location.reload();
+                    $('#role_description').val('');
+                    $('#role_name').val('');
+                    ProjectTplRole.prototype.fetchAll();
                 }
             },
             error: function (res) {
@@ -268,7 +272,7 @@ var ProjectTplRole = (function () {
                 auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
-                    window.location.reload();
+                    ProjectTplRole.prototype.fetchAll();
                 }
             },
             error: function (res) {
@@ -292,32 +296,7 @@ var ProjectTplRole = (function () {
                 auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
-                    window.location.reload();
-                }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    }
-
-    ProjectTplRole.prototype._deleteProjectTplRoleUser = function (id, user_id, project_id, role_id) {
-        if (!window.confirm('您确认删除该项吗?')) {
-            return false;
-        }
-        console.log($("li[data-user-id='0'] a")[0]);
-        let method = 'POST';
-        $.ajax({
-            type: method,
-            dataType: "json",
-            data: {id: id, user_id: user_id, project_id: project_id, role_id: role_id},
-            url: _options.delete_role_user_url,
-            success: function (resp) {
-                auth_check(resp);
-                notify_success(resp.msg);
-                if (resp.ret == 200) {
-                    $('#role_user_id_'+id).remove();
-                    $("li[data-user-id='0'] a")[0].click();
+                    ProjectTplRole.prototype.fetchAll();
                 }
             },
             error: function (res) {

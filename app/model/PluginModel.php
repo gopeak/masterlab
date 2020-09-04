@@ -81,6 +81,12 @@ class PluginModel extends DbModel
         return $this->getRows($fields, [], null, 'order_weight', 'desc', null, $primaryKey);
     }
 
+    public function getEnableItem( )
+    {
+        $fields = " *";
+        return $this->getRows($fields, ['enable'=>'1'], null, 'order_weight', 'desc');
+    }
+
     /**
      * @param $id
      * @return array

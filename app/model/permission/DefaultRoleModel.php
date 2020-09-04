@@ -43,6 +43,18 @@ class DefaultRoleModel extends BaseDictionaryModel
     }
 
     /**
+     * 通过名称获取记录
+     * @param $name
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getByName($name)
+    {
+        $where = ['name' => trim($name)];
+        $row = $this->getRow("*", $where);
+        return $row;
+    }
+    /**
      * 获取某个项目的所有角色
      * @param $projectId
      * @param bool $primaryKey
@@ -50,7 +62,7 @@ class DefaultRoleModel extends BaseDictionaryModel
      */
     public function getsByProject($projectId, $primaryKey = false)
     {
-        return $this->getRows('*', ['project_id' => $projectId], null, 'id', 'desc', $primaryKey);
+        return $this->getRows('*', ['project_tpl_id' => $projectId], null, 'id', 'desc', $primaryKey);
     }
 
     /**

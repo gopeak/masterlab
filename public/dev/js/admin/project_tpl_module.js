@@ -6,21 +6,50 @@ let ProjectTplModule = (function() {
     // constructor
     function ProjectTplModule (options) {
         _options = options;
+
+        $("#btn-module_add").click(function () {
+            ProjectTplModule.prototype.add();
+        });
+
+        $("#btn-module-update").click(function () {
+            ProjectTplModule.prototype.update();
+        });
+
+
     };
 
     ProjectTplModule.prototype.getOptions = function () {
         return _options;
     };
 
-    ProjectTplModule.prototype.fetch = function (id) {
-
-    };
 
     ProjectTplModule.prototype.add = function () {
-
+        var method = 'post';
+        var params = $('#form_add_module').serialize();
+        console.log(params)
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.add_url,
+            data: params,
+            success: function (resp) {
+                auth_check(resp);
+                notify_success(resp.msg);
+                if (resp.ret == 200) {
+                    // window.location.reload();
+                    $('#module_description').val('');
+                    $('#module_name').val('');
+                    ProjectTplModule.prototype.fetchAll();
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     };
 
-    ProjectTplModule.prototype.delete = function (project_id, module_id) {
+    ProjectTplModule.prototype.delete = function ( module_id) {
         swal({
                 title: "您确定删除吗?",
                 text: "你将无法恢复它",
@@ -35,12 +64,11 @@ let ProjectTplModule = (function() {
             },
             function(isConfirm){
                 if (isConfirm) {
-                    $.post("/project/module/delete",{project_id: project_id, module_id:module_id}, function (result) {
+                    $.post( _options.delete_url,{id:module_id}, function (result) {
                         if (result.ret == 200) {
                             //location.reload();
                             notify_success('删除成功');
-                            //window.location.reload();
-                            $('#li_data_id_'+module_id).remove();
+                            ProjectTplModule.prototype.fetchAll();
                         } else {
                             notify_error('删除失败');
                         }
@@ -55,12 +83,13 @@ let ProjectTplModule = (function() {
     };
 
     ProjectTplModule.prototype.edit = function (module_id) {
+        $("#modal-mudule_edit").modal();
         $.ajax({
             type: 'GET',
             dataType: "json",
             async: true,
-            url: "/project/module/fetch_module",
-            data: {module_id: module_id},
+            url: _options.get_url,
+            data: {id: module_id},
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret == 200) {
@@ -80,21 +109,18 @@ let ProjectTplModule = (function() {
         });
     };
 
-    ProjectTplModule.prototype.doedit = function (module_id, name, weight, description) {
+    ProjectTplModule.prototype.update = function (module_id, name, weight, description) {
         $.ajax({
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/module/update",
-            data: {id: module_id, name: name, weight: weight, description: description},
+            url: _options.update_url,
+            data: $('#form-module_edit').serialize(),
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret == 200) {
-                    $('#modal-edit-module-href').on('hidden.bs.modal', function (e) {
-                        notify_success('操作成功');
-                        ProjectTplModule.prototype.fetchAll();
-                    });
-                    $('#modal-edit-module-href').modal('hide');
+                    notify_success('操作成功');
+                    ProjectTplModule.prototype.fetchAll();
                 } else {
                     notify_error('error');
                 }
@@ -105,8 +131,6 @@ let ProjectTplModule = (function() {
         });
 
     };
-
-
 
     ProjectTplModule.prototype.fetchAll = function ( ) {
 
@@ -124,28 +148,13 @@ let ProjectTplModule = (function() {
                     let result = template(resp.data);
                     //console.log(result);
                     $('#' + _options.list_render_id).html(result);
-
-                    if (resp.data.pages > 1) {
-                        let options = {
-                            currentPage: resp.data.page,
-                            totalPages: resp.data.pages,
-                            onPageClicked: function (e, originalEvent, type, page) {
-                                console.log("Page item clicked, type: " + type + " page: " + page);
-                                $("#filter_page").val(page);
-                                _options.query_param_obj["page"] = page;
-                                ProjectTplModule.prototype.fetchAll();
-                            }
-                        };
-                        $('#ampagination-bootstrap').bootstrapPaginator(options);
-                    }
-
-                    $(".list_for_delete").click(function () {
+                    $(".module_list_for_edit").click(function () {
+                        ProjectTplModule.prototype.edit($(this).data('id'));
+                    });
+                    $(".module_list_for_delete").click(function () {
                         ProjectTplModule.prototype.delete($(this).data("id"));
                     });
 
-                    $(".project_module_edit_click").bind("click", function () {
-                        ProjectTplModule.prototype.edit($(this).data('module_id'));
-                    });
                 } else {
                     defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
