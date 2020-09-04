@@ -51,7 +51,6 @@ class TestLabels extends BaseApiTestCase
         $this->assertEquals('200', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
-
     }
 
     /**
@@ -85,9 +84,9 @@ class TestLabels extends BaseApiTestCase
         $this->assertEquals('200', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
-        if(strpos($respData['body']['title'],'这个标签') !== false){
+        if (strpos($respData['body']['title'], '这个标签') !== false) {
             $this->assertTrue(true); //包含
-        }else{
+        } else {
             $this->assertTrue(false);
         }
 

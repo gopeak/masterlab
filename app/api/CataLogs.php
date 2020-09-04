@@ -75,13 +75,13 @@ class CataLogs extends BaseAuth
             $insertArr['order_weight'] = (int)$_POST['order_weight'];
         }
 
-        list($ret, $errMsg) = $projectCatalogLabelModel->insert($insertArr);
+        list($ret, $id) = $projectCatalogLabelModel->insert($insertArr);
         if ($ret) {
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->authAccount;
             $logData['real_name'] = $this->authAccount;
-            $logData['obj_id'] = $errMsg;
+            $logData['obj_id'] = $id;
             $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
             $logData['page'] = $_SERVER['REQUEST_URI'];
             $logData['action'] = LogOperatingLogic::ACT_ADD;
@@ -90,13 +90,13 @@ class CataLogs extends BaseAuth
             $logData['cur_data'] = $insertArr;
             LogOperatingLogic::add($uid, $projectId, $logData);
 
-            $insertArr['id'] = $errMsg;
+            $insertArr['id'] = $id;
             $event = new CommonPlacedEvent($this, $insertArr);
             $this->dispatcher->dispatch($event, Events::onCataloglCreate);
 
-            return self::returnHandler('分类添加成功');
+            return self::returnHandler('分类添加成功', ['id' => $id]);
         } else {
-            return self::returnHandler('服务器执行失败' . $errMsg, [], Constants::HTTP_BAD_REQUEST);
+            return self::returnHandler('服务器执行失败' . $id, [], Constants::HTTP_BAD_REQUEST);
         }
     }
 
