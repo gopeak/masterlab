@@ -326,8 +326,8 @@ class Issues extends BaseAuth
 
         // 操作日志
         $logData = [];
-        $logData['user_name'] = $this->authAccount;
-        $logData['real_name'] = $this->authAccount;
+        $logData['user_name'] = $this->masterAccount;
+        $logData['real_name'] = $this->masterAccount;
         $logData['obj_id'] = $issueId;
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
         $logData['page'] = $_SERVER['REQUEST_URI'];
@@ -476,8 +476,8 @@ class Issues extends BaseAuth
         unset($project);
         //写入操作日志
         $logData = [];
-        $logData['user_name'] = $this->authAccount;
-        $logData['real_name'] = $this->authAccount;
+        $logData['user_name'] = $this->masterAccount;
+        $logData['real_name'] = $this->masterAccount;
         $logData['obj_id'] = $issueId;
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
         $logData['page'] = $_SERVER['REQUEST_URI'];

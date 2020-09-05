@@ -24,6 +24,7 @@ class BaseApi
 
     protected $requestMethod = null;
     protected $masterUid = 0;
+    protected $masterAccount = 'api_master';
 
     /**
      * 参数处理

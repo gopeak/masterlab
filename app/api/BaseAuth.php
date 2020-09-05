@@ -11,8 +11,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class BaseAuth extends BaseApi
 {
-    protected $authUserId = null;
-    protected $authAccount = null;
     /**
      * @var EventDispatcher|null
      */
@@ -28,7 +26,7 @@ class BaseAuth extends BaseApi
         parent::__construct();
 
         // 开发模式关闭jwt
-        if (0) {
+        if (1) {
             if (!isset($_GET['access_token']) || empty($_GET['access_token'])) {
                 self::echoJson('缺少参数.', [], Constants::HTTP_AUTH_FAIL);
             }
@@ -36,7 +34,8 @@ class BaseAuth extends BaseApi
             $jwt = JWTLogic::getInstance();
             $parserTokenArr = $jwt->parser($accessToken);
 
-            if ($parserTokenArr['code'] == JWTLogic::PARSER_STATUS_INVALID || $parserTokenArr['code'] == JWTLogic::PARSER_STATUS_EXCEPTION) {
+            if ($parserTokenArr['code'] == JWTLogic::PARSER_STATUS_INVALID
+                || $parserTokenArr['code'] == JWTLogic::PARSER_STATUS_EXCEPTION) {
                 self::echoJson($parserTokenArr['msg'], [], Constants::HTTP_AUTH_FAIL);
             }
 
@@ -45,13 +44,12 @@ class BaseAuth extends BaseApi
                 self::echoJson(JWTLogic::PARSER_STATUS_EXPIRED, [], Constants::HTTP_AUTH_FAIL);
             }
 
-            $this->authUserId = $parserTokenArr['uid'];
-            $this->authAccount = $parserTokenArr['account'];
+            $this->masterUid = $parserTokenArr['uid'];
+            $this->masterAccount = $parserTokenArr['account'];
         }
 
         $this->dispatcher = new EventDispatcher();
         $this->loadPlugin();
-
     }
 
     /**

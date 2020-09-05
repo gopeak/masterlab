@@ -46,8 +46,8 @@ date_default_timezone_set($appConfig['date_default_timezone']);
 
 // api使用JWT
 define("JWT_KEY", $appConfig['encrypy_key']);
-define("JWT_TOKEN_EXPIRED", 3600*24);
-define("JWT_REFRESH_TOKEN_EXPIRED", 3600*24*30);
+define("JWT_TOKEN_EXPIRED", 3600*24*30*3);
+define("JWT_REFRESH_TOKEN_EXPIRED", 3600*24*30*6);
 
 // 销毁该全局变量
 unset($appConfig);

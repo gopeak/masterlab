@@ -79,8 +79,8 @@ class CataLogs extends BaseAuth
         if ($ret) {
             //写入操作日志
             $logData = [];
-            $logData['user_name'] = $this->authAccount;
-            $logData['real_name'] = $this->authAccount;
+            $logData['user_name'] = $this->masterAccount;
+            $logData['real_name'] = $this->masterAccount;
             $logData['obj_id'] = $id;
             $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
             $logData['page'] = $_SERVER['REQUEST_URI'];
@@ -219,8 +219,8 @@ class CataLogs extends BaseAuth
         if ($ret[0]) {
             //写入操作日志
             $logData = [];
-            $logData['user_name'] = $this->authAccount;
-            $logData['real_name'] = $this->authAccount;
+            $logData['user_name'] = $this->masterAccount;
+            $logData['real_name'] = $this->masterAccount;
             $logData['obj_id'] = $cataLoglabelId;
             $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
             $logData['page'] = $_SERVER['REQUEST_URI'];
@@ -269,8 +269,8 @@ class CataLogs extends BaseAuth
         $info2 = array_map($callFunc, $info);
         //写入操作日志
         $logData = [];
-        $logData['user_name'] = $this->authAccount;
-        $logData['real_name'] = $this->authAccount;
+        $logData['user_name'] = $this->masterAccount;
+        $logData['real_name'] = $this->masterAccount;
         $logData['obj_id'] = 0;
         $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
         $logData['page'] = $_SERVER['REQUEST_URI'];
