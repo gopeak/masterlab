@@ -108,10 +108,12 @@ class ProjectTpl extends BaseAdminCtrl
         $addedSubSystemArr = [];
         foreach ($tpl['subsystem_json'] as $subsystem) {
             if(isset($subSystemArr[$subsystem])){
+                $subSystemArr[$subsystem]['name'] = $subsystem;
                 $addedSubSystemArr[$subsystem] = $subSystemArr[$subsystem];
                 unset($subSystemArr[$subsystem]);
             }
         }
+
         $data['no_subsystem'] = $subSystemArr;
         $data['added_subsystem'] = $addedSubSystemArr;
 
@@ -210,47 +212,37 @@ class ProjectTpl extends BaseAdminCtrl
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $errorMsg = [];
-        if (isset($_POST['title']) && empty($_POST['title'])) {
-            $errorMsg['title'] = '标题不能为空';
-        }
-        if (isset($_POST['type']) && empty($_POST['type'])) {
-            $errorMsg['type'] = '类型不能为空';
-        }
-        if (!empty($errorMsg)) {
-            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
-        }
-
-
         $id = (int)$id;
-        $model = new PluginModel();
+        $model = new ProjectTemplateModel();
         $row = $model->getById($id);
         if (!isset($row['id'])) {
             $this->ajaxFailed('参数错误,数据不存在');
         }
         unset($row);
-
         $info = [];
-        if (isset($_POST['title'])) {
-            $info['title'] = $_POST['title'];
+        if (isset($_POST['name'])) {
+            $info['name'] = $_POST['name'];
         }
-        if (isset($_POST['type'])) {
-            $info['type'] = $_POST['type'];
-        }
-        if (isset($_POST['url'])) {
-            $info['url'] = $_POST['url'];
-        }
-        if (isset($_POST['version'])) {
-            $info['version'] = $_POST['version'];
+        if (isset($_POST['category_id'])) {
+            $info['category_id'] = (int)$_POST['category_id'];
         }
         if (isset($_POST['description'])) {
             $info['description'] = $_POST['description'];
         }
-        if (isset($_POST['icon'])) {
-            $info['icon_file'] = $_POST['icon'];
+        if (isset($_POST['image_bg'])) {
+            $info['image_bg'] = $_POST['image_bg'];
         }
-        if (isset($_POST['company'])) {
-            $info['company'] = $_POST['company'];
+        if (isset($_POST['sub_system'])) {
+            $subSystemArr = json_decode($_POST['sub_system'], true);
+            $sortArr = [];
+            foreach ($subSystemArr as $item) {
+                $weight = max(0, intval($item['top']/150)*1120 ) + (int)$item['left'] ;
+                $sortArr[$item['name']] = $weight ;
+            }
+            asort ($sortArr, SORT_NUMERIC );
+            $sortArr = array_keys($sortArr);
+            $info['subsystem_json'] = json_encode($sortArr);
+
         }
         if (!empty($info)) {
             $model->updateById($id, $info);

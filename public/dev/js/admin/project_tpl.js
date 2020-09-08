@@ -179,6 +179,30 @@ var PluginTemplate = (function() {
         });
     };
 
+    PluginTemplate.prototype.patch = function( params ) {
+
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.update_url,
+            data: params ,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret ==='200'  ){
+                     return true;
+                }else{
+                    return false;
+                }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
     PluginTemplate.prototype.install = function(name ) {
 
         var method = 'POST';
