@@ -1,43 +1,35 @@
-let Label = (function () {
+let ProjectTplCatalog = (function () {
 
     let _options = {};
 
     // constructor
-    function Label (options) {
+    function ProjectTplCatalog (options) {
         _options = options;
     };
 
-    Label.prototype.getOptions = function () {
+    ProjectTplCatalog.prototype.getOptions = function () {
         return _options;
     };
 
-    Label.prototype.fetch = function (id) {
+    ProjectTplCatalog.prototype.fetch = function (id) {
 
     };
 
 
-    Label.prototype.add = function (project_id) {
-        let add_name_obj = $('#form_create_action input[name=title]');
-        if (is_empty(add_name_obj.val())) {
-            notify_error('参数错误', '标签名称不能为空');
-            add_name_obj.focus();
-            return;
-        }
-
+    ProjectTplCatalog.prototype.add = function () {
+        let el_form = $('#form-catalog');
         $.ajax({
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/label/add?project_id="+project_id,
-            data: $('#form_create_action').serialize(),
+            url: "/project/catalog/add",
+            data: el_form.serialize(),
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret === "200") {
-                    notify_success(resp.msg);
-                    Label.prototype.fetchAll();
-                    $('#form_create_action input[name=title]').val('');
-                    $('#form_create_action input[name=description]').val('');
-                    $('#modal-create-label-href').modal('hide');
+                    notify_success(resp.msg, resp.data);
+                    ProjectTplCatalog.prototype.fetchAll();
+                    $('#modal-form-catalog').modal('hide');
                 } else {
                     notify_error(resp.msg, resp.data);
                 }
@@ -48,33 +40,38 @@ let Label = (function () {
         });
     };
 
-    Label.prototype.delete = function (project_id, label_id) {
-        $.post(root_url+"project/label/delete",{project_id: project_id, id:label_id},function (result) {
-            if (result.ret == 200) {
-                notify_success('删除成功');
-                $('#project_label_'+label_id).remove();
-                window.location.reload();
+    ProjectTplCatalog.prototype.delete = function (project_id, id) {
+        $.post(root_url+"project/catalog/delete",{project_id: project_id, id:id},function (result) {
+            if (result.ret == '200') {
+                notify_success(result.msg, result.data);
+                $('#project_label_'+id).remove();
+
             } else {
-                notify_error('删除失败');
+                notify_error(result.msg, result.data);
             }
         });
     };
 
-    Label.prototype.edit = function (label_id) {
+    ProjectTplCatalog.prototype.edit = function (id) {
+        $('#modal-form-catalog').modal('show');
+        $('#action').val('update');
+        $('#catalog_id').val(id);
+        loading.show('#modal-body');
         $.ajax({
             type: 'GET',
             dataType: "json",
             async: true,
-            url: "/project/label/fetch",
-            data: {id: label_id},
+            url: "/project/catalog/fetch",
+            data: {id: id},
             success: function (resp) {
                 auth_check(resp);
-                if (resp.ret == 200) {
-                    $('#label_form_id').val(resp.data.id);
-                    $('#label_form_title').val(resp.data.title);
-                    $('.js-label-color-preview').css("background-color", resp.data.bg_color);
-                    $('#label_form_label_color').val(resp.data.bg_color);
-                    $('#label_form_description').val(resp.data.description);
+                loading.closeAll();
+                if (resp.ret == '200') {
+                    $('#input-name').val(resp.data.name);
+                    ProjectTplCatalog.prototype.initProjectLabel(resp.data.label_id_json);
+                    $('#input-font_color').val(resp.data.font_color);
+                    $('#textarea-description').text(resp.data.description);
+                    $('#input-order_weight').val(resp.data.order_weight);
                 } else {
                     notify_error(resp.msg, resp.data);
                 }
@@ -85,28 +82,22 @@ let Label = (function () {
         });
     };
 
-    Label.prototype.update = function (project_id) {
-        let add_name_obj = $('#form_edit_action input[name=title]');
-        if (is_empty(add_name_obj.val())) {
-            notify_error('参数错误', '标签名称不能为空');
-            add_name_obj.focus();
-            return;
-        }
-
+    ProjectTplCatalog.prototype.update = function () {
+        let el_form = $('#form-catalog');
         $.ajax({
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/label/update?project_id="+project_id,
-            data: $('#form_edit_action').serialize(),
+            url: "/project/catalog/update",
+            data: el_form.serialize(),
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret === "200") {
-                    notify_success(resp.msg);
-                    Label.prototype.fetchAll();
-                    $('#modal-edit-label-href').modal('hide');
+                    notify_success(resp.msg, resp.data);
+                    ProjectTplCatalog.prototype.fetchAll();
+                    $('#modal-form-catalog').modal('hide');
                 } else {
-                    notify_error(resp.msg);
+                    notify_error(resp.msg, resp.data);
                 }
             },
             error: function (res) {
@@ -115,7 +106,28 @@ let Label = (function () {
         });
     };
 
-    Label.prototype.fetchAll = function () {
+
+    ProjectTplCatalog.prototype.initProjectLabel = function (label_id_arr) {
+        // console.log(label_id_arr)
+        let el_select = $('#select-label_id_arr');
+        el_select.empty();
+        for (let i=0; i< _issueConfig.issue_labels.length;i++) {
+            let row = _issueConfig.issue_labels[i];
+            let id = row.id;
+            let title = row.title;
+            let selected = '';
+            if(in_array(id, label_id_arr)){
+                selected = 'selected';
+            }
+            let opt = '<option value="' + id + '"  ' + selected + '>' + title + '</option>';
+            // console.log(opt)
+            el_select.append(opt);
+        }
+        $('.selectpicker').selectpicker('refresh');
+
+    };
+
+    ProjectTplCatalog.prototype.fetchAll = function () {
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -124,7 +136,7 @@ let Label = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 auth_check(resp);
-                if (resp.data.labels.length) {
+                if (resp.data.catalogs.length) {
                     let source = $('#' + _options.list_tpl_id).html();
                     let template = Handlebars.compile(source);
                     let result = template(resp.data);
@@ -132,14 +144,14 @@ let Label = (function () {
 
                     $(".label_edit_link").bind("click", function () {
                         //window.location.href = project_root_url+'/settings_label_edit?id='+$(this).data('id');
-                        Label.prototype.edit($(this).data('id'));
+                        ProjectTplCatalog.prototype.edit($(this).data('id'));
                     });
 
                     $(".label_edit_remove").bind("click",function () {
                         let label_id =  $(this).data('id');
                         swal({
-                                title: "确认要删除该标签？",
-                                text: "注:删除后，标签是无法恢复的！",
+                                title: "确认要删除该分类？",
+                                text: "注:删除后，分类是无法恢复的！",
                                 html: true,
                                 type: "warning",
                                 showCancelButton: true,
@@ -151,7 +163,7 @@ let Label = (function () {
                             },
                             function (isConfirm) {
                                 if (isConfirm) {
-                                    window.$labels.delete(window._project_id, label_id);
+                                    ProjectTplCatalog.prototype.delete(window._project_id, label_id);
                                     swal.close();
                                 } else {
                                     swal.close();
@@ -162,9 +174,9 @@ let Label = (function () {
                 } else {
                     defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
-                        message : '标签为空',
+                        message : '分类为空',
                         name: 'label',
-                        handleHtml: `<a class="btn btn-new js-create-label" data-toggle="modal"  href="#modal-create-label-href">添加标签</a>`
+                        handleHtml: ``
                     })
                 }
             },
@@ -174,6 +186,6 @@ let Label = (function () {
         });
     };
 
-    return Label;
+    return ProjectTplCatalog;
 })();
 

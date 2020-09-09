@@ -6,6 +6,8 @@
     <script src="/dev/js/admin/project_tpl.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/project_tpl_role.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/project_tpl_module.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl_label.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl_catalog.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
@@ -64,17 +66,20 @@
                                             </a>
                                         </li>
                                         <li  role="presentation"   class="">
-                                            <a  title="项目拥有的子系统"  href="#subsystem" id="subsystem-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>子系统</span></a>
+                                            <a  title="项目拥有的子系统"  href="#subsystem" id="subsystem-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始子系统</span></a>
                                         </li>
                                         <li  role="presentation"  class="">
-                                            <a  title="项目也有的子系统"  href="#role" id="role-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>角色权限</span></a>
+                                            <a  title="项目也有的子系统"  href="#role" id="role-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始角色权限</span></a>
                                         </li>
                                         <li  role="presentation"   class="" >
                                             <a  title="初始模块"  href="#module" id="module-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始模块</span></a>
                                         </li>
                                         <li  role="presentation"   class="">
-                                            <a  title="初始标签&分类"  href="#label" id="label-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始标签&分类</span></a>
+                                            <a  title="初始标签"  href="#label" id="label-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始标签</span></a>
                                         </li>
+                                       <li  role="presentation"   class="">
+                                           <a  title="初始分类"  href="#catalog" id="catalog-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始分类</span></a>
+                                       </li>
                                     </ul>
 
                                     <!-- Tab panes -->
@@ -265,24 +270,95 @@
                                                     <input type="hidden" name="authenticity_token" value="">
                                                 </form>
 
-                                                <div class="panel panel-form panel-default margin-t-lg">
-                                                    <div class="panel-heading">
-                                                        <strong>模块</strong>
-                                                        <div class="input-group member-search-form">
-                                                        </div>
+                                                    <style type="text/css">
+                                                        .thumbnail {
+                                                            display: block;
+                                                            padding: 4px;
+                                                            max-width: 280px;
+                                                            margin-bottom: 10px;
+                                                            line-height: 1.42857143;
+                                                            background-color: #fff;
+                                                            border: 1px solid #ddd;
+                                                            border-radius: 4px;
+                                                            -webkit-transition: border .2s ease-in-out;
+                                                            -o-transition: border .2s ease-in-out;
+                                                            transition: border .2s ease-in-out;
+                                                        }
+                                                    </style>
+                                                <hr>
+                                                    <div class="row "  id="module_list_render_id">
+
                                                     </div>
-                                                    <ul class="flex-list content-list" id="module_list_render_id">
+
+                                            </div>
+
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="label">
+                                            <div class="col-lg-3 settings-sidebar">
+                                                <h4 class="prepend-top-0">
+                                                    标签
+                                                </h4>
+                                                <p>
+                                                    对事项进行特别标记,一个事项可以有多个标签
+                                                    <strong></strong>
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <div class="top-area adjust setting-form">
+                                                    <div class="nav-text">
+                                                        标签可以更好的识别事项
+                                                    </div>
+                                                    <div class="nav-controls">
+                                                        <a class="btn btn-new label_create_link" data-toggle="modal" href="#modal-create-label-href"  href="javascript:void(0)">添加标签
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="panel panel-default margin-t">
+                                                    <div class="panel-heading">
+                                                        <strong>标签</strong>
+                                                    </div>
+
+                                                    <ul class="flex-list content-list " id="label_list_render_id">
 
                                                     </ul>
-                                                </div>
-                                                <input name="page" id="filter_page" type="hidden" value="1">
-                                                <div class="gl-pagination border-0" id="ampagination-bootstrap">
-
                                                 </div>
                                             </div>
 
                                         </div>
-                                        <div role="tabpanel" class="tab-pane" id="label">...</div>
+                                        <div role="tabpanel" class="tab-pane" id="catalog">
+                                            <div class="col-lg-12" style="margin-top: 40px">
+                                                <div class="col-lg-3 settings-sidebar">
+                                                    <h4 class="prepend-top-0">
+                                                        分类
+                                                    </h4>
+                                                    <p>
+                                                        分类是多个标签的集合，通过分类进行更高级的查询
+                                                        <strong></strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="top-area adjust setting-form">
+                                                        <div class="nav-text">
+                                                            一个分类包含多个标签
+                                                        </div>
+                                                        <div class="nav-controls">
+                                                            <a class="btn btn-new label_create_link"  id="btn-catalog_create" href="javascript:void(0)">添加分类
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    <hr>
+                                                    <div class="row "  id="catalog_list_render_id">
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
                                     </div>
 
                                 </div>
@@ -439,6 +515,245 @@
     </form>
 </div>
 
+<div class="modal" id="modal-create-label-href">
+    <form class="form-horizontal label-form" id="form_label_create_action" action="#" accept-charset="UTF-8" method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-edit-issue_title" class="modal-header-title">添加标签</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="label_title">名称</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" required="required" type="text" name="title" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="label_color">颜色</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <div class="input-group-addon js-label-color-preview" style="background-color: #428BCA">&nbsp;</div>
+                                <input class="form-control" type="text" value="#428BCA" name="bg_color" id="create_form_bg_color">
+                            </div>
+                            <div class="help-block">
+                                自定义标签颜色.
+                                <br>
+                                或选择下面推荐的颜色之一
+                            </div>
+                            <div class="suggest-colors">
+                                <a style="background-color: #0033CC" data-color="#0033CC" href="#">&nbsp;
+                                </a><a style="background-color: #428BCA" data-color="#428BCA" href="#">&nbsp;
+                                </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="#">&nbsp;
+                                </a><a style="background-color: #A8D695" data-color="#A8D695" href="#">&nbsp;
+                                </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="#">&nbsp;
+                                </a><a style="background-color: #69D100" data-color="#69D100" href="#">&nbsp;
+                                </a><a style="background-color: #004E00" data-color="#004E00" href="#">&nbsp;
+                                </a><a style="background-color: #34495E" data-color="#34495E" href="#">&nbsp;
+                                </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="#">&nbsp;
+                                </a><a style="background-color: #A295D6" data-color="#A295D6" href="#">&nbsp;
+                                </a><a style="background-color: #5843AD" data-color="#5843AD" href="#">&nbsp;
+                                </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="#">&nbsp;
+                                </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="#">&nbsp;
+                                </a><a style="background-color: #AD4363" data-color="#AD4363" href="#">&nbsp;
+                                </a><a style="background-color: #D10069" data-color="#D10069" href="#">&nbsp;
+                                </a><a style="background-color: #CC0033" data-color="#CC0033" href="#">&nbsp;
+                                </a><a style="background-color: #FF0000" data-color="#FF0000" href="#">&nbsp;
+                                </a><a style="background-color: #D9534F" data-color="#D9534F" href="#">&nbsp;
+                                </a><a style="background-color: #D1D100" data-color="#D1D100" href="#">&nbsp;
+                                </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="#">&nbsp;
+                                </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="#">&nbsp;
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="label_description">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" name="description"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="btn_label_create_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="modal" id="modal-edit-label-href">
+    <form class="form-horizontal label-form" id="form_label_edit_action" action="#" accept-charset="UTF-8" method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-edit-issue_title" class="modal-header-title">编辑标签</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="authenticity_token" value="">
+                    <input type="hidden" name="id" value="" id="label_form_id">
+
+                    <div class="form-group">
+                        <label class="control-label" for="label_title">名称</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" required="required" type="text" name="title" id="label_form_title" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="label_color">颜色</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <div class="input-group-addon js-label-color-preview">&nbsp;</div>
+                                <input class="form-control" type="text" value="" name="bg_color" id="label_form_label_color" >
+                            </div>
+                            <div class="help-block">
+                                自定义标签颜色.
+                                <br>
+                                或选择下面推荐的颜色之一
+                            </div>
+                            <div class="suggest-colors">
+                                <a style="background-color: #0033CC" data-color="#0033CC" href="#">&nbsp;
+                                </a><a style="background-color: #428BCA" data-color="#428BCA" href="#">&nbsp;
+                                </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="#">&nbsp;
+                                </a><a style="background-color: #A8D695" data-color="#A8D695" href="#">&nbsp;
+                                </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="#">&nbsp;
+                                </a><a style="background-color: #69D100" data-color="#69D100" href="#">&nbsp;
+                                </a><a style="background-color: #004E00" data-color="#004E00" href="#">&nbsp;
+                                </a><a style="background-color: #34495E" data-color="#34495E" href="#">&nbsp;
+                                </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="#">&nbsp;
+                                </a><a style="background-color: #A295D6" data-color="#A295D6" href="#">&nbsp;
+                                </a><a style="background-color: #5843AD" data-color="#5843AD" href="#">&nbsp;
+                                </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="#">&nbsp;
+                                </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="#">&nbsp;
+                                </a><a style="background-color: #AD4363" data-color="#AD4363" href="#">&nbsp;
+                                </a><a style="background-color: #D10069" data-color="#D10069" href="#">&nbsp;
+                                </a><a style="background-color: #CC0033" data-color="#CC0033" href="#">&nbsp;
+                                </a><a style="background-color: #FF0000" data-color="#FF0000" href="#">&nbsp;
+                                </a><a style="background-color: #D9534F" data-color="#D9534F" href="#">&nbsp;
+                                </a><a style="background-color: #D1D100" data-color="#D1D100" href="#">&nbsp;
+                                </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="#">&nbsp;
+                                </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="#">&nbsp;
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="label_description">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="label_form_description" name="description"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="btn_label_edit_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="modal" id="modal-form-catalog">
+    <form class="form-horizontal label-form" id="form-catalog" action="#" accept-charset="UTF-8" method="post">
+        <input type="hidden" name="project_tpl_id" id="catalog_project_tpl_id" value="<?=id?>">
+        <input type="hidden" id="catalog_action" name="action" value="">
+        <input type="hidden" id="catalog_id" name="id" value="">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-catalog_title" class="modal-header-title">添加分类</h3>
+                </div>
+
+                <div class="modal-body" id="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="input-name">名称</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" required="required" type="text" id="input-name" name="name" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="select-label_id_arr">包含标签</label>
+                        <div class="col-sm-10">
+                            <select id="select-label_id_arr" name="label_id_arr[]" class="form-control selectpicker"  multiple  title="请选择"  ></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="input-font_color">字体颜色</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <div class="input-group-addon js-label-color-preview" style="background-color: #428BCA">&nbsp;</div>
+                                <input class="form-control" type="text" value="#428BCA"  id="input-catalog_font_color" name="font_color">
+                            </div>
+                            <div class="help-block">
+                                可选择下面推荐的颜色之一
+                            </div>
+                            <div class="suggest-colors">
+                                <a style="background-color: #0033CC" data-color="#0033CC" href="#">&nbsp;
+                                </a><a style="background-color: #428BCA" data-color="#428BCA" href="#">&nbsp;
+                                </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="#">&nbsp;
+                                </a><a style="background-color: #A8D695" data-color="#A8D695" href="#">&nbsp;
+                                </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="#">&nbsp;
+                                </a><a style="background-color: #69D100" data-color="#69D100" href="#">&nbsp;
+                                </a><a style="background-color: #004E00" data-color="#004E00" href="#">&nbsp;
+                                </a><a style="background-color: #34495E" data-color="#34495E" href="#">&nbsp;
+                                </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="#">&nbsp;
+                                </a><a style="background-color: #A295D6" data-color="#A295D6" href="#">&nbsp;
+                                </a><a style="background-color: #5843AD" data-color="#5843AD" href="#">&nbsp;
+                                </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="#">&nbsp;
+                                </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="#">&nbsp;
+                                </a><a style="background-color: #AD4363" data-color="#AD4363" href="#">&nbsp;
+                                </a><a style="background-color: #D10069" data-color="#D10069" href="#">&nbsp;
+                                </a><a style="background-color: #CC0033" data-color="#CC0033" href="#">&nbsp;
+                                </a><a style="background-color: #FF0000" data-color="#FF0000" href="#">&nbsp;
+                                </a><a style="background-color: #D9534F" data-color="#D9534F" href="#">&nbsp;
+                                </a><a style="background-color: #D1D100" data-color="#D1D100" href="#">&nbsp;
+                                </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="#">&nbsp;
+                                </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="#">&nbsp;
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="textarea-description">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="textarea-description" name="description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="input-order_weight">排序权重</label>
+                        <div class="col-sm-10">
+                            <input class="form-control"  type="number" id="input-order_weight" name="order_weight" value="">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="btn_catalog_create_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
 {% verbatim %}
 <script type="text/x-handlebars-template"  id="role_list_tpl">
     {{#each roles}}
@@ -471,48 +786,71 @@
 </script>
 <script type="text/x-handlebars-template" id="module_list_tpl">
     {{#each modules}}
-    <li class="flex-row" id="li_data_id_{{id}}">
-        <div class="row-main-content ">
-            <a  href="{{../project_path.project_root_url}}/issues?模块={{name}}">
-                <span class="item-title">
-                    <i class="fa fa-th-large" ></i> {{name}}
-                </span>
-            </a>
-            <div class="block-truncated">
-                <div class="branch-commit">
-                    <div class="icon-container commit-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 18" enable-background="new 0 0 36 18"><path d="m34 7h-7.2c-.9-4-4.5-7-8.8-7s-7.9 3-8.8 7h-7.2c-1.1 0-2 .9-2 2 0 1.1.9 2 2 2h7.2c.9 4 4.5 7 8.8 7s7.9-3 8.8-7h7.2c1.1 0 2-.9 2-2 0-1.1-.9-2-2-2m-16 7c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5"></path></svg>
-                    </div>
-                    <small class="edited-text">
-                        {{#if description}}
-                        <span>{{description}}</span>
-                        {{else}}
-                        <span>无描述</span>
-                        {{/if}}
-                    </small>
-                </div>
+    <div class="col-sm-4 col-md-3 col-lg-2 " id="li_data_id_{{id}}" style="height: 180px;">
+          <div class="thumbnail" style="height: 236px;">
+
+            <div class="caption">
+              <h3>
+                  <a href="#" title="Icon汇" target="_blank"  >{{name}}</a>
+              </h3>
+              <div  style="max-height: 130px;min-height: 120px;">
+                  <p> {{#if description}}
+                            <span>{{description}}</span>
+                            {{else}}
+                            <span>无描述</span>
+                            {{/if}}
+                  </p>
+              </div>
+              <div class="pull-right hidden-xs hidden-sm hidden-md">
+                    <a class="btn btn-transparent btn-action module_list_for_edit" title="编辑模块"   data-id="{{id}}">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                    <a class="btn btn-transparent btn-action module_list_for_delete" title="删除模块" data-id="{{id}}"  >
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+              </div>
+
             </div>
+          </div>
         </div>
-        <div class="pull-left hidden-xs hidden-sm hidden-md">
-            <a class="btn btn-transparent btn-action module_list_for_edit" title="编辑模块"   data-id="{{id}}">
+    {{/each}}
+</script>
+<script type="text/x-handlebars-template" id="label_list_tpl">
+    {{#labels}}
+    <li data-id="{{id}}" id="project_label_{{id}}">
+        <span class="label-row">
+            <span class="label-name">
+                <a href="{% endverbatim %}<?=project_root_url?>{% verbatim %}?sys_filter=label_{{id}}">
+                    <span class="label color-label " style="background-color: {{bg_color}}; color: {{color}}" title="{{description}}" data-container="body">{{title}}</span>
+                </a>
+            </span>
+            <span class="label-type">
+                {{description}}
+            </span>
+        </span>
+
+        <div class="pull-right hidden-xs hidden-sm hidden-md">
+            <a title="编辑" class="btn btn-transparent btn-action label_edit_link"  href="#modal-edit-label-href" data-toggle="modal" data-id="{{id}}" href="javascript:void(0)">
                 <i class="fa fa-pencil-square-o"></i>
             </a>
-            <a class="btn btn-transparent btn-action module_list_for_delete" title="删除模块" data-id="{{id}}"  >
+
+            <a title="删除" class="btn btn-transparent btn-action remove-row label_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
                 <i class="fa fa-trash-o"></i>
             </a>
         </div>
 
     </li>
-    {{/each}}
-</script>
-{% endverbatim %}
+    {{/labels}}
+</script>{% endverbatim %}
 <script type="text/javascript">
 
     var _issueConfig = {};
     var _fineUploader = null;
     var $modules = null;
     var $role = null;
+    var $label = null;
     var $gridly = null;
+    var $catalogAjax = null;
     var projetc_tpl_id = '<?=id?>';
 
     function saveSubsystem(  ) {
@@ -630,6 +968,73 @@
         };
         window.$modules = new ProjectTplModule( module_options );
         window.$modules.fetchAll();
+
+        var label_options = {
+            list_render_id:"label_list_render_id",
+            list_tpl_id:"label_list_tpl",
+            filter_url:"/admin/ProjectTplLabel/fetchAll?project_tpl_id=<?=id?>",
+            get_url:"/admin/ProjectTplLabel/get",
+            add_url:"/admin/ProjectTplLabel/add?project_tpl_id=<?=id?>",
+            update_url:"/admin/ProjectTplLabel/update",
+            delete_url:"/admin/ProjectTplLabel/delete",
+        };
+        window.$label = new ProjectTplLabel( label_options );
+        window.$label.fetchAll();
+
+
+        let catalog_options = {
+            list_render_id:"catalog_list_render_id",
+            list_tpl_id:"catalog_list_tpl",
+            filter_url:"/admin/ProjectTplCatalog/fetchAll?project_tpl_id=<?=id?>",
+            get_url:"/admin/ProjectTplCatalog/get",
+            add_url:"/admin/ProjectTplCatalog/add?project_tpl_id=<?=id?>",
+            update_url:"/admin/ProjectTplCatalog/update",
+            delete_url:"/admin/ProjectTplCatalog/delete",
+        };
+        window.$catalogAjax= new ProjectTplCatalog(catalog_options);
+        window.$catalogAjax.fetchAll();
+
+        $('#btn_label_create_save').click(function () {
+            window.$labels.add('<?=id?>');
+        });
+
+        $('#btn_label_edit_save').click(function () {
+            window.$labels.update('<?=id?>');
+        });
+
+        $('#form_label_create_action .suggest-colors a').click(function () {
+            $('#create_form_bg_color').val($(this).data("color"));
+            $('#form_create_action .js-label-color-preview').css("background-color", $(this).data("color"));
+        });
+
+        $('#form_label_edit_action .suggest-colors a').click(function () {
+            $('#label_form_label_color').val($(this).data("color"));
+            $('#form_edit_action .js-label-color-preview').css("background-color", $(this).data("color"));
+        });
+
+        $('#btn-catalog_create').click(function () {
+            $('#form-catalog').resetForm();
+            $('#catalog_action').val('add');
+            $('#catalog_project_tpl_id').val('<?=id?>');
+            //window.$catalogAjax.initProjectLabel([]);
+            $('#modal-form-catalog').modal('show');
+        });
+
+        $('#btn_catalog_create_save').click(function () {
+            let action = $('#catalog_action').val();
+            if(action==='add'){
+                window.$catalogAjax.add();
+            }else{
+                window.$catalogAjax.update();
+            }
+        });
+
+        $('#form-catalog .suggest-colors a').click(function () {
+            $('#catalog_font_color').val($(this).data("color"));
+            $('#form-catalog .js-label-color-preview').css("background-color", $(this).data("color"));
+        });
+
+
     });
 
 </script>
