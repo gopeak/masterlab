@@ -82,9 +82,8 @@ class ProjectTplLabel extends BaseUserCtrl
      * @param null $params
      * @throws \Exception
      */
-    public function add($params = null)
+    public function add()
     {
-        $uid = $this->getCurrentUid();
         $projectId = null;
         if (isset($_GET['_target'][3])) {
             $projectId = (int)$_GET['_target'][3];
@@ -95,16 +94,17 @@ class ProjectTplLabel extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
+        $params = $_POST;
         if (empty($params)) {
             $this->ajaxFailed('错误', '没有提交表单数据');
         }
         $errorMsg = [];
-        if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['name'] = '标题不能为空';
+        if (!isset($params['title']) || empty($params['title'])) {
+            $errorMsg['title'] = '标题不能为空';
         }
 
-        if (isset($params['name']) && empty($params['name'])) {
-            $errorMsg['name'] = '名称不能为空';
+        if (isset($params['title']) && empty($params['title'])) {
+            $errorMsg['title'] = '名称不能为空';
         }
 
         if (!empty($errorMsg)) {
@@ -113,13 +113,18 @@ class ProjectTplLabel extends BaseUserCtrl
 
         $info = [];
         $info['project_tpl_id'] = $projectId;
-        $info['name'] = $params['name'];
+        $info['title'] = $params['title'];
+        $info['color'] = '#FFFFFF';
 
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
         }
+        if (isset($params['bg_color'])) {
+            $info['bg_color'] = $params['bg_color'];
+        }
+
         $model = new ProjectTplLabelModel();
-        if (isset($model->getByName($info['name'])['id'])) {
+        if (isset($model->getByName($info['title'])['id'])) {
             $this->ajaxFailed('提示', '名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
         list($ret, $msg) = $model->insert($info);

@@ -74,16 +74,14 @@
                                         <li  role="presentation"   class="" >
                                             <a  title="初始模块"  href="#module" id="module-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始模块</span></a>
                                         </li>
-                                        <li  role="presentation"   class="">
-                                            <a  title="初始标签"  href="#label" id="label-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始标签</span></a>
-                                        </li>
+
                                        <li  role="presentation"   class="">
-                                           <a  title="初始分类"  href="#catalog" id="catalog-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始分类</span></a>
+                                           <a  title="初始标签分类"  href="#catalog" id="catalog-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始分类</span></a>
                                        </li>
                                     </ul>
 
                                     <!-- Tab panes -->
-                                    <div class="tab-content">
+                                   <div class="tab-content">
                                         <div role="tabpanel" class="tab-pane active" id="ui">
                                             <div class="col-lg-9">
                                                 <div class="form-group">
@@ -293,72 +291,40 @@
                                             </div>
 
                                         </div>
-                                        <div role="tabpanel" class="tab-pane" id="label">
-                                            <div class="col-lg-3 settings-sidebar">
-                                                <h4 class="prepend-top-0">
-                                                    标签
-                                                </h4>
-                                                <p>
-                                                    对事项进行特别标记,一个事项可以有多个标签
-                                                    <strong></strong>
-                                                </p>
-                                            </div>
-                                            <div class="col-lg-9">
-                                                <div class="top-area adjust setting-form">
-                                                    <div class="nav-text">
-                                                        标签可以更好的识别事项
-                                                    </div>
-                                                    <div class="nav-controls">
-                                                        <a class="btn btn-new label_create_link" data-toggle="modal" href="#modal-create-label-href"  href="javascript:void(0)">添加标签
-                                                        </a>
-                                                    </div>
-                                                </div>
 
-                                                <div class="panel panel-default margin-t">
-                                                    <div class="panel-heading">
-                                                        <strong>标签</strong>
-                                                    </div>
-
-                                                    <ul class="flex-list content-list " id="label_list_render_id">
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                        </div>
                                         <div role="tabpanel" class="tab-pane" id="catalog">
-                                            <div class="col-lg-12" style="margin-top: 40px">
-                                                <div class="col-lg-3 settings-sidebar">
-                                                    <h4 class="prepend-top-0">
-                                                        分类
-                                                    </h4>
-                                                    <p>
-                                                        分类是多个标签的集合，通过分类进行更高级的查询
-                                                        <strong></strong>
-                                                    </p>
+
+                                            <div class="top-area adjust setting-form"  style="margin-top: 40px">
+                                                <div class="nav-text">
+                                                    对事项进行特别标记,一个事项可以有多个标签,标签可以更好的识别事项
+                                                    <a class="btn btn-new label_create_link" data-toggle="modal" href="#modal-create-label-href"  href="javascript:void(0)">添加标签
+                                                    </a>
                                                 </div>
-                                                <div class="col-lg-9">
-                                                    <div class="top-area adjust setting-form">
-                                                        <div class="nav-text">
-                                                            一个分类包含多个标签
-                                                        </div>
-                                                        <div class="nav-controls">
-                                                            <a class="btn btn-new label_create_link"  id="btn-catalog_create" href="javascript:void(0)">添加分类
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                            </div>
+                                            <div class="row " id="label_list_render_id">
 
-                                                    <hr>
-                                                    <div class="row "  id="catalog_list_render_id">
+                                            </div>
+                                            <hr>
+                                            <div class="top-area adjust setting-form"  >
+                                                <div class="nav-text">
+                                                    一个分类包含多个标签
+                                                    <a class="btn btn-new label_create_link"  id="btn-catalog_create" href="javascript:void(0)">添加分类
+                                                    </a>
+                                                </div>
+                                            </div>
 
-                                                    </div>
+                                            <div class="panel panel-default margin-t">
+                                                <div class="panel-heading">
+                                                    <strong>分 类</strong>
                                                 </div>
 
+                                                <ul class="flex-list content-list " id="catalog_list_render_id">
 
-
+                                                </ul>
                                             </div>
 
                                         </div>
+
                                     </div>
 
                                 </div>
@@ -527,7 +493,7 @@
                     <div class="form-group">
                         <label class="control-label" for="label_title">名称</label>
                         <div class="col-sm-10">
-                            <input class="form-control" required="required" type="text" name="title" value="">
+                            <input class="form-control" required="required" type="text" id="id_label_title" name="title" value="">
                         </div>
                     </div>
                     <div class="form-group">
@@ -535,7 +501,7 @@
                         <div class="col-sm-10">
                             <div class="input-group">
                                 <div class="input-group-addon js-label-color-preview" style="background-color: #428BCA">&nbsp;</div>
-                                <input class="form-control" type="text" value="#428BCA" name="bg_color" id="create_form_bg_color">
+                                <input class="form-control" type="text" value="#428BCA" name="bg_color" id="id_label_bg_color">
                             </div>
                             <div class="help-block">
                                 自定义标签颜色.
@@ -572,7 +538,7 @@
                     <div class="form-group">
                         <label class="control-label" for="label_description">描述</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" name="description"></textarea>
+                            <textarea class="form-control" name="description" id="id_label_description"></textarea>
                         </div>
                     </div>
                 </div>
@@ -588,82 +554,6 @@
     </form>
 </div>
 
-<div class="modal" id="modal-edit-label-href">
-    <form class="form-horizontal label-form" id="form_label_edit_action" action="#" accept-charset="UTF-8" method="post">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 id="modal-edit-issue_title" class="modal-header-title">编辑标签</h3>
-                </div>
-
-                <div class="modal-body">
-                    <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="authenticity_token" value="">
-                    <input type="hidden" name="id" value="" id="label_form_id">
-
-                    <div class="form-group">
-                        <label class="control-label" for="label_title">名称</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" required="required" type="text" name="title" id="label_form_title" value="">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="label_color">颜色</label>
-                        <div class="col-sm-10">
-                            <div class="input-group">
-                                <div class="input-group-addon js-label-color-preview">&nbsp;</div>
-                                <input class="form-control" type="text" value="" name="bg_color" id="label_form_label_color" >
-                            </div>
-                            <div class="help-block">
-                                自定义标签颜色.
-                                <br>
-                                或选择下面推荐的颜色之一
-                            </div>
-                            <div class="suggest-colors">
-                                <a style="background-color: #0033CC" data-color="#0033CC" href="#">&nbsp;
-                                </a><a style="background-color: #428BCA" data-color="#428BCA" href="#">&nbsp;
-                                </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="#">&nbsp;
-                                </a><a style="background-color: #A8D695" data-color="#A8D695" href="#">&nbsp;
-                                </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="#">&nbsp;
-                                </a><a style="background-color: #69D100" data-color="#69D100" href="#">&nbsp;
-                                </a><a style="background-color: #004E00" data-color="#004E00" href="#">&nbsp;
-                                </a><a style="background-color: #34495E" data-color="#34495E" href="#">&nbsp;
-                                </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="#">&nbsp;
-                                </a><a style="background-color: #A295D6" data-color="#A295D6" href="#">&nbsp;
-                                </a><a style="background-color: #5843AD" data-color="#5843AD" href="#">&nbsp;
-                                </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="#">&nbsp;
-                                </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="#">&nbsp;
-                                </a><a style="background-color: #AD4363" data-color="#AD4363" href="#">&nbsp;
-                                </a><a style="background-color: #D10069" data-color="#D10069" href="#">&nbsp;
-                                </a><a style="background-color: #CC0033" data-color="#CC0033" href="#">&nbsp;
-                                </a><a style="background-color: #FF0000" data-color="#FF0000" href="#">&nbsp;
-                                </a><a style="background-color: #D9534F" data-color="#D9534F" href="#">&nbsp;
-                                </a><a style="background-color: #D1D100" data-color="#D1D100" href="#">&nbsp;
-                                </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="#">&nbsp;
-                                </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="#">&nbsp;
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="label_description">描述</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control" id="label_form_description" name="description"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-save" id="btn_label_edit_save">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                </div>
-
-            </div>
-        </div>
-
-    </form>
-</div>
 
 <div class="modal" id="modal-form-catalog">
     <form class="form-horizontal label-form" id="form-catalog" action="#" accept-charset="UTF-8" method="post">
@@ -817,11 +707,30 @@
 </script>
 <script type="text/x-handlebars-template" id="label_list_tpl">
     {{#labels}}
-    <li data-id="{{id}}" id="project_label_{{id}}">
+        <span data-id="{{id}}"
+        id="project_label_{{id}}"
+        class="label color-label label_edit_link"
+        title="{{description}}"
+        style="background-color: {{bg_color}}; color: {{color}};margin-left: 10px"
+        data-container="body">{{title}}
+
+        </span>
+        <a title="删除" class="btn btn-transparent btn-action remove-row label_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
+                <i class="fa fa-trash-o"></i>
+         </a>
+
+
+    {{/labels}}
+
+</script>
+
+<script type="text/html" id="catalog_list_tpl">
+    {{#catalogs}}
+    <li data-id="{{id}}" id="project_catalog_{{id}}">
         <span class="label-row">
             <span class="label-name">
-                <a href="{% endverbatim %}<?=project_root_url?>{% verbatim %}?sys_filter=label_{{id}}">
-                    <span class="label color-label " style="background-color: {{bg_color}}; color: {{color}}" title="{{description}}" data-container="body">{{title}}</span>
+                <a href="#">
+                    <span class="" style="color: {{font_color}}" title="" data-container="body">{{name}}</span>
                 </a>
             </span>
             <span class="label-type">
@@ -840,15 +749,17 @@
         </div>
 
     </li>
-    {{/labels}}
-</script>{% endverbatim %}
+    {{/catalogs}}
+</script>
+
+{% endverbatim %}
 <script type="text/javascript">
 
     var _issueConfig = {};
     var _fineUploader = null;
     var $modules = null;
     var $role = null;
-    var $label = null;
+    var $labels = null;
     var $gridly = null;
     var $catalogAjax = null;
     var projetc_tpl_id = '<?=id?>';
@@ -942,55 +853,57 @@
 
 <script>
 
+    var role_options = {
+        list_render_id:"role_list_render_id",
+        list_tpl_id:"role_list_tpl",
+        filter_url:"/admin/ProjectTplRole/fetchAll?id=<?=id?>",
+        get_url:"/admin/ProjectTplRole/get",
+        add_url:"/admin/ProjectTplRole/add?id=<?=id?>",
+        update_url:"/admin/ProjectTplRole/update",
+        tree_url: "/admin/ProjectTplRole/perm_tree",
+        update_perm_url:"/admin/ProjectTplRole/update_perm",
+    };
+
+    var module_options = {
+        list_render_id:"module_list_render_id",
+        list_tpl_id:"module_list_tpl",
+        filter_url:"/admin/ProjectTplModule/fetchAll?project_tpl_id=<?=id?>",
+        get_url:"/admin/ProjectTplModule/get",
+        add_url:"/admin/ProjectTplModule/add?project_tpl_id=<?=id?>",
+        update_url:"/admin/ProjectTplModule/update",
+        delete_url:"/admin/ProjectTplModule/delete",
+    };
+
+    var label_options = {
+        list_render_id:"label_list_render_id",
+        list_tpl_id:"label_list_tpl",
+        filter_url:"/admin/ProjectTplLabel/fetchAll?project_tpl_id=<?=id?>",
+        get_url:"/admin/ProjectTplLabel/get",
+        add_url:"/admin/ProjectTplLabel/add?project_tpl_id=<?=id?>",
+        update_url:"/admin/ProjectTplLabel/update",
+        delete_url:"/admin/ProjectTplLabel/delete",
+    };
+
+    var catalog_options = {
+        list_render_id:"catalog_list_render_id",
+        list_tpl_id:"catalog_list_tpl",
+        filter_url:"/admin/ProjectTplCatalog/fetchAll?project_tpl_id=<?=id?>",
+        get_url:"/admin/ProjectTplCatalog/get",
+        add_url:"/admin/ProjectTplCatalog/add?project_tpl_id=<?=id?>",
+        update_url:"/admin/ProjectTplCatalog/update",
+        delete_url:"/admin/ProjectTplCatalog/delete",
+    };
     $(function() {
 
-        var role_options = {
-            list_render_id:"role_list_render_id",
-            list_tpl_id:"role_list_tpl",
-            filter_url:"/admin/ProjectTplRole/fetchAll?id=<?=id?>",
-            get_url:"/admin/ProjectTplRole/get",
-            add_url:"/admin/ProjectTplRole/add?id=<?=id?>",
-            update_url:"/admin/ProjectTplRole/update",
-            tree_url: "/admin/ProjectTplRole/perm_tree",
-            update_perm_url:"/admin/ProjectTplRole/update_perm",
-        };
         window.$role = new ProjectTplRole( role_options );
         window.$role.fetchAll();
 
-        var module_options = {
-            list_render_id:"module_list_render_id",
-            list_tpl_id:"module_list_tpl",
-            filter_url:"/admin/ProjectTplModule/fetchAll?project_tpl_id=<?=id?>",
-            get_url:"/admin/ProjectTplModule/get",
-            add_url:"/admin/ProjectTplModule/add?project_tpl_id=<?=id?>",
-            update_url:"/admin/ProjectTplModule/update",
-            delete_url:"/admin/ProjectTplModule/delete",
-        };
         window.$modules = new ProjectTplModule( module_options );
         window.$modules.fetchAll();
 
-        var label_options = {
-            list_render_id:"label_list_render_id",
-            list_tpl_id:"label_list_tpl",
-            filter_url:"/admin/ProjectTplLabel/fetchAll?project_tpl_id=<?=id?>",
-            get_url:"/admin/ProjectTplLabel/get",
-            add_url:"/admin/ProjectTplLabel/add?project_tpl_id=<?=id?>",
-            update_url:"/admin/ProjectTplLabel/update",
-            delete_url:"/admin/ProjectTplLabel/delete",
-        };
-        window.$label = new ProjectTplLabel( label_options );
-        window.$label.fetchAll();
+        window.$labels = new ProjectTplLabel( label_options );
+        window.$labels.fetchAll();
 
-
-        let catalog_options = {
-            list_render_id:"catalog_list_render_id",
-            list_tpl_id:"catalog_list_tpl",
-            filter_url:"/admin/ProjectTplCatalog/fetchAll?project_tpl_id=<?=id?>",
-            get_url:"/admin/ProjectTplCatalog/get",
-            add_url:"/admin/ProjectTplCatalog/add?project_tpl_id=<?=id?>",
-            update_url:"/admin/ProjectTplCatalog/update",
-            delete_url:"/admin/ProjectTplCatalog/delete",
-        };
         window.$catalogAjax= new ProjectTplCatalog(catalog_options);
         window.$catalogAjax.fetchAll();
 
@@ -1013,10 +926,10 @@
         });
 
         $('#btn-catalog_create').click(function () {
-            $('#form-catalog').resetForm();
+           // $('#form-catalog').resetForm();
             $('#catalog_action').val('add');
             $('#catalog_project_tpl_id').val('<?=id?>');
-            //window.$catalogAjax.initProjectLabel([]);
+             window.$catalogAjax.initProjectLabel([]);
             $('#modal-form-catalog').modal('show');
         });
 

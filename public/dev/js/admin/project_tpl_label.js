@@ -15,9 +15,8 @@ let ProjectTplLabel = (function () {
 
     };
 
-
     ProjectTplLabel.prototype.add = function (project_id) {
-        let add_name_obj = $('#form_create_action input[name=title]');
+        let add_name_obj = $('#id_label_title');
         if (is_empty(add_name_obj.val())) {
             notify_error('参数错误', '标签名称不能为空');
             add_name_obj.focus();
@@ -27,15 +26,15 @@ let ProjectTplLabel = (function () {
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/label/add?project_id="+project_id,
-            data: $('#form_create_action').serialize(),
+            url: _options.add_url,
+            data: $('#form_label_create_action').serialize(),
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret === "200") {
                     notify_success(resp.msg);
                     ProjectTplLabel.prototype.fetchAll();
-                    $('#form_create_action input[name=title]').val('');
-                    $('#form_create_action input[name=description]').val('');
+                    $('#id_label_title').val('');
+                    $('#id_label_description').val('');
                     $('#modal-create-label-href').modal('hide');
                 } else {
                     notify_error(resp.msg, resp.data);

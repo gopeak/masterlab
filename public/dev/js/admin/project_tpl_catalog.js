@@ -109,21 +109,38 @@ let ProjectTplCatalog = (function () {
 
     ProjectTplCatalog.prototype.initProjectLabel = function (label_id_arr) {
         // console.log(label_id_arr)
-        let el_select = $('#select-label_id_arr');
-        el_select.empty();
-        for (let i=0; i< _issueConfig.issue_labels.length;i++) {
-            let row = _issueConfig.issue_labels[i];
-            let id = row.id;
-            let title = row.title;
-            let selected = '';
-            if(in_array(id, label_id_arr)){
-                selected = 'selected';
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: window.label_options.filter_url,
+            data: {},
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.data.labels.length) {
+                    let el_select = $('#select-label_id_arr');
+                    el_select.empty();
+                    for (let i=0; i< resp.data.labels.length;i++) {
+                        let row = resp.data.labels[i];
+                        let id = row.id;
+                        let title = row.title;
+                        let selected = '';
+                        if(in_array(id, label_id_arr)){
+                            selected = 'selected';
+                        }
+                        let opt = '<option value="' + id + '"  ' + selected + '>' + title + '</option>';
+                        // console.log(opt)
+                        el_select.append(opt);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
             }
-            let opt = '<option value="' + id + '"  ' + selected + '>' + title + '</option>';
-            // console.log(opt)
-            el_select.append(opt);
-        }
-        $('.selectpicker').selectpicker('refresh');
+        });
+
+
 
     };
 
@@ -133,7 +150,7 @@ let ProjectTplCatalog = (function () {
             dataType: "json",
             async: true,
             url: _options.filter_url,
-            data: _options.query_param_obj,
+            data: {},
             success: function (resp) {
                 auth_check(resp);
                 if (resp.data.catalogs.length) {
