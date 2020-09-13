@@ -5,6 +5,7 @@ let ProjectTplLabel = (function () {
     // constructor
     function ProjectTplLabel (options) {
         _options = options;
+        $('')
     };
 
     ProjectTplLabel.prototype.getOptions = function () {
@@ -47,15 +48,24 @@ let ProjectTplLabel = (function () {
     };
 
     ProjectTplLabel.prototype.delete = function (project_id, label_id) {
-        $.post(root_url+"project/label/delete",{project_id: project_id, id:label_id},function (result) {
+        $.post(_options.delete_url,{project_id: project_id, id:label_id},function (result) {
             if (result.ret == 200) {
                 notify_success('删除成功');
                 $('#project_label_'+label_id).remove();
-                window.location.reload();
+               // window.location.reload();
             } else {
                 notify_error('删除失败');
             }
         });
+    };
+
+    ProjectTplLabel.prototype.create = function () {
+        $('#modal-create-label-href').modal('show');
+        $('#id_label_id').val('');
+        $('#id_label_title').val('');
+       //$('.js-label-color-preview').css("background-color", '');
+        $('#id_label_bg_color').val('');
+        $('#id_label_description').val('');
     };
 
     ProjectTplLabel.prototype.edit = function (label_id) {
@@ -63,16 +73,16 @@ let ProjectTplLabel = (function () {
             type: 'GET',
             dataType: "json",
             async: true,
-            url: "/project/label/fetch",
+            url: _options.get_url,
             data: {id: label_id},
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret == 200) {
-                    $('#label_form_id').val(resp.data.id);
-                    $('#label_form_title').val(resp.data.title);
+                    $('#id_label_id').val(resp.data.id);
+                    $('#id_label_title').val(resp.data.title);
                     $('.js-label-color-preview').css("background-color", resp.data.bg_color);
-                    $('#label_form_label_color').val(resp.data.bg_color);
-                    $('#label_form_description').val(resp.data.description);
+                    $('#id_label_bg_color').val(resp.data.bg_color);
+                    $('#id_label_description').val(resp.data.description);
                 } else {
                     notify_error(resp.msg, resp.data);
                 }
@@ -130,6 +140,7 @@ let ProjectTplLabel = (function () {
 
                     $(".label_edit_link").bind("click", function () {
                         //window.location.href = project_root_url+'/settings_label_edit?id='+$(this).data('id');
+                        $('#modal-create-label-href').modal('show')
                         ProjectTplLabel.prototype.edit($(this).data('id'));
                     });
 

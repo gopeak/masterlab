@@ -41,7 +41,7 @@ let ProjectTplCatalog = (function () {
     };
 
     ProjectTplCatalog.prototype.delete = function (project_id, id) {
-        $.post(root_url+"project/catalog/delete",{project_id: project_id, id:id},function (result) {
+        $.post(_options.delete_url,{project_id: project_id, id:id},function (result) {
             if (result.ret == '200') {
                 notify_success(result.msg, result.data);
                 $('#project_label_'+id).remove();
@@ -61,7 +61,7 @@ let ProjectTplCatalog = (function () {
             type: 'GET',
             dataType: "json",
             async: true,
-            url: "/project/catalog/fetch",
+            url: _options.fetch_url,
             data: {id: id},
             success: function (resp) {
                 auth_check(resp);
@@ -88,7 +88,7 @@ let ProjectTplCatalog = (function () {
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/catalog/update",
+            url: _options.update_url,
             data: el_form.serialize(),
             success: function (resp) {
                 auth_check(resp);
@@ -159,12 +159,12 @@ let ProjectTplCatalog = (function () {
                     let result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
 
-                    $(".label_edit_link").bind("click", function () {
+                    $(".catalog_edit_link").bind("click", function () {
                         //window.location.href = project_root_url+'/settings_label_edit?id='+$(this).data('id');
                         ProjectTplCatalog.prototype.edit($(this).data('id'));
                     });
 
-                    $(".label_edit_remove").bind("click",function () {
+                    $(".catalog_edit_remove").bind("click",function () {
                         let label_id =  $(this).data('id');
                         swal({
                                 title: "确认要删除该分类？",

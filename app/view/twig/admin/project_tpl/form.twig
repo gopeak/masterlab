@@ -76,7 +76,7 @@
                                         </li>
 
                                        <li  role="presentation"   class="">
-                                           <a  title="初始标签分类"  href="#catalog" id="catalog-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始分类</span></a>
+                                           <a  title="初始标签和分类"  href="#catalog" id="catalog-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始标签和分类</span></a>
                                        </li>
                                     </ul>
 
@@ -297,10 +297,37 @@
                                             <div class="top-area adjust setting-form"  style="margin-top: 40px">
                                                 <div class="nav-text">
                                                     对事项进行特别标记,一个事项可以有多个标签,标签可以更好的识别事项
-                                                    <a class="btn btn-new label_create_link" data-toggle="modal" href="#modal-create-label-href"  href="javascript:void(0)">添加标签
+                                                    <a class="btn  btn-small " id="btn-label_create"  href="javascript:void(0)"><i class="fa fa-plus"></i> 添加标签
                                                     </a>
                                                 </div>
                                             </div>
+                                            <style>
+                                                /* adapted from http://maxwells.github.io/bootstrap-tags.html */
+                                                .tag {
+                                                    font-size: 14px;
+                                                    padding: .3em .4em .4em;
+                                                    margin: 0 .1em;
+                                                }
+                                                .tag a {
+                                                    color: #bbb;
+                                                    cursor: pointer;
+                                                    opacity: 0.6;
+                                                }
+                                                .tag a:hover {
+                                                    opacity: 1.0
+                                                }
+                                                .tag .remove {
+                                                    vertical-align: bottom;
+                                                    top: 0;
+                                                }
+                                                .tag a {
+                                                    margin: 0 0 0 .3em;
+                                                }
+                                                .tag a .glyphicon-white {
+                                                    color: #fff;
+                                                    margin-bottom: 2px;
+                                                }
+                                            </style>
                                             <div class="row " id="label_list_render_id">
 
                                             </div>
@@ -308,7 +335,7 @@
                                             <div class="top-area adjust setting-form"  >
                                                 <div class="nav-text">
                                                     一个分类包含多个标签
-                                                    <a class="btn btn-new label_create_link"  id="btn-catalog_create" href="javascript:void(0)">添加分类
+                                                    <a class="btn  btn-small  label_create_link"  id="btn-catalog_create" href="javascript:void(0)"><i class="fa fa-plus"></i> 添加分类
                                                     </a>
                                                 </div>
                                             </div>
@@ -483,10 +510,11 @@
 
 <div class="modal" id="modal-create-label-href">
     <form class="form-horizontal label-form" id="form_label_create_action" action="#" accept-charset="UTF-8" method="post">
+        <input class="form-control" required="required" type="hidden" id="id_label_id" name="id" value="">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 id="modal-edit-issue_title" class="modal-header-title">添加标签</h3>
+                    <h3 id="modal-edit-issue_title" class="modal-header-title">标签</h3>
                 </div>
 
                 <div class="modal-body">
@@ -708,17 +736,15 @@
 <script type="text/x-handlebars-template" id="label_list_tpl">
     {{#labels}}
         <span data-id="{{id}}"
-        id="project_label_{{id}}"
-        class="label color-label label_edit_link"
-        title="{{description}}"
-        style="background-color: {{bg_color}}; color: {{color}};margin-left: 10px"
-        data-container="body">{{title}}
-
+            id="project_label_{{id}}"
+            class="tag label label-info "
+            title="{{description}}"
+            data-container="body"
+             style="background-color: {{bg_color}}; color: {{color}}; margin-left: 10px"
+            >
+             <a class="label_edit_link" href="#" data-id="{{id}}" >{{title}}</a>
+           <a class="label_edit_remove" href="#" data-id="{{id}}"> <i class="remove  fa fa-remove  white"  style="color:white" ></i></a>
         </span>
-        <a title="删除" class="btn btn-transparent btn-action remove-row label_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
-                <i class="fa fa-trash-o"></i>
-         </a>
-
 
     {{/labels}}
 
@@ -739,11 +765,11 @@
         </span>
 
         <div class="pull-right hidden-xs hidden-sm hidden-md">
-            <a title="编辑" class="btn btn-transparent btn-action label_edit_link"  href="#modal-edit-label-href" data-toggle="modal" data-id="{{id}}" href="javascript:void(0)">
+            <a title="编辑" class="btn btn-transparent btn-action catalog_edit_link"  href="#modal-form-catalog" data-toggle="modal" data-id="{{id}}" href="javascript:void(0)">
                 <i class="fa fa-pencil-square-o"></i>
             </a>
 
-            <a title="删除" class="btn btn-transparent btn-action remove-row label_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
+            <a title="删除" class="btn btn-transparent btn-action remove-row catalog_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
                 <i class="fa fa-trash-o"></i>
             </a>
         </div>
@@ -906,6 +932,10 @@
 
         window.$catalogAjax= new ProjectTplCatalog(catalog_options);
         window.$catalogAjax.fetchAll();
+
+        $('#btn-label_create').click(function () {
+            window.$labels.create();
+        });
 
         $('#btn_label_create_save').click(function () {
             window.$labels.add('<?=id?>');
