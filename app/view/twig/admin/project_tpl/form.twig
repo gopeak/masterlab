@@ -93,8 +93,8 @@
                                                             <label class="label-light" for="layout">页面布局:</label>
                                                         </div>
                                                         <div class="col-lg-4">
-                                                            <select class="form-control" name="params[page_layout]" id="page_layout">
-                                                                <option selected="selected" value="fixed">固定</option>
+                                                            <select class="form-control selectpicker" name="page_layout" id="page_layout">
+                                                                <option value="fixed">固定</option>
                                                                 <option value="fluid">自适应</option></select>
                                                         </div>
                                                         <div class="col-lg-6">
@@ -109,8 +109,8 @@
                                                             <label class="label-light" for="project_view">项目首页显示:</label>
                                                         </div>
                                                         <div class="col-lg-4">
-                                                            <select class="form-control" name="params[project_view]" id="project_view">
-                                                                <option selected="selected" value="issues">事项列表</option>
+                                                            <select class="form-control selectpicker" name="project_view" id="project_view">
+                                                                <option   value="issues">事项列表</option>
                                                                 <option value="summary">项目概要</option>
                                                                 <option value="backlog">待办事项</option>
                                                                 <option value="sprints">迭代列表</option>
@@ -129,8 +129,8 @@
                                                             <label class="label-light" for="issue_view">事项显示:</label>
                                                         </div>
                                                         <div class="col-lg-4">
-                                                            <select class="form-control" name="params[issue_view]" id="issue_view">
-                                                                <option selected="selected" value="list">表格视图</option>
+                                                            <select class="form-control selectpicker" name="issue_view" id="issue_view">
+                                                                <option  value="list">表格视图</option>
                                                                 <option value="detail">左右视图</option>
                                                                 <option value="responsive">响应式视图</option>
                                                             </select>
@@ -141,15 +141,11 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group">
-                                                    <input id="commit" type="button" name="commit" value="保存" class="btn btn-save js-key-enter">
-                                                </div>
-
                                             </div>
                                         </div>
 
                                         <div role="tabpanel" class="tab-pane " id="issue">
-                                            <form id="form_add_action" class="form-horizontal  " action="/project/main/create" accept-charset="UTF-8" method="post">
+                                            <form id="form_add_action" class="form-horizontal  " action="#" accept-charset="UTF-8" method="post">
                                             <div class="form-group">
 
                                             </div>
@@ -311,7 +307,6 @@
                                                 .tag a {
                                                     color: #bbb;
                                                     cursor: pointer;
-                                                    opacity: 0.6;
                                                 }
                                                 .tag a:hover {
                                                     opacity: 1.0
@@ -599,7 +594,7 @@
                     <div class="form-group">
                         <label class="control-label" for="input-name">名称</label>
                         <div class="col-sm-10">
-                            <input class="form-control" required="required" type="text" id="input-name" name="name" value="">
+                            <input class="form-control" required="required" type="text" id="input-catalog-name" name="name" value="">
                         </div>
                     </div>
                     <div class="form-group">
@@ -613,7 +608,7 @@
                         <div class="col-sm-10">
                             <div class="input-group">
                                 <div class="input-group-addon js-label-color-preview" style="background-color: #428BCA">&nbsp;</div>
-                                <input class="form-control" type="text" value="#428BCA"  id="input-catalog_font_color" name="font_color">
+                                <input class="form-control" type="text" value="#428BCA"  id="input-catalog-font_color" name="font_color">
                             </div>
                             <div class="help-block">
                                 可选择下面推荐的颜色之一
@@ -648,14 +643,14 @@
                     <div class="form-group">
                         <label class="control-label" for="textarea-description">描述</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" id="textarea-description" name="description"></textarea>
+                            <textarea class="form-control" id="textarea-catalog-description" name="description"></textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label" for="input-order_weight">排序权重</label>
                         <div class="col-sm-10">
-                            <input class="form-control"  type="number" id="input-order_weight" name="order_weight" value="">
+                            <input class="form-control"  type="number" id="input-catlog-order_weight" name="order_weight" value="">
                         </div>
                     </div>
 
@@ -742,8 +737,8 @@
             data-container="body"
              style="background-color: {{bg_color}}; color: {{color}}; margin-left: 10px"
             >
-             <a class="label_edit_link" href="#" data-id="{{id}}" >{{title}}</a>
-           <a class="label_edit_remove" href="#" data-id="{{id}}"> <i class="remove  fa fa-remove  white"  style="color:white" ></i></a>
+             <a class="label_edit_link" href="#" data-id="{{id}}" style="color:white">{{title}}</a>
+             <a class="label_edit_remove" href="#" data-id="{{id}}"> <i class="remove  fa fa-remove  white"  style="color:white" ></i></a>
         </span>
 
     {{/labels}}
@@ -753,25 +748,27 @@
 <script type="text/html" id="catalog_list_tpl">
     {{#catalogs}}
     <li data-id="{{id}}" id="project_catalog_{{id}}">
-        <span class="label-row">
-            <span class="label-name">
-                <a href="#">
-                    <span class="" style="color: {{font_color}}" title="" data-container="body">{{name}}</span>
+        <div class="row">
+            <div class="col-md-2">
+                <span class="label-name" title="{{description}}">
+                    <a href="#">
+                        <span class="" style="color: {{font_color}}" title="" data-container="body">{{name}}</span>
+                    </a>
+                </span>
+            </div>
+            <div class="col-md-8" id="catalog-labels-html-{{id}}">
+
+            </div>
+
+            <div class="col-md-2">
+                <a title="编辑" class="btn btn-transparent btn-action catalog_edit_link" data-id="{{id}}" href="javascript:void(0)">
+                    <i class="fa fa-pencil-square-o"></i>
                 </a>
-            </span>
-            <span class="label-type">
-                {{description}}
-            </span>
-        </span>
 
-        <div class="pull-right hidden-xs hidden-sm hidden-md">
-            <a title="编辑" class="btn btn-transparent btn-action catalog_edit_link"  href="#modal-form-catalog" data-toggle="modal" data-id="{{id}}" href="javascript:void(0)">
-                <i class="fa fa-pencil-square-o"></i>
-            </a>
-
-            <a title="删除" class="btn btn-transparent btn-action remove-row catalog_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
-                <i class="fa fa-trash-o"></i>
-            </a>
+                <a title="删除" class="btn btn-transparent btn-action remove-row catalog_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+            </div>
         </div>
 
     </li>
@@ -825,7 +822,7 @@
 
     // Generated by CoffeeScript 2.5.1
 
-        $(function() {
+    $(function() {
             var brick;
             brick = "<div class='brick small'><div class='delete'>&times;</div></div>";
             $gridly = $('.gridly').gridly({
@@ -877,7 +874,7 @@
 
 </script>
 
-<script>
+<script type="text/javascript">
 
     var role_options = {
         list_render_id:"role_list_render_id",
@@ -914,12 +911,14 @@
         list_render_id:"catalog_list_render_id",
         list_tpl_id:"catalog_list_tpl",
         filter_url:"/admin/ProjectTplCatalog/fetchAll?project_tpl_id=<?=id?>",
-        get_url:"/admin/ProjectTplCatalog/get",
+        get_url:"/admin/ProjectTplCatalog/fetch",
         add_url:"/admin/ProjectTplCatalog/add?project_tpl_id=<?=id?>",
         update_url:"/admin/ProjectTplCatalog/update",
         delete_url:"/admin/ProjectTplCatalog/delete",
     };
     $(function() {
+        window.$projectTpl = new PluginTemplate({patch_url:'/admin/project_tpl/update'}  );
+        window.$projectTpl.bindEvent();
 
         window.$role = new ProjectTplRole( role_options );
         window.$role.fetchAll();
@@ -932,51 +931,6 @@
 
         window.$catalogAjax= new ProjectTplCatalog(catalog_options);
         window.$catalogAjax.fetchAll();
-
-        $('#btn-label_create').click(function () {
-            window.$labels.create();
-        });
-
-        $('#btn_label_create_save').click(function () {
-            window.$labels.add('<?=id?>');
-        });
-
-        $('#btn_label_edit_save').click(function () {
-            window.$labels.update('<?=id?>');
-        });
-
-        $('#form_label_create_action .suggest-colors a').click(function () {
-            $('#create_form_bg_color').val($(this).data("color"));
-            $('#form_create_action .js-label-color-preview').css("background-color", $(this).data("color"));
-        });
-
-        $('#form_label_edit_action .suggest-colors a').click(function () {
-            $('#label_form_label_color').val($(this).data("color"));
-            $('#form_edit_action .js-label-color-preview').css("background-color", $(this).data("color"));
-        });
-
-        $('#btn-catalog_create').click(function () {
-           // $('#form-catalog').resetForm();
-            $('#catalog_action').val('add');
-            $('#catalog_project_tpl_id').val('<?=id?>');
-             window.$catalogAjax.initProjectLabel([]);
-            $('#modal-form-catalog').modal('show');
-        });
-
-        $('#btn_catalog_create_save').click(function () {
-            let action = $('#catalog_action').val();
-            if(action==='add'){
-                window.$catalogAjax.add();
-            }else{
-                window.$catalogAjax.update();
-            }
-        });
-
-        $('#form-catalog .suggest-colors a').click(function () {
-            $('#catalog_font_color').val($(this).data("color"));
-            $('#form-catalog .js-label-color-preview').css("background-color", $(this).data("color"));
-        });
-
 
     });
 

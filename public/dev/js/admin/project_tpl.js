@@ -31,8 +31,53 @@ var PluginTemplate = (function() {
         }
     };
 
-    PluginTemplate.prototype.fetchAll = function(  ) {
+    PluginTemplate.prototype.bindEvent = function( ) {
+        $('#page_layout').change(function () {
+            PluginTemplate.prototype.updateSelectData({page_layout: $(this).val() });
+        });
+        $('#project_view').change(function () {
+            PluginTemplate.prototype.updateSelectData({project_view: $(this).val() });
+        });
+        $('#issue_view').change(function () {
+            PluginTemplate.prototype.updateSelectData({issue_view: $(this).val() });
+        });
+        $('#issue_type_scheme_id').change(function () {
+            PluginTemplate.prototype.updateSelectData({issue_type_scheme_id: $(this).val() });
+        });
+        $('#issue_workflow_scheme_id').change(function () {
+            PluginTemplate.prototype.updateSelectData({issue_workflow_scheme_id: $(this).val() });
+        });
+        $('#issue_ui_scheme_id').change(function () {
+            PluginTemplate.prototype.updateSelectData({issue_ui_scheme_id: $(this).val() });
+        });
+    };
 
+    PluginTemplate.prototype.updateSelectData = function(selected_data ) {
+
+        selected_data['id'] = window.projetc_tpl_id;
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.patch_url,
+            data: selected_data ,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret ==='200'  ){
+                    notify_success( resp.msg );
+                }else{
+                    notify_error( resp.msg );
+                }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    PluginTemplate.prototype.fetchAll = function(  ) {
         // url,  list_tpl_id, list_render_id
         var params = {  format:'json',category_id:window.category_id };
         $.ajax({

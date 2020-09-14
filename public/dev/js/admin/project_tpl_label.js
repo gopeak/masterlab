@@ -5,7 +5,22 @@ let ProjectTplLabel = (function () {
     // constructor
     function ProjectTplLabel (options) {
         _options = options;
-        $('')
+        $('#btn-label_create').click(function () {
+            window.$labels.create();
+        });
+
+        $('#btn_label_create_save').click(function () {
+            window.$labels.add();
+        });
+
+        $('#btn_label_edit_save').click(function () {
+            window.$labels.update();
+        });
+
+        $('#form_label_create_action .suggest-colors a').click(function () {
+            $('#id_label_bg_color').val($(this).data("color"));
+            $('#form_label_create_action .js-label-color-preview').css("background-color", $(this).data("color"));
+        });
     };
 
     ProjectTplLabel.prototype.getOptions = function () {
@@ -16,7 +31,7 @@ let ProjectTplLabel = (function () {
 
     };
 
-    ProjectTplLabel.prototype.add = function (project_id) {
+    ProjectTplLabel.prototype.add = function () {
         let add_name_obj = $('#id_label_title');
         if (is_empty(add_name_obj.val())) {
             notify_error('参数错误', '标签名称不能为空');
@@ -93,7 +108,7 @@ let ProjectTplLabel = (function () {
         });
     };
 
-    ProjectTplLabel.prototype.update = function (project_id) {
+    ProjectTplLabel.prototype.update = function () {
         let add_name_obj = $('#form_edit_action input[name=title]');
         if (is_empty(add_name_obj.val())) {
             notify_error('参数错误', '标签名称不能为空');
@@ -105,14 +120,14 @@ let ProjectTplLabel = (function () {
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/label/update?project_id="+project_id,
+            url: _options.update_url,
             data: $('#form_edit_action').serialize(),
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret === "200") {
                     notify_success(resp.msg);
                     ProjectTplLabel.prototype.fetchAll();
-                    $('#modal-edit-label-href').modal('hide');
+                    $('#modal-create-label-href').modal('hide');
                 } else {
                     notify_error(resp.msg);
                 }
@@ -173,7 +188,7 @@ let ProjectTplLabel = (function () {
                         wrap: '#' + _options.list_render_id,
                         message : '标签为空',
                         name: 'label',
-                        handleHtml: `<a class="btn btn-new js-create-label" data-toggle="modal"  href="#modal-create-label-href">添加标签</a>`
+                        handleHtml: `<a class="btn  js-create-label" data-toggle="modal"  href="#modal-create-label-href">添加标签</a>`
                     })
                 }
             },

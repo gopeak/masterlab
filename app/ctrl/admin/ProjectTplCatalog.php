@@ -8,6 +8,7 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
 use main\app\model\ProjectTplCatalogLabelModel;
+use main\app\model\ProjectTplLabelModel;
 
 /**
  *
@@ -54,6 +55,10 @@ class ProjectTplCatalog extends BaseUserCtrl
         }
         $model = new ProjectTplCatalogLabelModel();
         $data['catalogs'] = $model->getByProject($projectId);
+
+        $model = new ProjectTplLabelModel();
+        $data['labels'] = $model->getByProject($projectId);
+
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -130,6 +135,9 @@ class ProjectTplCatalog extends BaseUserCtrl
         }
 
         $errorMsg = [];
+        if (!isset($_POST['project_tpl_id']) || empty($_POST['project_tpl_id'])) {
+            $errorMsg['project_tpl_id'] = '参数project_tpl_id没有提供';
+        }
         if (isset($_POST['name']) && empty($_POST['name'])) {
             $errorMsg['name'] = '名称不能为空';
         }
@@ -162,10 +170,7 @@ class ProjectTplCatalog extends BaseUserCtrl
         if (empty($catalog)) {
             $this->ajaxFailed('提示', '参数错误, 数据为空');
         }
-        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
-            $this->ajaxFailed('提示', '您没有权限访问该页面,需要项目管理权限');
-        }
-        if ($catalog['project_tpl_id'] != $this->projectId) {
+        if ($catalog['project_tpl_id'] != $_POST['project_tpl_id']) {
             $this->ajaxFailed('提示', '参数错误, 非当前项目的数据');
         }
         if ($catalog['name'] != $updateArr['name']) {
@@ -193,15 +198,16 @@ class ProjectTplCatalog extends BaseUserCtrl
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
+        if (!isset($_POST['project_tpl_id']) || empty($_POST['project_tpl_id'])) {
+            $this->ajaxFailed('参数project_tpl_id没有提供');
+        }
         $id = intval($id);
         $model = new ProjectTplCatalogLabelModel();
         $info = $model->getById($id);
-        if ($info['project_tpl_id'] != $this->projectId) {
+        if ($info['project_tpl_id'] != $_POST['project_tpl_id']) {
             $this->ajaxFailed('提示', '参数错误,非当前项目的分类无法删除');
         }
         $model->deleteItem($id);
-        $event = new CommonPlacedEvent($this, $info);
-        $this->dispatcher->dispatch($event,  Events::onCatalogDelete);
         $this->ajaxSuccess('提示','操作成功');
     }
 }

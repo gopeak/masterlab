@@ -5,6 +5,29 @@ let ProjectTplCatalog = (function () {
     // constructor
     function ProjectTplCatalog (options) {
         _options = options;
+        $('#btn-catalog_create').click(function () {
+            // $('#form-catalog').resetForm();
+            $('#catalog_action').val('add');
+            $('#input-catalog-name').val('');
+            $('#input-catalog-font_color').val('#0033CC');
+            $('#form-catalog .js-label-color-preview').css("background-color", $('#input-catalog-font_color').val());
+            $('#textarea-catalog-description').val('');
+            window.$catalogAjax.initProjectLabel([]);
+            $('#modal-form-catalog').modal('show');
+        });
+        $('#btn_catalog_create_save').click(function () {
+            let action = $('#catalog_action').val();
+            if(action==='add'){
+                window.$catalogAjax.add();
+            }else{
+                window.$catalogAjax.update();
+            }
+        });
+        $('#form-catalog .suggest-colors a').click(function () {
+            $('#input-catalog-font_color').val($(this).data("color"));
+            $('#form-catalog .js-label-color-preview').css("background-color", $(this).data("color"));
+        });
+
     };
 
     ProjectTplCatalog.prototype.getOptions = function () {
@@ -22,7 +45,7 @@ let ProjectTplCatalog = (function () {
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/catalog/add",
+            url: _options.add_url,
             data: el_form.serialize(),
             success: function (resp) {
                 auth_check(resp);
@@ -56,22 +79,23 @@ let ProjectTplCatalog = (function () {
         $('#modal-form-catalog').modal('show');
         $('#action').val('update');
         $('#catalog_id').val(id);
+
         loading.show('#modal-body');
         $.ajax({
             type: 'GET',
             dataType: "json",
             async: true,
-            url: _options.fetch_url,
+            url: _options.get_url,
             data: {id: id},
             success: function (resp) {
                 auth_check(resp);
                 loading.closeAll();
                 if (resp.ret == '200') {
-                    $('#input-name').val(resp.data.name);
+                    $('#input-catalog-name').val(resp.data.name);
                     ProjectTplCatalog.prototype.initProjectLabel(resp.data.label_id_json);
-                    $('#input-font_color').val(resp.data.font_color);
-                    $('#textarea-description').text(resp.data.description);
-                    $('#input-order_weight').val(resp.data.order_weight);
+                    $('#input-catalog-font_color').val(resp.data.font_color);
+                    $('#textarea-catalog-description').text(resp.data.description);
+                    $('#input-catalog-order_weight').val(resp.data.order_weight);
                 } else {
                     notify_error(resp.msg, resp.data);
                 }
@@ -154,11 +178,25 @@ let ProjectTplCatalog = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.data.catalogs.length) {
+
                     let source = $('#' + _options.list_tpl_id).html();
                     let template = Handlebars.compile(source);
                     let result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
-
+                    for(let i=0;i<resp.data.catalogs.length; i++){
+                        let labels_html = '';
+                        let  label_arr = JSON.parse(resp.data.catalogs[i]['label_id_json']);
+                        if(label_arr){
+                            for(let j=0;j<label_arr.length; j++){
+                                let label = getArrayValue(resp.data.labels, 'id', label_arr[j]);
+                                console.log(label)
+                                if(label){
+                                    labels_html += '<a class=" " style="margin-left:6px;color:gray">'+label['title']+'</a>';
+                                }
+                            }
+                        }
+                        $('#catalog-labels-html-'+resp.data.catalogs[i].id).html(labels_html);
+                    }
                     $(".catalog_edit_link").bind("click", function () {
                         //window.location.href = project_root_url+'/settings_label_edit?id='+$(this).data('id');
                         ProjectTplCatalog.prototype.edit($(this).data('id'));

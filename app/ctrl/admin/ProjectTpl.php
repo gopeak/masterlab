@@ -244,11 +244,30 @@ class ProjectTpl extends BaseAdminCtrl
             $info['subsystem_json'] = json_encode($sortArr);
 
         }
+        if (isset($_POST['page_layout'])) {
+            $info['page_layout'] = $_POST['page_layout'];
+        }
+        if (isset($_POST['project_view'])) {
+            $info['project_view'] = $_POST['project_view'];
+        }
+        if (isset($_POST['issue_view'])) {
+            $info['issue_view'] = $_POST['issue_view'];
+        }
+        if (isset($_POST['issue_type_scheme_id'])) {
+            $info['issue_type_scheme_id'] = $_POST['issue_type_scheme_id'];
+        }
+        if (isset($_POST['issue_workflow_scheme_id'])) {
+            $info['issue_workflow_scheme_id'] = $_POST['issue_workflow_scheme_id'];
+        }
+        if (isset($_POST['issue_ui_scheme_id'])) {
+            $info['issue_ui_scheme_id'] = $_POST['issue_ui_scheme_id'];
+        }
         if (!empty($info)) {
             $model->updateById($id, $info);
         }
         $this->ajaxSuccess('操作成功');
     }
+
 
     /**
      * 删除插件，包括插件目录,谨慎操作
