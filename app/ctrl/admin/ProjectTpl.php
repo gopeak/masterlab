@@ -68,8 +68,8 @@ class ProjectTpl extends BaseAdminCtrl
         $userId = UserAuth::getId();
 
         $data = [];
-        $data['title'] = '项目';
-        $data['sub_nav_active'] = 'project_tpl';
+        $data['title'] = '项目模板';
+        $data['nav_links_active'] = 'project_tpl';
         $data['left_nav_active'] = 'all';
         $data['category_id'] = isset($_GET['category_id']) ? $_GET['category_id'] :'';
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
@@ -85,7 +85,7 @@ class ProjectTpl extends BaseAdminCtrl
     {
         $data = [];
         $data['title'] = '项目';
-        $data['sub_nav_active'] = 'project_tpl';
+        $data['nav_links_active'] = 'project_tpl';
         $data['left_nav_active'] = 'all';
         $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
