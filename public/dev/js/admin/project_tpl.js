@@ -103,8 +103,8 @@ var PluginTemplate = (function() {
                         PluginTemplate.prototype.uninstall( $(this).attr("data-value") );
                     });
 
-                    $(".list_for_edit").click(function(){
-                        PluginTemplate.prototype.edit( $(this).attr("data-value") );
+                    $(".tpl_edit_link").click(function(){
+                        PluginTemplate.prototype.edit($(this).data("id"));
                     });
 
                     $(".list_for_delete").click(function(){
@@ -139,11 +139,9 @@ var PluginTemplate = (function() {
         $("#id_category").selectpicker('refresh');
         console.log(window.uploader)
         window.uploader.reset();
-
     };
 
     PluginTemplate.prototype.edit = function(id ) {
-
         $("#modal-project_tpl").modal('show');
         $('#modal-header-title').html('编辑模板');
         $("#id_action").val('update');
@@ -158,13 +156,19 @@ var PluginTemplate = (function() {
             success: function (resp) {
                 loading.closeAll();
                 auth_check(resp);
-                $("#edit_id").val(resp.data.id);
-                $("#id_name").val(resp.data.name);
+                var tpl = resp.data.tpl;
+                $("#edit_id").val(tpl.id);
+                $("#id_name").val(tpl.name);
                 $('#tip_name').hide();
-                $("#id_category").val(resp.data.type);
-                $("#id_description").text(resp.data.description);
-                $("#id_image_bg").val(resp.data.image_bg);
-
+                $("#id_category").val(tpl.category_id);
+                $("#id_description").text(tpl.description);
+                $("#id_image_bg").val(tpl.image_bg);
+                if (window.uploader) {
+                    var initFile = [];
+                    initFile.push({thumbnailUrl:tpl.image_bg, name:tpl.name+"背景",uuid:generateUUID()});
+                    window.uploader.reset();
+                    window.uploader.addInitialFiles (initFile);
+                }
                 $('.selectpicker').selectpicker('refresh');
             },
             error: function (res) {
@@ -248,50 +252,8 @@ var PluginTemplate = (function() {
         });
     };
 
-    PluginTemplate.prototype.install = function(name ) {
 
-        var method = 'POST';
-        $.ajax({
-            type: method,
-            dataType: "json",
-            data:{name:name },
-            url: _options.install_url,
-            success: function (resp) {
-                auth_check(resp);
-                notify_success( resp.msg,  resp.data);
-                if( resp.ret ==='200'  ){
-                    window.location.reload();
-                }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    };
 
-    PluginTemplate.prototype.uninstall = function(id ) {
-
-        if  (!window.confirm('您确认要卸载吗?')) {
-            return false;
-        }
-        var method = 'POST';
-        $.ajax({
-            type: method,
-            dataType: "json",
-            data:{id:id },
-            url: _options.uninstall_url,
-            success: function (resp) {
-                auth_check(resp);
-                notify_success( resp.msg );
-                if( resp.ret ==='200'  ){
-                    window.location.reload();
-                }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    };
 
     PluginTemplate.prototype._delete = function(name ) {
 

@@ -94,8 +94,8 @@
                                                         </div>
                                                         <div class="col-lg-4">
                                                             <select class="form-control selectpicker" name="page_layout" id="page_layout">
-                                                                <option value="fixed">固定</option>
-                                                                <option value="fluid">自适应</option></select>
+                                                                <option value="fixed"  {% if 'fixed'==tpl.page_layout %} selected {% endif %}>固定</option>
+                                                                <option value="fluid"  {% if 'fluid'==tpl.page_layout %} selected {% endif %}>自适应</option></select>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <span class="help-block">在固定（最大1200 px）和自适应（100%）应用程序布局之间进行选择。</span>
@@ -110,11 +110,11 @@
                                                         </div>
                                                         <div class="col-lg-4">
                                                             <select class="form-control selectpicker" name="project_view" id="project_view">
-                                                                <option   value="issues">事项列表</option>
-                                                                <option value="summary">项目概要</option>
-                                                                <option value="backlog">待办事项</option>
-                                                                <option value="sprints">迭代列表</option>
-                                                                <option value="board">迭代看板</option>
+                                                                <option value="issues"    {% if 'issues'==tpl.project_view %} selected {% endif %}>事项列表</option>
+                                                                <option value="summary"   {% if 'summary'==tpl.project_view %} selected {% endif %}>项目概要</option>
+                                                                <option value="backlog"   {% if 'backlog'==tpl.project_view %} selected {% endif %}>待办事项</option>
+                                                                <option value="sprints"   {% if 'sprints'==tpl.project_view %} selected {% endif %}>迭代列表</option>
+                                                                <option value="board"     {% if 'board'==tpl.project_view %} selected {% endif %}>迭代看板</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-lg-6">
@@ -130,9 +130,9 @@
                                                         </div>
                                                         <div class="col-lg-4">
                                                             <select class="form-control selectpicker" name="issue_view" id="issue_view">
-                                                                <option  value="list">表格视图</option>
-                                                                <option value="detail">左右视图</option>
-                                                                <option value="responsive">响应式视图</option>
+                                                                <option  value="list"       {% if 'list'==tpl.issue_view %} selected {% endif %}>表格视图</option>
+                                                                <option value="detail"      {% if 'detail'==tpl.issue_view %} selected {% endif %}>左右视图</option>
+                                                                <option value="responsive"  {% if 'responsive'==tpl.issue_view %} selected {% endif %}>响应式视图</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-lg-6">
@@ -150,36 +150,36 @@
 
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="id_category">事项类型方案:<span class="required"> *</span></label>
+                                                <label class="control-label" for="id_category">事项类型方案:<span class="required"></span></label>
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <select  id="issue_type_scheme_id" name="issue_type_scheme_id" class="selectpicker"  title="请选择" >
-                                                            {% for index,category in category_arr %}
-                                                                <option value="<?=category.id?>"><?=category.name?></option>
+                                                            {% for index,scheme in issueTypeSchemesArr %}
+                                                                <option value="<?=scheme.id?>" {% if scheme.id==tpl.issue_type_scheme_id %} selected {% endif %} ><?=scheme.name?></option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="id_category">事项状态流方案:<span class="required"> *</span></label>
+                                                <label class="control-label" for="id_category">事项状态流方案:<span class="required"></span></label>
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <select  id="issue_workflow_scheme_id" name="issue_workflow_scheme_id" class="selectpicker"  title="请选择" >
-                                                            {% for index,category in category_arr %}
-                                                                <option value="<?=category.id?>"><?=category.name?></option>
+                                                            {% for index,scheme in workflowSchemesArr %}
+                                                                <option value="<?=scheme.id?>" {% if scheme.id==tpl.issue_workflow_scheme_id %} selected {% endif %}><?=scheme.name?></option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="id_category">事项表单流方案:<span class="required"> *</span></label>
+                                                <label class="control-label" for="id_category">事项表单流方案:<span class="required"></span></label>
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <select  id="issue_ui_scheme_id" name="issue_ui_scheme_id" class="selectpicker"  title="请选择" >
-                                                            {% for index,category in category_arr %}
-                                                                <option value="<?=category.id?>"><?=category.name?></option>
+                                                            {% for index,scheme in issueUiSchemesArr %}
+                                                                <option value="<?=scheme.id?>"  {% if scheme.id==tpl.issue_ui_scheme_id %} selected {% endif %}><?=scheme.name?></option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>

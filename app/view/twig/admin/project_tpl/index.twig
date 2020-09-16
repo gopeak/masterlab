@@ -318,8 +318,8 @@
             <h3>{{name}}</h3>
             <p style="min-height: 30px;max-height: 40px">{{description}}</p>
             <p style="float: right">
-            <a href="/admin/project_tpl/detail" class="gray" role="button">详情</a>
-            <a href="/admin/project_tpl/edit?id={{id}}" class="gray" role="button">编辑</a>
+            <a href="#" class="gray tpl_edit_link" data-id="{{id}}" role="button">编辑</a>
+            <a href="/admin/project_tpl/edit?id={{id}}" class="gray" role="button">配置</a>
             <a href="/admin/project_tpl/copy?id={{id}}" class="gray" role="button">复制</a>
             <a href="javascript:;" class="gray"  >删除</a>
             </p>
@@ -339,6 +339,19 @@
     var uploader = null;
     var category_id = '<?=category_id?>';
 
+    function generateUUID() {
+        var d = new Date().getTime();
+        if (window.performance && typeof window.performance.now === "function") {
+            d += performance.now(); //use high-precision timer if available
+        }
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
+    }
+    
     $(function() {
         $('.selectpicker').selectpicker('refresh');
         var options = {
@@ -375,7 +388,6 @@
 
 
         $("#modal-project_tpl").on('show.bs.modal', function (e) {
-
             keyMaster.addKeys([
                 {
                     key: ['command+enter', 'ctrl+enter'],

@@ -10,6 +10,9 @@ use main\app\classes\UserAuth;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\ctrl\BaseCtrl;
 use main\app\model\issue\IssueModel;
+use main\app\model\issue\IssueTypeSchemeModel;
+use main\app\model\issue\IssueUiSchemeModel;
+use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\OrgModel;
 use main\app\model\PluginModel;
 use main\app\model\project\ProjectModel;
@@ -81,6 +84,25 @@ class ProjectTpl extends BaseAdminCtrl
     /**
      * @throws \Exception
      */
+    public function get()
+    {
+        $data = [];
+        $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
+        $categoryModel = new ProjectTemplateDisplayCategoryModel();
+        $model = new ProjectTemplateModel();
+        $tpl = $model->getById($data['id']);
+        if($tpl){
+            $tpl['subsystem_json'] = json_decode($tpl['subsystem_json'], true);
+        }
+        $data['tpl'] = $tpl;
+        $data['category_arr'] = $categoryModel->getAllItems();
+
+        $this->ajaxSuccess('success', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function pageEdit()
     {
         $data = [];
@@ -116,6 +138,13 @@ class ProjectTpl extends BaseAdminCtrl
 
         $data['no_subsystem'] = $subSystemArr;
         $data['added_subsystem'] = $addedSubSystemArr;
+
+        // 工作流方案
+        $data['workflowSchemesArr'] = WorkflowSchemeModel::getInstance()->getAllItems(false);
+        // 事项类型方案
+        $data['issueTypeSchemesArr'] = (new IssueTypeSchemeModel())->getAllItems(false);
+        // 事项表单配置方案
+        $data['issueUiSchemesArr'] = (new IssueUiSchemeModel())->getAllItems(false);
 
         $this->render('gitlab/admin/project_tpl/form.twig', $data);
     }
@@ -262,6 +291,7 @@ class ProjectTpl extends BaseAdminCtrl
         if (isset($_POST['issue_ui_scheme_id'])) {
             $info['issue_ui_scheme_id'] = $_POST['issue_ui_scheme_id'];
         }
+
         if (!empty($info)) {
             $model->updateById($id, $info);
         }
