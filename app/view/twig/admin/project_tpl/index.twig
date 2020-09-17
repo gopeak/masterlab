@@ -184,10 +184,16 @@
                         <label class="control-label" for="id_image_bg">
                             <span>图片</span>
                         </label>
-                        <div class="col-sm-6">
-                            <input type="hidden" name="image_bg" id="id_image_bg" value=""/>
-                            <div id="fine-uploader-gallery"></div>
-                            <div class="help-block">用做显示的背景图,图片大小不能超过100K</div>
+                        <div class="col-sm-10">
+                            <div class="col-sm-6">
+                                <div id="fine-uploader-gallery"></div>
+                                <div class="help-block">用做显示的背景图,图片大小不能超过100K</div>
+                            </div>
+                            <div class="col-sm-4">
+                                <img id="image_bg_display" class="" alt="" src="" style="width:120px;">
+                                <input type="hidden" name="image_bg" id="id_image_bg" value=""/>
+                            </div>
+
                         </div>
 
                     </div>

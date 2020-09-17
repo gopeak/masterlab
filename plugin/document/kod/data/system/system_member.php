@@ -14,7 +14,7 @@
         },
         "createTime": 1589187576,
         "status": 1,
-        "lastLogin": 1597324802
+        "lastLogin": 1600358682
     },
     "100": {
         "userID": "100",
@@ -69,5 +69,41 @@
         "status": 1,
         "lastLogin": 1596817866,
         "createTime": 1596817865
+    },
+    "103": {
+        "userID": "103",
+        "name": "project57",
+        "nickName": "project57",
+        "password": "dbfbfb177c90ae717fc01759ab2bd6aa",
+        "role": "2",
+        "config": {
+            "sizeMax": 5,
+            "sizeUse": 1048576
+        },
+        "groupInfo": {
+            "1": "write"
+        },
+        "path": "project57",
+        "status": 1,
+        "lastLogin": "",
+        "createTime": 1600358666
+    },
+    "104": {
+        "userID": "104",
+        "name": "project58",
+        "nickName": "project58",
+        "password": "21883a7f8e428e6960bbfce05eaf0299",
+        "role": "2",
+        "config": {
+            "sizeMax": 5,
+            "sizeUse": 1048576
+        },
+        "groupInfo": {
+            "1": "write"
+        },
+        "path": "project58",
+        "status": 1,
+        "lastLogin": "",
+        "createTime": 1600358682
     }
 }

@@ -135,6 +135,7 @@ var PluginTemplate = (function() {
         $("#id_name").attr('readonly', false);
         $('#tip_name').show();
         $("#id_image_bg").val('');
+        $("#image_bg_display").hide();
         $("#id_category").val('');
         $("#id_category").selectpicker('refresh');
         console.log(window.uploader)
@@ -163,11 +164,10 @@ var PluginTemplate = (function() {
                 $("#id_category").val(tpl.category_id);
                 $("#id_description").text(tpl.description);
                 $("#id_image_bg").val(tpl.image_bg);
+                $("#image_bg_display").show();
+                $("#image_bg_display").attr('src',tpl.image_bg);
                 if (window.uploader) {
-                    var initFile = [];
-                    initFile.push({thumbnailUrl:tpl.image_bg, name:tpl.name+"背景",uuid:generateUUID()});
                     window.uploader.reset();
-                    window.uploader.addInitialFiles (initFile);
                 }
                 $('.selectpicker').selectpicker('refresh');
             },
