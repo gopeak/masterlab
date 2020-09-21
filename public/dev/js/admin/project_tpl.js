@@ -9,9 +9,14 @@ var PluginTemplate = (function() {
         $("#btn-project_tpl_save").click(function(){
             if($('#id_action').val()==='add'){
                 PluginTemplate.prototype.add();
-            }else{
+            }
+            if($('#id_action').val()==='add'){
                 PluginTemplate.prototype.update();
             }
+            if($('#id_action').val()==='copy'){
+                PluginTemplate.prototype.postCopy();
+            }
+
         });
         $("#btn-create_project_tpl").click(function(){
             PluginTemplate.prototype.create();
@@ -95,18 +100,12 @@ var PluginTemplate = (function() {
                     var result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
 
-                    $(".list_for_install").click(function(){
-                        PluginTemplate.prototype.install( $(this).attr("data-value") );
-                    });
-
-                    $(".list_for_uninstall").click(function(){
-                        PluginTemplate.prototype.uninstall( $(this).attr("data-value") );
-                    });
-
                     $(".tpl_edit_link").click(function(){
                         PluginTemplate.prototype.edit($(this).data("id"));
                     });
-
+                    $(".tpl_copy_link").click(function(){
+                        PluginTemplate.prototype.copy($(this).data("id"));
+                    });
                     $(".list_for_delete").click(function(){
                         PluginTemplate.prototype._delete( $(this).attr("data-value") );
                     });
@@ -177,6 +176,40 @@ var PluginTemplate = (function() {
         });
     };
 
+    PluginTemplate.prototype.copy = function(id ) {
+        $("#modal-project_tpl").modal('show');
+        $('#modal-header-title').html('复制模板');
+        $("#id_action").val('copy');
+        loading.show('#modal-body');
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.get_url+"?id="+id,
+            data: { id:id} ,
+            success: function (resp) {
+                loading.closeAll();
+                auth_check(resp);
+                var tpl = resp.data.tpl;
+                $("#edit_id").val(tpl.id);
+                $("#id_name").val(tpl.name);
+                $('#tip_name').hide();
+                $("#id_category").val(tpl.category_id);
+                $("#id_description").text(tpl.description);
+                $("#id_image_bg").val(tpl.image_bg);
+                $("#image_bg_display").show();
+                $("#image_bg_display").attr('src',tpl.image_bg);
+                if (window.uploader) {
+                    window.uploader.reset();
+                }
+                $('.selectpicker').selectpicker('refresh');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
 
 
     PluginTemplate.prototype.add = function(  ) {
@@ -193,6 +226,7 @@ var PluginTemplate = (function() {
                 auth_check(resp);
                 if( resp.ret ==='200'  ){
                     alert('保存成功,跳转下一页');
+                    window.location.href = '/admin/project_tpl/edit?id='+resp.data;
                 }else{
                     notify_error( resp.msg ,resp.data);
                 }
@@ -203,6 +237,31 @@ var PluginTemplate = (function() {
         });
     };
 
+
+    PluginTemplate.prototype.postCopy = function(  ) {
+
+        var method = 'post';
+        var params = $('#form-plugin').serialize();
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.post_copy_url,
+            data: params ,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret ==='200'  ){
+                    //window.location.reload();
+                }else{
+                    notify_error( resp.msg );
+                }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
     PluginTemplate.prototype.update = function(  ) {
 
         var method = 'post';

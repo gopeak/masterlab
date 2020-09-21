@@ -2,29 +2,24 @@
 
 namespace main\app\ctrl\admin;
 
-use Doctrine\Common\Inflector\Inflector;
 use main\app\classes\PermissionGlobal;
-use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\ctrl\BaseCtrl;
-use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\IssueUiSchemeModel;
 use main\app\model\issue\WorkflowSchemeModel;
-use main\app\model\OrgModel;
+use main\app\model\permission\DefaultRoleModel;
 use main\app\model\PluginModel;
 use main\app\model\project\ProjectModel;
-use main\app\classes\UserLogic;
-use main\app\classes\SettingsLogic;
 use main\app\classes\ConfigLogic;
-use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\ProjectTemplateDisplayCategoryModel;
 use main\app\model\ProjectTemplateModel;
-use main\app\model\user\UserModel;
+use main\app\model\ProjectTplCatalogLabelModel;
+use main\app\model\ProjectTplLabelModel;
+use main\app\model\ProjectTplModuleModel;
 use main\app\classes\UploadLogic;
-use main\app\model\user\UserSettingModel;
 
 /**
  * 项目列表
@@ -34,15 +29,15 @@ use main\app\model\user\UserSettingModel;
 class ProjectTpl extends BaseAdminCtrl
 {
 
-    public static  $defaultSubSystem = [
-        'issue'=>['title'=>'事项','fix'=>true,'color'=>'blue','is_system'=>'1'],
-        'gantt'=>['title'=>'甘特图','fix'=>false,'color'=>'red','is_system'=>'1'],
-        'mind'=>['title'=>'事项分解','fix'=>false,'color'=>'gray','is_system'=>'1'],
-        'backlog'=>['title'=>'待办事项','fix'=>false,'color'=>'gray','is_system'=>'1'],
-        'sprint'=>['title'=>'冲刺','fix'=>false,'color'=>'red','is_system'=>'1'],
-        'kanban'=>['title'=>'看板','fix'=>false,'color'=>'blue','is_system'=>'1'],
-        'chart'=>['title'=>'图表','fix'=>false,'color'=>'blue','is_system'=>'1'],
-        'stat'=>['title'=>'统计','fix'=>false,'color'=>'blue','is_system'=>'1'],
+    public static $defaultSubSystem = [
+        'issue' => ['title' => '事项', 'fix' => true, 'color' => 'blue', 'is_system' => '1'],
+        'gantt' => ['title' => '甘特图', 'fix' => false, 'color' => 'red', 'is_system' => '1'],
+        'mind' => ['title' => '事项分解', 'fix' => false, 'color' => 'gray', 'is_system' => '1'],
+        'backlog' => ['title' => '待办事项', 'fix' => false, 'color' => 'gray', 'is_system' => '1'],
+        'sprint' => ['title' => '冲刺', 'fix' => false, 'color' => 'red', 'is_system' => '1'],
+        'kanban' => ['title' => '看板', 'fix' => false, 'color' => 'blue', 'is_system' => '1'],
+        'chart' => ['title' => '图表', 'fix' => false, 'color' => 'blue', 'is_system' => '1'],
+        'stat' => ['title' => '统计', 'fix' => false, 'color' => 'blue', 'is_system' => '1'],
 
     ];
 
@@ -68,13 +63,11 @@ class ProjectTpl extends BaseAdminCtrl
      */
     public function pageIndex()
     {
-        $userId = UserAuth::getId();
-
         $data = [];
         $data['title'] = '项目模板';
         $data['nav_links_active'] = 'project_tpl';
         $data['left_nav_active'] = 'all';
-        $data['category_id'] = isset($_GET['category_id']) ? $_GET['category_id'] :'';
+        $data['category_id'] = isset($_GET['category_id']) ? $_GET['category_id'] : '';
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
         $data['category_arr'] = $categoryModel->getAllItems();
         $data['projects'] = ConfigLogic::getJoinProjects();
@@ -87,11 +80,11 @@ class ProjectTpl extends BaseAdminCtrl
     public function get()
     {
         $data = [];
-        $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
+        $data['id'] = isset($_GET['id']) ? $_GET['id'] : '';
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
         $model = new ProjectTemplateModel();
         $tpl = $model->getById($data['id']);
-        if($tpl){
+        if ($tpl) {
             $tpl['subsystem_json'] = json_decode($tpl['subsystem_json'], true);
         }
         $data['tpl'] = $tpl;
@@ -109,11 +102,11 @@ class ProjectTpl extends BaseAdminCtrl
         $data['title'] = '项目';
         $data['nav_links_active'] = 'project_tpl';
         $data['left_nav_active'] = 'all';
-        $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
+        $data['id'] = isset($_GET['id']) ? $_GET['id'] : '';
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
         $model = new ProjectTemplateModel();
         $tpl = $model->getById($data['id']);
-        if($tpl){
+        if ($tpl) {
             $tpl['subsystem_json'] = json_decode($tpl['subsystem_json'], true);
         }
         $data['tpl'] = $tpl;
@@ -129,7 +122,7 @@ class ProjectTpl extends BaseAdminCtrl
         $noSubSystemArr = [];
         $addedSubSystemArr = [];
         foreach ($tpl['subsystem_json'] as $subsystem) {
-            if(isset($subSystemArr[$subsystem])){
+            if (isset($subSystemArr[$subsystem])) {
                 $subSystemArr[$subsystem]['name'] = $subsystem;
                 $addedSubSystemArr[$subsystem] = $subSystemArr[$subsystem];
                 unset($subSystemArr[$subsystem]);
@@ -149,13 +142,17 @@ class ProjectTpl extends BaseAdminCtrl
         $this->render('gitlab/admin/project_tpl/form.twig', $data);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public function pageDetail()
     {
         $data = [];
         $data['title'] = '项目';
         $data['sub_nav_active'] = 'project_tpl';
         $data['left_nav_active'] = 'all';
-        $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
+        $data['id'] = isset($_GET['id']) ? $_GET['id'] : '';
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
         $model = new ProjectTemplateModel();
         $tpl = $model->getById($data['id']);
@@ -165,13 +162,17 @@ class ProjectTpl extends BaseAdminCtrl
         $this->render('gitlab/admin/project_tpl/detail.twig', $data);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public function pageCopy()
     {
         $data = [];
         $data['title'] = '项目';
         $data['sub_nav_active'] = 'project_tpl';
         $data['left_nav_active'] = 'all';
-        $data['id'] = isset($_GET['id']) ? $_GET['id'] :'';
+        $data['id'] = isset($_GET['id']) ? $_GET['id'] : '';
         $categoryModel = new ProjectTemplateDisplayCategoryModel();
         $model = new ProjectTemplateModel();
         $tpl = $model->getById($data['id']);
@@ -218,9 +219,127 @@ class ProjectTpl extends BaseAdminCtrl
         if (isset($_POST['image_bg'])) {
             $info['image_bg'] = $_POST['image_bg'];
         }
-        list($ret ,$msg) = $model->insertItem($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
-            $this->ajaxSuccess('操作成功');
+            $this->ajaxSuccess('操作成功', $msg);
+        } else {
+            $this->ajaxFailed('服务器错误:', $msg);
+        }
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public function copy()
+    {
+        if (empty($_POST)) {
+            $this->ajaxFailed('错误', '没有提交表单数据');
+        }
+        $copyId = null;
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
+            $copyId = $_POST['id'];
+        }
+        $_POST['name'] = trimStr($_POST['name']);
+        if (isset($_POST['name']) && empty($_POST['name'])) {
+            $errorMsg['name'] = '名称不能为空';
+        }
+        if (isset($_POST['category_id']) && empty($_POST['category_id'])) {
+            $errorMsg['category_id'] = '类型不能为空';
+        }
+        $model = new ProjectTemplateModel();
+        if (isset($model->getByName($_POST['name'])['id'])) {
+            $errorMsg['name'] = '名称已经被使用';
+        }
+
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+        $name = trimStr($_POST['name']);
+        $info = [];
+        $info['name'] = $name;
+        $info['category_id'] =  $_POST['category_id'] ?? 0;
+        $info['is_system'] = '0';
+        if (isset($_POST['description'])) {
+            $info['description'] = $_POST['description'];
+        }
+        if (isset($_POST['image_bg'])) {
+            $info['image_bg'] = $_POST['image_bg'];
+        }
+        if ($copyId) {
+            $copyProjectTpl = $model->getById($copyId);
+            $info['issue_type_scheme_id'] = $copyProjectTpl['issue_type_scheme_id'];
+            $info['issue_workflow_scheme_id'] = $copyProjectTpl['issue_workflow_scheme_id'];
+            $info['issue_ui_scheme_id'] = $copyProjectTpl['issue_ui_scheme_id'];
+            $info['nav_type'] = $copyProjectTpl['nav_type'];
+            $info['ui_style'] = $copyProjectTpl['ui_style'];
+            $info['theme_color'] = $copyProjectTpl['theme_color'];
+            $info['is_fix_header'] = $copyProjectTpl['is_fix_header'];
+            $info['is_fix_left'] = $copyProjectTpl['is_fix_left'];
+            $info['subsystem_json'] = $copyProjectTpl['subsystem_json'];
+            $info['page_layout'] = $copyProjectTpl['page_layout'];
+            $info['project_view'] = $copyProjectTpl['project_view'];
+            $info['issue_view'] = $copyProjectTpl['issue_view'];
+        }
+        list($ret, $msg) = $model->insertItem($info);
+        if ($ret) {
+            $projectTplId = $msg;
+            if ($copyId && $copyProjectTpl) {
+                $projectTplLabelModel = new ProjectTplLabelModel();
+                $projectTplDataArr = $projectTplLabelModel->getByProject($copyId);
+                if ($projectTplDataArr) {
+                    foreach ($projectTplDataArr as $item) {
+                        $arr = $item;
+                        unset($arr['id']);
+                        $arr['project_tpl_id'] = $projectTplId;
+                        if(isset($arr['k'])){
+                            unset($arr['k']);
+                        }
+                        $projectTplLabelModel->insertItem($arr);
+                    }
+                }
+                $model = new ProjectTplCatalogLabelModel();
+                $projectTplDataArr = $model->getByProject($copyId);
+                if ($projectTplDataArr) {
+                    foreach ($projectTplDataArr as $item) {
+                        $arr = $item;
+                        unset($arr['id']);
+                        if(isset($arr['k'])){
+                            unset($arr['k']);
+                        }
+                        $arr['project_tpl_id'] = $projectTplId;
+                        $model->insertItem($arr);
+                    }
+                }
+                $model = new ProjectTplModuleModel();
+                $projectTplDataArr = $model->getByProject($copyId);
+                if ($projectTplDataArr) {
+                    foreach ($projectTplDataArr as $item) {
+                        $arr = $item;
+                        unset($arr['id']);
+                        if(isset($arr['k'])){
+                            unset($arr['k']);
+                        }
+                        $arr['created_at'] = time();
+                        $arr['project_tpl_id'] = $projectTplId;
+                        $model->insert($arr);
+                    }
+                }
+                $model = new DefaultRoleModel();
+                $projectTplDataArr = $model->getsByProject($copyId);
+                if ($projectTplDataArr) {
+                    foreach ($projectTplDataArr as $item) {
+                        $arr = $item;
+                        unset($arr['id']);
+                        if(isset($arr['k'])){
+                            unset($arr['k']);
+                        }
+                        $arr['project_tpl_id'] = $projectTplId;
+                        $model->insert($arr);
+                    }
+                }
+            }
+            $this->ajaxSuccess('操作成功', $msg);
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
         }
@@ -265,10 +384,10 @@ class ProjectTpl extends BaseAdminCtrl
             $subSystemArr = json_decode($_POST['sub_system'], true);
             $sortArr = [];
             foreach ($subSystemArr as $item) {
-                $weight = max(0, intval($item['top']/150)*1120 ) + (int)$item['left'] ;
-                $sortArr[$item['name']] = $weight ;
+                $weight = max(0, intval($item['top'] / 150) * 1120) + (int)$item['left'];
+                $sortArr[$item['name']] = $weight;
             }
-            asort ($sortArr, SORT_NUMERIC );
+            asort($sortArr, SORT_NUMERIC);
             $sortArr = array_keys($sortArr);
             $info['subsystem_json'] = json_encode($sortArr);
 
@@ -328,9 +447,9 @@ class ProjectTpl extends BaseAdminCtrl
      */
     public function fetchAll()
     {
-        $categoryId = isset($_GET['category_id']) && !empty($_GET['category_id']) ? $_GET['category_id'] :null;
+        $categoryId = isset($_GET['category_id']) && !empty($_GET['category_id']) ? $_GET['category_id'] : null;
         $projectTplModel = new ProjectTemplateModel();
-        $projectTpls = $projectTplModel->getItems( $categoryId );
+        $projectTpls = $projectTplModel->getItems($categoryId);
         $data['project_tpls'] = $projectTpls;
 
         $this->ajaxSuccess('success', $data);
@@ -378,13 +497,6 @@ class ProjectTpl extends BaseAdminCtrl
         echo json_encode($resp);
         exit;
     }
-
-
-    public function test()
-    {
-        echo (new SettingsLogic)->dateTimezone();
-    }
-
 
     /**
      * 初始化项目角色

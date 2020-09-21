@@ -752,7 +752,7 @@ class Main extends Base
         if (isset($params['key']) && $projectModel->checkKeyExist($params['key'])) {
             $err['project_key'] = '项目关键字已经被使用了,请更换一个吧';
         }
-        if (isset($params['key']) && !preg_match("/^[a-zA-Z]+$/", $params['key'])) {
+        if (isset($params['key']) && !preg_match("/^[a-zA-Z]+[0-9]*$/", $params['key'])) {
             $err['project_key'] = '项目关键字必须全部为英文字母,不能包含空格和特殊字符';
         }
 

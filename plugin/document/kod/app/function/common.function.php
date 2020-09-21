@@ -631,13 +631,17 @@ function json_encode_force($json){
  * @params {array} 返回的数据集合
  */
 function show_json($data,$code = true,$info=''){
+
 	if($GLOBALS['SHOW_JSON_RETURN']){
 		return;
 	}
+
 	$useTime = mtime() - $GLOBALS['config']['appStartTime'];
 	$result = array('code'=>$code,'use_time'=>$useTime,'data'=>$data);
+    $result['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
 	if(defined("GLOBAL_DEBUG") && GLOBAL_DEBUG==1){
 		$result['call'] = get_caller_info();
+        //$result['include'] = get_included_files();
 	}
 	if ($info != '') {
 		$result['info'] = $info;
@@ -654,6 +658,7 @@ function show_json($data,$code = true,$info=''){
 		}
 	}
 	$json = json_encode_force($result);
+
 	if(isset($_GET['callback'])){
 		if(!preg_match("/^[0-9a-zA-Z_.]+$/",$_GET['callback'])){
 			die("calllback error!");
