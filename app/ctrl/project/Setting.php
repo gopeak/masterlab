@@ -6,6 +6,7 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectListCountLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\IssueTypeLogic;
+use main\app\classes\SettingsLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
@@ -47,6 +48,24 @@ class Setting extends BaseUserCtrl
             $preData = $projectModel->getRowById($_GET[$projectParamkey]);
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
 
+
+            $settingLogic = new SettingsLogic();
+            $maxLengthProjectName = $settingLogic->maxLengthProjectName();
+
+            if (!isset($params['name'])) {
+                $this->ajaxFailed('表单错误', '需要填写项目名称');
+            }
+            if (isset($params['name']) && empty(trimStr($params['name']))) {
+                $this->ajaxFailed('表单错误', '需要填写项目名称。');
+            }
+            if (isset($params['name']) && strlen($params['name']) > $maxLengthProjectName) {
+                $this->ajaxFailed('表单错误', '名称长度太长,长度应该小于'. $maxLengthProjectName);
+            }
+            if (isset($params['name']) && $projectModel->checkNameExist($params['name'])) {
+                $this->ajaxFailed('表单错误', '项目名称已经被使用了,请更换一个吧');
+            }
+
+
             if (isset($params['type']) && empty(trimStr($params['type']))) {
                 $this->ajaxFailed('param_error:type_is_null');
             }
@@ -58,6 +77,7 @@ class Setting extends BaseUserCtrl
             }
 
             $info = [];
+            $info['name'] = $params['name'];
             // 修改项目leader
             if ($preData['lead'] != $params['lead']) {
                 $info['lead'] = $params['lead'];
@@ -69,7 +89,7 @@ class Setting extends BaseUserCtrl
             $info['url'] = $params['url'];
             $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
             //$info['detail'] = $params['detail'];
-            $info['workflow_scheme_id'] = $params['workflow_scheme_id'];
+            $info['workflow_scheme_id'] = isset($params['workflow_scheme_id'])?$params['workflow_scheme_id']:1;
             $issueTypeSchemeId = $params['issue_type_scheme_id'];
 
             // 管理员可以变更项目所属的组织
