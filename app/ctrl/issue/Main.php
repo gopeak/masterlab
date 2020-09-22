@@ -1683,7 +1683,11 @@ class Main extends BaseUserCtrl
             $updatedIssue = $issueModel->getById($issueId);
             $updateDurationArr = [];
             $ganttSetting = (new ProjectGanttSettingModel())->getByProject($issue['project_id']);
-            $workDates = json_decode($ganttSetting['work_dates'], true);
+            if (empty($ganttSetting)) {
+                $workDates = null;
+            } else {
+                $workDates = json_decode($ganttSetting['work_dates'], true);
+            }
             $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $workDates, $holidays, $extraWorkerDays);
             // print_r($updateDurationArr);
             list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
@@ -1727,6 +1731,7 @@ class Main extends BaseUserCtrl
             if (empty($params['labels'])) {
                 $model->delete(['issue_id' => $issueId]);
             } else {
+                $model->delete(['issue_id' => $issueId]);
                 $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
             }
         }

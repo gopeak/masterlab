@@ -8,6 +8,7 @@ namespace main\app\ctrl\project;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
+use main\app\classes\ProjectGantt;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\IssueFilterLogic;
@@ -819,7 +820,9 @@ class Main extends Base
                 $logData['pre_data'] = [];
                 $logData['cur_data'] = $info;
                 LogOperatingLogic::add($uid, 0, $logData);
-
+                // 初始化甘特图设置
+                $projectGantt = new ProjectGantt();
+                $projectGantt->initGanttSetting($ret['data']['project_id']);
                 $projectModel->db->commit();
                 // 分发事件
                 $info['id'] = $ret['data']['project_id'];
