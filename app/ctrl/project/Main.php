@@ -8,6 +8,7 @@ namespace main\app\ctrl\project;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
+use main\app\classes\ProjectGantt;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\IssueFilterLogic;
@@ -21,6 +22,7 @@ use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
+use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectMainExtraModel;
@@ -825,6 +827,11 @@ class Main extends Base
             if ($uid != $info['lead']) {
                 ProjectLogic::assignProjectRoleForUser($ret['data']['project_id'], $uid, 'Users');
             }
+
+            // 初始化甘特图设置
+            $projectGantt = new ProjectGantt();
+            $projectGantt->initGanttSetting($ret['data']['project_id']);
+
 
             //写入操作日志
             $logData = [];
