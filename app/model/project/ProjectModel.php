@@ -86,18 +86,18 @@ class ProjectModel extends CacheModel
     }
 
     /**
-     * 通过名字搜索(带类型)
+     * 通过名字搜索(带所属模板)
      * @param $keyword
-     * @param $typeId
+     * @param $tplId
      * @param string $orderBy
      * @param string $sort
-     * @return array
+     * @return mixed[]
      */
-    public function filterByNameOrKeyAndType($keyword, $typeId, $orderBy = 'id', $sort = 'desc')
+    public function filterByNameOrKeyAndTpl($keyword, $tplId, $orderBy = 'id', $sort = 'desc')
     {
         $table = $this->getTable();
         $params = array();
-        $where = wrapBlank("WHERE `type`=$typeId AND (`name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%') AND archived='N' ");
+        $where = wrapBlank("WHERE `project_tpl_id`=$tplId AND (`name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%') AND archived='N' ");
         $orderBy = " ORDER BY $orderBy $sort";
         $sql = "SELECT * FROM " . $table . $where . $orderBy;
         return $this->db->fetchAll($sql, $params);

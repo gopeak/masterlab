@@ -161,6 +161,7 @@ class PermissionLogic
      * 获取组织id数组，通过项目id数组
      * @param $projectIdArr
      * @return array
+     * @throws \Exception
      */
     public static function getUserRelationOrgIdArr($projectIdArr)
     {

@@ -30,6 +30,8 @@ use main\app\model\project\ProjectModuleModel;
 use main\app\classes\SettingsLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\RewriteUrl;
+use main\app\model\ProjectTemplateDisplayCategoryModel;
+use main\app\model\ProjectTemplateModel;
 use main\app\model\user\UserModel;
 use main\app\service\ProjectService;
 
@@ -75,10 +77,9 @@ class Main extends Base
         $data['users'] = $users;
 
         $data['org_list'] = $orgList;
-        $data['full_type'] = ProjectLogic::faceMap();
-
         $data['project_name_max_length'] = (new SettingsLogic)->maxLengthProjectName();
         $data['project_key_max_length'] = (new SettingsLogic)->maxLengthProjectKey();
+        $data['project_tpl_group_arr'] = ProjectLogic::getProjectTplByCategory();
 
         $data['root_domain'] = ROOT_URL;
 
@@ -225,20 +226,20 @@ class Main extends Base
         //var_dump($pluginFile);
         if (file_exists($pluginFile)) {
             require_once($pluginFile);
-            $pluginIndexClass = sprintf("main\\plugin\\%s\\%s",  $pluginName, 'Index');
+            $pluginIndexClass = sprintf("main\\plugin\\%s\\%s", $pluginName, 'Index');
             if (class_exists($pluginIndexClass)) {
                 $indexCtrl = new $pluginIndexClass($this->dispatcher);
-                if(method_exists($indexCtrl,'main')){
+                if (method_exists($indexCtrl, 'main')) {
                     $indexCtrl->main();
                 }
-                if(method_exists($indexCtrl,'pageIndex')){
+                if (method_exists($indexCtrl, 'pageIndex')) {
                     $indexCtrl->pageIndex();
                 }
-            }else{
+            } else {
                 echo "入口类: {$pluginIndexClass} 缺失";
             }
 
-        }else{
+        } else {
             echo "入口文件: {$pluginFile} 缺失";
         }
     }
@@ -312,8 +313,8 @@ class Main extends Base
 
 
     /**
-     * @todo 此处有bug, 不能即是页面有时ajax的处理
      * @throws \Exception
+     * @todo 此处有bug, 不能即是页面有时ajax的处理
      */
     public function pageSettingsProfile()
     {
@@ -708,11 +709,9 @@ class Main extends Base
         if (!PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
         }
-
         if (empty($params)) {
             $this->ajaxFailed('错误', '无表单数据提交');
         }
-
         $err = [];
         $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel($uid);
@@ -765,10 +764,10 @@ class Main extends Base
             $err['project_lead'] = '项目负责人错误';
         }
 
-        if (!isset($params['type'])) {
-            $err['type'] = '请选择项目类型';
-        } elseif (isset($params['type']) && empty(trimStr($params['type']))) {
-            $err['type'] = '项目类型不能为空';
+        if (!isset($params['project_tpl_id'])) {
+            $err['project_tpl_id'] = '请选择项目模板';
+        } elseif (isset($params['type']) && empty(trimStr($params['project_tpl_id']))) {
+            $err['project_tpl_id'] = '项目模板不能为空';
         }
 
         if (!empty($err)) {
@@ -778,7 +777,7 @@ class Main extends Base
         //$params['key'] = mb_strtoupper(trimStr($params['key']));
         $params['key'] = trimStr($params['key']);
         $params['name'] = trimStr($params['name']);
-        $params['type'] = intval($params['type']);
+        $params['project_tpl_id'] = intval($params['project_tpl_id']);
 
         if (!isset($params['lead']) || empty($params['lead'])) {
             $params['lead'] = $uid;
@@ -790,7 +789,7 @@ class Main extends Base
         $info['key'] = $params['key'];
         $info['lead'] = $params['lead'];
         $info['description'] = $params['description'];
-        $info['type'] = $params['type'];
+        $info['project_tpl_id'] = $params['project_tpl_id'];
         $info['category'] = 0;
         $info['url'] = isset($params['url']) ? $params['url'] : '';
         $info['create_time'] = time();
@@ -798,61 +797,46 @@ class Main extends Base
         $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
         $info['detail'] = isset($params['detail']) ? $params['detail'] : '';
         //$info['avatar'] = !empty($avatar) ? $avatar : "";
+        try {
+            $projectModel->db->beginTransaction();
+            $orgModel = new OrgModel();
+            $orgInfo = $orgModel->getById($params['org_id']);
 
-        $projectModel->db->beginTransaction();
+            $info['org_path'] = $orgInfo['path'];
 
-        $orgModel = new OrgModel();
-        $orgInfo = $orgModel->getById($params['org_id']);
+            $ret = ProjectLogic::create($info, $uid);
 
-        $info['org_path'] = $orgInfo['path'];
+            if (!$ret['errorCode']) {
+                //写入操作日志
+                $logData = [];
+                $logData['user_name'] = $this->auth->getUser()['username'];
+                $logData['real_name'] = $this->auth->getUser()['display_name'];
+                $logData['obj_id'] = 0;
+                $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+                $logData['page'] = $_SERVER['REQUEST_URI'];
+                $logData['action'] = LogOperatingLogic::ACT_ADD;
+                $logData['remark'] = '新建项目';
+                $logData['pre_data'] = [];
+                $logData['cur_data'] = $info;
+                LogOperatingLogic::add($uid, 0, $logData);
 
-        $ret = ProjectLogic::create($info, $uid);
-        //$ret['errorCode'] = 0;
+                $projectModel->db->commit();
+                // 分发事件
+                $info['id'] = $ret['data']['project_id'];
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event, Events::onProjectCreate);
+
+            }
+        } catch (\PDOException $e) {
+            $projectModel->db->rollBack();
+            $this->ajaxFailed('服务器错误', '添加失败,错误详情 :' . $ret['msg']);
+        }
         $final = array(
             'project_id' => $ret['data']['project_id'],
             'key' => $params['key'],
             'org_name' => $orgInfo['name'],
             'path' => $orgInfo['path'] . '/' . $params['key'],
         );
-        if (!$ret['errorCode']) {
-            // 初始化项目角色
-            list($flagInitRole, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
-            ProjectLogic::initLabelAndCatalog($ret['data']['project_id']);
-
-            // 把项目负责人赋予该项目的管理员权限
-            list($flagAssignAdminRole) = ProjectLogic::assignAdminRoleForProjectLeader($ret['data']['project_id'], $info['lead']);
-            // 把项目创建人添加到该项目，并赋予项目角色-普通用户
-            if ($uid != $info['lead']) {
-                ProjectLogic::assignProjectRoleForUser($ret['data']['project_id'], $uid, 'Users');
-            }
-
-            //写入操作日志
-            $logData = [];
-            $logData['user_name'] = $this->auth->getUser()['username'];
-            $logData['real_name'] = $this->auth->getUser()['display_name'];
-            $logData['obj_id'] = 0;
-            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
-            $logData['page'] = $_SERVER['REQUEST_URI'];
-            $logData['action'] = LogOperatingLogic::ACT_ADD;
-            $logData['remark'] = '新建项目';
-            $logData['pre_data'] = [];
-            $logData['cur_data'] = $info;
-            LogOperatingLogic::add($uid, 0, $logData);
-
-            if ($flagInitRole && $flagAssignAdminRole) {
-                $projectModel->db->commit();
-                // 分发事件
-                $info['id'] = $ret['data']['project_id'];
-                $event = new CommonPlacedEvent($this, $info);
-                $this->dispatcher->dispatch($event,  Events::onProjectCreate);
-                $this->ajaxSuccess('操作成功', $final);
-            } else {
-                $projectModel->db->rollBack();
-                $this->ajaxFailed('fail', '项目角色添加失败：' . $roleInfo);
-            }
-        } else {
-            $projectModel->db->rollBack();
-            $this->ajaxFailed('服务器错误', '添加失败,错误详情 :' . $ret['msg']);
-        }
+        $this->ajaxSuccess('操作成功', $final);
     }
 }

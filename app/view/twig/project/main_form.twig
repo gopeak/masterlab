@@ -127,23 +127,22 @@
 
 									<div class="form-group">
 										<label class="control-label" for="">
-											项目类型
+											项目模板
 											<i class="required">*</i>
 										</label>
-										<div class="col-sm-6 radio-with">
-											{% for type_id,type_item in full_type %}
-												<div class="radio">
-													<label>
-														<input type="radio" name="params[type]" value="<?=type_id?>">
-
-														<span style="font-weight: bolder;" title="<?=type_item['type_desc']?>"><?=type_item['type_name']?></span>
-														<div style="color:#999999;">
-
-														</div>
-													</label>
-												</div>
-											{% endfor %}
+										<div class="col-sm-6  ">
+											<select  name="params[project_tpl_id]" id="project_tpl_id" title="项目模板"  data-live-search="true"  class="selectpicker ">
+												{% for category in project_tpl_group_arr %}
+													<optgroup label="<?=category.name?>">
+														{% for tpl in category.tpl_arr %}
+															<option value="<?=tpl.id?>" ><?=tpl.name?></option>
+														{% endfor %}
+													</optgroup>
+												{% endfor %}
+											</select>
+											<span  class="gray "  style="margin-left: 20px"> 项目初创建的配置将使用所选的模板，可以在管理页面自定义模板</span>
 										</div>
+
 									</div>
 
 									<div class="row">
@@ -159,8 +158,6 @@
 															<option value="<?=row.uid?>"  data-content="<img width='20px' height='20px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/<?=row.uid?>.png' > <?=display_name?>"  ><?=display_name?></option>
 														{% endfor %}
 													</select>
-
-
 													<!--<a class="assign-to-me-link " href="#">赋予给我</a>-->
 													<p id="tip-project_lead" class="gl-field-error hide"></p>
 												</div>
@@ -329,9 +326,6 @@
 					toolbarIcons: "custom",
 					autoFocus: false
 				});
-
-
-				$("input[name='params[type]']:eq(0)").attr("checked", 'checked');
 
 				$('#fine-uploader-gallery').fineUploader({
 					template: 'qq-template-gallery',
