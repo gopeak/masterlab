@@ -259,7 +259,7 @@ class ProjectLogic
                 array('issue_type_scheme_id' => $schemeId, 'project_id' => $pid)
             );
             if (!$ret[0]) {
-                return self::retModel(-1, 'insert is error.');
+                return self::retModel(-1, 'insert is error. project repeat');
             }
 
             $projectListCountLogic = new ProjectListCountLogic();
