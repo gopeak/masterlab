@@ -802,9 +802,7 @@ class Main extends Base
             $projectModel->db->beginTransaction();
             $orgModel = new OrgModel();
             $orgInfo = $orgModel->getById($params['org_id']);
-
             $info['org_path'] = $orgInfo['path'];
-
             $ret = ProjectLogic::create($info, $uid);
 
             if (!$ret['errorCode']) {
@@ -828,7 +826,6 @@ class Main extends Base
                 $info['id'] = $ret['data']['project_id'];
                 $event = new CommonPlacedEvent($this, $info);
                 $this->dispatcher->dispatch($event, Events::onProjectCreate);
-
             }
         } catch (\PDOException $e) {
             $projectModel->db->rollBack();

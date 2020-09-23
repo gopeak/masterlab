@@ -7,9 +7,11 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
+use main\app\ctrl\admin\ProjectTpl;
 use main\app\model\PluginModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\ProjectLogic;
+use main\app\model\ProjectTemplateModel;
 use main\app\model\user\UserMessageModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserSettingModel;
@@ -133,12 +135,22 @@ class BaseUserCtrl extends BaseCtrl
             }
             $project = [];
             // print_r($this->projectPermArr);
+            $subsystemArr = [];
             if ($projectId) {
                 $projModel = new ProjectModel();
                 $project = $projModel->getById($projectId);
                 if ($project) {
                     list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
                     $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
+                }
+                $projectTplModel = new ProjectTemplateModel();
+                $subsystemJson = $projectTplModel->getFieldById('subsystem_json', $project['project_tpl_id']);
+                $curProjectSubsystemArr = json_decode($subsystemJson, true);
+                foreach ( ProjectTpl::$defaultSubSystem as $k=> $subsystem) {
+                    if(in_array($subsystem['name'], $curProjectSubsystemArr)){
+                        $subsystem['type'] = PluginModel::TYPE_PROJECT_DEFAULT;
+                        $subsystemArr[] = $subsystem;
+                    }
                 }
             }
             $this->addGVar('_project_id', $this->projectId);
@@ -184,9 +196,13 @@ class BaseUserCtrl extends BaseCtrl
             //  加载插件
             $model = new PluginModel();
             $pluginArr = $model->getRows('*');
-            $this->addGVar('_pluginArr', $pluginArr);
+            foreach ($pluginArr as $item) {
+                array_push($subsystemArr, $item);
+            }
+            $this->addGVar('_pluginArr', $subsystemArr);
             $this->addGVar('_plugin_admin_type', PluginModel::TYPE_ADMIN);
             $this->addGVar('_plugin_project_type', PluginModel::TYPE_MODULE);
+            $this->addGVar('_plugin_project_default', PluginModel::TYPE_PROJECT_DEFAULT);
 
             $this->checkUpdate();
         }

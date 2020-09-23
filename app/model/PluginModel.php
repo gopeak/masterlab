@@ -38,6 +38,7 @@ class PluginModel extends DbModel
         self::STATUS_UNINSTALLED => '未安装',
     ];
 
+    const  TYPE_PROJECT_DEFAULT = 'project_default';
     const  TYPE_MODULE = 'project_module';
     const  TYPE_ADMIN = 'admin_module';
     const  TYPE_THEME = 'theme';
