@@ -23,7 +23,7 @@
                     <li class=" {% if (nav_links_active == 'home') %} <?= 'active' ?>{% endif %}">
                         <a title="Home" class="shortcuts-project" href="<?=project_root_url?>/home"><img style="width:16px;height: 16px" src="/attachment/plugin/index.png" /> <span> 项目概要 </span> </a>
                     </li>
-             
+
                     {% for plugin in _pluginArr %}
                         {% if plugin.type == _plugin_project_default %}
 
