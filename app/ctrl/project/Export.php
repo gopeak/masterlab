@@ -3,15 +3,22 @@
 namespace main\app\ctrl\project;
 
 use main\app\classes\AgileLogic;
+use main\app\classes\ConfigLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueLogic;
 use main\app\classes\IssueStatusLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\ProjectLogic;
+use main\app\classes\RewriteUrl;
+use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\PermissionLogic;
 use main\app\ctrl\BaseUserCtrl;
 
+use main\app\model\agile\SprintModel;
+use main\app\model\issue\IssueModel;
+use main\app\model\project\ProjectModel;
+use main\app\model\user\UserModel;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -600,6 +607,107 @@ class Export extends BaseUserCtrl
         ob_end_flush();
 
         return true;
+    }
+
+    public function issueDetail()
+    {
+        $issueId = 0;
+        if (isset($_GET['issue_id']) && !empty($_GET['issue_id'])) {
+            $issueId = intval($_GET['issue_id']);
+        } else {
+            $this->ajaxFailed('未找到当前事项');
+        }
+
+        $leftLabelMap = [
+            'summary' => '标题', 'project_id' => '项目', 'issue_num' => '编号', 'issue_type' => '事项类型',
+            'module' => '模块', 'sprint' => '迭代', 'weight' => '权重值', 'description' => '描述',
+            'priority' => '优先级', 'status' => '状态', 'resolve' => '解决结果', 'environment' => '运行环境',
+            'reporter' => '报告人', 'assignee' => '经办人', 'assistants' => '协助人', 'modifier' => '最后修改人',
+            'master_id' => '是否父任务', 'created' => '创建时间', 'updated' => '修改时间', 'start_date' => '计划开始日期',
+            'due_date' => '计划结束日期', 'resolve_date' => '实际解决日期',
+        ];
+
+        $data['issue_id'] = $issueId;
+
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if (empty($issue)) {
+            $this->ajaxFailed('未找到当前事项.');
+        }
+
+        $data['project_id'] = $projectId = (int)$issue['project_id'];
+        $model = new ProjectModel();
+        $data['project'] = $model->getById($projectId);
+        $data['project_name'] = $data['project']['name'];
+
+        $issue['created_text'] = format_unix_time($issue['created']);
+        $issue['updated_text'] = format_unix_time($issue['updated']);
+
+        /*
+        $userModel = new UserModel();
+        $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
+        UserLogic::formatAvatarUser($issue['assignee_info']);
+        $issue['reporter_info'] = $userModel->getByUid($issue['reporter']);
+        UserLogic::formatAvatarUser($issue['reporter_info']);
+        $issue['modifier_info'] = $userModel->getByUid($issue['modifier']);
+        UserLogic::formatAvatarUser($issue['modifier_info']);
+        $issue['creator_info'] = $userModel->getByUid($issue['creator']);
+        UserLogic::formatAvatarUser($issue['creator_info']);
+        */
+
+        $data['issue'] = $issue;
+        $data = RewriteUrl::setProjectData($data);
+
+
+        $data['project_root_url'] = ROOT_URL . $data['project']['org_path'] . '/' . $data['project']['key'];
+
+        $data['sprints'] = [];
+        $data['active_sprint'] = [];
+        if (!empty($data['project_id'])) {
+            $sprintModel = new SprintModel();
+            $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
+            $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
+        }
+
+
+
+
+        $issueStatusArr = ConfigLogic::getStatus(true);
+        $issueTypeArr = ConfigLogic::getTypes(true);
+        $issuePriorityArr = ConfigLogic::getPriority(true);
+        $issueResolvesArr = ConfigLogic::getResolves(true);
+        $usersArr = ConfigLogic::getAllUser(true);
+
+        $issue['issue_type'] = $issueTypeArr[$issue['issue_type']]['name'];
+        $issue['priority'] = $issuePriorityArr[$issue['priority']]['name'];
+        $issue['status'] = $issueStatusArr[$issue['status']]['name'];
+        $issue['resolve'] = $issueResolvesArr[$issue['resolve']]['name'];
+        $issue['creator'] = $usersArr[$issue['creator']]['display_name'];
+        $issue['modifier'] = $usersArr[$issue['modifier']]['display_name'];
+        $issue['reporter'] = $usersArr[$issue['reporter']]['display_name'];
+        $issue['assignee'] = $usersArr[$issue['assignee']]['display_name'];
+
+        $final = [];
+        $cellIndex = 2;
+        foreach ($issue as $key => $item) {
+            $final['A'.$cellIndex] = isset($leftLabelMap[$key])?$leftLabelMap[$key]:$key;
+            $final['B'.$cellIndex] = $item;
+            $cellIndex++;
+        }
+
+        var_dump($final);exit;
+
+        $this->exportExcel(
+            $final,
+            date("Y-m-d") . time() . "-issue.xlsx",
+            [
+                'print' => true,
+                //'freezePane' => 'A2',
+                //'setARGB' => $cellHeaderArr1,
+                'setBorder' => true,
+            ]);
+
+        //dump($data);
     }
 
 }
