@@ -81,11 +81,17 @@ switch ($step) {
         $install_recover = '';
         $demo_data = file_exists('./data/utf8_add.sql') ? true : false;
         importSql($install_error, $install_recover);
+        if(extension_loaded('Opcache')){
+            opcache_reset();
+        }
         break;
     case 4:
 
         break;
     case 5:
+        if(extension_loaded('Opcache')){
+            opcache_reset();
+        }
         $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
         $sitepath = str_replace('install', "", $sitepath);
         $http_type = (

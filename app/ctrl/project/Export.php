@@ -405,7 +405,6 @@ class Export extends BaseUserCtrl
         if (empty($datas)) {
             return false;
         }
-
         set_time_limit(0);
         /** @var Spreadsheet $objSpreadsheet */
         $objSpreadsheet = new Spreadsheet();

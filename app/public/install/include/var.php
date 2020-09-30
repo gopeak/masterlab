@@ -1,6 +1,7 @@
 <?php
 $env_items = array();
 $dirfile_items = array(
+    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/config/deploy')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/public/install/data')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/public/install')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../../app/public/attachment')),
@@ -21,7 +22,6 @@ if (ini_get('session.save_handler') == 'files') {
         $sessionPath = realpath($sessionPath);
         $dirfile_items[] = ['type' => 'file', 'path' => $sessionPath];
     }
-
 }
 
 $func_items = array(

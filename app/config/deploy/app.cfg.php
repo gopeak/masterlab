@@ -11,7 +11,7 @@ define('ROOT_URL', currentHttpDomain());
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 当前版本号
-define('MASTERLAB_VERSION', '2.1.9');
+define('MASTERLAB_VERSION', '2.1.10');
 
 // 使用twig模板引擎
 define('TPL_ENGINE', 'twig');
