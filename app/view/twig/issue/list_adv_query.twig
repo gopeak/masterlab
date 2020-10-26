@@ -10,6 +10,23 @@ function deleteAdvQuery(index) {
     IssueAdvQuery.prototype.renderAdvQuery(adv_details);
 }
 
+function clearAdvSearchQuery() {
+    $("#adv_andor").val("");
+    $('#adv_field option:selected').prop("selected", false);
+    $("#adv_opt").val("");
+    $(".form-control[dataType='" + advQueryType + "']").val("");
+
+    advQueryType = "text";
+    advQuerySource = "";
+    advQueryTitle = "请选择";
+    document.getElementById("adv_andor").options.selectedIndex = 0;
+    document.getElementById("adv_field").options.selectedIndex = 0;
+    document.getElementById("adv_opt").options.selectedIndex = 0;
+
+    $("#dynamic-form").html(IssueAdvQuery.prototype.renderTableAdvQuery("content", "text", "", "", "值"));
+    $('.selectpicker').selectpicker('refresh');
+}
+
 $(function () {
     window.$IssueAdvQuery = new IssueAdvQuery(_issueConfig);
     // 高级搜索字段修改
@@ -135,22 +152,6 @@ $(function () {
         IssueAdvQuery.prototype.renderAdvQuery(adv_details);
     });
 
-    function clearAdvSearchQuery() {
-        $("#adv_andor").val("");
-        $('#adv_field option:selected').prop("selected", false);
-        $("#adv_opt").val("");
-        $(".form-control[dataType='" + advQueryType + "']").val("");
-
-        advQueryType = "text";
-        advQuerySource = "";
-        advQueryTitle = "请选择";
-        document.getElementById("adv_andor").options.selectedIndex = 0;
-        document.getElementById("adv_field").options.selectedIndex = 0;
-        document.getElementById("adv_opt").options.selectedIndex = 0;
-
-        $("#dynamic-form").html(IssueAdvQuery.prototype.renderTableAdvQuery("content", "text", "", "", "值"));
-        $('.selectpicker').selectpicker('refresh');
-    }
 
     // 双击修改
     $(document).on("dblclick", "#adv-query-box .table-text", function () {
@@ -312,7 +313,6 @@ $(function () {
         }
         var queryData = JSON.stringify(temp);
         IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData, null, adv_data);
-
     });
 
 });

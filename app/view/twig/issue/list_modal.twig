@@ -618,14 +618,7 @@
                                 <option value="IS NOT NULL">IS NOT NULL</option-->
                             </select>
                         </div>
-                        {#<div class="col-sm-3 dynamic-form">#}
-                        {#<input type="text" class="form-control" dataType="text" name="params[text]" id="adv_content"  value="" placeholder="查询内容" />#}
 
-                        {#<select id="adv_select" name="params[select]" dataType="select" class="selectpicker form-control hidden" dropdownAlignRight="true" title="请选择"  >#}
-                        {#<option value="LIKE">LIKE</option>#}
-                        {#<option value="LIKE %...%">LIKE %...%</option>#}
-                        {#</select>#}
-                        {#</div>#}
                         <div class="col-sm-3 dynamic-form" id="dynamic-form">
                             <input type="text" class="form-control"
                                    datatype="text" name="content"
@@ -707,13 +700,11 @@
                                href="javascript:">
                                 <svg class="s16 adv-sort-img <?= sort_by == 'asc' ? '' : 'hidden' ?>"
                                      id="adv-sort-by-desc">
-                                    <use style="stroke: rgba(245, 245, 245, 0.85);"
-                                         xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
+                                    <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
                                 </svg>
                                 <svg class="s16 <?= sort_by == 'asc' ? 'hidden' : '' ?> adv-sort-img"
                                      id="adv-sort-by-asc">
-                                    <use style="stroke: rgba(245, 245, 245, 0.85);"
-                                         xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                    <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
                                 </svg>
                             </a>
                         </div>

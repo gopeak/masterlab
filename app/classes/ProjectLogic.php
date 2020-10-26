@@ -520,7 +520,7 @@ class ProjectLogic
             }
         }
 
-        $item['type_name'] = isset($projectTplNameArr[$item['project_tpl_id']]) ? $projectTplNameArr[$item['project_tpl_id']] : '';
+        $item['type_name'] = isset($projectTplNameArr[@$item['project_tpl_id']]) ? $projectTplNameArr[@$item['project_tpl_id']] : '';
         $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
         $item['create_time_text'] = format_unix_time($item['create_time'], time());
         $item['create_time_origin'] = '';
