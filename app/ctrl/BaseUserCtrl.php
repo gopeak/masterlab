@@ -146,12 +146,15 @@ class BaseUserCtrl extends BaseCtrl
                 $projectTplModel = new ProjectTemplateModel();
                 $subsystemJson = $projectTplModel->getFieldById('subsystem_json', $project['project_tpl_id']);
                 $curProjectSubsystemArr = json_decode($subsystemJson, true);
-                foreach ( ProjectTpl::$defaultSubSystem as $k=> $subsystem) {
-                    if(in_array($subsystem['name'], $curProjectSubsystemArr)){
-                        $subsystem['type'] = PluginModel::TYPE_PROJECT_DEFAULT;
-                        $subsystemArr[] = $subsystem;
+                if($curProjectSubsystemArr){
+                    foreach (ProjectTpl::$defaultSubSystem as $k=> $subsystem) {
+                        if(in_array($subsystem['name'], $curProjectSubsystemArr)){
+                            $subsystem['type'] = PluginModel::TYPE_PROJECT_DEFAULT;
+                            $subsystemArr[] = $subsystem;
+                        }
                     }
                 }
+
             }
             $this->addGVar('_project_id', $this->projectId);
             $this->addGVar('G_project', $project);

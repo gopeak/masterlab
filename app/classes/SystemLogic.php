@@ -9,6 +9,8 @@
 
 namespace main\app\classes;
 
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\system\MailQueueModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\project\ProjectUserRoleModel;

@@ -438,6 +438,7 @@
 <script src="/dev/js/input_search.js"></script>
 
 <script type="text/javascript">
+    var $filterSreach = null;
     $(function(){
         var usersList = [ ];
         var from_user = _issueConfig.users;
@@ -522,7 +523,7 @@
             }
         ];
 
-        var $filterSreach = new InputSearch(_searches, operators);
+        $filterSreach = new InputSearch(_searches, operators);
 {% verbatim %}
         var str = "{{fds}} span {{user}}";
         var regex = /[^{{}}]+(?=\}})/g;

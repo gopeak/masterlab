@@ -119,7 +119,7 @@ html, body{
 }
 
 .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
-    width: 250px !important;
+    width: 400px !important;
 }
 
 .modal .bootstrap-select > .dropdown-toggle {

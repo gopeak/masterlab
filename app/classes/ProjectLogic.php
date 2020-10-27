@@ -627,17 +627,14 @@ class ProjectLogic
         try {
             $labelModel = new ProjectLabelModel();
             $catalogLabelModel = new ProjectCatalogLabelModel();
-            $tplCatalogLabelArr = ProjectTplCatalogLabelModel::getInstance()->getByProject($projectTplId);
-            $tplLabelArr = ProjectTplLabelModel::getInstance()->getByProject($projectTplId, true);
-            $orderWeight = count($tplCatalogLabelArr)+100;
-            $i = 0;
-            foreach ($tplCatalogLabelArr as $catalog) {
-                $i++;
+            $initCatalogLabelArr = ProjectTplCatalogLabelModel::getInstance()->getByProject($projectTplId);
+            $initLabelArr = ProjectTplLabelModel::getInstance()->getByProject($projectTplId);
+
+            $orderWeight = count($initCatalogLabelArr)+100;
+            foreach ($initCatalogLabelArr as $catalogKey => $catalogLabel) {
                 $catalogLabelIdArr = [];
-                $catalogLabelArr =  json_decode($catalog['label_id_json'], true);
-                foreach ($catalogLabelArr as $labelId) {
-                    if(isset($tplLabelArr[$labelId])){
-                        $label = $tplLabelArr[$labelId];
+                foreach ($initLabelArr as $label) {
+                    if($label['catalog']==$catalogKey){
                         $insertArr = [];
                         $insertArr['project_id'] = $projectId;
                         $insertArr['title'] = $label['title'];
@@ -652,11 +649,11 @@ class ProjectLogic
                 }
                 $insertCatalogArr = [];
                 $insertCatalogArr['project_id'] = $projectId;
-                $insertCatalogArr['name'] = $catalog['name'];
-                $insertCatalogArr['font_color'] = $catalog['font_color'];
-                $insertCatalogArr['description'] = $catalog['description'];
+                $insertCatalogArr['name'] = $catalogLabel['name'];
+                $insertCatalogArr['font_color'] = $catalogLabel['font_color'];
+                $insertCatalogArr['description'] = $catalogLabel['description'];
                 $insertCatalogArr['label_id_json'] = json_encode($catalogLabelIdArr);
-                $insertCatalogArr['order_weight'] =  $orderWeight - $i;
+                $insertCatalogArr['order_weight'] =  $orderWeight - (int)$catalogKey;
                 $catalogLabelModel->insert($insertCatalogArr);
             }
         } catch (\PDOException $e) {

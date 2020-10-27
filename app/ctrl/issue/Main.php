@@ -115,7 +115,8 @@ class Main extends BaseUserCtrl
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
                 if ($fav['is_adv_query'] == '0') {
-                    $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
+                    $fav['filter'] = str_replace([':='], [':'], $fav['filter']);
+                    $fav['filter'] = str_replace([':', ' ', '"',';;'], ['=', '&', '','&'], $fav['filter']);
                     $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
                     $filter = $fav['filter'] . '&active_id=' . $favFilterId;
                     $issueUrl = 'issue/main';
@@ -1664,6 +1665,7 @@ class Main extends BaseUserCtrl
             $resolve = IssueResolveModel::getInstance()->getByKey('done');
             $resolveDoneId = $resolve['id'];
             if ($info['resolve'] == $resolveDoneId) {
+                $info['resolve_date'] = date('Y-m-d');
                 $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
                 if (!$closePerm) {
                     $this->ajaxFailed('当前项目中您没有权限将解决结果修改为:' . $resolve['name']);
@@ -2114,6 +2116,7 @@ class Main extends BaseUserCtrl
         $info = [];
         $info['status'] = IssueStatusModel::getInstance()->getIdByKey('closed');
         $info['resolve'] = IssueResolveModel::getInstance()->getIdByKey('done');
+        $info['resolve_date'] = date('Y-m-d');
 
         $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
         if (!$closePerm) {

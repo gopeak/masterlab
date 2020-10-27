@@ -3,6 +3,8 @@
 namespace main\app\classes;
 
 use main\app\ctrl\admin\IssueType;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
@@ -15,6 +17,7 @@ use main\app\model\system\NotifySchemeDataModel;
 use main\app\model\system\NotifySchemeModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserModel;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * 邮件通知处理类
@@ -204,13 +207,17 @@ class NotifyLogic
         if ($this->sendEmailInitParams(
             $toEmails,
             $sourceType,
-
             $schemeDataFlag,
             $projectId,
             $sourceId,
             $body
         )) {
             $systemLogic = new SystemLogic();
+            // 分发邮件推送事件
+            $eventData = [$this->to, $this->subject, $this->body];
+            $event = new CommonPlacedEvent($this, $eventData);
+            $dispatcher = new EventDispatcher();
+            $dispatcher->dispatch($event,  Events::onSendMailBefore);
             $systemLogic->mail($this->to, $this->subject, $this->body);
         }
     }
