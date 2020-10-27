@@ -70,7 +70,7 @@ class Setting extends BaseUserCtrl
                 $this->ajaxFailed('param_error:type_is_null');
             }
 
-            $params['type'] = intval($params['type']);
+            //$params['type'] = intval($params['type']);
 
             if (!isset($params['lead']) || empty($params['lead'])) {
                 $params['lead'] = $uid;
@@ -84,7 +84,7 @@ class Setting extends BaseUserCtrl
                 $isUpdateLeader = true;
             }
             $info['description'] = $params['description'];
-            $info['type'] = $params['type'];
+            //$info['type'] = $params['type'];
             $info['url'] = $params['url'];
             $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
             //$info['detail'] = $params['detail'];
