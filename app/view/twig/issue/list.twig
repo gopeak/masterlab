@@ -366,11 +366,13 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in sprints %}
-                                                            <li>
-                                                                <a class="btn_batch_update" data-field="sprint"
-                                                                   data-id="<?= item['id'] ?>"
-                                                                   href="#"><?= item['name'] ?></a>
-                                                            </li>
+                                                            {% if item.status!=3 %}
+                                                                <li>
+                                                                    <a class="btn_batch_update" data-field="sprint"
+                                                                       data-id="<?= item['id'] ?>"
+                                                                       href="#"><?= item['name'] ?></a>
+                                                                </li>
+                                                            {% endif %}
                                                         {% endfor %}
 
                                                     </ul>
