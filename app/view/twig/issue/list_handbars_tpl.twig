@@ -52,16 +52,14 @@
 											</div>
 										</td>
 									{{/if_in_array}}
+									{% endverbatim %}
 
-
-                                        {% if (is_all_issues or 'project_id'in display_fields) %}
-
-                                                <td class="width_8">
-                                                    {{make_project project_id}}
-                                                </td>
-
-                                        {% endif %}
-
+                                    {% if (is_all_issues or 'project_id' in display_fields) %}
+                                            <td class="width_8">
+                                                {{make_project project_id}}
+                                            </td>
+                                    {% endif %}
+                {% verbatim %}
 
 									{{#if_in_array 'module'  ../display_fields}}
 										<td class="width_6"  title="双击可直接修改">

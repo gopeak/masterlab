@@ -116,9 +116,9 @@ var IssueMain = (function () {
 
     IssueMain.prototype.saveFilter = function (name) {
         window.is_save_filter = '1';
-        var searchQuery = window.gl.DropdownUtils.getSearchQuery();
-        return false;
-        window.is_save_filter = '0';
+        var searchQuery = window.$filterSreach.getCurrentSearchesStr();
+        console.log(searchQuery);
+       // window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
             var params = { format: 'json' };

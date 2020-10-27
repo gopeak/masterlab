@@ -93,6 +93,10 @@ class Index extends BasePluginCtrl
      */
     private function getEventArr()
     {
+        $arr['邮件推送'] = [
+            Events::onSendMailBefore=>'发送邮件之前',
+        ];
+
         $arr['事项'] = [
             Events::onIssueCreateBefore=>'创建事项之前',
             Events::onIssueCreateAfter=>'创建事项之后',

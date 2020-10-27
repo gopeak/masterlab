@@ -139,8 +139,7 @@
                                                 </th>
                                             {% endif %}
 
-                                            {% if (is_all_issues or 'project_id'in display_fields) %}
-
+                                            {% if (is_all_issues or 'project_id' in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">项 目</th>
                                             {% endif %}
 
@@ -466,7 +465,7 @@
                 var urls = parseURL(window.location.href);
                 var $sort_field = '<?= sort_field ?>';
                 var $sort_by = '<?= sort_by ?>';
-                var is_all_issues = '<?= is_all_issues ?>';
+                var is_all_issues = {% if (is_all_issues)%}true{% else %}false{% endif %};
 
                 var display_fields = <?= display_fields|json_encode()|raw ?>;
                 var uiDisplayFields = <?= uiDisplayFields|json_encode()|raw ?>;

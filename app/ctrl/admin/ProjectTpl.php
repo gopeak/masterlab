@@ -30,7 +30,7 @@ class ProjectTpl extends BaseAdminCtrl
 {
 
     public static $defaultSubSystem = [
-        'issue' => ['title' => '事项', 'name'=>'issue', 'fix' => true, 'color' => 'blue', 'is_system' => '1','description'=>''],
+        'issues' => ['title' => '事项', 'name'=>'issues', 'fix' => true, 'color' => 'blue', 'is_system' => '1','description'=>''],
         'gantt' => ['title' => '甘特图','name'=>'gantt',  'fix' => false, 'color' => 'red', 'is_system' => '1','description'=>'以甘特图的方式进行整个项目或迭代的事项计划'],
         'mind' => ['title' => '事项分解','name'=>'mind',  'fix' => false, 'color' => 'gray', 'is_system' => '1','description'=>'将思维导图和事项进行整个，可直观图形化树状化的方式管理事项'],
         'backlog' => ['title' => '待办事项', 'name'=>'backlog', 'fix' => false, 'color' => 'gray', 'is_system' => '1','description'=>'待办事项是一个排序的列表,包含所有产品需要的事项,也是产品需求变动的唯一来源。产品负责人负责产品待办事项列表的内容、可用性和优先级'],

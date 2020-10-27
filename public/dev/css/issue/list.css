@@ -446,8 +446,6 @@ table tbody tr td.width_7_9 {
 
 
 
-
-
 .resolve-select {
     position: relative;
     -moz-user-select:none; /*火狐*/
@@ -485,6 +483,7 @@ table tbody tr td.width_7_9 {
 .resolve-select .resolve-list li:hover{
     background: #f6fafd;
 }
+
 
 .list-settings {
     display: inline-block;

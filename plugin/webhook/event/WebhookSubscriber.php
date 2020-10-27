@@ -225,6 +225,7 @@ class WebhookSubscriber implements EventSubscriberInterface
      * @param array $dataArr
      * @return array
      * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     private function requestByMasterlabSocket($webhook, $dataArr)
     {
