@@ -85,7 +85,6 @@ class Setting extends BaseUserCtrl
             }
             $info['description'] = $params['description'];
             $info['type'] = $params['type'];
-            $info['category'] = 0;
             $info['url'] = $params['url'];
             $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
             //$info['detail'] = $params['detail'];
@@ -101,7 +100,6 @@ class Setting extends BaseUserCtrl
             }
 
             $projectModel->db->beginTransaction();
-
             $ret1 = $projectModel->update($info, array('id' => $_GET[$projectParamkey]));
 
             if ($isUpdateLeader) {
@@ -122,27 +120,7 @@ class Setting extends BaseUserCtrl
                 $projectModel->db->rollBack();
                 $this->ajaxFailed('错误', '更新项目描述失败');
             }
-            // @todo 先判断项目类型有变更，再去做更新
-            if ($preData['type'] != $params['type']) {
-                $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);
-                $retSchemeId = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[$projectParamkey]);
-                if ($retSchemeId) {
-                    $ret2 = $projectIssueTypeSchemeDataModel->update(array('issue_type_scheme_id' => $schemeId), array('project_id' => $_GET[$projectParamkey]));
-                } else {
-                    $ret2 = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $_GET[$projectParamkey]));
-                }
-                if (!$ret2[0]) {
-                    $projectModel->db->rollBack();
-                    $this->ajaxFailed('错误', '更新项目类型失败');
-                }
-            }
 
-            if (!isset($info['type'])
-                || !is_numeric($info['type'])
-                || !in_array($info['type'], ProjectLogic::$type_all)
-            ) {
-                $this->ajaxFailed('参数错误', '项目类型错误');
-            }
 
             // 保存项目事项类型方案
             $projectId = $_GET[ProjectLogic::PROJECT_GET_PARAM_ID];

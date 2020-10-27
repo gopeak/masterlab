@@ -520,7 +520,7 @@ class ProjectLogic
             }
         }
 
-        $item['type_name'] = isset($projectTplNameArr[$item['project_tpl_id']]) ? $projectTplNameArr[$item['project_tpl_id']] : '';
+        $item['type_name'] = isset($projectTplNameArr[@$item['project_tpl_id']]) ? $projectTplNameArr[$item['project_tpl_id']] : '';
         $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
         $item['create_time_text'] = format_unix_time($item['create_time'], time());
         $item['create_time_origin'] = '';
@@ -627,14 +627,17 @@ class ProjectLogic
         try {
             $labelModel = new ProjectLabelModel();
             $catalogLabelModel = new ProjectCatalogLabelModel();
-            $initCatalogLabelArr = ProjectTplCatalogLabelModel::getInstance()->getByProject($projectTplId);
-            $initLabelArr = ProjectTplLabelModel::getInstance()->getByProject($projectTplId);
-
-            $orderWeight = count($initCatalogLabelArr)+100;
-            foreach ($initCatalogLabelArr as $catalogKey => $catalogLabel) {
+            $tplCatalogLabelArr = ProjectTplCatalogLabelModel::getInstance()->getByProject($projectTplId);
+            $tplLabelArr = ProjectTplLabelModel::getInstance()->getByProject($projectTplId, true);
+            $orderWeight = count($tplCatalogLabelArr)+100;
+            $i = 0;
+            foreach ($tplCatalogLabelArr as $catalog) {
+                $i++;
                 $catalogLabelIdArr = [];
-                foreach ($initLabelArr as $label) {
-                    if($label['catalog']==$catalogKey){
+                $catalogLabelArr =  json_decode($catalog['label_id_json'], true);
+                foreach ($catalogLabelArr as $labelId) {
+                    if(isset($tplLabelArr[$labelId])){
+                        $label = $tplLabelArr[$labelId];
                         $insertArr = [];
                         $insertArr['project_id'] = $projectId;
                         $insertArr['title'] = $label['title'];
@@ -649,11 +652,11 @@ class ProjectLogic
                 }
                 $insertCatalogArr = [];
                 $insertCatalogArr['project_id'] = $projectId;
-                $insertCatalogArr['name'] = $catalogLabel['name'];
-                $insertCatalogArr['font_color'] = $catalogLabel['font_color'];
-                $insertCatalogArr['description'] = $catalogLabel['description'];
+                $insertCatalogArr['name'] = $catalog['name'];
+                $insertCatalogArr['font_color'] = $catalog['font_color'];
+                $insertCatalogArr['description'] = $catalog['description'];
                 $insertCatalogArr['label_id_json'] = json_encode($catalogLabelIdArr);
-                $insertCatalogArr['order_weight'] =  $orderWeight - (int)$catalogKey;
+                $insertCatalogArr['order_weight'] =  $orderWeight - $i;
                 $catalogLabelModel->insert($insertCatalogArr);
             }
         } catch (\PDOException $e) {

@@ -198,15 +198,9 @@ class ProjectTplCatalog extends BaseUserCtrl
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        if (!isset($_POST['project_tpl_id']) || empty($_POST['project_tpl_id'])) {
-            $this->ajaxFailed('参数project_tpl_id没有提供');
-        }
+
         $id = intval($id);
         $model = new ProjectTplCatalogLabelModel();
-        $info = $model->getById($id);
-        if ($info['project_tpl_id'] != $_POST['project_tpl_id']) {
-            $this->ajaxFailed('提示', '参数错误,非当前项目的分类无法删除');
-        }
         $model->deleteItem($id);
         $this->ajaxSuccess('提示','操作成功');
     }

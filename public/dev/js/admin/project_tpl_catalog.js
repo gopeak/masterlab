@@ -7,6 +7,7 @@ let ProjectTplCatalog = (function () {
         _options = options;
         $('#btn-catalog_create').click(function () {
             // $('#form-catalog').resetForm();
+            $('#modal-catalog_title').html('新增分类');
             $('#catalog_action').val('add');
             $('#input-catalog-name').val('');
             $('#input-catalog-font_color').val('#0033CC');
@@ -63,23 +64,36 @@ let ProjectTplCatalog = (function () {
         });
     };
 
-    ProjectTplCatalog.prototype.delete = function (project_id, id) {
-        $.post(_options.delete_url,{project_id: project_id, id:id},function (result) {
-            if (result.ret == '200') {
-                notify_success(result.msg, result.data);
-                $('#project_label_'+id).remove();
+    ProjectTplCatalog.prototype.delete = function ( id) {
 
-            } else {
-                notify_error(result.msg, result.data);
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            async: true,
+            url: _options.delete_url,
+            data: {id: id},
+            success: function (resp) {
+                auth_check(resp);
+                loading.closeAll();
+                if (resp.ret == '200') {
+                    notify_success(resp.msg, resp.data);
+                    $('#project_catalog_'+id).remove();
+                } else {
+                    notify_error(resp.msg, resp.data);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
             }
         });
+
     };
 
     ProjectTplCatalog.prototype.edit = function (id) {
         $('#modal-form-catalog').modal('show');
         $('#action').val('update');
         $('#catalog_id').val(id);
-
+        $('#modal-catalog_title').html('编辑分类');
         loading.show('#modal-body');
         $.ajax({
             type: 'GET',
@@ -203,7 +217,7 @@ let ProjectTplCatalog = (function () {
                     });
 
                     $(".catalog_edit_remove").bind("click",function () {
-                        let label_id =  $(this).data('id');
+                        let catalog_id =  $(this).data('id');
                         swal({
                                 title: "确认要删除该分类？",
                                 text: "注:删除后，分类是无法恢复的！",
@@ -218,7 +232,7 @@ let ProjectTplCatalog = (function () {
                             },
                             function (isConfirm) {
                                 if (isConfirm) {
-                                    ProjectTplCatalog.prototype.delete(window._project_id, label_id);
+                                    ProjectTplCatalog.prototype.delete(catalog_id);
                                     swal.close();
                                 } else {
                                     swal.close();

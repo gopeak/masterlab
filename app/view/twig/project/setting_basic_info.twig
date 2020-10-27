@@ -4,8 +4,7 @@
 
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/lib/jquery.form.js"></script>
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
-            charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <!-- Fine Uploader jQuery JS file-->
     <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
@@ -50,8 +49,7 @@
                     <div class="col-lg-3">
                         <h4 class="prepend-top-0">项目基础设置</h4>
                         <p>将事项分为不同的类型, 例如 缺陷或任务等。 每个事项类型都可以分别配置不同的选项。
-
-事项类型方案用于定义这个项目使用哪几种事项类型。 要改变项目的事项类型, 可以选择另一个事项类型方案, 或编辑当前的事项类型界面方案。</p>
+                            事项类型方案用于定义这个项目使用哪几种事项类型。 要改变项目的事项类型, 可以选择另一个事项类型方案, 或编辑当前的事项类型界面方案。</p>
                     </div>
                     <div class="col-lg-9">
                         <div class="panel panel-default">
@@ -92,7 +90,7 @@
                                         </div>
                                         <div class="form-group project-path">
                                             <label class="control-label" for="project_namespace_id">
-                                                <span>项目KEY <i class="required">*</i></span>
+                                                <span>项目KEY <i class="required"></i></span>
                                             </label>
                                             <div class="col-sm-10">
                                                 <input value="<?=info['key']?>" placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"required="required" type="text" name="params[key]" id="project_key" disabled>
@@ -101,20 +99,10 @@
 
                                         <div class="form-group clearfix">
                                             <label class="control-label" for="project_visibility_level">
-                                                项目类型 <i class="required">*</i>
+                                                项目模板 <i class="required"></i>
                                             </label>
                                             <div class="col-sm-10 radio-with">
-                                                {% for type_id,type_item in full_type %}
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" name="params[type]" value="<?=type_id?>" {% if (type_id == info['type']) %}<?= 'checked' ?>{% endif %} >
-                                                            <i class="<?=type_item['type_face']?>"></i> <span style="font-weight: bolder;"><?=type_item['type_name']?></span>
-                                                            <div style="color:#999999;">
-                                                                <?=type_item['type_desc']?>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                {% endfor %}
+                                                <input value="<?=info['project_tpl_text']?>"  class="form-control"   type="text" name="params[project_tpl_text]" id="project_tpl_text" disabled>
                                             </div>
                                         </div>
 

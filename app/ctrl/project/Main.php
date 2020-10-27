@@ -349,8 +349,11 @@ class Main extends Base
 
         //$data['users'] = $users;
         $info['org_name'] = $orgName;
+        $projectTpl = (new ProjectTemplateModel())->getById($info['project_tpl_id']);
+        if($projectTpl){
+            $info['project_tpl_text'] = $projectTpl['name'];
+        }
         $data['info'] = $info;
-        $data['full_type'] = ProjectLogic::faceMap();
 
         $data['root_domain'] = ROOT_URL;
 
