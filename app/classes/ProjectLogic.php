@@ -242,6 +242,7 @@ class ProjectLogic
             'subsystem_json' => $projectTemplate['subsystem_json'],
             'project_view' => $projectTemplate['project_view'],
             'issue_view' => $projectTemplate['issue_view'],
+            'default_issue_type_id' => $projectTemplate['default_issue_type_id'],
             'issue_ui_scheme_id' => $projectTemplate['issue_ui_scheme_id'],
             'type_child' => 0,
             'permission_scheme_id' => 0,

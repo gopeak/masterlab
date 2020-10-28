@@ -7,6 +7,7 @@ use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\ctrl\BaseCtrl;
+use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\IssueUiSchemeModel;
 use main\app\model\issue\WorkflowSchemeModel;
@@ -137,6 +138,8 @@ class ProjectTpl extends BaseAdminCtrl
         $data['issueTypeSchemesArr'] = (new IssueTypeSchemeModel())->getAllItems(false);
         // 事项表单配置方案
         $data['issueUiSchemesArr'] = (new IssueUiSchemeModel())->getAllItems(false);
+        // 事项类型
+        $data['issueTypeArr'] = (new IssueTypeModel())->getAllItems(false);
 
         $this->render('gitlab/admin/project_tpl/form.twig', $data);
     }
@@ -400,6 +403,10 @@ class ProjectTpl extends BaseAdminCtrl
         if (isset($_POST['issue_view'])) {
             $info['issue_view'] = $_POST['issue_view'];
         }
+        if (isset($_POST['default_issue_type_id'])) {
+            $info['default_issue_type_id'] = $_POST['default_issue_type_id'];
+        }
+
         if (isset($_POST['issue_type_scheme_id'])) {
             $info['issue_type_scheme_id'] = $_POST['issue_type_scheme_id'];
         }

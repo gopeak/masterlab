@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/lib/jquery.form.js"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
+
+</head>
+<body class="" data-group="" data-page="projects:issues:new" data-project="xphp" >
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body">
+{% include 'twig/common/body/header-content.twig' %}
+
+<script>
+    var findFileURL = "";
+</script>
+<style>
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 100% !important;
+    }
+</style>
+<div class="page-with-sidebar">
+    {% include 'twig/project/common-page-nav-project.twig' %}
+    {% include 'twig/project/common-setting-nav-links-sub-nav.twig' %}
+
+    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+        <div class="alert-wrapper">
+
+            <div class="flash-container flash-container-page">
+            </div>
+
+        </div>
+        <div class="container-fluid container-limited">
+            <div class="content" id="content-body">
+                <div class="row prepend-top-default">
+                    <div class="col-lg-3">
+                        <h4 class="prepend-top-0">项目事项设置</h4>
+                        <p> </p>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong>事项设置</strong>
+                            </div>
+                            <div class="panel-body">
+                                <div>
+                                    <form id="save_project" action="/project/setting/save_settings_profile?project_id=<?=project_id?>" accept-charset="UTF-8" method="post" class="form-horizontal">
+                                        <input name="utf8" type="hidden" value="✓">
+                                        <input type="hidden" name="authenticity_token" value="">
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="issue_type_scheme_id">
+                                                <span>事项类型方案 <i class="required">*</i></span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="selectpicker"  name="params[issue_type_scheme_id]" id="issue_type_scheme_id">
+                                                        {% for scheme in issue_type_schemes %}
+                                                            <option value="<?=scheme['id']?>"><?=scheme['name']?></option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="workflow_scheme_id">
+                                                <span>事项状态流方案 <i class="required">*</i></span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="selectpicker" name="params[workflow_scheme_id]" id="workflow_scheme_id">
+                                                        {% for scheme in workflow_schemes %}
+                                                            <option value="<?=scheme['id']?>"><?=scheme['name']?></option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="issue_type_scheme_id">
+                                                <span>创建事项时的默认类型 <i class="required"></i></span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="form-control selectpicker" name="params[default_issue_type_id]" id="default_issue_type_id">
+                                                        {% for  issue_type in issueTypeArr %}
+                                                            <option value="<?=issue_type.id?>" {% if issue_type.id==project.default_issue_type_id %} selected {% endif %} ><?=issue_type.name?></option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="issue_type_scheme_id">
+                                                <span>是否记住上次创建事项数据 <i class="required"></i></span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="form-control selectpicker" name="params[is_remember_last_issue]" id="is_remember_last_issue">
+                                                         <option value="1" {% if 1==project.is_remember_last_issue %} selected {% endif %} >是</option>
+                                                         <option value="0" {% if 0==project.is_remember_last_issue %} selected {% endif %} >否</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="issue_type_scheme_id">
+                                                <span>记住上次创建事项的字段 <i class="required"></i></span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="form-control selectpicker" multiple name="params[remember_last_issue_field][]" id="remember_last_issue_field">
+                                                        {% for  index,rememberFieldName in rememberFieldArr %}
+                                                            {% set selected='' %}
+                                                            {% if  index in project.remember_last_issue_field %}
+                                                                {% set selected='selected' %}
+                                                            {% endif %}
+                                                            <option value="<?=index?>" <?=selected?> ><?=rememberFieldName?></option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label"></label>
+                                            <div class="col-sm-10">
+                                                <input type="submit" name="commit" value="保存" class="btn btn-create project-submit js-key-enter" tabindex="4">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</section>
+
+<script>
+    // 初始化事项类型方案
+    $("#issue_type_scheme_id").selectpicker('val', '<?=issue_type_scheme_id?>');
+    // 初始化状态流方案
+    $("#workflow_scheme_id").selectpicker('val', '<?=project.workflow_scheme_id?>');
+
+
+    var options = {
+        beforeSubmit: function (arr, $form, options) {
+            return true;
+        },
+        success: function (data, textStatus, jqXHR, $form) {
+            if(data.ret == 200){
+                notify_success('操作成功');
+            }else{
+                notify_error('保存失败: ' + data.msg);
+            }
+            console.log(data);
+        },
+        type:      "post",
+        dataType:  "json",
+        timeout:   3000
+    };
+
+    $('#save_project').submit(function() {
+        $(this).ajaxSubmit(options);
+        return false;
+    });
+
+
+    var update_key_options = {
+        beforeSubmit:  function (arr, $form, options) {
+            return true;
+        },
+        success:       function (data, textStatus, jqXHR, $form) {
+            if(data.ret == 200){
+                notify_success('KEY修改成功');
+                window.location.href="/projects";
+            }else{
+                notify_error('KEY修改失败: ' + data.msg);
+            }
+            //console.log(data);
+        },
+        type:      "post",
+        dataType:  "json",
+        timeout:   3000
+    };
+
+    $('#update_key_from').submit(function() {
+        $(this).ajaxSubmit(update_key_options);
+        return false;
+    });
+</script>
+</body>
+
+</html>

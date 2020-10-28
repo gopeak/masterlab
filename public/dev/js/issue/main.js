@@ -38,10 +38,15 @@ var IssueMain = (function () {
 
     var _temp_data = {};
     var _default_data = null;
+    var _default_issue_type_id = 1;
 
     // constructor
     function IssueMain(options) {
         _options = options;
+
+        if(window._default_issue_type_id){
+            _default_issue_type_id = window._default_issue_type_id;
+        }
 
         IssueMain.prototype.initProjectSelect();
         $("#btn-issue_type_add").click(function () {
@@ -177,13 +182,14 @@ var IssueMain = (function () {
 
         var first_issue_type = {};
         for (var i = 0; i < issue_types.length; i++) {
-            if (i == 0) {
+            if (_default_issue_type_id == issue_types[i].id) {
                 first_issue_type = issue_types[i];
             }
             var content = "<div class=issue-types-icon><i class=" + issue_types[i].font_awesome + "></i> " + issue_types[i].name + "</div>"
+
             issue_types_select.append("<option data-content='" + content + "' value='" + issue_types[i].id + "'>" + issue_types[i].name + "</option>")
         }
-        console.log(issue_types_select)
+        // console.log(issue_types_select)
         if (on_change) {
             $("#create_issue_types_select").bind("change", function () {
                 console.log($(this).val(), issue_types)
@@ -229,6 +235,11 @@ var IssueMain = (function () {
     IssueMain.prototype.onChangeCreateProjectSelected = function (project_id, key) {
         _cur_form_project_id = project_id;
         _cur_project_key = key;
+        //_default_issue_type_id =
+        var project = getArrayValue(window._issueConfig.projects, 'id', project_id);
+        if(project){
+            _default_issue_type_id = project.default_issue_type_id;
+        }
 
         $.ajax({
             type: "GET",

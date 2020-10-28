@@ -18,6 +18,7 @@ use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
+use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\OrgModel;
@@ -337,7 +338,6 @@ class Main extends Base
             $info['detail'] = '';
         }
 
-
         $orgModel = new OrgModel();
         $orgList = $orgModel->getAllItems();
         $data['org_list'] = $orgList;
@@ -369,9 +369,90 @@ class Main extends Base
         $workflowSchemeModel = new WorkflowSchemeModel();
         $data['workflow_schemes'] = $workflowSchemeModel->getAll();
 
+        // 事项类型
+        $data['issueTypeArr'] = (new IssueTypeModel())->getAllItems(false);
+
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
+        $data['users'] = $users;
+
         $data = RewriteUrl::setProjectData($data);
 
         $this->render('gitlab/project/setting_basic_info.php', $data);
+    }
+
+
+    /**
+     * @throws \Exception
+     * @todo 此处有bug, 不能即是页面有时ajax的处理
+     */
+    public function pageSettingIssue()
+    {
+        if (!PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
+            if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
+                $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
+                die;
+            }
+        }
+
+        $projectModel = new ProjectModel();
+        $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        $projectMainExtra = new ProjectMainExtraModel();
+        $infoExtra = $projectMainExtra->getByProjectId($info['id']);
+        if ($infoExtra) {
+            $info['detail'] = $infoExtra['detail'];
+        } else {
+            $info['detail'] = '';
+        }
+
+        $orgModel = new OrgModel();
+        $orgList = $orgModel->getAllItems();
+        $data['org_list'] = $orgList;
+
+        $orgName = $orgModel->getField('name', array('id' => $info['org_id']));
+        $data['title'] = '设置';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'issue_setting';
+
+        //$data['users'] = $users;
+        $info['org_name'] = $orgName;
+        $projectTpl = (new ProjectTemplateModel())->getById($info['project_tpl_id']);
+        if($projectTpl){
+            $info['project_tpl_text'] = $projectTpl['name'];
+        }
+        $data['info'] = $info;
+
+        $data['root_domain'] = ROOT_URL;
+
+        // 事项类型方案
+        $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+        $data['issue_type_scheme_id'] = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        // 事项类型方案列表
+        $issueTypeSchemeModel = new IssueTypeSchemeModel();
+        $data['issue_type_schemes'] = $issueTypeSchemeModel->getAll();
+
+        // 状态流方案列表
+        $workflowSchemeModel = new WorkflowSchemeModel();
+        $data['workflow_schemes'] = $workflowSchemeModel->getAll();
+
+        // 事项类型
+        $data['issueTypeArr'] = (new IssueTypeModel())->getAllItems(false);
+
+        $data['rememberFieldArr'] = [
+            'issue_type'=>'事项类型',
+            'issue_module'=>'模 块',
+            'assignee'=>'经办人',
+            'fix_version'=>'解决版本',
+            'labels'=>'标 签',
+        ];
+
+        $data = RewriteUrl::setProjectData($data);
+        $data['project']['remember_last_issue_field'] = json_decode($data['project']['remember_last_issue_field'], true);
+
+        //print_r($data['project']);die;
+        $this->render('gitlab/project/setting_issue.php', $data);
     }
 
     /**

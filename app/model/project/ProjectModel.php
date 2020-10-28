@@ -107,6 +107,7 @@ class ProjectModel extends CacheModel
      * @param $page
      * @param $page_size
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getFilter($page, $page_size)
     {
@@ -127,6 +128,13 @@ class ProjectModel extends CacheModel
         return array($rows, $total);
     }
 
+    /**
+     * 更新记录
+     * @param $id
+     * @param $row
+     * @return array
+     * @throws \Exception
+     */
     public function updateById($updateInfo, $projectId)
     {
         $where = ['id' => $projectId];
@@ -134,6 +142,11 @@ class ProjectModel extends CacheModel
         return $flag;
     }
 
+    /**
+     * @param $projectId
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getKeyById($projectId)
     {
         $table = $this->getTable();
@@ -144,6 +157,11 @@ class ProjectModel extends CacheModel
         return $key;
     }
 
+    /**
+     * @param $projectId
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getById($projectId)
     {
         $fields = "*";
@@ -152,6 +170,11 @@ class ProjectModel extends CacheModel
         return $row;
     }
 
+    /**
+     * @param $projectId
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getNameById($projectId)
     {
         $fields = "name";
@@ -160,6 +183,11 @@ class ProjectModel extends CacheModel
         return $row;
     }
 
+    /**
+     * @param $projectId
+     * @return false|mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getFieldNameById($projectId)
     {
         $field = "name";
@@ -168,6 +196,11 @@ class ProjectModel extends CacheModel
         return $row;
     }
 
+    /**
+     * @param $key
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getByKey($key)
     {
         $fields = "*,{$this->primaryKey} as k";
@@ -176,6 +209,11 @@ class ProjectModel extends CacheModel
         return $row;
     }
 
+    /**
+     * @param $name
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getByName($name)
     {
         $fields = "*,{$this->primaryKey} as k";
@@ -184,6 +222,10 @@ class ProjectModel extends CacheModel
         return $row;
     }
 
+    /**
+     * @param $originId
+     * @return array
+     */
     public function getsByOrigin($originId)
     {
         $fields = "*";
@@ -192,15 +234,25 @@ class ProjectModel extends CacheModel
         return $rows;
     }
 
+    /**
+     * @param $name
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function checkNameExist($name)
     {
-
         $fields = "count(*) as cc";
         $where = ['name' => $name];
         $count = $this->getField($fields, $where);
         return $count > 0;
     }
 
+    /**
+     * @param $id
+     * @param $name
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function checkIdNameExist($id, $name)
     {
         $table = $this->getTable();
@@ -211,6 +263,11 @@ class ProjectModel extends CacheModel
         return $count > 0;
     }
 
+    /**
+     * @param $key
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function checkKeyExist($key)
     {
         $fields = "count(*) as cc";
@@ -219,6 +276,12 @@ class ProjectModel extends CacheModel
         return $count > 0;
     }
 
+    /**
+     * @param $id
+     * @param $key
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function checkIdKeyExist($id, $key)
     {
         $table = $this->getTable();

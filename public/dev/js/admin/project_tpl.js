@@ -46,6 +46,10 @@ var PluginTemplate = (function() {
         $('#issue_view').change(function () {
             PluginTemplate.prototype.updateSelectData({issue_view: $(this).val() });
         });
+        $('#default_issue_type_id').change(function () {
+            PluginTemplate.prototype.updateSelectData({default_issue_type_id: $(this).val() });
+        });
+
         $('#issue_type_scheme_id').change(function () {
             PluginTemplate.prototype.updateSelectData({issue_type_scheme_id: $(this).val() });
         });
