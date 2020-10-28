@@ -50,6 +50,7 @@ use main\app\model\issue\IssueUiTabModel;
 use main\app\model\issue\IssueRecycleModel;
 use main\app\model\field\FieldTypeModel;
 use main\app\model\field\FieldModel;
+use main\app\model\user\UserIssueLastCreateDataModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
 use main\app\model\user\UserSettingModel;
@@ -1083,7 +1084,6 @@ class Main extends BaseUserCtrl
         if (!isset($project['id'])) {
             $this->ajaxFailed('项目参数错误');
         }
-
         $info['project_id'] = $projectId;
 
         // issue 类型
@@ -1161,6 +1161,17 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         // @todo这里表结构有bug需要测试
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
+
+        // 记录的最近的数据
+        $lastData = [];
+        $lastData['issue_type'] = $info['issue_type'];
+        $lastData['issue_module'] = isset($info['module']) ? $info['module']:null;
+        $lastData['assignee'] = $info['assignee'];
+        $lastData['fix_version'] = isset($params['fix_version']) ? $params['fix_version'] :null;
+        $lastData['labels'] = isset($params['labels']) ? $params['labels'] :null;
+        $lastDataJson = json_encode($lastData);
+        $userIssueLastCreateDataModel = new UserIssueLastCreateDataModel();
+        $userIssueLastCreateDataModel->insertData($this->getCurrentUid(), $projectId, $lastDataJson);
 
         // email
         $notifyLogic = new NotifyLogic();

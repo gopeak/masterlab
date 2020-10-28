@@ -422,7 +422,7 @@
         <select id="module-select-{{id}}-value" name="{{field_name}}" class="selectpicker"  data-live-search="true"  data-none-selected-text="{{display_name}}"
                 data-project-id="{{project_id}}"
         >
-             <option >请选择</option>
+             <option value="">请选择</option>
             {{#list_data}}
                 <option value="{{id}}"    {{#if_eq id ../default_value }} selected {{/if_eq}} >{{title}}</option>
             {{/list_data}}

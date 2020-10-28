@@ -30,6 +30,7 @@ class LoginlogModel extends DbModel
      * 记录登录日志,用于只允许单个用户登录
      * @param $userId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function loginLogInsert($userId)
     {
@@ -41,6 +42,12 @@ class LoginlogModel extends DbModel
         return parent::insert($info);
     }
 
+    /**
+     * @param $userId
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     */
     public function deleteByUid($userId)
     {
         $conditions['uid'] = $userId;

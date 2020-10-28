@@ -499,6 +499,7 @@ var IssueForm = (function () {
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
+
     IssueForm.prototype.show = function (id) {
 
         var show = $(id).css('display');
