@@ -1638,7 +1638,10 @@ var IssueMain = (function () {
                     var edit_attachment_data = issue[field_name];
                     // console.log(edit_attachment_data);
                     if (typeof (edit_attachment_data) != 'undefined') {
-                        _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
+                        var arr = Object.keys(edit_attachment_data);
+                        if (arr.length > 0) {
+                            _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
+                        }
                     }
 
                 }
