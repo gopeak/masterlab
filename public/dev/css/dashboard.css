@@ -141,9 +141,9 @@ header .header-content {
 
 .user-profile-content .user-avatar img {
     display: block;
-    border-radius: 72px;
-    width: 72px;
-    height: 72px;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #eee;
 }
 
 .user-profile-content .user-profile-text{
@@ -165,22 +165,29 @@ header .header-content {
 }
 
 .user-profile .user-profile-extra {
-    margin-left: 88px;
-    text-align: right;
-    margin-bottom: 16px;
+    display: flex;
+    padding-top: 10px;
 }
 
 .user-profile-extra .extra-item {
-    padding: 0 32px;
+    padding: 0 30px 0 0;
     position: relative;
-    display: inline-block;
+    display: flex;
+    height: 40px;
+    align-items: center;
+    margin-right: 30px;
 }
 
-.user-profile-extra .extra-item + .extra-item:before {
+.nav-controls-wrap {
+    display: flex;
+    align-items: flex-end;
+}
+
+.user-profile-extra .extra-item:before {
     background-color: #e8e8e8;
     position: absolute;
-    top: 8px;
-    left: 0;
+    top: 0;
+    right: 0;
     width: 1px;
     height: 40px;
     content: "";
@@ -189,15 +196,12 @@ header .header-content {
 .user-profile-extra .extra-item .extra-item-title{
     color: rgba(0,0,0,.45);
     font-size: 14px;
-    line-height: 22px;
-    margin-bottom: 4px;
 }
 
 .user-profile-extra .extra-item .extra-item-num{
     color: rgba(0,0,0,.85);
-    font-size: 30px;
-    line-height: 38px;
-    margin: 0;
+    font-size: 24px;
+    margin: 0 0 0 10px;
 }
 
 .extra-item-num span {
