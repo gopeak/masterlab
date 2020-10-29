@@ -230,6 +230,7 @@ class IssueLogic
                         $finalVal[] = [
                             'name' => $uploadValItem['name'],
                             'size' => $uploadValItem['size'],
+                            'show_size' => transformByte($uploadValItem['size']),
                             'thumbnailUrl' => ATTACHMENT_URL . $attachmentData['file_name'],
                             'uuid' => $uploadValItem['uuid'],
                         ];
@@ -466,19 +467,7 @@ class IssueLogic
                 $value =  is_string($value) ? explode(',',$value) : $value;
                 break;
             case "UPLOAD_FILE":
-                if (empty($value)) {
-                    $value = '';
-                }
-                $valueStr = '';
-                if (is_array($value)) {
-                    $model = new IssueFileAttachmentModel();
-                    foreach ($value as $item) {
-                        $attachmentData = $model->getByUuid($item['uuid']);
-                        $valueStr .= sprintf('<a href="%s" target="_blank">%s %s</a><br>', ATTACHMENT_URL . $attachmentData['file_name'], $item['name'], $item['size']);
-                    }
 
-                    $value = $valueStr;
-                }
                 break;
             default:
                 break;

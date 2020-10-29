@@ -1,6 +1,25 @@
 <?php
 
 /**
+ *
+ * @param $num
+ * @return string
+ */
+function transformByte($byte)
+{
+    if ($byte < 1024) {
+        $final = round($byte, 2) . 'B';
+    } else if ($byte < 1048576) {
+        $final = round($byte / 1024, 2) . 'K';
+    } else if ($byte < 1073741824) {
+        $final = round($byte / 1048576, 2) . 'M';
+    } else {
+        $final = round($byte / 1073741824, 2) . 'G';
+    }
+    return $final;
+}
+
+/**
  * @param $str
  * @return int
  */
