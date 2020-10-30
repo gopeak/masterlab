@@ -39,6 +39,7 @@ var IssueMain = (function () {
     var _temp_data = {};
     var _default_data = null;
     var _default_issue_type_id = 1;
+    var _last_create_issue_data = null;
 
     // constructor
     function IssueMain(options) {
@@ -46,6 +47,12 @@ var IssueMain = (function () {
 
         if(window._default_issue_type_id){
             _default_issue_type_id = window._default_issue_type_id;
+        }
+        if(window.last_create_issue_data){
+            _last_create_issue_data = window.last_create_issue_data;
+        }
+        if(_last_create_issue_data && ('issue_type' in _last_create_issue_data)){
+            _default_issue_type_id = _last_create_issue_data.issue_type;
         }
 
         IssueMain.prototype.initProjectSelect();
@@ -186,7 +193,6 @@ var IssueMain = (function () {
                 first_issue_type = issue_types[i];
             }
             var content = "<div class=issue-types-icon><i class=" + issue_types[i].font_awesome + "></i> " + issue_types[i].name + "</div>"
-
             issue_types_select.append("<option data-content='" + content + "' value='" + issue_types[i].id + "'>" + issue_types[i].name + "</option>")
         }
         // console.log(issue_types_select)
@@ -849,7 +855,7 @@ var IssueMain = (function () {
 
     IssueMain.prototype.convertChild = function (issue_id) {
 
-        var master_id = $("input[name='parent_select_issue_id']").val();
+        var master_id = $("#parent_select_issue_id").val();
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -1256,6 +1262,11 @@ var IssueMain = (function () {
                 }
             }
         }
+        if (_last_create_issue_data) {
+            for ([_key, _value] of Object.entries(_last_create_issue_data)) {
+                _temp_data[_key] = _value;
+            }
+        }
 
         $.ajax({
             type: method,
@@ -1283,12 +1294,10 @@ var IssueMain = (function () {
                 for (var i = 0; i < _tabs.length; i++) {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1;
                     IssueForm.prototype.uiAddTab('create', _tabs[i].name, _tabs[i].id);
-                    html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id, _allow_add_status);
+                    html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id, _allow_add_status, _temp_data);
                     var id = '#create_ui_config-create_tab-' + _tabs[i].id;
                     $(id).html(html);
                 }
-
-
 
                 if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
@@ -1305,7 +1314,6 @@ var IssueMain = (function () {
 
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
-
 
                 /*
                  * websocket广州宣讲添加
@@ -1340,7 +1348,6 @@ var IssueMain = (function () {
                 temp_data[_key] = value;
             }
         }
-
         return JSON.parse(JSON.stringify(temp_data));
     };
 

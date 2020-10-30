@@ -20,6 +20,8 @@
 
 		<script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
 		<link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+        <script src="/dev/lib/select2-4.0.13/dist/js/select2.js" type="text/javascript" charset="utf-8"></script>
+        <link href="/dev/lib/select2-4.0.13/dist/css/select2.css" rel="stylesheet">
 
 		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>" type="text/javascript"></script>
 		<script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
@@ -374,7 +376,6 @@
                                                                 </li>
                                                             {% endif %}
                                                         {% endfor %}
-
                                                     </ul>
                                                 </div>
                                             </div>
@@ -469,6 +470,7 @@
                 var $sort_by = '<?= sort_by ?>';
                 var is_all_issues = {% if (is_all_issues)%}true{% else %}false{% endif %};
                 var _default_issue_type_id = '<?=project.default_issue_type_id?>';
+                var last_create_issue_data = <?=last_create_data|json_encode()|raw ?>;
 
                 var display_fields = <?= display_fields|json_encode()|raw ?>;
                 var uiDisplayFields = <?= uiDisplayFields|json_encode()|raw ?>;
@@ -1096,7 +1098,26 @@
                             }
                         ])
                     });
-
+{% verbatim %}
+                    // 转换为子任务时，要选择父事项
+                    $('#parent_select_issue_id').select2({
+                      ajax: {
+                        url: '/issue/main/autocomplete',
+                        data: function (params) {
+                          var query = {
+                            query: params.term,
+                            project_id: _cur_project_id
+                          }
+                          return query;
+                        },
+                        processResults: function (resp) {
+                              return {
+                                results: resp.data
+                              };
+                        }
+                      }
+                    });
+{% endverbatim %}
                     // 提交导出 excel 表单
                     $("#btn-export_excel").click(function () {
                         // 当前查询参数字符串

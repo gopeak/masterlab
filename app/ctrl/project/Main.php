@@ -442,7 +442,7 @@ class Main extends Base
 
         $data['rememberFieldArr'] = [
             'issue_type'=>'事项类型',
-            'issue_module'=>'模 块',
+            'module'=>'模 块',
             'assignee'=>'经办人',
             'fix_version'=>'解决版本',
             'labels'=>'标 签',

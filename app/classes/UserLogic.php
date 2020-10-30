@@ -11,6 +11,7 @@ namespace main\app\classes;
 
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\UserGroupModel;
+use main\app\model\user\UserIssueLastCreateDataModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
 use main\app\model\project\ProjectUserRoleModel;
@@ -688,5 +689,33 @@ class UserLogic
         $rows2 = $model->getRows('DISTINCT `project_id` as project_id ',['user_id'=>$userId2]);
         $user2ProjectIdArr = array_column($rows2, 'project_id');
         return count(array_intersect($user1ProjectIdArr, $user2ProjectIdArr))>0;
+    }
+
+    /**
+     * @param $userId
+     * @param $project
+     * @return array|null
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public static function getLastCreateIssueData($userId ,$project)
+    {
+        $finalData = null;
+        if($project['is_remember_last_issue']==1){
+            $lastCreateData = (new UserIssueLastCreateDataModel())->getData($userId, $project['id']);
+            if(isset($lastCreateData['issue_data'])){
+                $lastCreateDataArr = json_decode($lastCreateData['issue_data'], true);
+                $lastCreateDataFieldArr = json_decode($project['remember_last_issue_field'], true);
+                $arr = [];
+                if(!empty($lastCreateDataArr) && !empty($lastCreateDataFieldArr)){
+                    foreach ($lastCreateDataArr as $field => $item) {
+                        if(in_array($field, $lastCreateDataFieldArr)){
+                            $arr[$field] = $item;
+                        }
+                    }
+                }
+                $finalData = $arr;
+            }
+        }
+        return $finalData;
     }
 }

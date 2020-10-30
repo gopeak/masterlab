@@ -43,12 +43,21 @@ use main\app\model\agile\SprintModel;
  */
 class Detail extends BaseUserCtrl
 {
+
+    public $issue = [];
     /**
      * Detail constructor.
      * @throws \Exception
      */
     public function __construct()
     {
+        if ( count($_GET['_target'])>3 && $_GET['_target'][1]=='detail'  && $_GET['_target'][2]=='index') {
+            $issueId = $_GET['_target'][3];
+            $issueModel = new IssueModel();
+            $this->issue = $issueModel->getById($issueId);
+            $_GET['project_id'] = $this->issue['project_id'];
+            $this->projectId = $this->issue['project_id'];
+        }
         parent::__construct();
         parent::addGVar('top_menu_active', 'issue');
     }
@@ -81,9 +90,14 @@ class Detail extends BaseUserCtrl
         }
 
         $issueModel = new IssueModel();
-        $issue = $issueModel->getById($issueId);
+        if(empty($this->issue)){
+            $issue = $issueModel->getById($issueId);
+        }else{
+            $issue = $this->issue;
+        }
+
         if (empty($issue)) {
-            $this->error('failed', 'Issue data is empty');
+            $this->error('提示', '事项数据不存在');
             die;
         }
         $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $issue['project_id'], $this->isAdmin);
@@ -124,8 +138,8 @@ class Detail extends BaseUserCtrl
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
-
-        $this->render('gitlab/issue/detail.php', $data);
+        // print_r(self::$gTplVars);
+        $this->render('gitlab/issue/detail.twig', $data);
     }
 
     /**

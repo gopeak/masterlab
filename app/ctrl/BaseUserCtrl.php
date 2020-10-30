@@ -136,6 +136,7 @@ class BaseUserCtrl extends BaseCtrl
             $project = [];
             // print_r($this->projectPermArr);
             $subsystemArr = [];
+            //var_dump($projectId);die;
             if ($projectId) {
                 $projModel = new ProjectModel();
                 $project = $projModel->getById($projectId);
@@ -196,12 +197,14 @@ class BaseUserCtrl extends BaseCtrl
             $conditionArr['readed'] = '0';
             $this->addGVar('_unread_count', $model->getUnreadCountByfilter($conditionArr));
 
+
             //  加载插件
             $model = new PluginModel();
             $pluginArr = $model->getRows('*');
             foreach ($pluginArr as $item) {
                 array_push($subsystemArr, $item);
             }
+            //print_r($subsystemArr);
             $this->addGVar('_pluginArr', $subsystemArr);
             $this->addGVar('_plugin_admin_type', PluginModel::TYPE_ADMIN);
             $this->addGVar('_plugin_project_type', PluginModel::TYPE_MODULE);

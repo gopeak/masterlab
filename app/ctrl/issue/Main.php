@@ -13,6 +13,7 @@ use main\app\classes\NotifyLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\ProjectGantt;
 use main\app\classes\RewriteUrl;
+use main\app\classes\SearchLogic;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
@@ -163,14 +164,11 @@ class Main extends BaseUserCtrl
         }
         $data['showFavFilters'] = $showFavFilters;
         $data['otherFavFilters'] = $otherFavFilters;
-
         // 获取当前用户未解决的数量
         $data['unResolveCount'] = IssueFilterLogic::getUnResolveCountByAssigneeProject(UserAuth::getId(), $data['project_id']);
-
         // 描述模板
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
-
         // 表格视图的显示字段
         $issueLogic = new IssueLogic();
         $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
@@ -185,13 +183,9 @@ class Main extends BaseUserCtrl
                 $displayCustomFieldArr[] = $field;
             }
         }
-
         $data['displayCustomFieldArr'] = $displayCustomFieldArr;
-
-
         // 高级查询字段
         $data['advFields'] = IssueFilterLogic::$advFields;
-
         // 事项展示的视图方式
         $data['issue_view'] = SettingModel::getInstance()->getValue('issue_view');
         $userId = UserAuth::getId();
@@ -224,6 +218,9 @@ class Main extends BaseUserCtrl
         }
 
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
+
+        $data['last_create_data'] = UserLogic::getLastCreateIssueData($userId, $data['project']);
+
         $this->render('gitlab/issue/list.php', $data);
     }
 
@@ -592,6 +589,27 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', []);
         }
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function autocomplete()
+    {
+        $keyword = isset($_GET['query']) ?  $_GET['query'] : null;
+        if(empty(trimStr($keyword))){
+            $this->ajaxSuccess('none', []);
+        }
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
+        $limitSql = "   limit 20" ;
+        $issueModel = new IssueModel();
+        $table = $issueModel->getTable();
+        $where = "WHERE locate(:keyword,`summary`) > 0  AND project_id={$projectId} ";
+        $params['keyword'] = $keyword;
+        $sql = "SELECT id, summary as `text` FROM {$table}  {$where} {$limitSql}";
+        $rows = $issueModel->db->fetchAll($sql, $params);
+        $this->ajaxSuccess('success', $rows);
+    }
+
 
     /**
      * 事项列表查询处理
@@ -1165,10 +1183,28 @@ class Main extends BaseUserCtrl
         // 记录的最近的数据
         $lastData = [];
         $lastData['issue_type'] = $info['issue_type'];
-        $lastData['issue_module'] = isset($info['module']) ? $info['module']:null;
+        $lastData['module'] = isset($info['module']) ? $info['module']:null;
         $lastData['assignee'] = $info['assignee'];
-        $lastData['fix_version'] = isset($params['fix_version']) ? $params['fix_version'] :null;
-        $lastData['labels'] = isset($params['labels']) ? $params['labels'] :null;
+        $lastData['fix_version'] = null;
+        if(isset($params['fix_version']) && is_array($params['fix_version'])){
+            $arr = [];
+            foreach ($params['fix_version'] as $fixVersion) {
+                if(!empty($fixVersion)){
+                    $arr[] = $fixVersion;
+                }
+            }
+            $lastData['fix_version'] = $arr;
+        }
+        $lastData['labels'] = null;
+        if(isset($params['labels']) && is_array($params['labels'])){
+            $arr = [];
+            foreach ($params['labels'] as $label) {
+                if(!empty($label)){
+                    $arr[] = $label;
+                }
+            }
+            $lastData['labels'] = $arr;
+        }
         $lastDataJson = json_encode($lastData);
         $userIssueLastCreateDataModel = new UserIssueLastCreateDataModel();
         $userIssueLastCreateDataModel->insertData($this->getCurrentUid(), $projectId, $lastDataJson);
