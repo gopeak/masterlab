@@ -322,6 +322,42 @@
                                                         删 除
                                                     </button>
                                                 {% endif %}
+
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        优先级
+                                                        <i class="fa fa-caret-down"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        {% for item in priority %}
+                                                            <li>
+                                                                <a class="btn_batch_update" data-field="priority"
+                                                                   data-id="<?= item['id'] ?>" href="#"
+                                                                   style="color:<?= item['status_color'] ?>"><?= item['name'] ?></a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        状 态
+                                                        <i class="fa fa-caret-down"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        {% for item in issue_status %}
+                                                            <li>
+                                                                <a class="btn_batch_update" data-field="status"
+                                                                   data-id="<?= item['id'] ?>" href="#" >
+                                                                    <span class="label current label-<?=item.color ?> prepend-left-5" style="cursor:pointer;"><?= item['name'] ?></span>
+                                                                </a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
                                                             data-toggle="dropdown" aria-haspopup="true"
@@ -337,7 +373,6 @@
                                                                    style="color:<?= item['color'] ?>"><?= item['name'] ?></a>
                                                             </li>
                                                         {% endfor %}
-
                                                     </ul>
                                                 </div>
 
@@ -375,6 +410,25 @@
                                                                        href="#"><?= item['name'] ?></a>
                                                                 </li>
                                                             {% endif %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        移动至项目
+                                                        <i class="fa fa-caret-down"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        {% for item in projects %}
+
+                                                            <li>
+                                                                <a class="btn_batch_update" data-field="project_id"
+                                                                   data-id="<?= item['id'] ?>"
+                                                                   href="#"><?= item['name'] ?></a>
+                                                            </li>
+
                                                         {% endfor %}
                                                     </ul>
                                                 </div>

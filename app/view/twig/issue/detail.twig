@@ -1010,7 +1010,9 @@
 							 {{show_value}}
 						 {{/if_eq}}
 						  {{#if_eq field_type 'UPLOAD_FILE' }}
-							 {{show_value}}
+						     {{#show_value}}
+						     <a href="{{thumbnailUrl}}" target="_blank">{{name}}</a>&nbsp;&nbsp;<span>{{show_size}}</span><br>
+							 {{/show_value}}
 						 {{/if_eq}}
 						 {{#if_eq field_type 'MILESTONE' }}
 							 {{show_value}}
