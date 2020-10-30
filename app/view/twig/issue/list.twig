@@ -422,7 +422,6 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in projects %}
-
                                                             <li>
                                                                 <a class="btn_batch_update" data-field="project_id"
                                                                    data-id="<?= item['id'] ?>"
@@ -676,7 +675,16 @@
                     $('.btn_batch_update').bind('click', function () {
                         var field = $(this).data('field');
                         var value = $(this).data('id');
-                        IssueMain.prototype.batchUpdate(field, value);
+                        var name = $(this).html();
+                        if(field=='project_id'){
+                            IssueMain.prototype.displayMoveProject(value, name);
+                        }else{
+                            IssueMain.prototype.batchUpdate(field, value);
+                        }
+                    });
+
+                    $('#btn-move-project').bind('click', function () {
+                        IssueMain.prototype.batchMoveProject();
                     });
 
                     $('.sort_select').bind('click', function () {

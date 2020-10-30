@@ -10,6 +10,7 @@ use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
+use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\user\UserModel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -55,6 +56,8 @@ class IssueSubscriber implements EventSubscriberInterface
             Events::onIssueConvertChild => 'onIssueConvertChild',
             Events::onIssueBatchDelete => 'onIssueBatchDelete',
             Events::onIssueBatchUpdate => 'onIssueBatchUpdate',
+            Events::onIssueBatchMoveProject => 'onIssueBatchMoveProject',
+
             Events::onIssueImportByExcel => 'onIssueImportByExcel',
             Events::onIssueRemoveChild => 'onIssueRemoveChild',
             Events::onIssueJoinSprint => 'onIssueJoinSprint',
@@ -432,6 +435,37 @@ class IssueSubscriber implements EventSubscriberInterface
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $activityAction;
             $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+        }
+    }
+
+    /**
+     * @param CommonPlacedEvent $event
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public function onIssueBatchMoveProject(CommonPlacedEvent $event)
+    {
+        $issueIdArr = $event->pluginDataArr['issue_id_arr'];
+        $targetProjectId = $event->pluginDataArr['target_project_id'];
+        $sourceProjectId = $event->pluginDataArr['source_project_id'];
+        $activityModel = new ActivityModel();
+        $targetProject = (new ProjectModel())->getById($targetProjectId);
+        $issueModel = new IssueModel();
+        foreach ($issueIdArr as $issueId) {
+            $issueName = $issueModel->getFieldById('summary ', $issueId);
+            $currentUid = UserAuth::getId();
+            $activityInfo = [];
+            $activityInfo['action'] = '移动事项：'.$issueName.'至项目'.$targetProject['name'];
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = '批量移动事项';
+            $activityModel->insertItem($currentUid, $targetProjectId, $activityInfo);
+            $activityInfo = [];
+            $activityInfo['action'] = '移动事项：'.$issueName.'至项目'.$targetProject['name'];
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = '批量移动事项';
+            $activityModel->insertItem($currentUid, $sourceProjectId, $activityInfo);
         }
     }
 

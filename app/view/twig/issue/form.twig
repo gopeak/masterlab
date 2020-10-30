@@ -120,27 +120,16 @@
                 <input type="hidden" name="issue_id" id="current_issue_id" value="">
                 <input type="hidden" name="format" id="format_parent" value="json">
                 <div  >
-                    <div class="form-group  margin-b-m">
-
-                        <!--<main>
-                            <div class="field">
-                                <div class="icon"></div>
-                                <input class="form-control" type="text" name="parent_select_issue_id" id="parent_select_issue_id" placeholder="查询父事项" maxlength="60" />
-                            </div>
-                        </main>-->
-                        <select class="js-data-example-ajax"  name="parent_select_issue_id" id="parent_select_issue_id" placeholder="查询父事项">
-
-                        </select>
-
-
-
-                    </div>
-
                     <div class="form-group">
-                        <span>注:</span><br>
+                        <span>提示:</span><br>
                         <span>输入事项主题进行匹配</span><br>
                         <span>只能在当前事项的项目内操作</span><br>
                     </div>
+                    <div class="form-group  margin-b-m">
+                        <select class="js-data-example-ajax"  name="parent_select_issue_id" id="parent_select_issue_id" placeholder="查询父事项">
+                        </select>
+                    </div>
+
                 </div>
             </div>
 
@@ -152,6 +141,81 @@
     </div>
 </div>
 
+<div class="modal" id="modal-move-project">
+    <div class="modal-dialog issue-modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" href="#">×</a>
+                <h3 class="modal-header-title" id="move-header-title">移动至项目:</h3>
+            </div>
+
+            <div class="modal-body issue-modal-body" style="height:500px" id="displayMoveProject">
+                <input type="hidden" name="move_project_id" id="move_project_id" value="">
+                <div  >
+                    <div class="form-group">
+                        <span>以下字段值需要重新赋值</span><br>
+                    </div>
+
+                    <div class="form-group" style="height:40px">
+                        <label class="control-label" for="module">模块:</label>
+                        <div class="col-sm-10">
+                            <select id="move-module" name="module" class="selectpicker"
+                                    dropdownAlignRight="true" data-live-search="true" title="">
+                                <option value="">请选择</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"  style="height:40px">
+                        <label class="control-label" for="move-sprint">迭代:</label>
+                        <div class="col-sm-10">
+                            <select id="move-sprint" name="sprint" class="selectpicker"
+                                    dropdownAlignRight="true" data-live-search="true" title="">
+                                <option value="">请选择</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"  style="height:40px">
+                        <label class="control-label" for="move-labels">标签:</label>
+                        <div class="col-sm-10">
+                            <select id="move-labels" name="labels[]" class="selectpicker"
+                                    dropdownAlignRight="true" data-live-search="true" title="">
+                                <option value="">请选择</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"  style="height:40px">
+                        <label class="control-label" for="move-effect_version">影响版本:</label>
+                        <div class="col-sm-10">
+                            <select id="move-effect_version" multiple name="effect_version[]" class="selectpicker"
+                                    dropdownAlignRight="true" data-live-search="true" title="">
+                                <option value="">请选择</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"  style="height:40px">
+                        <label class="control-label" for="move-fix_version">解决版本:</label>
+                        <div class="col-sm-10">
+                            <select id="move-fix_version" multiple name="fix_version[]" class="selectpicker"
+                                    dropdownAlignRight="true" data-live-search="true" title="">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer issue-modal-footer footer-block row-content-block">
+                <button name="submit" type="button" class="btn btn-create" id="btn-move-project">确定</button>
+                <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal height100" id="modal-create-issue">
     <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
           id="create_issue"

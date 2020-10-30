@@ -1211,6 +1211,106 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.batchMoveProject = function (field, value) {
+
+        var checked_issue_id_arr = new Array()
+        $.each($("input[name='check_issue_id_arr']"), function () {
+            if (this.checked) {
+                checked_issue_id_arr.push($(this).val());
+            }
+        });
+        console.log(checked_issue_id_arr);
+        let project_id = $('#move_project_id').val();
+        let module = $('#move-module').val();
+        let sprint = $('#move-sprint').val();
+        let effect_version = $('#move-effect_version').val();
+        let fix_version = $('#move-fix_version').val();
+        let labels = $('#move-labels').val();
+        loading.show('#displayMoveProject' );
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/batchMoveProject",
+            data: {project_id:project_id, issue_id_arr: checked_issue_id_arr,labels:labels, module:module, sprint: sprint, effect_version: effect_version,fix_version:fix_version },
+            success: function (resp) {
+                loading.hide('#displayMoveProject');
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('操作失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                loading.hide('#displayMoveProject');
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.displayMoveProject = function (project_id, project_name) {
+
+        var checked_issue_id_arr = new Array()
+        $.each($("input[name='check_issue_id_arr']"), function () {
+            if (this.checked) {
+                checked_issue_id_arr.push($(this).val());
+            }
+        });
+        if(is_empty(checked_issue_id_arr)){
+            notify_warn('请先选择事项');
+            return false;
+        }
+        $('#move_project_id').val(project_id);
+        $('#move-header-title').html('移动至项目:'+project_name);
+        // /issue/main/getProjectRelateData
+        loading.show('#displayMoveProject' );
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url: "/issue/main/getProjectRelateData",
+            data: {  project_id: project_id },
+            success: function (resp) {
+                let move_select = $('#move-module');
+                for (let i = 0; i < resp.data.project_modules.length; i++) {
+                    let row = resp.data.project_modules[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.name + "</option>")
+                }
+                move_select = $('#move-sprint');
+                for (let i = 0; i < resp.data.project_sprints.length; i++) {
+                    let row = resp.data.project_sprints[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.name + "</option>")
+                }
+                move_select = $('#move-labels');
+                for (let i = 0; i < resp.data.project_labels.length; i++) {
+                    let row = resp.data.project_labels[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.title + "</option>")
+                }
+                move_select = $('#move-effect_version');
+                for (let i = 0; i < resp.data.project_versions.length; i++) {
+                    let row = resp.data.project_versions[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.name + "</option>")
+                }
+                move_select = $('#move-fix_version');
+                for (let i = 0; i < resp.data.project_versions.length; i++) {
+                    let row = resp.data.project_versions[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.name + "</option>")
+                }
+                $('.selectpicker').selectpicker('refresh');
+                loading.hide('#displayMoveProject');
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+        console.log(checked_issue_id_arr);
+        $('#modal-move-project').modal('show');
+    }
+
+
     // saveUserIssueDisplayFields
     IssueMain.prototype.saveUserIssueDisplayFields = function () {
 

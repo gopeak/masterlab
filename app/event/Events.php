@@ -79,6 +79,7 @@ final class Events
     public const onIssueConvertChild = 'onIssueConvertChild';
     public const onIssueBatchDelete = 'onIssueBatchDelete';
     public const onIssueBatchUpdate = 'onIssueBatchUpdate';
+    public const onIssueBatchMoveProject = 'onIssueBatchMoveProject';
     public const onIssueImportByExcel = 'onIssueImportByExcel';
     public const onIssueRemoveChild = 'onIssueRemoveChild';
     public const onIssueUpload= 'onIssueUpload';
