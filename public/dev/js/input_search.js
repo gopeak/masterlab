@@ -235,10 +235,10 @@ var InputSearch = (function () {
             var value = self.getSearchObjectValue(tempArr);
             var regex = /[^\[\]]+(?=\])/g;
             var operator = "=";
-            if (name.indexOf("not[") !== -1) {
-                var temp = name.match(regex);
-                name = temp[0];
-                operator = "!=";
+            if (value && value.indexOf("not@") !== -1) {
+                var temp = value.split('not@');
+                //value = temp[1];
+                operator = '!='
             }
 
             var temp = {
@@ -256,9 +256,12 @@ var InputSearch = (function () {
             if (value) {
                 searchKeysArr.push(temp);
                 searchParams.push(temp1);
-                tempData += name + ":" + operator + value + ";;";
+                tempData += name + '=' + value + "&";
             }
         });
+        if(tempData.substr(tempData.length-1,1)=='&'){
+            tempData = tempData.substr(0,tempData.length-1);
+        }
         _currentSearchesArr = searchKeysArr;
         _currentSearchesParams = searchParams;
         _currentSearchesStr = $.trim(tempData);
@@ -279,9 +282,10 @@ var InputSearch = (function () {
             var value = self.getSearchObjectValue(tempArr);
             var regex = /[^\[\]]+(?=\])/g;
             var operator = "=";
-            if (name.indexOf("not[") !== -1) {
-                var temp = name.match(regex);
-                name = temp[0];
+
+            if (value && value.indexOf("not@") !== -1) {
+                var temp = value.split('not@');
+                value = temp[1];
                 operator = "!=";
             }
 
@@ -432,9 +436,8 @@ var InputSearch = (function () {
                     value = value.replace(n.symbol, "");
                 }
             });
-
             if (operator.indexOf("!") != -1) {
-                searches["not[" + name + "]"] = value;
+                searches[name] = "not@" +value;
             } else {
                 searches[name] = value;
             }
