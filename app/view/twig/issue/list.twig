@@ -21,6 +21,7 @@
 		<script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
 		<link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
         <script src="/dev/lib/select2-4.0.13/dist/js/select2.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/dev/lib/select2-4.0.13/dist/js/i18n/zh-CN.js" type="text/javascript" charset="utf-8"></script>
         <link href="/dev/lib/select2-4.0.13/dist/css/select2.css" rel="stylesheet">
 
 		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>" type="text/javascript"></script>
@@ -1163,6 +1164,7 @@
 {% verbatim %}
                     // 转换为子任务时，要选择父事项
                     $('#parent_select_issue_id').select2({
+                      language: "zh-CN",
                       ajax: {
                         url: '/issue/main/autocomplete',
                         data: function (params) {
