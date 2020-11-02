@@ -4,12 +4,9 @@ var Profile = (function() {
     var _options = {};
  
 
-
     // constructor
     function Profile(  options  ) {
         _options = options;
-
-
     };
 
     Profile.prototype.getOptions = function() {
