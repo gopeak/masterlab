@@ -620,7 +620,9 @@ class ProjectLogic
     /**
      * 初始化项目的标签和分类
      * @param $projectId
+     * @param $projectTplId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
     public static function initLabelAndCatalog($projectId, $projectTplId)
@@ -630,12 +632,15 @@ class ProjectLogic
             $catalogLabelModel = new ProjectCatalogLabelModel();
             $initCatalogLabelArr = ProjectTplCatalogLabelModel::getInstance()->getByProject($projectTplId);
             $initLabelArr = ProjectTplLabelModel::getInstance()->getByProject($projectTplId);
+            $initLabelIdArr = array_column($initLabelArr, null, 'id');
 
             $orderWeight = count($initCatalogLabelArr)+100;
             foreach ($initCatalogLabelArr as $catalogKey => $catalogLabel) {
                 $catalogLabelIdArr = [];
-                foreach ($initLabelArr as $label) {
-                    if($label['catalog']==$catalogKey){
+                $labelIdArr = json_decode($catalogLabel['label_id_json'], true);
+                foreach ($labelIdArr as $labelId) {
+                    if(isset($initLabelIdArr[$labelId])){
+                        $label = $initLabelIdArr[$labelId];
                         $insertArr = [];
                         $insertArr['project_id'] = $projectId;
                         $insertArr['title'] = $label['title'];

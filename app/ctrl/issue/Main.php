@@ -2000,7 +2000,12 @@ class Main extends BaseUserCtrl
                     $model->delete(['issue_id' => $issueId]);
                     $issueLogic->addChildData($model, $issueId, $updateFixVersionArr, 'version_id');
                 }
-
+            }
+            if(isset($_POST['is_delete_current']) && $_POST['is_delete_current']=='1'){
+                $deletedRet = $issueModel->deleteItemById($issueId);
+                if ($deletedRet) {
+                    $this->deletedAfter($issueId, $issue);
+                }
             }
 
             $successIssueIdArr[] = $issueId;
@@ -2033,6 +2038,56 @@ class Main extends BaseUserCtrl
         $event = new CommonPlacedEvent($this, $eventData);
         $this->dispatcher->dispatch($event, Events::onIssueBatchMoveProject);
         $this->ajaxSuccess('success');
+    }
+
+    /**
+     * @param $issueId
+     * @param array $issue
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \Exception
+     */
+    private function deletedAfter($issueId, $issue=[])
+    {
+        if(empty($issue)){
+            $issueModel = new IssueModel();
+            $issue = $issueModel->getById($issueId);
+        }
+        // 将子任务的关系清除
+        $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+        // 将父任务的 have_children 减 1
+        if (!empty($issue['master_id'])) {
+            $masterId = $issue['master_id'];
+            $issueModel->dec('have_children', $masterId, 'id', 1);
+        }
+        // 删除附件
+        $issueFileModel = new IssueFileAttachmentModel();
+        $issueFilesRows = $issueFileModel->getsByIssueId($issueId);
+        foreach ($issueFilesRows as $issueFilesRow) {
+            $fileName = $issueFilesRow['file_name'];
+            if(strpos($fileName,'?')!==false){
+                list($fileName) = explode('?', $fileName);
+            }
+            if(file_exists(PUBLIC_PATH.'attachment/'.$fileName)){
+                @unlink(PUBLIC_PATH.'attachment/'.$fileName);
+            }
+            $issueFileModel->deleteById($issueFilesRow['id']);
+        }
+        // 删除标签数据
+        $labelDataModel = new IssueLabelDataModel();
+        $labelDataModel->deleteItemByIssueId($issueId);
+        unset($issue['id']);
+        $issue['delete_user_id'] = $this->getCurrentUid();
+        $issueRecycleModel = new IssueRecycleModel();
+        $info = [];
+        $info['issue_id'] = $issueId;
+        $info['project_id'] = $issue['project_id'];
+        $info['delete_user_id'] = $this->getCurrentUid();
+        $info['summary'] = $issue['summary'];
+        $info['data'] = json_encode($issue);
+        $info['time'] = time();
+        $issueRecycleModel->insert($info);
+        unset($info);
     }
 
     /**
@@ -2159,29 +2214,7 @@ class Main extends BaseUserCtrl
             $issueModel->db->beginTransaction();
             $ret = $issueModel->deleteById($issueId);
             if ($ret) {
-                // 将子任务的关系清除
-                $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
-                // 将父任务的 have_children 减 1
-                if (!empty($issue['master_id'])) {
-                    $masterId = $issue['master_id'];
-                    $issueModel->dec('have_children', $masterId, 'id', 1);
-                }
-                unset($issue['id']);
-                $issue['delete_user_id'] = UserAuth::getId();
-                $issueRecycleModel = new IssueRecycleModel();
-                $info = [];
-                $info['issue_id'] = $issueId;
-                $info['project_id'] = $issue['project_id'];
-                $info['delete_user_id'] = UserAuth::getId();
-                $info['summary'] = $issue['summary'];
-                $info['data'] = json_encode($issue);
-                $info['time'] = time();
-                list($deleteRet, $msg) = $issueRecycleModel->insert($info);
-                unset($info);
-                if (!$deleteRet) {
-                    $issueModel->db->rollBack();
-                    $this->ajaxFailed('服务器错误', '新增删除的数据失败,详情:' . $msg);
-                }
+                $this->deletedAfter($issueId, $issue);
             }
             $issueModel->db->commit();
         } catch (\PDOException $e) {
@@ -2234,28 +2267,7 @@ class Main extends BaseUserCtrl
                 }
                 $ret = $issueModel->deleteById($issueId);
                 if ($ret) {
-                    $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
-                    // 将父任务的 have_children 减 1
-                    if (!empty($issue['master_id'])) {
-                        $masterId = $issue['master_id'];
-                        $issueModel->dec('have_children', $masterId, 'id', 1);
-                    }
-                    unset($issue['id']);
-                    $issue['delete_user_id'] = $userId;
-                    $issueRecycleModel = new IssueRecycleModel();
-                    $info = [];
-                    $info['issue_id'] = $issueId;
-                    $info['project_id'] = $issue['project_id'];
-                    $info['delete_user_id'] = $userId;
-                    $info['summary'] = $issue['summary'];
-                    $info['data'] = json_encode($issue);
-                    $info['time'] = time();
-                    list($deleteInsertRet, $msg) = $issueRecycleModel->insert($info);
-                    unset($info);
-                    if (!$deleteInsertRet) {
-                        $issueModel->db->rollBack();
-                        $this->ajaxFailed('服务器错误', '新增删除的数据失败,详情:' . $msg);
-                    }
+                    $this->deletedAfter($issueId, $issue);
                 }
             }
             $issueModel->db->commit();

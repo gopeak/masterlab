@@ -1213,7 +1213,7 @@ var IssueMain = (function () {
 
     IssueMain.prototype.batchMoveProject = function (field, value) {
 
-        var checked_issue_id_arr = new Array()
+        var checked_issue_id_arr = [];
         $.each($("input[name='check_issue_id_arr']"), function () {
             if (this.checked) {
                 checked_issue_id_arr.push($(this).val());
@@ -1221,6 +1221,7 @@ var IssueMain = (function () {
         });
         console.log(checked_issue_id_arr);
         let project_id = $('#move_project_id').val();
+        let is_delete_current = $('#is_delete_current').val();
         let module = $('#move-module').val();
         let sprint = $('#move-sprint').val();
         let effect_version = $('#move-effect_version').val();
@@ -1232,7 +1233,16 @@ var IssueMain = (function () {
             dataType: "json",
             async: true,
             url: root_url + "issue/main/batchMoveProject",
-            data: {project_id:project_id, issue_id_arr: checked_issue_id_arr,labels:labels, module:module, sprint: sprint, effect_version: effect_version,fix_version:fix_version },
+            data: {
+                project_id:project_id,
+                is_delete_current:is_delete_current,
+                issue_id_arr: checked_issue_id_arr,
+                labels:labels,
+                module:module,
+                sprint: sprint,
+                effect_version: effect_version,
+                fix_version:fix_version
+            },
             success: function (resp) {
                 loading.hide('#displayMoveProject');
                 auth_check(resp);
