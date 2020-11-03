@@ -17,6 +17,9 @@ use main\app\event\Events;
  */
 class PassportSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -27,21 +30,34 @@ class PassportSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param CommonPlacedEvent $event
+     */
     public function onUserRegister(CommonPlacedEvent $event)
     {
 
     }
 
+    /**
+     * @param CommonPlacedEvent $event
+     */
     public function onUserLogin(CommonPlacedEvent $event)
     {
 
     }
 
+    /**
+     * @param CommonPlacedEvent $event
+     */
     public function onUserlogout(CommonPlacedEvent $event)
     {
 
     }
 
+    /**
+     * @param CommonPlacedEvent $event
+     * @throws \Exception
+     */
     public function onUserUpdateProfile(CommonPlacedEvent $event)
     {
         $preData = $event->pluginDataArr['pre_data'];
@@ -49,7 +65,14 @@ class PassportSubscriber implements EventSubscriberInterface
         $updatedMsg = '';
         foreach ($currentUser as $key => $item) {
             if ($item != $preData[$key]) {
-                $updatedMsg .= $preData[$key] . '-->' . $item . ' ';
+                $old = $preData[$key]. '-->' ;
+                $new = $item;
+                if($key=='avatar'){
+                    $old = '';
+                    //$new = '<img class=" float-none" style="border-radius: 50%;min-height:32px;width:34px" src="/attachment/'.$item.'"   draggable="false" />';
+                    $new = '新头像';
+                }
+                $updatedMsg .= $old . $new . ' ';
             }
         }
         $activityModel = new ActivityModel();

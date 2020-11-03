@@ -76,4 +76,17 @@ class DefaultRoleModel extends BaseDictionaryModel
     {
         return $this->getField('id', ['project_id' => $projectId, 'name' => $roleName]);
     }
+
+    /**
+     * @param $projectId
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     */
+    public function deleteByProject($projectId)
+    {
+        $where = ['project_tpl_id' => $projectId];
+        $row = $this->delete($where);
+        return $row;
+    }
 }

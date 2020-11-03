@@ -1,11 +1,11 @@
 {
   "main_class": "DocumentPlugin",
-  "title": "document",
-  "description": "",
+  "title": "可道云文档管理",
+  "description": "KodExplorer可道云，原名芒果云，是基于Web技术的私有云在线文档管理解决方案",
   "version": "1.0",
   "type": "project_module",
   "chmod":[],
-  "url":"http://www.masterlab.vip/",
-  "company":"Masterlab",
-  "icon_file": "/attachment/image/20200512/20200512151006_96933.png"
+  "url":"http://kodcloud.com/",
+  "company":"可道云",
+  "icon_file": "/attachment/plugin/logo-kod.png"
 }
