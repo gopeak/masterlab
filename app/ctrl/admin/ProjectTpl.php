@@ -425,30 +425,38 @@ class ProjectTpl extends BaseAdminCtrl
 
 
     /**
-     * 删除插件，包括插件目录,谨慎操作
+     * 删除模板，包括子数据
      * @param $id
      * @throws \Exception
      */
     public function delete()
     {
-        $name = null;
-        if (isset($_POST['name'])) {
-            $name = trimStr($_POST['name']);
+        $id = null;
+        if (isset($_POST['id'])) {
+            $id = trimStr($_POST['id']);
         }
-        if (!$name) {
-            $this->ajaxFailed('参数错误', '名称不能为空');
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $model = new PluginModel();
-        $pluginRow = $model->getByName($name);
-        if (!empty($pluginRow)) {
-            $model->deleteById($pluginRow['id']);
+        $model = new ProjectTemplateModel();
+        $row = $model->getById($id);
+        if (!empty($row)) {
+            $deletedNum = $model->deleteById($row['id']);
+            if($deletedNum>0){
+                $model = new ProjectTplCatalogLabelModel();
+                $model->deleteByProject($id);
+                $model = new ProjectTplLabelModel();
+                $model->deleteByProject($id);
+                $model = new ProjectTplModuleModel();
+                $model->deleteByProject($id);
+                $model = new DefaultRoleModel();
+                $model->deleteByProject($id);
+            }
         }
         $this->ajaxSuccess('操作成功');
-
     }
 
     /**
-     * @param int $typeId
      * @throws \Exception
      */
     public function fetchAll()
@@ -457,7 +465,6 @@ class ProjectTpl extends BaseAdminCtrl
         $projectTplModel = new ProjectTemplateModel();
         $projectTpls = $projectTplModel->getItems($categoryId);
         $data['project_tpls'] = $projectTpls;
-
         $this->ajaxSuccess('success', $data);
     }
 
@@ -508,12 +515,12 @@ class ProjectTpl extends BaseAdminCtrl
      * 初始化项目角色
      * @throws \Exception
      */
-    public function initRole()
+    public function initRole($projectTplId)
     {
         $ret = [];
         $projectArr = (new ProjectModel())->getAll(false);
         foreach ($projectArr as $item) {
-            $ret[] = ProjectLogic::initRole($item['id']);
+            $ret[] = ProjectLogic::initRole($item['id'], $projectTplId);
         }
         $this->ajaxSuccess('ok', $ret);
     }

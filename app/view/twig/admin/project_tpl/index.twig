@@ -127,10 +127,10 @@
     </div>
 </div>
 
-    <div class="modal" id="modal-project_tpl">
+<div class="modal" id="modal-project_tpl">
     <form class="js-quick-submit js-upload-blob-form form-horizontal"
           id="form-plugin"
-          action="/admin/plugin_manager/add"
+          action="/admin/project_tpl/add"
           accept-charset="UTF-8"
           method="post">
         <input type="hidden" name="format" id="id_format" value="json">
@@ -324,10 +324,14 @@
             <h3>{{name}}</h3>
             <p style="min-height: 30px;max-height: 40px">{{description}}</p>
             <p style="float: right">
+            <a href="/admin/project_tpl/edit?id={{id}}" class="blue" role="button">配置</a>
+            {{#if_eq is_system '0'}}
             <a href="#" class="gray tpl_edit_link" data-id="{{id}}" role="button">编辑</a>
+            {{/if_eq}}
             <a href="javascript:;" class="gray tpl_copy_link"  data-id="{{id}}"  role="button">复制</a>
-            <a href="/admin/project_tpl/edit?id={{id}}" class="gray" role="button">配置</a>
-            <a href="javascript:;" class="gray" >删除</a>
+            {{#if_eq is_system '0'}}
+            <a href="javascript:;" class="gray tpl_delete_link"  data-id="{{id}}" >删除</a>
+            {{/if_eq}}
             </p>
           </div>
         </div>

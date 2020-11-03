@@ -10,18 +10,16 @@ var PluginTemplate = (function() {
             if($('#id_action').val()==='add'){
                 PluginTemplate.prototype.add();
             }
-            if($('#id_action').val()==='add'){
+            if($('#id_action').val()==='update'){
                 PluginTemplate.prototype.update();
             }
             if($('#id_action').val()==='copy'){
                 PluginTemplate.prototype.postCopy();
             }
-
         });
         $("#btn-create_project_tpl").click(function(){
             PluginTemplate.prototype.create();
         });
-
     };
 
     PluginTemplate.prototype.getOptions = function() {
@@ -110,8 +108,8 @@ var PluginTemplate = (function() {
                     $(".tpl_copy_link").click(function(){
                         PluginTemplate.prototype.copy($(this).data("id"));
                     });
-                    $(".list_for_delete").click(function(){
-                        PluginTemplate.prototype._delete( $(this).attr("data-value") );
+                    $(".tpl_delete_link").click(function(){
+                        PluginTemplate.prototype._delete( $(this).data("id") );
                     });
                 }else{
                     var emptyHtml = defineStatusHtml({
@@ -315,19 +313,15 @@ var PluginTemplate = (function() {
         });
     };
 
-
-
-
-    PluginTemplate.prototype._delete = function(name ) {
-
-        if  (!window.confirm('您确认删除吗?删除后插件的所有文件将被清空!')) {
+    PluginTemplate.prototype._delete = function(id ) {
+        if  (!window.confirm('您确认删除吗?')) {
             return false;
         }
         var method = 'POST';
         $.ajax({
             type: method,
             dataType: "json",
-            data:{name:name },
+            data:{id:id},
             url: _options.delete_url,
             success: function (resp) {
                 auth_check(resp);
