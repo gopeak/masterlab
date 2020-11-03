@@ -1,10 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 4.8.3
--- https://www.phpmyadmin.net/
---
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -25,16 +20,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `agile_board` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `type` enum('status','issue_type','label','module','resolve','priority','assignee') DEFAULT NULL,
-  `is_filter_backlog` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-  `is_filter_closed` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-  `weight` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `range_type` enum('current_sprint','all','sprints','modules','issue_types') NOT NULL COMMENT '看板数据范围',
-  `range_data` varchar(1024) NOT NULL COMMENT '范围数据',
-  `is_system` tinyint(2) NOT NULL DEFAULT '0'
+                               `id` int UNSIGNED NOT NULL,
+                               `name` varchar(128) NOT NULL,
+                               `project_id` int UNSIGNED NOT NULL,
+                               `type` enum('status','issue_type','label','module','resolve','priority','assignee') DEFAULT NULL,
+                               `is_filter_backlog` tinyint UNSIGNED NOT NULL DEFAULT '1',
+                               `is_filter_closed` tinyint UNSIGNED NOT NULL DEFAULT '1',
+                               `weight` int UNSIGNED NOT NULL DEFAULT '0',
+                               `range_type` enum('current_sprint','all','sprints','modules','issue_types') NOT NULL COMMENT '看板数据范围',
+                               `range_data` varchar(1024) NOT NULL COMMENT '范围数据',
+                               `is_system` tinyint NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -52,11 +47,11 @@ INSERT INTO `agile_board` (`id`, `name`, `project_id`, `type`, `is_filter_backlo
 --
 
 CREATE TABLE `agile_board_column` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `board_id` int(11) UNSIGNED NOT NULL,
-  `data` varchar(1000) NOT NULL,
-  `weight` int(11) UNSIGNED NOT NULL DEFAULT '0'
+                                      `id` int UNSIGNED NOT NULL,
+                                      `name` varchar(128) NOT NULL,
+                                      `board_id` int UNSIGNED NOT NULL,
+                                      `data` varchar(1000) NOT NULL,
+                                      `weight` int UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -81,18 +76,18 @@ INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VA
 --
 
 CREATE TABLE `agile_sprint` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `description` varchar(256) DEFAULT NULL,
-  `active` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',
-  `status` tinyint(2) UNSIGNED NOT NULL DEFAULT '1' COMMENT '1为准备中，2为已完成，3为已归档',
-  `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `target` text NOT NULL COMMENT 'sprint目标内容',
-  `inspect` text NOT NULL COMMENT 'Sprint 评审会议内容',
-  `review` text NOT NULL COMMENT 'Sprint 回顾会议内容'
+                                `id` int UNSIGNED NOT NULL,
+                                `project_id` int UNSIGNED NOT NULL,
+                                `name` varchar(128) NOT NULL,
+                                `description` varchar(256) DEFAULT NULL,
+                                `active` tinyint UNSIGNED NOT NULL DEFAULT '0',
+                                `status` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '1为准备中，2为已完成，3为已归档',
+                                `order_weight` int UNSIGNED NOT NULL DEFAULT '0',
+                                `start_date` date DEFAULT NULL,
+                                `end_date` date DEFAULT NULL,
+                                `target` text NOT NULL COMMENT 'sprint目标内容',
+                                `inspect` text NOT NULL COMMENT 'Sprint 评审会议内容',
+                                `review` text NOT NULL COMMENT 'Sprint 回顾会议内容'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -101,7 +96,9 @@ CREATE TABLE `agile_sprint` (
 
 INSERT INTO `agile_sprint` (`id`, `project_id`, `name`, `description`, `active`, `status`, `order_weight`, `start_date`, `end_date`, `target`, `inspect`, `review`) VALUES
 (1, 1, '1.0迭代', '', 0, 1, 0, '2020-01-17', '2020-07-01', '', '', ''),
-(2, 1, '2.0迭代', 'xxxx', 1, 1, 0, '2020-02-19', '2020-03-01', '', '', '');
+(2, 1, '2.0迭代', 'xxxx', 1, 1, 0, '2020-02-19', '2020-03-01', '', '', ''),
+(4, 46, '2.0迭代', 'xxxx', 1, 1, 0, '2020-02-19', '2020-03-01', '', '', ''),
+(5, 46, '1.0迭代', '', 0, 1, 0, '2020-01-17', '2020-07-01', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -110,17 +107,17 @@ INSERT INTO `agile_sprint` (`id`, `project_id`, `name`, `description`, `active`,
 --
 
 CREATE TABLE `agile_sprint_issue_report` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `sprint_id` int(11) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `week` tinyint(2) UNSIGNED DEFAULT NULL,
-  `month` varchar(20) DEFAULT NULL,
-  `done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-  `no_done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-  `done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-  `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-  `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-  `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
+                                             `id` int UNSIGNED NOT NULL,
+                                             `sprint_id` int UNSIGNED NOT NULL,
+                                             `date` date NOT NULL,
+                                             `week` tinyint UNSIGNED DEFAULT NULL,
+                                             `month` varchar(20) DEFAULT NULL,
+                                             `done_count` int UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
+                                             `no_done_count` int UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
+                                             `done_count_by_resolve` int UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
+                                             `no_done_count_by_resolve` int UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
+                                             `today_done_points` int UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
+                                             `today_done_number` int UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -130,16 +127,16 @@ CREATE TABLE `agile_sprint_issue_report` (
 --
 
 CREATE TABLE `field_custom_value` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_id` int(11) UNSIGNED DEFAULT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `custom_field_id` int(11) DEFAULT NULL,
-  `parent_key` varchar(255) DEFAULT NULL,
-  `string_value` varchar(255) DEFAULT NULL,
-  `number_value` varchar(255) DEFAULT NULL,
-  `text_value` longtext,
-  `date_value` datetime DEFAULT NULL,
-  `value_type` varchar(32) NOT NULL DEFAULT 'string'
+                                      `id` int UNSIGNED NOT NULL,
+                                      `issue_id` int UNSIGNED DEFAULT NULL,
+                                      `project_id` int UNSIGNED DEFAULT NULL,
+                                      `custom_field_id` int DEFAULT NULL,
+                                      `parent_key` varchar(255) DEFAULT NULL,
+                                      `string_value` longtext CHARACTER SET utf8 COLLATE utf8_general_ci,
+                                      `number_value` varchar(255) DEFAULT NULL,
+                                      `text_value` longtext,
+                                      `date_value` datetime DEFAULT NULL,
+                                      `value_type` varchar(32) NOT NULL DEFAULT 'string'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -183,7 +180,59 @@ INSERT INTO `field_custom_value` (`id`, `issue_id`, `project_id`, `custom_field_
 (34, 183, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
 (35, 189, 36, 23, NULL, NULL, NULL, '', NULL, 'text'),
 (36, 189, 36, 37, NULL, 'bb', NULL, NULL, NULL, 'string'),
-(37, 189, 36, 38, NULL, 'xxx', NULL, NULL, NULL, 'string');
+(37, 189, 36, 38, NULL, 'xxx', NULL, NULL, NULL, 'string'),
+(38, 192, 36, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(39, 192, 36, 35, NULL, NULL, '1', NULL, NULL, 'number'),
+(40, 193, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(41, 193, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(42, 194, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(43, 194, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(44, 195, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(45, 195, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(46, 196, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(47, 196, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(48, 197, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(49, 197, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(50, 198, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(51, 198, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(52, 199, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(53, 199, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(54, 200, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(55, 200, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(56, 201, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(57, 201, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(58, 206, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(59, 206, 1, 35, NULL, NULL, '1', NULL, NULL, 'number'),
+(60, 207, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(61, 207, 1, 35, NULL, NULL, '1', NULL, NULL, 'number'),
+(62, 208, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(63, 208, 1, 35, NULL, NULL, '1', NULL, NULL, 'number'),
+(64, 209, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(65, 209, 1, 35, NULL, NULL, '1', NULL, NULL, 'number'),
+(66, 210, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(67, 210, 1, 35, NULL, NULL, '1', NULL, NULL, 'number'),
+(68, 211, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(69, 211, 1, 35, NULL, NULL, '1', NULL, NULL, 'number'),
+(70, 212, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(71, 212, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(72, 213, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(73, 213, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(74, 214, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(75, 214, 1, 35, NULL, NULL, '', NULL, NULL, 'number'),
+(76, 215, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(77, 120, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(78, 218, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(79, 219, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(80, 220, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(81, 221, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(82, 222, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(83, 223, 36, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(84, 224, 36, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(85, 225, 36, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(86, 226, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(87, 227, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(88, 229, 1, 23, NULL, NULL, NULL, '', NULL, 'text'),
+(89, 230, 1, 23, NULL, NULL, NULL, '', NULL, 'text');
 
 -- --------------------------------------------------------
 
@@ -192,15 +241,15 @@ INSERT INTO `field_custom_value` (`id`, `issue_id`, `project_id`, `custom_field_
 --
 
 CREATE TABLE `field_layout_default` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_type` int(11) UNSIGNED DEFAULT NULL,
-  `issue_ui_type` tinyint(1) UNSIGNED DEFAULT '1',
-  `field_id` int(11) UNSIGNED DEFAULT '0',
-  `verticalposition` decimal(18,0) DEFAULT NULL,
-  `ishidden` varchar(60) DEFAULT NULL,
-  `isrequired` varchar(60) DEFAULT NULL,
-  `sequence` int(11) UNSIGNED DEFAULT NULL,
-  `tab` int(11) UNSIGNED DEFAULT NULL
+                                        `id` int UNSIGNED NOT NULL,
+                                        `issue_type` int UNSIGNED DEFAULT NULL,
+                                        `issue_ui_type` tinyint UNSIGNED DEFAULT '1',
+                                        `field_id` int UNSIGNED DEFAULT '0',
+                                        `verticalposition` decimal(18,0) DEFAULT NULL,
+                                        `ishidden` varchar(60) DEFAULT NULL,
+                                        `isrequired` varchar(60) DEFAULT NULL,
+                                        `sequence` int UNSIGNED DEFAULT NULL,
+                                        `tab` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -264,16 +313,16 @@ INSERT INTO `field_layout_default` (`id`, `issue_type`, `issue_ui_type`, `field_
 --
 
 CREATE TABLE `field_layout_project_custom` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `issue_type` int(11) UNSIGNED DEFAULT NULL,
-  `issue_ui_type` tinyint(2) UNSIGNED DEFAULT NULL,
-  `field_id` int(11) UNSIGNED DEFAULT '0',
-  `verticalposition` decimal(18,0) DEFAULT NULL,
-  `ishidden` varchar(60) DEFAULT NULL,
-  `isrequired` varchar(60) DEFAULT NULL,
-  `sequence` int(11) UNSIGNED DEFAULT NULL,
-  `tab` int(11) UNSIGNED DEFAULT NULL
+                                               `id` int UNSIGNED NOT NULL,
+                                               `project_id` int UNSIGNED DEFAULT NULL,
+                                               `issue_type` int UNSIGNED DEFAULT NULL,
+                                               `issue_ui_type` tinyint UNSIGNED DEFAULT NULL,
+                                               `field_id` int UNSIGNED DEFAULT '0',
+                                               `verticalposition` decimal(18,0) DEFAULT NULL,
+                                               `ishidden` varchar(60) DEFAULT NULL,
+                                               `isrequired` varchar(60) DEFAULT NULL,
+                                               `sequence` int UNSIGNED DEFAULT NULL,
+                                               `tab` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -283,16 +332,16 @@ CREATE TABLE `field_layout_project_custom` (
 --
 
 CREATE TABLE `field_main` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `title` varchar(64) NOT NULL DEFAULT '',
-  `description` varchar(512) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
-  `default_value` varchar(255) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0',
-  `options` varchar(5000) DEFAULT '' COMMENT '{}',
-  `order_weight` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `extra_attr` varchar(512) NOT NULL DEFAULT '' COMMENT '额外的html属性'
+                              `id` int UNSIGNED NOT NULL,
+                              `name` varchar(255) DEFAULT NULL,
+                              `title` varchar(64) NOT NULL DEFAULT '',
+                              `description` varchar(512) DEFAULT NULL,
+                              `type` varchar(255) DEFAULT NULL,
+                              `default_value` varchar(255) DEFAULT NULL,
+                              `is_system` tinyint UNSIGNED DEFAULT '0',
+                              `options` varchar(5000) DEFAULT '' COMMENT '{}',
+                              `order_weight` int UNSIGNED NOT NULL DEFAULT '0',
+                              `extra_attr` varchar(512) NOT NULL DEFAULT '' COMMENT '额外的html属性'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -316,7 +365,7 @@ INSERT INTO `field_main` (`id`, `name`, `title`, `description`, `type`, `default
 (14, 'milestone', '里程碑', NULL, 'MILESTONE', NULL, 1, '', 0, ''),
 (15, 'sprint', '迭 代', NULL, 'SPRINT', NULL, 1, '', 0, ''),
 (17, 'parent_issue', '父事项', NULL, 'ISSUES', NULL, 1, '', 0, ''),
-(18, 'effect_version', '影响版本', NULL, 'VERSION', NULL, 1, '', 0, ''),
+(18, 'effect_version', '影响版本', NULL, 'VERSION', NULL, 1, '', 0, ' multiple'),
 (19, 'status', '状 态', NULL, 'STATUS', '1', 1, '', 950, ''),
 (20, 'assistants', '协助人', '协助人', 'USER_MULTI', NULL, 1, '', 900, ''),
 (21, 'weight', '权 重', '待办事项中的权重值', 'NUMBER', '0', 1, '', 0, 'min=\"0\"'),
@@ -324,11 +373,7 @@ INSERT INTO `field_main` (`id`, `name`, `title`, `description`, `type`, `default
 (26, 'progress', '完成度', '', 'PROGRESS', '0', 1, '', 0, 'min=\"0\" max=\"100\"'),
 (27, 'duration', '用时(天)', '', 'TEXT', '1', 1, '', 0, ''),
 (28, 'is_start_milestone', '是否起始里程碑', '', 'TEXT', '0', 1, '', 0, ''),
-(29, 'is_end_milestone', '是否结束里程碑', '', 'TEXT', '0', 1, '', 0, ''),
-(35, 'test_user', '用户测试', '', 'USER', '', 0, '', 0, ''),
-(36, 'user_mm', '多用户', '', 'USER_MULTI', '', 0, '', 0, ''),
-(37, 'select_test', 'SelectTest', '', 'SELECT', '', 0, '{\"aa\":\"AAAAAA\",\"bb\":\"BBBB\"}', 0, ''),
-(38, 'textarea1', 'textarea1', '', 'TEXTAREA', '', 0, '', 0, '');
+(29, 'is_end_milestone', '是否结束里程碑', '', 'TEXT', '0', 1, '', 0, '');
 
 -- --------------------------------------------------------
 
@@ -337,10 +382,10 @@ INSERT INTO `field_main` (`id`, `name`, `title`, `description`, `type`, `default
 --
 
 CREATE TABLE `field_type` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `type` varchar(64) DEFAULT NULL
+                              `id` int UNSIGNED NOT NULL,
+                              `name` varchar(64) DEFAULT NULL,
+                              `description` varchar(255) DEFAULT NULL,
+                              `type` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -380,10 +425,10 @@ INSERT INTO `field_type` (`id`, `name`, `description`, `type`) VALUES
 --
 
 CREATE TABLE `hornet_cache_key` (
-  `key` varchar(100) NOT NULL,
-  `module` varchar(64) DEFAULT NULL,
-  `datetime` datetime DEFAULT NULL,
-  `expire` int(10) UNSIGNED DEFAULT NULL
+                                    `key` varchar(100) NOT NULL,
+                                    `module` varchar(64) DEFAULT NULL,
+                                    `datetime` datetime DEFAULT NULL,
+                                    `expire` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -393,15 +438,15 @@ CREATE TABLE `hornet_cache_key` (
 --
 
 CREATE TABLE `hornet_user` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(60) NOT NULL DEFAULT '',
-  `phone` varchar(20) NOT NULL,
-  `password` varchar(32) NOT NULL DEFAULT '',
-  `email` varchar(50) NOT NULL DEFAULT '',
-  `status` tinyint(2) UNSIGNED NOT NULL DEFAULT '1' COMMENT '用户状态:1正常,2禁用',
-  `reg_time` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `last_login_time` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `company_id` int(11) UNSIGNED DEFAULT NULL
+                               `id` int UNSIGNED NOT NULL,
+                               `name` varchar(60) NOT NULL DEFAULT '',
+                               `phone` varchar(20) NOT NULL,
+                               `password` varchar(32) NOT NULL DEFAULT '',
+                               `email` varchar(50) NOT NULL DEFAULT '',
+                               `status` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '用户状态:1正常,2禁用',
+                               `reg_time` int UNSIGNED NOT NULL DEFAULT '0',
+                               `last_login_time` int UNSIGNED NOT NULL DEFAULT '0',
+                               `company_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- --------------------------------------------------------
@@ -411,10 +456,10 @@ CREATE TABLE `hornet_user` (
 --
 
 CREATE TABLE `issue_assistant` (
-  `id` int(11) NOT NULL,
-  `issue_id` int(11) UNSIGNED DEFAULT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT NULL,
-  `join_time` int(11) UNSIGNED NOT NULL DEFAULT '0'
+                                   `id` int NOT NULL,
+                                   `issue_id` int UNSIGNED DEFAULT NULL,
+                                   `user_id` int UNSIGNED DEFAULT NULL,
+                                   `join_time` int UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -423,7 +468,10 @@ CREATE TABLE `issue_assistant` (
 
 INSERT INTO `issue_assistant` (`id`, `issue_id`, `user_id`, `join_time`) VALUES
 (3, 116, 12165, 0),
-(4, 116, 12166, 0);
+(4, 116, 12166, 0),
+(5, 218, 12164, 0),
+(6, 218, 12165, 0),
+(7, 226, 12164, 0);
 
 -- --------------------------------------------------------
 
@@ -432,11 +480,11 @@ INSERT INTO `issue_assistant` (`id`, `issue_id`, `user_id`, `join_time`) VALUES
 --
 
 CREATE TABLE `issue_description_template` (
-  `id` int(11) NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `content` text NOT NULL,
-  `created` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `updated` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '更新时间'
+                                              `id` int NOT NULL,
+                                              `name` varchar(32) NOT NULL,
+                                              `content` text NOT NULL,
+                                              `created` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '创建时间',
+                                              `updated` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='新增事项时描述的模板';
 
 --
@@ -454,10 +502,22 @@ INSERT INTO `issue_description_template` (`id`, `name`, `content`, `created`, `u
 --
 
 CREATE TABLE `issue_effect_version` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_id` int(11) UNSIGNED DEFAULT NULL,
-  `version_id` int(11) UNSIGNED DEFAULT NULL
+                                        `id` int UNSIGNED NOT NULL,
+                                        `issue_id` int UNSIGNED DEFAULT NULL,
+                                        `version_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+--
+-- 转存表中的数据 `issue_effect_version`
+--
+
+INSERT INTO `issue_effect_version` (`id`, `issue_id`, `version_id`) VALUES
+(1, 219, 2),
+(2, 220, 1),
+(3, 220, 2),
+(4, 221, 1),
+(5, 221, 2),
+(6, 230, 1);
 
 -- --------------------------------------------------------
 
@@ -466,10 +526,10 @@ CREATE TABLE `issue_effect_version` (
 --
 
 CREATE TABLE `issue_extra_worker_day` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL DEFAULT '0',
-  `day` date NOT NULL,
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+                                          `id` int NOT NULL,
+                                          `project_id` int NOT NULL DEFAULT '0',
+                                          `day` date NOT NULL,
+                                          `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -479,14 +539,14 @@ CREATE TABLE `issue_extra_worker_day` (
 --
 
 CREATE TABLE `issue_field_layout_project` (
-  `id` decimal(18,0) NOT NULL,
-  `fieldlayout` decimal(18,0) DEFAULT NULL,
-  `fieldidentifier` varchar(255) DEFAULT NULL,
-  `description` text,
-  `verticalposition` decimal(18,0) DEFAULT NULL,
-  `ishidden` varchar(60) DEFAULT NULL,
-  `isrequired` varchar(60) DEFAULT NULL,
-  `renderertype` varchar(255) DEFAULT NULL
+                                              `id` decimal(18,0) NOT NULL,
+                                              `fieldlayout` decimal(18,0) DEFAULT NULL,
+                                              `fieldidentifier` varchar(255) DEFAULT NULL,
+                                              `description` text,
+                                              `verticalposition` decimal(18,0) DEFAULT NULL,
+                                              `ishidden` varchar(60) DEFAULT NULL,
+                                              `isrequired` varchar(60) DEFAULT NULL,
+                                              `renderertype` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -496,17 +556,17 @@ CREATE TABLE `issue_field_layout_project` (
 --
 
 CREATE TABLE `issue_file_attachment` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `uuid` varchar(64) NOT NULL DEFAULT '',
-  `issue_id` int(11) DEFAULT '0',
-  `tmp_issue_id` varchar(32) NOT NULL,
-  `mime_type` varchar(64) DEFAULT '',
-  `origin_name` varchar(128) NOT NULL DEFAULT '',
-  `file_name` varchar(255) DEFAULT '',
-  `created` int(11) DEFAULT '0',
-  `file_size` int(11) DEFAULT '0',
-  `author` int(11) DEFAULT '0',
-  `file_ext` varchar(32) NOT NULL DEFAULT ''
+                                         `id` int UNSIGNED NOT NULL,
+                                         `uuid` varchar(64) NOT NULL DEFAULT '',
+                                         `issue_id` int DEFAULT '0',
+                                         `tmp_issue_id` varchar(32) NOT NULL,
+                                         `mime_type` varchar(64) DEFAULT '',
+                                         `origin_name` varchar(128) NOT NULL DEFAULT '',
+                                         `file_name` varchar(255) DEFAULT '',
+                                         `created` int DEFAULT '0',
+                                         `file_size` int DEFAULT '0',
+                                         `author` int DEFAULT '0',
+                                         `file_ext` varchar(32) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -556,7 +616,32 @@ INSERT INTO `issue_file_attachment` (`id`, `uuid`, `issue_id`, `tmp_issue_id`, `
 (41, '0xOKgYhEszLPMATq436895', 0, '', 'image/jpeg', 'crm2.jpg', 'image/20200412/20200412144620_43140.jpg', 1586673980, 0, 1, 'jpg'),
 (42, 'BLLfzyXCh2GrrWFn781634', 0, '', 'image/png', 'project.png', 'image/20200415/20200415230134_26757.png', 1586962894, 0, 1, 'png'),
 (43, 'uk9vh3U0GncJHPVH21202', 0, '', 'image/png', 'QQ浏览器截图20180822011229.png', 'image/20200415/20200415230149_63177.png', 1586962909, 0, 1, 'png'),
-(44, '1590660041309', 0, '', 'image/png', 'login.png', 'image/20200528/20200528180045_84904.png', 1590660045, 14995, 1, 'png');
+(44, '1590660041309', 0, '', 'image/png', 'login.png', 'image/20200528/20200528180045_84904.png', 1590660045, 14995, 1, 'png'),
+(45, '4CSDmxXp47WcdJh8417852', 0, '', 'image/jpeg', 'crm2.jpg', 'image/20200615/20200615195914_93708.jpg', 1592222354, 0, 1, 'jpg'),
+(46, 'd89f41a9-997b-4339-8773-a69a99ef29a0', 120, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200622/20200622195915_48041.jpg', 1592827155, 591707, 1, 'jpg'),
+(47, '1592827168633', 0, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'image/20200622/20200622195934_26594.jpg', 1592827174, 591707, 1, 'jpg'),
+(48, '8258cfef-dacd-4d4b-a6bb-a8a0f5b37ef9', 0, '', 'image/jpeg', '42e1b368009ffe99aa47e8ddd3c3f8e2.jpg', 'project_image/20200709/20200709202312_43001.jpg', 1594297392, 97574, 1, 'jpg'),
+(49, '5a8e445f-a178-4a10-9999-94f127b231a0', 0, '', 'image/jpeg', 'crm2.jpg', 'project_image/20200711/20200711150339_19108.jpg', 1594451019, 6161, 1, 'jpg'),
+(50, '79851123-7d7f-4e23-bbcc-c023bd8aefe7', 116, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200806/20200806002059_70363.jpg', 1596644459, 591707, 1, 'jpg'),
+(51, '79851123-7d7f-4e23-bbcc-c023bd8aefe7', 116, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200806/20200806002235_86988.jpg', 1596644555, 591707, 1, 'jpg'),
+(52, '79851123-7d7f-4e23-bbcc-c023bd8aefe7', 116, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200806/20200806002532_78603.jpg', 1596644732, 591707, 1, 'jpg'),
+(53, '79851123-7d7f-4e23-bbcc-c023bd8aefe7', 116, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200806/20200806003032_43892.jpg', 1596645032, 591707, 1, 'jpg'),
+(54, '79851123-7d7f-4e23-bbcc-c023bd8aefe7', 116, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200806/20200806003237_98701.jpg', 1596645157, 591707, 1, 'jpg'),
+(55, '79851123-7d7f-4e23-bbcc-c023bd8aefe7', 116, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200806/20200806003410_80184.jpg', 1596645250, 591707, 1, 'jpg'),
+(56, '79851123-7d7f-4e23-bbcc-c023bd8aefe7', 116, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200806/20200806003638_82758.jpg', 1596645398, 591707, 1, 'jpg'),
+(57, '79851123-7d7f-4e23-bbcc-c023bd8aefe7', 116, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200806/20200806003641_57866.jpg', 1596645401, 591707, 1, 'jpg'),
+(58, '15f413cc-efeb-4f55-b6eb-9a0be0a2c7d9', 192, '', 'image/jpeg', '082538a1puihi057fainol.jpg', 'all/20200808/20200808003409_50004.jpg', 1596818049, 591707, 1, 'jpg'),
+(59, 'qVbsU1OGTHQFzSEv348403', 0, '', 'image/png', 'logo.png', 'image/20200831/20200831000128_35438.png', 1598803288, 0, 1, 'png'),
+(60, '2ioruF9l4iEn2hdH29325', 0, '', 'image/jpeg', 'crm2.jpg', 'image/20200831/20200831001840_26256.jpg', 1598804320, 0, 1, 'jpg'),
+(61, 'cn0XA7kxwimdPYMH104794', 0, '', 'image/jpeg', 'crm2.jpg', 'image/20200831/20200831002027_86663.jpg', 1598804427, 0, 1, 'jpg'),
+(62, '63Ksjw4VZpCWhL2T425233', 0, '', 'image/jpeg', 'crm2.jpg', 'image/20200831/20200831002135_77249.jpg', 1598804495, 0, 1, 'jpg'),
+(63, '3a30afd5-e91c-4349-bc8e-0377265e276e', 218, '', 'image/png', '未标题-5.png', 'all/20200917/20200917000618_49429.png', 1600272378, 7545, 1, 'png'),
+(64, 'Qldz4hseRjUj4lLQ266418', 0, '', 'image/png', 'logo.png', 'image/20200917/20200917001841_53290.png', 1600273121, 0, 1, 'png'),
+(65, 'PLSYelX2IovzTMQf614451', 0, '', 'image/jpeg', 'crm.jpg', 'image/20200917/20200917233427_21527.jpg', 1600356867, 0, 1, 'jpg'),
+(66, '3Z4eExqaD8ovKTY2692008', 0, '', 'image/jpeg', 'crm.jpg', 'image/20200917/20200917235139_72901.jpg', 1600357899, 0, 1, 'jpg'),
+(67, 'UUQkI3ddo5ajwkfT121181', 0, '', 'image/jpeg', 'crm.jpg', 'image/20200917/20200917235200_65140.jpg', 1600357920, 0, 1, 'jpg'),
+(68, '4a32b13a-d769-4abf-90e2-1d838702e314', 0, '', 'image/jpeg', 'crm.jpg', 'project_image/20200918/20200918000410_82013.jpg', 1600358650, 11071, 1, 'jpg'),
+(69, '329YPL3elqz3adch473966', 0, '', 'image/png', 'logo-kod.png', 'image/20201103/20201103171659_15778.png', 1604395019, 0, 1, 'png');
 
 -- --------------------------------------------------------
 
@@ -565,17 +650,17 @@ INSERT INTO `issue_file_attachment` (`id`, `uuid`, `issue_id`, `tmp_issue_id`, `
 --
 
 CREATE TABLE `issue_filter` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(64) DEFAULT NULL,
-  `author` int(11) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `share_obj` varchar(255) DEFAULT NULL,
-  `share_scope` varchar(20) DEFAULT NULL COMMENT 'all,group,uid,project,origin',
-  `projectid` decimal(18,0) DEFAULT NULL,
-  `filter` mediumtext,
-  `fav_count` decimal(18,0) DEFAULT NULL,
-  `name_lower` varchar(255) DEFAULT NULL,
-  `is_adv_query` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级查询'
+                                `id` int UNSIGNED NOT NULL,
+                                `name` varchar(64) DEFAULT NULL,
+                                `author` int DEFAULT NULL,
+                                `description` varchar(255) DEFAULT NULL,
+                                `share_obj` varchar(255) DEFAULT NULL,
+                                `share_scope` varchar(20) DEFAULT NULL COMMENT 'all,group,uid,project,origin',
+                                `projectid` decimal(18,0) DEFAULT NULL,
+                                `filter` mediumtext,
+                                `fav_count` decimal(18,0) DEFAULT NULL,
+                                `name_lower` varchar(255) DEFAULT NULL,
+                                `is_adv_query` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级查询'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -583,8 +668,6 @@ CREATE TABLE `issue_filter` (
 --
 
 INSERT INTO `issue_filter` (`id`, `name`, `author`, `description`, `share_obj`, `share_scope`, `projectid`, `filter`, `fav_count`, `name_lower`, `is_adv_query`) VALUES
-(1, '2.0迭代', 1, '', NULL, '', '1', '迭代:2.0迭代 sort_field:id sort_by:desc', NULL, NULL, 0),
-(2, '经办人Master', 1, '', NULL, '', '1', '经办人:@master sort_field:id sort_by:desc', NULL, NULL, 0),
 (10, '我报告的bug', 1, '', NULL, '', '1', '报告人:@master 类型:Bug sort_field:id sort_by:desc', NULL, NULL, 0),
 (11, '我进行中的', 1, '', NULL, '', '1', '报告人:@master 状态:进行中 sort_field:id sort_by:desc', NULL, NULL, 0),
 (12, '我优先级中的', 1, '', NULL, '', '1', '报告人:@master 优先级:中 sort_field:id sort_by:desc', NULL, NULL, 0),
@@ -598,10 +681,21 @@ INSERT INTO `issue_filter` (`id`, `name`, `author`, `description`, `share_obj`, 
 --
 
 CREATE TABLE `issue_fix_version` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_id` int(11) UNSIGNED DEFAULT NULL,
-  `version_id` int(11) UNSIGNED DEFAULT NULL
+                                     `id` int UNSIGNED NOT NULL,
+                                     `issue_id` int UNSIGNED DEFAULT NULL,
+                                     `version_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `issue_fix_version`
+--
+
+INSERT INTO `issue_fix_version` (`id`, `issue_id`, `version_id`) VALUES
+(1, 218, 2),
+(2, 219, 2),
+(3, 220, 0),
+(4, 221, 1),
+(5, 230, 1);
 
 -- --------------------------------------------------------
 
@@ -610,9 +704,9 @@ CREATE TABLE `issue_fix_version` (
 --
 
 CREATE TABLE `issue_follow` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL
+                                `id` int UNSIGNED NOT NULL,
+                                `issue_id` int UNSIGNED NOT NULL,
+                                `user_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -629,10 +723,10 @@ INSERT INTO `issue_follow` (`id`, `issue_id`, `user_id`) VALUES
 --
 
 CREATE TABLE `issue_holiday` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `day` date NOT NULL,
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+                                 `id` int NOT NULL,
+                                 `project_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                 `day` date NOT NULL,
+                                 `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -640,30 +734,30 @@ CREATE TABLE `issue_holiday` (
 --
 
 INSERT INTO `issue_holiday` (`id`, `project_id`, `day`, `name`) VALUES
-(674, 1, '2020-05-01', ''),
-(675, 1, '2020-05-02', ''),
-(676, 1, '2020-05-03', ''),
-(677, 1, '2020-05-04', ''),
-(678, 1, '2020-10-01', ''),
-(679, 1, '2021-01-01', ''),
-(680, 1, '2021-05-01', ''),
-(681, 1, '2021-05-02', ''),
-(682, 1, '2021-05-03', ''),
-(683, 1, '2021-05-04', ''),
-(684, 1, '2021-10-01', ''),
-(685, 1, '2022-01-01', ''),
-(686, 1, '2020-10-02', ''),
-(687, 1, '2020-10-03', ''),
-(688, 1, '2020-10-04', ''),
-(689, 1, '2020-10-05', ''),
-(690, 1, '2020-10-06', ''),
-(691, 1, '2020-10-07', ''),
-(692, 1, '2021-10-02', ''),
-(693, 1, '2021-10-03', ''),
-(694, 1, '2021-10-04', ''),
-(695, 1, '2021-10-05', ''),
-(696, 1, '2021-10-06', ''),
-(697, 1, '2021-10-07', '');
+(770, 1, '2020-05-01', ''),
+(771, 1, '2020-05-02', ''),
+(772, 1, '2020-05-03', ''),
+(773, 1, '2020-05-04', ''),
+(774, 1, '2020-10-01', ''),
+(775, 1, '2021-01-01', ''),
+(776, 1, '2021-05-01', ''),
+(777, 1, '2021-05-02', ''),
+(778, 1, '2021-05-03', ''),
+(779, 1, '2021-05-04', ''),
+(780, 1, '2021-10-01', ''),
+(781, 1, '2022-01-01', ''),
+(782, 1, '2020-10-02', ''),
+(783, 1, '2020-10-03', ''),
+(784, 1, '2020-10-04', ''),
+(785, 1, '2020-10-05', ''),
+(786, 1, '2020-10-06', ''),
+(787, 1, '2020-10-07', ''),
+(788, 1, '2021-10-02', ''),
+(789, 1, '2021-10-03', ''),
+(790, 1, '2021-10-04', ''),
+(791, 1, '2021-10-05', ''),
+(792, 1, '2021-10-06', ''),
+(793, 1, '2021-10-07', '');
 
 -- --------------------------------------------------------
 
@@ -672,11 +766,11 @@ INSERT INTO `issue_holiday` (`id`, `project_id`, `day`, `name`) VALUES
 --
 
 CREATE TABLE `issue_label` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `title` varchar(64) NOT NULL,
-  `color` varchar(20) NOT NULL,
-  `bg_color` varchar(20) NOT NULL DEFAULT ''
+                               `id` int UNSIGNED NOT NULL,
+                               `project_id` int UNSIGNED NOT NULL,
+                               `title` varchar(64) NOT NULL,
+                               `color` varchar(20) NOT NULL,
+                               `bg_color` varchar(20) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -695,9 +789,9 @@ INSERT INTO `issue_label` (`id`, `project_id`, `title`, `color`, `bg_color`) VAL
 --
 
 CREATE TABLE `issue_label_data` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_id` int(11) UNSIGNED DEFAULT NULL,
-  `label_id` int(11) UNSIGNED DEFAULT NULL
+                                    `id` int UNSIGNED NOT NULL,
+                                    `issue_id` int UNSIGNED DEFAULT NULL,
+                                    `label_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -705,8 +799,6 @@ CREATE TABLE `issue_label_data` (
 --
 
 INSERT INTO `issue_label_data` (`id`, `issue_id`, `label_id`) VALUES
-(1, 139, 3),
-(2, 139, 4),
 (3, 120, 4),
 (4, 120, 5),
 (5, 116, 8),
@@ -721,22 +813,25 @@ INSERT INTO `issue_label_data` (`id`, `issue_id`, `label_id`) VALUES
 (14, 120, 4),
 (15, 120, 5),
 (16, 120, 1),
-(17, 139, 3),
-(18, 139, 4),
-(19, 139, 3),
-(20, 139, 4),
-(21, 139, 3),
-(22, 139, 4),
-(23, 139, 3),
-(24, 139, 4),
-(25, 139, 3),
-(26, 139, 4),
-(27, 139, 3),
-(28, 139, 4),
-(29, 139, 3),
-(30, 139, 4),
-(31, 139, 3),
-(32, 139, 4);
+(33, 120, 1),
+(34, 120, 4),
+(35, 120, 5),
+(36, 218, 3),
+(37, 220, 1),
+(38, 220, 2),
+(39, 220, 3),
+(40, 221, 1),
+(41, 221, 2),
+(42, 221, 4),
+(43, 226, 3),
+(44, 226, 4),
+(45, 227, 1),
+(46, 227, 2),
+(47, 230, 1),
+(48, 230, 2),
+(49, 230, 3),
+(50, 139, 3),
+(51, 139, 4);
 
 -- --------------------------------------------------------
 
@@ -745,45 +840,45 @@ INSERT INTO `issue_label_data` (`id`, `issue_id`, `label_id`) VALUES
 --
 
 CREATE TABLE `issue_main` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `pkey` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `issue_num` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `project_id` int(11) DEFAULT '0',
-  `issue_type` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `creator` int(11) UNSIGNED DEFAULT '0',
-  `modifier` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `reporter` int(11) DEFAULT '0',
-  `assignee` int(11) DEFAULT '0',
-  `summary` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `description` text COLLATE utf8mb4_unicode_ci,
-  `environment` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `priority` int(11) DEFAULT '0',
-  `resolve` int(11) DEFAULT '0',
-  `status` int(11) DEFAULT '0',
-  `created` int(11) DEFAULT '0',
-  `updated` int(11) DEFAULT '0',
-  `start_date` date DEFAULT NULL,
-  `due_date` date DEFAULT NULL,
-  `duration` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `resolve_date` date DEFAULT NULL,
-  `module` int(11) DEFAULT '0',
-  `milestone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `sprint` int(11) NOT NULL DEFAULT '0',
-  `weight` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '优先级权重值',
-  `backlog_weight` int(11) NOT NULL DEFAULT '0' COMMENT 'backlog排序权重',
-  `sprint_weight` int(11) NOT NULL DEFAULT '0' COMMENT 'sprint排序权重',
-  `assistants` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `level` tinyint(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '甘特图级别',
-  `master_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
-  `have_children` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否拥有子任务',
-  `followed_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '被关注人数',
-  `comment_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '评论数',
-  `progress` tinyint(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '完成百分比',
-  `depends` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '前置任务',
-  `gant_sprint_weight` int(11) NOT NULL DEFAULT '0' COMMENT '迭代甘特图中该事项在同级的排序权重',
-  `gant_hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '甘特图中是否隐藏该事项',
-  `is_start_milestone` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `is_end_milestone` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+                              `id` int UNSIGNED NOT NULL,
+                              `pkey` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                              `issue_num` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                              `project_id` int DEFAULT '0',
+                              `issue_type` int UNSIGNED NOT NULL DEFAULT '0',
+                              `creator` int UNSIGNED DEFAULT '0',
+                              `modifier` int UNSIGNED NOT NULL DEFAULT '0',
+                              `reporter` int DEFAULT '0',
+                              `assignee` int DEFAULT '0',
+                              `summary` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+                              `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+                              `environment` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+                              `priority` int DEFAULT '0',
+                              `resolve` int DEFAULT '0',
+                              `status` int DEFAULT '0',
+                              `created` int DEFAULT '0',
+                              `updated` int DEFAULT '0',
+                              `start_date` date DEFAULT NULL,
+                              `due_date` date DEFAULT NULL,
+                              `duration` int UNSIGNED NOT NULL DEFAULT '0',
+                              `resolve_date` date DEFAULT NULL,
+                              `module` int DEFAULT '0',
+                              `milestone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                              `sprint` int NOT NULL DEFAULT '0',
+                              `weight` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '优先级权重值',
+                              `backlog_weight` int NOT NULL DEFAULT '0' COMMENT 'backlog排序权重',
+                              `sprint_weight` int NOT NULL DEFAULT '0' COMMENT 'sprint排序权重',
+                              `assistants` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                              `level` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '甘特图级别',
+                              `master_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
+                              `have_children` tinyint UNSIGNED DEFAULT '0' COMMENT '是否拥有子任务',
+                              `followed_count` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '被关注人数',
+                              `comment_count` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '评论数',
+                              `progress` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '完成百分比',
+                              `depends` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '前置任务',
+                              `gant_sprint_weight` int NOT NULL DEFAULT '0' COMMENT '迭代甘特图中该事项在同级的排序权重',
+                              `gant_hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '甘特图中是否隐藏该事项',
+                              `is_start_milestone` tinyint UNSIGNED NOT NULL DEFAULT '0',
+                              `is_end_milestone` tinyint UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -791,17 +886,17 @@ CREATE TABLE `issue_main` (
 --
 
 INSERT INTO `issue_main` (`id`, `pkey`, `issue_num`, `project_id`, `issue_type`, `creator`, `modifier`, `reporter`, `assignee`, `summary`, `description`, `environment`, `priority`, `resolve`, `status`, `created`, `updated`, `start_date`, `due_date`, `duration`, `resolve_date`, `module`, `milestone`, `sprint`, `weight`, `backlog_weight`, `sprint_weight`, `assistants`, `level`, `master_id`, `have_children`, `followed_count`, `comment_count`, `progress`, `depends`, `gant_sprint_weight`, `gant_hide`, `is_start_milestone`, `is_end_milestone`) VALUES
-(1, 'example', '1', 1, 3, 1, 1, 1, 12166, '数据库设计', 'xxxxxx', '', 4, 2, 1, 1579249719, 1582133907, '2020-01-17', '2020-01-30', 10, NULL, 2, NULL, 0, 80, 100000, 1600000, '', 0, 0, 3, 0, 0, 0, '', 999800000, 0, 0, 0),
+(1, 'example', '1', 1, 3, 1, 1, 1, 12166, '数据库设计', 'xxxxxx', '', 4, 2, 1, 1579249719, 1582133907, '2020-01-17', '2020-01-30', 10, NULL, 2, NULL, 0, 80, 100000, 1600000, '', 0, 0, 3, 0, 0, 0, '', 999900000, 0, 0, 0),
 (2, 'example', '2', 1, 3, 1, 1, 1, 1, '服务器端架构设计', 'xxxxxxxxxxxxxxxxxxxxx\r\n1**xxxxxxxx**', '', 3, 2, 1, 1579250062, 1582133914, '2020-03-03', '2020-03-06', 4, NULL, 1, NULL, 1, 80, 0, 2000000, '', 0, 106, 0, 0, 0, 1, '', 998500000, 0, 0, 0),
 (3, 'example', '3', 1, 2, 1, 1, 1, 12168, '业务模块开发', 'xxxxx', '', 3, 10000, 6, 1579423228, 1579423228, '2020-01-20', '2020-01-24', 5, NULL, 3, NULL, 1, 60, 0, 500000, '', 0, 0, 4, 0, 0, 0, '', 999500000, 0, 0, 0),
-(4, 'example', '4', 1, 3, 1, 1, 1, 1, '数据库表结构设计', '', '', 4, 2, 1, 1579423320, 1583079970, '2020-03-02', '2020-01-01', 0, NULL, 3, NULL, 0, 0, 200000, 1600000, '', 0, 1, 0, 0, 0, 0, '', 1000000000, 0, 0, 0),
+(4, 'example', '4', 1, 3, 1, 1, 1, 1, '数据库表结构设计', '', '', 4, 2, 1, 1579423320, 1583079970, '2020-03-02', '2020-01-01', 0, NULL, 3, NULL, 1, 0, 200000, 1600000, '', 0, 1, 0, 0, 0, 0, '', 999800000, 0, 0, 0),
 (5, 'example', '5', 1, 3, 1, 1, 1, 12165, '可行性分析', '', '', 4, 10000, 6, 1581321497, 1581321497, '2020-03-03', '2020-03-04', 2, NULL, 3, NULL, 1, 0, 0, 1900000, '', 0, 0, 3, 0, 0, 0, '', 998300000, 0, 0, 0),
 (8, 'example', '8', 1, 3, 1, 1, 1, 1, '技术可行性分析', '', '', 4, 10000, 6, 1582199367, 1582199367, '0000-00-00', '0000-00-00', 0, NULL, 3, NULL, 1, 0, 0, 1800000, '', 0, 5, 0, 0, 0, 0, '', 1000000000, 0, 0, 0),
-(53, 'example', '53', 1, 2, 1, 1, 1, 1, '优化改进事项1', '', '', 4, 2, 1, 1582602961, 1582602961, '2020-01-17', '2020-02-29', 31, NULL, 3, NULL, 2, 0, 0, 100000, '', 0, 0, 0, 0, 5, 0, '', 1000000000, 0, 0, 0),
+(53, 'example', '53', 1, 2, 1, 1, 1, 1, '优化改进事项1', '', '', 4, 2, 1, 1582602961, 1582602961, '2020-01-17', '2020-02-29', 31, NULL, 3, NULL, 2, 0, 0, 1700000, '', 0, 0, 0, 0, 5, 0, '', 1000000000, 0, 0, 0),
 (54, 'example', '54', 1, 2, 1, 1, 1, 1, 'ER关系设计', '', '', 4, 2, 1, 1582602962, 1582602962, '2020-03-03', '2020-03-06', 4, NULL, 3, NULL, 1, 0, 0, 700000, '', 0, 1, 0, 0, 0, 0, '', 1000000000, 0, 0, 0),
 (64, 'example', '64', 1, 3, 1, 1, 1, 12164, '前端架构设计', '', '', 3, 2, 1, 1582623716, 1582623716, '2020-03-04', '2020-03-06', 3, NULL, 3, NULL, 1, 0, 0, 800000, '', 0, 106, 1, 0, 0, 0, '', 998600000, 0, 0, 0),
-(87, 'example', '87', 1, 3, 1, 1, 1, 1, '产品功能说明书', '', '', 3, 10000, 6, 1582693628, 1582693628, '2020-03-01', '2020-03-16', 11, NULL, 3, NULL, 1, 0, 0, 900000, '', 0, 90, 0, 0, 0, 1, '', 998800000, 0, 0, 0),
-(90, 'example', '90', 1, 3, 1, 1, 1, 1, '产品设计', '', '', 3, 2, 6, 1582983902, 1582983902, '2020-02-28', '2020-03-03', 3, NULL, 3, NULL, 0, 0, 0, 500000, '', 0, 0, 4, 0, 0, 0, '', 999900000, 0, 0, 0),
+(87, 'example', '87', 1, 3, 1, 1, 1, 12164, '产品功能说明书', '', '', 3, 10000, 6, 1582693628, 1582693628, '2020-03-01', '2020-03-16', 11, NULL, 3, NULL, 1, 0, 0, 900000, '', 0, 90, 0, 0, 0, 1, '', 998800000, 0, 0, 0),
+(90, 'example', '90', 1, 3, 1, 1, 1, 1, '产品设计', '', '', 3, 2, 6, 1582983902, 1582983902, '2020-02-28', '2020-03-03', 3, NULL, 3, NULL, 1, 0, 0, 500000, '', 0, 0, 4, 0, 0, 0, '', 1000000000, 0, 0, 0),
 (94, 'example', '94', 1, 1, 1, 1, 1, 1, '市场可行性分析', '\r\n这里输入对bug做出清晰简洁的描述.\r\n\r\n**重现步骤**\r\n1. xx\r\n2. xxx\r\n3. xxxx\r\n4. xxxxxx\r\n\r\n**期望结果**\r\n简洁清晰的描述期望结果\r\n\r\n**实际结果**\r\n简述实际看到的结果，这里可以配上截图\r\n\r\n\r\n**附加说明**\r\n附加或额外的信息\r\n', '', 2, 2, 6, 1582992127, 1582992127, '0000-00-00', '0000-00-00', 0, NULL, 3, NULL, 1, 0, 0, 1700000, '', 0, 5, 0, 0, 0, 0, '', 999900000, 0, 0, 0),
 (95, 'example', '95', 1, 3, 1, 1, 1, 1, '交互设计', '', '', 3, 2, 1, 1582993508, 1582993508, '2020-03-09', '2020-03-20', 10, NULL, 3, NULL, 1, 0, 0, 1000000, '', 0, 90, 0, 0, 0, 1, '', 999100000, 0, 0, 0),
 (96, 'example', '96', 1, 3, 1, 0, 1, 1, 'UI设计', '', '', 3, 2, 3, 1582993557, 1582993557, '2020-03-01', '2020-03-13', 10, NULL, 3, NULL, 1, 0, 0, 1100000, '', 0, 90, 0, 0, 0, 0, '', 998900000, 0, 0, 0),
@@ -810,10 +905,8 @@ INSERT INTO `issue_main` (`id`, `pkey`, `issue_num`, `project_id`, `issue_type`,
 (107, 'example', '107', 1, 3, 1, 1, 1, 1, '用户模块开发编码1', '', '', 3, 2, 1, 1583041630, 1583041630, '2020-03-02', '2020-03-09', 11, NULL, 3, NULL, 1, 0, 0, 1400000, '', 0, 3, 0, 0, 0, 0, '', 999300000, 0, 0, 0),
 (108, 'example', '108', 1, 3, 1, 1, 1, 1, '产品模块开发编码1', '', '', 3, 2, 3, 1583043244, 1583043244, '2020-03-03', '2020-03-13', 9, NULL, 3, NULL, 1, 0, 0, 1500000, '', 0, 3, 0, 0, 4, 0, '', 999400000, 0, 0, 0),
 (116, 'example', '116', 1, 3, 1, 1, 1, 1, '日志模块开发x', '', '', 3, 2, 1, 1583044099, 1583079970, '2020-03-02', '2020-03-27', 20, NULL, 3, NULL, 1, 0, 0, 1600000, '12165,12166', 0, 0, 0, 1, 0, 0, '', 998400000, 0, 0, 0),
-(120, 'example', '120', 1, 3, 1, 1, 1, 1, '优化改进事项2', '', '', 3, 2, 1, 1583232765, 1583232765, '2020-03-03', '2020-03-11', 7, NULL, 0, NULL, 2, 0, 0, 200000, '', 0, 0, 0, 0, 0, 0, '', 999900000, 0, 0, 0),
-(139, 'example', '139', 1, 3, 1, 1, 1, 12167, '商城模块编码', '![1cut-202004181604013986.png](/attachment/image/20200418/1cut-202004181604013986.png \"截图-1cut-202004181604013986.png\")', '', 3, 2, 1, 1583242645, 1583242645, '2020-03-03', '2020-03-11', 7, NULL, 3, NULL, 1, 0, 0, 600000, '', 0, 3, 0, 0, 0, 1, '', 999250000, 0, 0, 0),
-(190, 'example', '190', 1, 3, 1, 0, 1, 1, '1111111', '', '', 3, 2, 1, 1591187232, 1591187232, '2020-06-03', '2020-06-04', 2, NULL, 0, NULL, 1, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, '', 499150000, 0, 0, 0),
-(191, 'example', '191', 1, 2, 1, 0, 1, 1, '新功能xxxxxxxxxxxxx', '**功能描述**\r\n一句话简洁清晰的描述功能，例如：\r\n作为一个<用户角色>，在<某种条件或时间>下，我想要<完成活动>，以便于<实现价值>\r\n\r\n**功能点**\r\n1. xx\r\n2. xxx\r\n3. xxxx\r\n\r\n**规则和影响**\r\n1. xx\r\n2. xxx\r\n\r\n**解决方案**\r\n 解决方案的描述\r\n\r\n**备用方案**\r\n 备用方案的描述\r\n\r\n**附加内容**\r\n\r\n', '', 3, 2, 1, 1591193308, 1591193308, '0000-00-00', '0000-00-00', 0, NULL, 5, NULL, 2, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, '', 999800000, 0, 0, 0);
+(120, 'example', '120', 1, 3, 1, 1, 1, 1, '优化改进事项2', '![](http://www.masterlab21.com/attachment/image/20200622/20200622195934_26594.jpg)', '', 3, 2, 1, 1583232765, 1583232765, '2020-03-03', '2020-03-11', 7, NULL, 3, NULL, 2, 0, 0, 1800000, '', 0, 0, 0, 0, 0, 0, '', 999900000, 0, 0, 0),
+(139, 'example', '139', 1, 3, 1, 1, 1, 12167, '商城模块编码', '![1cut-202004181604013986.png](/attachment/image/20200418/1cut-202004181604013986.png \"截图-1cut-202004181604013986.png\")', '', 3, 2, 1, 1583242645, 1583242645, '2020-03-03', '2020-03-11', 7, NULL, 3, NULL, 1, 0, 0, 600000, '', 0, 3, 0, 0, 0, 1, '', 999250000, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -822,9 +915,9 @@ INSERT INTO `issue_main` (`id`, `pkey`, `issue_num`, `project_id`, `issue_type`,
 --
 
 CREATE TABLE `issue_moved_issue_key` (
-  `id` decimal(18,0) NOT NULL,
-  `old_issue_key` varchar(255) DEFAULT NULL,
-  `issue_id` decimal(18,0) DEFAULT NULL
+                                         `id` decimal(18,0) NOT NULL,
+                                         `old_issue_key` varchar(255) DEFAULT NULL,
+                                         `issue_id` decimal(18,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -834,15 +927,15 @@ CREATE TABLE `issue_moved_issue_key` (
 --
 
 CREATE TABLE `issue_priority` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `sequence` int(11) UNSIGNED DEFAULT '0',
-  `name` varchar(60) DEFAULT NULL,
-  `_key` varchar(128) NOT NULL,
-  `description` text,
-  `iconurl` varchar(255) DEFAULT NULL,
-  `status_color` varchar(60) DEFAULT NULL,
-  `font_awesome` varchar(40) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+                                  `id` int UNSIGNED NOT NULL,
+                                  `sequence` int UNSIGNED DEFAULT '0',
+                                  `name` varchar(60) DEFAULT NULL,
+                                  `_key` varchar(128) NOT NULL,
+                                  `description` text,
+                                  `iconurl` varchar(255) DEFAULT NULL,
+                                  `status_color` varchar(60) DEFAULT NULL,
+                                  `font_awesome` varchar(40) DEFAULT NULL,
+                                  `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -863,36 +956,36 @@ INSERT INTO `issue_priority` (`id`, `sequence`, `name`, `_key`, `description`, `
 --
 
 CREATE TABLE `issue_recycle` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `delete_user_id` int(11) UNSIGNED NOT NULL,
-  `issue_id` int(11) UNSIGNED DEFAULT NULL,
-  `pkey` varchar(32) DEFAULT NULL,
-  `issue_num` decimal(18,0) DEFAULT NULL,
-  `project_id` int(11) DEFAULT '0',
-  `issue_type` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `creator` int(11) UNSIGNED DEFAULT '0',
-  `modifier` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `reporter` int(11) DEFAULT '0',
-  `assignee` int(11) DEFAULT '0',
-  `summary` varchar(255) DEFAULT '',
-  `description` text,
-  `environment` varchar(128) DEFAULT '',
-  `priority` int(11) DEFAULT '0',
-  `resolve` int(11) DEFAULT '0',
-  `status` int(11) DEFAULT '0',
-  `created` int(11) DEFAULT '0',
-  `updated` int(11) DEFAULT '0',
-  `start_date` date DEFAULT NULL,
-  `due_date` date DEFAULT NULL,
-  `resolve_date` datetime DEFAULT NULL,
-  `workflow_id` int(11) DEFAULT '0',
-  `module` int(11) DEFAULT '0',
-  `milestone` varchar(20) DEFAULT NULL,
-  `sprint` int(11) NOT NULL DEFAULT '0',
-  `assistants` varchar(256) NOT NULL DEFAULT '',
-  `master_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
-  `data` text,
-  `time` int(11) UNSIGNED DEFAULT NULL
+                                 `id` int UNSIGNED NOT NULL,
+                                 `delete_user_id` int UNSIGNED NOT NULL,
+                                 `issue_id` int UNSIGNED DEFAULT NULL,
+                                 `pkey` varchar(32) DEFAULT NULL,
+                                 `issue_num` decimal(18,0) DEFAULT NULL,
+                                 `project_id` int DEFAULT '0',
+                                 `issue_type` int UNSIGNED NOT NULL DEFAULT '0',
+                                 `creator` int UNSIGNED DEFAULT '0',
+                                 `modifier` int UNSIGNED NOT NULL DEFAULT '0',
+                                 `reporter` int DEFAULT '0',
+                                 `assignee` int DEFAULT '0',
+                                 `summary` varchar(255) DEFAULT '',
+                                 `description` text,
+                                 `environment` varchar(128) DEFAULT '',
+                                 `priority` int DEFAULT '0',
+                                 `resolve` int DEFAULT '0',
+                                 `status` int DEFAULT '0',
+                                 `created` int DEFAULT '0',
+                                 `updated` int DEFAULT '0',
+                                 `start_date` date DEFAULT NULL,
+                                 `due_date` date DEFAULT NULL,
+                                 `resolve_date` datetime DEFAULT NULL,
+                                 `workflow_id` int DEFAULT '0',
+                                 `module` int DEFAULT '0',
+                                 `milestone` varchar(20) DEFAULT NULL,
+                                 `sprint` int NOT NULL DEFAULT '0',
+                                 `assistants` varchar(256) NOT NULL DEFAULT '',
+                                 `master_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
+                                 `data` text,
+                                 `time` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -900,9 +993,10 @@ CREATE TABLE `issue_recycle` (
 --
 
 INSERT INTO `issue_recycle` (`id`, `delete_user_id`, `issue_id`, `pkey`, `issue_num`, `project_id`, `issue_type`, `creator`, `modifier`, `reporter`, `assignee`, `summary`, `description`, `environment`, `priority`, `resolve`, `status`, `created`, `updated`, `start_date`, `due_date`, `resolve_date`, `workflow_id`, `module`, `milestone`, `sprint`, `assistants`, `master_id`, `data`, `time`) VALUES
-(1, 1, 182, NULL, NULL, 36, 0, 0, 0, 0, 0, 'wwwwwwwwwwwwww', NULL, '', 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, 0, NULL, 0, '', 0, '{\"pkey\":\"ex\",\"issue_num\":\"182\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"wwwwwwwwwwwwww\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1590744940\",\"updated\":\"1590744940\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"duration\":\"0\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999500000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\",\"delete_user_id\":\"1\"}', 1591005381),
-(2, 1, 181, NULL, NULL, 36, 0, 0, 0, 0, 0, 'XXXXXXXXX', NULL, '', 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, 0, NULL, 0, '', 0, '{\"pkey\":\"ex\",\"issue_num\":\"181\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"XXXXXXXXX\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1590744702\",\"updated\":\"1590744702\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"duration\":\"0\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999600000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\",\"delete_user_id\":\"1\"}', 1591005381),
-(3, 1, 189, NULL, NULL, 36, 0, 0, 0, 0, 0, 'XXXXXXXXXXXXXXX', NULL, '', 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, 0, NULL, 0, '', 0, '{\"pkey\":\"ex\",\"issue_num\":\"189\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12255\",\"summary\":\"XXXXXXXXXXXXXXX\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":\"5\",\"created\":\"1591062918\",\"updated\":\"1591062918\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"duration\":\"0\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999700000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\",\"delete_user_id\":\"1\"}', 1591064143);
+(1, 1, 225, NULL, NULL, 36, 0, 0, 0, 0, 0, 'wwwwwww', NULL, '', 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, 0, NULL, 0, '', 0, '{\"pkey\":\"ex\",\"issue_num\":\"225\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"12255\",\"summary\":\"wwwwwww\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1603892762\",\"updated\":\"1603892762\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"duration\":\"0\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999400000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\",\"delete_user_id\":\"1\"}', 1604320311),
+(2, 1, 224, NULL, NULL, 36, 0, 0, 0, 0, 0, 'wwwwwww', NULL, '', 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, 0, NULL, 0, '', 0, '{\"pkey\":\"ex\",\"issue_num\":\"224\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"12255\",\"summary\":\"wwwwwww\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1603892374\",\"updated\":\"1603892374\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"duration\":\"0\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999500000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\",\"delete_user_id\":\"1\"}', 1604320311),
+(3, 1, 223, NULL, NULL, 36, 0, 0, 0, 0, 0, 'wwwwwww', NULL, '', 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, 0, NULL, 0, '', 0, '{\"pkey\":\"ex\",\"issue_num\":\"223\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"12255\",\"summary\":\"wwwwwww\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1603892364\",\"updated\":\"1603892364\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"duration\":\"0\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999600000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\",\"delete_user_id\":\"1\"}', 1604320311),
+(4, 1, 192, NULL, NULL, 36, 0, 0, 0, 0, 0, 'xxxxxxxxxxxxxx', NULL, '', 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, 0, NULL, 0, '', 0, '{\"pkey\":\"ex\",\"issue_num\":\"192\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"xxxxxxxxxxxxxx\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1591264369\",\"updated\":\"1591264369\",\"start_date\":\"2020-06-04\",\"due_date\":\"2020-06-20\",\"duration\":\"12\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"0\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"0\",\"depends\":\"\",\"gant_sprint_weight\":\"999700000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\",\"delete_user_id\":\"1\"}', 1604320311);
 
 -- --------------------------------------------------------
 
@@ -911,14 +1005,14 @@ INSERT INTO `issue_recycle` (`id`, `delete_user_id`, `issue_id`, `pkey`, `issue_
 --
 
 CREATE TABLE `issue_resolve` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `sequence` int(11) UNSIGNED DEFAULT '0',
-  `name` varchar(60) DEFAULT NULL,
-  `_key` varchar(128) NOT NULL,
-  `description` text,
-  `font_awesome` varchar(32) DEFAULT NULL,
-  `color` varchar(20) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+                                 `id` int UNSIGNED NOT NULL,
+                                 `sequence` int UNSIGNED DEFAULT '0',
+                                 `name` varchar(60) DEFAULT NULL,
+                                 `_key` varchar(128) NOT NULL,
+                                 `description` text,
+                                 `font_awesome` varchar(32) DEFAULT NULL,
+                                 `color` varchar(20) DEFAULT NULL,
+                                 `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -942,15 +1036,15 @@ INSERT INTO `issue_resolve` (`id`, `sequence`, `name`, `_key`, `description`, `f
 --
 
 CREATE TABLE `issue_status` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `sequence` int(11) UNSIGNED DEFAULT '0',
-  `name` varchar(60) DEFAULT NULL,
-  `_key` varchar(20) DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  `font_awesome` varchar(255) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0',
-  `color` varchar(20) DEFAULT NULL COMMENT 'Default Primary Success Info Warning Danger可选',
-  `text_color` varchar(12) NOT NULL DEFAULT 'black' COMMENT '字体颜色'
+                                `id` int UNSIGNED NOT NULL,
+                                `sequence` int UNSIGNED DEFAULT '0',
+                                `name` varchar(60) DEFAULT NULL,
+                                `_key` varchar(20) DEFAULT NULL,
+                                `description` varchar(500) DEFAULT NULL,
+                                `font_awesome` varchar(255) DEFAULT NULL,
+                                `is_system` tinyint UNSIGNED DEFAULT '0',
+                                `color` varchar(20) DEFAULT NULL COMMENT 'Default Primary Success Info Warning Danger可选',
+                                `text_color` varchar(12) NOT NULL DEFAULT 'black' COMMENT '字体颜色'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -974,16 +1068,16 @@ INSERT INTO `issue_status` (`id`, `sequence`, `name`, `_key`, `description`, `fo
 --
 
 CREATE TABLE `issue_type` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `sequence` decimal(18,0) DEFAULT NULL,
-  `name` varchar(60) DEFAULT NULL,
-  `_key` varchar(64) NOT NULL,
-  `catalog` enum('Custom','Kanban','Scrum','Standard') DEFAULT 'Standard' COMMENT '类型',
-  `description` text,
-  `font_awesome` varchar(20) DEFAULT NULL,
-  `custom_icon_url` varchar(128) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0',
-  `form_desc_tpl_id` int(11) UNSIGNED DEFAULT '0' COMMENT '创建事项时,描述字段对应的模板id'
+                              `id` int UNSIGNED NOT NULL,
+                              `sequence` decimal(18,0) DEFAULT NULL,
+                              `name` varchar(60) DEFAULT NULL,
+                              `_key` varchar(64) NOT NULL,
+                              `catalog` enum('Custom','Kanban','Scrum','Standard') DEFAULT 'Standard' COMMENT '类型',
+                              `description` text,
+                              `font_awesome` varchar(20) DEFAULT NULL,
+                              `custom_icon_url` varchar(128) DEFAULT NULL,
+                              `is_system` tinyint UNSIGNED DEFAULT '0',
+                              `form_desc_tpl_id` int UNSIGNED DEFAULT '0' COMMENT '创建事项时,描述字段对应的模板id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1008,10 +1102,10 @@ INSERT INTO `issue_type` (`id`, `sequence`, `name`, `_key`, `catalog`, `descript
 --
 
 CREATE TABLE `issue_type_scheme` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(100) DEFAULT NULL,
-  `is_default` tinyint(1) UNSIGNED DEFAULT '0'
+                                     `id` int UNSIGNED NOT NULL,
+                                     `name` varchar(64) DEFAULT NULL,
+                                     `description` varchar(100) DEFAULT NULL,
+                                     `is_default` tinyint UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题方案表';
 
 --
@@ -1019,7 +1113,7 @@ CREATE TABLE `issue_type_scheme` (
 --
 
 INSERT INTO `issue_type_scheme` (`id`, `name`, `description`, `is_default`) VALUES
-(1, '默认事项方案', '系统默认的事项方案,但没有设定或事项错误时使用该方案', 1),
+(1, '默认事项方案', '系统默认的事项方案', 1),
 (2, '敏捷开发事项方案', '敏捷开发适用的方案', 1),
 (5, '任务管理事项解决方案', '任务管理', 1);
 
@@ -1030,9 +1124,9 @@ INSERT INTO `issue_type_scheme` (`id`, `name`, `description`, `is_default`) VALU
 --
 
 CREATE TABLE `issue_type_scheme_data` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `scheme_id` int(11) UNSIGNED DEFAULT NULL,
-  `type_id` int(11) UNSIGNED DEFAULT NULL
+                                          `id` int UNSIGNED NOT NULL,
+                                          `scheme_id` int UNSIGNED DEFAULT NULL,
+                                          `type_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题方案字表';
 
 --
@@ -1042,21 +1136,21 @@ CREATE TABLE `issue_type_scheme_data` (
 INSERT INTO `issue_type_scheme_data` (`id`, `scheme_id`, `type_id`) VALUES
 (3, 3, 1),
 (17, 4, 10000),
-(446, 1, 1),
-(447, 1, 2),
-(448, 1, 3),
-(449, 1, 4),
-(450, 1, 5),
-(468, 5, 3),
-(469, 5, 4),
-(470, 5, 5),
 (471, 2, 1),
 (472, 2, 2),
 (473, 2, 3),
 (474, 2, 4),
 (475, 2, 6),
 (476, 2, 7),
-(477, 2, 8);
+(477, 2, 8),
+(488, 5, 3),
+(489, 5, 4),
+(490, 5, 5),
+(491, 1, 1),
+(492, 1, 2),
+(493, 1, 3),
+(494, 1, 4),
+(495, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -1065,305 +1159,322 @@ INSERT INTO `issue_type_scheme_data` (`id`, `scheme_id`, `type_id`) VALUES
 --
 
 CREATE TABLE `issue_ui` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `issue_type_id` int(10) UNSIGNED DEFAULT NULL,
-  `ui_type` varchar(10) DEFAULT '',
-  `field_id` int(10) UNSIGNED DEFAULT NULL,
-  `order_weight` int(10) UNSIGNED DEFAULT NULL,
-  `tab_id` int(11) UNSIGNED DEFAULT '0',
-  `required` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否必填项'
+                            `id` int UNSIGNED NOT NULL,
+                            `schem_id` int UNSIGNED NOT NULL DEFAULT '1' COMMENT '所属方案id',
+                            `issue_type_id` int UNSIGNED DEFAULT NULL,
+                            `ui_type` varchar(10) DEFAULT '',
+                            `field_id` int UNSIGNED DEFAULT NULL,
+                            `order_weight` int UNSIGNED DEFAULT NULL,
+                            `tab_id` int UNSIGNED DEFAULT '0',
+                            `required` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否必填项'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_ui`
 --
 
-INSERT INTO `issue_ui` (`id`, `issue_type_id`, `ui_type`, `field_id`, `order_weight`, `tab_id`, `required`) VALUES
-(205, 8, 'create', 1, 3, 0, 1),
-(206, 8, 'create', 2, 2, 0, 0),
-(207, 8, 'create', 3, 1, 0, 0),
-(208, 8, 'create', 4, 0, 0, 0),
-(209, 8, 'create', 5, 0, 2, 0),
-(210, 8, 'create', 6, 3, 0, 0),
-(211, 8, 'create', 7, 2, 0, 0),
-(212, 8, 'create', 8, 1, 0, 0),
-(213, 8, 'create', 9, 1, 0, 0),
-(214, 8, 'create', 10, 0, 0, 0),
-(215, 8, 'create', 11, 0, 0, 0),
-(216, 8, 'create', 12, 0, 0, 0),
-(217, 8, 'create', 13, 0, 0, 0),
-(218, 8, 'create', 14, 0, 0, 0),
-(219, 8, 'create', 15, 0, 0, 0),
-(220, 8, 'create', 16, 0, 0, 0),
-(221, 8, 'edit', 1, 3, 0, 1),
-(222, 8, 'edit', 2, 2, 0, 0),
-(223, 8, 'edit', 3, 1, 0, 0),
-(224, 8, 'edit', 4, 0, 0, 0),
-(225, 8, 'edit', 5, 0, 2, 0),
-(226, 8, 'edit', 6, 3, 0, 0),
-(227, 8, 'edit', 7, 2, 0, 0),
-(228, 8, 'edit', 8, 1, 0, 0),
-(229, 8, 'edit', 9, 1, 0, 0),
-(230, 8, 'edit', 10, 0, 0, 0),
-(231, 8, 'edit', 11, 0, 0, 0),
-(232, 8, 'edit', 12, 0, 0, 0),
-(233, 8, 'edit', 13, 0, 0, 0),
-(234, 8, 'edit', 14, 0, 0, 0),
-(235, 8, 'edit', 15, 0, 0, 0),
-(236, 8, 'edit', 16, 0, 0, 0),
-(422, 4, 'create', 1, 14, 0, 1),
-(423, 4, 'create', 6, 13, 0, 0),
-(424, 4, 'create', 2, 12, 0, 0),
-(425, 4, 'create', 3, 11, 0, 0),
-(426, 4, 'create', 7, 10, 0, 0),
-(427, 4, 'create', 9, 9, 0, 0),
-(428, 4, 'create', 8, 8, 0, 0),
-(429, 4, 'create', 4, 7, 0, 0),
-(430, 4, 'create', 19, 6, 0, 0),
-(431, 4, 'create', 10, 5, 0, 0),
-(432, 4, 'create', 11, 4, 0, 0),
-(433, 4, 'create', 12, 3, 0, 0),
-(434, 4, 'create', 13, 2, 0, 0),
-(435, 4, 'create', 15, 1, 0, 0),
-(436, 4, 'create', 20, 0, 0, 0),
-(452, 5, 'create', 1, 14, 0, 1),
-(453, 5, 'create', 6, 13, 0, 0),
-(454, 5, 'create', 2, 12, 0, 0),
-(455, 5, 'create', 7, 11, 0, 0),
-(456, 5, 'create', 9, 10, 0, 0),
-(457, 5, 'create', 8, 9, 0, 0),
-(458, 5, 'create', 3, 8, 0, 0),
-(459, 5, 'create', 4, 7, 0, 0),
-(460, 5, 'create', 19, 6, 0, 0),
-(461, 5, 'create', 10, 5, 0, 0),
-(462, 5, 'create', 11, 4, 0, 0),
-(463, 5, 'create', 12, 3, 0, 0),
-(464, 5, 'create', 13, 2, 0, 0),
-(465, 5, 'create', 15, 1, 0, 0),
-(466, 5, 'create', 20, 0, 0, 0),
-(467, 5, 'edit', 1, 14, 0, 1),
-(468, 5, 'edit', 6, 13, 0, 0),
-(469, 5, 'edit', 2, 12, 0, 0),
-(470, 5, 'edit', 7, 11, 0, 0),
-(471, 5, 'edit', 9, 10, 0, 0),
-(472, 5, 'edit', 8, 9, 0, 0),
-(473, 5, 'edit', 3, 8, 0, 0),
-(474, 5, 'edit', 4, 7, 0, 0),
-(475, 5, 'edit', 19, 6, 0, 0),
-(476, 5, 'edit', 10, 5, 0, 0),
-(477, 5, 'edit', 11, 4, 0, 0),
-(478, 5, 'edit', 12, 3, 0, 0),
-(479, 5, 'edit', 13, 2, 0, 0),
-(480, 5, 'edit', 15, 1, 0, 0),
-(481, 5, 'edit', 20, 0, 0, 0),
-(587, 6, 'create', 1, 7, 0, 1),
-(588, 6, 'create', 6, 6, 0, 0),
-(589, 6, 'create', 2, 5, 0, 0),
-(590, 6, 'create', 8, 4, 0, 0),
-(591, 6, 'create', 11, 3, 0, 0),
-(592, 6, 'create', 4, 2, 0, 0),
-(593, 6, 'create', 21, 1, 0, 0),
-(594, 6, 'create', 15, 0, 0, 0),
-(595, 6, 'create', 19, 6, 33, 0),
-(596, 6, 'create', 10, 5, 33, 0),
-(597, 6, 'create', 7, 4, 33, 0),
-(598, 6, 'create', 20, 3, 33, 0),
-(599, 6, 'create', 9, 2, 33, 0),
-(600, 6, 'create', 13, 1, 33, 0),
-(601, 6, 'create', 12, 0, 33, 0),
-(602, 6, 'edit', 1, 7, 0, 1),
-(603, 6, 'edit', 6, 6, 0, 0),
-(604, 6, 'edit', 2, 5, 0, 0),
-(605, 6, 'edit', 8, 4, 0, 0),
-(606, 6, 'edit', 4, 3, 0, 0),
-(607, 6, 'edit', 11, 2, 0, 0),
-(608, 6, 'edit', 15, 1, 0, 0),
-(609, 6, 'edit', 21, 0, 0, 0),
-(610, 6, 'edit', 19, 6, 34, 0),
-(611, 6, 'edit', 10, 5, 34, 0),
-(612, 6, 'edit', 7, 4, 34, 0),
-(613, 6, 'edit', 20, 3, 34, 0),
-(614, 6, 'edit', 9, 2, 34, 0),
-(615, 6, 'edit', 12, 1, 34, 0),
-(616, 6, 'edit', 13, 0, 34, 0),
-(646, 7, 'create', 1, 7, 0, 1),
-(647, 7, 'create', 6, 6, 0, 0),
-(648, 7, 'create', 2, 5, 0, 0),
-(649, 7, 'create', 8, 4, 0, 0),
-(650, 7, 'create', 4, 3, 0, 0),
-(651, 7, 'create', 11, 2, 0, 0),
-(652, 7, 'create', 15, 1, 0, 0),
-(653, 7, 'create', 21, 0, 0, 0),
-(654, 7, 'create', 19, 6, 37, 0),
-(655, 7, 'create', 10, 5, 37, 0),
-(656, 7, 'create', 7, 4, 37, 0),
-(657, 7, 'create', 20, 3, 37, 0),
-(658, 7, 'create', 9, 2, 37, 0),
-(659, 7, 'create', 13, 1, 37, 0),
-(660, 7, 'create', 12, 0, 37, 0),
-(1060, 9, 'create', 1, 4, 0, 1),
-(1061, 9, 'create', 19, 3, 0, 0),
-(1062, 9, 'create', 3, 2, 0, 0),
-(1063, 9, 'create', 6, 1, 0, 0),
-(1064, 9, 'create', 4, 0, 0, 0),
-(1080, 7, 'edit', 1, 7, 0, 0),
-(1081, 7, 'edit', 6, 6, 0, 0),
-(1082, 7, 'edit', 2, 5, 0, 0),
-(1083, 7, 'edit', 8, 4, 0, 0),
-(1084, 7, 'edit', 4, 3, 0, 0),
-(1085, 7, 'edit', 11, 2, 0, 0),
-(1086, 7, 'edit', 15, 1, 0, 0),
-(1087, 7, 'edit', 21, 0, 0, 0),
-(1088, 7, 'edit', 19, 6, 63, 0),
-(1089, 7, 'edit', 10, 5, 63, 0),
-(1090, 7, 'edit', 7, 4, 63, 0),
-(1091, 7, 'edit', 9, 3, 63, 0),
-(1092, 7, 'edit', 20, 2, 63, 0),
-(1093, 7, 'edit', 12, 1, 63, 0),
-(1094, 7, 'edit', 13, 0, 63, 0),
-(1095, 4, 'edit', 1, 11, 0, 0),
-(1096, 4, 'edit', 6, 10, 0, 0),
-(1097, 4, 'edit', 2, 9, 0, 0),
-(1098, 4, 'edit', 7, 8, 0, 0),
-(1099, 4, 'edit', 4, 7, 0, 0),
-(1100, 4, 'edit', 19, 6, 0, 0),
-(1101, 4, 'edit', 11, 5, 0, 0),
-(1102, 4, 'edit', 12, 4, 0, 0),
-(1103, 4, 'edit', 13, 3, 0, 0),
-(1104, 4, 'edit', 15, 2, 0, 0),
-(1105, 4, 'edit', 20, 1, 0, 0),
-(1106, 4, 'edit', 21, 0, 0, 0),
-(1107, 4, 'edit', 8, 3, 64, 0),
-(1108, 4, 'edit', 9, 2, 64, 0),
-(1109, 4, 'edit', 3, 1, 64, 0),
-(1110, 4, 'edit', 10, 0, 64, 0),
-(1414, 12, 'edit', 1, 8, 0, 1),
-(1415, 12, 'edit', 4, 7, 0, 1),
-(1416, 12, 'edit', 15, 6, 0, 1),
-(1417, 12, 'edit', 12, 5, 0, 1),
-(1418, 12, 'edit', 13, 4, 0, 1),
-(1419, 12, 'edit', 27, 3, 0, 0),
-(1420, 12, 'edit', 28, 2, 0, 0),
-(1421, 12, 'edit', 29, 1, 0, 0),
-(1422, 12, 'edit', 6, 0, 0, 0),
-(1423, 12, 'create', 1, 8, 0, 1),
-(1424, 12, 'create', 4, 7, 0, 1),
-(1425, 12, 'create', 15, 6, 0, 1),
-(1426, 12, 'create', 12, 5, 0, 1),
-(1427, 12, 'create', 27, 4, 0, 0),
-(1428, 12, 'create', 13, 3, 0, 1),
-(1429, 12, 'create', 28, 2, 0, 0),
-(1430, 12, 'create', 29, 1, 0, 0),
-(1431, 12, 'create', 6, 0, 0, 0),
-(1432, 2, 'create', 1, 10, 0, 1),
-(1433, 2, 'create', 6, 9, 0, 0),
-(1434, 2, 'create', 19, 8, 0, 0),
-(1435, 2, 'create', 2, 7, 0, 0),
-(1436, 2, 'create', 7, 6, 0, 0),
-(1437, 2, 'create', 4, 5, 0, 0),
-(1438, 2, 'create', 11, 4, 0, 0),
-(1439, 2, 'create', 12, 3, 0, 0),
-(1440, 2, 'create', 13, 2, 0, 0),
-(1441, 2, 'create', 15, 1, 0, 0),
-(1442, 2, 'create', 21, 0, 0, 0),
-(1443, 2, 'create', 10, 4, 81, 0),
-(1444, 2, 'create', 20, 3, 81, 0),
-(1445, 2, 'create', 9, 2, 81, 0),
-(1446, 2, 'create', 3, 1, 81, 0),
-(1447, 2, 'create', 26, 0, 81, 0),
-(1448, 2, 'edit', 1, 11, 0, 1),
-(1449, 2, 'edit', 19, 10, 0, 0),
-(1450, 2, 'edit', 10, 9, 0, 0),
-(1451, 2, 'edit', 6, 8, 0, 0),
-(1452, 2, 'edit', 2, 7, 0, 0),
-(1453, 2, 'edit', 7, 6, 0, 0),
-(1454, 2, 'edit', 4, 5, 0, 0),
-(1455, 2, 'edit', 11, 4, 0, 0),
-(1456, 2, 'edit', 12, 3, 0, 0),
-(1457, 2, 'edit', 13, 2, 0, 0),
-(1458, 2, 'edit', 15, 1, 0, 1),
-(1459, 2, 'edit', 21, 0, 0, 0),
-(1460, 2, 'edit', 20, 3, 82, 0),
-(1461, 2, 'edit', 9, 2, 82, 0),
-(1462, 2, 'edit', 3, 1, 82, 0),
-(1463, 2, 'edit', 26, 0, 82, 0),
-(1625, 3, 'create', 1, 12, 0, 1),
-(1626, 3, 'create', 6, 11, 0, 0),
-(1627, 3, 'create', 2, 10, 0, 0),
-(1628, 3, 'create', 7, 9, 0, 0),
-(1629, 3, 'create', 8, 8, 0, 0),
-(1630, 3, 'create', 4, 7, 0, 0),
-(1631, 3, 'create', 20, 6, 0, 0),
-(1632, 3, 'create', 19, 5, 0, 0),
-(1633, 3, 'create', 10, 4, 0, 0),
-(1634, 3, 'create', 11, 3, 0, 0),
-(1635, 3, 'create', 12, 2, 0, 0),
-(1636, 3, 'create', 13, 1, 0, 0),
-(1637, 3, 'create', 15, 0, 0, 0),
-(1638, 3, 'create', 3, 4, 90, 0),
-(1639, 3, 'create', 9, 3, 90, 0),
-(1640, 3, 'create', 21, 2, 90, 0),
-(1641, 3, 'create', 23, 1, 90, 0),
-(1642, 3, 'create', 26, 0, 90, 0),
-(1643, 3, 'edit', 1, 13, 0, 1),
-(1644, 3, 'edit', 6, 12, 0, 0),
-(1645, 3, 'edit', 2, 11, 0, 0),
-(1646, 3, 'edit', 7, 10, 0, 0),
-(1647, 3, 'edit', 8, 9, 0, 0),
-(1648, 3, 'edit', 4, 8, 0, 0),
-(1649, 3, 'edit', 20, 7, 0, 0),
-(1650, 3, 'edit', 19, 6, 0, 0),
-(1651, 3, 'edit', 10, 5, 0, 0),
-(1652, 3, 'edit', 11, 4, 0, 0),
-(1653, 3, 'edit', 12, 3, 0, 0),
-(1654, 3, 'edit', 13, 2, 0, 0),
-(1655, 3, 'edit', 26, 1, 0, 0),
-(1656, 3, 'edit', 15, 0, 0, 0),
-(1657, 3, 'edit', 9, 3, 91, 0),
-(1658, 3, 'edit', 3, 2, 91, 0),
-(1659, 3, 'edit', 23, 1, 91, 0),
-(1660, 3, 'edit', 21, 0, 91, 0),
-(2188, 1, 'create', 1, 11, 0, 1),
-(2189, 1, 'create', 6, 10, 0, 0),
-(2190, 1, 'create', 2, 9, 0, 1),
-(2191, 1, 'create', 7, 8, 0, 0),
-(2192, 1, 'create', 4, 7, 0, 1),
-(2193, 1, 'create', 11, 6, 0, 0),
-(2194, 1, 'create', 12, 5, 0, 0),
-(2195, 1, 'create', 13, 4, 0, 0),
-(2196, 1, 'create', 15, 3, 0, 0),
-(2197, 1, 'create', 23, 2, 0, 0),
-(2198, 1, 'create', 35, 1, 0, 0),
-(2199, 1, 'create', 36, 0, 0, 0),
-(2200, 1, 'create', 19, 9, 117, 0),
-(2201, 1, 'create', 10, 8, 117, 0),
-(2202, 1, 'create', 20, 7, 117, 0),
-(2203, 1, 'create', 18, 6, 117, 0),
-(2204, 1, 'create', 3, 5, 117, 0),
-(2205, 1, 'create', 21, 4, 117, 0),
-(2206, 1, 'create', 8, 3, 117, 0),
-(2207, 1, 'create', 9, 2, 117, 0),
-(2208, 1, 'create', 29, 1, 117, 0),
-(2209, 1, 'create', 28, 0, 117, 0),
-(2210, 1, 'edit', 1, 12, 0, 1),
-(2211, 1, 'edit', 6, 11, 0, 0),
-(2212, 1, 'edit', 2, 10, 0, 1),
-(2213, 1, 'edit', 19, 9, 0, 0),
-(2214, 1, 'edit', 10, 8, 0, 0),
-(2215, 1, 'edit', 7, 7, 0, 0),
-(2216, 1, 'edit', 4, 6, 0, 1),
-(2217, 1, 'edit', 11, 5, 0, 0),
-(2218, 1, 'edit', 12, 4, 0, 0),
-(2219, 1, 'edit', 13, 3, 0, 0),
-(2220, 1, 'edit', 15, 2, 0, 0),
-(2221, 1, 'edit', 35, 1, 0, 0),
-(2222, 1, 'edit', 36, 0, 0, 0),
-(2223, 1, 'edit', 3, 5, 118, 0),
-(2224, 1, 'edit', 18, 4, 118, 0),
-(2225, 1, 'edit', 20, 3, 118, 0),
-(2226, 1, 'edit', 21, 2, 118, 0),
-(2227, 1, 'edit', 8, 1, 118, 0),
-(2228, 1, 'edit', 9, 0, 118, 0);
+INSERT INTO `issue_ui` (`id`, `schem_id`, `issue_type_id`, `ui_type`, `field_id`, `order_weight`, `tab_id`, `required`) VALUES
+(205, 1, 8, 'create', 1, 3, 0, 1),
+(206, 1, 8, 'create', 2, 2, 0, 0),
+(207, 1, 8, 'create', 3, 1, 0, 0),
+(208, 1, 8, 'create', 4, 0, 0, 0),
+(209, 1, 8, 'create', 5, 0, 2, 0),
+(210, 1, 8, 'create', 6, 3, 0, 0),
+(211, 1, 8, 'create', 7, 2, 0, 0),
+(212, 1, 8, 'create', 8, 1, 0, 0),
+(213, 1, 8, 'create', 9, 1, 0, 0),
+(214, 1, 8, 'create', 10, 0, 0, 0),
+(215, 1, 8, 'create', 11, 0, 0, 0),
+(216, 1, 8, 'create', 12, 0, 0, 0),
+(217, 1, 8, 'create', 13, 0, 0, 0),
+(218, 1, 8, 'create', 14, 0, 0, 0),
+(219, 1, 8, 'create', 15, 0, 0, 0),
+(220, 1, 8, 'create', 16, 0, 0, 0),
+(221, 1, 8, 'edit', 1, 3, 0, 1),
+(222, 1, 8, 'edit', 2, 2, 0, 0),
+(223, 1, 8, 'edit', 3, 1, 0, 0),
+(224, 1, 8, 'edit', 4, 0, 0, 0),
+(225, 1, 8, 'edit', 5, 0, 2, 0),
+(226, 1, 8, 'edit', 6, 3, 0, 0),
+(227, 1, 8, 'edit', 7, 2, 0, 0),
+(228, 1, 8, 'edit', 8, 1, 0, 0),
+(229, 1, 8, 'edit', 9, 1, 0, 0),
+(230, 1, 8, 'edit', 10, 0, 0, 0),
+(231, 1, 8, 'edit', 11, 0, 0, 0),
+(232, 1, 8, 'edit', 12, 0, 0, 0),
+(233, 1, 8, 'edit', 13, 0, 0, 0),
+(234, 1, 8, 'edit', 14, 0, 0, 0),
+(235, 1, 8, 'edit', 15, 0, 0, 0),
+(236, 1, 8, 'edit', 16, 0, 0, 0),
+(422, 1, 4, 'create', 1, 14, 0, 1),
+(423, 1, 4, 'create', 6, 13, 0, 0),
+(424, 1, 4, 'create', 2, 12, 0, 0),
+(425, 1, 4, 'create', 3, 11, 0, 0),
+(426, 1, 4, 'create', 7, 10, 0, 0),
+(427, 1, 4, 'create', 9, 9, 0, 0),
+(428, 1, 4, 'create', 8, 8, 0, 0),
+(429, 1, 4, 'create', 4, 7, 0, 0),
+(430, 1, 4, 'create', 19, 6, 0, 0),
+(431, 1, 4, 'create', 10, 5, 0, 0),
+(432, 1, 4, 'create', 11, 4, 0, 0),
+(433, 1, 4, 'create', 12, 3, 0, 0),
+(434, 1, 4, 'create', 13, 2, 0, 0),
+(435, 1, 4, 'create', 15, 1, 0, 0),
+(436, 1, 4, 'create', 20, 0, 0, 0),
+(452, 1, 5, 'create', 1, 14, 0, 1),
+(453, 1, 5, 'create', 6, 13, 0, 0),
+(454, 1, 5, 'create', 2, 12, 0, 0),
+(455, 1, 5, 'create', 7, 11, 0, 0),
+(456, 1, 5, 'create', 9, 10, 0, 0),
+(457, 1, 5, 'create', 8, 9, 0, 0),
+(458, 1, 5, 'create', 3, 8, 0, 0),
+(459, 1, 5, 'create', 4, 7, 0, 0),
+(460, 1, 5, 'create', 19, 6, 0, 0),
+(461, 1, 5, 'create', 10, 5, 0, 0),
+(462, 1, 5, 'create', 11, 4, 0, 0),
+(463, 1, 5, 'create', 12, 3, 0, 0),
+(464, 1, 5, 'create', 13, 2, 0, 0),
+(465, 1, 5, 'create', 15, 1, 0, 0),
+(466, 1, 5, 'create', 20, 0, 0, 0),
+(467, 1, 5, 'edit', 1, 14, 0, 1),
+(468, 1, 5, 'edit', 6, 13, 0, 0),
+(469, 1, 5, 'edit', 2, 12, 0, 0),
+(470, 1, 5, 'edit', 7, 11, 0, 0),
+(471, 1, 5, 'edit', 9, 10, 0, 0),
+(472, 1, 5, 'edit', 8, 9, 0, 0),
+(473, 1, 5, 'edit', 3, 8, 0, 0),
+(474, 1, 5, 'edit', 4, 7, 0, 0),
+(475, 1, 5, 'edit', 19, 6, 0, 0),
+(476, 1, 5, 'edit', 10, 5, 0, 0),
+(477, 1, 5, 'edit', 11, 4, 0, 0),
+(478, 1, 5, 'edit', 12, 3, 0, 0),
+(479, 1, 5, 'edit', 13, 2, 0, 0),
+(480, 1, 5, 'edit', 15, 1, 0, 0),
+(481, 1, 5, 'edit', 20, 0, 0, 0),
+(587, 1, 6, 'create', 1, 7, 0, 1),
+(588, 1, 6, 'create', 6, 6, 0, 0),
+(589, 1, 6, 'create', 2, 5, 0, 0),
+(590, 1, 6, 'create', 8, 4, 0, 0),
+(591, 1, 6, 'create', 11, 3, 0, 0),
+(592, 1, 6, 'create', 4, 2, 0, 0),
+(593, 1, 6, 'create', 21, 1, 0, 0),
+(594, 1, 6, 'create', 15, 0, 0, 0),
+(595, 1, 6, 'create', 19, 6, 33, 0),
+(596, 1, 6, 'create', 10, 5, 33, 0),
+(597, 1, 6, 'create', 7, 4, 33, 0),
+(598, 1, 6, 'create', 20, 3, 33, 0),
+(599, 1, 6, 'create', 9, 2, 33, 0),
+(600, 1, 6, 'create', 13, 1, 33, 0),
+(601, 1, 6, 'create', 12, 0, 33, 0),
+(602, 1, 6, 'edit', 1, 7, 0, 1),
+(603, 1, 6, 'edit', 6, 6, 0, 0),
+(604, 1, 6, 'edit', 2, 5, 0, 0),
+(605, 1, 6, 'edit', 8, 4, 0, 0),
+(606, 1, 6, 'edit', 4, 3, 0, 0),
+(607, 1, 6, 'edit', 11, 2, 0, 0),
+(608, 1, 6, 'edit', 15, 1, 0, 0),
+(609, 1, 6, 'edit', 21, 0, 0, 0),
+(610, 1, 6, 'edit', 19, 6, 34, 0),
+(611, 1, 6, 'edit', 10, 5, 34, 0),
+(612, 1, 6, 'edit', 7, 4, 34, 0),
+(613, 1, 6, 'edit', 20, 3, 34, 0),
+(614, 1, 6, 'edit', 9, 2, 34, 0),
+(615, 1, 6, 'edit', 12, 1, 34, 0),
+(616, 1, 6, 'edit', 13, 0, 34, 0),
+(646, 1, 7, 'create', 1, 7, 0, 1),
+(647, 1, 7, 'create', 6, 6, 0, 0),
+(648, 1, 7, 'create', 2, 5, 0, 0),
+(649, 1, 7, 'create', 8, 4, 0, 0),
+(650, 1, 7, 'create', 4, 3, 0, 0),
+(651, 1, 7, 'create', 11, 2, 0, 0),
+(652, 1, 7, 'create', 15, 1, 0, 0),
+(653, 1, 7, 'create', 21, 0, 0, 0),
+(654, 1, 7, 'create', 19, 6, 37, 0),
+(655, 1, 7, 'create', 10, 5, 37, 0),
+(656, 1, 7, 'create', 7, 4, 37, 0),
+(657, 1, 7, 'create', 20, 3, 37, 0),
+(658, 1, 7, 'create', 9, 2, 37, 0),
+(659, 1, 7, 'create', 13, 1, 37, 0),
+(660, 1, 7, 'create', 12, 0, 37, 0),
+(1060, 1, 9, 'create', 1, 4, 0, 1),
+(1061, 1, 9, 'create', 19, 3, 0, 0),
+(1062, 1, 9, 'create', 3, 2, 0, 0),
+(1063, 1, 9, 'create', 6, 1, 0, 0),
+(1064, 1, 9, 'create', 4, 0, 0, 0),
+(1080, 1, 7, 'edit', 1, 7, 0, 0),
+(1081, 1, 7, 'edit', 6, 6, 0, 0),
+(1082, 1, 7, 'edit', 2, 5, 0, 0),
+(1083, 1, 7, 'edit', 8, 4, 0, 0),
+(1084, 1, 7, 'edit', 4, 3, 0, 0),
+(1085, 1, 7, 'edit', 11, 2, 0, 0),
+(1086, 1, 7, 'edit', 15, 1, 0, 0),
+(1087, 1, 7, 'edit', 21, 0, 0, 0),
+(1088, 1, 7, 'edit', 19, 6, 63, 0),
+(1089, 1, 7, 'edit', 10, 5, 63, 0),
+(1090, 1, 7, 'edit', 7, 4, 63, 0),
+(1091, 1, 7, 'edit', 9, 3, 63, 0),
+(1092, 1, 7, 'edit', 20, 2, 63, 0),
+(1093, 1, 7, 'edit', 12, 1, 63, 0),
+(1094, 1, 7, 'edit', 13, 0, 63, 0),
+(1095, 1, 4, 'edit', 1, 11, 0, 0),
+(1096, 1, 4, 'edit', 6, 10, 0, 0),
+(1097, 1, 4, 'edit', 2, 9, 0, 0),
+(1098, 1, 4, 'edit', 7, 8, 0, 0),
+(1099, 1, 4, 'edit', 4, 7, 0, 0),
+(1100, 1, 4, 'edit', 19, 6, 0, 0),
+(1101, 1, 4, 'edit', 11, 5, 0, 0),
+(1102, 1, 4, 'edit', 12, 4, 0, 0),
+(1103, 1, 4, 'edit', 13, 3, 0, 0),
+(1104, 1, 4, 'edit', 15, 2, 0, 0),
+(1105, 1, 4, 'edit', 20, 1, 0, 0),
+(1106, 1, 4, 'edit', 21, 0, 0, 0),
+(1107, 1, 4, 'edit', 8, 3, 64, 0),
+(1108, 1, 4, 'edit', 9, 2, 64, 0),
+(1109, 1, 4, 'edit', 3, 1, 64, 0),
+(1110, 1, 4, 'edit', 10, 0, 64, 0),
+(1414, 1, 12, 'edit', 1, 8, 0, 1),
+(1415, 1, 12, 'edit', 4, 7, 0, 1),
+(1416, 1, 12, 'edit', 15, 6, 0, 1),
+(1417, 1, 12, 'edit', 12, 5, 0, 1),
+(1418, 1, 12, 'edit', 13, 4, 0, 1),
+(1419, 1, 12, 'edit', 27, 3, 0, 0),
+(1420, 1, 12, 'edit', 28, 2, 0, 0),
+(1421, 1, 12, 'edit', 29, 1, 0, 0),
+(1422, 1, 12, 'edit', 6, 0, 0, 0),
+(1423, 1, 12, 'create', 1, 8, 0, 1),
+(1424, 1, 12, 'create', 4, 7, 0, 1),
+(1425, 1, 12, 'create', 15, 6, 0, 1),
+(1426, 1, 12, 'create', 12, 5, 0, 1),
+(1427, 1, 12, 'create', 27, 4, 0, 0),
+(1428, 1, 12, 'create', 13, 3, 0, 1),
+(1429, 1, 12, 'create', 28, 2, 0, 0),
+(1430, 1, 12, 'create', 29, 1, 0, 0),
+(1431, 1, 12, 'create', 6, 0, 0, 0),
+(1432, 1, 2, 'create', 1, 10, 0, 1),
+(1433, 1, 2, 'create', 6, 9, 0, 0),
+(1434, 1, 2, 'create', 19, 8, 0, 0),
+(1435, 1, 2, 'create', 2, 7, 0, 0),
+(1436, 1, 2, 'create', 7, 6, 0, 0),
+(1437, 1, 2, 'create', 4, 5, 0, 0),
+(1438, 1, 2, 'create', 11, 4, 0, 0),
+(1439, 1, 2, 'create', 12, 3, 0, 0),
+(1440, 1, 2, 'create', 13, 2, 0, 0),
+(1441, 1, 2, 'create', 15, 1, 0, 0),
+(1442, 1, 2, 'create', 21, 0, 0, 0),
+(1443, 1, 2, 'create', 10, 4, 81, 0),
+(1444, 1, 2, 'create', 20, 3, 81, 0),
+(1445, 1, 2, 'create', 9, 2, 81, 0),
+(1446, 1, 2, 'create', 3, 1, 81, 0),
+(1447, 1, 2, 'create', 26, 0, 81, 0),
+(1448, 1, 2, 'edit', 1, 11, 0, 1),
+(1449, 1, 2, 'edit', 19, 10, 0, 0),
+(1450, 1, 2, 'edit', 10, 9, 0, 0),
+(1451, 1, 2, 'edit', 6, 8, 0, 0),
+(1452, 1, 2, 'edit', 2, 7, 0, 0),
+(1453, 1, 2, 'edit', 7, 6, 0, 0),
+(1454, 1, 2, 'edit', 4, 5, 0, 0),
+(1455, 1, 2, 'edit', 11, 4, 0, 0),
+(1456, 1, 2, 'edit', 12, 3, 0, 0),
+(1457, 1, 2, 'edit', 13, 2, 0, 0),
+(1458, 1, 2, 'edit', 15, 1, 0, 1),
+(1459, 1, 2, 'edit', 21, 0, 0, 0),
+(1460, 1, 2, 'edit', 20, 3, 82, 0),
+(1461, 1, 2, 'edit', 9, 2, 82, 0),
+(1462, 1, 2, 'edit', 3, 1, 82, 0),
+(1463, 1, 2, 'edit', 26, 0, 82, 0),
+(1625, 1, 3, 'create', 1, 12, 0, 1),
+(1626, 1, 3, 'create', 6, 11, 0, 0),
+(1627, 1, 3, 'create', 2, 10, 0, 0),
+(1628, 1, 3, 'create', 7, 9, 0, 0),
+(1629, 1, 3, 'create', 8, 8, 0, 0),
+(1630, 1, 3, 'create', 4, 7, 0, 0),
+(1631, 1, 3, 'create', 20, 6, 0, 0),
+(1632, 1, 3, 'create', 19, 5, 0, 0),
+(1633, 1, 3, 'create', 10, 4, 0, 0),
+(1634, 1, 3, 'create', 11, 3, 0, 0),
+(1635, 1, 3, 'create', 12, 2, 0, 0),
+(1636, 1, 3, 'create', 13, 1, 0, 0),
+(1637, 1, 3, 'create', 15, 0, 0, 0),
+(1638, 1, 3, 'create', 3, 4, 90, 0),
+(1639, 1, 3, 'create', 9, 3, 90, 0),
+(1640, 1, 3, 'create', 21, 2, 90, 0),
+(1641, 1, 3, 'create', 23, 1, 90, 0),
+(1642, 1, 3, 'create', 26, 0, 90, 0),
+(1643, 1, 3, 'edit', 1, 13, 0, 1),
+(1644, 1, 3, 'edit', 6, 12, 0, 0),
+(1645, 1, 3, 'edit', 2, 11, 0, 0),
+(1646, 1, 3, 'edit', 7, 10, 0, 0),
+(1647, 1, 3, 'edit', 8, 9, 0, 0),
+(1648, 1, 3, 'edit', 4, 8, 0, 0),
+(1649, 1, 3, 'edit', 20, 7, 0, 0),
+(1650, 1, 3, 'edit', 19, 6, 0, 0),
+(1651, 1, 3, 'edit', 10, 5, 0, 0),
+(1652, 1, 3, 'edit', 11, 4, 0, 0),
+(1653, 1, 3, 'edit', 12, 3, 0, 0),
+(1654, 1, 3, 'edit', 13, 2, 0, 0),
+(1655, 1, 3, 'edit', 26, 1, 0, 0),
+(1656, 1, 3, 'edit', 15, 0, 0, 0),
+(1657, 1, 3, 'edit', 9, 3, 91, 0),
+(1658, 1, 3, 'edit', 3, 2, 91, 0),
+(1659, 1, 3, 'edit', 23, 1, 91, 0),
+(1660, 1, 3, 'edit', 21, 0, 91, 0),
+(2229, 1, 1, 'create', 1, 9, 0, 1),
+(2230, 1, 1, 'create', 6, 8, 0, 0),
+(2231, 1, 1, 'create', 2, 7, 0, 1),
+(2232, 1, 1, 'create', 7, 6, 0, 0),
+(2233, 1, 1, 'create', 4, 5, 0, 1),
+(2234, 1, 1, 'create', 11, 4, 0, 0),
+(2235, 1, 1, 'create', 12, 3, 0, 0),
+(2236, 1, 1, 'create', 13, 2, 0, 0),
+(2237, 1, 1, 'create', 15, 1, 0, 0),
+(2238, 1, 1, 'create', 23, 0, 0, 0),
+(2239, 1, 1, 'create', 19, 9, 119, 0),
+(2240, 1, 1, 'create', 10, 8, 119, 0),
+(2241, 1, 1, 'create', 20, 7, 119, 0),
+(2242, 1, 1, 'create', 18, 6, 119, 0),
+(2243, 1, 1, 'create', 3, 5, 119, 0),
+(2244, 1, 1, 'create', 21, 4, 119, 0),
+(2245, 1, 1, 'create', 8, 3, 119, 0),
+(2246, 1, 1, 'create', 9, 2, 119, 0),
+(2247, 1, 1, 'create', 29, 1, 119, 0),
+(2248, 1, 1, 'create', 28, 0, 119, 0),
+(2266, 1, 1, 'edit', 1, 10, 0, 1),
+(2267, 1, 1, 'edit', 6, 9, 0, 0),
+(2268, 1, 1, 'edit', 2, 8, 0, 1),
+(2269, 1, 1, 'edit', 19, 7, 0, 0),
+(2270, 1, 1, 'edit', 10, 6, 0, 0),
+(2271, 1, 1, 'edit', 7, 5, 0, 0),
+(2272, 1, 1, 'edit', 4, 4, 0, 1),
+(2273, 1, 1, 'edit', 11, 3, 0, 0),
+(2274, 1, 1, 'edit', 12, 2, 0, 0),
+(2275, 1, 1, 'edit', 13, 1, 0, 0),
+(2276, 1, 1, 'edit', 15, 0, 0, 0),
+(2277, 1, 1, 'edit', 3, 5, 121, 0),
+(2278, 1, 1, 'edit', 18, 4, 121, 0),
+(2279, 1, 1, 'edit', 20, 3, 121, 0),
+(2280, 1, 1, 'edit', 21, 2, 121, 0),
+(2281, 1, 1, 'edit', 8, 1, 121, 0),
+(2282, 1, 1, 'edit', 9, 0, 121, 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `issue_ui_scheme`
+--
+
+CREATE TABLE `issue_ui_scheme` (
+                                   `id` int UNSIGNED NOT NULL,
+                                   `name` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+                                   `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0',
+                                   `order_weight` int UNSIGNED NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='事项表单配置方案';
+
+--
+-- 转存表中的数据 `issue_ui_scheme`
+--
+
+INSERT INTO `issue_ui_scheme` (`id`, `name`, `is_system`, `order_weight`) VALUES
+(1, '默认方案', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1372,31 +1483,30 @@ INSERT INTO `issue_ui` (`id`, `issue_type_id`, `ui_type`, `field_id`, `order_wei
 --
 
 CREATE TABLE `issue_ui_tab` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_type_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `order_weight` int(11) DEFAULT NULL,
-  `ui_type` varchar(20) DEFAULT NULL
+                                `id` int UNSIGNED NOT NULL,
+                                `scheme_id` int UNSIGNED DEFAULT '1',
+                                `issue_type_id` int UNSIGNED DEFAULT NULL,
+                                `name` varchar(255) DEFAULT NULL,
+                                `order_weight` int DEFAULT NULL,
+                                `ui_type` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `issue_ui_tab`
 --
 
-INSERT INTO `issue_ui_tab` (`id`, `issue_type_id`, `name`, `order_weight`, `ui_type`) VALUES
-(7, 10, 'test-name-24019', 0, 'create'),
-(8, 11, 'test-name-53500', 0, 'create'),
-(33, 6, '更多', 0, 'create'),
-(34, 6, '\n            \n            更多\n             \n            \n        \n             \n            \n        ', 0, 'edit'),
-(37, 7, '更 多', 0, 'create'),
-(63, 7, '\n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        ', 0, 'edit'),
-(64, 4, '\n            \n            \n            更多\n             \n            \n        \n             \n            \n        \n             \n            \n        ', 0, 'edit'),
-(81, 2, '更 多', 0, 'create'),
-(82, 2, '\n            \n            \n            \n            \n            \n            \n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             ', 0, 'edit'),
-(90, 3, '其他', 0, 'create'),
-(91, 3, '\n            \n            \n            \n            \n            \n            \n            \n            其他\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        \n    ', 0, 'edit'),
-(117, 1, '更 多', 0, 'create'),
-(118, 1, '\n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n            \n       ', 0, 'edit');
+INSERT INTO `issue_ui_tab` (`id`, `scheme_id`, `issue_type_id`, `name`, `order_weight`, `ui_type`) VALUES
+(33, 1, 6, '更多', 0, 'create'),
+(34, 1, 6, '\n            \n            更多\n             \n            \n        \n             \n            \n        ', 0, 'edit'),
+(37, 1, 7, '更 多', 0, 'create'),
+(63, 1, 7, '\n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        ', 0, 'edit'),
+(64, 1, 4, '\n            \n            \n            更多\n             \n            \n        \n             \n            \n        \n             \n            \n        ', 0, 'edit'),
+(81, 1, 2, '更 多', 0, 'create'),
+(82, 1, 2, '\n            \n            \n            \n            \n            \n            \n            \n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             ', 0, 'edit'),
+(90, 1, 3, '其他', 0, 'create'),
+(91, 1, 3, '\n            \n            \n            \n            \n            \n            \n            \n            其他\n             \n            \n        \n             \n            \n        \n             \n            \n        \n             \n            \n        \n    ', 0, 'edit'),
+(119, 1, 1, '更 多', 0, 'create'),
+(121, 1, 1, '\n            更多\n             \n            \n        ', 0, 'edit');
 
 -- --------------------------------------------------------
 
@@ -1405,22 +1515,22 @@ INSERT INTO `issue_ui_tab` (`id`, `issue_type_id`, `name`, `order_weight`, `ui_t
 --
 
 CREATE TABLE `log_base` (
-  `id` int(11) NOT NULL,
-  `company_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `module` varchar(20) DEFAULT NULL COMMENT '所属模块',
-  `obj_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作记录所关联的对象id,如现货id 订单id',
-  `uid` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作者id,0为系统操作',
-  `user_name` varchar(32) DEFAULT '' COMMENT '操作者用户名',
-  `real_name` varchar(255) DEFAULT NULL,
-  `page` varchar(100) DEFAULT '' COMMENT '页面',
-  `pre_status` tinyint(3) UNSIGNED DEFAULT NULL,
-  `cur_status` tinyint(3) UNSIGNED DEFAULT NULL,
-  `action` varchar(20) DEFAULT NULL COMMENT '操作动作',
-  `remark` varchar(100) DEFAULT '' COMMENT '动作',
-  `pre_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
-  `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
-  `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
-  `time` int(11) UNSIGNED DEFAULT '0'
+                            `id` int NOT NULL,
+                            `company_id` int UNSIGNED NOT NULL DEFAULT '0',
+                            `module` varchar(20) DEFAULT NULL COMMENT '所属模块',
+                            `obj_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作记录所关联的对象id,如现货id 订单id',
+                            `uid` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作者id,0为系统操作',
+                            `user_name` varchar(32) DEFAULT '' COMMENT '操作者用户名',
+                            `real_name` varchar(255) DEFAULT NULL,
+                            `page` varchar(100) DEFAULT '' COMMENT '页面',
+                            `pre_status` tinyint UNSIGNED DEFAULT NULL,
+                            `cur_status` tinyint UNSIGNED DEFAULT NULL,
+                            `action` varchar(20) DEFAULT NULL COMMENT '操作动作',
+                            `remark` varchar(100) DEFAULT '' COMMENT '动作',
+                            `pre_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
+                            `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
+                            `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
+                            `time` int UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
 -- --------------------------------------------------------
@@ -1430,22 +1540,22 @@ CREATE TABLE `log_base` (
 --
 
 CREATE TABLE `log_operating` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `module` varchar(20) DEFAULT NULL COMMENT '所属模块',
-  `obj_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作记录所关联的对象id,如现货id 订单id',
-  `uid` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作者id,0为系统操作',
-  `user_name` varchar(32) DEFAULT '' COMMENT '操作者用户名',
-  `real_name` varchar(255) DEFAULT NULL,
-  `page` varchar(100) DEFAULT '' COMMENT '页面',
-  `pre_status` tinyint(3) UNSIGNED DEFAULT NULL,
-  `cur_status` tinyint(3) UNSIGNED DEFAULT NULL,
-  `action` varchar(20) DEFAULT NULL COMMENT '操作动作',
-  `remark` varchar(100) DEFAULT '' COMMENT '动作',
-  `pre_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
-  `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
-  `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
-  `time` int(11) UNSIGNED DEFAULT '0'
+                                 `id` int NOT NULL,
+                                 `project_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                 `module` varchar(20) DEFAULT NULL COMMENT '所属模块',
+                                 `obj_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作记录所关联的对象id,如现货id 订单id',
+                                 `uid` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作者id,0为系统操作',
+                                 `user_name` varchar(32) DEFAULT '' COMMENT '操作者用户名',
+                                 `real_name` varchar(255) DEFAULT NULL,
+                                 `page` varchar(100) DEFAULT '' COMMENT '页面',
+                                 `pre_status` tinyint UNSIGNED DEFAULT NULL,
+                                 `cur_status` tinyint UNSIGNED DEFAULT NULL,
+                                 `action` varchar(20) DEFAULT NULL COMMENT '操作动作',
+                                 `remark` varchar(100) DEFAULT '' COMMENT '动作',
+                                 `pre_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
+                                 `cur_data` varchar(1000) DEFAULT '{}' COMMENT '操作记录前的数据,json格式',
+                                 `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
+                                 `time` int UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
 --
@@ -1453,11 +1563,10 @@ CREATE TABLE `log_operating` (
 --
 
 INSERT INTO `log_operating` (`id`, `project_id`, `module`, `obj_id`, `uid`, `user_name`, `real_name`, `page`, `pre_status`, `cur_status`, `action`, `remark`, `pre_data`, `cur_data`, `ip`, `time`) VALUES
-(1, 36, '项目', 0, 1, 'master', 'Master', '/project/role/add_project_member_roles', NULL, NULL, '新增', '添加项目角色的用户', '[]', '{\"user_id\":12255,\"project_id\":\"36\",\"role_id\":\"178\"}', '127.0.0.1', 1591062885),
-(2, 36, '事项', 189, 1, 'master', 'Master', '/issue/main/add', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"XXXXXXXXXXXXXXX\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1591062918,\"updated\":1591062918,\"project_id\":36,\"issue_type\":1,\"priority\":4,\"status\":1,\"resolve\":2,\"assignee\":12255,\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"module\":\"\",\"environment\":\"\",\"sprint\":0,\"weight\":0,\"start_date\":\"\",\"due_date\":\"\",\"gant_sprint_weight\":999700000}', '127.0.0.1', 1591062919),
-(3, 36, '事项', 189, 1, 'master', 'Master', '/issue/main/update/', NULL, NULL, '编辑', '修改事项', '{\"id\":\"189\",\"pkey\":\"ex\",\"issue_num\":\"189\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"12255\",\"summary\":\"XXXXXXXXXXXXXXX\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1591062918\",\"updated\":\"1591062918\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"duration\":\"0\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assist', '{\"id\":\"189\",\"pkey\":\"ex\",\"issue_num\":\"189\",\"project_id\":\"36\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12255\",\"summary\":\"XXXXXXXXXXXXXXX\",\"description\":\"\\r\\n\\u8fd9\\u91cc\\u8f93\\u5165\\u5bf9bug\\u505a\\u51fa\\u6e05\\u6670\\u7b80\\u6d01\\u7684\\u63cf\\u8ff0.\\r\\n\\r\\n**\\u91cd\\u73b0\\u6b65\\u9aa4**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n4. xxxxxx\\r\\n\\r\\n**\\u671f\\u671b\\u7ed3\\u679c**\\r\\n\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u671f\\u671b\\u7ed3\\u679c\\r\\n\\r\\n**\\u5b9e\\u9645\\u7ed3\\u679c**\\r\\n\\u7b80\\u8ff0\\u5b9e\\u9645\\u770b\\u5230\\u7684\\u7ed3\\u679c\\uff0c\\u8fd9\\u91cc\\u53ef\\u4ee5\\u914d\\u4e0a\\u622a\\u56fe\\r\\n\\r\\n\\r\\n**\\u9644\\u52a0\\u8bf4\\u660e**\\r\\n\\u9644\\u52a0\\u6216\\u989d\\u5916\\u7684\\u4fe1\\u606f\\r\\n\",\"environment\":\"\",\"priority\":\"4\",\"resolve\":\"2\",\"status\":5,\"created\":\"1591062918\",\"updated\":\"1591062918\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"duration\":\"0\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"0\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistan', '127.0.0.1', 1591063058),
-(4, 1, '事项', 190, 1, 'master', 'Master', '/issue/main/add?from_gantt=1&from_module=gantt', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"1111111\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1591187232,\"updated\":1591187232,\"project_id\":1,\"issue_type\":3,\"priority\":3,\"status\":1,\"resolve\":\"2\",\"assignee\":1,\"description\":\"\",\"sprint\":1,\"start_date\":\"2020-06-03\",\"due_date\":\"2020-06-04\",\"progress\":0,\"is_start_milestone\":0,\"is_end_milestone\":0,\"gant_sprint_weight\":499150000,\"duration\":2}', '127.0.0.1', 1591187233),
-(5, 1, '事项', 191, 1, 'master', 'Master', '/issue/main/add', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"\\u65b0\\u529f\\u80fdxxxxxxxxxxxxx\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1591193308,\"updated\":1591193308,\"project_id\":1,\"issue_type\":2,\"priority\":3,\"status\":1,\"resolve\":2,\"assignee\":\"1\",\"description\":\"**\\u529f\\u80fd\\u63cf\\u8ff0**\\r\\n\\u4e00\\u53e5\\u8bdd\\u7b80\\u6d01\\u6e05\\u6670\\u7684\\u63cf\\u8ff0\\u529f\\u80fd\\uff0c\\u4f8b\\u5982\\uff1a\\r\\n\\u4f5c\\u4e3a\\u4e00\\u4e2a<\\u7528\\u6237\\u89d2\\u8272>\\uff0c\\u5728<\\u67d0\\u79cd\\u6761\\u4ef6\\u6216\\u65f6\\u95f4>\\u4e0b\\uff0c\\u6211\\u60f3\\u8981<\\u5b8c\\u6210\\u6d3b\\u52a8>\\uff0c\\u4ee5\\u4fbf\\u4e8e<\\u5b9e\\u73b0\\u4ef7\\u503c>\\r\\n\\r\\n**\\u529f\\u80fd\\u70b9**\\r\\n1. xx\\r\\n2. xxx\\r\\n3. xxxx\\r\\n\\r\\n**\\u89c4\\u5219\\u548c\\u5f71\\u54cd**\\r\\n1. xx\\r\\n2. xxx\\r\\n\\r\\n**\\u89e3\\u51b3\\u65b9\\u6848**\\r\\n \\u89e3\\u51b3\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u5907\\u7528\\u65b9\\u6848**\\r\\n \\u5907\\u7528\\u65b9\\u6848\\u7684\\u63cf\\u8ff0\\r\\n\\r\\n**\\u9644\\u52a0\\u5185\\u5bb9**\\r\\n\\r\\n\",\"module\":\"5\",\"environment\":\"\",\"sprint\":2,\"weight\":0,\"start_date\":\"\",\"due_date\":\"\",\"progress\":0,\"gant_sprint_wei', '127.0.0.1', 1591193308);
+(1, 0, '项目', 0, 1, 'master', 'Master', '/project/main/create', NULL, NULL, '新增', '新建项目', '[]', '{\"name\":\"NewCity\",\"org_id\":\"1\",\"key\":\"city\",\"lead\":\"1\",\"description\":\"wwwww\",\"project_tpl_id\":1,\"category\":0,\"url\":\"\",\"create_time\":1604403288,\"create_uid\":\"1\",\"avatar\":\"\",\"detail\":\"\",\"org_path\":\"default\"}', '127.0.0.1', 1604403289),
+(2, 0, '项目', 0, 1, 'master', 'Master', '/project/main/create', NULL, NULL, '新增', '新建项目', '[]', '{\"name\":\"NewCity2\",\"org_id\":\"1\",\"key\":\"city2\",\"lead\":\"1\",\"description\":\"wwwww\",\"project_tpl_id\":1,\"category\":0,\"url\":\"\",\"create_time\":1604404475,\"create_uid\":\"1\",\"avatar\":\"\",\"detail\":\"\",\"org_path\":\"default\"}', '127.0.0.1', 1604404475),
+(3, 0, '项目', 0, 1, 'master', 'Master', '/project/main/create', NULL, NULL, '新增', '新建项目', '[]', '{\"name\":\"NewCity3\",\"org_id\":\"1\",\"key\":\"city3\",\"lead\":\"1\",\"description\":\"wwwww\",\"project_tpl_id\":1,\"category\":0,\"url\":\"\",\"create_time\":1604404565,\"create_uid\":\"1\",\"avatar\":\"\",\"detail\":\"\",\"org_path\":\"default\"}', '127.0.0.1', 1604404565),
+(4, 1, '事项', 139, 1, 'master', 'Master', '/issue/main/update', NULL, NULL, '编辑', '修改事项', '{\"id\":\"139\",\"pkey\":\"example\",\"issue_num\":\"139\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12167\",\"summary\":\"\\u5546\\u57ce\\u6a21\\u5757\\u7f16\\u7801\",\"description\":\"![1cut-202004181604013986.png](\\/attachment\\/image\\/20200418\\/1cut-202004181604013986.png \\\"\\u622a\\u56fe-1cut-202004181604013986.png\\\")\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1583242645\",\"updated\":\"1583242645\",\"start_date\":\"2020-03-03\",\"due_date\":\"2020-03-11\",\"duration\":\"7\",\"resolve_date\":null,\"module\":\"3\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"600000\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"3\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"1\",\"depends\":\"\",\"gant_sprint_weight\":\"999250000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '{\"id\":\"139\",\"pkey\":\"example\",\"issue_num\":\"139\",\"project_id\":\"1\",\"issue_type\":\"3\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"12167\",\"summary\":\"\\u5546\\u57ce\\u6a21\\u5757\\u7f16\\u7801\",\"description\":\"![1cut-202004181604013986.png](\\/attachment\\/image\\/20200418\\/1cut-202004181604013986.png \\\"\\u622a\\u56fe-1cut-202004181604013986.png\\\")\",\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"2\",\"status\":\"1\",\"created\":\"1583242645\",\"updated\":\"1583242645\",\"start_date\":\"2020-03-03\",\"due_date\":\"2020-03-11\",\"duration\":\"7\",\"resolve_date\":null,\"module\":\"3\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"600000\",\"assistants\":\"\",\"level\":\"0\",\"master_id\":\"3\",\"have_children\":\"0\",\"followed_count\":\"0\",\"comment_count\":\"0\",\"progress\":\"1\",\"depends\":\"\",\"gant_sprint_weight\":\"999250000\",\"gant_hide\":\"0\",\"is_start_milestone\":\"0\",\"is_end_milestone\":\"0\"}', '127.0.0.1', 1604404921);
 
 -- --------------------------------------------------------
 
@@ -1466,14 +1575,14 @@ INSERT INTO `log_operating` (`id`, `project_id`, `module`, `obj_id`, `uid`, `use
 --
 
 CREATE TABLE `log_runtime_error` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `md5` varchar(32) NOT NULL,
-  `file` varchar(255) NOT NULL,
-  `line` smallint(6) UNSIGNED NOT NULL,
-  `time` int(10) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `err` varchar(32) NOT NULL DEFAULT '',
-  `errstr` varchar(255) NOT NULL DEFAULT ''
+                                     `id` int UNSIGNED NOT NULL,
+                                     `md5` varchar(32) NOT NULL,
+                                     `file` varchar(255) NOT NULL,
+                                     `line` smallint UNSIGNED NOT NULL,
+                                     `time` int UNSIGNED NOT NULL,
+                                     `date` date NOT NULL,
+                                     `err` varchar(32) NOT NULL DEFAULT '',
+                                     `errstr` varchar(255) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1483,17 +1592,17 @@ CREATE TABLE `log_runtime_error` (
 --
 
 CREATE TABLE `main_action` (
-  `id` decimal(18,0) NOT NULL,
-  `issueid` decimal(18,0) DEFAULT NULL,
-  `author` varchar(255) DEFAULT NULL,
-  `actiontype` varchar(255) DEFAULT NULL,
-  `actionlevel` varchar(255) DEFAULT NULL,
-  `rolelevel` decimal(18,0) DEFAULT NULL,
-  `actionbody` longtext,
-  `created` datetime DEFAULT NULL,
-  `updateauthor` varchar(255) DEFAULT NULL,
-  `updated` datetime DEFAULT NULL,
-  `actionnum` decimal(18,0) DEFAULT NULL
+                               `id` decimal(18,0) NOT NULL,
+                               `issueid` decimal(18,0) DEFAULT NULL,
+                               `author` varchar(255) DEFAULT NULL,
+                               `actiontype` varchar(255) DEFAULT NULL,
+                               `actionlevel` varchar(255) DEFAULT NULL,
+                               `rolelevel` decimal(18,0) DEFAULT NULL,
+                               `actionbody` longtext,
+                               `created` datetime DEFAULT NULL,
+                               `updateauthor` varchar(255) DEFAULT NULL,
+                               `updated` datetime DEFAULT NULL,
+                               `actionnum` decimal(18,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1503,128 +1612,17 @@ CREATE TABLE `main_action` (
 --
 
 CREATE TABLE `main_activity` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `action` varchar(32) DEFAULT NULL COMMENT '动作说明,如 关闭了，创建了，修复了',
-  `content` varchar(1024) NOT NULL DEFAULT '' COMMENT '内容',
-  `type` enum('agile','user','issue','issue_comment','org','project') DEFAULT 'issue' COMMENT 'project,issue,user,agile,issue_comment',
-  `obj_id` int(11) UNSIGNED DEFAULT NULL,
-  `title` varchar(128) DEFAULT NULL COMMENT '相关的事项标题',
-  `date` date DEFAULT NULL,
-  `time` int(11) UNSIGNED DEFAULT '0'
+                                 `id` int UNSIGNED NOT NULL,
+                                 `user_id` int UNSIGNED DEFAULT NULL,
+                                 `project_id` int UNSIGNED DEFAULT NULL,
+                                 `action` varchar(32) DEFAULT NULL COMMENT '动作说明,如 关闭了，创建了，修复了',
+                                 `content` varchar(1024) NOT NULL DEFAULT '' COMMENT '内容',
+                                 `type` enum('agile','user','issue','issue_comment','org','project') DEFAULT 'issue' COMMENT 'project,issue,user,agile,issue_comment',
+                                 `obj_id` int UNSIGNED DEFAULT NULL,
+                                 `title` varchar(128) DEFAULT NULL COMMENT '相关的事项标题',
+                                 `date` date DEFAULT NULL,
+                                 `time` int UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `main_activity`
---
-
-INSERT INTO `main_activity` (`id`, `user_id`, `project_id`, `action`, `content`, `type`, `obj_id`, `title`, `date`, `time`) VALUES
-(1, 1, 1, '在 \"甘特图\" 模块中修改事项', '标题 变更为 <span style=\"color:#337ab7\"><span style=\"color:#337ab7\">产品模块开发编码1</span></span>', 'issue', 108, '产品模块开发', '2020-03-03', 1583242607),
-(2, 1, 1, '在 \"甘特图\" 模块中修改事项', '标题 变更为 <span style=\"color:#337ab7\"><span style=\"color:#337ab7\">用户模块开发编码1</span></span>', 'issue', 107, '用户模块开发1', '2020-03-03', 1583242610),
-(3, 1, 1, '创建了 #3 的子任务', '', 'issue', 139, '商城模块编码1', '2020-03-03', 1583242645),
-(4, 1, 1, '创建了事项', '', 'issue', 139, '商城模块编码1', '2020-03-03', 1583242645),
-(5, 1, 2, '创建了事项', '', 'issue', 140, 'xxxxxxxxxxxxxxxxxxxx', '2020-03-10', 1583826501),
-(6, 1, 139, '为商城模块编码1添加了一个附件', '', 'issue', 139, 'Wildlife.wmv', '2020-03-16', 1584355873),
-(7, 1, 139, '为商城模块编码1添加了一个附件', '', 'issue', 139, 'oceans.mp4', '2020-03-16', 1584355894),
-(8, 1, 1, '创建了事项', '', 'issue', 141, '111111111111111111', '2020-03-16', 1584356775),
-(10, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-20</span> --> <span style=\"color:#337ab7\">2020-03-16</span>', 'issue', 87, '产品功能说明书', '2020-03-17', 1584428123),
-(11, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-05</span> --> <span style=\"color:#337ab7\">2020-03-6</span>', 'issue', 2, '服务器端架构设计', '2020-03-17', 1584428136),
-(12, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-06</span> --> <span style=\"color:#337ab7\">2020-03-6</span>', 'issue', 2, '服务器端架构设计', '2020-03-17', 1584428150),
-(13, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-06</span> --> <span style=\"color:#337ab7\">2020-03-6</span>', 'issue', 2, '服务器端架构设计', '2020-03-17', 1584428156),
-(14, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-06</span> --> <span style=\"color:#337ab7\">2020-03-5</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584428178),
-(15, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-05</span> --> <span style=\"color:#337ab7\">2020-03-6</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584428225),
-(16, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-06</span> --> <span style=\"color:#337ab7\">2020-03-6</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584428306),
-(17, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-06</span> --> <span style=\"color:#337ab7\">2020-03-5</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584429829),
-(18, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-05</span> --> <span style=\"color:#337ab7\">2020-03-5</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584429847),
-(19, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-05</span> --> <span style=\"color:#337ab7\">2020-03-6</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584429946),
-(20, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-06</span> --> <span style=\"color:#337ab7\">2020-03-6</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584429994),
-(21, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-06</span> --> <span style=\"color:#337ab7\">2020-03-5</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584430122),
-(22, 1, 1, '在 \"甘特图\" 模块中修改事项', '结束日期：<span style=\"color:#337ab7\">2020-03-05</span> --> <span style=\"color:#337ab7\">2020-03-6</span>', 'issue', 64, '前端架构设计', '2020-03-17', 1584430128),
-(23, 1, 1, '创建了标签', '', 'project', 1, '产品', '2020-03-22', 1584814601),
-(24, 1, 1, '创建了标签', '', 'project', 2, '运营', '2020-03-22', 1584814616),
-(25, 1, 1, '创建了标签', '', 'project', 3, '推广', '2020-03-22', 1584814624),
-(26, 1, 1, '创建了标签', '', 'project', 4, '开发', '2020-03-22', 1584814636),
-(27, 1, 1, '创建了标签', '', 'project', 5, '测试用例', '2020-03-22', 1584814651),
-(28, 1, 1, '创建了标签', '', 'project', 6, '测试规范', '2020-03-22', 1584814681),
-(29, 1, 1, '更新了标签', '', 'project', 1, '功能说明书（PRO文档）', '2020-03-22', 1584814718),
-(30, 1, 1, '更新了标签', '', 'project', 1, '功能说明书（PRD文档）', '2020-03-22', 1584814727),
-(31, 1, 1, '创建了标签', '', 'project', 7, '架构设计', '2020-03-22', 1584814749),
-(32, 1, 1, '创建了标签', '', 'project', 8, '协议规范', '2020-03-22', 1584814765),
-(33, 1, 1, '更新了标签', '', 'project', 8, '协议规范', '2020-03-22', 1584814771),
-(34, 1, 1, '更新了标签', '', 'project', 8, '开发协议规范', '2020-03-22', 1584814785),
-(35, 1, 1, '创建了标签', '', 'project', 9, 'UI设计规范', '2020-03-22', 1584814810),
-(36, 1, 1, '更新了标签', '', 'project', 9, 'UI设计规范', '2020-03-22', 1584814819),
-(37, 1, 1, '创建了标签', '', 'project', 10, '交互文档', '2020-03-22', 1584814830),
-(38, 1, 1, '创建了标签', '', 'project', 11, '运营文档', '2020-03-22', 1584814846),
-(39, 1, 1, '修改事项', '', 'issue', 139, '商城模块编码1', '2020-03-22', 1584862445),
-(40, 1, 1, '修改事项', '', 'issue', 120, '优化改进事项2', '2020-03-22', 1584862463),
-(41, 1, 1, '创建了标签', '', 'project', 12, '运维', '2020-03-22', 1584890947),
-(42, 1, 1, '更新了标签', '', 'project', 1, '产 品', '2020-03-22', 1584890963),
-(43, 1, 1, '更新了标签', '', 'project', 2, '运 营', '2020-03-22', 1584890968),
-(44, 1, 1, '更新了标签', '', 'project', 3, '推 广', '2020-03-22', 1584890971),
-(45, 1, 1, '更新了标签', '', 'project', 12, '运 维', '2020-03-22', 1584890978),
-(197, 1, 1, '批量删除了事项: ', '', 'issue', 0, 'wwwww', '2020-04-18', 1587209597),
-(198, 1, 36, '批量删除了事项: ', '', 'issue', 0, 'xxxxxxxxxxxxxxxx,xxxxxxxxxx', '2020-04-18', 1587209613),
-(199, 1, 43, '创建了项目', '', 'project', 43, 'qqqqqqqq', '2020-04-20', 1587372553),
-(200, 1, 43, '创建了事项', '', 'issue', 164, 'wwww', '2020-04-20', 1587373082),
-(201, 1, 1, '项目添加用户', '', 'project', 12255, '79720699:', '2020-04-20', 1587373244),
-(202, 1, 1, '项目添加用户', '', 'project', 12170, 'moxao:', '2020-04-20', 1587373271),
-(203, 1, 1, '项目移除了用户', '', 'project', 12255, '示例项目:79720699', '2020-04-20', 1587373424),
-(204, 1, 1, '项目移除了用户', '', 'project', 12170, '示例项目:moxao', '2020-04-20', 1587373430),
-(205, 1, 1, '项目添加用户', '', 'project', 12255, '79720699:', '2020-04-20', 1587373466),
-(206, 1, 1, '项目移除了用户', '', 'project', 12168, '示例项目:Sandy', '2020-04-20', 1587373649),
-(207, 1, 1, '项目移除了用户', '', 'project', 12255, '示例项目:79720699', '2020-04-20', 1587373720),
-(208, 1, 1, '项目添加用户', '', 'project', 12255, '79720699:', '2020-04-20', 1587373773),
-(209, 1, 1, '项目添加用户', '', 'project', 12170, 'moxao:', '2020-04-20', 1587373950),
-(210, 1, 1, '项目添加用户', '', 'project', 12168, 'Sandy:', '2020-04-20', 1587374016),
-(211, 1, 1, '项目移除了用户', '', 'project', 12255, '示例项目:79720699', '2020-04-20', 1587374699),
-(212, 1, 1, '项目移除了用户', '', 'project', 12170, '示例项目:moxao', '2020-04-20', 1587374718),
-(213, 1, 1, '项目添加用户', '', 'project', 12255, '79720699: ', '2020-04-20', 1587374854),
-(214, 1, 1, '项目添加用户', '', 'project', 12170, 'moxao: ', '2020-04-20', 1587375125),
-(215, 1, 1, '项目移除了用户', '', 'project', 12255, '示例项目:79720699', '2020-04-20', 1587375295),
-(216, 1, 1, '项目添加用户', '', 'project', 12255, '79720699: ', '2020-04-20', 1587375303),
-(217, 1, 1, '项目移除了用户', '', 'project', 12255, '示例项目:79720699', '2020-04-20', 1587375504),
-(218, 1, 1, '项目添加用户', '', 'project', 12255, '79720699:Developers Administrators ', '2020-04-20', 1587375512),
-(219, 1, 1, '项目移除了用户', '', 'project', 12255, '示例项目:79720699', '2020-04-20', 1587375540),
-(220, 1, 1, '项目添加用户', '', 'project', 12255, '79720699:Developers Administrators ', '2020-04-20', 1587375548),
-(221, 1, 1, '项目移除了用户', '', 'project', 12255, '示例项目:79720699', '2020-04-20', 1587375601),
-(222, 1, 1, '在 \"甘特图\" 模块中修改事项', '', 'issue', 108, '产品模块开发编码1', '2020-04-20', 1587375680),
-(223, 1, 1, '在 \"甘特图\" 模块中修改事项', '', 'issue', 108, '产品模块开发编码1', '2020-04-20', 1587375696),
-(224, 1, 1, '在 \"甘特图\" 模块中修改事项', '', 'issue', 108, '产品模块开发编码1', '2020-04-20', 1587375977),
-(225, 1, 1, '在 \"甘特图\" 模块中修改事项', '', 'issue', 108, '产品模块开发编码1', '2020-04-20', 1587376018),
-(226, 1, 1, '在 \"甘特图\" 模块中修改事项', '', 'issue', 108, '产品模块开发编码1', '2020-04-20', 1587376041),
-(227, 1, 1, '项目添加用户', '', 'project', 12255, '79720699:Developers ', '2020-04-20', 1587383418),
-(228, 1, 1, '创建了事项', '', 'issue', 165, 'sql', '2020-04-22', 1587526481),
-(229, 1, 1, '修改事项', '', 'issue', 165, 'sql', '2020-04-22', 1587526815),
-(230, 1, 1, '创建了事项', '', 'issue', 166, '\"ssssssssssss\">>><><', '2020-04-27', 1587991721),
-(231, 1, 1, '创建了事项', '', 'issue', 167, '?\"ddd\"><><>', '2020-04-27', 1587991797),
-(232, 1, 1, '创建了事项', '', 'issue', 168, '?\"ddd\"><><>', '2020-04-27', 1587991915),
-(233, 1, 1, '创建了事项', '', 'issue', 169, '?\"ddd\"><><>', '2020-04-27', 1587991930),
-(234, 1, 1, '创建了事项', '', 'issue', 170, '?&quot;ddd&quot;&gt;&lt;&gt;&lt;&gt;', '2020-04-27', 1587991985),
-(235, 1, 1, '创建了事项', '', 'issue', 171, '&quot;dfsafsdf&quot;&gt;&lt;&gt;&lt;&gt;&lt;&lt;sdfsdfsd!!', '2020-04-27', 1587992034),
-(236, 1, 1, '创建了事项', '', 'issue', 172, 'xxxxxxxxxxx', '2020-04-30', 1588176048),
-(237, 1, 1, '修改事项', '', 'issue', 172, 'xxxxxxxxxxx', '2020-04-30', 1588176320),
-(238, 1, 1, '创建了事项', '', 'issue', 173, 'xxxxxxxxxx', '2020-04-30', 1588179086),
-(239, 1, 1, '创建了事项', '', 'issue', 174, 'xxxxxxxxxx', '2020-04-30', 1588179251),
-(240, 1, 1, '修改事项', '', 'issue', 174, 'xxxxxxxxxx', '2020-04-30', 1588180512),
-(241, 1, 1, '修改事项', '', 'issue', 174, 'xxxxxxxxxx', '2020-04-30', 1588180727),
-(242, 1, 1, '创建了事项', '', 'issue', 175, 'BBBBBBBBBBBBBBB', '2020-04-30', 1588181403),
-(243, 1, 1, '创建了事项', '', 'issue', 176, 'WWWWWWWWW', '2020-04-30', 1588181644),
-(244, 1, 1, '批量删除了事项: ', '', 'issue', 0, '?\"ddd\"><><>,?\"ddd\"><><>,?\"ddd\"><><>,?&quot;ddd&quot;&gt;&lt;&gt;&lt;&gt;,\"ssssssssssss\">>><><,&quot;dfsafsdf&quot;&gt;&lt;&gt;&l', '2020-05-08', 1588927162),
-(245, 1, 1, '批量删除了事项: ', '', 'issue', 0, 'sql', '2020-05-08', 1588927179),
-(246, 1, 1, '修改事项', '', 'issue', 139, '商城模块编码', '2020-05-08', 1588927197),
-(247, 1, 1, '创建了事项', '', 'issue', 177, '111111111', '2020-05-28', 1590657615),
-(248, 1, 1, '创建了事项', '', 'issue', 178, '222222', '2020-05-28', 1590657624),
-(249, 1, 1, '创建了事项', '', 'issue', 179, '333333333', '2020-05-28', 1590657634),
-(250, 1, 1, '创建了事项', '', 'issue', 180, '44444444444', '2020-05-28', 1590657645),
-(251, 1, 1, '添加了评论 ', '<p><img src=\"http://www.masterlab213.com/attachment/image/20200528/20200528180045_84904.png\" alt=\"\"></p>\n', 'issue_comment', 180, '<a href=\'/issue/detail/index/180\' >44444444444</a>', '2020-05-28', 1590660049),
-(277, 1, 36, '批量删除了事项: ', '', 'issue', 0, 'XXXXXXXXX,wwwwwwwwwwwwww', '2020-06-01', 1591005381),
-(278, 1, 36, '创建了事项', '', 'issue', 189, 'XXXXXXXXXXXXXXX', '2020-06-02', 1591062919),
-(279, 1, 36, '修改事项', '状态：<span class=\"label label-info\">打 开</span> --> <span class=\"label label-success\">已解决</span>', 'issue', 189, 'XXXXXXXXXXXXXXX', '2020-06-02', 1591063058),
-(280, 1, 36, '删除了事项', '', 'issue', 189, 'XXXXXXXXXXXXXXX', '2020-06-02', 1591064143),
-(281, 1, 1, '创建了事项', '', 'issue', 190, '1111111', '2020-06-03', 1591187234),
-(282, 1, 1, '创建了事项', '', 'issue', 191, '新功能xxxxxxxxxxxxx', '2020-06-03', 1591193308);
 
 -- --------------------------------------------------------
 
@@ -1633,11 +1631,11 @@ INSERT INTO `main_activity` (`id`, `user_id`, `project_id`, `action`, `content`,
 --
 
 CREATE TABLE `main_announcement` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `content` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0为禁用,1为发布中',
-  `flag` int(11) DEFAULT '0' COMMENT '每次发布将自增该字段',
-  `expire_time` int(11) DEFAULT NULL
+                                     `id` int UNSIGNED NOT NULL,
+                                     `content` varchar(255) DEFAULT NULL,
+                                     `status` tinyint UNSIGNED DEFAULT '0' COMMENT '0为禁用,1为发布中',
+                                     `flag` int DEFAULT '0' COMMENT '每次发布将自增该字段',
+                                     `expire_time` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1654,10 +1652,10 @@ INSERT INTO `main_announcement` (`id`, `content`, `status`, `flag`, `expire_time
 --
 
 CREATE TABLE `main_cache_key` (
-  `key` varchar(100) NOT NULL,
-  `module` varchar(64) DEFAULT NULL,
-  `datetime` datetime DEFAULT NULL,
-  `expire` int(10) UNSIGNED DEFAULT NULL
+                                  `key` varchar(100) NOT NULL,
+                                  `module` varchar(64) DEFAULT NULL,
+                                  `datetime` datetime DEFAULT NULL,
+                                  `expire` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1667,11 +1665,11 @@ CREATE TABLE `main_cache_key` (
 --
 
 CREATE TABLE `main_eventtype` (
-  `id` decimal(18,0) NOT NULL,
-  `template_id` decimal(18,0) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `event_type` varchar(60) DEFAULT NULL
+                                  `id` decimal(18,0) NOT NULL,
+                                  `template_id` decimal(18,0) DEFAULT NULL,
+                                  `name` varchar(255) DEFAULT NULL,
+                                  `description` text,
+                                  `event_type` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1681,14 +1679,14 @@ CREATE TABLE `main_eventtype` (
 --
 
 CREATE TABLE `main_group` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `active` int(11) DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `updated_date` datetime DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `group_type` varchar(60) DEFAULT NULL,
-  `directory_id` decimal(18,0) DEFAULT NULL
+                              `id` int NOT NULL,
+                              `name` varchar(255) DEFAULT NULL,
+                              `active` int DEFAULT NULL,
+                              `created_date` datetime DEFAULT NULL,
+                              `updated_date` datetime DEFAULT NULL,
+                              `description` varchar(255) DEFAULT NULL,
+                              `group_type` varchar(60) DEFAULT NULL,
+                              `directory_id` decimal(18,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1709,13 +1707,13 @@ INSERT INTO `main_group` (`id`, `name`, `active`, `created_date`, `updated_date`
 --
 
 CREATE TABLE `main_mail_queue` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `seq` varchar(32) DEFAULT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `address` varchar(200) DEFAULT NULL,
-  `status` varchar(10) DEFAULT NULL,
-  `create_time` int(11) UNSIGNED DEFAULT NULL,
-  `error` varchar(200) DEFAULT NULL
+                                   `id` int UNSIGNED NOT NULL,
+                                   `seq` varchar(32) DEFAULT NULL,
+                                   `title` varchar(100) DEFAULT NULL,
+                                   `address` varchar(200) DEFAULT NULL,
+                                   `status` varchar(10) DEFAULT NULL,
+                                   `create_time` int UNSIGNED DEFAULT NULL,
+                                   `error` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1734,9 +1732,9 @@ INSERT INTO `main_mail_queue` (`id`, `seq`, `title`, `address`, `status`, `creat
 --
 
 CREATE TABLE `main_notify_scheme` (
-  `id` int(11) NOT NULL,
-  `name` varchar(20) NOT NULL,
-  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+                                      `id` int NOT NULL,
+                                      `name` varchar(20) NOT NULL,
+                                      `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1753,13 +1751,13 @@ INSERT INTO `main_notify_scheme` (`id`, `name`, `is_system`) VALUES
 --
 
 CREATE TABLE `main_notify_scheme_data` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `scheme_id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(20) NOT NULL,
-  `flag` varchar(128) DEFAULT NULL,
-  `user` varchar(1024) NOT NULL DEFAULT '[]' COMMENT '项目成员,经办人,报告人,关注人',
-  `title_tpl` varchar(128) NOT NULL DEFAULT '',
-  `body_tpl` text NOT NULL
+                                           `id` int UNSIGNED NOT NULL,
+                                           `scheme_id` int UNSIGNED NOT NULL,
+                                           `name` varchar(20) NOT NULL,
+                                           `flag` varchar(128) DEFAULT NULL,
+                                           `user` varchar(1024) NOT NULL DEFAULT '[]' COMMENT '项目成员,经办人,报告人,关注人',
+                                           `title_tpl` varchar(128) NOT NULL DEFAULT '',
+                                           `body_tpl` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1789,15 +1787,15 @@ INSERT INTO `main_notify_scheme_data` (`id`, `scheme_id`, `name`, `flag`, `user`
 --
 
 CREATE TABLE `main_org` (
-  `id` int(11) NOT NULL,
-  `path` varchar(64) NOT NULL DEFAULT '',
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `description` text NOT NULL,
-  `avatar` varchar(256) NOT NULL DEFAULT '',
-  `create_uid` int(11) NOT NULL DEFAULT '0',
-  `created` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `updated` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `scope` tinyint(2) NOT NULL DEFAULT '1' COMMENT '1 private, 2 internal , 3 public'
+                            `id` int NOT NULL,
+                            `path` varchar(64) NOT NULL DEFAULT '',
+                            `name` varchar(64) NOT NULL DEFAULT '',
+                            `description` text NOT NULL,
+                            `avatar` varchar(256) NOT NULL DEFAULT '',
+                            `create_uid` int NOT NULL DEFAULT '0',
+                            `created` int UNSIGNED NOT NULL DEFAULT '0',
+                            `updated` int UNSIGNED NOT NULL DEFAULT '0',
+                            `scope` tinyint NOT NULL DEFAULT '1' COMMENT '1 private, 2 internal , 3 public'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1814,23 +1812,23 @@ INSERT INTO `main_org` (`id`, `path`, `name`, `description`, `avatar`, `create_u
 --
 
 CREATE TABLE `main_plugin` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `index_page` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `version` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1已安装,2未安装,0无效(插件目录不存在)',
-  `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `chmod_json` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `icon_file` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `company` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `install_time` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
-  `is_display` tinyint(1) UNSIGNED NOT NULL DEFAULT '1'
+                               `id` int UNSIGNED NOT NULL,
+                               `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `title` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `index_page` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `description` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `version` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1已安装,2未安装,0无效(插件目录不存在)',
+                               `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `chmod_json` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `url` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `icon_file` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `company` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `install_time` int UNSIGNED NOT NULL DEFAULT '0',
+                               `order_weight` int UNSIGNED NOT NULL DEFAULT '0',
+                               `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0',
+                               `enable` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
+                               `is_display` tinyint UNSIGNED NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1848,17 +1846,17 @@ INSERT INTO `main_plugin` (`id`, `name`, `title`, `index_page`, `description`, `
 --
 
 CREATE TABLE `main_setting` (
-  `id` int(11) NOT NULL,
-  `_key` varchar(50) NOT NULL COMMENT '关键字',
-  `title` varchar(64) NOT NULL COMMENT '标题',
-  `module` varchar(20) NOT NULL DEFAULT '' COMMENT '所属模块,basic,advance,ui,datetime,languge,attachment可选',
-  `order_weight` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重',
-  `_value` varchar(100) NOT NULL,
-  `default_value` varchar(100) DEFAULT '' COMMENT '默认值',
-  `format` enum('string','int','float','json') NOT NULL DEFAULT 'string' COMMENT '数据类型',
-  `form_input_type` enum('datetime','date','textarea','select','checkbox','radio','img','color','file','int','number','text') DEFAULT 'text' COMMENT '表单项类型',
-  `form_optional_value` varchar(5000) DEFAULT NULL COMMENT '待选的值定义,为json格式',
-  `description` varchar(200) DEFAULT ''
+                                `id` int NOT NULL,
+                                `_key` varchar(50) NOT NULL COMMENT '关键字',
+                                `title` varchar(64) NOT NULL COMMENT '标题',
+                                `module` varchar(20) NOT NULL DEFAULT '' COMMENT '所属模块,basic,advance,ui,datetime,languge,attachment可选',
+                                `order_weight` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重',
+                                `_value` varchar(100) NOT NULL,
+                                `default_value` varchar(100) DEFAULT '' COMMENT '默认值',
+                                `format` enum('string','int','float','json') NOT NULL DEFAULT 'string' COMMENT '数据类型',
+                                `form_input_type` enum('datetime','date','textarea','select','checkbox','radio','img','color','file','int','number','text') DEFAULT 'text' COMMENT '表单项类型',
+                                `form_optional_value` varchar(5000) DEFAULT NULL COMMENT '待选的值定义,为json格式',
+                                `description` varchar(200) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统配置表';
 
 --
@@ -1914,12 +1912,12 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (74, 'ldap_port', '服务器端口', 'ldap', 90, '389', '389', 'int', 'text', NULL, ''),
 (75, 'ldap_schema', '服务器类型', 'ldap', 96, 'OpenLDAP', 'ActiveDirectory', 'string', 'select', '{\"ActiveDirectory\":\"ActiveDirectory\",\"OpenLDAP\":\"OpenLDAP\",\"FreeIPA\": \"FreeIPA\"}', ''),
 (76, 'ldap_username', '管理员DN值', 'ldap', 70, 'CN=Administrator,CN=Users,DC=extest,DC=cn', 'cn=Manager,dc=masterlab,dc=vip', 'string', 'text', NULL, ''),
-(77, 'ldap_password', '管理员密码', 'ldap', 60, 'xxxxx', '', 'string', 'text', NULL, ''),
+(77, 'ldap_password', '管理员密码', 'ldap', 60, 'testtest', '', 'string', 'text', NULL, ''),
 (78, 'ldap_base_dn', 'BASE_DN', 'ldap', 76, 'dc=extest,dc=cn', 'dc=masterlab,dc=vip', 'string', 'text', NULL, '不能为空'),
 (79, 'ldap_timeout', '连接超时时间', 'ldap', 88, '10', '10', 'string', 'text', NULL, ''),
 (80, 'ldap_version', '版本', 'ldap', 80, '3', '3', 'string', 'text', NULL, ''),
 (81, 'ldap_security protocol', '安全协议', 'ldap', 84, '', '', 'string', 'select', '{\"\":\"普通\",\"ssl\":\"SSL\",\"tls\":\"TLS\"}', ''),
-(82, 'ldap_enable', '启用', 'ldap', 99, '0', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
+(82, 'ldap_enable', '启用', 'ldap', 99, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (83, 'ldap_match_attr', '匹配属性', 'ldap', 74, 'cn', 'cn', 'string', 'text', '', '设置什么属性作为匹配用户名，建议使用 cn 或 dn '),
 (84, 'is_exchange_server', '服务器为ExchangeServer', 'mail', 910, '0', '0', 'string', 'radio', '{\"1\":\"是\",\"0\":\"否\"}', ''),
 (85, 'is_ssl', 'SSL', 'mail', 920, '0', '0', 'string', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '');
@@ -1931,17 +1929,17 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 --
 
 CREATE TABLE `main_timeline` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `uid` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `type` varchar(12) NOT NULL DEFAULT '',
-  `origin_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `issue_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `action` varchar(32) NOT NULL DEFAULT '',
-  `action_icon` varchar(64) NOT NULL DEFAULT '',
-  `content` text NOT NULL,
-  `content_html` text NOT NULL,
-  `time` int(11) UNSIGNED NOT NULL DEFAULT '0'
+                                 `id` int UNSIGNED NOT NULL,
+                                 `uid` int UNSIGNED NOT NULL DEFAULT '0',
+                                 `type` varchar(12) NOT NULL DEFAULT '',
+                                 `origin_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                 `project_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                 `issue_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                 `action` varchar(32) NOT NULL DEFAULT '',
+                                 `action_icon` varchar(64) NOT NULL DEFAULT '',
+                                 `content` text NOT NULL,
+                                 `content_html` text NOT NULL,
+                                 `time` int UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1969,7 +1967,8 @@ INSERT INTO `main_timeline` (`id`, `uid`, `type`, `origin_id`, `project_id`, `is
 (21, 1, 'issue', 0, 0, 186, 'commented', '', 'test', '<p>test</p>\n', 1591001263),
 (22, 1, 'issue', 0, 0, 186, 'commented', '', 'test', '<p>test</p>\n', 1591001347),
 (23, 1, 'issue', 0, 0, 186, 'commented', '', 'test', '<p>test</p>\n', 1591001369),
-(24, 1, 'issue', 0, 0, 186, 'commented', '', 'test', '<p>test</p>\n', 1591001441);
+(24, 1, 'issue', 0, 0, 186, 'commented', '', 'test', '<p>test</p>\n', 1591001441),
+(25, 1, 'issue', 0, 0, 207, 'commented', '', 'www', '<p>www</p>\n', 1596635923);
 
 -- --------------------------------------------------------
 
@@ -1978,15 +1977,107 @@ INSERT INTO `main_timeline` (`id`, `uid`, `type`, `origin_id`, `project_id`, `is
 --
 
 CREATE TABLE `main_webhook` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `event_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `secret_token` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
-  `timeout` tinyint(2) UNSIGNED NOT NULL DEFAULT '10',
-  `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
+                                `id` int UNSIGNED NOT NULL,
+                                `name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                `url` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                `event_json` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                `secret_token` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                `enable` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
+                                `timeout` tinyint UNSIGNED NOT NULL DEFAULT '10',
+                                `description` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                `hook_event_json` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '定义触发哪些事件'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 转存表中的数据 `main_webhook`
+--
+
+INSERT INTO `main_webhook` (`id`, `name`, `url`, `event_json`, `secret_token`, `enable`, `timeout`, `description`, `hook_event_json`) VALUES
+(9, 'webhook', 'http://masterlab.ink/webhook.php', '', 'xxxxxxx', 1, 10, 'xxx', '[\"onIssueCreateAfter\",\"onIssueUpdateAfter\",\"onIssueDelete\",\"onIssueClose\",\"onIssueAddComment\"]');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `main_webhook_log`
+--
+
+CREATE TABLE `main_webhook_log` (
+                                    `id` int NOT NULL,
+                                    `project_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                    `webhook_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                    `event_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                                    `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                                    `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                    `status` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '0准备中;1执行成功;2异步发送失败;3队列中;4执行失败',
+                                    `time` int UNSIGNED NOT NULL,
+                                    `timeout` tinyint UNSIGNED NOT NULL DEFAULT '15' COMMENT '超时时间',
+                                    `user_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '提交的当前用户id',
+                                    `err_msg` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 转存表中的数据 `main_webhook_log`
+--
+
+INSERT INTO `main_webhook_log` (`id`, `project_id`, `webhook_id`, `event_name`, `url`, `data`, `status`, `time`, `timeout`, `user_id`, `err_msg`) VALUES
+(1, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591715123%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1591715347%2C%22updated%22%3A1591715347%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A998300000%2C%22id%22%3A%22207%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 0, 1591715348, 15, 1, ''),
+(2, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591715123%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1591715759%2C%22updated%22%3A1591715759%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A998200000%2C%22id%22%3A%22208%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 1, 1591715759, 15, 1, 'xxxx'),
+(3, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591715123%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1591715834%2C%22updated%22%3A1591715834%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A998100000%2C%22id%22%3A%22209%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 0, 1591715834, 15, 1, ''),
+(4, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591715123%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1591715891%2C%22updated%22%3A1591715891%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A998000000%2C%22id%22%3A%22210%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 0, 1591715892, 15, 1, ''),
+(5, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591715123%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1591716066%2C%22updated%22%3A1591716066%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A997900000%2C%22id%22%3A%22211%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 1, 1591716066, 15, 1, '请求成功'),
+(6, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591790952%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22XXXXXXXXXXXXXXX%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1591798145%2C%22updated%22%3A1591798145%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A997800000%2C%22id%22%3A%22212%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 0, 1591798145, 15, 1, ''),
+(7, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591790952%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22212%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22212%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22XXXXXXXXXXXXXXX%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%2210100%22%2C%22created%22%3A%221591798145%22%2C%22updated%22%3A%221591798145%22%2C%22start_date%22%3A%220000-00-00%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%220%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 0, 1591798196, 15, 1, ''),
+(8, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591899253%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22XXXXXXXXXXXXXX%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1591899274%2C%22updated%22%3A1591899274%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A997600000%2C%22id%22%3A%22214%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1591899274, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(9, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221591982113%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22Summary%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1591982354%2C%22updated%22%3A1591982354%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%223%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A998200000%2C%22id%22%3A%22215%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1591982354, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(10, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221592033012%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22wwwwwwwwwwwww%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1592038353%2C%22updated%22%3A1592038353%2C%22project_id%22%3A1%2C%22issue_type%22%3A3%2C%22priority%22%3A3%2C%22status%22%3A1%2C%22resolve%22%3A%222%22%2C%22assignee%22%3A1%2C%22description%22%3A%22%22%2C%22sprint%22%3A2%2C%22start_date%22%3A%222020-06-13%22%2C%22due_date%22%3A%222020-06-20%22%2C%22progress%22%3A0%2C%22is_start_milestone%22%3A0%2C%22is_end_milestone%22%3A0%2C%22gant_sprint_weight%22%3A998450000%2C%22duration%22%3A5%2C%22id%22%3A%22216%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1592038353, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(11, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221592033012%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22ww%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1592038508%2C%22updated%22%3A1592038508%2C%22project_id%22%3A1%2C%22issue_type%22%3A3%2C%22priority%22%3A3%2C%22status%22%3A%221%22%2C%22resolve%22%3A%222%22%2C%22assignee%22%3A1%2C%22description%22%3A%22%22%2C%22gant_sprint_weight%22%3A999600000%2C%22id%22%3A%22217%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1592038509, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(12, 1, 9, 'onIssueDelete', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221592041176%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22217%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%223%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%220%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22ww%22%2C%22description%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%223%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221592038508%22%2C%22updated%22%3A%221592038508%22%2C%22start_date%22%3Anull%2C%22due_date%22%3Anull%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%220%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%220%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22999600000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22delete_user_id%22%3A%221%22%2C%22id%22%3A217%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueDelete&secret_token=xxxxxxx', 2, 1592042562, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(13, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%2287%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%2287%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%223%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212164%22%2C%22summary%22%3A%22%5Cu4ea7%5Cu54c1%5Cu529f%5Cu80fd%5Cu8bf4%5Cu660e%5Cu4e66%22%2C%22description%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%223%22%2C%22resolve%22%3A%2210000%22%2C%22status%22%3A%226%22%2C%22created%22%3A%221582693628%22%2C%22updated%22%3A%221582693628%22%2C%22start_date%22%3A%222020-03-01%22%2C%22due_date%22%3A%222020-03-16%22%2C%22duration%22%3A%2211%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%223%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%221%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22900000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%2290%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%221%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22998800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595507913, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(14, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22WWWW%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1595592373%2C%22updated%22%3A1595592373%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A12165%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%221%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A998100000%2C%22id%22%3A%22218%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1595592374, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n');
+INSERT INTO `main_webhook_log` (`id`, `project_id`, `webhook_id`, `event_name`, `url`, `data`, `status`, `time`, `timeout`, `user_id`, `err_msg`) VALUES
+(15, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22SSSSSSSSSSSS%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1595593587%2C%22updated%22%3A1595593587%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%5Cu8bf7%5Cu9009%5Cu62e9%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A998000000%2C%22id%22%3A%22219%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1595593588, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(16, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22Summary%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1595594016%2C%22updated%22%3A1595594016%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%5Cu8bf7%5Cu9009%5Cu62e9%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A997900000%2C%22id%22%3A%22220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1595594017, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(17, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22Summary%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1595595371%2C%22updated%22%3A1595595371%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%5Cu8bf7%5Cu9009%5Cu62e9%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A997800000%2C%22id%22%3A%22221%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1595595372, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(18, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595860529, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(19, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595861584, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(20, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212164%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862080, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(21, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212166%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862374, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(22, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212166%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862375, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(23, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212166%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862377, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(24, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212164%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862499, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(25, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212164%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862500, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(26, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212164%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862502, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n');
+INSERT INTO `main_webhook_log` (`id`, `project_id`, `webhook_id`, `event_name`, `url`, `data`, `status`, `time`, `timeout`, `user_id`, `err_msg`) VALUES
+(27, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212165%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862631, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(28, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212165%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862632, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(29, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212165%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862634, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(30, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862662, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(31, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862663, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(32, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595862665, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(33, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212164%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595863264, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(34, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212165%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595863352, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(35, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212167%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595863359, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(36, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212165%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595863416, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(37, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212166%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595863424, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n');
+INSERT INTO `main_webhook_log` (`id`, `project_id`, `webhook_id`, `event_name`, `url`, `data`, `status`, `time`, `timeout`, `user_id`, `err_msg`) VALUES
+(38, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221595424899%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22221%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22221%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%221%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22Summary%22%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221595595371%22%2C%22updated%22%3A%221595595371%22%2C%22start_date%22%3A%222020-07-27%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22400000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22997800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1595863449, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(39, 0, 9, 'onIssueAddComment', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221596629949%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22uid%22%3A%221%22%2C%22issue_id%22%3A207%2C%22content%22%3A%22www%22%2C%22content_html%22%3A%22%3Cp%3Ewww%3C%5C%2Fp%3E%5Cn%22%2C%22time%22%3A1596635923%2C%22type%22%3A%22issue%22%2C%22action%22%3A%22commented%22%2C%22id%22%3A%2225%22%2C%22project_info%22%3A%7B%7D%7D&event_name=onIssueAddComment&secret_token=xxxxxxx', 2, 1596635923, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(40, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603705283%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22Summary%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603802471%2C%22updated%22%3A1603802471%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%5Cu8bf7%5Cu9009%5Cu62e9%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A997700000%2C%22id%22%3A%22222%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee2%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603802471, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(41, 36, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22wwwwwww%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603892364%2C%22updated%22%3A1603892364%2C%22project_id%22%3A36%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A12255%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%5Cu8bf7%5Cu9009%5Cu62e9%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A0%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A999600000%2C%22id%22%3A%22223%22%2C%22project_info%22%3A%7B%22id%22%3A%2236%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu7a7a%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22http%3A%5C%2F%5C%2Fmaster.888zb.com%5C%2Fabout.php%22%2C%22lead%22%3A%2212164%22%2C%22description%22%3A%22good+luck%21%22%2C%22key%22%3A%22ex%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F2.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221585132124%22%2C%22un_done_count%22%3A%222%22%2C%22done_count%22%3A%220%22%2C%22closed_count%22%3A%220%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221585132124%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%221%22%2C%22is_remember_last_issue%22%3A%220%22%2C%22remember_last_issue_field%22%3A%22%5B%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603892364, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(42, 36, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22wwwwwww%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603892374%2C%22updated%22%3A1603892374%2C%22project_id%22%3A36%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A12255%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%5Cu8bf7%5Cu9009%5Cu62e9%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A0%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A999500000%2C%22id%22%3A%22224%22%2C%22project_info%22%3A%7B%22id%22%3A%2236%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu7a7a%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22http%3A%5C%2F%5C%2Fmaster.888zb.com%5C%2Fabout.php%22%2C%22lead%22%3A%2212164%22%2C%22description%22%3A%22good+luck%21%22%2C%22key%22%3A%22ex%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F2.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221585132124%22%2C%22un_done_count%22%3A%222%22%2C%22done_count%22%3A%220%22%2C%22closed_count%22%3A%220%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221585132124%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%221%22%2C%22is_remember_last_issue%22%3A%220%22%2C%22remember_last_issue_field%22%3A%22%5B%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603892374, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(43, 36, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22wwwwwww%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603892762%2C%22updated%22%3A1603892762%2C%22project_id%22%3A36%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A12255%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%22%5Cu8bf7%5Cu9009%5Cu62e9%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A0%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A999400000%2C%22id%22%3A%22225%22%2C%22project_info%22%3A%7B%22id%22%3A%2236%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu7a7a%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22http%3A%5C%2F%5C%2Fmaster.888zb.com%5C%2Fabout.php%22%2C%22lead%22%3A%2212164%22%2C%22description%22%3A%22good+luck%21%22%2C%22key%22%3A%22ex%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F2.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%2210%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221585132124%22%2C%22un_done_count%22%3A%222%22%2C%22done_count%22%3A%220%22%2C%22closed_count%22%3A%220%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221585132124%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%221%22%2C%22is_remember_last_issue%22%3A%220%22%2C%22remember_last_issue_field%22%3A%22%5B%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603892762, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(44, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22%5Cu563b%5Cu563b%5Cu563b%5Cu563b%5Cu563b%5Cu563b%5Cu563b%5Cu563b%5Cu5bfb%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603938503%2C%22updated%22%3A1603938503%2C%22project_id%22%3A1%2C%22issue_type%22%3A3%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22sss%22%2C%22module%22%3A%222%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22progress%22%3A0%2C%22gant_sprint_weight%22%3A997600000%2C%22id%22%3A%22226%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee23%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22issue_module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603938503, 15, 1, 'fsockopen failed:10061 鐢变簬鐩爣璁＄畻鏈虹Н鏋佹嫆缁濓紝鏃犳硶杩炴帴銆\r\n'),
+(45, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22fsdfsdfds%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603939041%2C%22updated%22%3A1603939041%2C%22project_id%22%3A1%2C%22issue_type%22%3A3%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A1%2C%22description%22%3A%22%22%2C%22module%22%3A%221%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22progress%22%3A0%2C%22gant_sprint_weight%22%3A997500000%2C%22id%22%3A%22227%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee23%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22issue_module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603939041, 15, 1, 'fsockopen failed:10061 鐢变簬鐩爣璁＄畻鏈虹Н鏋佹嫆缁濓紝鏃犳硶杩炴帴銆\r\n'),
+(46, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22xingongn%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603939117%2C%22updated%22%3A1603939117%2C%22project_id%22%3A1%2C%22issue_type%22%3A2%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A12165%2C%22description%22%3A%22%2A%2A%5Cu529f%5Cu80fd%5Cu63cf%5Cu8ff0%2A%2A%5Cr%5Cn%5Cu4e00%5Cu53e5%5Cu8bdd%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu529f%5Cu80fd%5Cuff0c%5Cu4f8b%5Cu5982%5Cuff1a%5Cr%5Cn%5Cu4f5c%5Cu4e3a%5Cu4e00%5Cu4e2a%3C%5Cu7528%5Cu6237%5Cu89d2%5Cu8272%3E%5Cuff0c%5Cu5728%3C%5Cu67d0%5Cu79cd%5Cu6761%5Cu4ef6%5Cu6216%5Cu65f6%5Cu95f4%3E%5Cu4e0b%5Cuff0c%5Cu6211%5Cu60f3%5Cu8981%3C%5Cu5b8c%5Cu6210%5Cu6d3b%5Cu52a8%3E%5Cuff0c%5Cu4ee5%5Cu4fbf%5Cu4e8e%3C%5Cu5b9e%5Cu73b0%5Cu4ef7%5Cu503c%3E%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu529f%5Cu80fd%5Cu70b9%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu89c4%5Cu5219%5Cu548c%5Cu5f71%5Cu54cd%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu89e3%5Cu51b3%5Cu65b9%5Cu6848%2A%2A%5Cr%5Cn+%5Cu89e3%5Cu51b3%5Cu65b9%5Cu6848%5Cu7684%5Cu63cf%5Cu8ff0%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5907%5Cu7528%5Cu65b9%5Cu6848%2A%2A%5Cr%5Cn+%5Cu5907%5Cu7528%5Cu65b9%5Cu6848%5Cu7684%5Cu63cf%5Cu8ff0%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu5185%5Cu5bb9%2A%2A%5Cr%5Cn%5Cr%5Cn%22%2C%22module%22%3A%222%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22progress%22%3A0%2C%22gant_sprint_weight%22%3A997400000%2C%22id%22%3A%22228%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee23%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22issue_module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603939117, 15, 1, 'fsockopen failed:10061 鐢变簬鐩爣璁＄畻鏈虹Н鏋佹嫆缁濓紝鏃犳硶杩炴帴銆\r\n'),
+(47, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%22wwwww%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603940194%2C%22updated%22%3A1603940194%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A12165%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%221%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A997300000%2C%22id%22%3A%22229%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee23%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22issue_module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603940195, 15, 1, 'fsockopen failed:10061 鐢变簬鐩爣璁＄畻鏈虹Н鏋佹嫆缁濓紝鏃犳硶杩炴帴銆\r\n'),
+(48, 1, 9, 'onIssueCreateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22summary%22%3A%222121%22%2C%22creator%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22created%22%3A1603940698%2C%22updated%22%3A1603940698%2C%22project_id%22%3A1%2C%22issue_type%22%3A1%2C%22priority%22%3A4%2C%22status%22%3A1%2C%22resolve%22%3A2%2C%22assignee%22%3A12164%2C%22description%22%3A%22%5Cr%5Cn%5Cu8fd9%5Cu91cc%5Cu8f93%5Cu5165%5Cu5bf9bug%5Cu505a%5Cu51fa%5Cu6e05%5Cu6670%5Cu7b80%5Cu6d01%5Cu7684%5Cu63cf%5Cu8ff0.%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu91cd%5Cu73b0%5Cu6b65%5Cu9aa4%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn4.+xxxxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu671f%5Cu671b%5Cu7ed3%5Cu679c%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5b9e%5Cu9645%5Cu7ed3%5Cu679c%2A%2A%5Cr%5Cn%5Cu7b80%5Cu8ff0%5Cu5b9e%5Cu9645%5Cu770b%5Cu5230%5Cu7684%5Cu7ed3%5Cu679c%5Cuff0c%5Cu8fd9%5Cu91cc%5Cu53ef%5Cu4ee5%5Cu914d%5Cu4e0a%5Cu622a%5Cu56fe%5Cr%5Cn%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu8bf4%5Cu660e%2A%2A%5Cr%5Cn%5Cu9644%5Cu52a0%5Cu6216%5Cu989d%5Cu5916%5Cu7684%5Cu4fe1%5Cu606f%5Cr%5Cn%22%2C%22module%22%3A%221%22%2C%22environment%22%3A%22%22%2C%22sprint%22%3A2%2C%22weight%22%3A0%2C%22start_date%22%3A%22%22%2C%22due_date%22%3A%22%22%2C%22gant_sprint_weight%22%3A997200000%2C%22id%22%3A%22230%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee23%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22issue_module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueCreateAfter&secret_token=xxxxxxx', 2, 1603940699, 15, 1, 'fsockopen failed:10061 鐢变簬鐩爣璁＄畻鏈虹Н鏋佹嫆缁濓紝鏃犳硶杩炴帴銆\r\n'),
+(49, 1, 9, 'onIssueDelete', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22191%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%222%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%220%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22%5Cu65b0%5Cu529f%5Cu80fdxxxxxxxxxxxxx%22%2C%22description%22%3A%22%2A%2A%5Cu529f%5Cu80fd%5Cu63cf%5Cu8ff0%2A%2A%5Cr%5Cn%5Cu4e00%5Cu53e5%5Cu8bdd%5Cu7b80%5Cu6d01%5Cu6e05%5Cu6670%5Cu7684%5Cu63cf%5Cu8ff0%5Cu529f%5Cu80fd%5Cuff0c%5Cu4f8b%5Cu5982%5Cuff1a%5Cr%5Cn%5Cu4f5c%5Cu4e3a%5Cu4e00%5Cu4e2a%3C%5Cu7528%5Cu6237%5Cu89d2%5Cu8272%3E%5Cuff0c%5Cu5728%3C%5Cu67d0%5Cu79cd%5Cu6761%5Cu4ef6%5Cu6216%5Cu65f6%5Cu95f4%3E%5Cu4e0b%5Cuff0c%5Cu6211%5Cu60f3%5Cu8981%3C%5Cu5b8c%5Cu6210%5Cu6d3b%5Cu52a8%3E%5Cuff0c%5Cu4ee5%5Cu4fbf%5Cu4e8e%3C%5Cu5b9e%5Cu73b0%5Cu4ef7%5Cu503c%3E%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu529f%5Cu80fd%5Cu70b9%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn3.+xxxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu89c4%5Cu5219%5Cu548c%5Cu5f71%5Cu54cd%2A%2A%5Cr%5Cn1.+xx%5Cr%5Cn2.+xxx%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu89e3%5Cu51b3%5Cu65b9%5Cu6848%2A%2A%5Cr%5Cn+%5Cu89e3%5Cu51b3%5Cu65b9%5Cu6848%5Cu7684%5Cu63cf%5Cu8ff0%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu5907%5Cu7528%5Cu65b9%5Cu6848%2A%2A%5Cr%5Cn+%5Cu5907%5Cu7528%5Cu65b9%5Cu6848%5Cu7684%5Cu63cf%5Cu8ff0%5Cr%5Cn%5Cr%5Cn%2A%2A%5Cu9644%5Cu52a0%5Cu5185%5Cu5bb9%2A%2A%5Cr%5Cn%5Cr%5Cn%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%223%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221591193308%22%2C%22updated%22%3A%221591193308%22%2C%22start_date%22%3A%220000-00-00%22%2C%22due_date%22%3A%220000-00-00%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%220%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%220%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%221600000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22999800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22delete_user_id%22%3A%221%22%2C%22id%22%3A191%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee23%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%2C%5C%22labels%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueDelete&secret_token=xxxxxxx', 2, 1604308357, 15, 1, 'fsockopen failed:10061 鐢变簬鐩爣璁＄畻鏈虹Н鏋佹嫆缁濓紝鏃犳硶杩炴帴銆\r\n'),
+(50, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22190%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22190%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%223%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%221111111%22%2C%22description%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%223%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221591187232%22%2C%22updated%22%3A%221591187232%22%2C%22start_date%22%3A%222020-06-03%22%2C%22due_date%22%3A%222020-06-04%22%2C%22duration%22%3A%222%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%223%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%221%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%220%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22499150000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee23%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%2C%5C%22labels%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1604308372, 15, 1, 'fsockopen failed:10061 鐢变簬鐩爣璁＄畻鏈虹Н鏋佹嫆缁濓紝鏃犳硶杩炴帴銆\r\n');
+INSERT INTO `main_webhook_log` (`id`, `project_id`, `webhook_id`, `event_name`, `url`, `data`, `status`, `time`, `timeout`, `user_id`, `err_msg`) VALUES
+(51, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22120%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22120%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%223%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22%5Cu4f18%5Cu5316%5Cu6539%5Cu8fdb%5Cu4e8b%5Cu98792%22%2C%22description%22%3A%22%21%5B%5D%28http%3A%5C%2F%5C%2Fwww.masterlab21.com%5C%2Fattachment%5C%2Fimage%5C%2F20200622%5C%2F20200622195934_26594.jpg%29%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%223%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221583232765%22%2C%22updated%22%3A%221583232765%22%2C%22start_date%22%3A%222020-03-03%22%2C%22due_date%22%3A%222020-03-11%22%2C%22duration%22%3A%227%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%223%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%222%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%221800000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22999600000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%2C%5C%22labels%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1604316835, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(52, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%224%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%224%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%223%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22%5Cu6570%5Cu636e%5Cu5e93%5Cu8868%5Cu7ed3%5Cu6784%5Cu8bbe%5Cu8ba1%22%2C%22description%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%224%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221579423320%22%2C%22updated%22%3A%221583079970%22%2C%22start_date%22%3A%222020-03-02%22%2C%22due_date%22%3A%222020-01-01%22%2C%22duration%22%3A%220%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%223%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%221%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%22200000%22%2C%22sprint_weight%22%3A%221600000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%221%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22999800000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%2C%5C%22labels%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1604316861, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(53, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1579249493%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221603891115%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%2290%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%2290%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%223%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%221%22%2C%22summary%22%3A%22%5Cu4ea7%5Cu54c1%5Cu8bbe%5Cu8ba1%22%2C%22description%22%3A%22%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%223%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%226%22%2C%22created%22%3A%221582983902%22%2C%22updated%22%3A%221582983902%22%2C%22start_date%22%3A%222020-02-28%22%2C%22due_date%22%3A%222020-03-03%22%2C%22duration%22%3A%223%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%223%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%221%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22500000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%220%22%2C%22have_children%22%3A%224%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%220%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%221000000000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%2C%5C%22labels%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1604316863, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n'),
+(54, 1, 9, 'onIssueUpdateAfter', 'http://masterlab.ink/webhook.php', 'current_user_id=1&current_user_info=%7B%22uid%22%3A%221%22%2C%22schema_source%22%3A%22inner%22%2C%22directory_id%22%3A%221%22%2C%22phone%22%3A%2218002510000%22%2C%22username%22%3A%22master%22%2C%22openid%22%3A%22q7a752741f667201b54780c926faec4e%22%2C%22status%22%3A%221%22%2C%22first_name%22%3A%22%22%2C%22last_name%22%3A%22master%22%2C%22display_name%22%3A%22Master%22%2C%22email%22%3A%22121642038%40qq.com%22%2C%22sex%22%3A%221%22%2C%22birthday%22%3A%222019-01-13%22%2C%22create_time%22%3A%220%22%2C%22update_time%22%3A%220%22%2C%22avatar%22%3A%22http%3A%5C%2F%5C%2Fmasterlab.ink%5C%2Fattachment%5C%2Favatar%5C%2F1.png%3Ft%3D1604387178%22%2C%22source%22%3A%22%22%2C%22ios_token%22%3Anull%2C%22android_token%22%3Anull%2C%22version%22%3Anull%2C%22token%22%3Anull%2C%22last_login_time%22%3A%221604321657%22%2C%22is_system%22%3A%220%22%2C%22login_counter%22%3A%220%22%2C%22title%22%3A%22%5Cu7ba1%5Cu7406%5Cu5458%22%2C%22sign%22%3A%22%5Cu7b80%5Cu5316%5Cu9879%5Cu76ee%5Cu7ba1%5Cu7406%5Cuff0c%5Cu4fdd%5Cu969c%5Cu7ed3%5Cu679c%5Cuff0c%5Cu5feb%5Cu4e50%5Cu56e2%5Cu961f%5Cuff01%22%2C%22create_time_text%22%3A%22%22%2C%22create_time_origin%22%3A%22%22%2C%22update_time_text%22%3A%22%22%2C%22update_time_origin%22%3A%22%22%2C%22first_word%22%3A%22Ma%22%7D&json=%7B%22id%22%3A%22139%22%2C%22pkey%22%3A%22example%22%2C%22issue_num%22%3A%22139%22%2C%22project_id%22%3A%221%22%2C%22issue_type%22%3A%223%22%2C%22creator%22%3A%221%22%2C%22modifier%22%3A%221%22%2C%22reporter%22%3A%221%22%2C%22assignee%22%3A%2212167%22%2C%22summary%22%3A%22%5Cu5546%5Cu57ce%5Cu6a21%5Cu5757%5Cu7f16%5Cu7801%22%2C%22description%22%3A%22%21%5B1cut-202004181604013986.png%5D%28%5C%2Fattachment%5C%2Fimage%5C%2F20200418%5C%2F1cut-202004181604013986.png+%5C%22%5Cu622a%5Cu56fe-1cut-202004181604013986.png%5C%22%29%22%2C%22environment%22%3A%22%22%2C%22priority%22%3A%223%22%2C%22resolve%22%3A%222%22%2C%22status%22%3A%221%22%2C%22created%22%3A%221583242645%22%2C%22updated%22%3A%221583242645%22%2C%22start_date%22%3A%222020-03-03%22%2C%22due_date%22%3A%222020-03-11%22%2C%22duration%22%3A%227%22%2C%22resolve_date%22%3Anull%2C%22module%22%3A%223%22%2C%22milestone%22%3Anull%2C%22sprint%22%3A%221%22%2C%22weight%22%3A%220%22%2C%22backlog_weight%22%3A%220%22%2C%22sprint_weight%22%3A%22600000%22%2C%22assistants%22%3A%22%22%2C%22level%22%3A%220%22%2C%22master_id%22%3A%223%22%2C%22have_children%22%3A%220%22%2C%22followed_count%22%3A%220%22%2C%22comment_count%22%3A%220%22%2C%22progress%22%3A%221%22%2C%22depends%22%3A%22%22%2C%22gant_sprint_weight%22%3A%22999250000%22%2C%22gant_hide%22%3A%220%22%2C%22is_start_milestone%22%3A%220%22%2C%22is_end_milestone%22%3A%220%22%2C%22project_info%22%3A%7B%22id%22%3A%221%22%2C%22org_id%22%3A%221%22%2C%22org_path%22%3A%22default%22%2C%22name%22%3A%22%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22url%22%3A%22%22%2C%22lead%22%3A%221%22%2C%22description%22%3A%22Masterlab%5Cu7684%5Cu793a%5Cu4f8b%5Cu9879%5Cu76ee%22%2C%22key%22%3A%22example%22%2C%22pcounter%22%3Anull%2C%22default_assignee%22%3A%221%22%2C%22assignee_type%22%3Anull%2C%22avatar%22%3A%22project%5C%2Favatar%5C%2F1.png%22%2C%22category%22%3A%220%22%2C%22type%22%3A%220%22%2C%22type_child%22%3A%220%22%2C%22permission_scheme_id%22%3A%220%22%2C%22workflow_scheme_id%22%3A%221%22%2C%22create_uid%22%3A%221%22%2C%22create_time%22%3A%221579247230%22%2C%22un_done_count%22%3A%2215%22%2C%22done_count%22%3A%226%22%2C%22closed_count%22%3A%224%22%2C%22archived%22%3A%22N%22%2C%22issue_update_time%22%3A%221583220515%22%2C%22is_display_issue_catalog%22%3A%221%22%2C%22subsystem_json%22%3A%22%5B%5D%22%2C%22project_view%22%3A%22issue%22%2C%22issue_view%22%3A%22detail%22%2C%22issue_ui_scheme_id%22%3A%220%22%2C%22project_tpl_id%22%3A%221%22%2C%22default_issue_type_id%22%3A%223%22%2C%22is_remember_last_issue%22%3A%221%22%2C%22remember_last_issue_field%22%3A%22%5B%5C%22issue_type%5C%22%2C%5C%22module%5C%22%2C%5C%22assignee%5C%22%2C%5C%22fix_version%5C%22%2C%5C%22labels%5C%22%5D%22%2C%22remember_last_issue_data%22%3A%22%7B%7D%22%7D%7D&event_name=onIssueUpdateAfter&secret_token=xxxxxxx', 2, 1604404921, 15, 1, 'fsockopen failed:10061 由于目标计算机积极拒绝，无法连接。\r\n');
 
 -- --------------------------------------------------------
 
@@ -1995,19 +2086,19 @@ CREATE TABLE `main_webhook` (
 --
 
 CREATE TABLE `main_widget` (
-  `id` int(11) NOT NULL COMMENT '主键id',
-  `name` varchar(255) DEFAULT NULL COMMENT '工具名称',
-  `_key` varchar(64) NOT NULL,
-  `method` varchar(64) NOT NULL DEFAULT '',
-  `module` varchar(20) NOT NULL,
-  `pic` varchar(255) NOT NULL,
-  `type` enum('list','chart_line','chart_pie','chart_bar','text') DEFAULT NULL COMMENT '工具类型',
-  `status` tinyint(2) DEFAULT '1' COMMENT '状态（1可用，0不可用）',
-  `is_default` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-  `required_param` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否需要参数才能获取数据',
-  `description` varchar(512) DEFAULT '' COMMENT '描述',
-  `parameter` varchar(1024) NOT NULL DEFAULT '{}' COMMENT '支持的参数说明',
-  `order_weight` int(10) UNSIGNED NOT NULL
+                               `id` int NOT NULL COMMENT '主键id',
+                               `name` varchar(255) DEFAULT NULL COMMENT '工具名称',
+                               `_key` varchar(64) NOT NULL,
+                               `method` varchar(64) NOT NULL DEFAULT '',
+                               `module` varchar(20) NOT NULL,
+                               `pic` varchar(255) NOT NULL,
+                               `type` enum('list','chart_line','chart_pie','chart_bar','text') DEFAULT NULL COMMENT '工具类型',
+                               `status` tinyint DEFAULT '1' COMMENT '状态（1可用，0不可用）',
+                               `is_default` tinyint UNSIGNED NOT NULL DEFAULT '0',
+                               `required_param` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否需要参数才能获取数据',
+                               `description` varchar(512) DEFAULT '' COMMENT '描述',
+                               `parameter` varchar(1024) NOT NULL DEFAULT '{}' COMMENT '支持的参数说明',
+                               `order_weight` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2047,22 +2138,22 @@ INSERT INTO `main_widget` (`id`, `name`, `_key`, `method`, `module`, `pic`, `typ
 --
 
 CREATE TABLE `mind_issue_attribute` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `issue_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `source` varchar(20) NOT NULL DEFAULT '',
-  `group_by` varchar(20) NOT NULL DEFAULT '',
-  `layout` varchar(20) NOT NULL DEFAULT '',
-  `shape` varchar(20) NOT NULL DEFAULT '',
-  `color` varchar(20) NOT NULL DEFAULT '',
-  `icon` varchar(64) NOT NULL DEFAULT '',
-  `font_family` varchar(32) NOT NULL DEFAULT '',
-  `font_size` tinyint(2) NOT NULL DEFAULT '1',
-  `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-  `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16) NOT NULL,
-  `text_color` varchar(32) NOT NULL,
-  `side` varchar(16) NOT NULL
+                                        `id` int UNSIGNED NOT NULL,
+                                        `project_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                        `issue_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                        `source` varchar(20) NOT NULL DEFAULT '',
+                                        `group_by` varchar(20) NOT NULL DEFAULT '',
+                                        `layout` varchar(20) NOT NULL DEFAULT '',
+                                        `shape` varchar(20) NOT NULL DEFAULT '',
+                                        `color` varchar(20) NOT NULL DEFAULT '',
+                                        `icon` varchar(64) NOT NULL DEFAULT '',
+                                        `font_family` varchar(32) NOT NULL DEFAULT '',
+                                        `font_size` tinyint NOT NULL DEFAULT '1',
+                                        `font_bold` tinyint(1) NOT NULL DEFAULT '0',
+                                        `font_italic` tinyint(1) NOT NULL DEFAULT '0',
+                                        `bg_color` varchar(16) NOT NULL,
+                                        `text_color` varchar(32) NOT NULL,
+                                        `side` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2089,19 +2180,19 @@ INSERT INTO `mind_issue_attribute` (`id`, `project_id`, `issue_id`, `source`, `g
 --
 
 CREATE TABLE `mind_project_attribute` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `layout` varchar(20) NOT NULL DEFAULT '',
-  `shape` varchar(20) NOT NULL DEFAULT '',
-  `color` varchar(20) NOT NULL DEFAULT '',
-  `icon` varchar(64) NOT NULL DEFAULT '',
-  `font_family` varchar(32) NOT NULL DEFAULT '',
-  `font_size` tinyint(2) NOT NULL DEFAULT '1',
-  `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-  `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16) NOT NULL,
-  `text_color` varchar(16) NOT NULL,
-  `side` varchar(16) NOT NULL
+                                          `id` int UNSIGNED NOT NULL,
+                                          `project_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                          `layout` varchar(20) NOT NULL DEFAULT '',
+                                          `shape` varchar(20) NOT NULL DEFAULT '',
+                                          `color` varchar(20) NOT NULL DEFAULT '',
+                                          `icon` varchar(64) NOT NULL DEFAULT '',
+                                          `font_family` varchar(32) NOT NULL DEFAULT '',
+                                          `font_size` tinyint NOT NULL DEFAULT '1',
+                                          `font_bold` tinyint(1) NOT NULL DEFAULT '0',
+                                          `font_italic` tinyint(1) NOT NULL DEFAULT '0',
+                                          `bg_color` varchar(16) NOT NULL,
+                                          `text_color` varchar(16) NOT NULL,
+                                          `side` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2118,22 +2209,22 @@ INSERT INTO `mind_project_attribute` (`id`, `project_id`, `layout`, `shape`, `co
 --
 
 CREATE TABLE `mind_second_attribute` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `source` varchar(20) NOT NULL DEFAULT '',
-  `group_by` varchar(20) NOT NULL DEFAULT '',
-  `group_by_id` varchar(20) NOT NULL DEFAULT '',
-  `layout` varchar(20) NOT NULL DEFAULT '',
-  `shape` varchar(20) NOT NULL DEFAULT '',
-  `color` varchar(20) NOT NULL DEFAULT '',
-  `icon` varchar(64) NOT NULL DEFAULT '',
-  `font_family` varchar(32) NOT NULL DEFAULT '',
-  `font_size` tinyint(2) NOT NULL DEFAULT '1',
-  `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-  `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16) NOT NULL,
-  `text_color` varchar(16) NOT NULL,
-  `side` varchar(16) NOT NULL
+                                         `id` int UNSIGNED NOT NULL,
+                                         `project_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                         `source` varchar(20) NOT NULL DEFAULT '',
+                                         `group_by` varchar(20) NOT NULL DEFAULT '',
+                                         `group_by_id` varchar(20) NOT NULL DEFAULT '',
+                                         `layout` varchar(20) NOT NULL DEFAULT '',
+                                         `shape` varchar(20) NOT NULL DEFAULT '',
+                                         `color` varchar(20) NOT NULL DEFAULT '',
+                                         `icon` varchar(64) NOT NULL DEFAULT '',
+                                         `font_family` varchar(32) NOT NULL DEFAULT '',
+                                         `font_size` tinyint NOT NULL DEFAULT '1',
+                                         `font_bold` tinyint(1) NOT NULL DEFAULT '0',
+                                         `font_italic` tinyint(1) NOT NULL DEFAULT '0',
+                                         `bg_color` varchar(16) NOT NULL,
+                                         `text_color` varchar(16) NOT NULL,
+                                         `side` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2166,19 +2257,19 @@ INSERT INTO `mind_second_attribute` (`id`, `project_id`, `source`, `group_by`, `
 --
 
 CREATE TABLE `mind_sprint_attribute` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `sprint_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `layout` varchar(20) NOT NULL DEFAULT '',
-  `shape` varchar(20) NOT NULL DEFAULT '',
-  `color` varchar(20) NOT NULL DEFAULT '',
-  `icon` varchar(64) NOT NULL DEFAULT '',
-  `font_family` varchar(32) NOT NULL DEFAULT '',
-  `font_size` tinyint(2) NOT NULL DEFAULT '1',
-  `font_bold` tinyint(1) NOT NULL DEFAULT '0',
-  `font_italic` tinyint(1) NOT NULL DEFAULT '0',
-  `bg_color` varchar(16) NOT NULL,
-  `text_color` varchar(16) NOT NULL,
-  `side` varchar(16) NOT NULL
+                                         `id` int UNSIGNED NOT NULL,
+                                         `sprint_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                         `layout` varchar(20) NOT NULL DEFAULT '',
+                                         `shape` varchar(20) NOT NULL DEFAULT '',
+                                         `color` varchar(20) NOT NULL DEFAULT '',
+                                         `icon` varchar(64) NOT NULL DEFAULT '',
+                                         `font_family` varchar(32) NOT NULL DEFAULT '',
+                                         `font_size` tinyint NOT NULL DEFAULT '1',
+                                         `font_bold` tinyint(1) NOT NULL DEFAULT '0',
+                                         `font_italic` tinyint(1) NOT NULL DEFAULT '0',
+                                         `bg_color` varchar(16) NOT NULL,
+                                         `text_color` varchar(16) NOT NULL,
+                                         `side` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2195,22 +2286,27 @@ INSERT INTO `mind_sprint_attribute` (`id`, `sprint_id`, `layout`, `shape`, `colo
 --
 
 CREATE TABLE `permission_default_role` (
-  `id` int(11) NOT NULL,
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(256) DEFAULT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT '0' COMMENT '如果为0表示系统初始化的角色，不为0表示某一项目特有的角色'
+                                           `id` int NOT NULL,
+                                           `name` varchar(64) DEFAULT NULL,
+                                           `description` varchar(256) DEFAULT NULL,
+                                           `project_id` int UNSIGNED DEFAULT '0' COMMENT '3.0版本后废弃',
+                                           `project_tpl_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '所属的项目模板id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目角色表';
 
 --
 -- 转存表中的数据 `permission_default_role`
 --
 
-INSERT INTO `permission_default_role` (`id`, `name`, `description`, `project_id`) VALUES
-(10000, 'Users', '普通用户', 0),
-(10001, 'Developers', '开发者,如程序员，架构师', 0),
-(10002, 'Administrators', '项目管理员，如项目经理，技术经理', 0),
-(10003, 'QA', '测试工程师', 0),
-(10006, 'PO', '产品经理，产品负责人', 0);
+INSERT INTO `permission_default_role` (`id`, `name`, `description`, `project_id`, `project_tpl_id`) VALUES
+(10000, 'Users', '普通用户', 0, 0),
+(10001, 'Developers', '开发者,如程序员，架构师', 0, 0),
+(10002, 'Administrators', '项目管理员，如项目经理，技术经理', 0, 0),
+(10003, 'QA', '测试工程师', 0, 0),
+(10006, 'PO', '产品经理，产品负责人', 0, 0),
+(10007, 'xxx', 'xxxxx', 0, 1),
+(10008, 'QQQQ', 'xxxxxx', 0, 1),
+(10009, 'QQQQ', 'xxxxxx', 0, 1),
+(10010, 'xxx', 'xxxxx', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -2219,9 +2315,9 @@ INSERT INTO `permission_default_role` (`id`, `name`, `description`, `project_id`
 --
 
 CREATE TABLE `permission_default_role_relation` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `role_id` int(11) UNSIGNED DEFAULT NULL,
-  `perm_id` int(11) UNSIGNED DEFAULT NULL
+                                                    `id` int UNSIGNED NOT NULL,
+                                                    `role_id` int UNSIGNED DEFAULT NULL,
+                                                    `perm_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2296,11 +2392,11 @@ INSERT INTO `permission_default_role_relation` (`id`, `role_id`, `perm_id`) VALU
 --
 
 CREATE TABLE `permission_global` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `parent_id` int(11) UNSIGNED DEFAULT '0',
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `_key` varchar(64) DEFAULT NULL
+                                     `id` int UNSIGNED NOT NULL,
+                                     `parent_id` int UNSIGNED DEFAULT '0',
+                                     `name` varchar(64) DEFAULT NULL,
+                                     `description` varchar(255) DEFAULT NULL,
+                                     `_key` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
@@ -2321,9 +2417,9 @@ INSERT INTO `permission_global` (`id`, `parent_id`, `name`, `description`, `_key
 --
 
 CREATE TABLE `permission_global_group` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
-  `group_id` int(11) UNSIGNED DEFAULT NULL
+                                           `id` int UNSIGNED NOT NULL,
+                                           `perm_global_id` int UNSIGNED DEFAULT NULL,
+                                           `group_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2340,10 +2436,10 @@ INSERT INTO `permission_global_group` (`id`, `perm_global_id`, `group_id`) VALUE
 --
 
 CREATE TABLE `permission_global_role` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(40) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
+                                          `id` int UNSIGNED NOT NULL,
+                                          `name` varchar(40) DEFAULT NULL,
+                                          `description` varchar(255) DEFAULT NULL,
+                                          `is_system` tinyint UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2352,11 +2448,11 @@ CREATE TABLE `permission_global_role` (
 
 INSERT INTO `permission_global_role` (`id`, `name`, `description`, `is_system`) VALUES
 (1, '超级管理员', NULL, 1),
-(2, '系统设置管理员', NULL, 0),
+(2, '系统设置管理员', '', 0),
 (3, '项目管理员', NULL, 0),
 (4, '用户管理员', NULL, 0),
 (5, '事项设置管理员', NULL, 0),
-(6, '组织管理员', NULL, 0);
+(6, '组织管理员', '', 0);
 
 -- --------------------------------------------------------
 
@@ -2365,10 +2461,10 @@ INSERT INTO `permission_global_role` (`id`, `name`, `description`, `is_system`) 
 --
 
 CREATE TABLE `permission_global_role_relation` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `perm_global_id` int(11) UNSIGNED DEFAULT NULL,
-  `role_id` int(11) UNSIGNED DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否系统自带'
+                                                   `id` int UNSIGNED NOT NULL,
+                                                   `perm_global_id` int UNSIGNED DEFAULT NULL,
+                                                   `role_id` int UNSIGNED DEFAULT NULL,
+                                                   `is_system` tinyint UNSIGNED DEFAULT '0' COMMENT '是否系统自带'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户组拥有的全局权限';
 
 --
@@ -2380,7 +2476,9 @@ INSERT INTO `permission_global_role_relation` (`id`, `perm_global_id`, `role_id`
 (8, 2, 1, 1),
 (9, 3, 1, 1),
 (10, 4, 1, 1),
-(11, 5, 1, 1);
+(11, 5, 1, 1),
+(13, 1, 2, 1),
+(14, 2, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -2389,9 +2487,9 @@ INSERT INTO `permission_global_role_relation` (`id`, `perm_global_id`, `role_id`
 --
 
 CREATE TABLE `permission_global_user_role` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT '0',
-  `role_id` int(11) UNSIGNED DEFAULT '0'
+                                               `id` int UNSIGNED NOT NULL,
+                                               `user_id` int UNSIGNED DEFAULT '0',
+                                               `role_id` int UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
@@ -2400,55 +2498,18 @@ CREATE TABLE `permission_global_user_role` (
 
 INSERT INTO `permission_global_user_role` (`id`, `user_id`, `role_id`) VALUES
 (5613, 1, 1),
-(5615, 12188, 1),
-(5616, 12189, 1),
-(5617, 12190, 1),
-(5618, 12191, 1),
-(5619, 12192, 1),
-(5620, 12193, 1),
-(5621, 12194, 1),
-(5622, 12195, 1),
-(5623, 12196, 1),
-(5624, 12197, 1),
-(5625, 12198, 1),
-(5626, 12199, 1),
-(5627, 12200, 1),
-(5628, 12201, 1),
-(5629, 12202, 1),
-(5630, 12203, 1),
-(5631, 12204, 1),
-(5632, 12205, 1),
-(5633, 12206, 1),
-(5634, 12207, 1),
-(5635, 12208, 1),
-(5636, 12209, 1),
-(5637, 12210, 1),
-(5638, 12211, 1),
-(5639, 12215, 1),
-(5640, 12216, 1),
-(5641, 12232, 1),
-(5642, 12233, 1),
-(5643, 12234, 1),
-(5644, 12235, 1),
-(5645, 12236, 1),
-(5646, 12237, 1),
-(5647, 12238, 1),
-(5648, 12239, 1),
-(5649, 12240, 1),
-(5650, 12241, 1),
-(5651, 12242, 1),
-(5652, 12243, 1),
-(5653, 12244, 1),
-(5654, 12245, 1),
-(5655, 12246, 1),
-(5656, 12247, 1),
-(5657, 12248, 1),
-(5658, 12249, 1),
-(5659, 12250, 1),
-(5660, 12251, 1),
-(5661, 12252, 1),
-(5662, 12253, 1),
-(5663, 12254, 1);
+(5671, 12167, 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `plugin_document_project_relation`
+--
+
+CREATE TABLE `plugin_document_project_relation` (
+                                                    `project_id` int UNSIGNED NOT NULL,
+                                                    `doc_user` varchar(20) COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2457,13 +2518,13 @@ INSERT INTO `permission_global_user_role` (`id`, `user_id`, `role_id`) VALUES
 --
 
 CREATE TABLE `project_catalog_label` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `name` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `label_id_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `font_color` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'blueviolet' COMMENT '字体颜色',
-  `description` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `order_weight` int(11) UNSIGNED NOT NULL
+                                         `id` int UNSIGNED NOT NULL,
+                                         `project_id` int NOT NULL,
+                                         `name` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                         `label_id_json` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                         `font_color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'blueviolet' COMMENT '字体颜色',
+                                         `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                                         `order_weight` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='项目的分类定义';
 
 --
@@ -2483,12 +2544,7 @@ INSERT INTO `project_catalog_label` (`id`, `project_id`, `name`, `label_id_json`
 (32, 36, '测 试', '[\"42\",\"43\"]', 'blueviolet', '', 102),
 (33, 36, 'UI设计', '[\"44\"]', 'blueviolet', '', 101),
 (34, 36, '运 维', '[\"45\"]', 'blueviolet', '', 100),
-(83, 43, '产 品', '[\"135\",\"136\"]', 'blueviolet', '', 105),
-(84, 43, '运 营', '[\"137\",\"138\"]', 'blueviolet', '', 104),
-(85, 43, '开发', '[\"139\",\"140\",\"141\"]', 'blueviolet', '', 103),
-(86, 43, '测 试', '[\"142\",\"143\"]', 'blueviolet', '', 102),
-(87, 43, 'UI设计', '[\"144\"]', 'blueviolet', '', 101),
-(88, 43, '运 维', '[\"145\"]', 'blueviolet', '', 100);
+(89, 1, '增长', '[\"146\"]', '#D9534F', '', 0);
 
 -- --------------------------------------------------------
 
@@ -2497,10 +2553,10 @@ INSERT INTO `project_catalog_label` (`id`, `project_id`, `name`, `label_id_json`
 --
 
 CREATE TABLE `project_category` (
-  `id` int(18) UNSIGNED NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `color` varchar(20) DEFAULT ''
+                                    `id` int UNSIGNED NOT NULL,
+                                    `name` varchar(255) DEFAULT NULL,
+                                    `description` text,
+                                    `color` varchar(20) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2510,11 +2566,11 @@ CREATE TABLE `project_category` (
 --
 
 CREATE TABLE `project_flag` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `flag` varchar(64) NOT NULL,
-  `value` text NOT NULL,
-  `update_time` int(10) UNSIGNED NOT NULL
+                                `id` int UNSIGNED NOT NULL,
+                                `project_id` int UNSIGNED NOT NULL,
+                                `flag` varchar(64) NOT NULL,
+                                `value` text NOT NULL,
+                                `update_time` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2523,8 +2579,8 @@ CREATE TABLE `project_flag` (
 
 INSERT INTO `project_flag` (`id`, `project_id`, `flag`, `value`, `update_time`) VALUES
 (5, 1, 'backlog_weight', '{\"4\":200000,\"1\":100000}', 1588150926),
-(10, 1, 'sprint_2_weight', '{\"120\":200000,\"53\":100000}', 1588152828),
-(16, 1, 'sprint_1_weight', '{\"2\":2000000,\"5\":1900000,\"8\":1800000,\"94\":1700000,\"116\":1600000,\"108\":1500000,\"107\":1400000,\"106\":1300000,\"97\":1200000,\"96\":1100000,\"95\":1000000,\"87\":900000,\"64\":800000,\"54\":700000,\"139\":600000,\"3\":500000,\"188\":400000,\"186\":300000,\"185\":200000,\"184\":100000}', 1591001556);
+(16, 1, 'sprint_1_weight', '{\"2\":2000000,\"5\":1900000,\"8\":1800000,\"94\":1700000,\"116\":1600000,\"108\":1500000,\"107\":1400000,\"106\":1300000,\"97\":1200000,\"96\":1100000,\"95\":1000000,\"87\":900000,\"64\":800000,\"54\":700000,\"139\":600000,\"3\":500000,\"188\":400000,\"186\":300000,\"185\":200000,\"184\":100000}', 1591001556),
+(31, 1, 'sprint_2_weight', '{\"120\":1800000,\"53\":1700000,\"191\":1600000,\"199\":1500000,\"198\":1400000,\"194\":1300000,\"193\":1200000,\"215\":1100000,\"207\":1000000,\"206\":900000,\"205\":800000,\"204\":700000,\"203\":600000,\"216\":500000,\"221\":400000,\"220\":300000,\"219\":200000,\"218\":100000}', 1600187179);
 
 -- --------------------------------------------------------
 
@@ -2533,13 +2589,13 @@ INSERT INTO `project_flag` (`id`, `project_id`, `flag`, `value`, `update_time`) 
 --
 
 CREATE TABLE `project_gantt_setting` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `source_type` varchar(20) DEFAULT NULL COMMENT 'project,active_sprint',
-  `source_from` varchar(20) DEFAULT NULL,
-  `is_display_backlog` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在甘特图中显示待办事项',
-  `hide_issue_types` varchar(100) NOT NULL DEFAULT '' COMMENT '要隐藏的事项类型key以逗号分隔',
-  `work_dates` varchar(100) DEFAULT NULL
+                                         `id` int UNSIGNED NOT NULL,
+                                         `project_id` int UNSIGNED DEFAULT NULL,
+                                         `source_type` varchar(20) DEFAULT NULL COMMENT 'project,active_sprint',
+                                         `source_from` varchar(20) DEFAULT NULL,
+                                         `is_display_backlog` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在甘特图中显示待办事项',
+                                         `hide_issue_types` varchar(100) NOT NULL DEFAULT '' COMMENT '要隐藏的事项类型key以逗号分隔',
+                                         `work_dates` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
@@ -2547,7 +2603,7 @@ CREATE TABLE `project_gantt_setting` (
 --
 
 INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_from`, `is_display_backlog`, `hide_issue_types`, `work_dates`) VALUES
-(1, 1, 'project', NULL, 1, 'bug,gantt', '[1, 2, 3, 4, 5]'),
+(1, 1, 'project', NULL, 0, 'bug,gantt', '[1,2,3,4,5]'),
 (2, 3, 'project', NULL, 0, '', 'null'),
 (3, 2, 'project', NULL, 0, '', 'null'),
 (4, 11, 'project', NULL, 0, '', 'null'),
@@ -2556,7 +2612,12 @@ INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_
 (7, 37, 'project', NULL, 1, '', '[1,2,3,4,5]'),
 (8, 38, 'project', NULL, 1, '', '[1,2,3,4,5]'),
 (9, 41, 'project', NULL, 1, '', '[1,2,3,4,5]'),
-(10, 40, 'project', NULL, 1, '', '[1,2,3,4,5]');
+(10, 40, 'project', NULL, 1, '', '[1,2,3,4,5]'),
+(11, 83, 'project', NULL, 1, '', '[1,2,3,4,5]'),
+(12, 87, 'project', NULL, 1, '', '[1,2,3,4,5]'),
+(13, 88, 'project', NULL, 1, '', '[1,2,3,4,5]'),
+(14, 89, 'project', NULL, 1, '', '[1,2,3,4,5]'),
+(15, 90, 'project', NULL, 1, '', '[1,2,3,4,5]');
 
 -- --------------------------------------------------------
 
@@ -2565,17 +2626,17 @@ INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_
 --
 
 CREATE TABLE `project_issue_report` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `week` tinyint(2) UNSIGNED DEFAULT NULL,
-  `month` varchar(20) DEFAULT NULL,
-  `done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-  `no_done_count` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-  `done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-  `no_done_count_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-  `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-  `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
+                                        `id` int UNSIGNED NOT NULL,
+                                        `project_id` int UNSIGNED NOT NULL,
+                                        `date` date NOT NULL,
+                                        `week` tinyint UNSIGNED DEFAULT NULL,
+                                        `month` varchar(20) DEFAULT NULL,
+                                        `done_count` int UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
+                                        `no_done_count` int UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
+                                        `done_count_by_resolve` int UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
+                                        `no_done_count_by_resolve` int UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
+                                        `today_done_points` int UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
+                                        `today_done_number` int UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2585,9 +2646,9 @@ CREATE TABLE `project_issue_report` (
 --
 
 CREATE TABLE `project_issue_type_scheme_data` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `issue_type_scheme_id` int(11) UNSIGNED DEFAULT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL
+                                                  `id` int UNSIGNED NOT NULL,
+                                                  `issue_type_scheme_id` int UNSIGNED DEFAULT NULL,
+                                                  `project_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2595,7 +2656,7 @@ CREATE TABLE `project_issue_type_scheme_data` (
 --
 
 INSERT INTO `project_issue_type_scheme_data` (`id`, `issue_type_scheme_id`, `project_id`) VALUES
-(1, 2, 1),
+(1, 1, 1),
 (2, 2, 2),
 (3, 2, 3),
 (4, 2, 4),
@@ -2613,7 +2674,48 @@ INSERT INTO `project_issue_type_scheme_data` (`id`, `issue_type_scheme_id`, `pro
 (16, 2, 40),
 (17, 2, 41),
 (18, 2, 42),
-(26, 2, 43);
+(26, 2, 43),
+(27, 2, 45),
+(28, 2, 47),
+(29, 2, 48),
+(30, 2, 49),
+(31, 2, 50),
+(32, 2, 51),
+(33, 2, 52),
+(34, 2, 53),
+(35, 2, 54),
+(36, 2, 55),
+(37, 2, 56),
+(38, 2, 57),
+(39, 2, 58),
+(40, 2, 59),
+(41, 2, 60),
+(42, 2, 61),
+(43, 2, 62),
+(44, 2, 63),
+(45, 2, 64),
+(46, 2, 65),
+(47, 2, 66),
+(48, 2, 67),
+(49, 2, 68),
+(50, 2, 69),
+(51, 2, 70),
+(52, 2, 71),
+(53, 2, 72),
+(54, 2, 73),
+(55, 2, 74),
+(56, 2, 75),
+(57, 2, 76),
+(58, 2, 77),
+(59, 2, 78),
+(61, NULL, 80),
+(62, NULL, 81),
+(63, 0, 82),
+(64, 0, 83),
+(65, 0, 87),
+(66, 0, 88),
+(67, 0, 89),
+(68, 0, 90);
 
 -- --------------------------------------------------------
 
@@ -2622,9 +2724,9 @@ INSERT INTO `project_issue_type_scheme_data` (`id`, `issue_type_scheme_id`, `pro
 --
 
 CREATE TABLE `project_key` (
-  `id` decimal(18,0) NOT NULL,
-  `project_id` decimal(18,0) DEFAULT NULL,
-  `project_key` varchar(255) DEFAULT NULL
+                               `id` decimal(18,0) NOT NULL,
+                               `project_id` decimal(18,0) DEFAULT NULL,
+                               `project_key` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2634,12 +2736,12 @@ CREATE TABLE `project_key` (
 --
 
 CREATE TABLE `project_label` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `title` varchar(64) NOT NULL,
-  `color` varchar(20) NOT NULL,
-  `bg_color` varchar(20) NOT NULL DEFAULT '',
-  `description` varchar(256) DEFAULT NULL
+                                 `id` int UNSIGNED NOT NULL,
+                                 `project_id` int UNSIGNED NOT NULL,
+                                 `title` varchar(64) NOT NULL,
+                                 `color` varchar(20) NOT NULL,
+                                 `bg_color` varchar(20) NOT NULL DEFAULT '',
+                                 `description` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2668,18 +2770,7 @@ INSERT INTO `project_label` (`id`, `project_id`, `title`, `color`, `bg_color`, `
 (42, 36, '测试用例', '#FFFFFF', '#69D100', ''),
 (43, 36, '测试规范', '#FFFFFF', '#69D100', ''),
 (44, 36, 'UI设计', '#FFFFFF', '#D10069', ''),
-(45, 36, '运 维', '#FFFFFF', '#D1D100', ''),
-(135, 43, '产 品', '#FFFFFF', '#428BCA', ''),
-(136, 43, '交互文档', '#FFFFFF', '#CC0033', ''),
-(137, 43, '运 营', '#FFFFFF', '#44AD8E', ''),
-(138, 43, '推 广', '#FFFFFF', '#A8D695', ''),
-(139, 43, '编码规范', '#FFFFFF', '#69D100', ''),
-(140, 43, '架构设计', '#FFFFFF', '#A295D6', ''),
-(141, 43, '数据协议', '#FFFFFF', '#AD4363', ''),
-(142, 43, '测试用例', '#FFFFFF', '#69D100', ''),
-(143, 43, '测试规范', '#FFFFFF', '#69D100', ''),
-(144, 43, 'UI设计', '#FFFFFF', '#D10069', ''),
-(145, 43, '运 维', '#FFFFFF', '#D1D100', '');
+(45, 36, '运 维', '#FFFFFF', '#D1D100', '');
 
 -- --------------------------------------------------------
 
@@ -2688,10 +2779,10 @@ INSERT INTO `project_label` (`id`, `project_id`, `title`, `color`, `bg_color`, `
 --
 
 CREATE TABLE `project_list_count` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `project_type_id` smallint(5) UNSIGNED DEFAULT NULL,
-  `project_total` int(10) UNSIGNED DEFAULT NULL,
-  `remark` varchar(50) DEFAULT ''
+                                      `id` int UNSIGNED NOT NULL,
+                                      `project_type_id` smallint UNSIGNED DEFAULT NULL,
+                                      `project_total` int UNSIGNED DEFAULT NULL,
+                                      `remark` varchar(50) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2701,40 +2792,49 @@ CREATE TABLE `project_list_count` (
 --
 
 CREATE TABLE `project_main` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `org_id` int(11) NOT NULL DEFAULT '1',
-  `org_path` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lead` int(11) UNSIGNED DEFAULT '0',
-  `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `key` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pcounter` decimal(18,0) DEFAULT NULL,
-  `default_assignee` int(11) UNSIGNED DEFAULT '0',
-  `assignee_type` int(11) DEFAULT NULL,
-  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category` int(11) UNSIGNED DEFAULT NULL,
-  `type` tinyint(2) DEFAULT '1',
-  `type_child` tinyint(2) DEFAULT '0',
-  `permission_scheme_id` int(11) UNSIGNED DEFAULT '0',
-  `workflow_scheme_id` int(11) UNSIGNED NOT NULL,
-  `create_uid` int(11) UNSIGNED DEFAULT '0',
-  `create_time` int(11) UNSIGNED DEFAULT '0',
-  `un_done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '未完成事项数',
-  `done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '已经完成事项数',
-  `closed_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `archived` enum('Y','N') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT '已归档',
-  `issue_update_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '事项最新更新时间',
-  `is_display_issue_catalog` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否在事项列表显示分类'
+                                `id` int UNSIGNED NOT NULL,
+                                `org_id` int NOT NULL DEFAULT '1',
+                                `org_path` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                                `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                                `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                                `lead` int UNSIGNED DEFAULT '0',
+                                `description` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                                `key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                                `pcounter` decimal(18,0) DEFAULT NULL,
+                                `default_assignee` int UNSIGNED DEFAULT '0',
+                                `assignee_type` int DEFAULT NULL,
+                                `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                                `category` int UNSIGNED DEFAULT NULL,
+                                `type` tinyint DEFAULT '1',
+                                `type_child` tinyint DEFAULT '0',
+                                `permission_scheme_id` int UNSIGNED DEFAULT '0',
+                                `workflow_scheme_id` int UNSIGNED NOT NULL,
+                                `create_uid` int UNSIGNED DEFAULT '0',
+                                `create_time` int UNSIGNED DEFAULT '0',
+                                `un_done_count` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '未完成事项数',
+                                `done_count` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '已经完成事项数',
+                                `closed_count` int UNSIGNED NOT NULL DEFAULT '0',
+                                `archived` enum('Y','N') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT '已归档',
+                                `issue_update_time` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '事项最新更新时间',
+                                `is_display_issue_catalog` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否在事项列表显示分类',
+                                `subsystem_json` varchar(5012) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]' COMMENT '当前项目启用的子系统',
+                                `project_view` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'issue' COMMENT '进入项目默认打开的那个页面',
+                                `issue_view` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'detail' COMMENT '点击事项的交互',
+                                `issue_ui_scheme_id` int NOT NULL DEFAULT '0' COMMENT '所属的界面方案id',
+                                `project_tpl_id` int NOT NULL DEFAULT '1' COMMENT '所属的项目模板id',
+                                `default_issue_type_id` int UNSIGNED NOT NULL DEFAULT '1' COMMENT '创建事项时默认的类型',
+                                `is_remember_last_issue` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否记住上次创建事项的数据',
+                                `remember_last_issue_field` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]' COMMENT '上次创建事项的数据字段',
+                                `remember_last_issue_data` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '{}' COMMENT '上次创建事项时的一些数据'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- 转存表中的数据 `project_main`
 --
 
-INSERT INTO `project_main` (`id`, `org_id`, `org_path`, `name`, `url`, `lead`, `description`, `key`, `pcounter`, `default_assignee`, `assignee_type`, `avatar`, `category`, `type`, `type_child`, `permission_scheme_id`, `workflow_scheme_id`, `create_uid`, `create_time`, `un_done_count`, `done_count`, `closed_count`, `archived`, `issue_update_time`, `is_display_issue_catalog`) VALUES
-(1, 1, 'default', '示例项目', '', 1, 'Masterlab的示例项目', 'example', NULL, 1, NULL, 'project/avatar/1.png', 0, 10, 0, 0, 1, 1, 1579247230, 15, 6, 4, 'N', 1583220515, 1),
-(36, 1, 'default', '空项目', 'http://master.888zb.com/about.php', 12164, 'good luck!', 'ex', NULL, 1, NULL, 'project/avatar/2.png', 0, 10, 0, 0, 1, 1, 1585132124, 2, 0, 0, 'N', 1585132124, 1);
+INSERT INTO `project_main` (`id`, `org_id`, `org_path`, `name`, `url`, `lead`, `description`, `key`, `pcounter`, `default_assignee`, `assignee_type`, `avatar`, `category`, `type`, `type_child`, `permission_scheme_id`, `workflow_scheme_id`, `create_uid`, `create_time`, `un_done_count`, `done_count`, `closed_count`, `archived`, `issue_update_time`, `is_display_issue_catalog`, `subsystem_json`, `project_view`, `issue_view`, `issue_ui_scheme_id`, `project_tpl_id`, `default_issue_type_id`, `is_remember_last_issue`, `remember_last_issue_field`, `remember_last_issue_data`) VALUES
+(1, 1, 'default', '示例项目', '', 1, 'Masterlab的示例项目', 'example', NULL, 1, NULL, 'project/avatar/1.png', 0, 0, 0, 0, 1, 1, 1579247230, 15, 6, 4, 'N', 1583220515, 1, '[]', 'issue', 'detail', 0, 1, 3, 1, '[\"issue_type\",\"module\",\"assignee\",\"fix_version\",\"labels\"]', '{}'),
+(36, 1, 'default', '空项目', 'http://master.888zb.com/about.php', 12164, 'good luck!', 'ex', NULL, 1, NULL, 'project/avatar/2.png', 0, 10, 0, 0, 1, 1, 1585132124, 2, 0, 0, 'N', 1585132124, 1, '[]', 'issue', 'detail', 0, 1, 1, 0, '[]', '{}');
 
 -- --------------------------------------------------------
 
@@ -2743,9 +2843,9 @@ INSERT INTO `project_main` (`id`, `org_id`, `org_path`, `name`, `url`, `lead`, `
 --
 
 CREATE TABLE `project_main_extra` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `project_id` int(10) UNSIGNED DEFAULT '0',
-  `detail` text
+                                      `id` int UNSIGNED NOT NULL,
+                                      `project_id` int UNSIGNED DEFAULT '0',
+                                      `detail` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 --
@@ -2761,7 +2861,48 @@ INSERT INTO `project_main_extra` (`id`, `project_id`, `detail`) VALUES
 (16, 40, ''),
 (17, 41, ''),
 (18, 42, ''),
-(21, 43, 'qqq');
+(21, 43, 'qqq'),
+(22, 45, ''),
+(23, 47, 'ww'),
+(24, 48, ''),
+(25, 49, ''),
+(26, 50, ''),
+(27, 51, ''),
+(28, 52, ''),
+(29, 53, ''),
+(30, 54, ''),
+(31, 55, ''),
+(32, 56, ''),
+(33, 57, ''),
+(34, 58, ''),
+(35, 59, ''),
+(36, 60, ''),
+(37, 61, ''),
+(38, 62, ''),
+(39, 63, ''),
+(40, 64, ''),
+(41, 65, ''),
+(42, 66, ''),
+(43, 67, ''),
+(44, 68, ''),
+(45, 69, ''),
+(46, 70, ''),
+(47, 71, ''),
+(48, 72, ''),
+(49, 73, ''),
+(50, 74, ''),
+(51, 75, ''),
+(52, 76, ''),
+(53, 77, ''),
+(54, 78, ''),
+(55, 80, 'www'),
+(56, 81, 'www'),
+(57, 82, ''),
+(58, 83, ''),
+(59, 87, 'wwwwwww'),
+(60, 88, ''),
+(61, 89, ''),
+(62, 90, '');
 
 -- --------------------------------------------------------
 
@@ -2770,10 +2911,10 @@ INSERT INTO `project_main_extra` (`id`, `project_id`, `detail`) VALUES
 --
 
 CREATE TABLE `project_mind_setting` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `setting_key` varchar(32) NOT NULL,
-  `setting_value` varchar(64) NOT NULL
+                                        `id` int NOT NULL,
+                                        `project_id` int NOT NULL,
+                                        `setting_key` varchar(32) NOT NULL,
+                                        `setting_value` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2802,14 +2943,14 @@ INSERT INTO `project_mind_setting` (`id`, `project_id`, `setting_key`, `setting_
 --
 
 CREATE TABLE `project_module` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(64) DEFAULT '',
-  `description` varchar(256) DEFAULT NULL,
-  `lead` int(11) UNSIGNED DEFAULT NULL,
-  `default_assignee` int(11) UNSIGNED DEFAULT NULL,
-  `ctime` int(10) UNSIGNED DEFAULT '0',
-  `order_weight` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重'
+                                  `id` int UNSIGNED NOT NULL,
+                                  `project_id` int UNSIGNED DEFAULT NULL,
+                                  `name` varchar(64) DEFAULT '',
+                                  `description` varchar(256) DEFAULT NULL,
+                                  `lead` int UNSIGNED DEFAULT NULL,
+                                  `default_assignee` int UNSIGNED DEFAULT NULL,
+                                  `ctime` int UNSIGNED DEFAULT '0',
+                                  `order_weight` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2822,7 +2963,8 @@ INSERT INTO `project_module` (`id`, `project_id`, `name`, `description`, `lead`,
 (3, 1, '用户', '', 0, 0, 1579249127, 0),
 (4, 1, '首页', '', 0, 0, 1579249131, 0),
 (5, 1, '引擎', '', 0, 0, 1579249144, 0),
-(6, 1, '测试', '', 0, 0, 1579423336, 0);
+(6, 1, '测试', '', 0, 0, 1579423336, 0),
+(13, 1, 'XXX', 'XX', 0, 0, 1597251981, 0);
 
 -- --------------------------------------------------------
 
@@ -2831,11 +2973,11 @@ INSERT INTO `project_module` (`id`, `project_id`, `name`, `description`, `lead`,
 --
 
 CREATE TABLE `project_permission` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `parent_id` int(11) UNSIGNED DEFAULT '0',
-  `name` varchar(64) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `_key` varchar(64) DEFAULT NULL
+                                      `id` int UNSIGNED NOT NULL,
+                                      `parent_id` int UNSIGNED DEFAULT '0',
+                                      `name` varchar(64) DEFAULT NULL,
+                                      `description` varchar(255) DEFAULT NULL,
+                                      `_key` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
@@ -2869,11 +3011,11 @@ INSERT INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_ke
 --
 
 CREATE TABLE `project_role` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(40) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
+                                `id` int UNSIGNED NOT NULL,
+                                `project_id` int UNSIGNED DEFAULT NULL,
+                                `name` varchar(40) DEFAULT NULL,
+                                `description` varchar(255) DEFAULT NULL,
+                                `is_system` tinyint UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2891,43 +3033,20 @@ INSERT INTO `project_role` (`id`, `project_id`, `name`, `description`, `is_syste
 (179, 36, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
 (180, 36, 'QA', '测试工程师', 1),
 (181, 36, 'PO', '产品经理，产品负责人', 1),
-(182, 37, 'Users', '普通用户', 1),
-(183, 37, 'Developers', '开发者,如程序员，架构师', 1),
-(184, 37, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
-(185, 37, 'QA', '测试工程师', 1),
-(186, 37, 'PO', '产品经理，产品负责人', 1),
-(187, 38, 'Users', '普通用户', 1),
-(188, 38, 'Developers', '开发者,如程序员，架构师', 1),
-(189, 38, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
-(190, 38, 'QA', '测试工程师', 1),
-(191, 38, 'PO', '产品经理，产品负责人', 1),
-(192, 39, 'Users', '普通用户', 1),
-(193, 39, 'Developers', '开发者,如程序员，架构师', 1),
-(194, 39, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
-(195, 39, 'QA', '测试工程师', 1),
-(196, 39, 'PO', '产品经理，产品负责人', 1),
-(197, 40, 'Users', '普通用户', 1),
-(198, 40, 'Developers', '开发者,如程序员，架构师', 1),
-(199, 40, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
-(200, 40, 'QA', '测试工程师', 1),
-(201, 40, 'PO', '产品经理，产品负责人', 1),
-(202, 41, 'Users', '普通用户', 1),
-(203, 41, 'Developers', '开发者,如程序员，架构师', 1),
-(204, 41, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
-(205, 41, 'QA', '测试工程师', 1),
-(206, 41, 'PO', '产品经理，产品负责人', 1),
-(207, 42, 'Users', '普通用户', 1),
-(208, 42, 'Developers', '开发者,如程序员，架构师', 1),
-(209, 42, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
-(210, 42, 'QA', '测试工程师', 1),
-(211, 42, 'PO', '产品经理，产品负责人', 1),
 (212, 1, 'xxx', 'xx', 0),
-(213, 43, 'Users', '普通用户', 1),
-(214, 43, 'Developers', '开发者,如程序员，架构师', 1),
-(215, 43, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
-(216, 43, 'QA', '测试工程师', 1),
-(217, 43, 'PO', '产品经理，产品负责人', 1),
-(218, 1, 'xxxxxx', 'xx', 0);
+(218, 1, 'xxxxxx', 'xx', 0),
+(494, 88, 'xxx', 'xxxxx', 1),
+(495, 88, 'QQQQ', 'xxxxxx', 1),
+(496, 88, 'QQQQ', 'xxxxxx', 1),
+(497, 88, 'xxx', 'xxxxx', 1),
+(498, 89, 'xxx', 'xxxxx', 1),
+(499, 89, 'QQQQ', 'xxxxxx', 1),
+(500, 89, 'QQQQ', 'xxxxxx', 1),
+(501, 89, 'xxx', 'xxxxx', 1),
+(502, 90, 'xxx', 'xxxxx', 1),
+(503, 90, 'QQQQ', 'xxxxxx', 1),
+(504, 90, 'QQQQ', 'xxxxxx', 1),
+(505, 90, 'xxx', 'xxxxx', 1);
 
 -- --------------------------------------------------------
 
@@ -2936,10 +3055,10 @@ INSERT INTO `project_role` (`id`, `project_id`, `name`, `description`, `is_syste
 --
 
 CREATE TABLE `project_role_relation` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `role_id` int(11) UNSIGNED DEFAULT NULL,
-  `perm_id` int(11) UNSIGNED DEFAULT NULL
+                                         `id` int UNSIGNED NOT NULL,
+                                         `project_id` int UNSIGNED DEFAULT NULL,
+                                         `role_id` int UNSIGNED DEFAULT NULL,
+                                         `perm_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3067,66 +3186,170 @@ INSERT INTO `project_role_relation` (`id`, `project_id`, `role_id`, `perm_id`) V
 (2191, 36, 181, 10905),
 (2192, 36, 181, 10906),
 (2193, 36, 181, 10907),
-(2194, 36, 181, 10908),
-(2555, 43, 213, 10005),
-(2556, 43, 213, 10006),
-(2557, 43, 213, 10007),
-(2558, 43, 213, 10008),
-(2559, 43, 213, 10013),
-(2560, 43, 214, 10005),
-(2561, 43, 214, 10006),
-(2562, 43, 214, 10007),
-(2563, 43, 214, 10008),
-(2564, 43, 214, 10013),
-(2565, 43, 214, 10014),
-(2566, 43, 214, 10015),
-(2568, 43, 214, 10016),
-(2567, 43, 214, 10028),
-(2569, 43, 215, 10004),
-(2570, 43, 215, 10005),
-(2571, 43, 215, 10006),
-(2572, 43, 215, 10007),
-(2573, 43, 215, 10008),
-(2574, 43, 215, 10013),
-(2575, 43, 215, 10014),
-(2576, 43, 215, 10015),
-(2581, 43, 215, 10016),
-(2582, 43, 215, 10017),
-(2577, 43, 215, 10028),
-(2578, 43, 215, 10902),
-(2579, 43, 215, 10903),
-(2580, 43, 215, 10904),
-(2583, 43, 215, 10905),
-(2584, 43, 215, 10906),
-(2585, 43, 215, 10907),
-(2586, 43, 215, 10908),
-(2587, 43, 216, 10005),
-(2588, 43, 216, 10006),
-(2589, 43, 216, 10007),
-(2590, 43, 216, 10008),
-(2591, 43, 216, 10013),
-(2592, 43, 216, 10014),
-(2593, 43, 216, 10015),
-(2595, 43, 216, 10017),
-(2594, 43, 216, 10028),
-(2596, 43, 217, 10004),
-(2597, 43, 217, 10005),
-(2598, 43, 217, 10006),
-(2599, 43, 217, 10007),
-(2600, 43, 217, 10008),
-(2601, 43, 217, 10013),
-(2602, 43, 217, 10014),
-(2603, 43, 217, 10015),
-(2611, 43, 217, 10016),
-(2608, 43, 217, 10017),
-(2604, 43, 217, 10028),
-(2605, 43, 217, 10902),
-(2606, 43, 217, 10903),
-(2607, 43, 217, 10904),
-(2609, 43, 217, 10905),
-(2610, 43, 217, 10906),
-(2612, 43, 217, 10907),
-(2613, 43, 217, 10908);
+(2194, 36, 181, 10908);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `project_template`
+--
+
+CREATE TABLE `project_template` (
+                                    `id` int UNSIGNED NOT NULL,
+                                    `name` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+                                    `category_id` int NOT NULL DEFAULT '0',
+                                    `description` varchar(256) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+                                    `image_bg` varchar(256) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+                                    `order_weight` int UNSIGNED NOT NULL DEFAULT '0',
+                                    `created_at` int UNSIGNED DEFAULT NULL,
+                                    `updated_at` int UNSIGNED DEFAULT NULL,
+                                    `user_id` int UNSIGNED DEFAULT NULL,
+                                    `issue_type_scheme_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '事项类型方案id',
+                                    `issue_workflow_scheme_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '事项工作流方案id',
+                                    `issue_ui_scheme_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                    `nav_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'left' COMMENT '导航风格：left,top可选',
+                                    `ui_style` varchar(20) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'dark' COMMENT '整体风格设置',
+                                    `theme_color` varchar(20) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'blue' COMMENT '主题色',
+                                    `is_fix_header` tinyint(1) NOT NULL DEFAULT '0' COMMENT '固定 Header',
+                                    `is_fix_left` tinyint(1) NOT NULL DEFAULT '0' COMMENT '固定侧边菜单',
+                                    `subsystem_json` varchar(5120) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]' COMMENT '子系统',
+                                    `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否系统自带的模板',
+                                    `page_layout` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+                                    `project_view` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+                                    `issue_view` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+                                    `default_issue_type_id` int UNSIGNED NOT NULL DEFAULT '1' COMMENT '创建事项时默认的类型'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT=' 项目模板';
+
+--
+-- 转存表中的数据 `project_template`
+--
+
+INSERT INTO `project_template` (`id`, `name`, `category_id`, `description`, `image_bg`, `order_weight`, `created_at`, `updated_at`, `user_id`, `issue_type_scheme_id`, `issue_workflow_scheme_id`, `issue_ui_scheme_id`, `nav_type`, `ui_style`, `theme_color`, `is_fix_header`, `is_fix_left`, `subsystem_json`, `is_system`, `page_layout`, `project_view`, `issue_view`, `default_issue_type_id`) VALUES
+(1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/react.png', 100000, NULL, NULL, NULL, 0, 0, 0, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"gantt\",\"kanban\",\"sprint\",\"mind\",\"backlog\",\"stat\",\"chart\",\"activity\",\"webhook\"]', 1, 'fluid', 'summary', '', 1),
+(2, '软件开发', 1, '模板描述', '/dev/img/project_tpl/vuejs.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issue\",\"mind\",\"sprints\",\"chart\",\"stat\",\"webhook\",\"activity\",\"kanban\",\"backlog\"]', 0, 'fluid', 'issues', 'detail', 1),
+(3, 'Scrum敏捷开发', 1, '模板描述', '/dev/img/project_tpl/preact.png', 0, NULL, NULL, NULL, 0, 0, 0, 'left', 'dark', 'blue', 0, 0, '[]', 0, '', 'issues', '', 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `project_template_display_category`
+--
+
+CREATE TABLE `project_template_display_category` (
+                                                     `id` int NOT NULL,
+                                                     `name` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+                                                     `order_weight` int UNSIGNED NOT NULL DEFAULT '0',
+                                                     `user_id` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `project_template_display_category`
+--
+
+INSERT INTO `project_template_display_category` (`id`, `name`, `order_weight`, `user_id`) VALUES
+(1, '产品研发', 999, NULL),
+(2, '市场营销', 998, NULL),
+(3, '教育培训', 997, NULL),
+(4, '客户服务', 996, NULL),
+(5, '生产制造', 995, NULL),
+(6, '政务管理', 994, NULL),
+(7, '个人计划', 993, NULL),
+(8, '产品研发', 0, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `project_tpl_category`
+--
+
+CREATE TABLE `project_tpl_category` (
+                                        `id` int UNSIGNED NOT NULL,
+                                        `name` varchar(255) DEFAULT NULL,
+                                        `description` text,
+                                        `color` varchar(20) DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `project_tpl_category_label`
+--
+
+CREATE TABLE `project_tpl_category_label` (
+                                              `id` int UNSIGNED NOT NULL,
+                                              `project_tpl_id` int NOT NULL,
+                                              `name` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                              `label_id_json` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                              `font_color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'blueviolet' COMMENT '字体颜色',
+                                              `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                                              `order_weight` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='项目的分类定义';
+
+--
+-- 转存表中的数据 `project_tpl_category_label`
+--
+
+INSERT INTO `project_tpl_category_label` (`id`, `project_tpl_id`, `name`, `label_id_json`, `font_color`, `description`, `order_weight`) VALUES
+(1, 1, '产品', '[\"3\",\"4\"]', '#0033CC', '', 0),
+(3, 1, '开发和BUG', '[\"1\",\"2\"]', '#0033CC', '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `project_tpl_label`
+--
+
+CREATE TABLE `project_tpl_label` (
+                                     `id` int UNSIGNED NOT NULL,
+                                     `project_tpl_id` int UNSIGNED NOT NULL,
+                                     `title` varchar(64) NOT NULL,
+                                     `color` varchar(20) NOT NULL,
+                                     `bg_color` varchar(20) NOT NULL DEFAULT '',
+                                     `description` varchar(256) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `project_tpl_label`
+--
+
+INSERT INTO `project_tpl_label` (`id`, `project_tpl_id`, `title`, `color`, `bg_color`, `description`) VALUES
+(1, 1, '开发', '#FFFFFF', '', ''),
+(2, 1, 'BUG', '#FFFFFF', '#FF0000', ''),
+(3, 1, '产品', '#FFFFFF', '#5843AD', ''),
+(4, 1, '文档', '#FFFFFF', '#004E00', ''),
+(5, 1, '运维', '#FFFFFF', '#8E44AD', ''),
+(6, 1, '运营', '#FFFFFF', '#F0AD4E', '');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `project_tpl_module`
+--
+
+CREATE TABLE `project_tpl_module` (
+                                      `id` int UNSIGNED NOT NULL,
+                                      `project_tpl_id` int UNSIGNED DEFAULT NULL,
+                                      `name` varchar(64) DEFAULT '',
+                                      `description` varchar(256) DEFAULT NULL,
+                                      `created_at` int UNSIGNED DEFAULT '0',
+                                      `order_weight` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `project_tpl_widget`
+--
+
+CREATE TABLE `project_tpl_widget` (
+                                      `id` int NOT NULL COMMENT '主键id',
+                                      `project_tpl_id` int UNSIGNED NOT NULL COMMENT '项目模板id',
+                                      `widget_id` int NOT NULL COMMENT 'main_widget主键id',
+                                      `order_weight` int UNSIGNED DEFAULT NULL COMMENT '工具顺序',
+                                      `panel` varchar(40) NOT NULL,
+                                      `parameter` varchar(1024) NOT NULL,
+                                      `is_saved_parameter` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否保存了过滤参数'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3135,10 +3358,10 @@ INSERT INTO `project_role_relation` (`id`, `project_id`, `role_id`, `perm_id`) V
 --
 
 CREATE TABLE `project_user_role` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT '0',
-  `project_id` int(11) UNSIGNED DEFAULT '0',
-  `role_id` int(11) UNSIGNED DEFAULT '0'
+                                     `id` int UNSIGNED NOT NULL,
+                                     `user_id` int UNSIGNED DEFAULT '0',
+                                     `project_id` int UNSIGNED DEFAULT '0',
+                                     `role_id` int UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3158,16 +3381,56 @@ INSERT INTO `project_user_role` (`id`, `user_id`, `project_id`, `role_id`) VALUE
 (160, 1, 41, 204),
 (161, 1, 42, 209),
 (168, 1, 43, 215),
+(214, 1, 57, 282),
+(216, 1, 58, 289),
+(218, 1, 59, 296),
+(220, 1, 60, 303),
+(222, 1, 61, 310),
+(224, 1, 62, 317),
+(226, 1, 63, 324),
+(228, 1, 64, 331),
+(230, 1, 65, 338),
+(232, 1, 66, 345),
+(234, 1, 67, 352),
+(236, 1, 68, 359),
+(238, 1, 69, 366),
+(240, 1, 70, 373),
+(242, 1, 71, 380),
+(244, 1, 72, 387),
+(246, 1, 73, 394),
+(248, 1, 74, 401),
+(250, 1, 75, 408),
 (5, 12164, 1, 2),
+(210, 12164, 1, 4),
 (154, 12164, 37, 184),
 (165, 12165, 1, 2),
 (8, 12166, 1, 5),
 (7, 12167, 1, 2),
 (175, 12168, 1, 2),
-(177, 12170, 1, 2),
+(187, 12170, 1, 3),
+(188, 12170, 1, 4),
+(212, 12170, 1, 5),
+(213, 12170, 57, 284),
+(215, 12170, 58, 291),
 (164, 12227, 5, 10002),
-(183, 12255, 1, 2),
-(185, 12255, 36, 178);
+(185, 12255, 36, 178),
+(217, 12256, 59, 298),
+(219, 12256, 60, 305),
+(221, 12256, 61, 312),
+(223, 12256, 62, 319),
+(225, 12256, 63, 326),
+(227, 12256, 64, 333),
+(229, 12256, 65, 340),
+(231, 12256, 66, 347),
+(233, 12256, 67, 354),
+(235, 12256, 68, 361),
+(237, 12256, 69, 368),
+(239, 12256, 70, 375),
+(241, 12256, 71, 382),
+(243, 12262, 72, 389),
+(245, 12262, 73, 396),
+(247, 12262, 74, 403),
+(249, 12262, 75, 410);
 
 -- --------------------------------------------------------
 
@@ -3176,17 +3439,25 @@ INSERT INTO `project_user_role` (`id`, `user_id`, `project_id`, `role_id`) VALUE
 --
 
 CREATE TABLE `project_version` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `sequence` decimal(18,0) DEFAULT NULL,
-  `released` tinyint(10) UNSIGNED DEFAULT '0' COMMENT '0未发布 1已发布',
-  `archived` varchar(10) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `start_date` int(10) UNSIGNED DEFAULT NULL,
-  `release_date` int(10) UNSIGNED DEFAULT NULL
+                                   `id` int NOT NULL,
+                                   `project_id` int UNSIGNED DEFAULT NULL,
+                                   `name` varchar(255) DEFAULT NULL,
+                                   `description` text,
+                                   `sequence` decimal(18,0) DEFAULT NULL,
+                                   `released` tinyint UNSIGNED DEFAULT '0' COMMENT '0未发布 1已发布',
+                                   `archived` varchar(10) DEFAULT NULL,
+                                   `url` varchar(255) DEFAULT NULL,
+                                   `start_date` int UNSIGNED DEFAULT NULL,
+                                   `release_date` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `project_version`
+--
+
+INSERT INTO `project_version` (`id`, `project_id`, `name`, `description`, `sequence`, `released`, `archived`, `url`, `start_date`, `release_date`) VALUES
+(1, 1, 'v1.0', '', '0', 1, NULL, '', 1595520000, 1596124800),
+(2, 1, 'v2.0', '', '0', 1, NULL, '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -3195,11 +3466,11 @@ CREATE TABLE `project_version` (
 --
 
 CREATE TABLE `project_workflows` (
-  `id` decimal(18,0) NOT NULL,
-  `workflowname` varchar(255) DEFAULT NULL,
-  `creatorname` varchar(255) DEFAULT NULL,
-  `descriptor` longtext,
-  `islocked` varchar(60) DEFAULT NULL
+                                     `id` decimal(18,0) NOT NULL,
+                                     `workflowname` varchar(255) DEFAULT NULL,
+                                     `creatorname` varchar(255) DEFAULT NULL,
+                                     `descriptor` longtext,
+                                     `islocked` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3209,9 +3480,9 @@ CREATE TABLE `project_workflows` (
 --
 
 CREATE TABLE `project_workflow_status` (
-  `id` decimal(18,0) NOT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `parentname` varchar(255) DEFAULT NULL
+                                           `id` decimal(18,0) NOT NULL,
+                                           `status` varchar(255) DEFAULT NULL,
+                                           `parentname` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3221,17 +3492,17 @@ CREATE TABLE `project_workflow_status` (
 --
 
 CREATE TABLE `report_project_issue` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `week` tinyint(2) UNSIGNED DEFAULT NULL,
-  `month` varchar(20) DEFAULT NULL,
-  `count_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-  `count_no_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-  `count_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-  `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-  `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-  `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
+                                        `id` int UNSIGNED NOT NULL,
+                                        `project_id` int UNSIGNED NOT NULL,
+                                        `date` date NOT NULL,
+                                        `week` tinyint UNSIGNED DEFAULT NULL,
+                                        `month` varchar(20) DEFAULT NULL,
+                                        `count_done` int UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
+                                        `count_no_done` int UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
+                                        `count_done_by_resolve` int UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
+                                        `count_no_done_by_resolve` int UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
+                                        `today_done_points` int UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
+                                        `today_done_number` int UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3241,17 +3512,17 @@ CREATE TABLE `report_project_issue` (
 --
 
 CREATE TABLE `report_sprint_issue` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `sprint_id` int(11) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `week` tinyint(2) UNSIGNED DEFAULT NULL,
-  `month` varchar(20) DEFAULT NULL,
-  `count_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
-  `count_no_done` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
-  `count_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
-  `count_no_done_by_resolve` int(11) UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
-  `today_done_points` int(11) UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
-  `today_done_number` int(11) UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
+                                       `id` int UNSIGNED NOT NULL,
+                                       `sprint_id` int UNSIGNED NOT NULL,
+                                       `date` date NOT NULL,
+                                       `week` tinyint UNSIGNED DEFAULT NULL,
+                                       `month` varchar(20) DEFAULT NULL,
+                                       `count_done` int UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数',
+                                       `count_no_done` int UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,安装状态进行统计',
+                                       `count_done_by_resolve` int UNSIGNED DEFAULT '0' COMMENT '今天汇总完成的事项总数,按照解决结果进行统计',
+                                       `count_no_done_by_resolve` int UNSIGNED DEFAULT '0' COMMENT '今天汇总未完成的事项总数,按照解决结果进行统计',
+                                       `today_done_points` int UNSIGNED DEFAULT '0' COMMENT '敏捷开发中的事项工作量或点数',
+                                       `today_done_number` int UNSIGNED DEFAULT '0' COMMENT '当天完成的事项数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3261,11 +3532,11 @@ CREATE TABLE `report_sprint_issue` (
 --
 
 CREATE TABLE `service_config` (
-  `id` decimal(18,0) NOT NULL,
-  `delaytime` decimal(18,0) DEFAULT NULL,
-  `clazz` varchar(255) DEFAULT NULL,
-  `servicename` varchar(255) DEFAULT NULL,
-  `cron_expression` varchar(255) DEFAULT NULL
+                                  `id` decimal(18,0) NOT NULL,
+                                  `delaytime` decimal(18,0) DEFAULT NULL,
+                                  `clazz` varchar(255) DEFAULT NULL,
+                                  `servicename` varchar(255) DEFAULT NULL,
+                                  `cron_expression` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -3275,15 +3546,15 @@ CREATE TABLE `service_config` (
 --
 
 CREATE TABLE `user_application` (
-  `id` decimal(18,0) NOT NULL,
-  `application_name` varchar(255) DEFAULT NULL,
-  `lower_application_name` varchar(255) DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `updated_date` datetime DEFAULT NULL,
-  `active` decimal(9,0) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `application_type` varchar(255) DEFAULT NULL,
-  `credential` varchar(255) DEFAULT NULL
+                                    `id` decimal(18,0) NOT NULL,
+                                    `application_name` varchar(255) DEFAULT NULL,
+                                    `lower_application_name` varchar(255) DEFAULT NULL,
+                                    `created_date` datetime DEFAULT NULL,
+                                    `updated_date` datetime DEFAULT NULL,
+                                    `active` decimal(9,0) DEFAULT NULL,
+                                    `description` varchar(255) DEFAULT NULL,
+                                    `application_type` varchar(255) DEFAULT NULL,
+                                    `credential` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3300,12 +3571,12 @@ INSERT INTO `user_application` (`id`, `application_name`, `lower_application_nam
 --
 
 CREATE TABLE `user_attributes` (
-  `id` decimal(18,0) NOT NULL,
-  `user_id` decimal(18,0) DEFAULT NULL,
-  `directory_id` decimal(18,0) DEFAULT NULL,
-  `attribute_name` varchar(255) DEFAULT NULL,
-  `attribute_value` varchar(255) DEFAULT NULL,
-  `lower_attribute_value` varchar(255) DEFAULT NULL
+                                   `id` decimal(18,0) NOT NULL,
+                                   `user_id` decimal(18,0) DEFAULT NULL,
+                                   `directory_id` decimal(18,0) DEFAULT NULL,
+                                   `attribute_name` varchar(255) DEFAULT NULL,
+                                   `attribute_value` varchar(255) DEFAULT NULL,
+                                   `lower_attribute_value` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3315,12 +3586,12 @@ CREATE TABLE `user_attributes` (
 --
 
 CREATE TABLE `user_email_active` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `username` varchar(32) DEFAULT '',
-  `email` varchar(64) NOT NULL DEFAULT '',
-  `uid` int(11) UNSIGNED NOT NULL,
-  `verify_code` varchar(32) NOT NULL,
-  `time` int(10) UNSIGNED NOT NULL
+                                     `id` int UNSIGNED NOT NULL,
+                                     `username` varchar(32) DEFAULT '',
+                                     `email` varchar(64) NOT NULL DEFAULT '',
+                                     `uid` int UNSIGNED NOT NULL,
+                                     `verify_code` varchar(32) NOT NULL,
+                                     `time` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3337,10 +3608,10 @@ INSERT INTO `user_email_active` (`id`, `username`, `email`, `uid`, `verify_code`
 --
 
 CREATE TABLE `user_email_find_password` (
-  `email` varchar(50) NOT NULL,
-  `uid` int(11) UNSIGNED NOT NULL,
-  `verify_code` varchar(32) NOT NULL,
-  `time` int(10) UNSIGNED NOT NULL
+                                            `email` varchar(50) NOT NULL,
+                                            `uid` int UNSIGNED NOT NULL,
+                                            `verify_code` varchar(32) NOT NULL,
+                                            `time` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3357,14 +3628,14 @@ INSERT INTO `user_email_find_password` (`email`, `uid`, `verify_code`, `time`) V
 --
 
 CREATE TABLE `user_email_token` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `uid` int(10) UNSIGNED NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `expired` int(10) UNSIGNED NOT NULL COMMENT '有效期',
-  `created_at` int(10) UNSIGNED NOT NULL,
-  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT '1-有效，0-无效',
-  `used_model` varchar(255) NOT NULL DEFAULT '' COMMENT '用于哪个模型或功能'
+                                    `id` bigint UNSIGNED NOT NULL,
+                                    `email` varchar(255) NOT NULL,
+                                    `uid` int UNSIGNED NOT NULL,
+                                    `token` varchar(255) NOT NULL,
+                                    `expired` int UNSIGNED NOT NULL COMMENT '有效期',
+                                    `created_at` int UNSIGNED NOT NULL,
+                                    `status` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '1-有效，0-无效',
+                                    `used_model` varchar(255) NOT NULL DEFAULT '' COMMENT '用于哪个模型或功能'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3374,9 +3645,9 @@ CREATE TABLE `user_email_token` (
 --
 
 CREATE TABLE `user_group` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `uid` int(11) UNSIGNED DEFAULT NULL,
-  `group_id` int(11) UNSIGNED DEFAULT NULL
+                              `id` int UNSIGNED NOT NULL,
+                              `uid` int UNSIGNED DEFAULT NULL,
+                              `group_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3386,6 +3657,9 @@ CREATE TABLE `user_group` (
 INSERT INTO `user_group` (`id`, `uid`, `group_id`) VALUES
 (1, 0, 1),
 (2, 1, 1),
+(59, 12166, 2),
+(58, 12168, 2),
+(57, 12170, 2),
 (3, 12187, 1),
 (4, 12188, 1),
 (5, 12189, 1),
@@ -3424,7 +3698,8 @@ INSERT INTO `user_group` (`id`, `uid`, `group_id`) VALUES
 (52, 12251, 1),
 (53, 12252, 1),
 (54, 12253, 1),
-(55, 12254, 1);
+(55, 12254, 1),
+(56, 12255, 2);
 
 -- --------------------------------------------------------
 
@@ -3433,12 +3708,12 @@ INSERT INTO `user_group` (`id`, `uid`, `group_id`) VALUES
 --
 
 CREATE TABLE `user_invite` (
-  `id` int(11) NOT NULL,
-  `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `project_roles` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目的角色id，可以是多个以逗号,分隔',
-  `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expire_time` int(11) UNSIGNED NOT NULL
+                               `id` int NOT NULL,
+                               `email` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `project_id` int UNSIGNED NOT NULL,
+                               `project_roles` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目的角色id，可以是多个以逗号,分隔',
+                               `token` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                               `expire_time` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3448,10 +3723,10 @@ CREATE TABLE `user_invite` (
 --
 
 CREATE TABLE `user_ip_login_times` (
-  `id` int(11) NOT NULL,
-  `ip` varchar(20) NOT NULL DEFAULT '',
-  `times` int(11) NOT NULL DEFAULT '0',
-  `up_time` int(11) NOT NULL DEFAULT '0'
+                                       `id` int NOT NULL,
+                                       `ip` varchar(20) NOT NULL DEFAULT '',
+                                       `times` int NOT NULL DEFAULT '0',
+                                       `up_time` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3461,10 +3736,10 @@ CREATE TABLE `user_ip_login_times` (
 --
 
 CREATE TABLE `user_issue_display_fields` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `project_id` int(11) UNSIGNED NOT NULL,
-  `fields` varchar(512) NOT NULL
+                                             `id` int NOT NULL,
+                                             `user_id` int UNSIGNED NOT NULL,
+                                             `project_id` int UNSIGNED NOT NULL,
+                                             `fields` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3474,7 +3749,28 @@ CREATE TABLE `user_issue_display_fields` (
 INSERT INTO `user_issue_display_fields` (`id`, `user_id`, `project_id`, `fields`) VALUES
 (13, 1, 3, 'issue_num,issue_type,priority,module,sprint,summary,assignee,status,plan_date'),
 (16, 1, 0, 'issue_num,issue_type,priority,project_id,module,summary,assignee,status,resolve,plan_date'),
-(27, 1, 1, 'issue_num,issue_type,priority,module,sprint,summary,label,assignee,status,resolve,plan_date');
+(30, 1, 1, 'issue_num,issue_type,priority,module,sprint,summary,label,assignee,status,resolve,plan_date');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `user_issue_last_create_data`
+--
+
+CREATE TABLE `user_issue_last_create_data` (
+                                               `id` int UNSIGNED NOT NULL,
+                                               `user_id` int UNSIGNED NOT NULL,
+                                               `project_id` int UNSIGNED NOT NULL,
+                                               `issue_data` varchar(1024) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '{}'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `user_issue_last_create_data`
+--
+
+INSERT INTO `user_issue_last_create_data` (`id`, `user_id`, `project_id`, `issue_data`) VALUES
+(3, 1, 36, '{\"issue_type\":1,\"issue_module\":\"\\u8bf7\\u9009\\u62e9\",\"assignee\":12255,\"fix_version\":[\"\"],\"labels\":null}'),
+(8, 1, 1, '{\"issue_type\":1,\"module\":\"1\",\"assignee\":12164,\"fix_version\":[\"1\"],\"labels\":[\"1\",\"2\",\"3\"]}');
 
 -- --------------------------------------------------------
 
@@ -3483,12 +3779,12 @@ INSERT INTO `user_issue_display_fields` (`id`, `user_id`, `project_id`, `fields`
 --
 
 CREATE TABLE `user_login_log` (
-  `id` int(11) NOT NULL,
-  `session_id` varchar(64) NOT NULL DEFAULT '',
-  `token` varchar(128) DEFAULT '',
-  `uid` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `time` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `ip` varchar(24) NOT NULL DEFAULT ''
+                                  `id` int NOT NULL,
+                                  `session_id` varchar(64) NOT NULL DEFAULT '',
+                                  `token` varchar(128) DEFAULT '',
+                                  `uid` int UNSIGNED NOT NULL DEFAULT '0',
+                                  `time` int UNSIGNED NOT NULL DEFAULT '0',
+                                  `ip` varchar(24) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录日志表';
 
 --
@@ -3496,16 +3792,7 @@ CREATE TABLE `user_login_log` (
 --
 
 INSERT INTO `user_login_log` (`id`, `session_id`, `token`, `uid`, `time`, `ip`) VALUES
-(1, 'g9q83tk5epigu2rp0aac2r5s8h', '', 1, 1591018542, '127.0.0.1'),
-(2, 'f4u18lj6d1fk9r7bt1kjo4llss', '', 1, 1591062606, '127.0.0.1'),
-(3, 'vuo9jf4edour52rgfvbmes2t4h', '', 12256, 1591078783, '127.0.0.1'),
-(4, 'vuo9jf4edour52rgfvbmes2t4h', '', 1, 1591083871, '127.0.0.1'),
-(5, 'v0d79ud6qjgc3626n0krjq3c7a', '', 1, 1591176371, '127.0.0.1'),
-(6, 'dma0e98tclsv7i5m0deugq2i0a', '', 1, 1591178696, '127.0.0.1'),
-(7, 'jg541r22oaadt9f20au3ef418r', '', 1, 1591182690, '127.0.0.1'),
-(8, 'l9fbgmmbj44oglifbpb9s7quj1', '', 1, 1591185069, '127.0.0.1'),
-(9, 'anehb0vhhjh8furb9tor7bnlj3', '', 1, 1591186937, '127.0.0.1'),
-(10, 'epe30229632u8drp8ipkpkl213', '', 1, 1591187397, '127.0.0.1');
+(1, 'lhsr25nbm3k22pr46mnuci1cmn', '', 1, 1604321657, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -3514,33 +3801,33 @@ INSERT INTO `user_login_log` (`id`, `session_id`, `token`, `uid`, `time`, `ip`) 
 --
 
 CREATE TABLE `user_main` (
-  `uid` int(11) NOT NULL,
-  `schema_source` varchar(12) NOT NULL DEFAULT 'inner' COMMENT '用户数据源: inner ldap wechat weibo github等',
-  `directory_id` int(11) DEFAULT NULL,
-  `phone` varchar(16) DEFAULT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  `openid` varchar(32) NOT NULL,
-  `status` tinyint(2) DEFAULT '1' COMMENT '0 审核中;1 正常; 2 禁用',
-  `first_name` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  `display_name` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `sex` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '1男2女',
-  `birthday` varchar(20) DEFAULT NULL,
-  `create_time` int(11) UNSIGNED DEFAULT '0',
-  `update_time` int(11) DEFAULT '0',
-  `avatar` varchar(100) DEFAULT '',
-  `source` varchar(20) DEFAULT '',
-  `ios_token` varchar(128) DEFAULT NULL,
-  `android_token` varchar(128) DEFAULT NULL,
-  `version` varchar(20) DEFAULT NULL,
-  `token` varchar(64) DEFAULT '',
-  `last_login_time` int(11) UNSIGNED DEFAULT '0',
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否系统自带的用户,不可删除',
-  `login_counter` int(11) UNSIGNED DEFAULT '0' COMMENT '登录次数',
-  `title` varchar(32) DEFAULT NULL,
-  `sign` varchar(64) DEFAULT NULL
+                             `uid` int NOT NULL,
+                             `schema_source` varchar(12) NOT NULL DEFAULT 'inner' COMMENT '用户数据源: inner ldap wechat weibo github等',
+                             `directory_id` int DEFAULT NULL,
+                             `phone` varchar(16) DEFAULT NULL,
+                             `username` varchar(255) DEFAULT NULL,
+                             `openid` varchar(32) NOT NULL,
+                             `status` tinyint DEFAULT '1' COMMENT '0 审核中;1 正常; 2 禁用',
+                             `first_name` varchar(255) DEFAULT NULL,
+                             `last_name` varchar(255) DEFAULT NULL,
+                             `display_name` varchar(255) DEFAULT NULL,
+                             `email` varchar(255) DEFAULT NULL,
+                             `password` varchar(255) DEFAULT NULL,
+                             `sex` tinyint UNSIGNED DEFAULT '0' COMMENT '1男2女',
+                             `birthday` varchar(20) DEFAULT NULL,
+                             `create_time` int UNSIGNED DEFAULT '0',
+                             `update_time` int DEFAULT '0',
+                             `avatar` varchar(100) DEFAULT '',
+                             `source` varchar(20) DEFAULT '',
+                             `ios_token` varchar(128) DEFAULT NULL,
+                             `android_token` varchar(128) DEFAULT NULL,
+                             `version` varchar(20) DEFAULT NULL,
+                             `token` varchar(64) DEFAULT '',
+                             `last_login_time` int UNSIGNED DEFAULT '0',
+                             `is_system` tinyint UNSIGNED DEFAULT '0' COMMENT '是否系统自带的用户,不可删除',
+                             `login_counter` int UNSIGNED DEFAULT '0' COMMENT '登录次数',
+                             `title` varchar(32) DEFAULT NULL,
+                             `sign` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3548,7 +3835,7 @@ CREATE TABLE `user_main` (
 --
 
 INSERT INTO `user_main` (`uid`, `schema_source`, `directory_id`, `phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`, `update_time`, `avatar`, `source`, `ios_token`, `android_token`, `version`, `token`, `last_login_time`, `is_system`, `login_counter`, `title`, `sign`) VALUES
-(1, 'inner', 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '121642038@qq.com', '$2y$10$f/pmUWT5JFvLVtlq83lv..dhkDMM60Da80w.VidavER.vtCAZSBOS', 1, '2019-01-13', 0, 0, 'avatar/1.png?t=1579249493', '', NULL, NULL, NULL, NULL, 1591187397, 0, 0, '管理员', '简化项目管理，保障结果，快乐团队！'),
+(1, 'inner', 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '121642038@qq.com', '$2y$10$f/pmUWT5JFvLVtlq83lv..dhkDMM60Da80w.VidavER.vtCAZSBOS', 1, '2019-01-13', 0, 0, 'avatar/1.png?t=1604387178', '', NULL, NULL, NULL, NULL, 1604321657, 0, 0, '管理员', '简化项目管理，保障结果，快乐团队！'),
 (12164, 'inner', NULL, NULL, 'json', '87655dd189dc13a7eb36f62a3a8eed4c', 1, NULL, NULL, 'Json', '23335096@qq.com', '$2y$10$hW2HeFe4kUO/IDxGW5A68e7r.sERM6.VtP3VrYLXeyHVb0ZjXo2Sm', 0, NULL, 1579247721, 0, 'avatar/12164.png?t=1579247721', '', NULL, NULL, NULL, '', 0, 0, 0, 'Java开发工程师', NULL),
 (12165, 'inner', NULL, NULL, 'shelly', '74eb77b447ad46f0ba76dba8de3e8489', 1, NULL, NULL, 'Shelly', '460399316@qq.com', '$2y$10$RXindYr74f9I1GyaGtovE.KgD6pgcjE6Z9SZyqLO9UykzImG6n2kS', 0, NULL, 1579247769, 0, 'avatar/12165.png?t=1579247769', '', NULL, NULL, NULL, '', 1583827161, 0, 0, '软件测试工程师', NULL),
 (12166, 'inner', NULL, NULL, 'alex', '22778739b6553330c4f9e8a29d0e1d5f', 1, NULL, NULL, 'Alex', '2823335096@qq.com', '$2y$10$ENToGF7kfUrXm0i6DISJ6utmjq076tSCaVuEyeqQRdQocgUwxZKZ6', 0, NULL, 1579247886, 0, 'avatar/12166.png?t=1579247886', '', NULL, NULL, NULL, '', 0, 0, 0, '产品经理', NULL),
@@ -3565,17 +3852,29 @@ INSERT INTO `user_main` (`uid`, `schema_source`, `directory_id`, `phone`, `usern
 --
 
 CREATE TABLE `user_message` (
-  `id` int(11) NOT NULL,
-  `sender_uid` int(11) UNSIGNED NOT NULL,
-  `sender_name` varchar(64) NOT NULL,
-  `direction` smallint(4) UNSIGNED NOT NULL,
-  `receiver_uid` int(11) UNSIGNED NOT NULL,
-  `title` varchar(128) NOT NULL,
-  `content` text NOT NULL,
-  `readed` tinyint(1) UNSIGNED NOT NULL,
-  `type` tinyint(2) UNSIGNED NOT NULL,
-  `create_time` int(11) UNSIGNED NOT NULL
+                                `id` int NOT NULL,
+                                `sender_uid` int UNSIGNED NOT NULL,
+                                `sender_name` varchar(64) NOT NULL,
+                                `direction` smallint UNSIGNED NOT NULL,
+                                `receiver_uid` int UNSIGNED NOT NULL,
+                                `title` varchar(128) NOT NULL,
+                                `content` text NOT NULL,
+                                `readed` tinyint UNSIGNED NOT NULL,
+                                `type` tinyint UNSIGNED NOT NULL,
+                                `create_time` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `user_message`
+--
+
+INSERT INTO `user_message` (`id`, `sender_uid`, `sender_name`, `direction`, `receiver_uid`, `title`, `content`, `readed`, `type`, `create_time`) VALUES
+(1, 0, 'Masterlab', 1, 1, '项目创建异常', '文档模块创建失败,请联系管理员', 0, 1, 1604403289),
+(2, 0, 'Masterlab', 1, 1, '项目创建异常', '文档模块创建失败,请联系管理员', 0, 1, 1604404476),
+(3, 0, 'Masterlab', 1, 1, '项目创建异常', '文档模块创建失败,请联系管理员', 0, 1, 1604404566),
+(4, 0, 'Masterlab', 1, 1, '项目删除提示', '文档模块用户接口错误:获取用户project90信息失败\r\n{\n    \"code\": false,\n    \"use_time\": 0.10400605201721191,\n    \"data\": \"Not Exists\",\n    \"REQUEST_URI\": \"\\/kod_index.php?systemMember\\/getByName&name=project90&accessToken=42ac6khrFD_pUtX8vYEmeKmaymL-dsCHToMFAumlWN1aiqN0K-7knOYYQQSHY2QAtE_jmcxL7w\"\n}', 0, 1, 1604404675),
+(5, 0, 'Masterlab', 1, 1, '项目删除提示', '文档模块用户接口错误:获取用户project89信息失败\r\n{\n    \"code\": false,\n    \"use_time\": 0.10500597953796387,\n    \"data\": \"Not Exists\",\n    \"REQUEST_URI\": \"\\/kod_index.php?systemMember\\/getByName&name=project89&accessToken=f651kHYCslR5HByrpqmujcbxY-Kd9L-VrfHpu_T4Fe8p5S7UPd5Ub8VbSwKJ2TZzk8-UBweKQw\"\n}', 0, 1, 1604404689),
+(6, 0, 'Masterlab', 1, 1, '项目删除提示', '文档模块用户接口错误:获取用户project88信息失败\r\n{\n    \"code\": false,\n    \"use_time\": 0.10500597953796387,\n    \"data\": \"Not Exists\",\n    \"REQUEST_URI\": \"\\/kod_index.php?systemMember\\/getByName&name=project88&accessToken=4e13PN_cN0XHmJFWG8f5zzHBEklzXwIKRP3cOCeR13QlnX1nyPzoOuH2x2nTtnNTUo-nJCbTqg\"\n}', 0, 1, 1604408496);
 
 -- --------------------------------------------------------
 
@@ -3584,8 +3883,8 @@ CREATE TABLE `user_message` (
 --
 
 CREATE TABLE `user_password` (
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `hash` varchar(72) DEFAULT '' COMMENT 'password_hash()值'
+                                 `user_id` int UNSIGNED NOT NULL,
+                                 `hash` varchar(72) DEFAULT '' COMMENT 'password_hash()值'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3595,8 +3894,8 @@ CREATE TABLE `user_password` (
 --
 
 CREATE TABLE `user_password_strategy` (
-  `id` int(1) UNSIGNED NOT NULL,
-  `strategy` tinyint(1) UNSIGNED DEFAULT NULL COMMENT '1允许所有密码;2不允许非常简单的密码;3要求强密码  关于安全密码策略'
+                                          `id` int UNSIGNED NOT NULL,
+                                          `strategy` tinyint UNSIGNED DEFAULT NULL COMMENT '1允许所有密码;2不允许非常简单的密码;3要求强密码  关于安全密码策略'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3613,10 +3912,10 @@ INSERT INTO `user_password_strategy` (`id`, `strategy`) VALUES
 --
 
 CREATE TABLE `user_phone_find_password` (
-  `id` int(11) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `verify_code` varchar(128) NOT NULL DEFAULT '',
-  `time` int(11) UNSIGNED NOT NULL DEFAULT '0'
+                                            `id` int NOT NULL,
+                                            `phone` varchar(20) NOT NULL,
+                                            `verify_code` varchar(128) NOT NULL DEFAULT '',
+                                            `time` int UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='找回密码表';
 
 --
@@ -3633,10 +3932,10 @@ INSERT INTO `user_phone_find_password` (`id`, `phone`, `verify_code`, `time`) VA
 --
 
 CREATE TABLE `user_posted_flag` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `_date` date NOT NULL,
-  `ip` varchar(32) NOT NULL
+                                    `id` int NOT NULL,
+                                    `user_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                    `_date` date NOT NULL,
+                                    `ip` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3644,49 +3943,9 @@ CREATE TABLE `user_posted_flag` (
 --
 
 INSERT INTO `user_posted_flag` (`id`, `user_id`, `_date`, `ip`) VALUES
-(2, 0, '2020-04-20', '127.0.0.1'),
-(3, 0, '2020-04-21', '127.0.0.1'),
-(5, 0, '2020-04-22', '127.0.0.1'),
-(9, 0, '2020-04-23', '127.0.0.1'),
-(11, 0, '2020-04-24', '127.0.0.1'),
-(13, 0, '2020-04-27', '127.0.0.1'),
-(14, 0, '2020-04-29', '127.0.0.1'),
-(16, 0, '2020-05-02', '127.0.0.1'),
-(17, 0, '2020-05-04', '192.168.0.101'),
-(20, 0, '2020-05-12', '127.0.0.1'),
-(22, 0, '2020-05-15', '192.168.3.48'),
-(23, 0, '2020-05-16', '127.0.0.1'),
-(25, 0, '2020-05-25', '127.0.0.1'),
-(28, 0, '2020-05-26', '127.0.0.1'),
-(29, 0, '2020-05-28', '127.0.0.1'),
-(31, 0, '2020-05-29', '127.0.0.1'),
-(33, 0, '2020-05-30', '127.0.0.1'),
-(36, 0, '2020-05-31', '127.0.0.1'),
-(37, 0, '2020-06-01', '127.0.0.1'),
-(41, 0, '2020-06-02', '127.0.0.1'),
-(44, 0, '2020-06-03', '127.0.0.1'),
-(1, 1, '2020-04-20', '127.0.0.1'),
-(4, 1, '2020-04-21', '127.0.0.1'),
-(6, 1, '2020-04-22', '127.0.0.1'),
-(7, 1, '2020-04-23', '127.0.0.1'),
-(12, 1, '2020-04-27', '127.0.0.1'),
-(15, 1, '2020-04-29', '127.0.0.1'),
-(18, 1, '2020-05-06', '127.0.0.1'),
-(19, 1, '2020-05-11', '127.0.0.1'),
-(21, 1, '2020-05-12', '127.0.0.1'),
-(24, 1, '2020-05-16', '127.0.0.1'),
-(26, 1, '2020-05-25', '127.0.0.1'),
-(27, 1, '2020-05-26', '127.0.0.1'),
-(30, 1, '2020-05-28', '127.0.0.1'),
-(32, 1, '2020-05-29', '127.0.0.1'),
-(34, 1, '2020-05-30', '127.0.0.1'),
-(40, 1, '2020-06-01', '127.0.0.1'),
-(42, 1, '2020-06-02', '127.0.0.1'),
-(45, 1, '2020-06-03', '127.0.0.1'),
-(35, 12255, '2020-05-30', '127.0.0.1'),
-(43, 12256, '2020-06-02', '127.0.0.1'),
-(38, 12260, '2020-06-01', '127.0.0.1'),
-(39, 12261, '2020-06-01', '127.0.0.1');
+(1, 0, '2020-11-02', '127.0.0.1'),
+(2, 1, '2020-11-02', '127.0.0.1'),
+(3, 1, '2020-11-03', '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -3695,9 +3954,9 @@ INSERT INTO `user_posted_flag` (`id`, `user_id`, `_date`, `ip`) VALUES
 --
 
 CREATE TABLE `user_refresh_token` (
-  `uid` int(10) UNSIGNED NOT NULL,
-  `refresh_token` varchar(256) NOT NULL,
-  `expire` int(10) UNSIGNED NOT NULL
+                                      `uid` int UNSIGNED NOT NULL,
+                                      `refresh_token` varchar(256) NOT NULL,
+                                      `expire` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户刷新的token表';
 
 -- --------------------------------------------------------
@@ -3707,10 +3966,10 @@ CREATE TABLE `user_refresh_token` (
 --
 
 CREATE TABLE `user_setting` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `_key` varchar(64) DEFAULT NULL,
-  `_value` varchar(256) DEFAULT NULL
+                                `id` int UNSIGNED NOT NULL,
+                                `user_id` int UNSIGNED NOT NULL,
+                                `_key` varchar(64) DEFAULT NULL,
+                                `_value` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3720,7 +3979,7 @@ CREATE TABLE `user_setting` (
 INSERT INTO `user_setting` (`id`, `user_id`, `_key`, `_value`) VALUES
 (51, 1, 'scheme_style', 'left'),
 (53, 1, 'project_view', 'issues'),
-(54, 1, 'issue_view', 'list'),
+(54, 1, 'issue_view', 'detail'),
 (198, 1, 'initializedWidget', '1'),
 (201, 1, 'initialized_widget', '1'),
 (353, 1, 'page_layout', 'fixed'),
@@ -3739,7 +3998,10 @@ INSERT INTO `user_setting` (`id`, `user_id`, `_key`, `_value`) VALUES
 (572, 12256, 'initializedWidget', '1'),
 (597, 12256, 'layout', 'aaa'),
 (598, 12256, 'projects_sort', 'created_desc'),
-(600, 1, 'layout', 'aaa');
+(602, 12262, 'layout', 'aa'),
+(603, 12262, 'initializedWidget', '1'),
+(604, 12262, 'projects_sort', 'created_desc'),
+(614, 1, 'layout', 'aaa');
 
 -- --------------------------------------------------------
 
@@ -3748,12 +4010,12 @@ INSERT INTO `user_setting` (`id`, `user_id`, `_key`, `_value`) VALUES
 --
 
 CREATE TABLE `user_token` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户id',
-  `token` varchar(255) NOT NULL DEFAULT '' COMMENT 'token',
-  `token_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'token过期时间',
-  `refresh_token` varchar(255) NOT NULL DEFAULT '' COMMENT '刷新token',
-  `refresh_token_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '刷新token过期时间'
+                              `id` int UNSIGNED NOT NULL,
+                              `uid` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户id',
+                              `token` varchar(255) NOT NULL DEFAULT '' COMMENT 'token',
+                              `token_time` int UNSIGNED NOT NULL DEFAULT '0' COMMENT 'token过期时间',
+                              `refresh_token` varchar(255) NOT NULL DEFAULT '' COMMENT '刷新token',
+                              `refresh_token_time` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '刷新token过期时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3761,13 +4023,14 @@ CREATE TABLE `user_token` (
 --
 
 INSERT INTO `user_token` (`id`, `uid`, `token`, `token_time`, `refresh_token`, `refresh_token_time`) VALUES
-(1, 1, 'c89fa66ec1bdcb7978181da4799edb5b61e7e67de92fcca8fe3444d31abc5f42', 1590657444, '495b9949311a220568fcfea321f4d6b25b3eb0f3d2246b922f5b1a7759aa70a4', 1590657444),
+(1, 1, 'f2c75534fa5f67bf0499f2f081d82d2ea67223dcb4a36780a878c94cbaf81e8b', 1603702456, '1cc3c4b38af5b0729ab026fa1f1919ed5b3eb0f3d2246b922f5b1a7759aa70a4', 1603702456),
 (2, 12165, '289782df047c0639a1de60ec30df81be53d3aa23f5e7cee5ef5aa4b20f672467', 1583827161, 'f2e9f12ee857d126d36df54e03e4f0cf98a48d68c05a484f1469710b20a19d3b', 1583827161),
 (3, 12170, '091ec9b5343b945a2a879dbfdfc6dcae84ba0e8eafae9c81d63f741f94164677', 1585123124, 'de5f7da9538959dd325522b5526e9ad6bd2aaef4485b9bc5c66971bc6c3c3e01', 1585123124),
 (4, 12256, 'ea8a1052074fffe62ee5e9100ed0540c48a812fa8aa80b165908bf5f62a88cea', 1590482533, '807d05146a7385e017feeadb25642c431276ca280e9d78e7d60c9cbf36c98ad3', 1590482533),
 (5, 12255, '1900f267de67e2c589a673ea9dd7fa6e3aaef718953de171acc5efd0f7d7df5c', 1590829475, '4b2dc1cf0a9c7b165bd84d943f49fc0d0b8a73ee4155e896616bb50c969545de', 1590829475),
 (6, 12260, '2a3d355be7ad548fcdb5cb678c3f954a40b7af3e01ae2315a6b8b8366cab8a2d', 1590941255, '3809c705052ff05d5c7c8df9462f0f2835fc93d257caf06eab6c344a1c462375', 1590941255),
-(7, 12261, '9e24d6373c5604e7929a47ac3b8cf66d9ab0af7f5f5ba86c5f293d085872739b', 1590941546, '9cd87f6c48e515f4889fdd5f39ecfa05cba9d6feea987d82b61f9d0806df49aa', 1590941546);
+(7, 12261, '9e24d6373c5604e7929a47ac3b8cf66d9ab0af7f5f5ba86c5f293d085872739b', 1590941546, '9cd87f6c48e515f4889fdd5f39ecfa05cba9d6feea987d82b61f9d0806df49aa', 1590941546),
+(8, 12262, '4df8c02c95d4262ea8e1656cf56cc24358a7c10d2f92307759bc504a988dc1c5', 1593856423, '702f97f1753c239b384f81c35bf676d6a6f9ba4bc1f247428990e2c3bd22fead', 1593856423);
 
 -- --------------------------------------------------------
 
@@ -3776,13 +4039,13 @@ INSERT INTO `user_token` (`id`, `uid`, `token`, `token_time`, `refresh_token`, `
 --
 
 CREATE TABLE `user_widget` (
-  `id` int(11) NOT NULL COMMENT '主键id',
-  `user_id` int(11) UNSIGNED NOT NULL COMMENT '用户id',
-  `widget_id` int(11) NOT NULL COMMENT 'main_widget主键id',
-  `order_weight` int(11) UNSIGNED DEFAULT NULL COMMENT '工具顺序',
-  `panel` varchar(40) NOT NULL,
-  `parameter` varchar(1024) NOT NULL,
-  `is_saved_parameter` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否保存了过滤参数'
+                               `id` int NOT NULL COMMENT '主键id',
+                               `user_id` int UNSIGNED NOT NULL COMMENT '用户id',
+                               `widget_id` int NOT NULL COMMENT 'main_widget主键id',
+                               `order_weight` int UNSIGNED DEFAULT NULL COMMENT '工具顺序',
+                               `panel` varchar(40) NOT NULL,
+                               `parameter` varchar(1024) NOT NULL,
+                               `is_saved_parameter` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否保存了过滤参数'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3865,12 +4128,20 @@ INSERT INTO `user_widget` (`id`, `user_id`, `widget_id`, `order_weight`, `panel`
 (2807, 12256, 2, 3, 'first', '', 0),
 (2808, 12256, 3, 1, 'second', '', 0),
 (2809, 12256, 23, 1, 'third', '', 0),
-(2817, 1, 1, 1, 'first', '', 0),
-(2818, 1, 23, 2, 'first', '', 0),
-(2819, 1, 24, 3, 'first', '', 0),
-(2820, 1, 10, 1, 'second', '[{\"name\":\"project_id\",\"value\":\"1\"},{\"name\":\"status\",\"value\":\"all\"}]', 1),
-(2821, 1, 14, 1, 'third', '[{\"name\":\"sprint_id\",\"value\":\"1\"}]', 1),
-(2822, 1, 3, 2, 'third', '', 0);
+(2829, 12262, 1, 1, 'first', '', 0),
+(2830, 12262, 4, 1, 'second', '', 0),
+(2831, 12262, 5, 2, 'second', '', 0),
+(2832, 12262, 23, 2, 'first', '', 0),
+(2833, 12262, 3, 3, 'first', '', 0),
+(2907, 1, 21, 1, 'first', '[{\"name\":\"sprint_id\",\"value\":\"2\"},{\"name\":\"status\",\"value\":\"all\"}]', 1),
+(2908, 1, 1, 2, 'first', '', 0),
+(2909, 1, 20, 3, 'first', '[{\"name\":\"sprint_id\",\"value\":\"1\"}]', 1),
+(2910, 1, 13, 4, 'first', '[{\"name\":\"sprint_id\",\"value\":\"1\"}]', 1),
+(2911, 1, 24, 5, 'first', '', 0),
+(2912, 1, 3, 1, 'second', '', 0),
+(2913, 1, 14, 1, 'third', '[{\"name\":\"sprint_id\",\"value\":\"2\"}]', 1),
+(2914, 1, 10, 2, 'third', '[{\"name\":\"project_id\",\"value\":\"1\"},{\"name\":\"status\",\"value\":\"all\"}]', 1),
+(2915, 1, 23, 3, 'third', '', 0);
 
 -- --------------------------------------------------------
 
@@ -3879,16 +4150,16 @@ INSERT INTO `user_widget` (`id`, `user_id`, `widget_id`, `order_weight`, `panel`
 --
 
 CREATE TABLE `workflow` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(40) DEFAULT '',
-  `description` varchar(100) DEFAULT '',
-  `create_uid` int(11) UNSIGNED DEFAULT NULL,
-  `create_time` int(11) UNSIGNED DEFAULT NULL,
-  `update_uid` int(11) UNSIGNED DEFAULT NULL,
-  `update_time` int(11) UNSIGNED DEFAULT NULL,
-  `steps` tinyint(2) UNSIGNED DEFAULT NULL,
-  `data` text,
-  `is_system` tinyint(1) UNSIGNED DEFAULT '0'
+                            `id` int UNSIGNED NOT NULL,
+                            `name` varchar(40) DEFAULT '',
+                            `description` varchar(100) DEFAULT '',
+                            `create_uid` int UNSIGNED DEFAULT NULL,
+                            `create_time` int UNSIGNED DEFAULT NULL,
+                            `update_uid` int UNSIGNED DEFAULT NULL,
+                            `update_time` int UNSIGNED DEFAULT NULL,
+                            `steps` tinyint UNSIGNED DEFAULT NULL,
+                            `data` text,
+                            `is_system` tinyint UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3907,13 +4178,13 @@ INSERT INTO `workflow` (`id`, `name`, `description`, `create_uid`, `create_time`
 --
 
 CREATE TABLE `workflow_block` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-  `status_id` int(11) UNSIGNED DEFAULT NULL,
-  `blcok_id` varchar(64) DEFAULT NULL,
-  `position_x` smallint(4) UNSIGNED DEFAULT NULL,
-  `position_y` smallint(4) UNSIGNED DEFAULT NULL,
-  `inner_html` varchar(200) DEFAULT NULL
+                                  `id` int UNSIGNED NOT NULL,
+                                  `workflow_id` int UNSIGNED DEFAULT NULL,
+                                  `status_id` int UNSIGNED DEFAULT NULL,
+                                  `blcok_id` varchar(64) DEFAULT NULL,
+                                  `position_x` smallint UNSIGNED DEFAULT NULL,
+                                  `position_y` smallint UNSIGNED DEFAULT NULL,
+                                  `inner_html` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3923,12 +4194,12 @@ CREATE TABLE `workflow_block` (
 --
 
 CREATE TABLE `workflow_connector` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-  `connector_id` varchar(32) DEFAULT NULL,
-  `title` varchar(64) DEFAULT NULL,
-  `source_id` varchar(64) DEFAULT NULL,
-  `target_id` varchar(64) DEFAULT NULL
+                                      `id` int UNSIGNED NOT NULL,
+                                      `workflow_id` int UNSIGNED DEFAULT NULL,
+                                      `connector_id` varchar(32) DEFAULT NULL,
+                                      `title` varchar(64) DEFAULT NULL,
+                                      `source_id` varchar(64) DEFAULT NULL,
+                                      `target_id` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -3938,10 +4209,10 @@ CREATE TABLE `workflow_connector` (
 --
 
 CREATE TABLE `workflow_scheme` (
-  `id` int(11) NOT NULL,
-  `name` varchar(128) DEFAULT NULL,
-  `description` varchar(256) DEFAULT NULL,
-  `is_system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
+                                   `id` int NOT NULL,
+                                   `name` varchar(128) DEFAULT NULL,
+                                   `description` varchar(256) DEFAULT NULL,
+                                   `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3961,10 +4232,10 @@ INSERT INTO `workflow_scheme` (`id`, `name`, `description`, `is_system`) VALUES
 --
 
 CREATE TABLE `workflow_scheme_data` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `scheme_id` int(11) UNSIGNED DEFAULT NULL,
-  `issue_type_id` int(11) UNSIGNED DEFAULT NULL,
-  `workflow_id` int(11) UNSIGNED DEFAULT NULL
+                                        `id` int UNSIGNED NOT NULL,
+                                        `scheme_id` int UNSIGNED DEFAULT NULL,
+                                        `issue_type_id` int UNSIGNED DEFAULT NULL,
+                                        `workflow_id` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3999,830 +4270,897 @@ INSERT INTO `workflow_scheme_data` (`id`, `scheme_id`, `issue_type_id`, `workflo
 -- 表的索引 `agile_board`
 --
 ALTER TABLE `agile_board`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `project_id` (`project_id`),
-  ADD KEY `weight` (`weight`),
-  ADD KEY `test` (`name`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_id` (`project_id`),
+    ADD KEY `weight` (`weight`),
+    ADD KEY `test` (`name`) USING BTREE;
 
 --
 -- 表的索引 `agile_board_column`
 --
 ALTER TABLE `agile_board_column`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `board_id` (`board_id`),
-  ADD KEY `id_and_weight` (`id`,`weight`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `board_id` (`board_id`),
+    ADD KEY `id_and_weight` (`id`,`weight`) USING BTREE;
 
 --
 -- 表的索引 `agile_sprint`
 --
 ALTER TABLE `agile_sprint`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `agile_sprint_issue_report`
 --
 ALTER TABLE `agile_sprint_issue_report`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `sprint_id` (`sprint_id`),
-  ADD KEY `sprintIdAndDate` (`sprint_id`,`date`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `sprint_id` (`sprint_id`),
+    ADD KEY `sprintIdAndDate` (`sprint_id`,`date`);
 
 --
 -- 表的索引 `field_custom_value`
 --
 ALTER TABLE `field_custom_value`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_index` (`issue_id`,`project_id`,`custom_field_id`) USING BTREE,
-  ADD KEY `issue_id` (`issue_id`),
-  ADD KEY `issue_id_2` (`issue_id`,`project_id`),
-  ADD KEY `union_issue_custom` (`issue_id`,`custom_field_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `unique_index` (`issue_id`,`project_id`,`custom_field_id`) USING BTREE,
+    ADD KEY `issue_id` (`issue_id`),
+    ADD KEY `issue_id_2` (`issue_id`,`project_id`),
+    ADD KEY `union_issue_custom` (`issue_id`,`custom_field_id`) USING BTREE;
 
 --
 -- 表的索引 `field_layout_default`
 --
 ALTER TABLE `field_layout_default`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `field_layout_project_custom`
 --
 ALTER TABLE `field_layout_project_custom`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `project_id` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `field_main`
 --
 ALTER TABLE `field_main`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_fli_fieldidentifier` (`name`),
-  ADD KEY `order_weight` (`order_weight`),
-  ADD KEY `is_system` (`is_system`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `idx_fli_fieldidentifier` (`name`),
+    ADD KEY `order_weight` (`order_weight`),
+    ADD KEY `is_system` (`is_system`);
 
 --
 -- 表的索引 `field_type`
 --
 ALTER TABLE `field_type`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `type` (`type`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `type` (`type`) USING BTREE;
 
 --
 -- 表的索引 `hornet_cache_key`
 --
 ALTER TABLE `hornet_cache_key`
-  ADD PRIMARY KEY (`key`),
-  ADD UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
-  ADD KEY `module` (`module`),
-  ADD KEY `expire` (`expire`);
+    ADD PRIMARY KEY (`key`),
+    ADD UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
+    ADD KEY `module` (`module`),
+    ADD KEY `expire` (`expire`);
 
 --
 -- 表的索引 `hornet_user`
 --
 ALTER TABLE `hornet_user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `phone_unique` (`phone`) USING BTREE,
-  ADD KEY `phone` (`phone`,`password`),
-  ADD KEY `email` (`email`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `phone_unique` (`phone`) USING BTREE,
+    ADD KEY `phone` (`phone`,`password`),
+    ADD KEY `email` (`email`);
 
 --
 -- 表的索引 `issue_assistant`
 --
 ALTER TABLE `issue_assistant`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `issue_id` (`issue_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `issue_id` (`issue_id`);
 
 --
 -- 表的索引 `issue_description_template`
 --
 ALTER TABLE `issue_description_template`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_effect_version`
 --
 ALTER TABLE `issue_effect_version`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_extra_worker_day`
 --
 ALTER TABLE `issue_extra_worker_day`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_field_layout_project`
 --
 ALTER TABLE `issue_field_layout_project`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_fli_fieldidentifier` (`fieldidentifier`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `idx_fli_fieldidentifier` (`fieldidentifier`);
 
 --
 -- 表的索引 `issue_file_attachment`
 --
 ALTER TABLE `issue_file_attachment`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `attach_issue` (`issue_id`),
-  ADD KEY `uuid` (`uuid`),
-  ADD KEY `tmp_issue_id` (`tmp_issue_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `attach_issue` (`issue_id`),
+    ADD KEY `uuid` (`uuid`),
+    ADD KEY `tmp_issue_id` (`tmp_issue_id`);
 
 --
 -- 表的索引 `issue_filter`
 --
 ALTER TABLE `issue_filter`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `sr_author` (`author`),
-  ADD KEY `searchrequest_filternameLower` (`name_lower`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `sr_author` (`author`),
+    ADD KEY `searchrequest_filternameLower` (`name_lower`);
 
 --
 -- 表的索引 `issue_fix_version`
 --
 ALTER TABLE `issue_fix_version`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_follow`
 --
 ALTER TABLE `issue_follow`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `issue_id` (`issue_id`,`user_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `issue_id` (`issue_id`,`user_id`);
 
 --
 -- 表的索引 `issue_holiday`
 --
 ALTER TABLE `issue_holiday`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_label`
 --
 ALTER TABLE `issue_label`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `project_id` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `issue_label_data`
 --
 ALTER TABLE `issue_label_data`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `issue_id` (`issue_id`),
-  ADD KEY `label_id` (`label_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `issue_id` (`issue_id`),
+    ADD KEY `label_id` (`label_id`);
 
 --
 -- 表的索引 `issue_main`
 --
 ALTER TABLE `issue_main`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `issue_created` (`created`),
-  ADD KEY `issue_updated` (`updated`),
-  ADD KEY `issue_duedate` (`due_date`),
-  ADD KEY `issue_assignee` (`assignee`),
-  ADD KEY `issue_reporter` (`reporter`),
-  ADD KEY `pkey` (`pkey`),
-  ADD KEY `summary` (`summary`),
-  ADD KEY `backlog_weight` (`backlog_weight`),
-  ADD KEY `sprint_weight` (`sprint_weight`),
-  ADD KEY `status` (`status`),
-  ADD KEY `gant_sprint_weight` (`gant_sprint_weight`),
-  ADD KEY `project_id` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `issue_created` (`created`),
+    ADD KEY `issue_updated` (`updated`),
+    ADD KEY `issue_duedate` (`due_date`),
+    ADD KEY `issue_assignee` (`assignee`),
+    ADD KEY `issue_reporter` (`reporter`),
+    ADD KEY `pkey` (`pkey`),
+    ADD KEY `summary` (`summary`),
+    ADD KEY `backlog_weight` (`backlog_weight`),
+    ADD KEY `sprint_weight` (`sprint_weight`),
+    ADD KEY `status` (`status`),
+    ADD KEY `gant_sprint_weight` (`gant_sprint_weight`),
+    ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `issue_moved_issue_key`
 --
 ALTER TABLE `issue_moved_issue_key`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `idx_old_issue_key` (`old_issue_key`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `idx_old_issue_key` (`old_issue_key`);
 
 --
 -- 表的索引 `issue_priority`
 --
 ALTER TABLE `issue_priority`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `_key` (`_key`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `_key` (`_key`);
 
 --
 -- 表的索引 `issue_recycle`
 --
 ALTER TABLE `issue_recycle`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `issue_assignee` (`assignee`),
-  ADD KEY `summary` (`summary`),
-  ADD KEY `project_id` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `issue_assignee` (`assignee`),
+    ADD KEY `summary` (`summary`),
+    ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `issue_resolve`
 --
 ALTER TABLE `issue_resolve`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `_key` (`_key`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `_key` (`_key`);
 
 --
 -- 表的索引 `issue_status`
 --
 ALTER TABLE `issue_status`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `key` (`_key`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `key` (`_key`);
 
 --
 -- 表的索引 `issue_type`
 --
 ALTER TABLE `issue_type`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `_key` (`_key`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `_key` (`_key`);
 
 --
 -- 表的索引 `issue_type_scheme`
 --
 ALTER TABLE `issue_type_scheme`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_type_scheme_data`
 --
 ALTER TABLE `issue_type_scheme_data`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `scheme_id` (`scheme_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `scheme_id` (`scheme_id`);
 
 --
 -- 表的索引 `issue_ui`
 --
 ALTER TABLE `issue_ui`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
+
+--
+-- 表的索引 `issue_ui_scheme`
+--
+ALTER TABLE `issue_ui_scheme`
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `issue_id` (`issue_type_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `issue_id` (`issue_type_id`) USING BTREE;
 
 --
 -- 表的索引 `log_base`
 --
 ALTER TABLE `log_base`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `uid` (`uid`),
-  ADD KEY `obj_id` (`obj_id`) USING BTREE,
-  ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `uid` (`uid`),
+    ADD KEY `obj_id` (`obj_id`) USING BTREE,
+    ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
 
 --
 -- 表的索引 `log_operating`
 --
 ALTER TABLE `log_operating`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `uid` (`uid`),
-  ADD KEY `obj_id` (`obj_id`) USING BTREE,
-  ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `uid` (`uid`),
+    ADD KEY `obj_id` (`obj_id`) USING BTREE,
+    ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
 
 --
 -- 表的索引 `log_runtime_error`
 --
 ALTER TABLE `log_runtime_error`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `file_line_unique` (`md5`),
-  ADD KEY `date` (`date`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `file_line_unique` (`md5`),
+    ADD KEY `date` (`date`);
 
 --
 -- 表的索引 `main_action`
 --
 ALTER TABLE `main_action`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `action_author_created` (`author`,`created`),
-  ADD KEY `action_issue` (`issueid`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `action_author_created` (`author`,`created`),
+    ADD KEY `action_issue` (`issueid`);
 
 --
 -- 表的索引 `main_activity`
 --
 ALTER TABLE `main_activity`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `project_id` (`project_id`),
-  ADD KEY `date` (`date`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `user_id` (`user_id`),
+    ADD KEY `project_id` (`project_id`),
+    ADD KEY `date` (`date`);
 
 --
 -- 表的索引 `main_announcement`
 --
 ALTER TABLE `main_announcement`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_cache_key`
 --
 ALTER TABLE `main_cache_key`
-  ADD PRIMARY KEY (`key`),
-  ADD UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
-  ADD KEY `module` (`module`),
-  ADD KEY `expire` (`expire`);
+    ADD PRIMARY KEY (`key`),
+    ADD UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
+    ADD KEY `module` (`module`),
+    ADD KEY `expire` (`expire`);
 
 --
 -- 表的索引 `main_eventtype`
 --
 ALTER TABLE `main_eventtype`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_group`
 --
 ALTER TABLE `main_group`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `name` (`name`);
 
 --
 -- 表的索引 `main_mail_queue`
 --
 ALTER TABLE `main_mail_queue`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `seq` (`seq`) USING BTREE,
-  ADD KEY `status` (`status`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `seq` (`seq`) USING BTREE,
+    ADD KEY `status` (`status`);
 
 --
 -- 表的索引 `main_notify_scheme`
 --
 ALTER TABLE `main_notify_scheme`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_notify_scheme_data`
 --
 ALTER TABLE `main_notify_scheme_data`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_org`
 --
 ALTER TABLE `main_org`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `path` (`path`),
-  ADD KEY `name` (`name`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `path` (`path`),
+    ADD KEY `name` (`name`);
 
 --
 -- 表的索引 `main_plugin`
 --
 ALTER TABLE `main_plugin`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD KEY `order_weight` (`order_weight`),
-  ADD KEY `type` (`type`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `name` (`name`),
+    ADD KEY `order_weight` (`order_weight`),
+    ADD KEY `type` (`type`);
 
 --
 -- 表的索引 `main_setting`
 --
 ALTER TABLE `main_setting`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `_key` (`_key`),
-  ADD KEY `module` (`module`) USING BTREE,
-  ADD KEY `module_2` (`module`,`order_weight`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `_key` (`_key`),
+    ADD KEY `module` (`module`) USING BTREE,
+    ADD KEY `module_2` (`module`,`order_weight`);
 
 --
 -- 表的索引 `main_timeline`
 --
 ALTER TABLE `main_timeline`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_webhook`
 --
 ALTER TABLE `main_webhook`
-  ADD UNIQUE KEY `id` (`id`),
-  ADD KEY `enable` (`enable`);
+    ADD UNIQUE KEY `id` (`id`),
+    ADD KEY `enable` (`enable`);
+
+--
+-- 表的索引 `main_webhook_log`
+--
+ALTER TABLE `main_webhook_log`
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `main_widget`
 --
 ALTER TABLE `main_widget`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `_key` (`_key`) USING BTREE,
-  ADD KEY `order_weight` (`order_weight`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `_key` (`_key`) USING BTREE,
+    ADD KEY `order_weight` (`order_weight`);
 
 --
 -- 表的索引 `mind_issue_attribute`
 --
 ALTER TABLE `mind_issue_attribute`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `project_id_2` (`project_id`,`issue_id`,`source`,`group_by`),
-  ADD KEY `project_id` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `project_id_2` (`project_id`,`issue_id`,`source`,`group_by`),
+    ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `mind_project_attribute`
 --
 ALTER TABLE `mind_project_attribute`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `project_id` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `mind_second_attribute`
 --
 ALTER TABLE `mind_second_attribute`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `mind_unique` (`project_id`,`source`,`group_by`,`group_by_id`) USING BTREE,
-  ADD KEY `project_id` (`project_id`),
-  ADD KEY `source_group_by` (`project_id`,`source`,`group_by`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `mind_unique` (`project_id`,`source`,`group_by`,`group_by_id`) USING BTREE,
+    ADD KEY `project_id` (`project_id`),
+    ADD KEY `source_group_by` (`project_id`,`source`,`group_by`) USING BTREE;
 
 --
 -- 表的索引 `mind_sprint_attribute`
 --
 ALTER TABLE `mind_sprint_attribute`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `sprint_id` (`sprint_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `sprint_id` (`sprint_id`);
 
 --
 -- 表的索引 `permission_default_role`
 --
 ALTER TABLE `permission_default_role`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_tpl_id` (`project_tpl_id`);
 
 --
 -- 表的索引 `permission_default_role_relation`
 --
 ALTER TABLE `permission_default_role_relation`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `default_role_id` (`role_id`),
-  ADD KEY `role_id-and-perm_id` (`role_id`,`perm_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `default_role_id` (`role_id`),
+    ADD KEY `role_id-and-perm_id` (`role_id`,`perm_id`);
 
 --
 -- 表的索引 `permission_global`
 --
 ALTER TABLE `permission_global`
-  ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD KEY `permission_global_key_idx` (`_key`) USING BTREE;
+    ADD PRIMARY KEY (`id`) USING BTREE,
+    ADD KEY `permission_global_key_idx` (`_key`) USING BTREE;
 
 --
 -- 表的索引 `permission_global_group`
 --
 ALTER TABLE `permission_global_group`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `perm_global_id` (`perm_global_id`),
-  ADD KEY `group_id` (`group_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `perm_global_id` (`perm_global_id`),
+    ADD KEY `group_id` (`group_id`);
 
 --
 -- 表的索引 `permission_global_role`
 --
 ALTER TABLE `permission_global_role`
-  ADD PRIMARY KEY (`id`) USING BTREE;
+    ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
 -- 表的索引 `permission_global_role_relation`
 --
 ALTER TABLE `permission_global_role_relation`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique` (`perm_global_id`,`role_id`) USING BTREE,
-  ADD KEY `perm_global_id` (`perm_global_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `unique` (`perm_global_id`,`role_id`) USING BTREE,
+    ADD KEY `perm_global_id` (`perm_global_id`);
 
 --
 -- 表的索引 `permission_global_user_role`
 --
 ALTER TABLE `permission_global_user_role`
-  ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD UNIQUE KEY `unique` (`user_id`,`role_id`) USING BTREE,
-  ADD KEY `uid` (`user_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`) USING BTREE,
+    ADD UNIQUE KEY `unique` (`user_id`,`role_id`) USING BTREE,
+    ADD KEY `uid` (`user_id`) USING BTREE;
 
 --
 -- 表的索引 `project_catalog_label`
 --
 ALTER TABLE `project_catalog_label`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `project_id` (`project_id`),
-  ADD KEY `project_id_2` (`project_id`,`order_weight`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_id` (`project_id`),
+    ADD KEY `project_id_2` (`project_id`,`order_weight`);
 
 --
 -- 表的索引 `project_category`
 --
 ALTER TABLE `project_category`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_project_category_name` (`name`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `idx_project_category_name` (`name`);
 
 --
 -- 表的索引 `project_flag`
 --
 ALTER TABLE `project_flag`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `project_id` (`project_id`,`flag`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `project_id` (`project_id`,`flag`);
 
 --
 -- 表的索引 `project_gantt_setting`
 --
 ALTER TABLE `project_gantt_setting`
-  ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`) USING BTREE,
+    ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_issue_report`
 --
 ALTER TABLE `project_issue_report`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `project_id` (`project_id`),
-  ADD KEY `projectIdAndDate` (`project_id`,`date`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_id` (`project_id`),
+    ADD KEY `projectIdAndDate` (`project_id`,`date`);
 
 --
 -- 表的索引 `project_issue_type_scheme_data`
 --
 ALTER TABLE `project_issue_type_scheme_data`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE,
-  ADD KEY `issue_type_scheme_id` (`issue_type_scheme_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE,
+    ADD KEY `issue_type_scheme_id` (`issue_type_scheme_id`) USING BTREE;
 
 --
 -- 表的索引 `project_key`
 --
 ALTER TABLE `project_key`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `idx_all_project_keys` (`project_key`),
-  ADD KEY `idx_all_project_ids` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `idx_all_project_keys` (`project_key`),
+    ADD KEY `idx_all_project_ids` (`project_id`);
 
 --
 -- 表的索引 `project_label`
 --
 ALTER TABLE `project_label`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `project_id` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `project_list_count`
 --
 ALTER TABLE `project_list_count`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `project_main`
 --
 ALTER TABLE `project_main`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `idx_project_key` (`key`),
-  ADD UNIQUE KEY `name` (`name`) USING BTREE,
-  ADD KEY `uid` (`create_uid`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `idx_project_key` (`key`),
+    ADD UNIQUE KEY `name` (`name`) USING BTREE,
+    ADD KEY `uid` (`create_uid`);
 
 --
 -- 表的索引 `project_main_extra`
 --
 ALTER TABLE `project_main_extra`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_mind_setting`
 --
 ALTER TABLE `project_mind_setting`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `project_id` (`project_id`,`setting_key`),
-  ADD KEY `project_id_2` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `project_id` (`project_id`,`setting_key`),
+    ADD KEY `project_id_2` (`project_id`);
 
 --
 -- 表的索引 `project_module`
 --
 ALTER TABLE `project_module`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `project_id` (`project_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_id` (`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_permission`
 --
 ALTER TABLE `project_permission`
-  ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD KEY `project_permission_key_idx` (`_key`) USING BTREE;
+    ADD PRIMARY KEY (`id`) USING BTREE,
+    ADD KEY `project_permission_key_idx` (`_key`) USING BTREE;
 
 --
 -- 表的索引 `project_role`
 --
 ALTER TABLE `project_role`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `p[roject_id` (`project_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `p[roject_id` (`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_role_relation`
 --
 ALTER TABLE `project_role_relation`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `role_id` (`role_id`),
-  ADD KEY `role_id-and-perm_id` (`role_id`,`perm_id`),
-  ADD KEY `unique_data` (`project_id`,`role_id`,`perm_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `role_id` (`role_id`),
+    ADD KEY `role_id-and-perm_id` (`role_id`,`perm_id`),
+    ADD KEY `unique_data` (`project_id`,`role_id`,`perm_id`);
+
+--
+-- 表的索引 `project_template`
+--
+ALTER TABLE `project_template`
+    ADD PRIMARY KEY (`id`);
+
+--
+-- 表的索引 `project_template_display_category`
+--
+ALTER TABLE `project_template_display_category`
+    ADD PRIMARY KEY (`id`);
+
+--
+-- 表的索引 `project_tpl_category`
+--
+ALTER TABLE `project_tpl_category`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `idx_project_category_name` (`name`);
+
+--
+-- 表的索引 `project_tpl_category_label`
+--
+ALTER TABLE `project_tpl_category_label`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_tpl_id` (`project_tpl_id`);
+
+--
+-- 表的索引 `project_tpl_label`
+--
+ALTER TABLE `project_tpl_label`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_tpl_id` (`project_tpl_id`);
+
+--
+-- 表的索引 `project_tpl_module`
+--
+ALTER TABLE `project_tpl_module`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_tpl_id` (`project_tpl_id`) USING BTREE;
+
+--
+-- 表的索引 `project_tpl_widget`
+--
+ALTER TABLE `project_tpl_widget`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `project_tpl_id` (`project_tpl_id`);
 
 --
 -- 表的索引 `project_user_role`
 --
 ALTER TABLE `project_user_role`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`) USING BTREE,
-  ADD KEY `uid` (`user_id`) USING BTREE,
-  ADD KEY `uid_project` (`user_id`,`project_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`) USING BTREE,
+    ADD KEY `uid` (`user_id`) USING BTREE,
+    ADD KEY `uid_project` (`user_id`,`project_id`) USING BTREE;
 
 --
 -- 表的索引 `project_version`
 --
 ALTER TABLE `project_version`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `project_name_unique` (`project_id`,`name`) USING BTREE,
-  ADD KEY `idx_version_project` (`project_id`),
-  ADD KEY `idx_version_sequence` (`sequence`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `project_name_unique` (`project_id`,`name`) USING BTREE,
+    ADD KEY `idx_version_project` (`project_id`),
+    ADD KEY `idx_version_sequence` (`sequence`);
 
 --
 -- 表的索引 `project_workflows`
 --
 ALTER TABLE `project_workflows`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `project_workflow_status`
 --
 ALTER TABLE `project_workflow_status`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_parent_name` (`parentname`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `idx_parent_name` (`parentname`);
 
 --
 -- 表的索引 `report_project_issue`
 --
 ALTER TABLE `report_project_issue`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `projectIdAndDate` (`project_id`,`date`) USING BTREE,
-  ADD KEY `project_id` (`project_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `projectIdAndDate` (`project_id`,`date`) USING BTREE,
+    ADD KEY `project_id` (`project_id`);
 
 --
 -- 表的索引 `report_sprint_issue`
 --
 ALTER TABLE `report_sprint_issue`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `sprintIdAndDate` (`sprint_id`,`date`) USING BTREE,
-  ADD KEY `sprint_id` (`sprint_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `sprintIdAndDate` (`sprint_id`,`date`) USING BTREE,
+    ADD KEY `sprint_id` (`sprint_id`);
 
 --
 -- 表的索引 `service_config`
 --
 ALTER TABLE `service_config`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_application`
 --
 ALTER TABLE `user_application`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uk_application_name` (`lower_application_name`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `uk_application_name` (`lower_application_name`);
 
 --
 -- 表的索引 `user_attributes`
 --
 ALTER TABLE `user_attributes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `uk_user_attr_name_lval` (`user_id`,`attribute_name`),
-  ADD KEY `idx_user_attr_dir_name_lval` (`directory_id`,`attribute_name`(240),`lower_attribute_value`(240)) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `uk_user_attr_name_lval` (`user_id`,`attribute_name`),
+    ADD KEY `idx_user_attr_dir_name_lval` (`directory_id`,`attribute_name`(240),`lower_attribute_value`(240)) USING BTREE;
 
 --
 -- 表的索引 `user_email_active`
 --
 ALTER TABLE `user_email_active`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `email` (`email`,`verify_code`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `email` (`email`,`verify_code`);
 
 --
 -- 表的索引 `user_email_find_password`
 --
 ALTER TABLE `user_email_find_password`
-  ADD PRIMARY KEY (`email`),
-  ADD UNIQUE KEY `email` (`email`,`verify_code`);
+    ADD PRIMARY KEY (`email`),
+    ADD UNIQUE KEY `email` (`email`,`verify_code`);
 
 --
 -- 表的索引 `user_email_token`
 --
 ALTER TABLE `user_email_token`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_group`
 --
 ALTER TABLE `user_group`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique` (`uid`,`group_id`) USING BTREE,
-  ADD KEY `uid` (`uid`),
-  ADD KEY `group_id` (`group_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `unique` (`uid`,`group_id`) USING BTREE,
+    ADD KEY `uid` (`uid`),
+    ADD KEY `group_id` (`group_id`);
 
 --
 -- 表的索引 `user_invite`
 --
 ALTER TABLE `user_invite`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `token` (`token`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `email` (`email`),
+    ADD KEY `token` (`token`);
 
 --
 -- 表的索引 `user_ip_login_times`
 --
 ALTER TABLE `user_ip_login_times`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `ip` (`ip`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `ip` (`ip`);
 
 --
 -- 表的索引 `user_issue_display_fields`
 --
 ALTER TABLE `user_issue_display_fields`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `user_fields` (`user_id`,`project_id`) USING BTREE;
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `user_fields` (`user_id`,`project_id`) USING BTREE;
+
+--
+-- 表的索引 `user_issue_last_create_data`
+--
+ALTER TABLE `user_issue_last_create_data`
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `user_id` (`user_id`,`project_id`);
 
 --
 -- 表的索引 `user_login_log`
 --
 ALTER TABLE `user_login_log`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `uid` (`uid`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `uid` (`uid`);
 
 --
 -- 表的索引 `user_main`
 --
 ALTER TABLE `user_main`
-  ADD PRIMARY KEY (`uid`),
-  ADD UNIQUE KEY `openid` (`openid`),
-  ADD UNIQUE KEY `email` (`email`) USING BTREE,
-  ADD UNIQUE KEY `username` (`username`) USING BTREE;
+    ADD PRIMARY KEY (`uid`),
+    ADD UNIQUE KEY `openid` (`openid`),
+    ADD UNIQUE KEY `email` (`email`) USING BTREE,
+    ADD UNIQUE KEY `username` (`username`) USING BTREE;
 
 --
 -- 表的索引 `user_message`
 --
 ALTER TABLE `user_message`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_password`
 --
 ALTER TABLE `user_password`
-  ADD PRIMARY KEY (`user_id`);
+    ADD PRIMARY KEY (`user_id`);
 
 --
 -- 表的索引 `user_password_strategy`
 --
 ALTER TABLE `user_password_strategy`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_phone_find_password`
 --
 ALTER TABLE `user_phone_find_password`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`phone`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `username` (`phone`);
 
 --
 -- 表的索引 `user_posted_flag`
 --
 ALTER TABLE `user_posted_flag`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`,`_date`,`ip`),
-  ADD KEY `user_id_2` (`user_id`,`_date`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `user_id` (`user_id`,`_date`,`ip`),
+    ADD KEY `user_id_2` (`user_id`,`_date`);
 
 --
 -- 表的索引 `user_refresh_token`
 --
 ALTER TABLE `user_refresh_token`
-  ADD PRIMARY KEY (`uid`),
-  ADD KEY `refresh_token` (`refresh_token`(255));
+    ADD PRIMARY KEY (`uid`),
+    ADD KEY `refresh_token` (`refresh_token`(255));
 
 --
 -- 表的索引 `user_setting`
 --
 ALTER TABLE `user_setting`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `user_id` (`user_id`,`_key`),
-  ADD KEY `uid` (`user_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `user_id` (`user_id`,`_key`),
+    ADD KEY `uid` (`user_id`);
 
 --
 -- 表的索引 `user_token`
 --
 ALTER TABLE `user_token`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `user_widget`
 --
 ALTER TABLE `user_widget`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`,`widget_id`),
-  ADD KEY `order_weight` (`order_weight`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `user_id` (`user_id`,`widget_id`),
+    ADD KEY `order_weight` (`order_weight`);
 
 --
 -- 表的索引 `workflow`
 --
 ALTER TABLE `workflow`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `workflow_block`
 --
 ALTER TABLE `workflow_block`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `workflow_id` (`workflow_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `workflow_id` (`workflow_id`);
 
 --
 -- 表的索引 `workflow_connector`
 --
 ALTER TABLE `workflow_connector`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `workflow_id` (`workflow_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `workflow_id` (`workflow_id`);
 
 --
 -- 表的索引 `workflow_scheme`
 --
 ALTER TABLE `workflow_scheme`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `workflow_scheme_data`
 --
 ALTER TABLE `workflow_scheme_data`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `workflow_scheme` (`scheme_id`);
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `workflow_scheme` (`scheme_id`);
 
 --
 -- 在导出的表使用AUTO_INCREMENT
@@ -4832,559 +5170,619 @@ ALTER TABLE `workflow_scheme_data`
 -- 使用表AUTO_INCREMENT `agile_board`
 --
 ALTER TABLE `agile_board`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `agile_board_column`
 --
 ALTER TABLE `agile_board_column`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint`
 --
 ALTER TABLE `agile_sprint`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint_issue_report`
 --
 ALTER TABLE `agile_sprint_issue_report`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `field_custom_value`
 --
 ALTER TABLE `field_custom_value`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- 使用表AUTO_INCREMENT `field_main`
 --
 ALTER TABLE `field_main`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- 使用表AUTO_INCREMENT `field_type`
 --
 ALTER TABLE `field_type`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- 使用表AUTO_INCREMENT `hornet_user`
 --
 ALTER TABLE `hornet_user`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- 使用表AUTO_INCREMENT `issue_assistant`
 --
 ALTER TABLE `issue_assistant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用表AUTO_INCREMENT `issue_description_template`
 --
 ALTER TABLE `issue_description_template`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `issue_effect_version`
 --
 ALTER TABLE `issue_effect_version`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `issue_extra_worker_day`
 --
 ALTER TABLE `issue_extra_worker_day`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `issue_file_attachment`
 --
 ALTER TABLE `issue_file_attachment`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- 使用表AUTO_INCREMENT `issue_filter`
 --
 ALTER TABLE `issue_filter`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- 使用表AUTO_INCREMENT `issue_fix_version`
 --
 ALTER TABLE `issue_fix_version`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `issue_follow`
 --
 ALTER TABLE `issue_follow`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `issue_holiday`
 --
 ALTER TABLE `issue_holiday`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=698;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=794;
 
 --
 -- 使用表AUTO_INCREMENT `issue_label`
 --
 ALTER TABLE `issue_label`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `issue_label_data`
 --
 ALTER TABLE `issue_label_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- 使用表AUTO_INCREMENT `issue_main`
 --
 ALTER TABLE `issue_main`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=192;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231;
 
 --
 -- 使用表AUTO_INCREMENT `issue_priority`
 --
 ALTER TABLE `issue_priority`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `issue_recycle`
 --
 ALTER TABLE `issue_recycle`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- 使用表AUTO_INCREMENT `issue_resolve`
 --
 ALTER TABLE `issue_resolve`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
 
 --
 -- 使用表AUTO_INCREMENT `issue_status`
 --
 ALTER TABLE `issue_status`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type`
 --
 ALTER TABLE `issue_type`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type_scheme`
 --
 ALTER TABLE `issue_type_scheme`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type_scheme_data`
 --
 ALTER TABLE `issue_type_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=484;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=496;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui`
 --
 ALTER TABLE `issue_ui`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2229;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2283;
+
+--
+-- 使用表AUTO_INCREMENT `issue_ui_scheme`
+--
+ALTER TABLE `issue_ui_scheme`
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- 使用表AUTO_INCREMENT `log_base`
 --
 ALTER TABLE `log_base`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `log_operating`
 --
 ALTER TABLE `log_operating`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- 使用表AUTO_INCREMENT `log_runtime_error`
 --
 ALTER TABLE `log_runtime_error`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `main_activity`
 --
 ALTER TABLE `main_activity`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=283;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `main_group`
 --
 ALTER TABLE `main_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `main_mail_queue`
 --
 ALTER TABLE `main_mail_queue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `main_notify_scheme`
 --
 ALTER TABLE `main_notify_scheme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `main_notify_scheme_data`
 --
 ALTER TABLE `main_notify_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `main_org`
 --
 ALTER TABLE `main_org`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
 
 --
 -- 使用表AUTO_INCREMENT `main_plugin`
 --
 ALTER TABLE `main_plugin`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- 使用表AUTO_INCREMENT `main_setting`
 --
 ALTER TABLE `main_setting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- 使用表AUTO_INCREMENT `main_timeline`
 --
 ALTER TABLE `main_timeline`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- 使用表AUTO_INCREMENT `main_webhook`
 --
 ALTER TABLE `main_webhook`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- 使用表AUTO_INCREMENT `main_webhook_log`
+--
+ALTER TABLE `main_webhook_log`
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- 使用表AUTO_INCREMENT `main_widget`
 --
 ALTER TABLE `main_widget`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=25;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=25;
 
 --
 -- 使用表AUTO_INCREMENT `mind_issue_attribute`
 --
 ALTER TABLE `mind_issue_attribute`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- 使用表AUTO_INCREMENT `mind_project_attribute`
 --
 ALTER TABLE `mind_project_attribute`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- 使用表AUTO_INCREMENT `mind_second_attribute`
 --
 ALTER TABLE `mind_second_attribute`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
 
 --
 -- 使用表AUTO_INCREMENT `mind_sprint_attribute`
 --
 ALTER TABLE `mind_sprint_attribute`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- 使用表AUTO_INCREMENT `permission_default_role`
 --
 ALTER TABLE `permission_default_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10007;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10011;
 
 --
 -- 使用表AUTO_INCREMENT `permission_default_role_relation`
 --
 ALTER TABLE `permission_default_role_relation`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global`
 --
 ALTER TABLE `permission_global`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_group`
 --
 ALTER TABLE `permission_global_group`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_role`
 --
 ALTER TABLE `permission_global_role`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_role_relation`
 --
 ALTER TABLE `permission_global_role_relation`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_user_role`
 --
 ALTER TABLE `permission_global_user_role`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5664;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5672;
 
 --
 -- 使用表AUTO_INCREMENT `project_catalog_label`
 --
 ALTER TABLE `project_catalog_label`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=868;
 
 --
 -- 使用表AUTO_INCREMENT `project_category`
 --
 ALTER TABLE `project_category`
-  MODIFY `id` int(18) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_flag`
 --
 ALTER TABLE `project_flag`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- 使用表AUTO_INCREMENT `project_gantt_setting`
 --
 ALTER TABLE `project_gantt_setting`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- 使用表AUTO_INCREMENT `project_issue_report`
 --
 ALTER TABLE `project_issue_report`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_issue_type_scheme_data`
 --
 ALTER TABLE `project_issue_type_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- 使用表AUTO_INCREMENT `project_label`
 --
 ALTER TABLE `project_label`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=612;
 
 --
 -- 使用表AUTO_INCREMENT `project_list_count`
 --
 ALTER TABLE `project_list_count`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_main`
 --
 ALTER TABLE `project_main`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- 使用表AUTO_INCREMENT `project_main_extra`
 --
 ALTER TABLE `project_main_extra`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- 使用表AUTO_INCREMENT `project_mind_setting`
 --
 ALTER TABLE `project_mind_setting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
 
 --
 -- 使用表AUTO_INCREMENT `project_module`
 --
 ALTER TABLE `project_module`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- 使用表AUTO_INCREMENT `project_permission`
 --
 ALTER TABLE `project_permission`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10909;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10909;
 
 --
 -- 使用表AUTO_INCREMENT `project_role`
 --
 ALTER TABLE `project_role`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=506;
 
 --
 -- 使用表AUTO_INCREMENT `project_role_relation`
 --
 ALTER TABLE `project_role_relation`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2614;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4859;
+
+--
+-- 使用表AUTO_INCREMENT `project_template`
+--
+ALTER TABLE `project_template`
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- 使用表AUTO_INCREMENT `project_template_display_category`
+--
+ALTER TABLE `project_template_display_category`
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- 使用表AUTO_INCREMENT `project_tpl_category`
+--
+ALTER TABLE `project_tpl_category`
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- 使用表AUTO_INCREMENT `project_tpl_category_label`
+--
+ALTER TABLE `project_tpl_category_label`
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- 使用表AUTO_INCREMENT `project_tpl_label`
+--
+ALTER TABLE `project_tpl_label`
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- 使用表AUTO_INCREMENT `project_tpl_module`
+--
+ALTER TABLE `project_tpl_module`
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- 使用表AUTO_INCREMENT `project_tpl_widget`
+--
+ALTER TABLE `project_tpl_widget`
+    MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT '主键id';
 
 --
 -- 使用表AUTO_INCREMENT `project_user_role`
 --
 ALTER TABLE `project_user_role`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=276;
 
 --
 -- 使用表AUTO_INCREMENT `project_version`
 --
 ALTER TABLE `project_version`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `report_project_issue`
 --
 ALTER TABLE `report_project_issue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `report_sprint_issue`
 --
 ALTER TABLE `report_sprint_issue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_email_active`
 --
 ALTER TABLE `user_email_active`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `user_email_token`
 --
 ALTER TABLE `user_email_token`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_group`
 --
 ALTER TABLE `user_group`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- 使用表AUTO_INCREMENT `user_invite`
 --
 ALTER TABLE `user_invite`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_ip_login_times`
 --
 ALTER TABLE `user_ip_login_times`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_issue_display_fields`
 --
 ALTER TABLE `user_issue_display_fields`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- 使用表AUTO_INCREMENT `user_issue_last_create_data`
+--
+ALTER TABLE `user_issue_last_create_data`
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- 使用表AUTO_INCREMENT `user_login_log`
 --
 ALTER TABLE `user_login_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `user_main`
 --
 ALTER TABLE `user_main`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12262;
+    MODIFY `uid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12263;
 
 --
 -- 使用表AUTO_INCREMENT `user_message`
 --
 ALTER TABLE `user_message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `user_phone_find_password`
 --
 ALTER TABLE `user_phone_find_password`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `user_posted_flag`
 --
 ALTER TABLE `user_posted_flag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `user_refresh_token`
 --
 ALTER TABLE `user_refresh_token`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `uid` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_setting`
 --
 ALTER TABLE `user_setting`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=601;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=615;
 
 --
 -- 使用表AUTO_INCREMENT `user_token`
 --
 ALTER TABLE `user_token`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- 使用表AUTO_INCREMENT `user_widget`
 --
 ALTER TABLE `user_widget`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=2823;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=2916;
 
 --
 -- 使用表AUTO_INCREMENT `workflow`
 --
 ALTER TABLE `workflow`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_block`
 --
 ALTER TABLE `workflow_block`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_connector`
 --
 ALTER TABLE `workflow_connector`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_scheme`
 --
 ALTER TABLE `workflow_scheme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10104;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10104;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_scheme_data`
 --
 ALTER TABLE `workflow_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
