@@ -89,6 +89,10 @@ class Main extends BaseAdminCtrl
         // $data['lang'] = ServerInfo::getLocalLang();
         $data['extListFormat'] = $extListFormat;
 
+        //echo ini_get('file_uploads');
+        //echo ini_get('upload_max_filesize');
+        //echo ini_get('post_max_size');
+
         $this->render('twig/admin/main/index.twig', $data);
     }
 
