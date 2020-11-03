@@ -297,3 +297,9 @@ body.dashboard {
 .modal-body table.table-adv-query td{
     color: #666;
 }
+
+.dropup .dropdown-menu, .navbar-fixed-bottom .dropdown .dropdown-menu {
+    top: auto;
+    bottom: 100%;
+    margin-bottom: 2px;
+}

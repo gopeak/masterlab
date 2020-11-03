@@ -368,6 +368,7 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 IssueMain.prototype.handleRenderIssues(resp, success);
+                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
