@@ -42,7 +42,6 @@ var IssueForm = (function () {
 
     IssueForm.prototype.makeCreateHtml = function (configs, fields, tab_id, allow_add_status, issue) {
         _allow_add_status = allow_add_status;
-
         var html = '';
         for (var i = 0; i < configs.length; i++) {
             var config = configs[i];

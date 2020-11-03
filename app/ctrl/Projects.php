@@ -13,6 +13,7 @@ use main\app\classes\UserLogic;
 use main\app\classes\SettingsLogic;
 use main\app\classes\ConfigLogic;
 use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\ProjectTemplateModel;
 use main\app\model\user\UserModel;
 use main\app\classes\UploadLogic;
 use main\app\model\user\UserSettingModel;
@@ -47,41 +48,10 @@ class Projects extends BaseUserCtrl
         $data['title'] = '项目';
         $data['sub_nav_active'] = 'project';
 
-        $dataKey = array(
-            'count',
-            'display_name'
-        );
-
-        $outProjectTypeList = [];
-        $projectTypeAndCount = ProjectLogic::getAllProjectTypeTotal();
-
-        foreach ($projectTypeAndCount as $key => $value) {
-            switch ($key) {
-                case 'WHOLE':
-                    $outProjectTypeList[0] = array_combine($dataKey, [$value, '全部']);
-                    break;
-                case 'SCRUM':
-                    $outProjectTypeList[ProjectLogic::PROJECT_TYPE_SCRUM] =
-                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_SCRUM]]);
-                    break;
-                case 'SOFTWARE_DEV':
-                    $outProjectTypeList[ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV] =
-                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV]]);
-                    break;
-                case 'TASK_MANAGE':
-                    $outProjectTypeList[ProjectLogic::PROJECT_TYPE_TASK_MANAGE] =
-                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_TASK_MANAGE]]);
-                    break;
-            }
-        }
-
-        $data['type_list'] = $outProjectTypeList;
-
         $data['is_admin'] = false;
         if (PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $data['is_admin'] = true;
         }
-
         // 获取用户搜索排序的个性化设置
         $data['project_sort'] = '';
         $userSettingModel = new UserSettingModel();
@@ -89,8 +59,8 @@ class Projects extends BaseUserCtrl
         if ($projectsSort) {
             $data['projects_sort'] = $projectsSort;
         }
-
-        ConfigLogic::getAllConfigs($data);
+        $projectTemplateModel =  new  ProjectTemplateModel();
+        $data['project_tpl_arr'] = $projectTemplateModel->getAllItems();
 
         $this->render('gitlab/project/main.php', $data);
     }
@@ -99,10 +69,9 @@ class Projects extends BaseUserCtrl
      * @param int $typeId
      * @throws \Exception
      */
-    public function fetchAll($typeId = 0)
+    public function fetchAll( )
     {
         $userId = UserAuth::getId();
-        $typeId = intval($typeId);
         $isAdmin = false;
 
         $searchSortArr = [
@@ -121,7 +90,6 @@ class Projects extends BaseUserCtrl
             if (array_key_exists($_GET['sort'], $searchSortArr)) {
                 $searchOrderBy = $searchSortArr[$_GET['sort']][0];
                 $searchSort = $searchSortArr[$_GET['sort']][1];
-
                 $userSettingModel = new UserSettingModel();
                 $projectsSort = $userSettingModel->getSettingByKey($userId, 'projects_sort');
                 if ($projectsSort) {
@@ -131,7 +99,6 @@ class Projects extends BaseUserCtrl
                 }
             }
         }
-        
 
         // 至少获取20个项目用户
         $fetchProjectUserNum = 20;
@@ -143,14 +110,13 @@ class Projects extends BaseUserCtrl
 
         $projectModel = new ProjectModel();
 
-        if ($typeId) {
-            //$projects = $projectModel->filterByType($typeId, false);
-            $projects = $projectModel->filterByNameOrKeyAndType($searchKey, $typeId, $searchOrderBy, $searchSort);
+        $projectTplId = isset($_GET['project_tpl_id']) ? intval($_GET['project_tpl_id']) : null;
+        if ($projectTplId) {
+            $projects = $projectModel->filterByNameOrKeyAndTpl($searchKey, $projectTplId, $searchOrderBy, $searchSort);
         } else {
             //$projects = $projectModel->getAll(false);
             $projects = $projectModel->filterByNameOrKey($searchKey, $searchOrderBy, $searchSort);
         }
-
 
         if (PermissionGlobal::check($userId, PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
             $isAdmin = true;
@@ -190,10 +156,7 @@ class Projects extends BaseUserCtrl
             }
             $item['join_user_id_arr'] = $userArr;
         }
-
-
         unset($userLogic, $item);
-
         $projects = array_values($projects);
         $data['projects'] = $projects;
 
@@ -201,7 +164,6 @@ class Projects extends BaseUserCtrl
         if ($isAdmin) {
             $data['is_admin'] = true;
         }
-
         $this->ajaxSuccess('success', $data);
     }
 

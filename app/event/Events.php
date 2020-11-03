@@ -61,6 +61,9 @@ final class Events
     public const onProjectArchive = 'onProjectArchive';
     public const onProjectRecover = 'onProjectRecover';
 
+    // 发送邮件
+    public const onSendMailBefore= 'onSendMailBefore';
+
     /**
      * 事项事件
      */
@@ -76,6 +79,7 @@ final class Events
     public const onIssueConvertChild = 'onIssueConvertChild';
     public const onIssueBatchDelete = 'onIssueBatchDelete';
     public const onIssueBatchUpdate = 'onIssueBatchUpdate';
+    public const onIssueBatchMoveProject = 'onIssueBatchMoveProject';
     public const onIssueImportByExcel = 'onIssueImportByExcel';
     public const onIssueRemoveChild = 'onIssueRemoveChild';
     public const onIssueUpload= 'onIssueUpload';

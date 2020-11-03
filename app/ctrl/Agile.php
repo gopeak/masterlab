@@ -88,7 +88,7 @@ class Agile extends BaseUserCtrl
         $data['title'] = 'Backlog';
         $data['top_menu_active'] = 'project';
         $data['page_type'] = 'sprint';
-        $data['nav_links_active'] = 'sprints';
+        $data['nav_links_active'] = 'sprint';
         $data['sub_nav_active'] = 'all';
         $data['is_sprint'] = true;
         $data['query_str'] = http_build_query($_GET);

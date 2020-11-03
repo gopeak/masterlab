@@ -82,7 +82,6 @@ switch ($step) {
         importSql($install_error, $install_recover);
         break;
     case 4:
-
         break;
     case 5:
         $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));

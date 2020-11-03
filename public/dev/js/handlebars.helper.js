@@ -255,13 +255,13 @@ $(function () {
     });
 
     Handlebars.registerHelper('make_label_html', function (label_id_arr) {
-        //console.log(uid_arr);
+        //console.log(label_id_arr);
         var html = '';
         if(label_id_arr){
             for (i = 0; i < label_id_arr.length; i++) {
-                var id = parseInt(label_id_arr[i]);
+                //var id = parseInt(label_id_arr[i]);
+                var id = label_id_arr[i];
                 var row = getArrayValue(_issueConfig.issue_labels, 'id',id);
-                //console.log(row);
                 if (row == null) {
                     return '';
                 }

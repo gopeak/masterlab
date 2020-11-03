@@ -34,26 +34,49 @@
                         <div class="container-fluid">
                             <div class="top-area">
                                 <ul class="nav-links issues-state-filters">
+                                    <li class=""  id="js-masterlab-project-type-tab-main" >
+                                        <a title="全部"
+                                           href="javascript:void(0);"
+                                           onclick="selectByType(0, this)"><span> 全部 </span>
+                                        </a>
+                                    </li>
                                     {% for key,item in type_list %}
-                                        <li class="" {% if (key == 0)  %} id="js-masterlab-project-type-tab-main" {% endif %}>
+                                        <!--<li class="" {% if (key == 0)  %} id="js-masterlab-project-type-tab-main" {% endif %}>
                                             <a title="<?=item['display_name']?>"
                                                href="javascript:void(0);"
                                                onclick="selectByType(<?=key?>, this)"><span> <?=item['display_name']?> </span>
-                                                <!--span class="badge"><?=item['count']?></span-->
+                                                 <span class="badge"><?=item['count']?></span>
                                             </a>
-                                        </li>
+                                        </li>-->
                                     {% endfor %}
                                 </ul>
 
                                 <div class="nav-controls row-fixed-content">
+
                                     <input type="search" name="name" id="project-filter-form-field" placeholder="通过项目名搜索" class="form-control input-short" spellcheck="false" tabindex="2">
                                     <input type="hidden" name="sort" id="project-filter-sort" value="{% if (projects_sort) %}<?= projects_sort ?>{% else %}created_desc{% endif %}">
-                                    <!--form class="project-filter-form qa-project-filter-form" id="project-filter-form" action="/projects" accept-charset="UTF-8" method="get">
-                                        <input name="utf8" type="hidden" value="✓">
-                                        <input type="search" name="name" id="project-filter-form-field" placeholder="通过项目名搜索" class="form-control input-short" spellcheck="false" tabindex="2">
-                                        <input type="hidden" name="sort" id="sort" value="name_asc">
 
-                                    </form-->
+                                    <select  name="project_tpl_id" id="project_tpl_id" title="所属模板" class="selectpicker hide">
+                                        {% for row in project_tpl_arr %}
+                                            {% set  display_name = row['display_name'] %}
+                                            <option value="<?=row.id?>" ><?=row.name?></option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="dropdown js-project-filter-dropdown-wrap">
+                                        <button class="dropdown-menu-toggle " id="filter-project_tpl_id" type="button"
+                                                data-toggle="dropdown" data-display="static" aria-expanded="true">
+                                            <span class="dropdown-toggle-text" id="js-masterlab-selected-tpl">所属模板</span>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable">
+                                            {% for key,item in project_tpl_arr %}
+                                                <li>
+                                                    <a class="filter_by_tpl " style="cursor:pointer;"  data-project_tpl_id="<?=item['id']?>" ><?=item['name']?>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
                                     <div class="dropdown js-project-filter-dropdown-wrap">
                                         <button class="dropdown-menu-toggle " id="sort-projects-dropdown" type="button" data-toggle="dropdown" data-display="static" aria-expanded="false">
                                             <span class="dropdown-toggle-text" id="js-masterlab-selected-sort">最后创建</span>
@@ -193,15 +216,7 @@
 
     var $projects = null;
     var _issueConfig = {
-        "priority":<?=priority|json_encode()|raw?>,
-        "issue_types":<?=issue_types|json_encode()|raw?>,
-        "issue_status":<?=issue_status|json_encode()|raw?>,
-        "issue_resolve":<?=issue_resolve|json_encode()|raw?>,
-        "issue_module":<?=project_modules|json_encode()|raw?>,
-        "issue_version":<?=project_versions|json_encode()|raw?>,
-        "issue_labels":<?=project_labels|json_encode()|raw?>,
-        "users":<?=users|json_encode()|raw?>,
-        "projects":<?=projects|json_encode()|raw?>
+
     };
 
 
@@ -244,6 +259,21 @@
             }
         });
 
+        $('.filter_by_tpl').on("click", function () {
+            var project_tpl_id = $(this).data('project_tpl_id');
+            $('.filter_by_tpl').removeClass('is-active');
+            $(this).addClass('is-active');
+            $('#js-masterlab-selected-tpl').text($(this).text());
+            var search_key = $('#project-filter-form-field').val();
+            var search_sort = $('#project-filter-sort').val();
+            var options = {
+                list_render_id: "list_render_id",
+                list_tpl_id: "list_tpl",
+                filter_url: "/projects/fetch_all?name="+search_key+"&sort="+search_sort+"&project_tpl_id="+project_tpl_id
+            };
+            window.$projects = new Project(options);
+            window.$projects.fetchAll();
+        });
 
         $('.js-masterlab-filter-selector-sort').on("click", function () {
             var sort = $(this).data('filter_sort');

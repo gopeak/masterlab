@@ -865,6 +865,7 @@
     var _active_sprint_id = '<?= active_sprint_id ?>';
     var $IssueMain = null;
     var _description_templates = <?= description_templates|json_encode()|raw ?>;
+    var _default_issue_type_id = '<?=project.default_issue_type_id?>';
 
     var _perm_kanban = <?= perm_kanban ? 1:0 ?>;
 

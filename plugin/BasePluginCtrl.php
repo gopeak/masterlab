@@ -82,8 +82,6 @@ class BasePluginCtrl extends BaseUserCtrl
 
         //  加载管理插件
         $model = new PluginModel();
-        $pluginArr = $model->getRows('*');
-        $this->addGVar('_pluginArr', $pluginArr);
         $this->addGVar('_plugin_admin_type', PluginModel::TYPE_ADMIN);
 
         $user = [];

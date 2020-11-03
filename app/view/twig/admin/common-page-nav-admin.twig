@@ -38,6 +38,10 @@
                     <a title="事项的默认配置，包含：事项类型，事项类型方案，状态，状态流，状态流方案，解决结果，字段管理，界面自定义等" href="/admin/issue_type"><i class="fa fa-tasks"></i> <span>事项配置</span>
                     </a>
                 </li>
+                <li class=" {% if (nav_links_active == 'project_tpl') %} <?= 'active' ?>{% endif %}">
+                    <a title=" " href="/admin/project_tpl"><i class="fa fa-bolt"></i> <span>项目模板</span>
+                    </a>
+                </li>
                 <li class=" {% if (nav_links_active == 'plugin') %} <?= 'active' ?>{% endif %}">
                     <a title=" " href="/admin/plugin_manager"><i class="fa fa-plug"></i> <span>插件管理</span>
                     </a>

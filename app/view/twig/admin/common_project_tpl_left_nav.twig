@@ -1,0 +1,32 @@
+
+{% if ( left_nav_active is not defined ) %}
+    {% set left_nav_active = '' %}
+{% endif %}
+{% if ( sub_nav_active is not defined ) %}
+    {% set sub_nav_active = '' %}
+{% endif %}
+
+
+<aside aria-live="polite" class="js-right-sidebar left-sidebar right-sidebar-expanded affix-top"
+       data-spy="affix" tabindex="0"  >
+    <div class="issuable-sidebar">
+
+        <div class="admin-menu-links">
+            <div class="aui-nav-heading   {% if (sub_nav_active == 'plugin') %} <?= 'active' ?>{% endif %}"><strong>模板类别</strong></div>
+            <ul class="aui-nav" resolved="">
+
+                <li data-type="all" class="li_plugin_type {% if (left_nav_active == 'all') %} <?= 'active' ?>{% endif %}">
+                    <a href="/admin/project_tpl" >全部</a>
+                </li>
+                {% for key,category in category_arr %}
+                <li data-type="project_module" class="li_plugin_type {% if (left_nav_active ==category.id ) %} <?= 'active' ?>{% endif %}">
+                    <a href="/admin/project_tpl?category_id=<?=category.id?>" ><?=category.name?></a>
+                </li>
+                {% endfor %}
+
+
+            </ul>
+            <hr>
+        </div>
+    </div>
+</aside>

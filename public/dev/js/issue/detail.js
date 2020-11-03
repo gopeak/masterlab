@@ -233,6 +233,12 @@ var IssueDetail = (function () {
                     IssueDetail.prototype.follow(id, follow_action);
                 });
 
+                // 导出事项详情
+                $('#btn-export').bind('click', function () {
+                    let exportUrl = root_url + 'project/export/issue_detail?issue_id=' + id;
+                    window.location.href=exportUrl;
+                });
+
                 $("time").each(function (i, el) {
                     var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                     $(el).html(t)

@@ -52,7 +52,7 @@
             <div class="user-profile">
                 <div class="user-profile-content">
                     <div class="user-avatar">
-                        <img src="<?=user['avatar']?>" alt="">
+                        <a href="/user/profile"><img src="<?=user['avatar']?>" alt=""></a>
                     </div>
 
                     <div class="user-profile-text">
@@ -65,43 +65,46 @@
                             {% endif %}
 
                         </div>
+                        <ul class="user-profile-extra">
+                            <li class="extra-item">
+                                <span class="extra-item-title">参与项目</span>
+                                <span class="extra-item-num"><?=joined_project_count?></span>
+                            </li>
+
+                            <li class="extra-item">
+                                <span class="extra-item-title">未解决事项</span>
+                                <span class="extra-item-num"><?=assignee_count?></span>
+                            </li>
+
+                            <li class="extra-item">
+                                <span class="extra-item-title">关注事项</span>
+                                <span class="extra-item-num"><?=follow_issue_count?></span>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div id="content-body1" class="nav-controls-wrap">
+                        <div class="nav-controls">
+                            <div class="btn-group" role="group">
+                                <a class="btn btn_issue_type_add js-key-create btn-default" data-target="#modal-tools-add" data-toggle="modal" href="#modal-tools-add">
+                                    <i class="fa fa-plus"></i>
+                                    添加小工具
+                                </a>
+                                <a class="btn btn_issue_type_add js-key-create btn-default" data-target="#modal-layout" data-toggle="modal" href="#modal-layout">
+                                    <i class="fa fa-th-large"></i>
+                                    版式布局
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <ul class="user-profile-extra">
-                    <li class="extra-item">
-                        <p class="extra-item-title">参与项目</p>
-                        <p class="extra-item-num"><?=joined_project_count?></p>
-                    </li>
-
-                    <li class="extra-item">
-                        <p class="extra-item-title">未解决事项</p>
-                        <p class="extra-item-num"><?=assignee_count?></p>
-                    </li>
-
-                    <li class="extra-item">
-                        <p class="extra-item-title">关注事项</p>
-                        <p class="extra-item-num"><?=follow_issue_count?></p>
-                    </li>
-
-                </ul>
+                
             </div>
         </div>
 
-        <div class="content padding-0" id="content-body1">
-            <div class="nav-controls">
-                <div class="btn-group" role="group">
-                    <a class="btn btn_issue_type_add js-key-create" data-target="#modal-tools-add" data-toggle="modal" href="#modal-tools-add">
-                        <i class="fa fa-plus"></i>
-                        添加小工具
-                    </a>
-                    <a class="btn btn_issue_type_add js-key-create" data-target="#modal-layout" data-toggle="modal" href="#modal-layout">
-                        <i class="fa fa-th-large"></i>
-                        版式布局
-                    </a>
-                </div>
-            </div>
-        </div>
+        
 
         <div class="content container-fluid" id="content-body">
             <div id="multi" class="container layout-panel layout-aa row">

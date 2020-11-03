@@ -18,6 +18,10 @@ use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\project\ProjectVersionModel;
+use main\app\model\ProjectTemplateDisplayCategoryModel;
+use main\app\model\ProjectTemplateModel;
+use main\app\model\ProjectTplCatalogLabelModel;
+use main\app\model\ProjectTplLabelModel;
 
 /**
  *
@@ -194,51 +198,52 @@ class ProjectLogic
     }
 
     /**
-     * @param $projectInfo
+     * @param $projectArr
      * @param int $createUid
      * @return array
      * @throws \Exception
      */
-    public static function create($projectInfo, $createUid = 0)
+    public static function create($projectArr, $createUid = 0)
     {
-        if (empty($projectInfo)) {
+        if (empty($projectArr)) {
             return self::retModel(-1, 'lose input data!');
         }
 
-        if (!isset($projectInfo['name'])) {
+        if (!isset($projectArr['name'])) {
             return self::retModel(-1, 'name field is required');
         }
-        if (!isset($projectInfo['org_id'])) {
+        if (!isset($projectArr['org_id'])) {
             return self::retModel(-1, 'org_id field is required');
         }
-        if (!isset($projectInfo['org_path'])) {
+        if (!isset($projectArr['org_path'])) {
             return self::retModel(-1, 'org_path field is required');
         }
-        if (!isset($projectInfo['key'])) {
+        if (!isset($projectArr['key'])) {
             return self::retModel(-1, 'key field is required');
         }
 
-        if (!isset($projectInfo['type'])) {
-            return self::retModel(-1, 'type field is required');
+        if (!isset($projectArr['project_tpl_id'])) {
+            return self::retModel(-1, 'project_tpl_id field is required');
         }
-
-        if (!in_array($projectInfo['type'], self::$type_all)) {
-            return self::retModel(-1, 'type field is error');
-        }
-
-        $row = array(
-            'org_id' => $projectInfo['org_id'],
-            'org_path' => $projectInfo['org_path'],
-            'name' => $projectInfo['name'],
-            'url' => isset($projectInfo['url']) ? $projectInfo['url'] : self::PROJECT_URL_DEFAULT,
-            'lead' => $projectInfo['lead'],
-            'description' =>
-                isset($projectInfo['description']) ? $projectInfo['description'] : self::PROJECT_DESCRIPTION_DEFAULT,
-            'key' => $projectInfo['key'],
+        $projectTemplateModel =  new  ProjectTemplateModel();
+        $projectTemplate = $projectTemplateModel->getById($projectArr['project_tpl_id']);
+        $insertArr = array(
+            'org_id' => $projectArr['org_id'],
+            'org_path' => $projectArr['org_path'],
+            'name' => $projectArr['name'],
+            'url' => isset($projectArr['url']) ? $projectArr['url'] : self::PROJECT_URL_DEFAULT,
+            'lead' => $projectArr['lead'],
+            'description' => isset($projectArr['description']) ? $projectArr['description'] : '',
+            'key' => $projectArr['key'],
             'default_assignee' => 1,
-            'avatar' => $projectInfo['avatar'],//self::PROJECT_AVATAR_DEFAULT,
+            'avatar' => $projectArr['avatar'],//self::PROJECT_AVATAR_DEFAULT,
             'category' => self::PROJECT_CATEGORY_DEFAULT,
-            'type' => $projectInfo['type'],
+            'project_tpl_id' => $projectArr['project_tpl_id'],
+            'subsystem_json' => $projectTemplate['subsystem_json'],
+            'project_view' => $projectTemplate['project_view'],
+            'issue_view' => $projectTemplate['issue_view'],
+            'default_issue_type_id' => $projectTemplate['default_issue_type_id'],
+            'issue_ui_scheme_id' => $projectTemplate['issue_ui_scheme_id'],
             'type_child' => 0,
             'permission_scheme_id' => 0,
             'workflow_scheme_id' => 0,
@@ -249,35 +254,31 @@ class ProjectLogic
         );
 
         $projectModel = new ProjectModel();
-        $flag = $projectModel->insert($row);
-
-        if ($flag[0]) {
-            $pid = $flag[1];
+        list($flag, $insertId) = $projectModel->insert($insertArr);
+        if ($flag) {
+            $projectId =$insertId;
+            // 把项目负责人赋予该项目的管理员权限
+            self::assignAdminRoleForProjectLeader($projectId,$projectArr['lead']);
+            // 把项目创建人添加到该项目，并赋予项目角色-普通用户
+            if ($createUid != $projectArr['lead']) {
+                self::assignProjectRoleForUser($projectId, $createUid, 'Users');
+            }
+            self::initRole($projectId, $projectTemplate['id']);
+            self::initLabelAndCatalog($projectId, $projectTemplate['id']);
             // 使用默认的事项类型方案
-
-            $schemeId = self::getIssueTypeSchemeId($projectInfo['type']);
+            $issueTypeScheme_id = $projectTemplate['issue_type_scheme_id'];
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-            $ret = $projectIssueTypeSchemeDataModel->replace(
-                array('issue_type_scheme_id' => $schemeId, 'project_id' => $pid)
+            $projectIssueTypeSchemeDataModel->replace(
+                array('issue_type_scheme_id' => $issueTypeScheme_id, 'project_id' => $projectId)
             );
-            if (!$ret[0]) {
-                return self::retModel(-1, 'insert is error.');
-            }
-
-            $projectListCountLogic = new ProjectListCountLogic();
-            if (!$projectListCountLogic->resetProjectTypeCount($projectInfo['type'])) {
-                return self::retModel(-1, 'resetProjectTypeCount is error..');
-            }
-
             $projectMainExtra = new ProjectMainExtraModel();
-            $ret = $projectMainExtra->replace(array('project_id' => $pid, 'detail' => $projectInfo['detail']));
+            $ret = $projectMainExtra->replace(array('project_id' => $projectId, 'detail' => $projectArr['detail']));
             if (!$ret) {
                 return self::retModel(-1, 'insert detail is error..');
             }
-
-            return self::retModel(0, 'success', array('project_id' => $pid));
+            return self::retModel(0, 'success', array('project_id' => $projectId));
         } else {
-            return self::retModel(-1, 'insert main project is error');
+            return self::retModel(-1, 'insert main project err:'.$insertId);
         }
     }
 
@@ -468,6 +469,34 @@ class ProjectLogic
     }
 
     /**
+     * 分组后的项目模板
+     * @return array
+     */
+    public static function getProjectTplByCategory()
+    {
+        $projectTemplateArr =  (new  ProjectTemplateModel())->getAllItems();
+        $tplCategoryArr = [];
+        $tplCategoryArr[] = ['id'=>0,'name'=>'默认模板', 'order_weight'=>'0', 'user_id'=>0];
+        $categoryDbArr  =  (new  ProjectTemplateDisplayCategoryModel())->getAllItems();
+        $tplCategoryArr = array_merge($tplCategoryArr, $categoryDbArr);
+        $projectTplGroupArr = [];
+        foreach ($tplCategoryArr as $categoryArr) {
+            $arr = [];
+            foreach ($projectTemplateArr as $item) {
+                if($item['category_id']==$categoryArr['id']){
+                    $arr[] = $item;
+                }
+            }
+            if($arr){
+                $categoryArr['tpl_arr'] = $arr;
+                $projectTplGroupArr[] = $categoryArr;
+            }
+        }
+        return $projectTplGroupArr;
+    }
+
+
+    /**
      * 格式化项目项的内容
      * @param $item
      * @return mixed
@@ -475,6 +504,13 @@ class ProjectLogic
      */
     public static function formatProject($item)
     {
+        static $projectTplNameArr;
+
+        if(empty($projectTplNameArr)){
+            $projectTemplateModel =  new  ProjectTemplateModel();
+            $projectTplNameArr = array_column($projectTemplateModel->getAllItems(), 'name', 'id');
+        }
+
         $item['done_percent'] = 0;
         if (isset($item['un_done_count']) && isset($item['done_count'])) {
             $unDoneCount = intval($item['un_done_count']);
@@ -485,8 +521,7 @@ class ProjectLogic
             }
         }
 
-        $types = self::$typeAll;
-        $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '';
+        $item['type_name'] = isset($projectTplNameArr[@$item['project_tpl_id']]) ? $projectTplNameArr[$item['project_tpl_id']] : '';
         $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
         $item['create_time_text'] = format_unix_time($item['create_time'], time());
         $item['create_time_origin'] = '';
@@ -522,7 +557,7 @@ class ProjectLogic
      * @return array
      * @throws \Exception
      */
-    public static function initRole($projectId)
+    public static function initRole($projectId, $projectTplId)
     {
         $insertProjectRole = [];
         try {
@@ -546,7 +581,7 @@ class ProjectLogic
 
             $defaultRoleModel = new DefaultRoleModel();
             $projectRoleRelationModel = new ProjectRoleRelationModel();
-            $defaultRoleArr = $defaultRoleModel->getAll(false);
+            $defaultRoleArr = $defaultRoleModel->getsByProject($projectTplId);
 
             foreach ($defaultRoleArr as $role) {
                 if (!in_array($role['name'], $haveRoleNameArr)) {
@@ -585,19 +620,27 @@ class ProjectLogic
     /**
      * 初始化项目的标签和分类
      * @param $projectId
+     * @param $projectTplId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    public static function initLabelAndCatalog($projectId)
+    public static function initLabelAndCatalog($projectId, $projectTplId)
     {
         try {
             $labelModel = new ProjectLabelModel();
             $catalogLabelModel = new ProjectCatalogLabelModel();
-            $orderWeight = count(self::$initCatalogLabel)+100;
-            foreach (self::$initCatalogLabel as $catalogKey => $catalogLabel) {
+            $initCatalogLabelArr = ProjectTplCatalogLabelModel::getInstance()->getByProject($projectTplId);
+            $initLabelArr = ProjectTplLabelModel::getInstance()->getByProject($projectTplId);
+            $initLabelIdArr = array_column($initLabelArr, null, 'id');
+
+            $orderWeight = count($initCatalogLabelArr)+100;
+            foreach ($initCatalogLabelArr as $catalogKey => $catalogLabel) {
                 $catalogLabelIdArr = [];
-                foreach (self::$initLabel as $label) {
-                    if($label['catalog']==$catalogKey){
+                $labelIdArr = json_decode($catalogLabel['label_id_json'], true);
+                foreach ($labelIdArr as $labelId) {
+                    if(isset($initLabelIdArr[$labelId])){
+                        $label = $initLabelIdArr[$labelId];
                         $insertArr = [];
                         $insertArr['project_id'] = $projectId;
                         $insertArr['title'] = $label['title'];

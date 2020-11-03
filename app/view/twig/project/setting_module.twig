@@ -142,7 +142,8 @@
     </div>
 </section>
 
-{% verbatim %}<script type="text/html" id="list_tpl">
+{% verbatim %}
+<script type="text/x-handlebars-template" id="list_tpl">
     {{#each modules}}
     <li class="flex-row" id="li_data_id_{{id}}">
         <div class="row-main-content ">
@@ -176,8 +177,9 @@
         </div>
 
     </li>
-    {{/modules}}
-</script>{% endverbatim %}
+    {{/each}}
+</script>
+{% endverbatim %}
 <script>
 
     let query_str = '<?=query_str?>';

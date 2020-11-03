@@ -17,7 +17,6 @@ class UserPostedFlagModel extends BaseUserItemModel
     public function __construct($userId = '', $persistent = false)
     {
         parent::__construct($userId, $persistent);
-
         $this->uid = $userId;
     }
 
@@ -26,6 +25,7 @@ class UserPostedFlagModel extends BaseUserItemModel
      * @param $date
      * @param $ip
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getByDateIp($userId, $date, $ip)
     {
@@ -52,6 +52,8 @@ class UserPostedFlagModel extends BaseUserItemModel
      * @param $userId
      * @param $date
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function deleteSettingByDate($userId, $date)
     {

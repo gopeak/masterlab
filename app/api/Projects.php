@@ -9,11 +9,6 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\ProjectLogic;
 use main\app\classes\SettingsLogic;
-use main\app\classes\UserAuth;
-use main\app\classes\UserLogic;
-use main\app\ctrl\BaseCtrl;
-use main\app\event\CommonPlacedEvent;
-use main\app\event\Events;
 use main\app\model\issue\IssueModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectCatalogLabelModel;
@@ -48,7 +43,7 @@ class Projects extends BaseAuth
     private function getHandler()
     {
         $projectId = 0;
-        if (isset($_GET['_target'][3])){
+        if (isset($_GET['_target'][3])) {
             $projectId = intval($_GET['_target'][3]);
         }
 
@@ -120,7 +115,7 @@ class Projects extends BaseAuth
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      * @throws \Exception
      */
-    private function deleteHandler( )
+    private function deleteHandler()
     {
         $uid = $this->masterUid;
         $projectId = 0;
@@ -232,10 +227,10 @@ class Projects extends BaseAuth
             $err['project_lead'] = '项目负责人错误';
         }
 
-        if (!isset($params['type'])) {
-            $err['type'] = '请选择项目类型';
-        } elseif (isset($params['type']) && empty(trimStr($params['type']))) {
-            $err['type'] = '项目类型不能为空';
+        if (!isset($params['project_tpl_id'])) {
+            $err['project_tpl_id'] = '请选择项目模板';
+        } elseif (isset($params['type']) && empty(trimStr($params['project_tpl_id']))) {
+            $err['project_tpl_id'] = '项目模板不能为空';
         }
 
         if (!empty($err)) {
@@ -255,8 +250,8 @@ class Projects extends BaseAuth
         $info['org_id'] = $params['org_id'];
         $info['key'] = $params['key'];
         $info['lead'] = $params['lead'];
-        $info['description'] = isset($params['description'])?$params['description']:'';
-        $info['type'] = $params['type'];
+        $info['description'] = isset($params['description']) ? $params['description'] : '';
+        $info['project_tpl_id'] = $params['project_tpl_id'];
         $info['category'] = 0;
         $info['url'] = isset($params['url']) ? $params['url'] : '';
         $info['create_time'] = time();
@@ -273,39 +268,18 @@ class Projects extends BaseAuth
         $info['org_path'] = $orgInfo['path'];
 
         $ret = ProjectLogic::create($info, $uid);
-
-        //$ret['errorCode'] = 0;
-        $final = array(
-            'project_id' => $ret['data']['project_id'],
-            'key' => $params['key'],
-            'org_name' => $orgInfo['name'],
-            'path' => $orgInfo['path'] . '/' . $params['key'],
-        );
         if (!$ret['errorCode']) {
-            // 初始化项目角色
-            list($flagInitRole, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
-            ProjectLogic::initLabelAndCatalog($ret['data']['project_id']);
-
-            // 把项目负责人赋予该项目的管理员权限
-            list($flagAssignAdminRole) = ProjectLogic::assignAdminRoleForProjectLeader($ret['data']['project_id'], $info['lead']);
-            // 把项目创建人添加到该项目，并赋予项目角色-普通用户
-            if ($uid != $info['lead']) {
-                ProjectLogic::assignProjectRoleForUser($ret['data']['project_id'], $uid, 'Users');
-            }
-
-            if ($flagInitRole && $flagAssignAdminRole) {
-                $projectModel->db->commit();
-                return self::returnHandler('操作成功', $final);
-            } else {
-                $projectModel->db->rollBack();
-                return self::returnHandler('项目角色添加失败' . $roleInfo);
-            }
+            $projectModel->db->commit();
+            $final = array(
+                'project_id' => $ret['data']['project_id'],
+                'key' => $params['key'],
+                'org_name' => $orgInfo['name'],
+                'path' => $orgInfo['path'] . '/' . $params['key'],
+            );
+            return self::returnHandler('操作成功', $final);
         } else {
             $projectModel->db->rollBack();
             return self::returnHandler('添加失败,错误详情 :' . $ret['msg'], [], Constants::HTTP_BAD_REQUEST);
         }
     }
-
-
-
 }

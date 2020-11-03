@@ -1,0 +1,8 @@
+.DS_Store
+coverage/
+.devserver/
+node_modules/
+dist/
+/themes
+/animations
+index.d.ts

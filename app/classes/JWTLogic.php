@@ -48,13 +48,13 @@ class JWTLogic
 
         $time = time();
         $token = $builder
-            ->issuedBy(ROOT_URL) // Configures the issuer (iss claim)
-            ->permittedFor($uid) // Configures the audience (aud claim)
-            ->identifiedBy($uid.'-'.$time, true) // Configures the id (jti claim), replicating as a header item
-            ->issuedAt($time) // Configures the time that the token was issue (iat claim)
-            ->canOnlyBeUsedAfter($time + 60) // Configures the time that the token can be used (nbf claim)
-            ->expiresAt($time + $expired) // Configures the expiration time of the token (exp claim)
-            ->withClaim('uid', $uid) // Configures a new claim, called "uid"
+            ->issuedBy(ROOT_URL)
+            ->permittedFor($uid)
+            ->identifiedBy($uid.'-'.$time, true)
+            ->issuedAt($time)
+            ->canOnlyBeUsedAfter($time + 60)
+            ->expiresAt($time + $expired)
+            ->withClaim('uid', $uid)
             ->withClaim('account', $account)
             ->getToken($signer, $key);
 
@@ -72,7 +72,7 @@ class JWTLogic
         $key = new Key(JWT_KEY);
         $builder = new Builder();
 
-        $expired = JWT_REFRESH_TOKEN_EXPIRED;// $expired = 2592000
+        $expired = JWT_REFRESH_TOKEN_EXPIRED;
 
         $time = time();
         $refreshToken = $builder

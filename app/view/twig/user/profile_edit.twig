@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html class="" lang="en">
-<head  >
-
+<head >
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet" />
     <script src="/dev/lib/laydate/laydate.js"></script>
+    <script src="/dev/vendor/cropper.min.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/css/cropper.min.css" rel="stylesheet">
     <script src="/dev/js/user/profile.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
 
 </head>
-<body class="" data-group="" data-page="profiles:show" data-project="">
+<body >
 {% include 'twig/common/body/script.twig' %}
 
 <section class="has-sidebar page-layout max-sidebar">
     {% include 'twig/common/body/page-left.twig' %}
-
     <div class="page-layout page-content-body background-white">
 {% include 'twig/common/body/header-content.twig' %}
 
@@ -51,6 +51,7 @@
                     <input type="hidden" name="_method" value="put" />
                     <input type="hidden" name="authenticity_token" value="" />
                     <input type="hidden" name="image" id="image" value="" />
+                    <input  class="js-user-avatar-input js-user-avatar-file-create hidden" accept="image/*" type="file" name="file_avatar" id="file_avatar" />
                     <div class="row">
                         <div class="col-lg-3 profile-settings-sidebar">
                             <h4 class="prepend-top-0">显示头像</h4>
@@ -59,16 +60,15 @@
                         </div>
                         <div class="col-lg-9">
                             <div class="clearfix avatar-image append-bottom-default">
-                                <a target="_blank" rel="noopener noreferrer" href="#">
-                                    <img id="avatar_display" alt="" class="avatar s160" src="" /></a>
+                                <img id="avatar_display" alt="" class="avatar s160" src="" />
                             </div>
                             <h5 class="prepend-top-0">修改头像</h5>
                             <div class="prepend-top-5 append-bottom-10">
-                                <a class="btn js-choose-user-avatar-button">浏览文件...</a>
+                                <a id="js-choose-user-avatar-button" class="btn js-choose-user-avatar-button">浏览文件...</a>
                                 <span class="avatar-file-name prepend-left-default js-avatar-filename">没有选择文件</span>
-                                <input class="js-user-avatar-input hidden" accept="image/*" type="file" name="user[avatar]" id="user_avatar" /></div>
+                                <input  class="js-user-avatar-input  hidden"  type="hidden" name="user[avatar]" id="user_avatar" />
+                            </div>
                             <div class="help-block">最大文件大小 500KB.</div>
-
                         </div>
                     </div>
                     <hr>
@@ -218,6 +218,31 @@
 
     </div>
 </section>
+
+<!-- create-avatar-modal -->
+<div class="modal fade" id="create-avatar-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width: 530px; height: 670px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">编辑头像</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="img-container">
+                    <img id="create-avatar-img" src="" alt="头像">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-save js-avatar-create-save" data-dismiss="modal">确认</button>
+                <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
 
     laydate.render({

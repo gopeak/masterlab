@@ -38,10 +38,22 @@ var IssueMain = (function () {
 
     var _temp_data = {};
     var _default_data = null;
+    var _default_issue_type_id = 1;
+    var _last_create_issue_data = null;
 
     // constructor
     function IssueMain(options) {
         _options = options;
+
+        if(window._default_issue_type_id){
+            _default_issue_type_id = window._default_issue_type_id;
+        }
+        if(window.last_create_issue_data){
+            _last_create_issue_data = window.last_create_issue_data;
+        }
+        if(_last_create_issue_data && ('issue_type' in _last_create_issue_data)){
+            _default_issue_type_id = _last_create_issue_data.issue_type;
+        }
 
         IssueMain.prototype.initProjectSelect();
         $("#btn-issue_type_add").click(function () {
@@ -116,9 +128,9 @@ var IssueMain = (function () {
 
     IssueMain.prototype.saveFilter = function (name) {
         window.is_save_filter = '1';
-        var searchQuery = window.gl.DropdownUtils.getSearchQuery();
-        return false;
-        window.is_save_filter = '0';
+        var searchQuery = window.$filterSreach.getCurrentSearchesStr();
+        console.log(searchQuery);
+       // window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
             var params = { format: 'json' };
@@ -161,7 +173,7 @@ var IssueMain = (function () {
             let opt = "<option data-key='"+project.key+"' data-content='" + content + "' value='" + project.id + "'>" + project.name + "</option>";
             $selectObj.append(opt);
         }
-
+        $selectObj.val(window.cur_project_id);
         $('.selectpicker').selectpicker('refresh');
 
         $selectObj.bind("change", function () {
@@ -177,13 +189,13 @@ var IssueMain = (function () {
 
         var first_issue_type = {};
         for (var i = 0; i < issue_types.length; i++) {
-            if (i == 0) {
+            if (_default_issue_type_id == issue_types[i].id) {
                 first_issue_type = issue_types[i];
             }
             var content = "<div class=issue-types-icon><i class=" + issue_types[i].font_awesome + "></i> " + issue_types[i].name + "</div>"
             issue_types_select.append("<option data-content='" + content + "' value='" + issue_types[i].id + "'>" + issue_types[i].name + "</option>")
         }
-        console.log(issue_types_select)
+        // console.log(issue_types_select)
         if (on_change) {
             $("#create_issue_types_select").bind("change", function () {
                 console.log($(this).val(), issue_types)
@@ -229,6 +241,11 @@ var IssueMain = (function () {
     IssueMain.prototype.onChangeCreateProjectSelected = function (project_id, key) {
         _cur_form_project_id = project_id;
         _cur_project_key = key;
+        //_default_issue_type_id =
+        var project = getArrayValue(window._issueConfig.projects, 'id', project_id);
+        if(project){
+            _default_issue_type_id = project.default_issue_type_id;
+        }
 
         $.ajax({
             type: "GET",
@@ -351,6 +368,7 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 IssueMain.prototype.handleRenderIssues(resp, success);
+                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -838,7 +856,7 @@ var IssueMain = (function () {
 
     IssueMain.prototype.convertChild = function (issue_id) {
 
-        var master_id = $("input[name='parent_select_issue_id']").val();
+        var master_id = $("#parent_select_issue_id").val();
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -1194,6 +1212,116 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.batchMoveProject = function (field, value) {
+
+        var checked_issue_id_arr = [];
+        $.each($("input[name='check_issue_id_arr']"), function () {
+            if (this.checked) {
+                checked_issue_id_arr.push($(this).val());
+            }
+        });
+        console.log(checked_issue_id_arr);
+        let project_id = $('#move_project_id').val();
+        let is_delete_current = $('#is_delete_current').val();
+        let module = $('#move-module').val();
+        let sprint = $('#move-sprint').val();
+        let effect_version = $('#move-effect_version').val();
+        let fix_version = $('#move-fix_version').val();
+        let labels = $('#move-labels').val();
+        loading.show('#displayMoveProject' );
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/batchMoveProject",
+            data: {
+                project_id:project_id,
+                is_delete_current:is_delete_current,
+                issue_id_arr: checked_issue_id_arr,
+                labels:labels,
+                module:module,
+                sprint: sprint,
+                effect_version: effect_version,
+                fix_version:fix_version
+            },
+            success: function (resp) {
+                loading.hide('#displayMoveProject');
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('操作失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                loading.hide('#displayMoveProject');
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.displayMoveProject = function (project_id, project_name) {
+
+        var checked_issue_id_arr = new Array()
+        $.each($("input[name='check_issue_id_arr']"), function () {
+            if (this.checked) {
+                checked_issue_id_arr.push($(this).val());
+            }
+        });
+        if(is_empty(checked_issue_id_arr)){
+            notify_warn('请先选择事项');
+            return false;
+        }
+        $('#move_project_id').val(project_id);
+        $('#move-header-title').html('移动至项目:'+project_name);
+        // /issue/main/getProjectRelateData
+        loading.show('#displayMoveProject' );
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url: "/issue/main/getProjectRelateData",
+            data: {  project_id: project_id },
+            success: function (resp) {
+                let move_select = $('#move-module');
+                for (let i = 0; i < resp.data.project_modules.length; i++) {
+                    let row = resp.data.project_modules[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.name + "</option>")
+                }
+                move_select = $('#move-sprint');
+                for (let i = 0; i < resp.data.project_sprints.length; i++) {
+                    let row = resp.data.project_sprints[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.name + "</option>")
+                }
+                move_select = $('#move-labels');
+                for (let i = 0; i < resp.data.project_labels.length; i++) {
+                    let row = resp.data.project_labels[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.title + "</option>")
+                }
+                move_select = $('#move-effect_version');
+                for (let i = 0; i < resp.data.project_versions.length; i++) {
+                    let row = resp.data.project_versions[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.name + "</option>")
+                }
+                move_select = $('#move-fix_version');
+                for (let i = 0; i < resp.data.project_versions.length; i++) {
+                    let row = resp.data.project_versions[i];
+                    move_select.append("<option   value='" + row.id + "'>" + row.name + "</option>")
+                }
+                $('.selectpicker').selectpicker('refresh');
+                loading.hide('#displayMoveProject');
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+        console.log(checked_issue_id_arr);
+        $('#modal-move-project').modal('show');
+    }
+
+
     // saveUserIssueDisplayFields
     IssueMain.prototype.saveUserIssueDisplayFields = function () {
 
@@ -1245,6 +1373,11 @@ var IssueMain = (function () {
                 }
             }
         }
+        if (_last_create_issue_data) {
+            for ([_key, _value] of Object.entries(_last_create_issue_data)) {
+                _temp_data[_key] = _value;
+            }
+        }
 
         $.ajax({
             type: method,
@@ -1272,12 +1405,10 @@ var IssueMain = (function () {
                 for (var i = 0; i < _tabs.length; i++) {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1;
                     IssueForm.prototype.uiAddTab('create', _tabs[i].name, _tabs[i].id);
-                    html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id, _allow_add_status);
+                    html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id, _allow_add_status, _temp_data);
                     var id = '#create_ui_config-create_tab-' + _tabs[i].id;
                     $(id).html(html);
                 }
-
-
 
                 if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
@@ -1294,7 +1425,6 @@ var IssueMain = (function () {
 
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
-
 
                 /*
                  * websocket广州宣讲添加
@@ -1329,7 +1459,6 @@ var IssueMain = (function () {
                 temp_data[_key] = value;
             }
         }
-
         return JSON.parse(JSON.stringify(temp_data));
     };
 
@@ -1627,7 +1756,10 @@ var IssueMain = (function () {
                     var edit_attachment_data = issue[field_name];
                     // console.log(edit_attachment_data);
                     if (typeof (edit_attachment_data) != 'undefined') {
-                        _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
+                        var arr = Object.keys(edit_attachment_data);
+                        if (arr.length > 0) {
+                            _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
+                        }
                     }
 
                 }

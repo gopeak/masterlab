@@ -26,6 +26,7 @@ session:
   cache_expire: 86400
   gc_maxlifetime: 24*60*7*3600
   cookie_lifetime: 24*60*7*3600
+  gc_divisor: 1000
   gc_probability: 1
 
 database:

@@ -13,6 +13,7 @@ use main\app\classes\NotifyLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\ProjectGantt;
 use main\app\classes\RewriteUrl;
+use main\app\classes\SearchLogic;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
@@ -50,6 +51,7 @@ use main\app\model\issue\IssueUiTabModel;
 use main\app\model\issue\IssueRecycleModel;
 use main\app\model\field\FieldTypeModel;
 use main\app\model\field\FieldModel;
+use main\app\model\user\UserIssueLastCreateDataModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
 use main\app\model\user\UserSettingModel;
@@ -72,7 +74,8 @@ class Main extends BaseUserCtrl
     public function __construct()
     {
         parent::__construct();
-        parent::addGVar('top_menu_active', 'issue');
+        parent::addGVar('top_menu_active', 'project');
+        parent::addGVar('sub_nav_active', 'project');
     }
 
     /**
@@ -114,7 +117,8 @@ class Main extends BaseUserCtrl
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
                 if ($fav['is_adv_query'] == '0') {
-                    $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
+                    $fav['filter'] = str_replace([':='], [':'], $fav['filter']);
+                    $fav['filter'] = str_replace([':', ' ', '"', ';;'], ['=', '&', '', '&'], $fav['filter']);
                     $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
                     $filter = $fav['filter'] . '&active_id=' . $favFilterId;
                     $issueUrl = 'issue/main';
@@ -160,14 +164,11 @@ class Main extends BaseUserCtrl
         }
         $data['showFavFilters'] = $showFavFilters;
         $data['otherFavFilters'] = $otherFavFilters;
-
         // 获取当前用户未解决的数量
         $data['unResolveCount'] = IssueFilterLogic::getUnResolveCountByAssigneeProject(UserAuth::getId(), $data['project_id']);
-
         // 描述模板
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
-
         // 表格视图的显示字段
         $issueLogic = new IssueLogic();
         $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
@@ -182,13 +183,9 @@ class Main extends BaseUserCtrl
                 $displayCustomFieldArr[] = $field;
             }
         }
-
         $data['displayCustomFieldArr'] = $displayCustomFieldArr;
-
-
         // 高级查询字段
         $data['advFields'] = IssueFilterLogic::$advFields;
-
         // 事项展示的视图方式
         $data['issue_view'] = SettingModel::getInstance()->getValue('issue_view');
         $userId = UserAuth::getId();
@@ -216,11 +213,14 @@ class Main extends BaseUserCtrl
         if (!empty($data['project_id'])) {
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
-        }else{
+        } else {
             $data['sprints'] = $sprintModel->getAllItems(false);
         }
 
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
+
+        $data['last_create_data'] = UserLogic::getLastCreateIssueData($userId, $data['project']);
+
         $this->render('gitlab/issue/list.php', $data);
     }
 
@@ -391,7 +391,7 @@ class Main extends BaseUserCtrl
             if (!empty($issueId)) {
 
                 $event = new CommonPlacedEvent($this, $issueId);
-                $this->dispatcher->dispatch($event,  Events::onIssueUpload);
+                $this->dispatcher->dispatch($event, Events::onIssueUpload);
             }
         } else {
             $resp['success'] = false;
@@ -521,7 +521,7 @@ class Main extends BaseUserCtrl
 
 
             $event = new CommonPlacedEvent($this, $issueId);
-            $this->dispatcher->dispatch($event,  Events::onIssueMobileUpload);
+            $this->dispatcher->dispatch($event, Events::onIssueMobileUpload);
         } else {
             $resp['success'] = false;
             $resp['error'] = $resp['message'];
@@ -582,13 +582,34 @@ class Main extends BaseUserCtrl
                     $this->ajaxFailed('服务器错误', "删除文件失败,路径:" . $savePath . '' . $file['file_name']);
                 }
                 $event = new CommonPlacedEvent($this, $file['issue_id']);
-                $this->dispatcher->dispatch($event,  Events::onIssueDeleteUpload);
+                $this->dispatcher->dispatch($event, Events::onIssueDeleteUpload);
                 $this->ajaxSuccess('success', $ret);
             }
         } else {
             $this->ajaxFailed('参数错误', []);
         }
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function autocomplete()
+    {
+        $keyword = isset($_GET['query']) ? $_GET['query'] : null;
+        if (empty(trimStr($keyword))) {
+            $this->ajaxSuccess('none', []);
+        }
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
+        $limitSql = "   limit 20";
+        $issueModel = new IssueModel();
+        $table = $issueModel->getTable();
+        $where = "WHERE locate(:keyword,`summary`) > 0  AND project_id={$projectId} ";
+        $params['keyword'] = $keyword;
+        $sql = "SELECT id, summary as `text` FROM {$table}  {$where} {$limitSql}";
+        $rows = $issueModel->db->fetchAll($sql, $params);
+        $this->ajaxSuccess('success', $rows);
+    }
+
 
     /**
      * 事项列表查询处理
@@ -608,7 +629,7 @@ class Main extends BaseUserCtrl
             $favFilterId = $_GET['fav_filter'];
             $filterModel = IssueFilterModel::getInstance();
             $favArr = $filterModel->getRowById($favFilterId);
-            if($favArr['is_adv_query']=='1'){
+            if ($favArr['is_adv_query'] == '1') {
                 $_GET['adv_query_json'] = $favArr['filter'];
                 $this->advFilter();
                 return;
@@ -781,7 +802,7 @@ class Main extends BaseUserCtrl
             $info['shared'] = $shared;
             $info['projectId'] = $projectId;
             $event = new CommonPlacedEvent($this, $info);
-            $this->dispatcher->dispatch($event,  Events::onIssueAddFilter);
+            $this->dispatcher->dispatch($event, Events::onIssueAddFilter);
             $this->ajaxSuccess('success', $msg);
         } else {
             $this->ajaxFailed('failed', [], $msg);
@@ -819,7 +840,7 @@ class Main extends BaseUserCtrl
         list($ret, $msg) = $filterModel->insert($info);
         if ($ret) {
             $event = new CommonPlacedEvent($this, $info);
-            $this->dispatcher->dispatch($event,  Events::onIssueAddAdvFilter);
+            $this->dispatcher->dispatch($event, Events::onIssueAddAdvFilter);
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('提示', $msg);
@@ -1021,7 +1042,7 @@ class Main extends BaseUserCtrl
 
         // 分发事件
         $event = new CommonPlacedEvent($this, $params);
-        $this->dispatcher->dispatch($event,  Events::onIssueCreateBefore);
+        $this->dispatcher->dispatch($event, Events::onIssueCreateBefore);
         // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
         $getDefaultPriorityId = function () {
             return (new IssuePriorityModel())->getIdByKey('normal');
@@ -1081,7 +1102,6 @@ class Main extends BaseUserCtrl
         if (!isset($project['id'])) {
             $this->ajaxFailed('项目参数错误');
         }
-
         $info['project_id'] = $projectId;
 
         // issue 类型
@@ -1114,8 +1134,8 @@ class Main extends BaseUserCtrl
 
 
                 $info['id'] = $issueId;
-                $event = new CommonPlacedEvent($this, ['master'=>$master,'child'=>$info]);
-                $this->dispatcher->dispatch($event,  Events::onIssueCreateChild);
+                $event = new CommonPlacedEvent($this, ['master' => $master, 'child' => $info]);
+                $this->dispatcher->dispatch($event, Events::onIssueCreateChild);
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
@@ -1160,6 +1180,35 @@ class Main extends BaseUserCtrl
         // @todo这里表结构有bug需要测试
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
+        // 记录的最近的数据
+        $lastData = [];
+        $lastData['issue_type'] = $info['issue_type'];
+        $lastData['module'] = isset($info['module']) ? $info['module'] : null;
+        $lastData['assignee'] = $info['assignee'];
+        $lastData['fix_version'] = null;
+        if (isset($params['fix_version']) && is_array($params['fix_version'])) {
+            $arr = [];
+            foreach ($params['fix_version'] as $fixVersion) {
+                if (!empty($fixVersion)) {
+                    $arr[] = $fixVersion;
+                }
+            }
+            $lastData['fix_version'] = $arr;
+        }
+        $lastData['labels'] = null;
+        if (isset($params['labels']) && is_array($params['labels'])) {
+            $arr = [];
+            foreach ($params['labels'] as $label) {
+                if (!empty($label)) {
+                    $arr[] = $label;
+                }
+            }
+            $lastData['labels'] = $arr;
+        }
+        $lastDataJson = json_encode($lastData);
+        $userIssueLastCreateDataModel = new UserIssueLastCreateDataModel();
+        $userIssueLastCreateDataModel->insertData($this->getCurrentUid(), $projectId, $lastDataJson);
+
         // email
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
@@ -1167,7 +1216,7 @@ class Main extends BaseUserCtrl
         // 分发事件
         $info['id'] = $issueId;
         $event = new CommonPlacedEvent($this, $info);
-        $this->dispatcher->dispatch($event,  Events::onIssueCreateAfter);
+        $this->dispatcher->dispatch($event, Events::onIssueCreateAfter);
         $this->ajaxSuccess('添加成功', $issueId);
     }
 
@@ -1583,7 +1632,7 @@ class Main extends BaseUserCtrl
         }
 
         $event = new CommonPlacedEvent($this, $_REQUEST);
-        $this->dispatcher->dispatch($event,  Events::onIssueUpdateBefore);
+        $this->dispatcher->dispatch($event, Events::onIssueUpdateBefore);
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
@@ -1663,6 +1712,7 @@ class Main extends BaseUserCtrl
             $resolve = IssueResolveModel::getInstance()->getByKey('done');
             $resolveDoneId = $resolve['id'];
             if ($info['resolve'] == $resolveDoneId) {
+                $info['resolve_date'] = date('Y-m-d');
                 $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
                 if (!$closePerm) {
                     $this->ajaxFailed('当前项目中您没有权限将解决结果修改为:' . $resolve['name']);
@@ -1682,7 +1732,11 @@ class Main extends BaseUserCtrl
             $updatedIssue = $issueModel->getById($issueId);
             $updateDurationArr = [];
             $ganttSetting = (new ProjectGanttSettingModel())->getByProject($issue['project_id']);
-            $workDates = json_decode($ganttSetting['work_dates'], true);
+            if (empty($ganttSetting)) {
+                $workDates = null;
+            } else {
+                $workDates = json_decode($ganttSetting['work_dates'], true);
+            }
             $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $workDates, $holidays, $extraWorkerDays);
             // print_r($updateDurationArr);
             list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
@@ -1726,6 +1780,7 @@ class Main extends BaseUserCtrl
             if (empty($params['labels'])) {
                 $model->delete(['issue_id' => $issueId]);
             } else {
+                $model->delete(['issue_id' => $issueId]);
                 $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
             }
         }
@@ -1761,7 +1816,7 @@ class Main extends BaseUserCtrl
         }
         $updatedIssue = $issueModel->getById($issueId);
         $event = new CommonPlacedEvent($this, $updatedIssue);
-        $this->dispatcher->dispatch($event,  Events::onIssueUpdateAfter);
+        $this->dispatcher->dispatch($event, Events::onIssueUpdateAfter);
         $this->ajaxSuccess('更新成功', $updatedIssue);
     }
 
@@ -1841,14 +1896,198 @@ class Main extends BaseUserCtrl
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
         $logData['page'] = $_SERVER['REQUEST_URI'];
         $logData['action'] = LogOperatingLogic::ACT_EDIT;
-        $logData['remark'] = '批量修改事项id:'.implode(',', $successIssueIdArr);
+        $logData['remark'] = '批量修改事项id:' . implode(',', $successIssueIdArr);
         $logData['pre_data'] = '-';
         $logData['cur_data'] = $value;
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
-        $event = new CommonPlacedEvent($this, ['field'=>$field, 'value'=>$value, 'project_id'=>$projectId, 'issue_id_arr'=>$successIssueIdArr]);
-        $this->dispatcher->dispatch($event,  Events::onIssueBatchUpdate);
+        $event = new CommonPlacedEvent($this, ['field' => $field, 'value' => $value, 'project_id' => $projectId, 'issue_id_arr' => $successIssueIdArr]);
+        $this->dispatcher->dispatch($event, Events::onIssueBatchUpdate);
         $this->ajaxSuccess('success');
+    }
+
+    /**
+     * @param $params
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \Exception
+     */
+    public function batchMoveProject($params)
+    {
+        // @todo 判断权限:全局权限和项目角色
+        $issueIdArr = null;
+        if (isset($_POST['issue_id_arr'])) {
+            $issueIdArr = $_POST['issue_id_arr'];
+        }
+        if (empty($issueIdArr)) {
+            $this->ajaxFailed('参数错误', '事项id数据不能为空');
+        }
+        $projectId = null;
+        if (isset($_POST['project_id'])) {
+            $projectId = $_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id数据不能为空');
+        }
+
+        $updateArr = [];
+        if (isset($_POST['module'])) {
+            $updateArr['module'] = (int)$_POST['module'];
+        }
+        if (isset($_POST['sprint'])) {
+            $updateArr['sprint'] = (int)$_POST['sprint'];
+        }
+        $updateLabelArr = [];
+        if (isset($_POST['labels']) && empty($_POST['labels'])) {
+            $updateLabelArr = $_POST['labels'];
+        }
+        $updateEffectVersionArr = [];
+        if (isset($_POST['effect_version']) && empty($_POST['effect_version'])) {
+            $updateEffectVersionArr = $_POST['effect_version'];
+        }
+        $updateFixVersionArr = [];
+        if (isset($_POST['fix_version']) && empty($_POST['fix_version'])) {
+            $updateFixVersionArr = $_POST['fix_version'];
+        }
+        $uid = $this->getCurrentUid();
+        $project = (new ProjectModel())->getById($projectId);
+        $issueModel = new IssueModel();
+        $curProjectId = null;
+        foreach ($issueIdArr as $issueId) {
+            $issue = $issueModel->getById($issueId);
+            $curProjectId = $issue['project_id'];
+            break;
+        }
+        // 是否有编辑权限
+        $editPerm = PermissionLogic::check($curProjectId, UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
+        if (!$editPerm) {
+            $this->ajaxFailed('当前项目中你没有编辑权限进行此操作');
+        }
+        // 是否有编辑权限
+        $targetEditPerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
+        if (!$targetEditPerm) {
+            $this->ajaxFailed('要移动的项目你没有编辑权限进行此操作');
+        }
+
+        $issueLogic = new IssueLogic();
+        $successIssueIdArr = [];
+        $errArr = [];
+        foreach ($issueIdArr as $issueId) {
+            $issue = $issueModel->getById($issueId);
+            if (!empty($updateArr)) {
+                list($ret, $affectedRows) = $issueModel->updateById($issueId, $updateArr);
+                if (!$ret) {
+                    $errArr[] = "事项id:{$issueId} 更新失败:{$affectedRows},已忽略";
+                }
+                $model = new IssueLabelDataModel();
+                if (empty($updateLabelArr)) {
+                    $model->delete(['issue_id' => $issueId]);
+                } else {
+                    $model->delete(['issue_id' => $issueId]);
+                    $issueLogic->addChildData($model, $issueId, $updateLabelArr, 'label_id');
+                }
+                $model = new IssueEffectVersionModel();
+                if (empty($updateEffectVersionArr)) {
+                    $model->delete(['issue_id' => $issueId]);
+                } else {
+                    $model->delete(['issue_id' => $issueId]);
+                    $issueLogic->addChildData($model, $issueId, $updateEffectVersionArr, 'version_id');
+                }
+                $model = new IssueFixVersionModel();
+                if (empty($updateFixVersionArr)) {
+                    $model->delete(['issue_id' => $issueId]);
+                } else {
+                    $model->delete(['issue_id' => $issueId]);
+                    $issueLogic->addChildData($model, $issueId, $updateFixVersionArr, 'version_id');
+                }
+            }
+            if(isset($_POST['is_delete_current']) && $_POST['is_delete_current']=='1'){
+                $deletedRet = $issueModel->deleteItemById($issueId);
+                if ($deletedRet) {
+                    $this->deletedAfter($issueId, $issue);
+                }
+            }
+
+            $successIssueIdArr[] = $issueId;
+        }
+
+        // 操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = null;//json_encode($successIssueIdArr);
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_EDIT;
+        $logData['remark'] = '批量移动事项:' . implode(',', $successIssueIdArr) . ' 至项目' . $project['name'];
+        $logData['pre_data'] = '';
+        $logData['cur_data'] = '';
+        LogOperatingLogic::add($uid, $projectId, $logData);
+        $childrenArr = [];
+        $childrenArr['labels'] = $updateLabelArr;
+        $childrenArr['effect_version'] = $updateEffectVersionArr;
+        $childrenArr['fix_version'] = $updateFixVersionArr;
+
+        $eventData = [
+            'update_arr' => $updateArr,
+            'children_arr' => $childrenArr,
+            'source_project_id' => $curProjectId,
+            'target_project_id' => $projectId,
+            'issue_id_arr' => $successIssueIdArr
+        ];
+        $event = new CommonPlacedEvent($this, $eventData);
+        $this->dispatcher->dispatch($event, Events::onIssueBatchMoveProject);
+        $this->ajaxSuccess('success');
+    }
+
+    /**
+     * @param $issueId
+     * @param array $issue
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \Exception
+     */
+    private function deletedAfter($issueId, $issue=[])
+    {
+        if(empty($issue)){
+            $issueModel = new IssueModel();
+            $issue = $issueModel->getById($issueId);
+        }
+        // 将子任务的关系清除
+        $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+        // 将父任务的 have_children 减 1
+        if (!empty($issue['master_id'])) {
+            $masterId = $issue['master_id'];
+            $issueModel->dec('have_children', $masterId, 'id', 1);
+        }
+        // 删除附件
+        $issueFileModel = new IssueFileAttachmentModel();
+        $issueFilesRows = $issueFileModel->getsByIssueId($issueId);
+        foreach ($issueFilesRows as $issueFilesRow) {
+            $fileName = $issueFilesRow['file_name'];
+            if(strpos($fileName,'?')!==false){
+                list($fileName) = explode('?', $fileName);
+            }
+            if(file_exists(PUBLIC_PATH.'attachment/'.$fileName)){
+                @unlink(PUBLIC_PATH.'attachment/'.$fileName);
+            }
+            $issueFileModel->deleteById($issueFilesRow['id']);
+        }
+        // 删除标签数据
+        $labelDataModel = new IssueLabelDataModel();
+        $labelDataModel->deleteItemByIssueId($issueId);
+        unset($issue['id']);
+        $issue['delete_user_id'] = $this->getCurrentUid();
+        $issueRecycleModel = new IssueRecycleModel();
+        $info = [];
+        $info['issue_id'] = $issueId;
+        $info['project_id'] = $issue['project_id'];
+        $info['delete_user_id'] = $this->getCurrentUid();
+        $info['summary'] = $issue['summary'];
+        $info['data'] = json_encode($issue);
+        $info['time'] = time();
+        $issueRecycleModel->insert($info);
+        unset($info);
     }
 
     /**
@@ -1881,7 +2120,7 @@ class Main extends BaseUserCtrl
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         $event = new CommonPlacedEvent($this, $issue);
-        $this->dispatcher->dispatch($event,  Events::onIssueFollow);
+        $this->dispatcher->dispatch($event, Events::onIssueFollow);
         $this->ajaxSuccess('success', $ret);
     }
 
@@ -1912,8 +2151,8 @@ class Main extends BaseUserCtrl
             $issueLogic->updateFollowCount($issueId);
         }
 
-        $event = new CommonPlacedEvent($this,  $issueId);
-        $this->dispatcher->dispatch($event,  Events::onIssueUnFollow);
+        $event = new CommonPlacedEvent($this, $issueId);
+        $this->dispatcher->dispatch($event, Events::onIssueUnFollow);
 
         $this->ajaxSuccess('success');
     }
@@ -1975,29 +2214,7 @@ class Main extends BaseUserCtrl
             $issueModel->db->beginTransaction();
             $ret = $issueModel->deleteById($issueId);
             if ($ret) {
-                // 将子任务的关系清除
-                $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
-                // 将父任务的 have_children 减 1
-                if (!empty($issue['master_id'])) {
-                    $masterId = $issue['master_id'];
-                    $issueModel->dec('have_children', $masterId, 'id', 1);
-                }
-                unset($issue['id']);
-                $issue['delete_user_id'] = UserAuth::getId();
-                $issueRecycleModel = new IssueRecycleModel();
-                $info = [];
-                $info['issue_id'] = $issueId;
-                $info['project_id'] = $issue['project_id'];
-                $info['delete_user_id'] = UserAuth::getId();
-                $info['summary'] = $issue['summary'];
-                $info['data'] = json_encode($issue);
-                $info['time'] = time();
-                list($deleteRet, $msg) = $issueRecycleModel->insert($info);
-                unset($info);
-                if (!$deleteRet) {
-                    $issueModel->db->rollBack();
-                    $this->ajaxFailed('服务器错误', '新增删除的数据失败,详情:' . $msg);
-                }
+                $this->deletedAfter($issueId, $issue);
             }
             $issueModel->db->commit();
         } catch (\PDOException $e) {
@@ -2006,7 +2223,7 @@ class Main extends BaseUserCtrl
         }
         $issue['id'] = $issueId;
         $event = new CommonPlacedEvent($this, $issue);
-        $this->dispatcher->dispatch($event,  Events::onIssueDelete);
+        $this->dispatcher->dispatch($event, Events::onIssueDelete);
         $this->ajaxSuccess('ok');
     }
 
@@ -2050,28 +2267,7 @@ class Main extends BaseUserCtrl
                 }
                 $ret = $issueModel->deleteById($issueId);
                 if ($ret) {
-                    $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
-                    // 将父任务的 have_children 减 1
-                    if (!empty($issue['master_id'])) {
-                        $masterId = $issue['master_id'];
-                        $issueModel->dec('have_children', $masterId, 'id', 1);
-                    }
-                    unset($issue['id']);
-                    $issue['delete_user_id'] = $userId;
-                    $issueRecycleModel = new IssueRecycleModel();
-                    $info = [];
-                    $info['issue_id'] = $issueId;
-                    $info['project_id'] = $issue['project_id'];
-                    $info['delete_user_id'] = $userId;
-                    $info['summary'] = $issue['summary'];
-                    $info['data'] = json_encode($issue);
-                    $info['time'] = time();
-                    list($deleteInsertRet, $msg) = $issueRecycleModel->insert($info);
-                    unset($info);
-                    if (!$deleteInsertRet) {
-                        $issueModel->db->rollBack();
-                        $this->ajaxFailed('服务器错误', '新增删除的数据失败,详情:' . $msg);
-                    }
+                    $this->deletedAfter($issueId, $issue);
                 }
             }
             $issueModel->db->commit();
@@ -2082,8 +2278,8 @@ class Main extends BaseUserCtrl
 
 
         // 分发事件
-        $event = new CommonPlacedEvent($this, ['title'=>$issueNames,'project_id'=>$projectId, 'issue_id_arr'=>$issueIdArr]);
-        $this->dispatcher->dispatch($event,  Events::onIssueBatchDelete);
+        $event = new CommonPlacedEvent($this, ['title' => $issueNames, 'project_id' => $projectId, 'issue_id_arr' => $issueIdArr]);
+        $this->dispatcher->dispatch($event, Events::onIssueBatchDelete);
         $this->ajaxSuccess('ok');
     }
 
@@ -2108,6 +2304,7 @@ class Main extends BaseUserCtrl
         $info = [];
         $info['status'] = IssueStatusModel::getInstance()->getIdByKey('closed');
         $info['resolve'] = IssueResolveModel::getInstance()->getIdByKey('done');
+        $info['resolve_date'] = date('Y-m-d');
 
         $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
         if (!$closePerm) {
@@ -2126,7 +2323,7 @@ class Main extends BaseUserCtrl
         } else {
             // 分发事件
             $event = new CommonPlacedEvent($this, $issueId);
-            $this->dispatcher->dispatch($event,  Events::onIssueClose);
+            $this->dispatcher->dispatch($event, Events::onIssueClose);
             $this->ajaxSuccess("操作成功");
         }
     }
@@ -2166,8 +2363,8 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
-            $event = new CommonPlacedEvent($this, ['master_id'=>$masterId, 'issue_id'=>$issueId]);
-            $this->dispatcher->dispatch($event,  Events::onIssueConvertChild);
+            $event = new CommonPlacedEvent($this, ['master_id' => $masterId, 'issue_id' => $issueId]);
+            $this->dispatcher->dispatch($event, Events::onIssueConvertChild);
             $this->ajaxSuccess($msg);
         }
     }
@@ -2192,7 +2389,7 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
             $event = new CommonPlacedEvent($this, $issueId);
-            $this->dispatcher->dispatch($event,  Events::onIssueRemoveChild);
+            $this->dispatcher->dispatch($event, Events::onIssueRemoveChild);
             $this->ajaxSuccess($msg);
         }
     }
@@ -2267,7 +2464,7 @@ class Main extends BaseUserCtrl
                 $successText .= "第" . $successRow['cell'] . '行: ' . $successRow['summary'] . '<br>';
             }
             $event = new CommonPlacedEvent($this, $successRows);
-            $this->dispatcher->dispatch($event,  Events::onIssueImportByExcel);
+            $this->dispatcher->dispatch($event, Events::onIssueImportByExcel);
             $this->ajaxSuccess('导入成功', $successText);
         } else {
             $errText = '';
@@ -2277,4 +2474,16 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('导入失败', $errText);
         }
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function getProjectRelateData()
+    {
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
+        $data['project_id'] = $projectId;
+        ConfigLogic::getAllConfigs($data);
+        $this->ajaxSuccess('ok', $data);
+    }
+
 }

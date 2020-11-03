@@ -100,6 +100,21 @@ class IssueFilterLogic
             }
         }
 
+        $getNotParam = function ($param){
+            $assigneeOpt = '=';
+            $value = $param;
+            if(strpos($param,'not@')!==false){
+                $valueArr = explode('@', $param);
+                if(is_array($valueArr) && count($valueArr)>1){
+                    list($opt, $value) = $valueArr;
+                    if($opt!='='){
+                        $assigneeOpt = '!=';
+                    }
+                }
+            }
+            return [$assigneeOpt, $value];
+        };
+
         // 项目筛选
         $projectId = null;
         if (!empty(trimStr($_GET['project']))) {
@@ -117,30 +132,37 @@ class IssueFilterLogic
             }
         }
         $assigneeUid = null;
+        $assigneeOpt = '=';
         if (isset($_GET[urlencode('经办人')])) {
             $userModel = new UserModel();
-            $row = $userModel->getByUsername(urldecode($_GET[urlencode('经办人')]));
+            $value = urldecode($_GET[urlencode('经办人')]);
+            list($assigneeOpt, $value) = $getNotParam($value);
+            $row = $userModel->getByUsername($value);
             if (isset($row['uid'])) {
                 $assigneeUid = $row['uid'];
             }
             unset($row);
         }
         if (isset($_GET['assignee'])) {
-            $assigneeUid = (int)$_GET['assignee'];
+            $value = $_GET['assignee'];
+            $assigneeUid = (int)$value;
         }
         if ($sysFilter == 'assignee_mine') {
             $assigneeUid = UserAuth::getInstance()->getId();
         }
         if ($assigneeUid !== null) {
-            $sql .= " AND assignee=:assignee";
+            $sql .= " AND assignee{$assigneeOpt}:assignee";
             $params['assignee'] = $assigneeUid;
         }
 
         // 谁创建的
         $reporterUid = null;
+        $reporterOpt = '=';
         if (isset($_GET[urlencode('报告人')])) {
             $userModel = new UserModel();
-            $row = $userModel->getByUsername(urldecode($_GET[urlencode('报告人')]));
+            $value = urldecode($_GET[urlencode('报告人')]);
+            list($reporterOpt, $value) = $getNotParam($value);
+            $row = $userModel->getByUsername($value);
             if (isset($row['uid'])) {
                 $reporterUid = $row['uid'];
             }
@@ -153,7 +175,7 @@ class IssueFilterLogic
             $reporterUid = UserAuth::getInstance()->getId();
         }
         if ($reporterUid !== null) {
-            $sql .= " AND reporter=:reporter";
+            $sql .= " AND reporter{$reporterOpt}:reporter";
             $params['reporter'] = $reporterUid;
         }
 
@@ -184,9 +206,11 @@ class IssueFilterLogic
 
         // 所属迭代
         $sprintId = null;
+        $sprintOpt = '=';
         if (isset($_GET[urlencode('迭代')])) {
             $sprintModel = new SprintModel();
             $sprintName = urldecode($_GET[urlencode('迭代')]);
+            list($sprintOpt, $sprintName) = $getNotParam($sprintName);
             $row = $sprintModel->getByProjectAndName($projectId, $sprintName);
             //print_r($row);
             if (isset($row['id'])) {
@@ -198,15 +222,17 @@ class IssueFilterLogic
             $sprintId = (int)$_GET['sprint_id'];
         }
         if (!empty($sprintId)) {
-            $sql .= " AND sprint=:sprint";
+            $sql .= " AND sprint{$sprintOpt}:sprint";
             $params['sprint'] = $sprintId;
         }
 
         // 所属模块
         $moduleId = null;
+        $moduleOpt = '=';
         if (isset($_GET[urlencode('模块')])) {
             $projectModuleModel = new ProjectModuleModel();
             $moduleName = urldecode($_GET[urlencode('模块')]);
+            list($moduleOpt, $moduleName) = $getNotParam($moduleName);
             $row = $projectModuleModel->getByProjectAndName($projectId, $moduleName);
             if (isset($row['id'])) {
                 $moduleId = $row['id'];
@@ -217,15 +243,18 @@ class IssueFilterLogic
             $moduleId = (int)$_GET['module_id'];
         }
         if (!empty($moduleId)) {
-            $sql .= " AND module=:module";
+            $sql .= " AND module{$moduleOpt}:module";
             $params['module'] = $moduleId;
         }
 
         // 优先级
         $priorityId = null;
+        $priorityOpt = '=';
         if (isset($_GET[urlencode('优先级')])) {
             $model = new IssuePriorityModel();
-            $row = $model->getByName(urldecode($_GET[urlencode('优先级')]));
+            $priorityName = urldecode($_GET[urlencode('优先级')]);
+            list($priorityOpt, $priorityName) = $getNotParam($priorityName);
+            $row = $model->getByName($priorityName);
             if (isset($row['id'])) {
                 $priorityId = $row['id'];
             }
@@ -235,29 +264,35 @@ class IssueFilterLogic
             $priorityId = (int)$_GET['priority_id'];
         }
         if ($priorityId !== null) {
-            $sql .= " AND priority=:priority";
+            $sql .= " AND priority{$priorityOpt}:priority";
             $params['priority'] = $priorityId;
         }
 
         // 解决结果
         $resolveId = null;
+        $resolveOpt = '=';
         if (isset($_GET[urlencode('解决结果')])) {
-            $resolveId = IssueResolveModel::getInstance()->getIdByName(urldecode($_GET[urlencode('解决结果')]));
+            $resolveName = urldecode($_GET[urlencode('解决结果')]);
+            list($resolveOpt, $resolveName) = $getNotParam($resolveName);
+            $resolveId = IssueResolveModel::getInstance()->getIdByName($resolveName);
             unset($row);
         }
         if (isset($_GET['resolve_id'])) {
             $resolveId = (int)$_GET['resolve_id'];
         }
         if ($resolveId !== null) {
-            $sql .= " AND resolve=:resolve";
+            $sql .= " AND resolve{$resolveOpt}:resolve";
             $params['resolve'] = $resolveId;
         }
 
         // 状态
         $statusId = null;
+        $statusOpt = '=';
         if (isset($_GET[urlencode('状态')])) {
             $model = new IssueStatusModel();
-            $row = $model->getByName(urldecode($_GET[urlencode('状态')]));
+            $statusName = urldecode($_GET[urlencode('状态')]);
+            list($statusOpt, $statusName) = $getNotParam($statusName);
+            $row = $model->getByName($statusName);
             if (isset($row['id'])) {
                 $statusId = $row['id'];
             }
@@ -268,15 +303,18 @@ class IssueFilterLogic
         }
 
         if ($statusId !== null) {
-            $sql .= " AND status=:status";
+            $sql .= " AND status{$statusOpt}:status";
             $params['status'] = $statusId;
         }
 
         // 事项类型
         $typeId = null;
+        $typeOpt = '=';
         if (isset($_GET[urlencode('类型')])) {
             $model = new IssueTypeModel();
-            $row = $model->getByName(urldecode($_GET[urlencode('类型')]));
+            $typeName = urldecode($_GET[urlencode('类型')]);
+            list($typeOpt, $typeName) = $getNotParam($typeName);
+            $row = $model->getByName($typeName);
             if (isset($row['id'])) {
                 $typeId = $row['id'];
             }
@@ -286,7 +324,7 @@ class IssueFilterLogic
             $typeId = (int)$_GET['type_id'];
         }
         if ($typeId !== null) {
-            $sql .= " AND issue_type=:issue_type";
+            $sql .= " AND issue_type{$typeOpt}:issue_type";
             $params['issue_type'] = $typeId;
         }
 

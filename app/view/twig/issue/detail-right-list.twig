@@ -17,9 +17,11 @@
         <div class="issuable-meta">
             由
             <strong>
-                <a class="author_link  hidden-xs" href="/sven">
-                    <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt=""
-                         src="{{issue.creator_info.avatar}}">
+                <a class="author_link  hidden-xs" href="/user/profile/{{issue.creator_info.uid}}">
+                    <img id="creator_avatar" width="24"
+                     class="avatar avatar-inline s24 "
+                     alt=""
+                     src="{{issue.creator_info.avatar}}">
                     <span id="author" class="author has-tooltip"
                           title="@{{issue.creator_info.username}}" data-placement="top">{{issue.creator_info.display_name}}</span></a>
                 <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">

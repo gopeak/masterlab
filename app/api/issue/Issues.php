@@ -59,8 +59,8 @@ class Issues extends BaseAuth
 
     /**
      * Restful GET , 获取事项列表 | 单个事项信息
-     * 获取模块列表: {{API_URL}}/api/issue/issues/v1/?project=1&access_token==xyz
-     * 获取单个模块: {{API_URL}}/api/issue/issues/v1/36?access_token==xyz
+     * 获取列表: {{API_URL}}/api/issue/issues/v1/?project=1&access_token==xyz
+     * 获取单个: {{API_URL}}/api/issue/issues/v1/36?access_token==xyz
      * @return array
      * @throws \Exception
      */
@@ -70,7 +70,7 @@ class Issues extends BaseAuth
         $projectId = 0;
         $issueId = 0;
 
-        if (isset($_GET['_target'][4])){
+        if (isset($_GET['_target'][4])) {
             $issueId = intval($_GET['_target'][4]);
         }
 
@@ -147,7 +147,7 @@ class Issues extends BaseAuth
         }
         $issue['id'] = $issueId;
         $event = new CommonPlacedEvent($this, $issue);
-        $this->dispatcher->dispatch($event,  Events::onIssueDelete);
+        $this->dispatcher->dispatch($event, Events::onIssueDelete);
 
 
         return self::returnHandler('删除成功');
@@ -185,7 +185,7 @@ class Issues extends BaseAuth
         }
 
         $event = new CommonPlacedEvent($this, $_REQUEST);
-        $this->dispatcher->dispatch($event,  Events::onIssueUpdateBefore);
+        $this->dispatcher->dispatch($event, Events::onIssueUpdateBefore);
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
@@ -259,7 +259,13 @@ class Issues extends BaseAuth
             $updateDurationArr = [];
             $ganttSetting = (new ProjectGanttSettingModel())->getByProject($issue['project_id']);
             $workDates = json_decode($ganttSetting['work_dates'], true);
-            $updateDurationArr['duration'] = getWorkingDays($updatedIssue['start_date'], $updatedIssue['due_date'], $workDates, $holidays, $extraWorkerDays);
+            $updateDurationArr['duration'] = getWorkingDays(
+                $updatedIssue['start_date'],
+                $updatedIssue['due_date'],
+                $workDates,
+                $holidays,
+                $extraWorkerDays
+            );
             // print_r($updateDurationArr);
             list($ret) = $issueModel->updateById($issueId, $updateDurationArr);
             if ($ret) {
@@ -320,8 +326,8 @@ class Issues extends BaseAuth
 
         // 操作日志
         $logData = [];
-        $logData['user_name'] = $this->authAccount;
-        $logData['real_name'] = $this->authAccount;
+        $logData['user_name'] = $this->masterAccount;
+        $logData['real_name'] = $this->masterAccount;
         $logData['obj_id'] = $issueId;
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
         $logData['page'] = $_SERVER['REQUEST_URI'];
@@ -337,10 +343,9 @@ class Issues extends BaseAuth
         }
         $updatedIssue = $issueModel->getById($issueId);
         $event = new CommonPlacedEvent($this, $updatedIssue);
-        $this->dispatcher->dispatch($event,  Events::onIssueUpdateAfter);
+        $this->dispatcher->dispatch($event, Events::onIssueUpdateAfter);
 
         return self::returnHandler('更新成功', array_merge($updatedIssue, ['id' => $issueId]));
-
     }
 
 
@@ -370,7 +375,7 @@ class Issues extends BaseAuth
 
         // 分发事件
         $event = new CommonPlacedEvent($this, $params);
-        $this->dispatcher->dispatch($event,  Events::onIssueCreateBefore);
+        $this->dispatcher->dispatch($event, Events::onIssueCreateBefore);
 
         // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
         $getDefaultPriorityId = function () {
@@ -463,7 +468,7 @@ class Issues extends BaseAuth
             if (!empty($master)) {
                 $info['id'] = $issueId;
                 $event = new CommonPlacedEvent($this, ['master'=>$master,'child'=>$info]);
-                $this->dispatcher->dispatch($event,  Events::onIssueCreateChild);
+                $this->dispatcher->dispatch($event, Events::onIssueCreateChild);
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
@@ -471,8 +476,8 @@ class Issues extends BaseAuth
         unset($project);
         //写入操作日志
         $logData = [];
-        $logData['user_name'] = $this->authAccount;
-        $logData['real_name'] = $this->authAccount;
+        $logData['user_name'] = $this->masterAccount;
+        $logData['real_name'] = $this->masterAccount;
         $logData['obj_id'] = $issueId;
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
         $logData['page'] = $_SERVER['REQUEST_URI'];
@@ -515,11 +520,10 @@ class Issues extends BaseAuth
         // 分发事件
         $info['id'] = $issueId;
         $event = new CommonPlacedEvent($this, $info);
-        $this->dispatcher->dispatch($event,  Events::onIssueCreateAfter);
+        $this->dispatcher->dispatch($event, Events::onIssueCreateAfter);
 
 
         return self::returnHandler('添加成功', ['id' => $issueId]);
-
     }
 
     /**
@@ -608,7 +612,6 @@ class Issues extends BaseAuth
         }
 
         if (isset($params['environment'])) {
-
             $info['environment'] = htmlentities($params['environment']);
         }
 
@@ -642,7 +645,6 @@ class Issues extends BaseAuth
 
         // 标题
         if (isset($params['summary'])) {
-
             $info['summary'] = htmlentities($params['summary']);
         }
 
@@ -726,7 +728,6 @@ class Issues extends BaseAuth
         }
 
         if (isset($params['environment'])) {
-
             $info['environment'] = htmlentities($params['environment']);
         }
 
@@ -748,7 +749,13 @@ class Issues extends BaseAuth
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($params['project_id']);
             $ganttSetting = (new ProjectGanttSettingModel())->getByProject($params['project_id']);
             $workDates = json_decode($ganttSetting['work_dates'], true);
-            $info['duration'] = getWorkingDays($params['start_date'], $params['due_date'], $workDates, $holidays, $extraWorkerDays);
+            $info['duration'] = getWorkingDays(
+                $params['start_date'],
+                $params['due_date'],
+                $workDates,
+                $holidays,
+                $extraWorkerDays
+            );
         }
 
         $this->initAddGanttWeight($params, $info);
@@ -935,11 +942,11 @@ class Issues extends BaseAuth
         $model = new SprintModel();
         $sprint = $model->getById($issue['sprint']);
         $issue['sprint_info'] = isset($sprint['name']) ? $sprint : new \stdClass();
-        if(isset($_GET['from']) && $_GET['from']=='gantt'){
-            if(isset($sprint['start_date']) && !empty($sprint['start_date']) && empty($issue['start_date'])){
+        if (isset($_GET['from']) && $_GET['from']=='gantt') {
+            if (isset($sprint['start_date']) && !empty($sprint['start_date']) && empty($issue['start_date'])) {
                 $issue['start_date'] = $sprint['start_date'];
             }
-            if(isset($sprint['end_date']) && !empty($sprint['end_date']) && empty($issue['due_date'])){
+            if (isset($sprint['end_date']) && !empty($sprint['end_date']) && empty($issue['due_date'])) {
                 $issue['due_date'] = $sprint['end_date'];
             }
         }
@@ -1105,12 +1112,12 @@ class Issues extends BaseAuth
         $data['next_issue_id'] = 0;
         $data['prev_issue_id'] = 0;
         list($ret, $nextId) = $issueLogic->getNextIssueId($issueId, $issueModel);
-        if($ret){
+        if ($ret) {
             $data['next_issue_id'] = (int)$nextId;
         }
         list($ret, $prevId) = $issueLogic->getPrevIssueId($issueId, $issueModel);
         //var_export($prevId);
-        if($ret){
+        if ($ret) {
             $data['prev_issue_id'] = (int)$prevId;
         }
 

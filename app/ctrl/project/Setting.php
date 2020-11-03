@@ -6,6 +6,7 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectListCountLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\IssueTypeLogic;
+use main\app\classes\SettingsLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
@@ -41,37 +42,64 @@ class Setting extends BaseUserCtrl
         $isUpdateLeader = false;
         $projectParamkey = ProjectLogic::PROJECT_GET_PARAM_ID;
         if (isPost()) {
+            $projectId = $_GET[ProjectLogic::PROJECT_GET_PARAM_ID];
             $params = $_POST['params'];
             $uid = $this->getCurrentUid();
             $projectModel = new ProjectModel($uid);
             $preData = $projectModel->getRowById($_GET[$projectParamkey]);
-            $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
 
-            if (isset($params['type']) && empty(trimStr($params['type']))) {
-                $this->ajaxFailed('param_error:type_is_null');
+            $settingLogic = new SettingsLogic();
+            $maxLengthProjectName = $settingLogic->maxLengthProjectName();
+
+            if (!isset($params['name'])) {
+                // $this->ajaxFailed('表单错误', '需要填写项目名称');
             }
-
-            $params['type'] = intval($params['type']);
+            if (isset($params['name']) && empty(trimStr($params['name']))) {
+                $this->ajaxFailed('表单错误失败,需要填写项目名称。');
+            }
+            if (isset($params['name']) && strlen($params['name']) > $maxLengthProjectName) {
+                $this->ajaxFailed('表单错误失败,名称长度太长,长度应该小于' . $maxLengthProjectName);
+            }
+            if (isset($params['name']) && $projectModel->checkIdNameExist($projectId, $params['name'])) {
+                $this->ajaxFailed('表单验证失败,项目名称已经被使用了,请更换一个吧');
+            }
 
             if (!isset($params['lead']) || empty($params['lead'])) {
                 $params['lead'] = $uid;
             }
-
             $info = [];
-            // 修改项目leader
-            if ($preData['lead'] != $params['lead']) {
-                $info['lead'] = $params['lead'];
-                $isUpdateLeader = true;
+            if (isset($params['name'])) {
+                $info['name'] = $params['name'];
             }
-            $info['description'] = $params['description'];
-            $info['type'] = $params['type'];
-            $info['category'] = 0;
-            $info['url'] = $params['url'];
-            $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
+            if (isset($params['lead'])) {
+                // 修改项目leader
+                if ($preData['lead'] != $params['lead']) {
+                    $info['lead'] = $params['lead'];
+                    $isUpdateLeader = true;
+                }
+            }
+            if (isset($params['description'])) {
+                $info['description'] = $params['description'];
+            }
+            if (isset($params['url'])) {
+                $info['url'] = $params['url'];
+            }
+            if (isset($params['avatar_relate_path'])) {
+                $info['avatar'] = $params['avatar_relate_path'];
+            }
             //$info['detail'] = $params['detail'];
-            $info['workflow_scheme_id'] = $params['workflow_scheme_id'];
-            $issueTypeSchemeId = $params['issue_type_scheme_id'];
-
+            if (isset($params['workflow_scheme_id'])) {
+                $info['workflow_scheme_id'] = (int)$params['workflow_scheme_id'];
+            }
+            if (isset($params['default_issue_type_id'])) {
+                $info['default_issue_type_id'] = (int)$params['default_issue_type_id'];
+            }
+            if (isset($params['is_remember_last_issue'])) {
+                $info['is_remember_last_issue'] = (int)$params['is_remember_last_issue'];
+            }
+            if (isset($params['remember_last_issue_field'])) {
+                $info['remember_last_issue_field'] = json_encode($params['remember_last_issue_field']);
+            }
             // 管理员可以变更项目所属的组织
             if (isset($params['org_id']) && $preData['org_id'] != $params['org_id'] && $this->isAdmin) {
                 $orgModel = new OrgModel();
@@ -81,66 +109,43 @@ class Setting extends BaseUserCtrl
             }
 
             $projectModel->db->beginTransaction();
-
-            $ret1 = $projectModel->update($info, array('id' => $_GET[$projectParamkey]));
-
-            if ($isUpdateLeader) {
-                $retModifyLeader = ProjectLogic::assignAdminRoleForProjectLeader($_GET[$projectParamkey], $info['lead']);
-                if (!$retModifyLeader[0]) {
-                    $projectModel->db->rollBack();
-                    $this->ajaxFailed('错误', '更新项目负责人失败');
-                }
-            }
-
-            $projectMainExtra = new ProjectMainExtraModel();
-            if ($projectMainExtra->getByProjectId($_GET[$projectParamkey])) {
-                $ret3 = $projectMainExtra->updateByProjectId(array('detail' => $params['detail']), $_GET[$projectParamkey]);
-            } else {
-                $ret3 = $projectMainExtra->insert(array('project_id' => $_GET[$projectParamkey], 'detail' => $params['detail']));
-            }
-            if (!$ret3[0]) {
-                $projectModel->db->rollBack();
-                $this->ajaxFailed('错误', '更新项目描述失败');
-            }
-            // @todo 先判断项目类型有变更，再去做更新
-            if ($preData['type'] != $params['type']) {
-                $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);
-                $retSchemeId = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[$projectParamkey]);
-                if ($retSchemeId) {
-                    $ret2 = $projectIssueTypeSchemeDataModel->update(array('issue_type_scheme_id' => $schemeId), array('project_id' => $_GET[$projectParamkey]));
-                } else {
-                    $ret2 = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $_GET[$projectParamkey]));
-                }
-                if (!$ret2[0]) {
-                    $projectModel->db->rollBack();
-                    $this->ajaxFailed('错误', '更新项目类型失败');
-                }
-            }
-
-            if (!isset($info['type'])
-                || !is_numeric($info['type'])
-                || !in_array($info['type'], ProjectLogic::$type_all)
-            ) {
-                $this->ajaxFailed('参数错误', '项目类型错误');
-            }
-
-            // 保存项目事项类型方案
-            $projectId = $_GET[ProjectLogic::PROJECT_GET_PARAM_ID];
-            $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-            $projectIssueTypeSchemeData = $projectIssueTypeSchemeDataModel->getRow('*', ['project_id' => $projectId]);
-
-            if ($projectIssueTypeSchemeData) {
-                $rowId = $projectIssueTypeSchemeData['id'];
-                $updates = ['issue_type_scheme_id' => $issueTypeSchemeId];
-                $projectIssueTypeSchemeDataModel->update($updates, ['id' => $rowId]);
-            } else {
-                $new = ['issue_type_scheme_id' => $issueTypeSchemeId, 'project_id' => $projectId];
-                $projectIssueTypeSchemeDataModel->insert($new);
-            }
-
+            //print_r($info);
+            $ret1 = $projectModel->update($info, array('id' => $projectId));
             if ($ret1[0]) {
+                if ($isUpdateLeader) {
+                    $retModifyLeader = ProjectLogic::assignAdminRoleForProjectLeader($projectId, $info['lead']);
+                    if (!$retModifyLeader[0]) {
+                        $projectModel->db->rollBack();
+                        $this->ajaxFailed('错误服务器执行错误,更新项目负责人失败');
+                    }
+                }
+                if (isset($params['detail'])) {
+                    $projectMainExtra = new ProjectMainExtraModel();
+                    if ($projectMainExtra->getByProjectId($projectId)) {
+                        $ret3 = $projectMainExtra->updateByProjectId(array('detail' => $params['detail']), $projectId);
+                    } else {
+                        $ret3 = $projectMainExtra->insert(array('project_id' => $projectId, 'detail' => $params['detail']));
+                    }
+                    if (!$ret3[0]) {
+                        $projectModel->db->rollBack();
+                        $this->ajaxFailed('服务器执行错误,更新项目描述失败');
+                    }
+                }
+                // 保存项目事项类型方案
+                if (isset($params['issue_type_scheme_id'])) {
+                    $issueTypeSchemeId = $params['issue_type_scheme_id'];
+                    $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+                    $projectIssueTypeSchemeData = $projectIssueTypeSchemeDataModel->getRow('*', ['project_id' => $projectId]);
+                    if ($projectIssueTypeSchemeData) {
+                        $rowId = $projectIssueTypeSchemeData['id'];
+                        $updates = ['issue_type_scheme_id' => $issueTypeSchemeId];
+                        $projectIssueTypeSchemeDataModel->update($updates, ['id' => $rowId]);
+                    } else {
+                        $new = ['issue_type_scheme_id' => $issueTypeSchemeId, 'project_id' => $projectId];
+                        $projectIssueTypeSchemeDataModel->insert($new);
+                    }
+                }
                 $projectModel->db->commit();
-
                 //写入操作日志
                 $logData = [];
                 $logData['user_name'] = $this->auth->getUser()['username'];
@@ -155,8 +160,8 @@ class Setting extends BaseUserCtrl
                 LogOperatingLogic::add($uid, $_GET[ProjectLogic::PROJECT_GET_PARAM_ID], $logData);
                 // 分发事件
                 $info['id'] = $projectId;
-                $event = new CommonPlacedEvent($this, ['pre_data'=>$preData,'cur_data'=>$info]);
-                $this->dispatcher->dispatch($event,  Events::onProjectUpdate);
+                $event = new CommonPlacedEvent($this, ['pre_data' => $preData, 'cur_data' => $info]);
+                $this->dispatcher->dispatch($event, Events::onProjectUpdate);
                 $this->ajaxSuccess("success");
             } else {
                 $projectModel->db->rollBack();

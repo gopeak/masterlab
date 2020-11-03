@@ -46,7 +46,7 @@ class KodSdk
         $url = sprintf($this->rootUrl  . "?user/loginSubmit&isAjax=1&getToken=1&login_token=%s", $loginToken);
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', $url);
-        echo $response->getBody();
+        //echo $response->getBody();
         $statusCode = $response->getStatusCode(); // 200
         if ($statusCode != 200) {
             return [false, 'response status:' . $statusCode];

@@ -21,6 +21,9 @@ class Framework extends BaseCtrl
         echo 'index';
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getPhpIni()
     {
         $ret = new \stdClass();
@@ -35,6 +38,9 @@ class Framework extends BaseCtrl
         $this->ajaxSuccess('ok', $ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function validateDir()
     {
         $dirs = [

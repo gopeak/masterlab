@@ -223,6 +223,52 @@ var InputSearch = (function () {
         return temp;
     };
 
+    InputSearch.prototype.getCurrentSearchesStr = function () {
+        var searchKeys = window.location.search.slice(1).split("&");
+        var searchKeysArr = [];
+        var searchParams = [];
+        var tempData = "";
+        var self = this;
+        searchKeys.forEach(function (n) {
+            var tempArr = n.split("=");
+            var name = decodeURIComponent(tempArr[0]);
+            var value = self.getSearchObjectValue(tempArr);
+            var regex = /[^\[\]]+(?=\])/g;
+            var operator = "=";
+            if (value && value.indexOf("not@") !== -1) {
+                var temp = value.split('not@');
+                //value = temp[1];
+                operator = '!='
+            }
+
+            var temp = {
+                name,
+                operator,
+                value
+            };
+
+            var temp1 = {
+                name,
+                operator,
+                value: decodeURIComponent(tempArr[1])
+            };
+
+            if (value) {
+                searchKeysArr.push(temp);
+                searchParams.push(temp1);
+                tempData += name + '=' + value + "&";
+            }
+        });
+        if(tempData.substr(tempData.length-1,1)=='&'){
+            tempData = tempData.substr(0,tempData.length-1);
+        }
+        _currentSearchesArr = searchKeysArr;
+        _currentSearchesParams = searchParams;
+        _currentSearchesStr = $.trim(tempData);
+
+        return _currentSearchesStr;
+    };
+
     //获取当前搜索内容
     InputSearch.prototype.getCurrentSearches = function () {
         var searchKeys = window.location.search.slice(1).split("&");
@@ -236,9 +282,10 @@ var InputSearch = (function () {
             var value = self.getSearchObjectValue(tempArr);
             var regex = /[^\[\]]+(?=\])/g;
             var operator = "=";
-            if (name.indexOf("not[") !== -1) {
-                var temp = name.match(regex);
-                name = temp[0];
+
+            if (value && value.indexOf("not@") !== -1) {
+                var temp = value.split('not@');
+                value = temp[1];
                 operator = "!=";
             }
 
@@ -263,6 +310,8 @@ var InputSearch = (function () {
         _currentSearchesArr = searchKeysArr;
         _currentSearchesParams = searchParams;
         _currentSearchesStr = $.trim(tempData);
+
+        return _currentSearchesStr;
     };
 
     // 设置当前搜索
@@ -387,9 +436,8 @@ var InputSearch = (function () {
                     value = value.replace(n.symbol, "");
                 }
             });
-
             if (operator.indexOf("!") != -1) {
-                searches["not[" + name + "]"] = value;
+                searches[name] = "not@" +value;
             } else {
                 searches[name] = value;
             }

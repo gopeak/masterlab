@@ -188,7 +188,7 @@ $(function () {
 
     // 新增
     $(".js-choose-user-avatar-button-create").on("click", function () {
-        $(".js-user-avatar-file-create").trigger("click")
+        $(".js-user-avatar-file-create").trigger("click");
     })
 
     $(".js-user-avatar-file-create").on("change", function () {
@@ -209,7 +209,7 @@ $(function () {
         cropBoxData = cropper.getCropBoxData();
         canvasData = cropper.getCanvasData();
         cropper.destroy();
-        $(".js-user-avatar-file-create").val("")
+        $(".js-user-avatar-file-create").val("");
     });
 
     $(".js-avatar-create-save").on("click", function () {
@@ -309,8 +309,6 @@ function userGroup(uid) {
         }
     });
 }
-
-
 
 function userAdd() {
 
@@ -434,8 +432,6 @@ function userDelete(id) {
 }
 
 function userActive(id) {
-
-
     var method = 'GET';
     var url = '/admin/user/active/?uid=' + id;
     $.ajax({

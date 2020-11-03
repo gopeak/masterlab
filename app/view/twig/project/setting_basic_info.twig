@@ -4,8 +4,7 @@
 
     {% include 'twig/common/header/include.twig' %}
     <script src="/dev/lib/jquery.form.js"></script>
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
-            charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <!-- Fine Uploader jQuery JS file-->
     <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
@@ -48,10 +47,9 @@
             <div class="content" id="content-body">
                 <div class="row prepend-top-default">
                     <div class="col-lg-3">
-                        <h4 class="prepend-top-0">项目基础设置</h4>
+                        <h4 class="prepend-top-0">基本设置</h4>
                         <p>将事项分为不同的类型, 例如 缺陷或任务等。 每个事项类型都可以分别配置不同的选项。
-
-事项类型方案用于定义这个项目使用哪几种事项类型。 要改变项目的事项类型, 可以选择另一个事项类型方案, 或编辑当前的事项类型界面方案。</p>
+                         事项类型方案用于定义这个项目使用哪几种事项类型。 要改变项目的事项类型, 可以选择另一个事项类型方案, 或编辑当前的事项类型界面方案。</p>
                     </div>
                     <div class="col-lg-9">
                         <div class="panel panel-default">
@@ -69,7 +67,7 @@
                                                 <span>项目名称 <i class="required">*</i></span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input value="<?=info['name']?>" placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus" required="required" type="text" name="params[name]" id="project_name" disabled>
+                                                <input value="<?=info['name']?>" placeholder="请输入名称" class="form-control" tabindex="1" required="required" type="text" name="params[name]" id="project_name" >
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -81,7 +79,7 @@
                                                     <input value="<?=info['org_name']?>" class="form-control" type="text" disabled>
                                                 {% else %}
                                                     <div class="select2-container">
-                                                        <select class="selectpicker" data-live-search="true" name="params[org_id]">
+                                                        <select class="selectpicker" id="org_id"  name="params[org_id]">
                                                             {% for org in org_list %}
                                                                 <option data-tokens="<?=org['name']?>" data-org_path="<?=org['path']?>" value="<?=org['id']?>"><?=org['name']?></option>
                                                             {% endfor %}
@@ -92,7 +90,7 @@
                                         </div>
                                         <div class="form-group project-path">
                                             <label class="control-label" for="project_namespace_id">
-                                                <span>项目KEY <i class="required">*</i></span>
+                                                <span>项目KEY <i class="required"></i></span>
                                             </label>
                                             <div class="col-sm-10">
                                                 <input value="<?=info['key']?>" placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"required="required" type="text" name="params[key]" id="project_key" disabled>
@@ -101,91 +99,28 @@
 
                                         <div class="form-group clearfix">
                                             <label class="control-label" for="project_visibility_level">
-                                                项目类型 <i class="required">*</i>
+                                                项目模板 <i class="required"></i>
                                             </label>
                                             <div class="col-sm-10 radio-with">
-                                                {% for type_id,type_item in full_type %}
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" name="params[type]" value="<?=type_id?>" {% if (type_id == info['type']) %}<?= 'checked' ?>{% endif %} >
-                                                            <i class="<?=type_item['type_face']?>"></i> <span style="font-weight: bolder;"><?=type_item['type_name']?></span>
-                                                            <div style="color:#999999;">
-                                                                <?=type_item['type_desc']?>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                {% endfor %}
+                                                <input value="<?=info['project_tpl_text']?>"  class="form-control"   type="text" name="params[project_tpl_text]" id="project_tpl_text" disabled>
                                             </div>
                                         </div>
+
 
                                         <div class="form-group">
                                             <label class="control-label" for="issue_type_scheme_id">
-                                                <span>事项类型方案 <i class="required">*</i></span>
+                                                <span>项目负责人 <i class="required">*</i></span>
                                             </label>
                                             <div class="col-sm-10">
                                                 <div class="select2-container">
-                                                    <select class="selectpicker" data-live-search="true" name="params[issue_type_scheme_id]" id="issue_type_scheme_id">
-                                                        {% for scheme in issue_type_schemes %}
-                                                            <option value="<?=scheme['id']?>"><?=scheme['name']?></option>
+                                                    <select  name="params[lead]" id="project_lead" title="项目负责人" class="selectpicker">
+                                                        {% for row in users %}
+                                                            {% set  display_name = row['display_name'] %}
+                                                            <option {% if row.uid==info.lead %} selected {% endif %} value="<?=row.uid?>"  data-content="<img width='20px' height='20px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/<?=row.uid?>.png' > <?=display_name?>"  ><?=display_name?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label" for="workflow_scheme_id">
-                                                <span>事项状态流方案 <i class="required">*</i></span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <div class="select2-container">
-                                                    <select class="selectpicker" data-live-search="true" name="params[workflow_scheme_id]" id="workflow_scheme_id">
-                                                        {% for scheme in workflow_schemes %}
-                                                            <option value="<?=scheme['id']?>"><?=scheme['name']?></option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group issue-assignee">
-                                            <label class="control-label" for="issue_assignee_id">项目负责人 <i style="color:red;">*</i></label>
-                                            <div class="col-sm-10">
-                                                <div class="issuable-form-select-holder">
-                                                    <input type="hidden" name="params[lead]" id="issue_assignee_id" value="<?=info['lead']?>"/>
-                                                    <div class="dropdown ">
-                                                        <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
-                                                                data-first-user="sven"
-                                                                data-null-user="true"
-                                                                data-current-user="true"
-                                                                data-project-id=""
-                                                                data-selected="null"
-                                                                data-field-name="params[lead]"
-                                                                data-default-label="Assignee"
-                                                                data-toggle="dropdown">
-                                                            <span class="dropdown-toggle-text is-default"><?=lead_display_name?></span>
-                                                            <i class="fa fa-chevron-down"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
-                                                            <div class="dropdown-title">
-                                                                <span>选择负责人</span>
-                                                                <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                                                                    <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                                                </button>
-                                                            </div>
-                                                            <div class="dropdown-input">
-                                                                <input type="search" id="" class="dropdown-input-field" placeholder="Search" autocomplete="off" />
-                                                                <i class="fa fa-search dropdown-input-search"></i>
-                                                                <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                                            </div>
-                                                            <div class="dropdown-content "></div>
-                                                            <div class="dropdown-loading">
-                                                                <i class="fa fa-spinner fa-spin"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <a class="assign-to-me-link " href="#">赋予给我</a></div>
                                         </div>
 
                                         <div class="form-group">
@@ -369,10 +304,10 @@
 
 <script>
     // 初始化组织值
-    $(".selectpicker").selectpicker('val', <?=project['org_id']?>);
+    $("#org_id").selectpicker('val', <?= project['org_id'] ?>);
     // 初始化事项类型方案
     $("#issue_type_scheme_id").selectpicker('val', <?= issue_type_scheme_id ?>);
-    // 初始化状态刘方案
+    // 初始化状态流方案
     $("#workflow_scheme_id").selectpicker('val', <?= project['workflow_scheme_id'] ?>);
 
     var editor = editormd({

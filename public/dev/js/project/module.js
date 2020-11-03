@@ -21,16 +21,37 @@ let Module = (function() {
     };
 
     Module.prototype.delete = function (project_id, module_id) {
-        $.post("/project/module/delete",{project_id: project_id, module_id:module_id}, function (result) {
-            if (result.ret == 200) {
-                //location.reload();
-                notify_success('删除成功');
-                //window.location.reload();
-                $('#li_data_id_'+module_id).remove();
-            } else {
-                notify_error('删除失败');
+        swal({
+                title: "您确定删除吗?",
+                text: "你将无法恢复它",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    $.post("/project/module/delete",{project_id: project_id, module_id:module_id}, function (result) {
+                        if (result.ret == 200) {
+                            //location.reload();
+                            notify_success('删除成功');
+                            //window.location.reload();
+                            $('#li_data_id_'+module_id).remove();
+                        } else {
+                            notify_error('删除失败');
+                        }
+                    });
+                    swal.close();
+                }else{
+                    swal.close();
+                }
             }
-        });
+        );
+
     };
 
     Module.prototype.edit = function (module_id) {

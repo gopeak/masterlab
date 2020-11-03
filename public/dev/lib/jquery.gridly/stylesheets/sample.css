@@ -1,0 +1,100 @@
+
+
+pre {
+  overflow: scroll;
+  background: #EEE;
+  padding: 10px; }
+
+.formats .format {
+  display: inline-block; }
+
+
+.fork {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0; }
+
+.button {
+  display: block;
+  padding: 20px;
+  width: 200px;
+  color: #FFF;
+  background: #488ed9;
+  margin: 20px 0;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px; }
+
+pre .support.tag {
+  color: #008; }
+pre .support.attribute {
+  color: #800; }
+pre .string.value {
+  color: #080; }
+
+.example {
+  position: relative; }
+  .example .brick {
+    opacity: 1;
+    cursor: pointer;
+    position: relative; }
+    .example .brick .delete {
+      display: block;
+      color: #FFF;
+      background: rgba(255, 255, 255, 0.2);
+      width: 40px;
+      height: 40px;
+      top: 0;
+      right: 0;
+      position: absolute;
+      text-align: center;
+      line-height: 40px; }
+    .example .brick.small {
+      width: 140px;
+      height: 140px; }
+    .example .brick.large {
+      width: 300px;
+      height: 300px; }
+    .example .brick.dragging {
+      opacity: 0.8; }
+    .example .brick:nth-child(20n + 1) {
+      background: #1ABC9C; }
+    .example .brick:nth-child(20n + 2) {
+      background: #16A085; }
+    .example .brick:nth-child(20n + 3) {
+      background: #2ECC71; }
+    .example .brick:nth-child(20n + 4) {
+      background: #27AE60; }
+    .example .brick:nth-child(20n + 5) {
+      background: #3498DB; }
+    .example .brick:nth-child(20n + 6) {
+      background: #2980B9; }
+    .example .brick:nth-child(20n + 7) {
+      background: #9B59B6; }
+    .example .brick:nth-child(20n + 8) {
+      background: #8E44AD; }
+    .example .brick:nth-child(20n + 9) {
+      background: #34495E; }
+    .example .brick:nth-child(20n + 10) {
+      background: #2C3E50; }
+    .example .brick:nth-child(20n + 11) {
+      background: #F1C40F; }
+    .example .brick:nth-child(20n + 12) {
+      background: #F39C12; }
+    .example .brick:nth-child(20n + 13) {
+      background: #E67E22; }
+    .example .brick:nth-child(20n + 14) {
+      background: #D35400; }
+    .example .brick:nth-child(20n + 15) {
+      background: #E74C3C; }
+    .example .brick:nth-child(20n + 16) {
+      background: #C0392B; }
+    .example .brick:nth-child(20n + 17) {
+      background: #ECF0F1; }
+    .example .brick:nth-child(20n + 18) {
+      background: #BDC3C7; }
+    .example .brick:nth-child(20n + 19) {
+      background: #95A5A6; }
+    .example .brick:nth-child(20n + 20) {
+      background: #7F8C8D; }

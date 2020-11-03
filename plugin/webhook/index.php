@@ -93,6 +93,10 @@ class Index extends BasePluginCtrl
      */
     private function getEventArr()
     {
+        $arr['邮件推送'] = [
+            Events::onSendMailBefore=>'发送邮件之前',
+        ];
+
         $arr['事项'] = [
             Events::onIssueCreateBefore=>'创建事项之前',
             Events::onIssueCreateAfter=>'创建事项之后',
@@ -106,6 +110,7 @@ class Index extends BasePluginCtrl
             Events::onIssueConvertChild=>'转换子任务事项',
             Events::onIssueBatchDelete=>'批量删除事项',
             Events::onIssueBatchUpdate=>'批量更新事项',
+            Events::onIssueBatchMoveProject=>'批量移动事项至新项目',
             Events::onIssueImportByExcel=>'导入事项',
             Events::onIssueRemoveChild=>'移除子任务',
             Events::onIssueUpload=>'附件上传',

@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- *  插件基类
+ *  插件事件基类
  * Class ActivityPlugin
  */
 class BasePluginSubscriber implements EventSubscriberInterface
@@ -59,7 +59,6 @@ class BasePluginSubscriber implements EventSubscriberInterface
             }
         }
         $currentDir->close();
-
     }
 
     /**

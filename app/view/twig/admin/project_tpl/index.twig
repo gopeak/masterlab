@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head>
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/js/admin/project_tpl.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+    <!-- Fine Uploader jQuery JS file-->
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+
+    <style>
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+        .panel-project .project-item {
+            padding: 24px;
+            -webkit-box-shadow: 0 0 0 0 #fff, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, 1px 0 0 0 #e8e8e8 inset, 0 1px 0 0 #e8e8e8 inset;
+            /* box-shadow: 0 0 0 0 #fff, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, inset 1px 0 0 0 #e8e8e8, inset 0 1px 0 0 #e8e8e8; */
+            border-right: 1px solid #e8e8e8;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .project-item-title{
+            box-sizing: border-box;
+        }
+        .project-item-body {
+            color: rgba(0,0,0,.45);
+            height: 44px;
+            line-height: 22px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .project-item-footer {
+            display: flex;
+            margin-top: 8px;
+            font-size: 12px;
+            height: 20px;
+            line-height: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            white-space: nowrap;
+        }
+
+    </style>
+</head>
+
+<body class="" data-group=""   >
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body system-page">
+    {% include 'twig/common/body/header-content.twig' %}
+
+
+<div class="page-with-sidebar">
+    {% include 'twig/admin/common-page-nav-admin.twig' %}
+
+
+    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+        <div class="alert-wrapper">
+            <div class="flash-container flash-container-page">
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="content" id="content-body">
+                {% include 'twig/admin/common_project_tpl_left_nav.twig' %}
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+
+                            <form id="filter_form" action="" onsubmit="return false" accept-charset="UTF-8" method="get">
+                                <input name="page" id="filter_page" type="hidden" value="1">
+                                <input name="type" id="filter_type" type="hidden" value="all">
+                                <input name="range" id="filter_range" type="hidden" value="all">
+                                <input name="sort_by" id="filter_sort_by" type="hidden" value="desc">
+                                <input name="sort_field" id="filter_sort_field" type="hidden" value="id">
+                                <ul class="nav-links">
+                                    <li id="state-all"  class="li_plugin_range state_li active" data-range="all">
+                                        <a  title="全部模板" href="#" >模板列表
+                                        </a>
+                                    </li>
+                                    <!--
+                                    <li id="state-install"  class="li_plugin_range state_li" data-range="installed">
+                                        <a title="已安装的模板" href="#">已安装<span id="installed_count"></span>
+                                        </a>
+                                    </li>
+                                    <li id="state-ready" class="li_plugin_range state_li" data-range="uninstalled">
+                                        <a  title="未安装的模板" href="#">未安装<span id="uninstalled_count"></span></a>
+                                    </li>-->
+                                </ul>
+                                <div class="nav-controls">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-new js-key-create"  id="btn-create_project_tpl">
+                                            <i class="fa fa-plus"></i>
+                                            创建模板
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="content-list">
+                            <div class="table-holder">
+
+                                    <div class="row" id="list_render_id">
+
+
+                                    </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal-project_tpl">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          id="form-plugin"
+          action="/admin/project_tpl/add"
+          accept-charset="UTF-8"
+          method="post">
+        <input type="hidden" name="format" id="id_format" value="json">
+        <input type="hidden" name="action" id="id_action" value="add">
+        <input type="hidden" name="id" id="edit_id" value="">
+
+        <div class="modal-dialog">
+            <div class="modal-content modal-middle">
+                <div class="modal-header">
+                    <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title" id="modal-header-title">创建模板</h3>
+                </div>
+                <div class="modal-body min-height300" id="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" id="id_name"  value="" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                                <span id="tip_name"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_category">类型:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <select  id="id_category" name="category_id" class="selectpicker"  title="请选择" >
+                                    {% for index,category in category_arr %}
+                                        <option value="<?=category.id?>"><?=category.name?></option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_description">描述:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <textarea  class="form-control" name="description" id="id_description" ></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_image_bg">
+                            <span>图片</span>
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="col-sm-6">
+                                <div id="fine-uploader-gallery"></div>
+                                <div class="help-block">用做显示的背景图,图片大小不能超过100K</div>
+                            </div>
+                            <div class="col-sm-4">
+                                <img id="image_bg_display" class="" alt="" src="" style="width:120px;">
+                                <input type="hidden" name="image_bg" id="id_image_bg" value=""/>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer footer-block row-content-block">
+                    <button name="submit"
+                            type="button"
+                            class="btn btn-create js-key-modal-enter1"
+                            id="btn-project_tpl_save"
+                            title="保存">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+    </div>
+</section>
+
+<!-- Fine Uploader Gallery template
+            ====================================================================== -->
+<script type="text/template" id="qq-template-gallery">
+    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="">
+        <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+            <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+        </div>
+        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+            <span class="qq-upload-drop-area-text-selector"></span>
+        </div>
+        <div class="qq-upload-button-selector qq-upload-button">
+            <div>点击上传</div>
+        </div>
+        <span class="qq-drop-processing-selector qq-drop-processing">
+					<span>Processing dropped files...</span>
+					<span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+				</span>
+        <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+            <li>
+                <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                <div class="qq-progress-bar-container-selector qq-progress-bar-container">
+                    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                </div>
+                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                <div class="qq-thumbnail-wrapper">
+                    <a href="javascript:;" class="qq-file-link qq-upload-file-url">
+                        <img class="qq-thumbnail-selector" qq-max-size="198" qq-server-scale>
+                    </a>
+                </div>
+                <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+                <button type="button" class="qq-upload-retry-selector qq-upload-retry">
+                    <span class="qq-btn qq-retry-icon" aria-label="重试"></span>
+                    重试
+                </button>
+
+                <div class="qq-file-info">
+                    <div class="qq-file-name">
+                        <span class="qq-upload-file-selector qq-upload-file"></span>
+                        <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+                    </div>
+                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+                        <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+                    </button>
+                    <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+                        <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+                    </button>
+                    <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+                        <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+                    </button>
+                </div>
+            </li>
+        </ul>
+
+        <dialog class="qq-alert-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">Close</button>
+            </div>
+        </dialog>
+
+        <dialog class="qq-confirm-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">否</button>
+                <button type="button" class="qq-ok-button-selector">是</button>
+            </div>
+        </dialog>
+
+        <dialog class="qq-prompt-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <input type="text">
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">取消</button>
+                <button type="button" class="qq-ok-button-selector">好的</button>
+            </div>
+        </dialog>
+    </div>
+</script>
+
+<style>
+    .qq-gallery.qq-uploader {
+        position: relative;
+        min-height: 140px;
+        max-height: 320px;
+        overflow-y: hidden;
+        width: inherit;
+        border-radius: 6px;
+        border: 1px dashed #CCCCCC;
+        background-color: #FAFAFA;
+        padding: 20px;
+    }
+</style>
+
+{% verbatim %}
+<script type="text/html"  id="list_tpl">
+    {{#project_tpls}}
+
+    <div class="  col-md-3" style="padding-top: 8px; margin-top:10px; margin-left: 20px;border-width: 1px;
+    border-style: solid;
+    border-color: rgb(240, 240, 240);
+    border-image: initial; ">
+        <div class="thumbnail">
+          <img  alt="{{name}}" src="{{image_bg}}" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+          <div class="caption">
+            <h3>{{name}}</h3>
+            <p style="min-height: 30px;max-height: 40px">{{description}}</p>
+            <p style="float: right">
+            <a href="/admin/project_tpl/edit?id={{id}}" class="blue" role="button">配置</a>
+            {{#if_eq is_system '0'}}
+            <a href="#" class="gray tpl_edit_link" data-id="{{id}}" role="button">编辑</a>
+            {{/if_eq}}
+            <a href="javascript:;" class="gray tpl_copy_link"  data-id="{{id}}"  role="button">复制</a>
+            {{#if_eq is_system '0'}}
+            <a href="javascript:;" class="gray tpl_delete_link"  data-id="{{id}}" >删除</a>
+            {{/if_eq}}
+            </p>
+          </div>
+        </div>
+      </div>
+    {{/project_tpls}}
+
+</script>
+{% endverbatim %}
+
+
+<script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
+<script type="text/javascript">
+
+    var $pluginTemplate = null;
+    var uploader = null;
+    var category_id = '<?=category_id?>';
+
+    function generateUUID() {
+        var d = new Date().getTime();
+        if (window.performance && typeof window.performance.now === "function") {
+            d += performance.now(); //use high-precision timer if available
+        }
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
+    }
+    
+    $(function() {
+        $('.selectpicker').selectpicker('refresh');
+        var options = {
+            list_render_id:"list_render_id",
+            list_tpl_id:"list_tpl",
+            filter_form_id:"filter_form",
+            filter_url:"/admin/project_tpl/fetch_all",
+            get_url:"/admin/project_tpl/get",
+            update_url:"/admin/project_tpl/update",
+            post_copy_url:"/admin/project_tpl/copy",
+            add_url:"/admin/project_tpl/add",
+            delete_url:"/admin/project_tpl/delete",
+            pagination_id:"pagination"
+
+        }
+        $pluginTemplate = new PluginTemplate( options );
+        $pluginTemplate.fetchAll();
+
+
+        $('.li_plugin_type').click(function(e){
+            let plugin_type = $(this).data('type');
+            $('#filter_type').val(plugin_type);
+            $('.li_plugin_type').removeClass('active');
+            $(this).addClass('active');
+            $pluginTemplate.fetchAll( );
+
+        });
+        $('.li_plugin_range').click(function(e){
+            let plugin_range = $(this).data('range');
+            $('#filter_range').val(plugin_range);
+            $('.li_plugin_range').removeClass('active');
+            $(this).addClass('active');
+            $pluginTemplate.fetchAll( );
+        });
+
+
+        $("#modal-project_tpl").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '.js-key-modal-enter1',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '.js-key-modal-close1',
+                    trigger: 'click'
+                }
+            ])
+        });
+
+         uploader = new qq.FineUploader({
+            element: document.getElementById('fine-uploader-gallery'),
+            template: 'qq-template-gallery',
+            multiple: false,
+            request: {
+                endpoint: '/admin/upload/plugin'
+            },
+            validation: {
+                allowedExtensions: [
+                    'jpeg', 'jpg', 'gif', 'png'
+                ],
+                sizeLimit: 1024 * 100
+            },
+            callbacks: {
+                onComplete: function (id, fileName, responseJSON) {
+                    console.log(responseJSON);
+                    if (responseJSON.error === '') {
+                        $('#id_image_bg').val('/attachment/'+responseJSON.relate_path);
+                    }
+                }
+            }
+        });
+
+    });
+
+
+
+</script>
+</body>
+</html>

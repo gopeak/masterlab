@@ -347,15 +347,14 @@
             </td>
             <td  >
              {{#if_eq is_system '0'}}
-                    <a class="list_for_edit btn btn-transparent  " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
 
                     {{#if_eq status '2'}}
-                        <a class="list_for_install btn btn-transparent  " href="#" data-value="{{name}}" style="padding: 6px 2px;color:blue">安装 </a>
+                        <a class="list_for_install btn btn-transparent  " href="#" data-value="{{name}}" style="padding: 2px 2px;color:blue">安装 </a>
                     {{/if_eq}}
-                     {{#if_eq status '1'}}
+                    {{#if_eq status '1'}}
+                        <a class="list_for_edit btn btn-transparent  " href="#" data-value="{{id}}" style="padding: 2px 2px;">编辑 </a>
                         <a class="list_for_uninstall btn  btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;color: orange">卸载</a>
                     {{/if_eq}}
-
                     <a class="list_for_delete btn btn-transparent  " href="#" data-value="{{name}}" style="padding: 6px 2px;color:red">删除 </a>
 
              {{/if_eq}}

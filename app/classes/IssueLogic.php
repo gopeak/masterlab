@@ -13,6 +13,7 @@ use main\app\model\agile\SprintModel;
 use main\app\model\field\FieldCustomValueModel;
 use main\app\model\field\FieldModel;
 use main\app\model\issue\IssueAssistantsModel;
+use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueFixVersionModel;
 use main\app\model\issue\IssueEffectVersionModel;
 use main\app\model\issue\IssueLabelDataModel;
@@ -217,6 +218,26 @@ class IssueLogic
             $row['value'] = null;
             if (isset($row[$valueType . '_value'])) {
                 $row['value'] = $row[$valueType . '_value'];
+            }
+            if ($row['field_type'] == 'UPLOAD_FILE') {
+                $uploadValArr = json_decode($row['value'], true);
+                //array_shift($uploadValArr);
+                $finalVal = [];
+                if (!empty($uploadValArr)) {
+                    foreach ($uploadValArr as $uploadValItem) {
+                        $model = new IssueFileAttachmentModel();
+                        $attachmentData = $model->getByUuid($uploadValItem['uuid']);
+                        $finalVal[] = [
+                            'name' => $uploadValItem['name'],
+                            'size' => $uploadValItem['size'],
+                            'show_size' => transformByte($uploadValItem['size']),
+                            'thumbnailUrl' => ATTACHMENT_URL . $attachmentData['file_name'],
+                            'uuid' => $uploadValItem['uuid'],
+                        ];
+                    }
+                }
+                $row['value'] = $finalVal;
+
             }
             $row['show_value'] = self::getFieldShowValue($row['value'], @$fields[$row['custom_field_id']]);
         }
@@ -444,6 +465,9 @@ class IssueLogic
                 break;
             case "USER_MULTI":
                 $value =  is_string($value) ? explode(',',$value) : $value;
+                break;
+            case "UPLOAD_FILE":
+
                 break;
             default:
                 break;

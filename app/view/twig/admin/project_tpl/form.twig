@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head>
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/js/admin/project_tpl.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl_role.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl_module.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl_label.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/project_tpl_catalog.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+    <script src="/dev/lib/jquery.gridly/javascripts/jquery.gridly.js" type="text/javascript"></script>
+    <script src="/dev/lib/jquery.gridly/javascripts/rainbow.js" type="text/javascript"></script>
+    <link href="/dev/lib/jquery.gridly/stylesheets/jquery.gridly.css" rel="stylesheet" type="text/css" />
+    <link href="/dev/lib/jquery.gridly/stylesheets/sample.css" rel="stylesheet" type="text/css" />
+
+    <!-- Fine Uploader jQuery JS file-->
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
+
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
+
+    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
+
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body background-white">
+        {% include 'twig/common/body/header-content.twig' %}
+
+        <div class="page-with-sidebar">
+            {% include 'twig/admin/common-page-nav-admin.twig' %}
+            <div class="content-wrapper page-with-layout-nav ">
+                <div class="alert-wrapper">
+                    <div class="flash-container flash-container-page">
+                    </div>
+                </div>
+                <div class="container-fluid container-limited">
+                    <div class="content" id="content-body">
+                        {% include 'twig/admin/common_project_tpl_left_nav.twig' %}
+                        <h3 class="page-title"><?=tpl.name?>--配置</h3>
+                        <p><?=tpl.description?></p>
+
+                        <div class="row">
+                            <div class="content-list">
+                                   <ul class="nav-links" role="tablist">
+                                        <li  role="presentation"    class="active" >
+                                            <a title="界面方案"  href="#ui" id="ui-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span> 界面方案 </span>
+                                            </a>
+                                        </li>
+                                        <li  role="presentation"   class="" >
+                                            <a title="事项方案"  href="#issue" id="issue-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span> 事项方案 </span>
+                                            </a>
+                                        </li>
+                                        <li  role="presentation"   class="">
+                                            <a  title="项目拥有的子系统"  href="#subsystem" id="subsystem-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始子系统</span></a>
+                                        </li>
+                                        <li  role="presentation"  class="">
+                                            <a  title="项目也有的子系统"  href="#role" id="role-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始角色权限</span></a>
+                                        </li>
+                                        <li  role="presentation"   class="" >
+                                            <a  title="初始模块"  href="#module" id="module-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始模块</span></a>
+                                        </li>
+
+                                       <li  role="presentation"   class="">
+                                           <a  title="初始标签和分类"  href="#catalog" id="catalog-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true"><span>初始标签和分类</span></a>
+                                       </li>
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                   <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="ui">
+                                            <div class="col-lg-9">
+                                                <div class="form-group">
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <label class="label-light" for="layout">页面布局:</label>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <select class="form-control selectpicker" name="page_layout" id="page_layout">
+                                                                <option value="fixed"  {% if 'fixed'==tpl.page_layout %} selected {% endif %}>固定</option>
+                                                                <option value="fluid"  {% if 'fluid'==tpl.page_layout %} selected {% endif %}>自适应</option></select>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="help-block">在固定（最大1200 px）和自适应（100%）应用程序布局之间进行选择。</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <label class="label-light" for="project_view">项目首页显示:</label>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <select class="form-control selectpicker" name="project_view" id="project_view">
+                                                                <option value="issues"    {% if 'issues'==tpl.project_view %} selected {% endif %}>事项列表</option>
+                                                                <option value="summary"   {% if 'summary'==tpl.project_view %} selected {% endif %}>项目概要</option>
+                                                                <option value="backlog"   {% if 'backlog'==tpl.project_view %} selected {% endif %}>待办事项</option>
+                                                                <option value="sprints"   {% if 'sprints'==tpl.project_view %} selected {% endif %}>迭代列表</option>
+                                                                <option value="board"     {% if 'board'==tpl.project_view %} selected {% endif %}>迭代看板</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="help-block">在项目概览页面中选择您希望看到的内容。</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <label class="label-light" for="issue_view">事项显示:</label>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <select class="form-control selectpicker" name="issue_view" id="issue_view">
+                                                                <option  value="list"       {% if 'list'==tpl.issue_view %} selected {% endif %}>表格视图</option>
+                                                                <option value="detail"      {% if 'detail'==tpl.issue_view %} selected {% endif %}>左右视图</option>
+                                                                <option value="responsive"  {% if 'responsive'==tpl.issue_view %} selected {% endif %}>响应式视图</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="help-block">在项目概览页面中选择您希望看到的内容。</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <label class="label-light" for="issue_view">创建事项时的默认类型:</label>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <select class="form-control selectpicker" name="default_issue_type_id" id="default_issue_type_id">
+                                                                {% for  issue_type in issueTypeArr %}
+                                                                    <option value="<?=issue_type.id?>" {% if issue_type.id==tpl.default_issue_type_id %} selected {% endif %} ><?=issue_type.name?></option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="help-block">在项目概览页面中选择您希望看到的内容。</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div role="tabpanel" class="tab-pane " id="issue">
+                                            <form id="form_add_action" class="form-horizontal  " action="#" accept-charset="UTF-8" method="post">
+                                            <div class="form-group">
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="id_category">事项类型方案:<span class="required"></span></label>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <select  id="issue_type_scheme_id" name="issue_type_scheme_id" class="selectpicker"  title="请选择" >
+                                                            {% for index,scheme in issueTypeSchemesArr %}
+                                                                <option value="<?=scheme.id?>" {% if scheme.id==tpl.issue_type_scheme_id %} selected {% endif %} ><?=scheme.name?></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="id_category">事项状态流方案:<span class="required"></span></label>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <select  id="issue_workflow_scheme_id" name="issue_workflow_scheme_id" class="selectpicker"  title="请选择" >
+                                                            {% for index,scheme in workflowSchemesArr %}
+                                                                <option value="<?=scheme.id?>" {% if scheme.id==tpl.issue_workflow_scheme_id %} selected {% endif %}><?=scheme.name?></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="id_category">事项表单流方案:<span class="required"></span></label>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <select  id="issue_ui_scheme_id" name="issue_ui_scheme_id" class="selectpicker"  title="请选择" >
+                                                            {% for index,scheme in issueUiSchemesArr %}
+                                                                <option value="<?=scheme.id?>"  {% if scheme.id==tpl.issue_ui_scheme_id %} selected {% endif %}><?=scheme.name?></option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </form>
+                                        </div>
+
+                                        <div role="tabpanel" class="tab-pane" id="subsystem">
+                                            <h4>初始的子系统</h4>
+                                            <p>创建项目后将启用以下子系统,可拖拽进行排序</p>
+                                            <section class='example'>
+                                                <div class='gridly'>
+                                                    {% for item in added_subsystem %}
+                                                    <div title="可拖拽排序" class='brick small' data-name="<?=item.name?>">
+                                                        <span title="可拖拽排序" style='margin-left:6px; color:white'><?=item.title?></span>
+                                                        <a  data-title="<?=item.title?>"  class='delete' href='#'>&times;</a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <hr>
+                                                <h4>可添加的子系统</h4>
+                                                <p class='actions'>
+                                                <div class="row" id="no_subsystem">
+                                                    {% for item in no_subsystem %}
+                                                    <div class="col-md-2" title="添加便可添加"><a  data-name="<?=item.name?>"  data-title="<?=item.title?>" class='add button add_subsystem' href='#'><?=item.title?></a></div>
+                                                    {% endfor %}
+                                                </div>
+                                                </p>
+                                            </section>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="role">
+                                            <div class="col-lg-12" style="margin-top: 40px">
+                                                <form id="form_add_role" class="setting-form clearfix" action="/project/role/add?project_id=<?=id?>" accept-charset="UTF-8" method="post">
+                                                    <input name="utf8" type="hidden" value="✓">
+                                                    <div class="form-group">
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <input style="margin-left: -15px;" type="text" name="params[name]" id="role_name" placeholder="角色名称" required="required" class="form-control">
+
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <input type="text" name="params[description]" id="role_description" placeholder="描 述" required="required" class="form-control">
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <input id="btn-role_add" type="button"   value="添 加" class="btn btn-create" >
+                                                    </div>
+                                                </form>
+
+                                                <div class="panel panel-default margin-t-lg">
+                                                    <div class="panel-heading">
+                                                        <strong>角色</strong>
+                                                    </div>
+                                                    <ul class="flex-list well-list content-list" id="role_list_render_id">
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="module">
+                                            <div class="col-lg-12" style="margin-top: 40px">
+                                                <form id="form_add_module" class="setting-form clearfix" action="/admin/project_tpl_module/add?project_id=<?=id?>" accept-charset="UTF-8" method="post">
+
+                                                    <div class="form-group">
+
+                                                    </div>
+                                                    <div class="form-group  col-md-2">
+                                                        <input style="margin-left: -15px;" type="text" name="params[name]" id="module_name"  placeholder="模块" required="required"
+                                                               tabindex="1" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-md-4">
+                                                        <input type="text" name="params[description]" id="module_description"  placeholder="说明"  class="form-control">
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <input type="button" name="commit" id="btn-module_add" value="添加模块" class="btn btn-create">
+                                                    </div>
+                                                    <input name="utf8" type="hidden" value="✓">
+                                                    <input type="hidden" name="authenticity_token" value="">
+                                                </form>
+
+                                                    <style type="text/css">
+                                                        .thumbnail {
+                                                            display: block;
+                                                            padding: 4px;
+                                                            max-width: 280px;
+                                                            margin-bottom: 10px;
+                                                            line-height: 1.42857143;
+                                                            background-color: #fff;
+                                                            border: 1px solid #ddd;
+                                                            border-radius: 4px;
+                                                            -webkit-transition: border .2s ease-in-out;
+                                                            -o-transition: border .2s ease-in-out;
+                                                            transition: border .2s ease-in-out;
+                                                        }
+                                                    </style>
+                                                <hr>
+                                                    <div class="row "  id="module_list_render_id">
+
+                                                    </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div role="tabpanel" class="tab-pane" id="catalog">
+
+                                            <div class="top-area adjust setting-form"  style="margin-top: 40px">
+                                                <div class="nav-text">
+                                                    对事项进行特别标记,一个事项可以有多个标签,标签可以更好的识别事项
+                                                    <a class="btn  btn-small " id="btn-label_create"  href="javascript:void(0)"><i class="fa fa-plus"></i> 添加标签
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <style>
+                                                /* adapted from http://maxwells.github.io/bootstrap-tags.html */
+                                                .tag {
+                                                    font-size: 14px;
+                                                    padding: .3em .4em .4em;
+                                                    margin: 0 .1em;
+                                                }
+                                                .tag a {
+                                                    color: #bbb;
+                                                    cursor: pointer;
+                                                }
+                                                .tag a:hover {
+                                                    opacity: 1.0
+                                                }
+                                                .tag .remove {
+                                                    vertical-align: bottom;
+                                                    top: 0;
+                                                }
+                                                .tag a {
+                                                    margin: 0 0 0 .3em;
+                                                }
+                                                .tag a .glyphicon-white {
+                                                    color: #fff;
+                                                    margin-bottom: 2px;
+                                                }
+                                            </style>
+                                            <div class="row " id="label_list_render_id">
+
+                                            </div>
+                                            <hr>
+                                            <div class="top-area adjust setting-form"  >
+                                                <div class="nav-text">
+                                                    一个分类包含多个标签
+                                                    <a class="btn  btn-small  label_create_link"  id="btn-catalog_create" href="javascript:void(0)"><i class="fa fa-plus"></i> 添加分类
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="panel panel-default margin-t">
+                                                <div class="panel-heading">
+                                                    <strong>分 类</strong>
+                                                </div>
+
+                                                <ul class="flex-list content-list " id="catalog_list_render_id">
+
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- Fine Uploader Gallery template
+   ====================================================================== -->
+
+
+<div class="modal" id="modal-role_edit">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"
+          action="#"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑项目角色</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="edit_id" value="">
+                    <input type="hidden" name="format" id="format" value="json">
+                    <input type="hidden" name="project_id" value="<?=id?>">
+
+                    <div class="form-group">
+                        <label class="control-label" >名称:</label>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="" name="params[name]" id="edit_name" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" >描述:</label>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="params[description]" id="edit_description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button name="edit_role_save" type="button" class="btn  btn-create " id="btn-role-update">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="modal-permission_edit" data-keyboard=true role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_permission_edit"
+          action="#"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">权限分配</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="role_id" id="perm_role_id" value="">
+                    <input type="hidden" name="permission_ids" id="permission_ids" value="">
+
+                    <div class="form-group">
+                        <label class="control-label">角色名称:</label>
+                        <div class="col-sm-5">
+                            <div class="form-group" >
+                                <input type="text" class="form-control" disabled placeholder="" name="perm_role_name" id="perm_role_name" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_font_icon">权限分配:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group" style="margin-top: 7px;">
+                                <span class="text-muted"><input type="checkbox" name="" id="checkall"> <label for="checkall"><small>选中全部</small></label></span>
+                                <div id="container">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="btn-permission_update" type="button" class="btn btn-save" id="btn-permission_update">保存</button>
+                    <a  class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal" id="modal-mudule_edit">
+    <form class="form-horizontal"
+          id="form-module_edit"
+          action="/project/module/update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-edit-issue_title" class="modal-header-title">编辑模块 </h3>
+                </div>
+
+                <div class="modal-body">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="authenticity_token" value="">
+                    <input type="hidden" name="id" id="mod_form_id" value="" />
+
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">模块</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="mod_form_name" name="name" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">排序权重</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="mod_form_weight" name="weight" value="0" maxlength="6">
+                            <div class="help-block edited-text">数值越大权重越高</div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="mod_form_description" name="description"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="btn-module-update">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal" id="modal-create-label-href">
+    <form class="form-horizontal label-form" id="form_label_create_action" action="#" accept-charset="UTF-8" method="post">
+        <input class="form-control" required="required" type="hidden" id="id_label_id" name="id" value="">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-edit-issue_title" class="modal-header-title">标签</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="label_title">名称</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" required="required" type="text" id="id_label_title" name="title" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="label_color">颜色</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <div class="input-group-addon js-label-color-preview" style="background-color: #428BCA">&nbsp;</div>
+                                <input class="form-control" type="text" value="#428BCA" name="bg_color" id="id_label_bg_color">
+                            </div>
+                            <div class="help-block">
+                                自定义标签颜色.
+                                <br>
+                                或选择下面推荐的颜色之一
+                            </div>
+                            <div class="suggest-colors">
+                                <a style="background-color: #0033CC" data-color="#0033CC" href="#">&nbsp;
+                                </a><a style="background-color: #428BCA" data-color="#428BCA" href="#">&nbsp;
+                                </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="#">&nbsp;
+                                </a><a style="background-color: #A8D695" data-color="#A8D695" href="#">&nbsp;
+                                </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="#">&nbsp;
+                                </a><a style="background-color: #69D100" data-color="#69D100" href="#">&nbsp;
+                                </a><a style="background-color: #004E00" data-color="#004E00" href="#">&nbsp;
+                                </a><a style="background-color: #34495E" data-color="#34495E" href="#">&nbsp;
+                                </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="#">&nbsp;
+                                </a><a style="background-color: #A295D6" data-color="#A295D6" href="#">&nbsp;
+                                </a><a style="background-color: #5843AD" data-color="#5843AD" href="#">&nbsp;
+                                </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="#">&nbsp;
+                                </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="#">&nbsp;
+                                </a><a style="background-color: #AD4363" data-color="#AD4363" href="#">&nbsp;
+                                </a><a style="background-color: #D10069" data-color="#D10069" href="#">&nbsp;
+                                </a><a style="background-color: #CC0033" data-color="#CC0033" href="#">&nbsp;
+                                </a><a style="background-color: #FF0000" data-color="#FF0000" href="#">&nbsp;
+                                </a><a style="background-color: #D9534F" data-color="#D9534F" href="#">&nbsp;
+                                </a><a style="background-color: #D1D100" data-color="#D1D100" href="#">&nbsp;
+                                </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="#">&nbsp;
+                                </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="#">&nbsp;
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="label_description">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" name="description" id="id_label_description"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="btn_label_create_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+<div class="modal" id="modal-form-catalog">
+    <form class="form-horizontal label-form" id="form-catalog" action="#" accept-charset="UTF-8" method="post">
+        <input type="hidden" name="project_tpl_id" id="catalog_project_tpl_id" value="<?=id?>">
+        <input type="hidden" id="catalog_action" name="action" value="">
+        <input type="hidden" id="catalog_id" name="id" value="">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-catalog_title" class="modal-header-title">添加分类</h3>
+                </div>
+
+                <div class="modal-body" id="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="input-name">名称</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" required="required" type="text" id="input-catalog-name" name="name" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="select-label_id_arr">包含标签</label>
+                        <div class="col-sm-10">
+                            <select id="select-label_id_arr" name="label_id_arr[]" class="form-control selectpicker"  multiple  title="请选择"  ></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="input-font_color">字体颜色</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <div class="input-group-addon js-label-color-preview" style="background-color: #428BCA">&nbsp;</div>
+                                <input class="form-control" type="text" value="#428BCA"  id="input-catalog-font_color" name="font_color">
+                            </div>
+                            <div class="help-block">
+                                可选择下面推荐的颜色之一
+                            </div>
+                            <div class="suggest-colors">
+                                <a style="background-color: #0033CC" data-color="#0033CC" href="#">&nbsp;
+                                </a><a style="background-color: #428BCA" data-color="#428BCA" href="#">&nbsp;
+                                </a><a style="background-color: #44AD8E" data-color="#44AD8E" href="#">&nbsp;
+                                </a><a style="background-color: #A8D695" data-color="#A8D695" href="#">&nbsp;
+                                </a><a style="background-color: #5CB85C" data-color="#5CB85C" href="#">&nbsp;
+                                </a><a style="background-color: #69D100" data-color="#69D100" href="#">&nbsp;
+                                </a><a style="background-color: #004E00" data-color="#004E00" href="#">&nbsp;
+                                </a><a style="background-color: #34495E" data-color="#34495E" href="#">&nbsp;
+                                </a><a style="background-color: #7F8C8D" data-color="#7F8C8D" href="#">&nbsp;
+                                </a><a style="background-color: #A295D6" data-color="#A295D6" href="#">&nbsp;
+                                </a><a style="background-color: #5843AD" data-color="#5843AD" href="#">&nbsp;
+                                </a><a style="background-color: #8E44AD" data-color="#8E44AD" href="#">&nbsp;
+                                </a><a style="background-color: #FFECDB" data-color="#FFECDB" href="#">&nbsp;
+                                </a><a style="background-color: #AD4363" data-color="#AD4363" href="#">&nbsp;
+                                </a><a style="background-color: #D10069" data-color="#D10069" href="#">&nbsp;
+                                </a><a style="background-color: #CC0033" data-color="#CC0033" href="#">&nbsp;
+                                </a><a style="background-color: #FF0000" data-color="#FF0000" href="#">&nbsp;
+                                </a><a style="background-color: #D9534F" data-color="#D9534F" href="#">&nbsp;
+                                </a><a style="background-color: #D1D100" data-color="#D1D100" href="#">&nbsp;
+                                </a><a style="background-color: #F0AD4E" data-color="#F0AD4E" href="#">&nbsp;
+                                </a><a style="background-color: #AD8D43" data-color="#AD8D43" href="#">&nbsp;
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="textarea-description">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="textarea-catalog-description" name="description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="input-order_weight">排序权重</label>
+                        <div class="col-sm-10">
+                            <input class="form-control"  type="number" id="input-catlog-order_weight" name="order_weight" value="">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="btn_catalog_create_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+{% verbatim %}
+<script type="text/x-handlebars-template"  id="role_list_tpl">
+    {{#each roles}}
+        <li>
+            <div class="pull-left append-right-10 hidden-xs">
+                <i class="fa fa-users key-icon"></i>
+            </div>
+            <div class="deploy-key-content key-list-item-info">
+                <strong class="title">
+                    {{name}}
+                </strong>
+                <div class="description">
+                    {{description}}
+                </div>
+            </div>
+            <div class="deploy-key-content">
+                <div class="visible-xs-block visible-sm-block"></div>
+                    <a class="list_for_edit prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
+                        编 辑
+                    </a>
+                    <a class="list_for_delete prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
+                        删 除
+                    </a>
+                    <a class="list_edit_perm prepend-left-10" rel="nofollow" data-id="{{id}}" data-name="{{name}}"  href="#">
+                        权 限
+                    </a>
+            </div>
+        </li>
+    {{/each}}
+</script>
+<script type="text/x-handlebars-template" id="module_list_tpl">
+    {{#each modules}}
+    <div class="col-sm-4 col-md-3 col-lg-2 " id="li_data_id_{{id}}" style="height: 180px;">
+          <div class="thumbnail" style="height: 236px;">
+
+            <div class="caption">
+              <h3>
+                  <a href="#" title="{{description}}"  >{{name}}</a>
+              </h3>
+              <div  style="max-height: 130px;min-height: 120px;">
+                  <p> {{#if description}}
+                            <span>{{description}}</span>
+                            {{else}}
+                            <span>无描述</span>
+                            {{/if}}
+                  </p>
+              </div>
+              <div class="pull-right hidden-xs hidden-sm hidden-md">
+                    <a class="btn btn-transparent btn-action module_list_for_edit" title="编辑模块"   data-id="{{id}}">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                    <a class="btn btn-transparent btn-action module_list_for_delete" title="删除模块" data-id="{{id}}"  >
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+    {{/each}}
+</script>
+<script type="text/x-handlebars-template" id="label_list_tpl">
+    {{#labels}}
+        <span data-id="{{id}}"
+            id="project_label_{{id}}"
+            class="tag label label-info "
+            title="{{description}}"
+            data-container="body"
+             style="background-color: {{bg_color}}; color: {{color}}; margin-left: 10px"
+            >
+             <a class="label_edit_link" href="#" data-id="{{id}}" style="color:white">{{title}}</a>
+             <a class="label_edit_remove" href="#" data-id="{{id}}"> <i class="remove  fa fa-remove  white"  style="color:white" ></i></a>
+        </span>
+
+    {{/labels}}
+
+</script>
+
+<script type="text/html" id="catalog_list_tpl">
+    {{#catalogs}}
+    <li data-id="{{id}}" id="project_catalog_{{id}}">
+        <div class="row">
+            <div class="col-md-2">
+                <span class="label-name" title="{{description}}">
+                    <a href="#">
+                        <span class="" style="color: {{font_color}}" title="" data-container="body">{{name}}</span>
+                    </a>
+                </span>
+            </div>
+            <div class="col-md-8" id="catalog-labels-html-{{id}}">
+
+            </div>
+
+            <div class="col-md-2">
+                <a title="编辑" class="btn btn-transparent btn-action catalog_edit_link" data-id="{{id}}" href="javascript:void(0)">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+
+                <a title="删除" class="btn btn-transparent btn-action remove-row catalog_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+            </div>
+        </div>
+
+    </li>
+    {{/catalogs}}
+</script>
+
+{% endverbatim %}
+<script type="text/javascript">
+
+    var _issueConfig = {};
+    var _fineUploader = null;
+    var $modules = null;
+    var $role = null;
+    var $labels = null;
+    var $gridly = null;
+    var $catalogAjax = null;
+    var projetc_tpl_id = '<?=id?>';
+
+    function saveSubsystem(  ) {
+        var subSystemArr = [];
+        $('.brick').each(function(el){
+            var name = $(this).data('name');
+            var left = $(this).position().left;
+            var top = $(this).position().top;
+            var obj = {name:name,left:left, top:top};
+            subSystemArr.push(obj);
+        });
+        console.log(subSystemArr);
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: '/admin/ProjectTpl/update?id='+projetc_tpl_id,
+            data: {id:projetc_tpl_id,sub_system:JSON.stringify(subSystemArr)} ,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret ==='200'  ){
+                    notify_success( resp.msg );
+                }else{
+                    notify_error( resp.msg );
+                }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+        return subSystemArr;
+    }
+
+    // Generated by CoffeeScript 2.5.1
+
+    $(function() {
+            var brick;
+            brick = "<div class='brick small'><div class='delete'>&times;</div></div>";
+            $gridly = $('.gridly').gridly({
+                base: 60, // px
+                gutter: 20, // px
+                columns: 16,
+                callbacks: {
+                    reordered: saveSubsystem,
+                }
+            });
+
+            $(document).on("click touchend", ".gridly .brick", function(event) {
+                var $this, size;
+                event.preventDefault();
+                event.stopPropagation();
+                $this = $(this);
+                return $('.gridly').gridly('layout');
+            });
+            $(document).on("click", ".gridly .delete", function(event) {
+                var $this;
+                event.preventDefault();
+                event.stopPropagation();
+                $this = $(this);
+                $this.closest('.brick').remove();
+                var title = $(this).data('title');
+                var name = $(this).data('name');
+                var html = '<div class="col-md-2"><a   data-name="'+name+'"  data-title="'+title+'" class="add button add_subsystem" href="#">'+title+'</a></div>';
+                $('#no_subsystem').append(html);
+                var aa = $gridly.gridly();
+                saveSubsystem();
+                return aa;
+            });
+            $(document).on("click", ".add_subsystem", function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var title = $(this).data('title');
+                var name = $(this).data('name');
+                brick = "<div class='brick small' data-name='"+name+"'><span style='margin-left:6px; color:white'>"+title+"</span><a  data-title='"+title+"' class='delete' href='#'>&times;</a></div>"
+                $gridly.append(brick);
+                $(this).parent().remove();
+                var aa = $gridly.gridly();
+                saveSubsystem();
+                return aa;
+            });
+            return $gridly.gridly();
+        });
+
+
+
+</script>
+
+<script type="text/javascript">
+
+    var role_options = {
+        list_render_id:"role_list_render_id",
+        list_tpl_id:"role_list_tpl",
+        filter_url:"/admin/ProjectTplRole/fetchAll?id=<?=id?>",
+        get_url:"/admin/ProjectTplRole/get",
+        add_url:"/admin/ProjectTplRole/add?id=<?=id?>",
+        update_url:"/admin/ProjectTplRole/update",
+        tree_url: "/admin/ProjectTplRole/perm_tree",
+        update_perm_url:"/admin/ProjectTplRole/update_perm",
+    };
+
+    var module_options = {
+        list_render_id:"module_list_render_id",
+        list_tpl_id:"module_list_tpl",
+        filter_url:"/admin/ProjectTplModule/fetchAll?project_tpl_id=<?=id?>",
+        get_url:"/admin/ProjectTplModule/get",
+        add_url:"/admin/ProjectTplModule/add?project_tpl_id=<?=id?>",
+        update_url:"/admin/ProjectTplModule/update",
+        delete_url:"/admin/ProjectTplModule/delete",
+    };
+
+    var label_options = {
+        list_render_id:"label_list_render_id",
+        list_tpl_id:"label_list_tpl",
+        filter_url:"/admin/ProjectTplLabel/fetchAll?project_tpl_id=<?=id?>",
+        get_url:"/admin/ProjectTplLabel/get",
+        add_url:"/admin/ProjectTplLabel/add?project_tpl_id=<?=id?>",
+        update_url:"/admin/ProjectTplLabel/update",
+        delete_url:"/admin/ProjectTplLabel/delete",
+    };
+
+    var catalog_options = {
+        list_render_id:"catalog_list_render_id",
+        list_tpl_id:"catalog_list_tpl",
+        filter_url:"/admin/ProjectTplCatalog/fetchAll?project_tpl_id=<?=id?>",
+        get_url:"/admin/ProjectTplCatalog/fetch",
+        add_url:"/admin/ProjectTplCatalog/add?project_tpl_id=<?=id?>",
+        update_url:"/admin/ProjectTplCatalog/update",
+        delete_url:"/admin/ProjectTplCatalog/delete",
+    };
+    $(function() {
+        window.$projectTpl = new PluginTemplate({patch_url:'/admin/project_tpl/update'}  );
+        window.$projectTpl.bindEvent();
+
+        window.$role = new ProjectTplRole( role_options );
+        window.$role.fetchAll();
+
+        window.$modules = new ProjectTplModule( module_options );
+        window.$modules.fetchAll();
+
+        window.$labels = new ProjectTplLabel( label_options );
+        window.$labels.fetchAll();
+
+        window.$catalogAjax= new ProjectTplCatalog(catalog_options);
+        window.$catalogAjax.fetchAll();
+
+    });
+
+</script>
+
+
+</body>
+</html>

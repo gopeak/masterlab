@@ -20,6 +20,9 @@
 
 		<script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
 		<link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+        <script src="/dev/lib/select2-4.0.13/dist/js/select2.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/dev/lib/select2-4.0.13/dist/js/i18n/zh-CN.js" type="text/javascript" charset="utf-8"></script>
+        <link href="/dev/lib/select2-4.0.13/dist/css/select2.css" rel="stylesheet">
 
 		<script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?=_version?>" type="text/javascript"></script>
 		<script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
@@ -139,8 +142,7 @@
                                                 </th>
                                             {% endif %}
 
-                                            {% if (is_all_issues or 'project_id'in display_fields) %}
-
+                                            {% if (is_all_issues or 'project_id' in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">项 目</th>
                                             {% endif %}
 
@@ -321,7 +323,43 @@
                                                         删 除
                                                     </button>
                                                 {% endif %}
-                                                <div class="btn-group" role="group">
+
+                                                <div class="btn-group dropup" role="group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        优先级
+                                                        <i class="fa fa-caret-down"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        {% for item in priority %}
+                                                            <li>
+                                                                <a class="btn_batch_update" data-field="priority"
+                                                                   data-id="<?= item['id'] ?>" href="#"
+                                                                   style="color:<?= item['status_color'] ?>"><?= item['name'] ?></a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group dropup" role="group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        状 态
+                                                        <i class="fa fa-caret-down"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        {% for item in issue_status %}
+                                                            <li>
+                                                                <a class="btn_batch_update" data-field="status"
+                                                                   data-id="<?= item['id'] ?>" href="#" >
+                                                                    <span class="label current label-<?=item.color ?> prepend-left-5" style="cursor:pointer;"><?= item['name'] ?></span>
+                                                                </a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group dropup" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
@@ -336,11 +374,10 @@
                                                                    style="color:<?= item['color'] ?>"><?= item['name'] ?></a>
                                                             </li>
                                                         {% endfor %}
-
                                                     </ul>
                                                 </div>
 
-                                                <div class="btn-group" role="group">
+                                                <div class="btn-group dropup" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
@@ -358,7 +395,7 @@
                                                     </ul>
                                                 </div>
 
-                                                <div class="btn-group" role="group">
+                                                <div class="btn-group dropup" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
@@ -367,13 +404,32 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in sprints %}
+                                                            {% if item.status!=3 %}
+                                                                <li>
+                                                                    <a class="btn_batch_update" data-field="sprint"
+                                                                       data-id="<?= item['id'] ?>"
+                                                                       href="#"><?= item['name'] ?></a>
+                                                                </li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group dropup" role="group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        移动至项目
+                                                        <i class="fa fa-caret-down"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        {% for item in projects %}
                                                             <li>
-                                                                <a class="btn_batch_update" data-field="sprint"
+                                                                <a class="btn_batch_update" data-field="project_id"
                                                                    data-id="<?= item['id'] ?>"
                                                                    href="#"><?= item['name'] ?></a>
                                                             </li>
-                                                        {% endfor %}
 
+                                                        {% endfor %}
                                                     </ul>
                                                 </div>
                                             </div>
@@ -466,7 +522,9 @@
                 var urls = parseURL(window.location.href);
                 var $sort_field = '<?= sort_field ?>';
                 var $sort_by = '<?= sort_by ?>';
-                var is_all_issues = '<?= is_all_issues ?>';
+                var is_all_issues = {% if (is_all_issues)%}true{% else %}false{% endif %};
+                var _default_issue_type_id = '<?=project.default_issue_type_id?>';
+                var last_create_issue_data = <?=last_create_data|json_encode()|raw ?>;
 
                 var display_fields = <?= display_fields|json_encode()|raw ?>;
                 var uiDisplayFields = <?= uiDisplayFields|json_encode()|raw ?>;
@@ -510,12 +568,7 @@
 
                 window.$IssueAdvQuery = new IssueAdvQuery(_issueConfig);
 
-                function deleteAdvQuery(index) {
-                    adv_details.splice(index, 1);
-                    IssueAdvQuery.prototype.renderAdvQuery(adv_details);
-                }
-
-                $(function () { 
+                $(function () {
                     var options = {
                         query_str: window.query_str,
                         query_param_obj: urls.searchObject,
@@ -550,7 +603,6 @@
                         }
                     }()
 
-                    
 
                     window.$IssueMain = new IssueMain(options);
 //                    window.$FilteredSearch = new FilteredSearch(urls.searchObject, _issueConfig, _cur_project_id);
@@ -596,72 +648,7 @@
                         }
                     });
 
-                    $('#modal-adv_query').on('shown.bs.modal', function (e) {
 
-                        $('.selectpicker').selectpicker('refresh');
-                        // 拖拽排序
-                        [].forEach.call(document.getElementById('adv-query-box').getElementsByClassName('adv-tbody'), function (el) {
-                            Sortable.create(el, {
-                                group: 'item',
-                                animation: 150,
-                                onStart: function (evt) {
-                                    // 拖拽完毕之后发生该事件
-                                    // 所在位置
-                                    var $parent = $(evt.item).parent();
-                                    var index = $parent.children().index($(evt.item));
-                                    console.log(evt.item.title + "拖动前位置：", index);
-                                    sort_adv_temp_item = adv_details[index];
-                                    adv_details.splice(index, 1);
-                                },
-                                onEnd: function (evt) {
-                                // 拖拽完毕之后发生该事件
-                                // 所在位置
-                                    var $parent = $(evt.item).parent();
-                                    var index = $parent.children().index($(evt.item));
-                                    console.log(evt.item.title + "拖动到位置：", index);
-
-                                    adv_details.splice(index, 0, sort_adv_temp_item);
-                                },
-                                onUpdate: function (evt) {
-                                // 拖拽完毕之后发生该事件
-                                // 所在位置
-                                    var $parent = $(evt.item).parent();
-                                    var index = $parent.children().index($(evt.item));
-                                    console.log(evt.item.title + "拖动后位置：", index);
-                                }
-                            });
-                        });
-                    });
-
-                    $('#btn-adv_submit').bind('click', function () {
-                        var tempData = JSON.parse(JSON.stringify(adv_details));
-                        var temp = tempData.map(function (n) {
-                            return {
-                                logic: n.logic,
-                                start_braces: n.start_braces,
-                                field: n.field,
-                                opt: n.opt,
-                                value: n.value,
-                                end_braces: n.end_braces
-                            }
-                        });
-                        var adv_data = tempData.map(function (n) {
-                            return n
-                        });
-
-                        if (window.qtipApi) {
-                            window.qtipApi.hide();
-                            $('#btn-save_adv_filter').qtip('api').toggle(false);
-                        }                        
-
-                        if(is_empty(temp)){
-                            notify_warn('提示','查询条件为空!');
-                            return;
-                        }
-                        var queryData = JSON.stringify(temp);
-                        IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData,null, adv_data);
-
-                    });
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
                     });
@@ -689,7 +676,16 @@
                     $('.btn_batch_update').bind('click', function () {
                         var field = $(this).data('field');
                         var value = $(this).data('id');
-                        IssueMain.prototype.batchUpdate(field, value);
+                        var name = $(this).html();
+                        if(field=='project_id'){
+                            IssueMain.prototype.displayMoveProject(value, name);
+                        }else{
+                            IssueMain.prototype.batchUpdate(field, value);
+                        }
+                    });
+
+                    $('#btn-move-project').bind('click', function () {
+                        IssueMain.prototype.batchMoveProject();
                     });
 
                     $('.sort_select').bind('click', function () {
@@ -857,7 +853,7 @@
                     });
 
                     el_list_render_id.on("click", ".tree-item", function(e) {
-
+                        if(e.target.nodeName.toLowerCase() != 'td') return;
                         if (isFloatPart) {
                             var el_target = $(e.target);
                             if(el_target.hasClass('no_float_event')
@@ -871,6 +867,7 @@
                             var dataId = $(this).data("id");
                             var dataSummary = $(this).data("summary") || "";
                             $(this).addClass("active").siblings(".tree-item").removeClass("active");
+                            
                             showFloatDetail(dataId, dataSummary);
                             
                             return false;
@@ -881,6 +878,7 @@
                             have_children = $(this).data('have_children');
                             if( have_children>0){
                                 IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                                
                             }
                         }
                     });
@@ -898,153 +896,6 @@
                         }
                     });
 
-
-                    function initAdvForm() {
-                        $('.selectpicker').selectpicker('refresh');
-                        laydate.render({elem: '.laydate_input_datetime', type: 'datetime', trigger: 'click'});
-                        laydate.render({elem: '.laydate_input_date', trigger: 'click'});
-                    }
-
-
-                    // 高级搜索字段修改
-                    $(document).on("change", "#adv_field", function () {
-                        var $selected = $('#adv_field option:selected');
-                        var dataType = $selected.data("type");
-                        var dataSource = $selected.data("source");
-                        var dataTitle = $selected.data("content");
-                        advQueryType = dataType;
-                        advQuerySource = dataSource;
-                        advQueryTitle = dataTitle;
-
-                        if (dataTitle === "解决结果") {
-                            dataSource = "resolve";
-                        }
-
-                        var html = IssueAdvQuery.prototype.renderTableAdvQuery("content", dataType, "", "", dataTitle, dataSource);
-
-                        $("#dynamic-form").html(html);
-
-                        initAdvForm();
-                    });
-
-                    // 高级搜索
-                    $(document).on("click", "#btn-adv_add_condition", function (e) {
-                        var field_title = $('#adv_field option:selected').data("content");
-                        var $select = $("select[name='content'] option:selected");
-                        var display_html = $(".form-control[name='content']").val();
-
-                        if ($select.length > 0) {
-                            display_html = $select.data("display_html");
-                            var avatar = $select.data("avatar");
-                        }
-                        let field_name = $('#adv_field').val();
-                        let opt = $("#adv_opt").val();
-                        let value = $(".form-control[name='content']").val();
-
-                        if (typeof field_name == "undefined" || field_name == null || field_name == "") {
-                            notify_error("请选择查询字段");
-                            return false;
-                        }
-                        if (typeof opt == "undefined" || opt == null || opt == "") {
-                            notify_error("请选择操作符");
-                            return false;
-                        }
-
-                        if (typeof value == "undefined" || value == null || value == "") {
-                            $(".form-control[name='content']").val("");
-                        }
-
-
-                        var temp = {
-                            logic: $("#adv_andor").val() || "and",
-                            start_braces: "",
-                            field_title: field_title,
-                            field: field_name,
-                            opt: opt,
-                            data_type: advQueryType,
-                            data_source: advQuerySource,
-                            data_title: advQueryTitle,
-                            value: value,
-                            avatar: avatar || "",
-                            display_html: display_html,
-                            end_braces: ""
-                        };
-
-                        console.log(temp);
-
-                        adv_details.push(temp);
-                        IssueAdvQuery.prototype.renderAdvQuery(adv_details);
-                        clearAdvSearchQuery();
-                    });
-
-                    // 点击高级查询
-                    $(document).on("click", "#btn-adv_save", function () {
-                        var tempData = JSON.parse(JSON.stringify(adv_details));
-                        var temp = tempData.map(function (n) {
-                            return {
-                                logic: n.logic,
-                                start_braces: n.start_braces,
-                                field: n.field,
-                                opt: n.opt,
-                                value: n.value,
-                                end_braces: n.end_braces
-                            }
-                        });
-                        var queryData = JSON.stringify(temp);
-                        var $self = $(this);
-                        if ($self.hasClass("disabled")) {
-                            return false;
-                        }
-                        $self.addClass('disabled');
-
-                        $.ajax({
-                            type: 'post',
-                            dataType: "json",
-                            async: false,
-                            url: '/issue/main/save_advance_query',
-                            data: {
-                                query: queryData
-                            },
-                            success: function (resp) {
-                                auth_check(resp);
-                                if (resp.ret == '200') {
-                                    notify_success('操作成功');
-                                } else {
-                                    notify_error(resp.msg);
-                                }
-                                $self.removeClass('disabled');
-
-                            },
-                            error: function (res) {
-                                notify_error("请求数据错误" + res);
-                                $self.removeClass('disabled');
-                                //$("#modal-adv_query").modal('hide');
-                            }
-                        });
-                    });
-
-                    // 清空条件
-                    $(document).on("click", "#btn-adv_clear", function () {
-                        adv_details = [];
-                        IssueAdvQuery.prototype.renderAdvQuery(adv_details);
-                    });
-
-                    function clearAdvSearchQuery() {
-                        $("#adv_andor").val("");
-                        $('#adv_field option:selected').prop("selected", false);
-                        $("#adv_opt").val("");
-                        $(".form-control[dataType='" + advQueryType + "']").val("");
-
-                        advQueryType = "text";
-                        advQuerySource = "";
-                        advQueryTitle = "请选择";
-                        document.getElementById("adv_andor").options.selectedIndex = 0;
-                        document.getElementById("adv_field").options.selectedIndex = 0;
-                        document.getElementById("adv_opt").options.selectedIndex = 0;
-
-                        $("#dynamic-form").html(IssueAdvQuery.prototype.renderTableAdvQuery("content", "text", "", "", "值"));
-                        $('.selectpicker').selectpicker('refresh');
-                    }
 
                     // 双击修改
                     $(document).on("dblclick", "#adv-query-box .table-text", function () {
@@ -1156,10 +1007,20 @@
                     }
 
                     // 显示右侧浮动窗
+                    var timer = null;
+                    
                     function showFloatDetail(dataId, dataSummary) {
-                        getFineUploader(dataId, dataSummary);
-                        getRightPartData(dataId);
-                        $('.float-right-side').show();
+                        if(timer) {
+                            return
+                        }else{
+                            getFineUploader(dataId, dataSummary);
+                            getRightPartData(dataId);
+                            $('.float-right-side').show();
+                            timer = setTimeout(function(){
+                                timer = null
+                            }, 1000)
+                        }
+                        
                     }
 
                     /*详情页的ajax*/
@@ -1312,7 +1173,27 @@
                             }
                         ])
                     });
-
+{% verbatim %}
+                    // 转换为子任务时，要选择父事项
+                    $('#parent_select_issue_id').select2({
+                      language: "zh-CN",
+                      ajax: {
+                        url: '/issue/main/autocomplete',
+                        data: function (params) {
+                          var query = {
+                            query: params.term,
+                            project_id: _cur_project_id
+                          }
+                          return query;
+                        },
+                        processResults: function (resp) {
+                              return {
+                                results: resp.data
+                              };
+                        }
+                      }
+                    });
+{% endverbatim %}
                     // 提交导出 excel 表单
                     $("#btn-export_excel").click(function () {
                         // 当前查询参数字符串

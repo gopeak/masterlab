@@ -87,7 +87,7 @@ function importSql(&$install_error, &$install_recover)
 
     writeConfigYml();
     writeSocketConfig();
-    $ret = file_put_contents(INSTALL_PATH . '/../../env.ini', "APP_STATUS = deploy\n");
+    $ret = file_put_contents(INSTALL_PATH . '/../env.ini', "APP_STATUS = deploy\n");
     showJsMessage("env.ini文件写入结果:" . $ret);
 
     $_charset = strtolower(DBCHARSET);
@@ -220,20 +220,20 @@ function writeConfigYml()
     $searchArr['{{socket_port}}'] = trimString($_POST['socket_port']);
 
     $searchArr['{{php_exe}}'] = trimString($_POST['php_bin']);
-    $preAppPath = realpath(INSTALL_PATH. '/../../') . "/";
+    $preAppPath = realpath(INSTALL_PATH. '/../') . "/";
     $searchArr['{{root_path}}'] = str_replace('\\','/',$preAppPath );
 
-    $tplFile = INSTALL_PATH . '/../../config.tpl.yml';
+    $tplFile = INSTALL_PATH . '/../config.tpl.yml';
     $tplContent = file_get_contents($tplFile);
     $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
-    $ret = file_put_contents(INSTALL_PATH . '/../../config.yml', $content);
+    $ret = file_put_contents(INSTALL_PATH . '/../config.yml', $content);
     showJsMessage("主配置文件 config.yml 文件写入结果:" . (bool)$ret);
 
 }
 
 function writeSocketConfig()
 {
-    $tplFile = INSTALL_PATH . '/../../bin/config-tpl.toml';
+    $tplFile = INSTALL_PATH . '/../bin/config-tpl.toml';
     $tplContent = file_get_contents($tplFile);
     $searchArr = [];
     $searchArr['{{db}}'] = trimString($_POST['db_name']);
@@ -245,17 +245,17 @@ function writeSocketConfig()
     $searchArr['{{redis_port}}'] = trimString($_POST['redis_port']);
     $searchArr['{{redis_password}}'] = trimString($_POST['redis_password']);
     $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
-    $ret = file_put_contents(INSTALL_PATH . '/../../bin/config.toml', $content);
+    $ret = file_put_contents(INSTALL_PATH . '/../bin/config.toml', $content);
     showJsMessage("MasterlabSocket config.toml 文件写入结果:" . (bool)$ret);
 
-    $tplFile = INSTALL_PATH . '/../../bin/cron-tpl.json';
+    $tplFile = INSTALL_PATH . '/../bin/cron-tpl.json';
     $tplContent = file_get_contents($tplFile);
-    $preAppPath = realpath(INSTALL_PATH. '/../../') . "/";
+    $preAppPath = realpath(INSTALL_PATH. '/../') . "/";
     $searchArr = [];
     $searchArr['{{exe_bin}}'] = $_POST['php_bin'];
     $searchArr['{{root_path}}'] = str_replace('\\','/',$preAppPath );
     $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
-    $ret = file_put_contents(INSTALL_PATH . '/../../bin/cron.json', $content);
+    $ret = file_put_contents(INSTALL_PATH . '/../bin/cron.json', $content);
     showJsMessage("MasterlabSocket cron.json 文件写入结果:" . (bool)$ret);
 }
 
@@ -264,7 +264,7 @@ function writeSocketConfig()
  */
 function env_check(&$env_items)
 {
-    $masterlabRootDir = realpath(INSTALL_PATH . '/../../').'/';
+    $masterlabRootDir = realpath(INSTALL_PATH . '/../').'/';
     $env_items[] = array('name' => '操作系统', 'min' => '无限制', 'good' => 'linux', 'cur' => PHP_OS, 'status' => 1);
     $env_items[] = array('name' => 'PHP版本', 'min' => '7.1', 'good' => '7.2', 'cur' => PHP_VERSION, 'status' => (PHP_VERSION < 5.6 ? 0 : 1));
     $tmp = function_exists('gd_info') ? gd_info() : array();

@@ -49,6 +49,8 @@ class ConfigLogic
         $data['project_modules'] = self::getModules($projectId );
         $data['project_versions'] = self::getVersions($projectId);
         $data['project_labels'] = self::getLabels($projectId);
+        $data['project_sprints'] = self::getSprints($projectId);
+
         $logic = new IssueTypeLogic();
         $data['project_issue_types'] = $logic->getIssueType($projectId);
     }
@@ -117,6 +119,8 @@ class ConfigLogic
         }
         return $rows;
     }
+
+
 
     /**
      * @param $projectId

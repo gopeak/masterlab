@@ -8,7 +8,7 @@
 	],
   "require": {
     "gregwar/captcha": "v1.1.5",
-    "phpmailer/phpmailer": "v5.2.27",
+    "phpmailer/phpmailer": "v6.1.6",
     "katzgrau/klogger": "v1.2.1",
     "endroid/qr-code": "3.4.0",
     "php-curl-class/php-curl-class": "v7.3.0",
