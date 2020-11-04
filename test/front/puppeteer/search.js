@@ -5,14 +5,14 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: false,defaultViewport:{width :1440,height:900}});
     const page = await browser.newPage();
 
     await page.goto('http://masterlab.ink');
 
     // Type into search box.
     await page.type('#user_login', 'master');
-    await page.type('#user_password', '123456');
+    await page.type('#user_password', 'testtest');
 
     // Wait for suggest overlay to appear and click "show all results".
     const submit_btn = '#login_submit_btn';
@@ -33,6 +33,7 @@ const puppeteer = require('puppeteer');
     }, resultsSelectorSpan);
     console.log(spans.join('\n'));
 
+
     await page.goto('http://masterlab.ink/default/example');
 
     // Wait for the results page to load and display the results.
@@ -48,5 +49,12 @@ const puppeteer = require('puppeteer');
     }, resultsSelector);
     console.log(links.join('\n'));
 
-    await browser.close();
+    // 进入项目列表，点击创建
+    await page.goto('http://masterlab.ink/projects');
+    const btn_create = '.btn-create';
+    await page.waitForSelector(btn_create);
+    await page.click(btn_create);
+
+
+    //await browser.close();
 })();
