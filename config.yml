@@ -34,7 +34,7 @@ database:
   default:
     host: 'localhost'
     port: '3306'
-    user: 'masterl30'
+    user: 'root'
     password: '123456'
     db_name: 'masterl30'
     charset: 'utf8'
@@ -44,8 +44,8 @@ database:
     host: 'localhost'
     port: 3306
     user: 'root'
-    password: ''
-    db_name: 'masterlab_log'
+    password: '123456'
+    db_name: 'masterl30'
     charset: 'utf8'
     timeout: 10
     show_field_info: false
