@@ -423,11 +423,13 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in projects %}
+                                                            {% if (item.id!=project_id) %}
                                                             <li>
                                                                 <a class="btn_batch_update" data-field="project_id"
                                                                    data-id="<?= item['id'] ?>"
                                                                    href="#"><?= item['name'] ?></a>
                                                             </li>
+                                                            {% endif %}
 
                                                         {% endfor %}
                                                     </ul>
@@ -867,6 +869,7 @@
                             var dataId = $(this).data("id");
                             var dataSummary = $(this).data("summary") || "";
                             $(this).addClass("active").siblings(".tree-item").removeClass("active");
+                            
                             showFloatDetail(dataId, dataSummary);
                             
                             return false;
@@ -877,6 +880,7 @@
                             have_children = $(this).data('have_children');
                             if( have_children>0){
                                 IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+                                
                             }
                         }
                     });
@@ -1005,10 +1009,20 @@
                     }
 
                     // 显示右侧浮动窗
+                    var timer = null;
+                    
                     function showFloatDetail(dataId, dataSummary) {
-                        getFineUploader(dataId, dataSummary);
-                        getRightPartData(dataId);
-                        $('.float-right-side').show();
+                        if(timer) {
+                            return
+                        }else{
+                            getFineUploader(dataId, dataSummary);
+                            getRightPartData(dataId);
+                            $('.float-right-side').show();
+                            timer = setTimeout(function(){
+                                timer = null
+                            }, 1000)
+                        }
+                        
                     }
 
                     /*详情页的ajax*/
