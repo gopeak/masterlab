@@ -423,11 +423,13 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in projects %}
+                                                            {% if (item.id!=project_id) %}
                                                             <li>
                                                                 <a class="btn_batch_update" data-field="project_id"
                                                                    data-id="<?= item['id'] ?>"
                                                                    href="#"><?= item['name'] ?></a>
                                                             </li>
+                                                            {% endif %}
 
                                                         {% endfor %}
                                                     </ul>
