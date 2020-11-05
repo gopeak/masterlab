@@ -366,7 +366,7 @@ var BoardSetting = (function () {
 
                     if (select_datas.length !== 0) {
                         for (let row of select_datas) {
-                            let value = _k;
+                            let value = row.id;
                             let title = row.title;
                             let selected = '';
                             if (("undefined" !== typeof swim_data[source]) && isInArray(source_data, value)) {
@@ -384,7 +384,9 @@ var BoardSetting = (function () {
                     selects[source] = $('#select_' + source + '_column_' + i);
                     selects[source].empty();
                     let select_datas = window._issueConfig.users;
-                    for (let row in select_datas) {
+                    //console.log(select_datas);
+                    for (var i=0;i<select_datas.length;i++) {
+                        let row = select_datas[i];
                         let value = row.uid;
                         let title = row.display_name;
                         let avatar = row.avatar;
@@ -392,7 +394,7 @@ var BoardSetting = (function () {
                         if (!source_data && ("undefined" !== typeof swim_data[source]) && isInArray(source_data, value)) {
                             selected = 'selected';
                         }
-                        let content = "<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='" + avatar + "' > " + title;
+                        let content = "<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='" + avatar + "' /> " + title;
                         let opt = '<option value="' + value + '"  data-content="' + content + '"  ' + selected + '>' + title + '</option>';
                         //console.log(opt)
                         selects[source].append(opt);
