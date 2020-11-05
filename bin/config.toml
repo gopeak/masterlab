@@ -18,10 +18,10 @@ single_mode	=	true
     auth_cmds = ["Auth","Authorize"]
 
 [mysql]
-    database 	=	"masterl30"
+    database 	=	"masterlab31"
     host        =   "localhost"
     port		=	"3306"
-    user 		= 	"masterl30"
+    user 		= 	"root"
     password 	= 	"123456"
     charset	    =	"utf8mb4_unicode_ci"
     timeout	    =	"10"
@@ -31,7 +31,7 @@ single_mode	=	true
 [object]
     data_type 	= "redis"
     redis_host 	= "127.0.0.1"
-    redis_port 	= "6379"
+    redis_port 	= "7379"
     redis_password = ""
 
 [worker]

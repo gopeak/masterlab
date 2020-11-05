@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 
+>>>>>>> 9b016fba2157a5a42e7d1f660d4c0063146cf6fe
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1987,6 +1990,7 @@ CREATE TABLE `main_webhook` (
                                 `timeout` tinyint UNSIGNED NOT NULL DEFAULT '10',
                                 `description` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                                 `hook_event_json` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '定义触发哪些事件'
+<<<<<<< HEAD
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2017,6 +2021,38 @@ CREATE TABLE `main_webhook_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+=======
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 转存表中的数据 `main_webhook`
+--
+
+INSERT INTO `main_webhook` (`id`, `name`, `url`, `event_json`, `secret_token`, `enable`, `timeout`, `description`, `hook_event_json`) VALUES
+(9, 'webhook', 'http://masterlab.ink/webhook.php', '', 'xxxxxxx', 1, 10, 'xxx', '[\"onIssueCreateAfter\",\"onIssueUpdateAfter\",\"onIssueDelete\",\"onIssueClose\",\"onIssueAddComment\"]');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `main_webhook_log`
+--
+
+CREATE TABLE `main_webhook_log` (
+                                    `id` int NOT NULL,
+                                    `project_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                    `webhook_id` int UNSIGNED NOT NULL DEFAULT '0',
+                                    `event_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                                    `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                                    `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                                    `status` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '0准备中;1执行成功;2异步发送失败;3队列中;4执行失败',
+                                    `time` int UNSIGNED NOT NULL,
+                                    `timeout` tinyint UNSIGNED NOT NULL DEFAULT '15' COMMENT '超时时间',
+                                    `user_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '提交的当前用户id',
+                                    `err_msg` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+>>>>>>> 9b016fba2157a5a42e7d1f660d4c0063146cf6fe
 -- 转存表中的数据 `main_webhook_log`
 --
 
@@ -3980,7 +4016,7 @@ CREATE TABLE `user_setting` (
 INSERT INTO `user_setting` (`id`, `user_id`, `_key`, `_value`) VALUES
 (51, 1, 'scheme_style', 'left'),
 (53, 1, 'project_view', 'issues'),
-(54, 1, 'issue_view', 'list'),
+(54, 1, 'issue_view', 'detail'),
 (198, 1, 'initializedWidget', '1'),
 (201, 1, 'initialized_widget', '1'),
 (353, 1, 'page_layout', 'fixed'),
