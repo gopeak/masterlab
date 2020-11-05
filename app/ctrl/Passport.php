@@ -512,6 +512,17 @@ class Passport extends BaseCtrl
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
 
+            // 生成默认头像
+            if (empty($avatar)) {
+                if (empty($user['display_name'])) {
+                    $avatarName = $userInfo['username'];
+                } else {
+                    $avatarName = $userInfo['display_name'];
+                }
+                $defaultAvatar = UserLogic::makeDefaultAvatar($user['uid'], $avatarName);
+                $userModel->updateUserById(['avatar' => $defaultAvatar['short_path']], $user['uid']);
+            }
+
 			list($mailRet, $msg) = $this->sendActiveEmail($user, $email, $displayName);
             if ($mailRet) {
                 $this->ajaxSuccess('提示', '注册已经提交，请查看邮箱的激活邮件');
@@ -524,7 +535,8 @@ class Passport extends BaseCtrl
             $this->dispatcher->dispatch($event,  Events::onUserRegister);
 
             $this->sendActiveEmail($user, $email, $displayName);
-            $this->ajaxSuccess('注册成功');        } else {
+            $this->ajaxSuccess('注册成功');
+        } else {
             $this->ajaxFailed('服务器错误', '注册失败,详情:' . $user);
         }
     }

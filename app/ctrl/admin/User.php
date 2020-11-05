@@ -297,7 +297,7 @@ class User extends BaseAdminCtrl
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
             $updateInfo = [];
-            if (isset($params['avatar'])) {
+            if (isset($params['avatar']) && !empty($params['avatar'])) {
                 $base64String = $params['avatar'];
                 $saveRet = UploadLogic::base64ImageContent($base64String, PUBLIC_PATH . 'attachment/avatar/', $user['uid']);
                 if ($saveRet !== false) {
@@ -306,6 +306,9 @@ class User extends BaseAdminCtrl
                     $ret = $userModel->updateUser($updateInfo);
                 }
                 unset($params['avatar'], $base64String);
+            } else {
+                $defaultAvatar = UserLogic::makeDefaultAvatar($user['uid'], $user['display_name']);
+                $userModel->updateUserById(['avatar' => $defaultAvatar['short_path']], $user['uid']);
             }
 
             if (isset($params['notify_email']) && $params['notify_email'] == '1') {
