@@ -55,6 +55,12 @@ const puppeteer = require('puppeteer');
     await page.waitForSelector(btn_create);
     await page.click(btn_create);
 
+    await page.waitForSelector('qq-uploader-selector');
+    await page.type('#project_name', 'TestProject');
+    await page.type('#project_key', 'testproject');
+    await page.type('#project_lead', '1');
+    await page.type('#project_tpl_id', '1');
 
+    await page.click('input[name=commit]');
     //await browser.close();
 })();
