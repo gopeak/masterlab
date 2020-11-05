@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserIssueLastCreateDataModel;
@@ -275,6 +276,39 @@ class UserLogic
             }
         }
         return $avatar;
+    }
+
+    /**
+     * 生成默认avatar
+     * @param $userId
+     * @param $name
+     * @return array
+     */
+    public static function makeDefaultAvatar($userId, $name)
+    {
+        $avatar = new InitialAvatar();
+        $bgColorArr = ['#FF4040', '#FF8C00', '#EED2EE', '#8FBC8F', '#9A32CD', '#707070', '#218868', '#00008B'];
+        $num = mt_rand(0, count($bgColorArr)-1);
+
+        $stream = $avatar->name($name)
+            ->autoFont()
+            ->length(1)
+            ->fontSize(0.65)
+            ->size(160) // 48 * 2
+            ->background($bgColorArr[$num])
+            ->color('#fff')
+            ->generate()
+            ->stream('png', 90);
+
+        $shortPath = 'avatar/'.$userId.'.png';
+        $avatarFile = PUBLIC_PATH . 'attachment/'.$shortPath;
+        file_put_contents($avatarFile, $stream);
+
+        return [
+            'url' => ATTACHMENT_URL . $shortPath,
+            'short_path' => $shortPath,
+            'full_path' => $avatarFile
+        ];
     }
 
     /**
