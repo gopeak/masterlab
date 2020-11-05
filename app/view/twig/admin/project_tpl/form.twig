@@ -43,18 +43,19 @@
 
         <div class="page-with-sidebar">
             {% include 'twig/admin/common-page-nav-admin.twig' %}
-            <div class="content-wrapper page-with-layout-nav ">
+            <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
                 <div class="alert-wrapper">
                     <div class="flash-container flash-container-page">
                     </div>
                 </div>
-                <div class="container-fluid container-limited">
+                <div class="container-fluid" style="padding:0;
+    position: relative;">
                     <div class="content" id="content-body">
                         {% include 'twig/admin/common_project_tpl_left_nav.twig' %}
                         <h3 class="page-title"><?=tpl.name?>--配置</h3>
                         <p><?=tpl.description?></p>
 
-                        <div class="row">
+                        <div class="row has-side-margin-left">
                             <div class="content-list">
                                    <ul class="nav-links" role="tablist">
                                         <li  role="presentation"    class="active" >
