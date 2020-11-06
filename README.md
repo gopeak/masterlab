@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="http://www.masterlab.vip ">
-    <img width="200" src="http://www.masterlab.vip/Images/logo_orange.png">
+    <img width="200" src="http://www.masterlab.vip/Images/logo.png">
   </a>
 </p>
 
