@@ -63,10 +63,11 @@ http://demo.masterlab.vip
        
      - Mysql
        - 版本 >= 5.7
-     
-     -  masterlab\app\storage 目录要求写入权限
-     -  masterlab\public\attachment 目录要求写入权限
-     -  masterlab\public\install 目录要求写入权限
+     -  masterlab 根目录php用户读写权限
+     -  masterlab\bin 已编译程序php用户目录读写权限
+     -  masterlab\app\storage 存储目录及子目录php用户读写权限
+     -  masterlab\public\attachment 附件目录及子目录php用户读写权限
+     -  masterlab\public\install 安装目录php用户读写权限
      ```
  2. 下载代码，将根目录的运行依赖库`vendor.zip`解压出来  
        ```text
