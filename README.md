@@ -47,7 +47,7 @@ http://demo.masterlab.vip
 [Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
 [Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
 
-通用安装步骤如下:  
+3.0版本安装步骤如下:  
 
  1. 搭建php的运行环境 
      ```
@@ -65,8 +65,8 @@ http://demo.masterlab.vip
        - 版本 >= 5.7
      
      -  masterlab\app\storage 目录要求写入权限
-     -  masterlab\app\public\attachment 目录要求写入权限
-     -  masterlab\app\public\install 目录要求写入权限
+     -  masterlab\public\attachment 目录要求写入权限
+     -  masterlab\public\install 目录要求写入权限
      ```
  2. 下载代码，将根目录的运行依赖库`vendor.zip`解压出来  
        ```text
@@ -75,7 +75,7 @@ http://demo.masterlab.vip
            - vendor
                - autoload.php 
        ```
- 3. 在web服务器添加虚拟主机并映射到masterlab的 app/public 目录  
+ 3. 在web服务器添加虚拟主机并映射到masterlab的 /public 目录  
     如果Web服务器是Apache,首先编辑主配置文件`httpd.conf`将  
       ```
       <Directory />
@@ -95,7 +95,7 @@ http://demo.masterlab.vip
       ```text
       <VirtualHost *:80>
         # 请更改为实际的masterlab目录
-        DocumentRoot "c:/phpenv/www/masterlab/app/public"
+        DocumentRoot "c:/phpenv/www/masterlab/public"
         # 这里使用的是示例域名，你可以更改为你的域名
         ServerName  www.yoursite.com
         <Directory />
@@ -104,7 +104,7 @@ http://demo.masterlab.vip
             #Allow from All
         </Directory>
         # 请更改为实际的masterlab目录
-        <Directory "c:/phpenv/www/masterlab/app/public">
+        <Directory "c:/phpenv/www/masterlab/public">
             Options  Indexes FollowSymLinks
             AllowOverride All
             #Order allow,deny
@@ -119,7 +119,7 @@ http://demo.masterlab.vip
         # 这里使用的是示例域名，你可以更改为你的域名
         server_name www.yoursite.com;
         # masterlab的入口访问路径,请更改为实际的masterlab目录
-        root /data/www/masterlab/app/public;
+        root /data/www/masterlab/public;
         index index.html index.htm index.php; 
         gzip on;
         gzip_min_length 1k;
