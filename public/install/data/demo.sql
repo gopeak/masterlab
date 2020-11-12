@@ -367,33 +367,6 @@ INSERT INTO `project_module` (`id`, `project_id`, `name`, `description`, `lead`,
 -- --------------------------------------------------------
 
 
---
--- 转存表中的数据 `project_permission`
---
-
-INSERT INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_key`) VALUES
-(10004, 0, '管理项目', '可以对项目进行设置', 'ADMINISTER_PROJECTS'),
-(10005, 0, '访问事项列表(已废弃)', '', 'BROWSE_ISSUES'),
-(10006, 0, '创建事项', '', 'CREATE_ISSUES'),
-(10007, 0, '评论', '', 'ADD_COMMENTS'),
-(10008, 0, '上传和删除附件', '', 'CREATE_ATTACHMENTS'),
-(10013, 0, '编辑事项', '项目的事项都可以编辑', 'EDIT_ISSUES'),
-(10014, 0, '删除事项', '项目的所有事项可以删除', 'DELETE_ISSUES'),
-(10015, 0, '关闭事项', '项目的所有事项可以关闭', 'CLOSE_ISSUES'),
-(10016, 0, '修改事项状态', '修改事项状态', 'EDIT_ISSUES_STATUS'),
-(10017, 0, '修改事项解决结果', '修改事项解决结果', 'EDIT_ISSUES_RESOLVE'),
-(10028, 0, '删除评论', '项目的所有的评论均可以删除', 'DELETE_COMMENTS'),
-(10902, 0, '管理backlog', '', 'MANAGE_BACKLOG'),
-(10903, 0, '管理sprint', '', 'MANAGE_SPRINT'),
-(10904, 0, '管理kanban', NULL, 'MANAGE_KANBAN'),
-(10905, 0, '导入事项', '可以到导入excel数据到项目中', 'IMPORT_EXCEL'),
-(10906, 0, '导出事项', '可以将项目中的数据导出为excel格式', 'EXPORT_EXCEL'),
-(10907, 0, '管理甘特图', '是否拥有权限操作甘特图中的事项和设置', 'ADMIN_GANTT'),
-(10908, 0, '事项分解设置', '是否拥有权限修改事项分解的设置', 'MIND_SETTING');
-
--- --------------------------------------------------------
-
-
 
 --
 -- 转存表中的数据 `project_role`
