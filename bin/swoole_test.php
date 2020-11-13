@@ -27,7 +27,6 @@ $sendArr['content_type'] =  'html';
 $sendArr['attach'] =  '';
 $body = json_encode($sendArr).PHP_EOL;
 
-
 $socketHost = trimStr($config['socket_server_host']);
 $socketPort = (int)$config['socket_server_port'];
 $fp = @fsockopen($socketHost, $socketPort, $errno, $errstr, 10);

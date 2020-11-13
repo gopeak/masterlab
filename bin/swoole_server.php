@@ -4,14 +4,15 @@ require_once $rootDir . '/vendor/autoload.php';
 use main\app\model\SettingModel;
 use main\app\model\system\MailQueueModel;
 
+
 $socketHost = trimStr($config['socket_server_host']);
 $socketPort = (int)$config['socket_server_port'];
-$serv = new Swoole\Server($socketHost, $socketPort);
+$server = new Swoole\Server($socketHost, $socketPort);
 
 //设置异步任务的工作进程数量
-$serv->set(array('task_worker_num' => 12));
+$server->set(array('task_worker_num' => 12));
 
-$serv->set([
+$server->set([
     'daemonize' => false, //是否作为守护进程
     'open_length_check' => true,
     'package_max_length' => 1024*1024*10,
@@ -20,32 +21,8 @@ $serv->set([
     'package_body_offset' => 4,
 ]);
 
-$server->on('onStart', function ($server){
-    global $rootDir;
-    echo "Server:started.\n";
-
-    $missions = [
-        [
-            'name' => 'ls',
-            'cmd' => "ls -al",
-            'out' => '/tmp/php_crontab.log',
-            'time' => '* * * * *',
-            'user' => 'www',
-            'group' => 'www'
-        ],
-        [
-            'name' => 'hostname',
-            'cmd' => "hostname",
-            'out' => '/tmp/php_crontab.log',
-            'time' =>  '* * * * *',
-        ],
-    ];
-    $daemon = new \Jenner\Crontab\Daemon($missions);
-    $daemon->start();
-});
-
 //此回调函数在worker进程中执行
-$serv->on('receive', function($serv, $fd, $from_id, $data) {
+$server->on('receive', function($serv, $fd, $from_id, $data) {
     $len = unpack('N', $data)['1'];
     $body = substr($data, -$len);
     //投递异步任务
@@ -54,10 +31,11 @@ $serv->on('receive', function($serv, $fd, $from_id, $data) {
 });
 
 //处理异步任务(此回调函数在task进程中执行)
-$serv->on('task', function ($serv, $task_id, $from_id, $data) {
+$server->on('task', function ($serv, $task_id, $from_id, $data) {
 
    // echo "New AsyncTask[id=$task_id]".PHP_EOL;
-    $sendArr = json_decode($data, true);
+    $bodyArr = json_decode($data, true);
+    $sendArr = $bodyArr;
     print_r($sendArr);
     $recipients = $sendArr['to'];
     $replyTo = $sendArr['cc'];
@@ -163,9 +141,59 @@ $serv->on('task', function ($serv, $task_id, $from_id, $data) {
     $serv->finish("$data -> OK");
 });
 
+
 //处理异步任务的结果(此回调函数在worker进程中执行)
-$serv->on('finish', function ($serv, $task_id, $data) {
+$server->on('finish', function ($serv, $task_id, $data) {
     echo "AsyncTask[$task_id] Finished ".PHP_EOL;
 });
 
-$serv->start();
+
+Swoole\Timer::tick(1000, function(){
+
+    echo "crontab checking \n";
+
+    $rootDir = realpath(dirname(__FILE__). '/../') ;
+    $json = file_get_contents($rootDir.'/bin/cron.json');
+    $cronArr = json_decode($json, true);
+
+    if(!$cronArr['schedule']){
+        return;
+    }
+    foreach ($cronArr['schedule'] as $item) {
+        $exp = substr($item['exp'],2);
+        //echo $exp." ";
+        $cron = Cron\CronExpression::factory($exp);
+        //echo $cron->getNextRunDate()->format('Y-m-d H:i:s')." \n";
+        // echo $cron->getNextRunDate()->getTimestamp()."\n";
+        $runTime = $cron->getNextRunDate()->getTimestamp();
+        $offsetTime = $runTime-time();
+        if($offsetTime<2 && $offsetTime>-2){
+            log_cron("脚本:".$item['name']." ".$item['file']." 触发");
+            echo $item['name'].' '.$cron->getNextRunDate()->format('Y-m-d H:i:s')." \n";
+            // 达到时间要求
+            $cronPhpBin = $item['exe_bin'];
+            if(!file_exists($cronPhpBin)){
+                list($phpBinRet, $phpBin) = get_php_bin_dir();
+                if(!$phpBinRet){
+                    return;
+                }
+                $cronPhpBin = $phpBin;
+            }
+            exec("ps aux | grep ".$item['file'], $output, $return);
+            if ($return == 0) {
+                echo $item['file'].", process is running\n";
+                continue;
+            }
+            $command = $cronPhpBin.' '.$item['arg'].' '.$item['file'];
+            exec($command, $output);
+            log_cron(print_r($output, true));
+            log_cron("脚本:".$item['name']." ".$item['file']." 执行结束");
+        }
+
+    }
+
+
+
+});
+
+$server->start();

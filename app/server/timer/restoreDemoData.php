@@ -23,13 +23,15 @@ try{
     $tables = $model->db->fetchAll('show tables');
     foreach ( $tables as $row) {
         $table = current($row);
-        $sql = "TRUNCATE $table ;";
+        $sql = "DROP  table $table ;";
         showLine('数据表  ' . $table . ' ...删除成功');
         $ret = $model->db->executeUpdate($sql);
         //var_dump($ret);
     }
     $demoSqlFile = realpath(APP_PATH . 'public/install/data/main.sql');
     $sql = file_get_contents($demoSqlFile);
+    $sql .= file_get_contents(realpath(APP_PATH . 'public/install/data/demo.sql'));
+    $sql .= file_get_contents(realpath(APP_PATH . 'public/install/data/fulltext-5.7.sql'));
     runSql($sql, $model->db);
     showLine('OK');
 }catch (Exception $exception){
