@@ -179,15 +179,24 @@ Swoole\Timer::tick(1000, function(){
                 }
                 $cronPhpBin = $phpBin;
             }
-            exec("ps aux | grep ".$item['file'], $output, $return);
+            $execFile = $item['file'];
+            $pathParts  = pathinfo($execFile);
+            if(!file_exists($execFile)){
+                $newFile = $rootDir.'/app/server/timer/'.$pathParts['basename'];
+                if(file_exists($newFile)){
+                    $execFile = $newFile;
+                }
+            }
+            exec("ps aux | grep ".$pathParts['basename'], $output, $return);
             if ($return == 0) {
                 echo $item['file'].", process is running\n";
                 continue;
             }
-            $command = $cronPhpBin.' '.$item['arg'].' '.$item['file'];
+            $command = $cronPhpBin.' '.$item['arg'].' '.$execFile;
+            log_cron($command);
             exec($command, $output);
             log_cron(print_r($output, true));
-            log_cron("脚本:".$item['name']." ".$item['file']." 执行结束");
+            log_cron("脚本:".$item['name']." ".$execFile." 执行结束");
         }
 
     }
