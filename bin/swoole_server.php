@@ -4,9 +4,16 @@ require_once $rootDir . '/vendor/autoload.php';
 use main\app\model\SettingModel;
 use main\app\model\system\MailQueueModel;
 
+$socketConfig = $GLOBALS['_yml_config']['socket'];
+print_r($socketConfig);
+if($socketConfig){
+    $socketHost = trimStr($socketConfig['host']);
+    $socketPort = (int)$socketConfig['port'];
+}else{
+    $socketHost = trimStr($config['socket_server_host']);
+    $socketPort = (int)$config['socket_server_port'];
+}
 
-$socketHost = trimStr($config['socket_server_host']);
-$socketPort = (int)$config['socket_server_port'];
 $server = new Swoole\Server($socketHost, $socketPort);
 
 //设置异步任务的工作进程数量
@@ -114,7 +121,9 @@ $server->on('task', function ($serv, $task_id, $from_id, $data) {
                 }
             }
         }
-
+        if(isset($sendArr['attach']) && !empty($sendArr['attach'])){
+            $mail->addAttachment($sendArr['attach']);
+        }
         $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; //当邮件不支持html时备用显示，可以省略
         $mail->WordWrap = 80; // 设置每行字符串的长度
         $contentType = isset($sendArr['content_type']) ? $sendArr['content_type'] : 'html';
