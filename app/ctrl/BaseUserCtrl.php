@@ -143,19 +143,18 @@ class BaseUserCtrl extends BaseCtrl
                 if ($project) {
                     list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
                     $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
-                }
-                $projectTplModel = new ProjectTemplateModel();
-                $subsystemJson = $projectTplModel->getFieldById('subsystem_json', $project['project_tpl_id']);
-                $curProjectSubsystemArr = json_decode($subsystemJson, true);
-                if($curProjectSubsystemArr){
-                    foreach (ProjectTpl::$defaultSubSystem as $k=> $subsystem) {
-                        if(in_array($subsystem['name'], $curProjectSubsystemArr)){
-                            $subsystem['type'] = PluginModel::TYPE_PROJECT_DEFAULT;
-                            $subsystemArr[] = $subsystem;
+                    $projectTplModel = new ProjectTemplateModel();
+                    $subsystemJson = $projectTplModel->getFieldById('subsystem_json', $project['project_tpl_id']);
+                    $curProjectSubsystemArr = json_decode($subsystemJson, true);
+                    if($curProjectSubsystemArr){
+                        foreach (ProjectTpl::$defaultSubSystem as $k=> $subsystem) {
+                            if(in_array($subsystem['name'], $curProjectSubsystemArr)){
+                                $subsystem['type'] = PluginModel::TYPE_PROJECT_DEFAULT;
+                                $subsystemArr[] = $subsystem;
+                            }
                         }
                     }
                 }
-
             }
             $this->addGVar('_project_id', $this->projectId);
             $this->addGVar('G_project', $project);

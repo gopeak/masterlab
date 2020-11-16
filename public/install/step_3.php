@@ -128,7 +128,7 @@
                     </span> <em>数据库默认端口一般为3306</em>
                 </div>
                 <?php if ($demo_data) { ?>
-                    <div style="display: none">
+                    <div >
                         <label>&nbsp;</label>
                         <input type="checkbox"
                                name="demo_data" <?php echo($_POST['demo_data'] == 1 ? 'checked' : 'checked'); ?>

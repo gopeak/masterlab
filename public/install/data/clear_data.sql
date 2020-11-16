@@ -52,11 +52,13 @@ TRUNCATE `user_posted_flag`;
 TRUNCATE `user_refresh_token`;
 TRUNCATE `user_token`;
 TRUNCATE `issue_holiday`;
+TRUNCATE `main_webhook_log`;
+
+
 DELETE FROM `agile_board` WHERE id>2;
 DELETE FROM `agile_board_column` WHERE board_id >2;
 DELETE FROM `main_org` WHERE `id` >1;
-INSERT INTO `user_group` VALUES ('1', '0', '1');
-INSERT INTO `user_group` VALUES ('2', '1', '1');
+DELETE FROM `user_group` WHERE uid!=1;
 DELETE FROM `user_main` WHERE uid!=1;
 DELETE FROM `user_setting` WHERE `user_id`!=1;
 DELETE FROM `user_widget` WHERE `user_id` >1;

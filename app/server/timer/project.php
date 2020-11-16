@@ -5,7 +5,7 @@
  */
 
 $currentDir = realpath(dirname(__FILE__). '/') ;
-
+echo $currentDir;
 require $currentDir.'/bootstrap.php';
 use \main\app\classes\CrontabProject;
 

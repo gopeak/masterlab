@@ -132,6 +132,7 @@ class SystemLogic
      * @param array $recipients
      * @param array $replyTo
      * @param array $others
+     * @param bool $isDebug
      * @return array
      * @throws \Exception
      */
@@ -290,6 +291,7 @@ class SystemLogic
         $socketHost = '127.0.0.1';
         $socketPort = 9002;
         $socketConnectTimeout = 10;
+        $socketType = 'golang';
         if (isset($config['socket_server_host']) && !empty($config['socket_server_host'])) {
             $socketHost = trimStr($config['socket_server_host']);
         }
@@ -298,6 +300,9 @@ class SystemLogic
         }
         if (isset($config['socket_connect_timeout']) && !empty($config['socket_connect_timeout'])) {
             $socketConnectTimeout = trimStr($config['socket_connect_timeout']);
+        }
+        if (isset($config['socket_server_type']) && !empty($config['socket_server_type'])) {
+            $socketType =  $config['socket_server_type'];
         }
         $fp = @fsockopen($socketHost, $socketPort, $errno, $errstr, $socketConnectTimeout);
         if (!$fp) {
@@ -318,8 +323,16 @@ class SystemLogic
             $bin_total_size = uInt32($total_size);
             $bin_type = uInt32(1);
             $bin_header_size = uInt32($header_len);
-            $bin_data = $bin_total_size . $bin_type . $bin_header_size . $header . $body;
-
+            if($socketType=='swoole'){
+                $bin_data = $bin_total_size . $bin_type . $bin_header_size . $header . $body;
+            }else{
+                $sendArr['cmd'] = 'Mail';
+                $sendArr['sid'] = $seq;
+                $sendArr['ver'] = '1.0';
+                $sendArr['token'] = '';
+                $body = json_encode($sendArr).PHP_EOL;
+                $bin_data = pack('N',strlen($body)).$body;
+            }
             fwrite($fp, $bin_data);
             fclose($fp);
         }

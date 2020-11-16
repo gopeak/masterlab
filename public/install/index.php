@@ -78,7 +78,7 @@ switch ($step) {
     case 3:
         $install_error = '';
         $install_recover = '';
-        $demo_data = file_exists('./data/utf8_add.sql') ? true : false;
+        $demo_data = file_exists('./data/demo.sql') ? true : false;
         importSql($install_error, $install_recover);
         break;
     case 4:

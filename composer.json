@@ -28,7 +28,8 @@
     "ext-curl": "*",
     "ext-redis": "*",
     "lcobucci/jwt": "^3.3",
-    "lasserafn/php-initial-avatar-generator": "^4.1"
+    "lasserafn/php-initial-avatar-generator": "^4.1",
+    "dragonmantank/cron-expression": "^3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "7.0",
