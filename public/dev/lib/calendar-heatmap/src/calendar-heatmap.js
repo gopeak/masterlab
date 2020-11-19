@@ -121,12 +121,12 @@ function calendarHeatmap() {
           if(isNaN(calendarTop)){
               calendarTop = 280;
           }
-          console.log('top:', calendarTop);
+          //console.log('top:', calendarTop);
           var calendarLeft = parseInt($(".calendar-heatmap").position().left);
           if(isNaN(calendarLeft)){
              calendarLeft = 500;
           }
-          console.log('left:', calendarLeft);
+          //console.log('left:', calendarLeft);
 
           var top =  d.getDay() * (SQUARE_LENGTH + SQUARE_PADDING) + MONTH_LABEL_PADDING * 3 + calendarTop;
           var left = Math.floor(i / 7) * SQUARE_LENGTH + calendarLeft;

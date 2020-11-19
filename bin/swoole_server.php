@@ -160,11 +160,9 @@ $server->on('finish', function ($serv, $task_id, $data) {
 Swoole\Timer::tick(1000, function(){
 
     echo "crontab checking \n";
-
     $rootDir = realpath(dirname(__FILE__). '/../') ;
     $json = file_get_contents($rootDir.'/bin/cron.json');
     $cronArr = json_decode($json, true);
-
     if(!$cronArr['schedule']){
         return;
     }
@@ -173,7 +171,6 @@ Swoole\Timer::tick(1000, function(){
         //echo $exp." ";
         $cron = Cron\CronExpression::factory($exp);
         //echo $cron->getNextRunDate()->format('Y-m-d H:i:s')." \n";
-        // echo $cron->getNextRunDate()->getTimestamp()."\n";
         $runTime = $cron->getNextRunDate()->getTimestamp();
         $offsetTime = $runTime-time();
         if($offsetTime<2 && $offsetTime>-2){
@@ -184,7 +181,7 @@ Swoole\Timer::tick(1000, function(){
             if(!file_exists($cronPhpBin)){
                 list($phpBinRet, $phpBin) = get_php_bin_dir();
                 if(!$phpBinRet){
-                    return;
+                    continue;
                 }
                 $cronPhpBin = $phpBin;
             }
@@ -209,8 +206,6 @@ Swoole\Timer::tick(1000, function(){
         }
 
     }
-
-
 
 });
 
