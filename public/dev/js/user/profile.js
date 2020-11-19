@@ -44,8 +44,11 @@ $(function () {
         }
     }
     var editAvatar = document.getElementById('avatar_display');
-    editAvatar.src = $("#avatar_display").attr("src")
-    createCropper(editAvatar);
+    if(editAvatar){
+        editAvatar.src = $("#avatar_display").attr("src")
+        createCropper(editAvatar);
+    }
+
     // 点击浏览按钮
     $("#js-choose-user-avatar-button").on("click", function () {
 
