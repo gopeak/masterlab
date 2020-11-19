@@ -2049,8 +2049,8 @@ class Main extends BaseUserCtrl
      */
     private function deletedAfter($issueId, $issue=[])
     {
+        $issueModel = new IssueModel();
         if(empty($issue)){
-            $issueModel = new IssueModel();
             $issue = $issueModel->getById($issueId);
         }
         // 将子任务的关系清除
