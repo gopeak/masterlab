@@ -122,56 +122,63 @@
     </div>
 </section>
 
+
+{% verbatim %}
+
+
 <script id="logs_tpl" type="text/html">
-    <?=#logs_arr?>
+    {{#logs_arr}}
     <tr class="commit">
             <td>
-             <?=webhook_name?>
+             {{webhook_name}}
             </td>
             <td>
-               <?=event_name?>
+               {{event_name}}
             </td>
             <td>
-              <?=url?>
+              {{url}}
             </td>
             <td>
-            <?=time_text?>
+            {{time_text}}
             </td>
             <td>
-                <?={err_msg?>}
+                {{{err_msg}}}
             </td>
             <td>
-                 <span class="label <?=status_bg?>"  > <?=status_text?> </span>
+                 <span class="label {{status_bg}}"  > {{status_text}} </span>
             </td>
             <td  >
                 <div class="controls member-controls " >
-                    <?=#if_eq status '4'?>
-                        <a class="user_for_active btn btn-transparent " data-uid="<?=uid?>"   href="#"  >
+                    {{#if_eq status '4'}}
+                        <a class="user_for_active btn btn-transparent " data-uid="{{uid}}"   href="#"  >
                             重新发送
                         </a>
-                    <?=/if_eq?>
-                    <?=#if_eq is_system '0'?>
-                        <?=#if_eq myself '0'?>
-                            <a class="user_for_delete btn btn-transparent"   href="javascript:userDelete(<?=uid?>);" style="padding: 6px 2px;">
+                    {{/if_eq}}
+                    {{#if_eq is_system '0'}}
+                        {{#if_eq myself '0'}}
+                            <a class="user_for_delete btn btn-transparent"   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
                                 <i class="fa fa-trash"></i>
                                 <span class="sr-only">删除</span>
                             </a>
-                        <?=/if_eq?>
-                    <?=/if_eq?>
+                        {{/if_eq}}
+                    {{/if_eq}}
                 </div>
 
             </td>
         </tr>
-    <?=/logs_arr?>
+    {{/logs_arr}}
     <div class="text-center" style="margin-top: .8em;">
         <span class="text-center">
-                总数:<span id="issue_count"><?=total?></span> 每页显示:<span id="page_size"><?=page_size?></span>
+                总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
         </span>
     </div>
     <div class="gl-pagination" id="ampagination-bootstrap" style="  border-top: 0px solid #e5e5e5; ">
 
     </div>
 </script>
+
+{% endverbatim %}
+
 
 
 <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
