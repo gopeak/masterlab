@@ -22,6 +22,8 @@ var Activity = (function () {
     Activity.prototype.fetchCalendarHeatmap = function () {
 
         // url,  list_tpl_id, list_render_id
+        var now = moment().endOf('day').toDate();
+        var yearAgo = moment().startOf('day').subtract(1, 'year').toDate();
         var params = {format: 'json'};
         $.ajax({
             type: "GET",
@@ -30,19 +32,20 @@ var Activity = (function () {
             url: root_url+'activity/fetchCalendarHeatmap',
             data: {user_id:_options.user_id},
             success: function (resp) {
-
-                console.log(resp)
-                auth_check(resp);
-                var now = moment().endOf('day').toDate();
-                var yearAgo = moment().startOf('day').subtract(1, 'year').toDate();
+                //console.log(resp)
+                //auth_check(resp);
+                let now = moment().endOf('day').toDate();
+                //alert(now);
+                let yearAgo = moment().startOf('day').subtract(1, 'year').toDate();
+                //alert(yearAgo);
                 var chartData = d3.time.days(yearAgo, now).map(function (dateElement) {
+                    //console.log(moment(dateElement).format( "YYYY-MM-DD"));
                     return {
-                        ymd:dateElement.format('yyyy-mm-dd'),
+                        ymd:moment(dateElement).format( "YYYY-MM-DD"),
                         date: dateElement,
                         count: 0
                     };
                 });
-
                 for (var i = 0; i < resp.data.heatmap.length; i++) {
                     var row = resp.data.heatmap[i];
                     for(var key in chartData){
