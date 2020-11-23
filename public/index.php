@@ -21,6 +21,7 @@ $hornetConfig->enableReflectMethod = ENABLE_REFLECT_METHOD;
 $hornetConfig->enableFilterSqlInject = false;
 $hornetConfig->enableXssFilter = false;
 $hornetConfig->exceptionPage = VIEW_PATH . 'exception.php';
+$hornetConfig->apiProtocolClass = 'OpenApi';
 $hornetConfig->ajaxProtocolClass = 'ajax';
 $hornetConfig->ctrlMethodPrefix = 'page';
 $hornetConfig->customRewriteClass = "main\\app\\classes\\RewriteUrl";
