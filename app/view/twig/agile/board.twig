@@ -88,7 +88,7 @@
                                                     <select id="boards_select" name="boards_select"
                                                             class="selectpicker">
                                                         {% for board in boards %}
-                                                            <option value="<?= board['id'] ?>"><?= board['name'] ?></option>
+                                                            <option value="<?= board['id'] ?>" {% if board_default_id==board['id'] %} selected {% endif %}><?= board['name'] ?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -356,17 +356,19 @@
             <td>{{range_type}}</td>
             <!--<td>{{#if_eq is_filter_backlog 1}} 是 {{^}} 否 {{/if_eq}}</td>
             <td>{{#if_eq is_filter_closed 1}} 是 {{^}} 否 {{/if_eq}}</td>-->
+            <td>{{#if_eq is_default 1}} <a  class="btn btn-transparent" href="#">默认</a> {{^}}
+            <a class="btn btn-transparent btn-action list_for_default " style="color:blue" title="设置默认"  href="javascript:void(0);"  data-id="{{id}}">设置</a>{{/if_eq}}</td>
             <td>{{weight}}</td>
             <td>
                 {{#if_eq is_system '1'}}
-                系统默认
+                系统自带
                 {{^}}
-                <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  data-id="{{id}}">
-                    <i class="fa fa-pencil-square-o"></i>
-                </a>
-                <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"  class="list_for_delete" data-id="{{id}}"  href="javascript:void(0)">
-                    <i class="fa fa-trash-o"></i>
-                </a>
+                    <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  style="color:blue"  data-id="{{id}}">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                    <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"  class="list_for_delete"  style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
                 {{/if_eq}}
 
             </td>
@@ -398,6 +400,7 @@
                                             <th>#</th>
                                             <th>名称</th>
                                             <th>数据范围</th>
+                                            <th>是否默认</th>
                                             <th>排序权重</th>
                                             <th>操作</th>
                                         </tr>
@@ -872,6 +875,7 @@
     var $board = null;
     var $board_setting = null;
     var _current_columns = [];
+    var _board_default_id = <?=board_default_id?>;
     $(function () {
 
 
@@ -923,12 +927,16 @@
             $('#range_container div').addClass('hide');
             $('#range-'+range_value).removeClass(('hide'));
         });
-
-        if (_active_sprint_id != '') {
-            window.$board.fetchBoardById(1);
+        if(_board_default_id>0){
+            if (_active_sprint_id != '') {
+                window.$board.fetchBoardById(1);
+            }else{
+                window.$board.fetchBoardById(2);
+            }
         }else{
-            window.$board.fetchBoardById(2);
+            window.$board.fetchBoardById(_board_default_id);
         }
+
         //$('.selectpicker').selectpicker();
         $("#boards_select").change(function () {
             console.log($(this).val());

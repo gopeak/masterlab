@@ -1512,7 +1512,7 @@ var IssueMain = (function () {
                 }
                 if (resp.ret == '200') {
                     notify_success(resp.msg);
-                    //window.location.reload();
+                    window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }
