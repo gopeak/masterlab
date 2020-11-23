@@ -38,6 +38,13 @@ class ProjectFlagModel extends BaseDictionaryModel
         return self::$instance[$index];
     }
 
+    /**
+     * @param $projectId
+     * @param $flag
+     * @param $value
+     * @return array
+     * @throws \Exception
+     */
     public function add($projectId, $flag, $value)
     {
         $info = [];
@@ -45,7 +52,7 @@ class ProjectFlagModel extends BaseDictionaryModel
         $info['flag'] = $flag;
         $info['value'] = $value;
         $info['update_time'] = time();
-        $ret = $this->insert($info);
+        $ret = $this->replace($info);
         return $ret;
     }
 

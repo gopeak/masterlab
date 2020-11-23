@@ -195,6 +195,10 @@ class Agile extends BaseUserCtrl
             $data['perm_kanban'] = PermissionLogic::check($data['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_KANBAN);
         }
 
+        $projectFlagModel = new ProjectFlagModel();
+        $boardDefaultId = (int)$projectFlagModel->getValueByFlag($data['project_id'], 'board_default_id');
+        $data['board_default_id'] = $boardDefaultId;
+
         $this->render('gitlab/agile/board.php', $data);
     }
 
@@ -386,6 +390,33 @@ class Agile extends BaseUserCtrl
         $activityInfo['obj_id'] = $boardId;
         $activityInfo['title'] = $info['name'];
         $activityModel->insertItem(UserAuth::getId(), $projectId, $activityInfo);
+
+        $this->ajaxSuccess('操作成功', $_POST);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function setBoardDefault()
+    {
+        $projectId = null;
+        if (isset($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $boardId = null;
+        if (isset($_POST['id'])) {
+            $boardId = (int)$_POST['id'];
+        }
+        if (empty($boardId)) {
+            $err['id'] = '看板id不能为空';
+            $this->ajaxFailed('参数错误', $err, parent::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+        $projectFlagModel = new ProjectFlagModel();
+        $projectFlagModel->add($projectId,'board_default_id', $boardId);
 
         $this->ajaxSuccess('操作成功', $_POST);
     }
@@ -964,6 +995,8 @@ class Agile extends BaseUserCtrl
         $agileBoardModel = new AgileBoardModel();
         $defaultBoards = $agileBoardModel->getsByDefault();
         $projectBoards = $agileBoardModel->getsByProject($projectId);
+        $projectFlagModel = new ProjectFlagModel();
+        $boardDefaultId = (int)$projectFlagModel->getValueByFlag($projectId, 'board_default_id');
 
         $boards = $defaultBoards;
         foreach ($projectBoards as $projectBoard) {
@@ -973,6 +1006,7 @@ class Agile extends BaseUserCtrl
         foreach ($boards as &$board) {
             $i++;
             $board['i'] = $i;
+            $board['is_default'] = $boardDefaultId==$board['id'] ? '1' :'0';
         }
         $data['boards'] = $boards;
         $this->ajaxSuccess('success', $data);

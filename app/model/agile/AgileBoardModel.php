@@ -75,6 +75,9 @@ class AgileBoardModel extends BaseDictionaryModel
         return $rows;
     }
 
+    /**
+     * @return array
+     */
     public function getsByDefault()
     {
         $params = ['project_id' => 0];
@@ -82,6 +85,12 @@ class AgileBoardModel extends BaseDictionaryModel
         return $rows;
     }
 
+    /**
+     * @param $projectId
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     */
     public function deleteByProjectId($projectId)
     {
         $conditions = [];
