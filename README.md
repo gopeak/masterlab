@@ -167,7 +167,7 @@ http://demo.masterlab.vip
      Windows操作系统的
      ```text
     # 在masterlab目录直接运行
-    bin/masterlab_socket.exe start -d 
+    ./bin/masterlab_socket.exe start -d 
     ```
      Linux操作系统的
      ```text
@@ -177,7 +177,7 @@ http://demo.masterlab.vip
     ```
      其他操作系统 参考 https://github.com/gopeak/masterlab_socket 的文档自行编译  
      
- 6. 如果是Linux系统， 可安装php的swoole扩展,代替masterlab_socket：
+ 6. 如果是Linux系统， 安装php的swoole扩展， 可代替masterlab_socket：
     ```text
     # 进入 masterlab/bin 目录，执行
     php swoole_server.php
