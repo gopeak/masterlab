@@ -39,14 +39,9 @@ http://demo.masterlab.vip
 
 
 ## **安装**
- 
-详细的安装示例  
 
-[Windows安装教程](http://www.masterlab.vip/help.php?md=install-windows "Windows安装教程")  
-[Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
-[Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
 
-2.1版本安装步骤如下:  
+3.0版本安装步骤如下:  
 
  1. 搭建php的运行环境 
      ```
@@ -189,7 +184,14 @@ http://demo.masterlab.vip
      
  7. 在浏览器访问 /install ,根据提示进行安装  
  
+
  
+2.1及以下版本的安装示例  
+
+[Windows安装教程](http://www.masterlab.vip/help.php?md=install-windows "Windows安装教程")  
+[Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
+[Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
+
 ## **更多文档**
 http://www.masterlab.vip/help.php
 
