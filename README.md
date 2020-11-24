@@ -186,7 +186,7 @@ http://demo.masterlab.vip
  
 
  
-2.1及以下版本的安装示例  
+## 2.1及以下版本的安装示例  
 
 [Windows安装教程](http://www.masterlab.vip/help.php?md=install-windows "Windows安装教程")  
 [Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
