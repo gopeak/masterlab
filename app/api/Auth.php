@@ -56,12 +56,13 @@ class Auth extends BaseApi
 
         if ($parserTokenArr['code'] == JWTLogic::PARSER_STATUS_INVALID
             || $parserTokenArr['code'] == JWTLogic::PARSER_STATUS_EXCEPTION) {
-            self::echoJson($parserTokenArr['msg'], [], Constants::HTTP_AUTH_FAIL);
+            //self::echoJson($parserTokenArr['msg'], [], Constants::HTTP_AUTH_FAIL);
+            throw new \Exception($parserTokenArr['msg'], Constants::HTTP_AUTH_FAIL);
         }
 
         if ($parserTokenArr['code'] == JWTLogic::PARSER_STATUS_EXPIRED) {
             // 前端识别到EXPIRED，调用refresh_token
-            self::echoJson(JWTLogic::PARSER_STATUS_EXPIRED, [], Constants::HTTP_AUTH_FAIL);
+            throw new \Exception(JWTLogic::PARSER_STATUS_EXPIRED, Constants::HTTP_AUTH_FAIL);
         }
 
         $accountId = $parserTokenArr['uid'];
