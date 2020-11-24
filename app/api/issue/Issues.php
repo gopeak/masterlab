@@ -549,7 +549,7 @@ class Issues extends BaseAuth
             $model = new IssueStatusModel();
             $issueStatusArr = $model->getAll();
             if (!isset($issueStatusArr[$statusId])) {
-                self::echoJson('param_error:status_not_found', [], Constants::HTTP_BAD_REQUEST);
+                throw new \Exception('param_error:status_not_found', Constants::HTTP_BAD_REQUEST);
             }
             unset($issueStatusArr);
             $info['status'] = $statusId;
@@ -561,7 +561,7 @@ class Issues extends BaseAuth
             $model = new IssuePriorityModel();
             $issuePriority = $model->getAll();
             if (!isset($issuePriority[$priorityId])) {
-                self::echoJson('param_error:priority_not_found', [], Constants::HTTP_BAD_REQUEST);
+                throw new \Exception('param_error:priority_not_found', Constants::HTTP_BAD_REQUEST);
             }
             unset($issuePriority);
             $info['priority'] = $priorityId;
@@ -573,7 +573,7 @@ class Issues extends BaseAuth
             $model = new IssueResolveModel();
             $issueResolves = $model->getAll();
             if (!isset($issueResolves[$resolveId])) {
-                self::echoJson('param_error:resolve_not_found', [], Constants::HTTP_BAD_REQUEST);
+                throw new \Exception('param_error:resolve_not_found', Constants::HTTP_BAD_REQUEST);
             }
             unset($issueResolves);
             $info['resolve'] = $resolveId;
@@ -585,7 +585,7 @@ class Issues extends BaseAuth
             $model = new UserModel();
             $user = $model->getByUid($assigneeUid);
             if (!isset($user['uid'])) {
-                self::echoJson('param_error:assignee_not_found', [], Constants::HTTP_BAD_REQUEST);
+                throw new \Exception('param_error:assignee_not_found', Constants::HTTP_BAD_REQUEST);
             }
             unset($user);
             $info['assignee'] = $assigneeUid;
@@ -597,7 +597,7 @@ class Issues extends BaseAuth
             $model = new UserModel();
             $user = $model->getByUid($reporterUid);
             if (!isset($user['uid'])) {
-                self::echoJson('param_error:reporter_not_found', [], Constants::HTTP_BAD_REQUEST);
+                throw new \Exception('param_error:reporter_not_found', Constants::HTTP_BAD_REQUEST);
             }
             unset($user);
             $info['reporter'] = $reporterUid;
@@ -661,7 +661,7 @@ class Issues extends BaseAuth
             $model = new IssueStatusModel();
             $issueStatusArr = $model->getAll();
             if (!isset($issueStatusArr[$statusId])) {
-                self::echoJson('param_error:status_not_found', [], Constants::HTTP_BAD_REQUEST);
+                throw new \Exception('param_error:status_not_found', Constants::HTTP_BAD_REQUEST);
             }
             unset($issueStatusArr);
             $info['status'] = $statusId;
@@ -695,7 +695,8 @@ class Issues extends BaseAuth
             $model = new UserModel();
             $user = $model->getByUid($assigneeUid);
             if (!isset($user['uid'])) {
-                self::echoJson('param_error:assignee_not_found', [], Constants::HTTP_BAD_REQUEST);
+                //self::echoJson('param_error:assignee_not_found', [], Constants::HTTP_BAD_REQUEST);
+                throw new \Exception('param_error:assignee_not_found', Constants::HTTP_BAD_REQUEST);
             }
             unset($user);
             $info['assignee'] = $assigneeUid;
@@ -709,7 +710,7 @@ class Issues extends BaseAuth
             $model = new UserModel();
             $user = $model->getByUid($reporterUid);
             if (!isset($user['uid'])) {
-                self::echoJson('param_error:reporter_not_found', [], Constants::HTTP_BAD_REQUEST);
+                throw new \Exception('param_error:reporter_not_found', Constants::HTTP_BAD_REQUEST);
             }
             unset($user);
             $info['reporter'] = $reporterUid;

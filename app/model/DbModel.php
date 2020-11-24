@@ -240,7 +240,6 @@ class DbModel extends BaseModel
         return $this->db->commit();
     }
 
-
     /**
      * 执行更新性的SQL语句 ,返回受修改或删除 SQL语句影响的行数。如果没有受影响的行，则返回 0。失败返回false
      * @param string $sql

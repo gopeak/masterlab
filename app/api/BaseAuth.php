@@ -27,8 +27,9 @@ class BaseAuth extends BaseApi
 
         // 开发模式关闭jwt
         if (1) {
+
             if (!isset($_GET['access_token']) || empty($_GET['access_token'])) {
-                self::echoJson('缺少参数.', [], Constants::HTTP_AUTH_FAIL);
+                throw new \Exception("缺少参数.", Constants::HTTP_AUTH_FAIL);
             }
             $accessToken = trim($_GET['access_token']);
             $jwt = JWTLogic::getInstance();
@@ -36,12 +37,13 @@ class BaseAuth extends BaseApi
 
             if ($parserTokenArr['code'] == JWTLogic::PARSER_STATUS_INVALID
                 || $parserTokenArr['code'] == JWTLogic::PARSER_STATUS_EXCEPTION) {
-                self::echoJson($parserTokenArr['msg'], [], Constants::HTTP_AUTH_FAIL);
+                throw new \Exception($parserTokenArr['msg'], Constants::HTTP_AUTH_FAIL);
             }
 
             if ($parserTokenArr['code'] == JWTLogic::PARSER_STATUS_EXPIRED) {
                 // 前端识别到EXPIRED，调用refresh_token
-                self::echoJson(JWTLogic::PARSER_STATUS_EXPIRED, [], Constants::HTTP_AUTH_FAIL);
+                throw new \Exception(JWTLogic::PARSER_STATUS_EXPIRED, Constants::HTTP_AUTH_FAIL);
+                //self::echoJson(JWTLogic::PARSER_STATUS_EXPIRED, [], Constants::HTTP_AUTH_FAIL);
             }
 
             $this->masterUid = $parserTokenArr['uid'];

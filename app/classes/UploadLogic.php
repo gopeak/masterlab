@@ -30,7 +30,7 @@ class UploadLogic
     }
 
     /**
-     * 统一的上传处理逻辑,根据文件类型上传至 app/storage/attachment 下
+     * 统一的上传处理逻辑,根据文件类型上传至 /storage/attachment 下
      * @param string $fieldName
      * @param string $fileType
      * @param string $uuid
@@ -42,18 +42,14 @@ class UploadLogic
      */
     public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0, $tmpIssueId = '')
     {
-
         $settings = Settings::getInstance()->attachment();
         //文件保存目录路径
         $savePath = $settings['attachment_dir'];
         //最大文件大小
         $max_size = $settings['attachment_size'];
-
         //文件保存目录URL
         $saveUrl = ATTACHMENT_URL;
-
         $relatePath = '';
-
         //定义允许上传的文件扩展名
         $extArr = array(
             'project_image' => array('jpg', 'jpeg', 'png', 'gif'),

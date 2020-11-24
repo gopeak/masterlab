@@ -5,7 +5,6 @@ namespace main\app\ctrl\admin;
 
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
-use main\app\classes\SlowLogLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\LogOperatingModel;
