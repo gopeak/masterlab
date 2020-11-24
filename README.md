@@ -45,9 +45,9 @@ http://demo.masterlab.vip
 
  1. 搭建php的运行环境 
      ```
-     - Web Server : Nginx 或 Apache
+     - Web服务器 : Nginx 或 Apache
      
-     - Php
+     - Php程序
        - 版本 >= 7.1
        - 必备扩展 ：curl,mysqlnd,pdo,mysqli,mbstring,redis,swoole
        - php.ini   修改 upload_max_filesize = 8M
@@ -55,8 +55,9 @@ http://demo.masterlab.vip
        - php.ini   修改 memory_limit = 128M  
        - php.ini   修改 max_execution_time = 30  
        
-     - Mysql
+     - Mysql数据库
        - 版本 >= 5.7
+       
      -  程序目录(含子目录)读写权限
      -  masterlab\bin  
      -  masterlab\upgrade  
@@ -64,7 +65,7 @@ http://demo.masterlab.vip
      -  masterlab\public\attachment  
      -  masterlab\public\install 
      ```
- 2. 下载代码，将根目录的运行依赖库`vendor.zip`解压出来  
+ 2. 下载3.0版本或master分支代码，将根目录的运行依赖库`vendor.zip`解压出来  
        ```text
          # 解压后的vendor目录结构
          - masterlab
