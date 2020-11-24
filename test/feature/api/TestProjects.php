@@ -42,7 +42,7 @@ class TestProjects extends BaseApiTestCase
 
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
 
