@@ -62,10 +62,10 @@ script:
   - chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
   - $TRAVIS_BUILD_DIR/travis/install-nginx.sh
   - chown -R $(whoami):$(whoami) $TRAVIS_BUILD_DIR/app/storage
-  - chmod +x $TRAVIS_BUILD_DIR/app/storage
+  - chmod +x $TRAVIS_BUILD_DIR/storage
   - curl "http://masterlab.ci:8888/framework/feature/getPhpIni?data_type=json"
   - cat /tmp/error.log
-  - touch $TRAVIS_BUILD_DIR/app/storage/tmp/10000.png
+  - touch $TRAVIS_BUILD_DIR/storage/tmp/10000.png
   - php app/public/test_mysql.php
   - cd app/test
   - sudo chmod +x $TRAVIS_BUILD_DIR

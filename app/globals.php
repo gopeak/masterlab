@@ -73,7 +73,7 @@ function bindAppConfig($envVarArr)
     $appStatus = $envVarArr['APP_STATUS'];
 
     // 加载主配置文件 config.yml @todo 使用yaml扩展函数将更高效
-    $cacheYamlConfigFile = APP_PATH . 'storage/cache/config.' . $appStatus . '.yaml.php';
+    $cacheYamlConfigFile =  PRE_APP_PATH . 'storage/cache/config.' . $appStatus . '.yaml.php';
     if ($cacheYamlConfig && file_exists($cacheYamlConfigFile)) {
         include $cacheYamlConfigFile;
         if (isset($_yaml_config) && !empty($_yaml_config)) {

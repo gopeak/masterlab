@@ -10,6 +10,7 @@ require_once '../app/globals.php';
 $hornetConfig = new \stdClass();
 $hornetConfig->currentApp = APP_NAME;
 $hornetConfig->appPath = APP_PATH;
+$hornetConfig->storagePath = STORAGE_PATH;
 $hornetConfig->appStatus = APP_STATUS;
 $hornetConfig->enableTrace = ENABLE_TRACE;
 $hornetConfig->enableXhprof = ENABLE_XHPROF;

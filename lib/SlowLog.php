@@ -15,7 +15,7 @@ class SlowLog
      * @param string $storagePath
      * @return SlowLog
      */
-    public static function getInstance($storagePath = APP_PATH.'storage/log/slow/sql')
+    public static function getInstance($storagePath = STORAGE_PATH.'log/slow/sql')
     {
         $index = md5($storagePath);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
@@ -24,7 +24,7 @@ class SlowLog
         return self::$instance[$index];
     }
 
-    public function __construct($storagePath = APP_PATH.'storage/log/slow/sql')
+    public function __construct($storagePath = STORAGE_PATH.'log/slow/sql')
     {
         $this->pattern = new Pattern();
         $this->storage_path = $storagePath;
