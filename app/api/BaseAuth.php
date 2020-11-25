@@ -26,10 +26,9 @@ class BaseAuth extends BaseApi
         parent::__construct();
 
         // 开发模式关闭jwt
-        if (1) {
-
+        if (0) {
             if (!isset($_GET['access_token']) || empty($_GET['access_token'])) {
-                throw new \Exception("缺少参数.", Constants::HTTP_AUTH_FAIL);
+                throw new \Exception("缺少token参数.", Constants::HTTP_AUTH_FAIL);
             }
             $accessToken = trim($_GET['access_token']);
             $jwt = JWTLogic::getInstance();

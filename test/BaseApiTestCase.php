@@ -51,12 +51,12 @@ class BaseApiTestCase extends BaseTestCase
                 'lead' => 1,
                 'type' => 10,
                 'description' => '描述：' . quickRandomStr(),
+                'project_tpl_id' => 1,
             ]
         ]);
         $rawResponse = $response->getBody()->getContents();
         $respArr = json_decode($rawResponse, true);
-
-        self::$projectId = $respArr['data']['body']['project_id'];
+        self::$projectId = $respArr['data']['project_id'];
     }
 
     /**

@@ -46,11 +46,11 @@ class TestModules extends BaseApiTestCase
         ]);
         $rawResponse = $response->getBody()->getContents();
         $respArr = json_decode($rawResponse, true);
-        $newModuleId = $respArr['data']['body']['id'];
+        $newModuleId = $respArr['data']['id'];
 
         return [
             'id' => $newModuleId,
-            'body' => $respArr['data']['body']
+            'body' => $respArr['data']
         ];
     }
 
@@ -76,7 +76,7 @@ class TestModules extends BaseApiTestCase
         //echo $rawResponse;
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
 
@@ -100,10 +100,10 @@ class TestModules extends BaseApiTestCase
         $respArr = json_decode($rawResponse, true);
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
-        if(strpos($respData['body']['name'],'这个模块') !== false){
+        if(strpos($respData['name'],'这个模块') !== false){
             $this->assertTrue(true); //包含
         } else {
             $this->assertTrue(false);
@@ -115,7 +115,7 @@ class TestModules extends BaseApiTestCase
         $respArr = json_decode($rawResponse, true);
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
     }

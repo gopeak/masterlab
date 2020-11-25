@@ -48,7 +48,7 @@ class TestLabels extends BaseApiTestCase
         //echo $rawResponse;
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
     }
@@ -71,7 +71,7 @@ class TestLabels extends BaseApiTestCase
         ]);
         $rawResponse = $response->getBody()->getContents();
         $respArr = json_decode($rawResponse, true);
-        $newLabelId = $respArr['data']['body']['id'];
+        $newLabelId = $respArr['data']['id'];
 
 
         $url = ROOT_URL . 'api/labels/v1/' . $newLabelId . '?access_token=' . $accessToken;
@@ -81,10 +81,10 @@ class TestLabels extends BaseApiTestCase
         $respArr = json_decode($rawResponse, true);
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
-        if (strpos($respData['body']['title'], '这个标签') !== false) {
+        if (strpos($respData['title'], '这个标签') !== false) {
             $this->assertTrue(true); //包含
         } else {
             $this->assertTrue(false);
@@ -97,7 +97,7 @@ class TestLabels extends BaseApiTestCase
         $respArr = json_decode($rawResponse, true);
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
 

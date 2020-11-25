@@ -41,7 +41,7 @@ class TestAuth extends BaseTestCase
         $curl->get(ROOT_URL.'api/auth/?account=master&password=testtest' );
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'api/auth failed');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
     }
