@@ -1606,7 +1606,7 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (84, 'is_exchange_server', '服务器为ExchangeServer', 'mail', 910, '0', '0', 'string', 'radio', '{\"1\":\"是\",\"0\":\"否\"}', ''),
 (85, 'is_ssl', 'SSL', 'mail', 920, '0', '0', 'string', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '');
 
-INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_value`, `default_value`, `format`, `form_input_type`, `form_optional_value`, `description`) VALUES (NULL, 'socket_server_type', '服务器类型', 'mail', '920', 'golang', 'golang', 'string', 'radio', '{\"golang\":\"Golang\",\"swoole\":\"Swoole\"}', '异步服务的类型');
+INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_value`, `default_value`, `format`, `form_input_type`, `form_optional_value`, `description`) VALUES (86, 'socket_server_type', '服务器类型', 'mail', '920', 'golang', 'golang', 'string', 'radio', '{\"golang\":\"Golang\",\"swoole\":\"Swoole\"}', '异步服务的类型');
 -- --------------------------------------------------------
 
 --
@@ -2311,37 +2311,7 @@ CREATE TABLE `project_label` (
                                  `description` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `project_label`
---
-
-INSERT INTO `project_label` (`id`, `project_id`, `title`, `color`, `bg_color`, `description`) VALUES
-(1, 1, '产 品', '#FFFFFF', '#428BCA', ''),
-(2, 1, '运 营', '#FFFFFF', '#44AD8E', ''),
-(3, 1, '推 广', '#FFFFFF', '#A8D695', ''),
-(4, 1, '编码规范', '#FFFFFF', '#69D100', ''),
-(5, 1, '测试用例', '#FFFFFF', '#69D100', ''),
-(6, 1, '测试规范', '#FFFFFF', '#69D100', ''),
-(7, 1, '架构设计', '#FFFFFF', '#A295D6', ''),
-(8, 1, '数据协议', '#FFFFFF', '#AD4363', ''),
-(9, 1, 'UI设计', '#FFFFFF', '#D10069', ''),
-(10, 1, '交互文档', '#FFFFFF', '#CC0033', ''),
-(12, 1, '运 维', '#FFFFFF', '#D1D100', ''),
-(35, 36, '产 品', '#FFFFFF', '#428BCA', ''),
-(36, 36, '交互文档', '#FFFFFF', '#CC0033', ''),
-(37, 36, '运 营', '#FFFFFF', '#44AD8E', ''),
-(38, 36, '推 广', '#FFFFFF', '#A8D695', ''),
-(39, 36, '编码规范', '#FFFFFF', '#69D100', ''),
-(40, 36, '架构设计', '#FFFFFF', '#A295D6', ''),
-(41, 36, '数据协议', '#FFFFFF', '#AD4363', ''),
-(42, 36, '测试用例', '#FFFFFF', '#69D100', ''),
-(43, 36, '测试规范', '#FFFFFF', '#69D100', ''),
-(44, 36, 'UI设计', '#FFFFFF', '#D10069', ''),
-(45, 36, '运 维', '#FFFFFF', '#D1D100', ''),
-(612, 91, '产品', '#FFFFFF', '#5843AD', ''),
-(613, 91, '文档', '#FFFFFF', '#004E00', ''),
-(614, 91, '开发', '#FFFFFF', '', ''),
-(615, 91, 'BUG', '#FFFFFF', '#FF0000', '');
+ 
 
 -- --------------------------------------------------------
 
