@@ -2311,7 +2311,7 @@ CREATE TABLE `project_label` (
                                  `description` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
- 
+
 
 -- --------------------------------------------------------
 
@@ -2671,9 +2671,7 @@ CREATE TABLE `project_version` (
 -- 转存表中的数据 `project_version`
 --
 
-INSERT INTO `project_version` (`id`, `project_id`, `name`, `description`, `sequence`, `released`, `archived`, `url`, `start_date`, `release_date`) VALUES
-(1, 1, 'v1.0', '', '0', 1, NULL, '', 1595520000, 1596124800),
-(2, 1, 'v2.0', '', '0', 1, NULL, '', 0, 0);
+ 
 
 -- --------------------------------------------------------
 
