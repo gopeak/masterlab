@@ -24,6 +24,7 @@ rm -f ./vendor.zip
 
 # 拷贝宝塔相关文件
 cp -f ./public/install/data/main.sql ./import.sql
+cat ./public/install/data/demo.sql >> ./import.sql
 cp -f ./resource/bt/config.bt.yml ./config.yml
 cp -f ./resource/bt/replace.php ./replace.php
 cp -f ./resource/bt/install.sh ./install.sh
