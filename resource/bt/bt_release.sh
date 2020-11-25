@@ -2,31 +2,35 @@
 
 # 先清除数据
 rm -rf ./masterlab
-rm -rf ./masterlab-2.1.3
+rm -rf ./masterlab-3.0
 rm -f  ./masterlab-bt-last.zip
 rm -rf ./vendor
 
-git clone git@github.com:gopeak/masterlab.git masterlab-2.1.3
+git clone git@github.com:gopeak/masterlab.git masterlab-3.0
 
-cd masterlab-2.1.3
+cd masterlab-3.0
 # git pull
-git checkout 2.1
-git pull origin 2.1
-git archive --format zip --output "./masterlab-2.1.3.zip" 2.1 -0
-cp -f ./masterlab-2.1.3.zip ../
+git checkout master
+git pull origin master
+git archive --format zip --output "./masterlab-3.0.zip" master -0
+cp -f ./masterlab-3.0.zip ../
 cd ../
-unzip ./masterlab-2.1.3.zip -d masterlab
+unzip ./masterlab-3.0.zip -d masterlab
 cd  masterlab
 
 # 解压composer类库
-unzip ./vendor.zip  
-rm -f ./vendor.zip 
+unzip ./vendor.zip
+rm -f ./vendor.zip
 
 # 拷贝宝塔相关文件
-cp -f ./app/public/install/data/main.sql ./import.sql
-cp -f ./bt/database.cfg.php ./app/config/deploy/database.cfg.php
-cp -f ./bt/auto_install.json ./auto_install.json
-rm -f ./app/public/install/lock
+cp -f ./public/install/data/main.sql ./import.sql
+cat ./public/install/data/demo.sql >> ./import.sql
+cp -f ./resource/bt/config.bt.yml ./config.yml
+cp -f ./resource/bt/replace.php ./replace.php
+cp -f ./resource/bt/install.sh ./install.sh
+cp -f ./resource/bt/auto_install.json ./auto_install.json
+rm -f ./composer.json
+touch  ./public/install/lock
 
 # 增加masterlab_socket
 #cp -rf ../bin ./
@@ -37,8 +41,8 @@ cp -f ./masterlab-bt-last.zip ../
 cd ../
 
 #rm -rf ./masterlab
-#rm -rf ./masterlab-2.1.2
+#rm -rf ./masterlab-3.0
 
 cp -f ./masterlab-bt-last.zip /data/www/masterlab_site/ant/downloads/masterlab-bt-last.zip
-cp -f ./masterlab-bt-last.zip /data/www/masterlab_site/ant/downloads/masterlab-bt-v2.1.3.zip
+cp -f ./masterlab-bt-last.zip /data/www/masterlab_site/ant/downloads/masterlab-bt-v3.0.zip
 
