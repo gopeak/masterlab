@@ -53,10 +53,10 @@ class TestIssues extends BaseApiTestCase
         ]);
         $rawResponse = $response->getBody()->getContents();
         $respArr = json_decode($rawResponse, true);
-        $newId = $respArr['data']['body']['id'];
+        $newId = $respArr['data']['id'];
         return [
             'id' => $newId,
-            'body' => $respArr['data']['body'],
+            'body' => $respArr['data'],
             'resp' => $respArr,
         ];
     }
@@ -71,7 +71,7 @@ class TestIssues extends BaseApiTestCase
         $respArr = $ret['resp'];
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
 
@@ -93,12 +93,13 @@ class TestIssues extends BaseApiTestCase
         $response = $client->get($url);
         $rawResponse = $response->getBody()->getContents();
         $respArr = json_decode($rawResponse, true);
+        //print_r($respArr);exit;
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
-        if (strpos($respData['body']['issue']['summary'],'这个事项') !== false) {
+        if (strpos($respData['issue']['summary'],'这个事项') !== false) {
             $this->assertTrue(true); //包含
         } else {
             $this->assertTrue(false);
@@ -110,7 +111,7 @@ class TestIssues extends BaseApiTestCase
         $respArr = json_decode($rawResponse, true);
         $this->assertNotEmpty($respArr, '接口请求失败');
         $this->assertTrue(isset($respArr['data']), '不包含data属性');
-        $this->assertEquals('200', $respArr['ret']);
+        $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
     }
@@ -168,8 +169,8 @@ class TestIssues extends BaseApiTestCase
         $respArr = json_decode($rawResponse, true);
 
         $this->assertNotEmpty($respArr, '接口请求失败');
-        $this->assertTrue(isset($respArr['data']['code']));
-        $this->assertTrue($respArr['data']['code'] == Constants::HTTP_OK);
+        $this->assertTrue(isset($respArr['ret']));
+        $this->assertTrue($respArr['ret'] == Constants::HTTP_OK);
     }
 
 }
