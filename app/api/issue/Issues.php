@@ -360,7 +360,7 @@ class Issues extends BaseAuth
     private function postHandler()
     {
         $uid = $this->masterUid;
-        $params = $_POST['params'];
+        $params = $_POST;
 
         $err = [];
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {

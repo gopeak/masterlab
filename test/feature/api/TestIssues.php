@@ -38,6 +38,7 @@ class TestIssues extends BaseApiTestCase
         $client = new \GuzzleHttp\Client();
         $url = ROOT_URL . 'api/issue/issues/v1/?access_token=' . $accessToken;
 
+        /*
         $response = $client->post($url, [
             'form_params' => [
                 'params' => [
@@ -49,6 +50,18 @@ class TestIssues extends BaseApiTestCase
                     'assignee' => 1,
                     'reporter' => 1,
                 ]
+            ]
+        ]);
+        */
+        $response = $client->post($url, [
+            'form_params' => [
+                'project_id' => $projectId,
+                'summary' => $name . quickRandomStr(50),
+                'issue_type' => 1,
+                'priority' => 1,
+                'description' => '描述1：' . quickRandomStr(),
+                'assignee' => 1,
+                'reporter' => 1,
             ]
         ]);
         $rawResponse = $response->getBody()->getContents();

@@ -1,14 +1,11 @@
 {
 	"php_ext":"pathinfo,redis,ldap",
 	"chmod":[
-		{"mode":666,"path":"/upgrade"},
-		{"mode":666,"path":"/storage"},
-		{"mode":666,"path":"/public/attachment"},
-        {"mode":777,"path":"/bin"}
-	],	
+		{"mode":777,"path":"/bin"}
+	],
 	"success_url":"/",
 	"php_versions":"71,72,73,74",
-	"db_config":"/app/config/database.cfg.php",
+	"db_config":"/config.yml",
 	"admin_username":"master",
 	"admin_password":"testtest",
 	"run_path":"/public",
