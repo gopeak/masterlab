@@ -144,6 +144,7 @@ class TestIssues extends BaseApiTestCase
 
         $client = new \GuzzleHttp\Client();
         $url = ROOT_URL . 'api/issue/issues/v1/' . $newId . '?access_token=' . $accessToken;
+        /*
         $response = $client->patch($url, [
             'form_params' => [
                 'params' => [
@@ -155,6 +156,18 @@ class TestIssues extends BaseApiTestCase
                     'assignee' => 1,
                     'reporter' => 1,
                 ]
+            ]
+        ]);
+        */
+        $response = $client->patch($url, [
+            'form_params' => [
+                'project_id' => $projectId,
+                'summary' => 'new' . quickRandomStr(50),
+                'issue_type' => 1,
+                'priority' => 1,
+                'description' => 'issue描述：' . quickRandomStr(),
+                'assignee' => 1,
+                'reporter' => 1,
             ]
         ]);
         //$response = $client->request('PUT', $url, ['body' => 'foo']);
