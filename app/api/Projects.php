@@ -229,7 +229,7 @@ class Projects extends BaseAuth
 
         if (!isset($params['project_tpl_id'])) {
             $err['project_tpl_id'] = '请选择项目模板';
-        } elseif (isset($params['type']) && empty(trimStr($params['project_tpl_id']))) {
+        } elseif (empty(trimStr($params['project_tpl_id']))) {
             $err['project_tpl_id'] = '项目模板不能为空';
         }
 
@@ -239,7 +239,7 @@ class Projects extends BaseAuth
 
         $params['key'] = trimStr($params['key']);
         $params['name'] = trimStr($params['name']);
-        $params['type'] = intval($params['type']);
+        $params['type'] = 1;
 
         if (!isset($params['lead']) || empty($params['lead'])) {
             $params['lead'] = $uid;
