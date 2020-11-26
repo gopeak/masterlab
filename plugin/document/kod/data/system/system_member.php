@@ -69,23 +69,5 @@
         "status": 1,
         "lastLogin": "",
         "createTime": 1606388226
-    },
-    "103": {
-        "userID": "103",
-        "name": "project93",
-        "nickName": "project93",
-        "password": "e39b8a859be3d0eee9678cdf59096553",
-        "role": "2",
-        "config": {
-            "sizeMax": 5,
-            "sizeUse": 1048576
-        },
-        "groupInfo": {
-            "1": "write"
-        },
-        "path": "project93",
-        "status": 1,
-        "lastLogin": "",
-        "createTime": 1606388495
     }
 }
