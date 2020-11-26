@@ -1719,12 +1719,10 @@ class Main extends BaseUserCtrl
                 }
             }
         }
-
         list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
         }
-
         // 更新用时
         if (isset($info['start_date']) || isset($info['due_date'])) {
             $holidays = (new HolidayModel())->getDays($issue['project_id']);
@@ -1743,9 +1741,7 @@ class Main extends BaseUserCtrl
             if ($ret) {
                 $updatedIssue['duration'] = $updateDurationArr['duration'];
             }
-
         }
-
         //写入操作日志
         $curIssue = $issue;
         foreach ($curIssue as $k => $v) {

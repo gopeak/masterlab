@@ -172,7 +172,7 @@ class Issues extends BaseAuth
         }
 
         $patch = self::_PATCH();
-        $params = $patch['params'];
+        $params = $patch;
 
         $info = [];
         if (isset($params['summary'])) {
@@ -184,11 +184,12 @@ class Issues extends BaseAuth
             return self::returnHandler('参数错误,数据为空', [], Constants::HTTP_BAD_REQUEST);
         }
 
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+
         $event = new CommonPlacedEvent($this, $_REQUEST);
         $this->dispatcher->dispatch($event, Events::onIssueUpdateBefore);
 
-        $issueModel = new IssueModel();
-        $issue = $issueModel->getById($issueId);
         $issueType = $issue['issue_type'];
         if (isset($params['issue_type'])) {
             $issueType = $params['issue_type'];
@@ -725,7 +726,12 @@ class Issues extends BaseAuth
         }
 
         if (isset($params['module'])) {
-            $info['module'] = $params['module'];
+            $projectModuleModel = new ProjectModuleModel();
+            $modulesArr = $projectModuleModel->getByProject($params['project_id'], true);
+            $moduleIdsArr = array_keys($modulesArr);
+            if (in_array($params['module'], $moduleIdsArr)) {
+                $info['module'] = $params['module'];
+            }
         }
 
         if (isset($params['environment'])) {

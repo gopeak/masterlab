@@ -761,25 +761,25 @@ class DbModel extends BaseModel
     }
 
     /**
-     * @param $row
+     * @param $param
      * @param $conditions
      * @return array
      * @throws Exception
      */
-    public function update($row, $conditions)
+    public function update($param, $conditions)
     {
         if (!is_array($conditions)) {
             return [false, 0];
         }
-        $this->fixField($row);
+        $this->fixField($param);
         $table = $this->getTable();
         $sql = " UPDATE {$table} SET ";
-        $sql .= $this->parsePrepareSql($row, true);
+        $sql .= $this->parsePrepareSql($param, true);
         $this->sql = $sql;
-        $this->removeFixField($row);
-        $ret = $this->db->update($table, $row, $conditions);
+        //$this->removeFixField($row);
+        $ret = $this->db->update($table, $param, $conditions);
         if ($ret === false) {
-            return [false, 'db update err:' . print_r($row, true) . print_r($conditions, true)];
+            return [false, 'db update err:' . print_r($param, true) . print_r($conditions, true)];
         }
         return [true, $ret];
     }

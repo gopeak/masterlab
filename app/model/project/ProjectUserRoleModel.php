@@ -234,13 +234,14 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         $info['user_id'] = $userId;
         $info['project_id'] = $projectId;
         $info['role_id'] = $roleId;
-        return $this->insert($info);
+        return $this->replace($info);
     }
 
     /**
      * 批量插入
      * @param $rows
      * @return bool
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function insertRoles($rows)
     {
