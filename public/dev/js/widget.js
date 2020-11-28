@@ -539,7 +539,10 @@ var Widgets = (function () {
             success: function (resp) {
                 auth_check(resp);
                 console.log(resp)
-
+                var source = $('#'+_key+'_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#'+_key+'_wrap').html(result);
                 $('#issues_count').html(resp.data.count);
                 $('#no_done_count').html(resp.data.no_done_count);
                 $('#closed_count').html(resp.data.closed_count);
