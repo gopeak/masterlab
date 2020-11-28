@@ -40,7 +40,7 @@ class TestSprints extends BaseApiTestCase
 
         $response = $client->post($url, [
             'form_params' => [
-                'name' => $name . quickRandomStr(50),
+                'sprint_name' => $name . quickRandomStr(50),
                 'description' => '描述1：' . quickRandomStr(),
             ]
         ]);
