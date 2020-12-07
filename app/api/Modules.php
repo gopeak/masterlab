@@ -128,7 +128,7 @@ class Modules extends BaseAuth
 
     /**
      * Restful DELETE ,删除某个项目模块
-     * {{API_URL}}/api/modules/v1/36?access_token==xyz
+     * {{API_URL}}/api/modules/v1/36?project_id=1&access_token==xyz
      * @return array
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
@@ -163,7 +163,7 @@ class Modules extends BaseAuth
 
     /**
      * Restful PATCH ,更新模块
-     * {{API_URL}}/api/modules/v1/36?access_token==xyz
+     * {{API_URL}}/api/modules/v1/36?project_id=1&access_token==xyz
      * @return array
      * @throws \Exception
      */

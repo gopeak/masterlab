@@ -190,7 +190,7 @@ class Versions extends BaseAuth
         if (isset($patch['version_name']) && !empty($patch['version_name'])) {
             $row['name'] = $patch['version_name'];
         } else {
-            return self::returnHandler('需要有模块名', [], Constants::HTTP_BAD_REQUEST);
+            return self::returnHandler('需要有版本名', [], Constants::HTTP_BAD_REQUEST);
         }
 
         if (isset($patch['description']) && !empty($patch['description'])) {

@@ -79,10 +79,10 @@ class Sprints extends BaseAuth
             $projectId = intval($_GET['project_id']);
         }
 
-        if (!isset($_POST['name'])) {
+        if (!isset($_POST['sprint_name'])) {
             return self::returnHandler('需要迭代名.', [], Constants::HTTP_BAD_REQUEST);
         }
-        $sprintName = trim($_POST['name']);
+        $sprintName = trim($_POST['sprint_name']);
 
         if (!isset($_POST['description'])) {
             $_POST['description'] = '';
@@ -204,8 +204,8 @@ class Sprints extends BaseAuth
         $patch = self::_PATCH();
 
         $row = [];
-        if (isset($patch['name']) && !empty($patch['name'])) {
-            $row['name'] = $patch['name'];
+        if (isset($patch['sprint_name']) && !empty($patch['sprint_name'])) {
+            $row['name'] = $patch['sprint_name'];
         } else {
             return self::returnHandler('需要有迭代名', [], Constants::HTTP_BAD_REQUEST);
         }
@@ -217,7 +217,7 @@ class Sprints extends BaseAuth
         if (isset($patch['start_date'])) {
             $row['start_date'] = $patch['start_date'];
         }
-        if (isset($_POST['start_date'])) {
+        if (isset($_POST['end_date'])) {
             $row['end_date'] = $patch['end_date'];
         }
         if (isset($_POST['params']['status'])) {
