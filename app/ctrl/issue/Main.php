@@ -1074,8 +1074,17 @@ class Main extends BaseUserCtrl
                 if (in_array($fieldName, $excludeFieldArr)) {
                     continue;
                 }
-                if (!isset($params[$fieldName]) || empty(trimStr($params[$fieldName]))) {
+                if (!isset($params[$fieldName])) {
                     $err[$fieldName] = $field['title'] . '不能为空';
+                }
+                if (isset($params[$fieldName])) {
+                    $tmpValue = $params[$fieldName];
+                    if(is_string($tmpValue)){
+                        $tmpValue = trimStr($tmpValue);
+                    }
+                    if(empty($tmpValue)){
+                        $err[$fieldName] = $field['title'] . '不能为空';
+                    }
                 }
             }
         }
