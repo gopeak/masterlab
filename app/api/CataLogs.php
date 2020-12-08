@@ -45,8 +45,8 @@ class CataLogs extends BaseAuth
         }
 
         $errorMsg = [];
-        if (!isset($_POST['name']) || empty($_POST['name'])) {
-            $errorMsg['name'] = '名称不能为空';
+        if (!isset($_POST['catalog_name']) || empty($_POST['catalog_name'])) {
+            $errorMsg['catalog_name'] = '名称不能为空';
         }
         if (!isset($_POST['label_id_arr']) || empty($_POST['label_id_arr'])) {
             $errorMsg['label_id_arr'] = '包含标签不能为空';
@@ -65,9 +65,9 @@ class CataLogs extends BaseAuth
         }
         $insertArr = [];
         $insertArr['project_id'] = $projectId;
-        $insertArr['name'] = $_POST['name'];
+        $insertArr['name'] = $_POST['catalog_name'];
         $insertArr['font_color'] = $_POST['font_color'];
-        $insertArr['label_id_json'] = json_encode($_POST['label_id_arr']);
+        $insertArr['label_id_json'] = json_encode(explode(',', $_POST['label_id_arr']));
         if (isset($_POST['description'])) {
             $insertArr['description'] = $_POST['description'];
         }

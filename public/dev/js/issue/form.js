@@ -444,6 +444,7 @@ var IssueForm = (function () {
             project_id: project_id,
             project_key: _cur_project_key,
         };
+        console.log(data);
         var source = $('#labels_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);

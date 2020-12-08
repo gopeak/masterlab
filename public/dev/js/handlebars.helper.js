@@ -12,12 +12,15 @@ $(function () {
     Handlebars.registerHelper('if_in_array', function (value, arr, opts) {
         //console.log(value,arr );
         var ret = false;
-        for (i = 0; i < arr.length; i++) {
-            if (value == arr[i]) {
-                ret = true;
-                break;
+        if(arr){
+            for (i = 0; i < arr.length; i++) {
+                if (value == arr[i]) {
+                    ret = true;
+                    break;
+                }
             }
         }
+
         if (ret) {
             return opts.fn(this);
         } else {
