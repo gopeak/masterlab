@@ -1140,11 +1140,13 @@ class Main extends BaseUserCtrl
             $masterId = (int)$params['master_issue_id'];
             $master = $model->getById($masterId);
             if (!empty($master)) {
-
-
-                $info['id'] = $issueId;
-                $event = new CommonPlacedEvent($this, ['master' => $master, 'child' => $info]);
-                $this->dispatcher->dispatch($event, Events::onIssueCreateChild);
+                $issueLogic = new IssueLogic();
+                list($ret, $msg) = $issueLogic->convertChild($issueId, $masterId);
+                if($ret){
+                    $info['id'] = $issueId;
+                    $event = new CommonPlacedEvent($this, ['master' => $master, 'child' => $info]);
+                    $this->dispatcher->dispatch($event, Events::onIssueCreateChild);
+                }
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
