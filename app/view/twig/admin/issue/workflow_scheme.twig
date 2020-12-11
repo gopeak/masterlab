@@ -157,7 +157,11 @@
         </div>
     </form>
 </div>
-
+<style>
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 100% !important;
+    }
+</style>
 <div class="modal" id="modal-workflow_scheme_edit">
     <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"
           action="/admin/workflow_scheme/edit"
@@ -170,7 +174,7 @@
                     <h3 class="modal-header-title">编辑状态流方案</h3>
                 </div>
 
-                <div class="modal-body overflow-x-hidden">
+                <div class="modal-body  ">
                     <input type="hidden" name="params[issue_type_workflow]" id="edit_issue_type_workflow">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -195,22 +199,16 @@
                     <hr>
                     <div class="form-group ">
                         <label class="control-label" >状态流定义:</label>
-                        <div class="row">
-                            <div class="btn-group">
-                                
-                            
-                            <div class="btn-group">
-                                <select   id="edit_issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   >
-
+                        <div class="row" style="display: flex">
+                            <div style="width: 30%; padding-right: 20px;">
+                                <select id="edit_issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   >
                                 </select>
                             </div>
-                            <div class="btn-group">
-                                <select   id="edit_workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择状态流"   >
-
+                            <div style="width: 30%;padding-right: 20px;" >
+                                <select  id="edit_workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择状态流"   >
                                 </select>
                             </div>
-                                <button name="btn-issue_type_workflow_add" type="button" class="btn" id="btn-issue_type_workflow_edit" >添加</button>
-                            </div>
+                            <button name="btn-issue_type_workflow_add" type="button" class="btn" id="btn-issue_type_workflow_edit" >添加</button>
                         </div>
 
                     </div>
