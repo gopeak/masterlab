@@ -16,6 +16,7 @@ use main\app\model\user\UserGroupModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
+use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * 系统逻辑处理类
@@ -164,7 +165,7 @@ class SystemLogic
             return [false, '发送地址不能为空'];
         }
         try {
-            $mail = new \PHPMailer(true);
+            $mail = new PHPMailer(true);
             $mail->IsSMTP();
             $mail->CharSet = 'UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
             $mail->SMTPAuth = true; //开启认证
