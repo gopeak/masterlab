@@ -1,5 +1,6 @@
 <?php
-require_once './bootstrap.php';
+
+require_once  realpath(dirname(__FILE__)). '/bootstrap.php';
 require_once $rootDir . '/vendor/autoload.php';
 
 use main\app\model\SettingModel;
@@ -21,7 +22,7 @@ $server = new Swoole\Server($socketHost, $socketPort);
 $server->set(array('task_worker_num' => 12));
 
 $server->set([
-    'daemonize' => true, //是否作为守护进程
+    'daemonize' => false, //是否作为守护进程
     'open_length_check' => true,
     'package_max_length' => 1024 * 1024 * 10,
     'package_length_type' => 'N', //see php pack()
