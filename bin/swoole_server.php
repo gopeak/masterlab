@@ -1,5 +1,6 @@
 <?php
-require_once './bootstrap.php';
+
+require_once  realpath(dirname(__FILE__)). '/bootstrap.php';
 require_once $rootDir . '/vendor/autoload.php';
 
 use main\app\model\SettingModel;
