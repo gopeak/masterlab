@@ -211,6 +211,7 @@ class UserModel extends DbModel
      * 添加用户
      * @param array $userInfo 提交的用户信息
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function addUser($userInfo)
     {
@@ -223,7 +224,7 @@ class UserModel extends DbModel
         list($flag, $insertId) = $this->insert($userInfo);
         if ($flag) {
             $this->uid = $insertId;
-            $user = $this->getUser(true);
+            $user = $this->getUser();
             return array(self::REG_RETURN_CODE_OK, $user);
         } else {
             return array(self::REG_RETURN_CODE_ERROR, $insertId);
