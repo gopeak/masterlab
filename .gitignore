@@ -17,3 +17,5 @@ env.ini
 app/public/install/lock
 /app/config/deploy/cache.cfg.php
 config.test.yml
+/plugin/document/kod/data/system
+/plugin/document/kod/data/system/system_member.php
