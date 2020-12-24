@@ -31,6 +31,9 @@
 
     <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
 
+    <script src="/dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
+
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
@@ -51,7 +54,7 @@
                 <div class="container-fluid" style="padding:0;
     position: relative;">
                     <div class="content" id="content-body">
-                        {% include 'twig/admin/common_project_tpl_left_nav.twig' %}
+
                         <h3 class="page-title"><?=tpl.name?>--配置</h3>
                         <p><?=tpl.description?></p>
 
@@ -904,6 +907,7 @@
         update_url:"/admin/ProjectTplRole/update",
         tree_url: "/admin/ProjectTplRole/perm_tree",
         update_perm_url:"/admin/ProjectTplRole/update_perm",
+        delete_url:"/admin/ProjectTplRole/delete",
     };
 
     var module_options = {

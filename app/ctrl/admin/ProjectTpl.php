@@ -35,7 +35,7 @@ class ProjectTpl extends BaseAdminCtrl
         'gantt' => ['title' => '甘特图','name'=>'gantt',  'fix' => false, 'color' => 'red', 'is_system' => '1','description'=>'以甘特图的方式进行整个项目或迭代的事项计划'],
         'mind' => ['title' => '事项分解','name'=>'mind',  'fix' => false, 'color' => 'gray', 'is_system' => '1','description'=>'将思维导图和事项进行整个，可直观图形化树状化的方式管理事项'],
         'backlog' => ['title' => '待办事项', 'name'=>'backlog', 'fix' => false, 'color' => 'gray', 'is_system' => '1','description'=>'待办事项是一个排序的列表,包含所有产品需要的事项,也是产品需求变动的唯一来源。产品负责人负责产品待办事项列表的内容、可用性和优先级'],
-        'sprint' => ['title' => '冲刺', 'name'=>'sprints', 'fix' => false, 'color' => 'red', 'is_system' => '1','description'=>'迭代即是冲刺，是将项目分成多个阶段，每个阶段按短迭代周期工作，每次迭代交付一些成功，关注业务优先级，检查与调整，能够得到早期用户的反馈，及时进行对产品的更改，降低风险'],
+        'sprints' => ['title' => '冲刺', 'name'=>'sprints', 'fix' => false, 'color' => 'red', 'is_system' => '1','description'=>'迭代即是冲刺，是将项目分成多个阶段，每个阶段按短迭代周期工作，每次迭代交付一些成功，关注业务优先级，检查与调整，能够得到早期用户的反馈，及时进行对产品的更改，降低风险'],
         'kanban' => ['title' => '看板','name'=>'kanban', 'fix' => false, 'color' => 'blue', 'is_system' => '1','description'=>'看板的方式跟踪整个项目或某一迭代的事项'],
         'chart' => ['title' => '图表', 'name'=>'chart', 'fix' => false, 'color' => 'blue', 'is_system' => '1','description'=>'图形化的方式展示整个项目或迭代的汇总信息'],
         'stat' => ['title' => '统计','name'=>'stat',  'fix' => false, 'color' => 'blue', 'is_system' => '1','description'=>'数字化的方式展示整个项目或迭代的汇总信息'],

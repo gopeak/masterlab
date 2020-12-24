@@ -16,6 +16,7 @@ class DefaultRoleRelationModel extends BaseDictionaryModel
     /**
      * DefaultRoleRelationModel constructor.
      * @param bool $persistent
+     * @throws \Exception
      */
     public function __construct($persistent = false)
     {

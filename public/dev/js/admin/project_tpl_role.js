@@ -244,12 +244,13 @@ var ProjectTplRole = (function () {
             data: params,
             success: function (resp) {
                 auth_check(resp);
-                notify_success(resp.msg);
                 if (resp.ret == 200) {
-                   // window.location.reload();
                     $('#role_description').val('');
                     $('#role_name').val('');
+                    notify_success(resp.msg);
                     ProjectTplRole.prototype.fetchAll();
+                }else{
+                    notify_error(resp.msg,resp.data);
                 }
             },
             error: function (res) {
@@ -270,9 +271,12 @@ var ProjectTplRole = (function () {
             data: $('#form_edit').serialize(),
             success: function (resp) {
                 auth_check(resp);
-                notify_success(resp.msg);
                 if (resp.ret == 200) {
+                    notify_success(resp.msg);
+                    $("#modal-role_edit").modal('hide');
                     ProjectTplRole.prototype.fetchAll();
+                }else{
+                    notify_error(resp.msg,resp.data);
                 }
             },
             error: function (res) {
@@ -285,7 +289,6 @@ var ProjectTplRole = (function () {
         if (!window.confirm('您确认删除该项吗?')) {
             return false;
         }
-
         var method = 'GET';
         $.ajax({
             type: method,
