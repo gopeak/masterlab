@@ -1,3 +1,11 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.2
+-- https://www.phpmyadmin.net/
+--
+-- 主机： localhost
+-- 生成日期： 2020-12-24 17:36:26
+-- 服务器版本： 8.0.20
+-- PHP 版本： 7.4.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1127,7 +1135,7 @@ INSERT INTO `issue_ui` (`id`, `schem_id`, `issue_type_id`, `ui_type`, `field_id`
 
 CREATE TABLE `issue_ui_scheme` (
                                    `id` int UNSIGNED NOT NULL,
-                                   `name` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+                                   `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                                    `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0',
                                    `order_weight` int UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='事项表单配置方案';
@@ -1604,9 +1612,9 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (82, 'ldap_enable', '启用', 'ldap', 99, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
 (83, 'ldap_match_attr', '匹配属性', 'ldap', 74, 'cn', 'cn', 'string', 'text', '', '设置什么属性作为匹配用户名，建议使用 cn 或 dn '),
 (84, 'is_exchange_server', '服务器为ExchangeServer', 'mail', 910, '0', '0', 'string', 'radio', '{\"1\":\"是\",\"0\":\"否\"}', ''),
-(85, 'is_ssl', 'SSL', 'mail', 920, '0', '0', 'string', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '');
+(85, 'is_ssl', 'SSL', 'mail', 920, '0', '0', 'string', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
+(86, 'socket_server_type', '服务器类型', 'mail', 920, 'golang', 'golang', 'string', 'radio', '{\"golang\":\"Golang\",\"swoole\":\"Swoole\"}', '异步服务的类型');
 
-INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_value`, `default_value`, `format`, `form_input_type`, `form_optional_value`, `description`) VALUES (86, 'socket_server_type', '服务器类型', 'mail', '920', 'golang', 'golang', 'string', 'radio', '{\"golang\":\"Golang\",\"swoole\":\"Swoole\"}', '异步服务的类型');
 -- --------------------------------------------------------
 
 --
@@ -1897,10 +1905,18 @@ INSERT INTO `permission_default_role` (`id`, `name`, `description`, `project_id`
 (10002, 'Administrators', '项目管理员，如项目经理，技术经理', 0, 0),
 (10003, 'QA', '测试工程师', 0, 0),
 (10006, 'PO', '产品经理，产品负责人', 0, 0),
-(10007, 'xxx', 'xxxxx', 0, 1),
-(10008, 'QQQQ', 'xxxxxx', 0, 1),
-(10009, 'QQQQ', 'xxxxxx', 0, 1),
-(10010, 'xxx', 'xxxxx', 0, 1);
+(10007, '测试人员', '', 0, 1),
+(10008, '开发人员', '', 0, 1),
+(10009, '普通成员', '', 0, 1),
+(10010, '项目经理', '项目的管理者', 0, 1),
+(10011, '测试', '', 0, 2),
+(10012, '开发者', '', 0, 2),
+(10013, '项目经理', '', 0, 2),
+(10015, '产品经理', '', 0, 2),
+(10016, '运维', '', 0, 2),
+(10017, 'PO', '产品负责人', 0, 3),
+(10018, 'Master', '以各种方式服务于产品负责人，开发人员以及团队', 0, 3),
+(10019, 'Member', '开发人员可包括具有专业技能的人员，如前端开发人员，后端开发人员，开发人员，QA专家，业务分析师，DBA等，他们都被称为开发人员;', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -1977,7 +1993,169 @@ INSERT INTO `permission_default_role_relation` (`id`, `role_id`, `perm_id`) VALU
 (85, 10006, 10905),
 (86, 10006, 10906),
 (102, 10006, 10907),
-(103, 10006, 10908);
+(103, 10006, 10908),
+(140, 10007, 10005),
+(141, 10007, 10006),
+(142, 10007, 10007),
+(143, 10007, 10008),
+(144, 10007, 10013),
+(145, 10007, 10014),
+(146, 10007, 10015),
+(147, 10007, 10016),
+(148, 10007, 10017),
+(149, 10007, 10028),
+(150, 10007, 10902),
+(151, 10007, 10903),
+(152, 10007, 10904),
+(153, 10007, 10905),
+(154, 10007, 10906),
+(155, 10007, 10907),
+(156, 10007, 10908),
+(157, 10008, 10005),
+(158, 10008, 10006),
+(159, 10008, 10007),
+(160, 10008, 10008),
+(161, 10008, 10013),
+(162, 10008, 10014),
+(163, 10008, 10015),
+(164, 10008, 10016),
+(165, 10008, 10017),
+(166, 10008, 10028),
+(167, 10008, 10902),
+(168, 10008, 10903),
+(169, 10008, 10904),
+(170, 10008, 10905),
+(171, 10008, 10906),
+(172, 10008, 10907),
+(173, 10008, 10908),
+(122, 10009, 10005),
+(123, 10009, 10006),
+(124, 10009, 10007),
+(125, 10009, 10008),
+(126, 10009, 10013),
+(104, 10010, 10004),
+(105, 10010, 10005),
+(106, 10010, 10006),
+(107, 10010, 10007),
+(108, 10010, 10008),
+(109, 10010, 10013),
+(110, 10010, 10014),
+(111, 10010, 10015),
+(112, 10010, 10016),
+(113, 10010, 10017),
+(114, 10010, 10028),
+(115, 10010, 10902),
+(116, 10010, 10903),
+(117, 10010, 10904),
+(118, 10010, 10905),
+(119, 10010, 10906),
+(120, 10010, 10907),
+(121, 10010, 10908),
+(259, 10011, 10005),
+(260, 10011, 10006),
+(261, 10011, 10007),
+(262, 10011, 10008),
+(263, 10011, 10013),
+(264, 10011, 10014),
+(265, 10011, 10015),
+(266, 10011, 10016),
+(267, 10011, 10017),
+(251, 10012, 10005),
+(252, 10012, 10006),
+(253, 10012, 10007),
+(254, 10012, 10008),
+(255, 10012, 10013),
+(256, 10012, 10014),
+(257, 10012, 10016),
+(258, 10012, 10028),
+(192, 10013, 10004),
+(193, 10013, 10005),
+(194, 10013, 10006),
+(195, 10013, 10007),
+(196, 10013, 10008),
+(197, 10013, 10013),
+(198, 10013, 10014),
+(199, 10013, 10015),
+(200, 10013, 10016),
+(201, 10013, 10017),
+(202, 10013, 10028),
+(203, 10013, 10902),
+(204, 10013, 10903),
+(205, 10013, 10904),
+(206, 10013, 10905),
+(207, 10013, 10906),
+(208, 10013, 10907),
+(209, 10013, 10908),
+(174, 10015, 10004),
+(175, 10015, 10005),
+(176, 10015, 10006),
+(177, 10015, 10007),
+(178, 10015, 10008),
+(179, 10015, 10013),
+(180, 10015, 10014),
+(181, 10015, 10015),
+(182, 10015, 10016),
+(183, 10015, 10017),
+(184, 10015, 10028),
+(185, 10015, 10902),
+(186, 10015, 10903),
+(187, 10015, 10904),
+(188, 10015, 10905),
+(189, 10015, 10906),
+(190, 10015, 10907),
+(191, 10015, 10908),
+(244, 10016, 10005),
+(245, 10016, 10006),
+(246, 10016, 10007),
+(247, 10016, 10008),
+(248, 10016, 10013),
+(249, 10016, 10015),
+(250, 10016, 10016),
+(295, 10017, 10004),
+(296, 10017, 10005),
+(297, 10017, 10006),
+(298, 10017, 10007),
+(299, 10017, 10008),
+(300, 10017, 10013),
+(301, 10017, 10014),
+(302, 10017, 10015),
+(303, 10017, 10016),
+(304, 10017, 10017),
+(305, 10017, 10028),
+(306, 10017, 10902),
+(307, 10017, 10903),
+(308, 10017, 10904),
+(309, 10017, 10905),
+(310, 10017, 10906),
+(311, 10017, 10907),
+(312, 10017, 10908),
+(277, 10018, 10004),
+(278, 10018, 10005),
+(279, 10018, 10006),
+(280, 10018, 10007),
+(281, 10018, 10008),
+(282, 10018, 10013),
+(283, 10018, 10014),
+(284, 10018, 10015),
+(285, 10018, 10016),
+(286, 10018, 10017),
+(287, 10018, 10028),
+(288, 10018, 10902),
+(289, 10018, 10903),
+(290, 10018, 10904),
+(291, 10018, 10905),
+(292, 10018, 10906),
+(293, 10018, 10907),
+(294, 10018, 10908),
+(268, 10019, 10005),
+(269, 10019, 10006),
+(270, 10019, 10007),
+(271, 10019, 10008),
+(272, 10019, 10013),
+(273, 10019, 10016),
+(274, 10019, 10902),
+(275, 10019, 10905),
+(276, 10019, 10907);
 
 -- --------------------------------------------------------
 
@@ -2102,7 +2280,7 @@ INSERT INTO `permission_global_user_role` (`id`, `user_id`, `role_id`) VALUES
 
 CREATE TABLE `plugin_document_project_relation` (
                                                     `project_id` int UNSIGNED NOT NULL,
-                                                    `doc_user` varchar(20) COLLATE utf8mb4_general_ci NOT NULL
+                                                    `doc_user` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2311,8 +2489,6 @@ CREATE TABLE `project_label` (
                                  `description` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -2358,15 +2534,15 @@ CREATE TABLE `project_main` (
                                 `archived` enum('Y','N') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT '已归档',
                                 `issue_update_time` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '事项最新更新时间',
                                 `is_display_issue_catalog` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否在事项列表显示分类',
-                                `subsystem_json` varchar(5012) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]' COMMENT '当前项目启用的子系统',
-                                `project_view` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'issue' COMMENT '进入项目默认打开的那个页面',
-                                `issue_view` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'detail' COMMENT '点击事项的交互',
+                                `subsystem_json` varchar(5012) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]' COMMENT '当前项目启用的子系统',
+                                `project_view` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'issue' COMMENT '进入项目默认打开的那个页面',
+                                `issue_view` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'detail' COMMENT '点击事项的交互',
                                 `issue_ui_scheme_id` int NOT NULL DEFAULT '0' COMMENT '所属的界面方案id',
                                 `project_tpl_id` int NOT NULL DEFAULT '1' COMMENT '所属的项目模板id',
                                 `default_issue_type_id` int UNSIGNED NOT NULL DEFAULT '1' COMMENT '创建事项时默认的类型',
                                 `is_remember_last_issue` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否记住上次创建事项的数据',
-                                `remember_last_issue_field` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]' COMMENT '上次创建事项的数据字段',
-                                `remember_last_issue_data` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '{}' COMMENT '上次创建事项时的一些数据'
+                                `remember_last_issue_field` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]' COMMENT '上次创建事项的数据字段',
+                                `remember_last_issue_data` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '{}' COMMENT '上次创建事项时的一些数据'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2425,7 +2601,9 @@ CREATE TABLE `project_permission` (
                                       `_key` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
+--
+-- 转存表中的数据 `project_permission`
+--
 
 INSERT INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_key`) VALUES
 (10004, 0, '管理项目', '可以对项目进行设置', 'ADMINISTER_PROJECTS'),
@@ -2446,6 +2624,8 @@ INSERT INTO `project_permission` (`id`, `parent_id`, `name`, `description`, `_ke
 (10906, 0, '导出事项', '可以将项目中的数据导出为excel格式', 'EXPORT_EXCEL'),
 (10907, 0, '管理甘特图', '是否拥有权限操作甘特图中的事项和设置', 'ADMIN_GANTT'),
 (10908, 0, '事项分解设置', '是否拥有权限修改事项分解的设置', 'MIND_SETTING');
+
+-- --------------------------------------------------------
 
 --
 -- 表的结构 `project_role`
@@ -2480,10 +2660,10 @@ CREATE TABLE `project_role_relation` (
 
 CREATE TABLE `project_template` (
                                     `id` int UNSIGNED NOT NULL,
-                                    `name` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+                                    `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
                                     `category_id` int NOT NULL DEFAULT '0',
-                                    `description` varchar(256) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
-                                    `image_bg` varchar(256) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+                                    `description` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+                                    `image_bg` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
                                     `order_weight` int UNSIGNED NOT NULL DEFAULT '0',
                                     `created_at` int UNSIGNED DEFAULT NULL,
                                     `updated_at` int UNSIGNED DEFAULT NULL,
@@ -2491,16 +2671,16 @@ CREATE TABLE `project_template` (
                                     `issue_type_scheme_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '事项类型方案id',
                                     `issue_workflow_scheme_id` int UNSIGNED NOT NULL DEFAULT '0' COMMENT '事项工作流方案id',
                                     `issue_ui_scheme_id` int UNSIGNED NOT NULL DEFAULT '0',
-                                    `nav_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'left' COMMENT '导航风格：left,top可选',
-                                    `ui_style` varchar(20) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'dark' COMMENT '整体风格设置',
-                                    `theme_color` varchar(20) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'blue' COMMENT '主题色',
+                                    `nav_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'left' COMMENT '导航风格：left,top可选',
+                                    `ui_style` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'dark' COMMENT '整体风格设置',
+                                    `theme_color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'blue' COMMENT '主题色',
                                     `is_fix_header` tinyint(1) NOT NULL DEFAULT '0' COMMENT '固定 Header',
                                     `is_fix_left` tinyint(1) NOT NULL DEFAULT '0' COMMENT '固定侧边菜单',
-                                    `subsystem_json` varchar(5120) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]' COMMENT '子系统',
+                                    `subsystem_json` varchar(5120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]' COMMENT '子系统',
                                     `is_system` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否系统自带的模板',
-                                    `page_layout` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
-                                    `project_view` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
-                                    `issue_view` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+                                    `page_layout` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                    `project_view` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                    `issue_view` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                                     `default_issue_type_id` int UNSIGNED NOT NULL DEFAULT '1' COMMENT '创建事项时默认的类型'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT=' 项目模板';
 
@@ -2509,9 +2689,9 @@ CREATE TABLE `project_template` (
 --
 
 INSERT INTO `project_template` (`id`, `name`, `category_id`, `description`, `image_bg`, `order_weight`, `created_at`, `updated_at`, `user_id`, `issue_type_scheme_id`, `issue_workflow_scheme_id`, `issue_ui_scheme_id`, `nav_type`, `ui_style`, `theme_color`, `is_fix_header`, `is_fix_left`, `subsystem_json`, `is_system`, `page_layout`, `project_view`, `issue_view`, `default_issue_type_id`) VALUES
-(1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/react.png', 100000, NULL, NULL, NULL, 0, 0, 0, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"gantt\",\"kanban\",\"sprint\",\"mind\",\"backlog\",\"stat\",\"chart\",\"activity\",\"webhook\"]', 1, 'fluid', 'summary', '', 1),
-(2, '软件开发', 1, '模板描述', '/dev/img/project_tpl/vuejs.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"mind\",\"chart\",\"stat\",\"webhook\",\"activity\",\"kanban\",\"backlog\",\"issues\",\"gantt\",\"document\",\"sprints\"]', 0, 'fluid', 'issues', 'detail', 1),
-(3, 'Scrum敏捷开发', 1, '模板描述', '/dev/img/project_tpl/preact.png', 0, NULL, NULL, NULL, 0, 0, 0, 'left', 'dark', 'blue', 0, 0, '[]', 0, '', 'issues', '', 1);
+(1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/react.png', 100000, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"gantt\",\"mind\",\"kanban\",\"activity\",\"document\",\"chart\",\"stat\"]', 1, 'fluid', 'summary', '', 1),
+(2, '软件开发', 1, '模板描述', '/dev/img/project_tpl/vuejs.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"kanban\",\"mind\",\"gantt\",\"activity\",\"chart\",\"stat\",\"document\"]', 0, 'fluid', 'issues', 'detail', 1),
+(3, 'Scrum敏捷开发', 1, '模板描述', '/dev/img/project_tpl/preact.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"backlog\",\"sprints\",\"kanban\",\"mind\",\"chart\",\"stat\",\"activity\",\"document\"]', 0, '', 'issues', '', 1);
 
 -- --------------------------------------------------------
 
@@ -2521,7 +2701,7 @@ INSERT INTO `project_template` (`id`, `name`, `category_id`, `description`, `ima
 
 CREATE TABLE `project_template_display_category` (
                                                      `id` int NOT NULL,
-                                                     `name` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+                                                     `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                                                      `order_weight` int UNSIGNED NOT NULL DEFAULT '0',
                                                      `user_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -2666,12 +2846,6 @@ CREATE TABLE `project_version` (
                                    `start_date` int UNSIGNED DEFAULT NULL,
                                    `release_date` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `project_version`
---
-
-
 
 -- --------------------------------------------------------
 
@@ -2931,7 +3105,7 @@ CREATE TABLE `user_issue_last_create_data` (
                                                `id` int UNSIGNED NOT NULL,
                                                `user_id` int UNSIGNED NOT NULL,
                                                `project_id` int UNSIGNED NOT NULL,
-                                               `issue_data` varchar(1024) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '{}'
+                                               `issue_data` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '{}'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -4464,7 +4638,7 @@ ALTER TABLE `main_plugin`
 -- 使用表AUTO_INCREMENT `main_setting`
 --
 ALTER TABLE `main_setting`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- 使用表AUTO_INCREMENT `main_timeline`
@@ -4518,13 +4692,13 @@ ALTER TABLE `mind_sprint_attribute`
 -- 使用表AUTO_INCREMENT `permission_default_role`
 --
 ALTER TABLE `permission_default_role`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10011;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10020;
 
 --
 -- 使用表AUTO_INCREMENT `permission_default_role_relation`
 --
 ALTER TABLE `permission_default_role_relation`
-    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+    MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=313;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global`
@@ -4839,4 +5013,6 @@ ALTER TABLE `workflow_scheme_data`
     MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
 COMMIT;
 
-
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -13,9 +13,7 @@ env.ini
 */.DS_Store
 .phpunit.result.cache
 /app/public/node_modules
-/app/public/develop
-app/public/install/lock
-/app/config/deploy/cache.cfg.php
+/public/install/lock
 config.test.yml
 /plugin/document/kod/data/system
 /plugin/document/kod/data/system/system_member.php
