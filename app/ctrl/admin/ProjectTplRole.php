@@ -117,7 +117,7 @@ class ProjectTplRole extends BaseUserCtrl
         }
         $model = new DefaultRoleModel();
         if (isset($model->getByName($info['name'])['id'])) {
-            $this->ajaxFailed('提示', '名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
+            //$this->ajaxFailed('提示', '名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
@@ -161,7 +161,7 @@ class ProjectTplRole extends BaseUserCtrl
         $row = $model->getByName($params['name']);
         //var_dump($row);
         if (isset($row['id']) && ($row['id'] != $id)) {
-            $errorMsg['name'] = '名称已经被使用';
+            //$errorMsg['name'] = '名称已经被使用';
         }
 
         if (!empty($errorMsg)) {
@@ -323,9 +323,6 @@ class ProjectTplRole extends BaseUserCtrl
             $this->ajaxFailed(' 服务器错误 ', '执行数据库操作失败,详情:' . $exception->getMessage());
         }
         unset($model);
-
-        $event = new CommonPlacedEvent($this, ['role_id' => $roleId, 'perm' => $permIdsList]);
-        $this->dispatcher->dispatch($event, Events::onProjectRolePermUpdate);
         $this->ajaxSuccess('ok', []);
     }
 
