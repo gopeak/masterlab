@@ -924,15 +924,7 @@
             $('#range_container div').addClass('hide');
             $('#range-'+range_value).removeClass(('hide'));
         });
-        if(_board_default_id>0){
-            if (_active_sprint_id != '') {
-                window.$board.fetchBoardById(1);
-            }else{
-                window.$board.fetchBoardById(2);
-            }
-        }else{
-            window.$board.fetchBoardById(_board_default_id);
-        }
+        window.$board.fetchBoardById(_board_default_id);
 
         //$('.selectpicker').selectpicker();
         $("#boards_select").change(function () {
