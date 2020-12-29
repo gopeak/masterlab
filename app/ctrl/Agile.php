@@ -154,7 +154,6 @@ class Agile extends BaseUserCtrl
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
-
         // 权限判断
         if (!empty($data['project_id'])) {
             $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
@@ -163,10 +162,8 @@ class Agile extends BaseUserCtrl
                 die;
             }
         }
-
         $agileLogic = new AgileLogic();
         $data['boards'] = $agileLogic->getBoardsByProjectV2($data['project_id']);
-
         $data['active_sprint_id'] = '';
         $model = new SprintModel();
         $activeSprint = $model->getActive($data['project_id']);
@@ -197,6 +194,9 @@ class Agile extends BaseUserCtrl
 
         $projectFlagModel = new ProjectFlagModel();
         $boardDefaultId = (int)$projectFlagModel->getValueByFlag($data['project_id'], 'board_default_id');
+        if(empty($boardDefaultId)){
+            $boardDefaultId = $data['boards'][0]['id'] ?? 1;
+        }
         $data['board_default_id'] = $boardDefaultId;
 
         $this->render('gitlab/agile/board.php', $data);
