@@ -26,8 +26,9 @@ class ProjectFlagModel extends BaseDictionaryModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws \PDOException
      * @return self
+     * @throws \Exception
+     * @throws \PDOException
      */
     public static function getInstance($persistent = false)
     {
@@ -56,11 +57,22 @@ class ProjectFlagModel extends BaseDictionaryModel
         return $ret;
     }
 
+    /**
+     * @param $id
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getById($id)
     {
         return $this->getRowById($id);
     }
 
+    /**
+     * @param $projectId
+     * @param $flag
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getByFlag($projectId, $flag)
     {
         $conditions = [];
@@ -70,6 +82,12 @@ class ProjectFlagModel extends BaseDictionaryModel
         return $row;
     }
 
+    /**
+     * @param $projectId
+     * @param $flag
+     * @return mixed|null
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getValueByFlag($projectId, $flag)
     {
         $value = null;

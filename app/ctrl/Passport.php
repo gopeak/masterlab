@@ -143,7 +143,6 @@ class Passport extends BaseCtrl
 
     }
 
-
     /**
      * 输出验证码
      */

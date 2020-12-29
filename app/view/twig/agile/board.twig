@@ -878,18 +878,15 @@
     var _board_default_id = <?=board_default_id?>;
     $(function () {
 
-
         var options = {}
         window.$board = new BoardColumn(options);
         window.$board_setting = new BoardSetting(options);
-
         // 聚焦模式切换
         $('#toggle_focus_mode').bind('click', function () {
             $('.main-sidebar').toggleClass('hidden');
             $('.with-horizontal-nav').toggleClass('hidden');
             $('.layout-nav').toggleClass('hidden');
         });
-
         $('#btn-setting_board').bind('click', function () {
             $('#board-header-title').html('看板管理');
             $('#modal-board_setting').modal('show');
