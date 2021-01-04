@@ -88,6 +88,7 @@ class Passport extends BaseCtrl
 
     /**
      * 登录页面
+     * @throws \Exception
      */
     public function pageLogin()
     {
