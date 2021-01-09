@@ -113,7 +113,7 @@ class Setting extends BaseUserCtrl
                 $ret1 = $projectModel->update($info, array('id' => $projectId));
                 if ($ret1[0]) {
                     if ($isUpdateLeader) {
-                        $retModifyLeader = ProjectLogic::assignAdminRoleForProjectLeader($projectId, $info['lead']);
+                        $retModifyLeader = ProjectLogic::assignProjectRoles($projectId, $info['lead']);
                         if (!$retModifyLeader[0]) {
                             $projectModel->db->rollBack();
                             $this->ajaxFailed('错误服务器执行错误,更新项目负责人失败');
