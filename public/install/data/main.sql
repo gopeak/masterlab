@@ -1657,9 +1657,6 @@ CREATE TABLE `main_webhook` (
 -- 转存表中的数据 `main_webhook`
 --
 
-INSERT INTO `main_webhook` (`id`, `name`, `url`, `event_json`, `secret_token`, `enable`, `timeout`, `description`, `hook_event_json`) VALUES
-(9, 'webhook', 'http://masterlab.ink/webhook.php', '', 'xxxxxxx', 1, 10, 'xxx', '[\"onIssueCreateAfter\",\"onIssueUpdateAfter\",\"onIssueDelete\",\"onIssueClose\",\"onIssueAddComment\"]');
-
 -- --------------------------------------------------------
 
 --
