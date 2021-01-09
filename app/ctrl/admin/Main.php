@@ -71,6 +71,10 @@ class Main extends BaseAdminCtrl
         $data['sys_mysql_dbname'] = $dbConf['default']['db_name'];
         $data['sys_mysql_use_user'] = $dbConf['default']['user'];
 
+        $data['php_ini_loaded_file'] = php_ini_loaded_file();
+        $data['session_save_handler'] = ini_get('session.save_handler');
+        $data['session_save_path'] = ini_get('session.save_path');
+        $data['upload_max_filesize'] = ini_get('upload_max_filesize');
 
         $data['masterlab_version'] = MASTERLAB_VERSION;
         $data['ip'] = ServerInfo::getLocalIp();

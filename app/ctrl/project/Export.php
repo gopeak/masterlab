@@ -50,7 +50,6 @@ class Export extends BaseUserCtrl
                 $this->ajaxFailed('当前项目中您没有权限进行此操作,需要导出事项权限');
             }
         }
-
         $headerMap = [
             'summary' => '标题', 'project_id' => '项目', 'issue_num' => '编号', 'issue_type' => '事项类型',
             'module' => '模块', 'sprint' => '迭代', 'weight' => '权重值', 'description' => '描述',
@@ -59,8 +58,6 @@ class Export extends BaseUserCtrl
             'master_id' => '是否父任务', 'created' => '创建时间', 'updated' => '修改时间', 'start_date' => '计划开始日期',
             'due_date' => '计划结束日期', 'resolve_date' => '实际解决日期',
         ];
-
-
         if (!isset($_GET['cur_project_id'])
             || !is_numeric($_GET['cur_project_id'])
             || $_GET['cur_project_id'] <= 0) {

@@ -246,7 +246,7 @@ class ProjectLogic
             'issue_ui_scheme_id' => $projectTemplate['issue_ui_scheme_id'],
             'type_child' => 0,
             'permission_scheme_id' => 0,
-            'workflow_scheme_id' => 0,
+            'workflow_scheme_id' => $projectTemplate['issue_workflow_scheme_id'] ?? 0,
             'create_uid' => $createUid,
             'create_time' => time(),
             //'detail' => $projectInfo['detail'],
@@ -257,14 +257,15 @@ class ProjectLogic
         list($flag, $insertId) = $projectModel->insert($insertArr);
         if ($flag) {
             $projectId =$insertId;
-            // 把项目负责人赋予该项目的管理员权限
-            self::assignAdminRoleForProjectLeader($projectId,$projectArr['lead']);
-            // 把项目创建人添加到该项目，并赋予项目角色-普通用户
-            if ($createUid != $projectArr['lead']) {
-                self::assignProjectRoleForUser($projectId, $createUid, 'Users');
-            }
+            // 根据项目模板初始化角色和标签分类
             self::initRole($projectId, $projectTemplate['id']);
             self::initLabelAndCatalog($projectId, $projectTemplate['id']);
+            // 把项目负责人加入该项目的所有角色
+            self::assignProjectRoles($projectId, $projectArr['lead']);
+            // 把项目创建人添加到该项目所有角色
+            if ($createUid != $projectArr['lead']) {
+                self::assignProjectRoles($projectId, $createUid);
+            }
             // 使用默认的事项类型方案
             $issueTypeScheme_id = $projectTemplate['issue_type_scheme_id'];
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
@@ -669,47 +670,23 @@ class ProjectLogic
         return [true, 'ok'];
     }
 
-    /**
-     * 创建项目,把项目负责人赋予该项目的Administrators权限
-     * @param $projectId
-     * @param $userId
-     * @return array
-     * @throws \Exception
-     */
-    public static function assignAdminRoleForProjectLeader($projectId, $userId)
-    {
-        $projectRoleModel = new ProjectRoleModel();
-        $projectAdminRoleId = $projectRoleModel->getProjectRoleIdByProjectIdRoleName($projectId, 'Administrators');
-        $projectUserRoleModel = new ProjectUserRoleModel();
-
-        list($ret, $msg) = $projectUserRoleModel->insertRole($userId, $projectId, $projectAdminRoleId);
-        if (!$ret) {
-            return [false, $msg];
-        }
-
-        return [true, $msg];
-    }
 
     /**
-     * 创建项目,为用户赋予该项目的权限
+     * 给用户加入到项目的所有角色
      * @param $projectId
      * @param $userId
-     * @param string $roleName  默认为普通用户角色
-     * @return array
+     * @return bool
      * @throws \Exception
      */
-    public static function assignProjectRoleForUser($projectId, $userId, $roleName = 'Users')
+    public static function assignProjectRoles($projectId, $userId)
     {
         $projectRoleModel = new ProjectRoleModel();
-        $projectRoleId = $projectRoleModel->getProjectRoleIdByProjectIdRoleName($projectId, $roleName);
+        $rolesRowsArr = $projectRoleModel->getsByProject($projectId);
         $projectUserRoleModel = new ProjectUserRoleModel();
-
-        list($ret, $msg) = $projectUserRoleModel->insertRole($userId, $projectId, $projectRoleId);
-        if (!$ret) {
-            return [false, $msg];
+        foreach ($rolesRowsArr as $item) {
+            $projectUserRoleModel->insertRole($userId, $projectId, $item['id']);
         }
-
-        return [true, $msg];
+        return true;
     }
 
     /**

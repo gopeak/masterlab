@@ -233,10 +233,34 @@
 													</tr>
 													<tr class="commit">
 														<td  class="td_title">
-															<strong>phpinfo</strong>
+															<strong>PHP配置文件路径</strong>
 														</td>
 														<td>
-															<a href="<?= sys_domain ?>p.php" , target="_blank" style="color:blue"><?= sys_domain ?>p.php</a>
+															 <?= php_ini_loaded_file ?>
+														</td>
+													</tr>
+													<tr class="commit">
+														<td  class="td_title">
+															<strong>PHP会话方式</strong>
+														</td>
+														<td>
+															<?= session_save_handler ?>
+														</td>
+													</tr>
+													<tr class="commit">
+														<td  class="td_title">
+															<strong>PHP会话存储位置</strong>
+														</td>
+														<td>
+															<?= session_save_path ?>
+														</td>
+													</tr>
+													<tr class="commit">
+														<td  class="td_title">
+															<strong>PHP最大上传大小</strong>
+														</td>
+														<td>
+															<?= upload_max_filesize ?>
 														</td>
 													</tr>
 													<tr class="commit">
