@@ -223,13 +223,12 @@ $(function () {
 
     Handlebars.registerHelper('make_assistants', function (uid_arr) {
         //console.log(uid_arr);
-        //console.log(users);
+        //console.log(_issueConfig.users);
         var html = '';
         for (i = 0; i < uid_arr.length; i++) {
-
-            var uid = parseInt(uid_arr[i]);
-            var user = getArrayValue(_issueConfig.users, 'uid', uid);
-            console.log(user);
+            let uid = _.toString(uid_arr[i]);
+            let user = getArrayValue(_issueConfig.users, 'uid', uid);
+            //console.log(user);
             if (user == null) {
                 return '';
             }

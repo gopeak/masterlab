@@ -27,7 +27,7 @@
     "ext-pdo": "*",
     "ext-curl": "*",
     "ext-redis": "*",
-    "lcobucci/jwt": "3.3",
+    "lcobucci/jwt": "3.4.2",
     "lasserafn/php-initial-avatar-generator": "4.1",
     "dragonmantank/cron-expression": "3.0"
   },

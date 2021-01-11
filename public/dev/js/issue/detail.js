@@ -110,6 +110,7 @@ var IssueDetail = (function () {
                     $('#btn-close').data('issue_id', id);
                     $('#btn-delete').data('issue_id', id);
                     //从右边弹出页面
+
                     source = $('#detail-page-users_tpl').html();
                     template = Handlebars.compile(source);
                     result = template(_edit_issue);

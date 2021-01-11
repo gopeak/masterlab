@@ -34,7 +34,7 @@ function getValueByKey($map, $key) {
  */
 function getArrayValue(arr, $key, value ) {
     for (var i = 0; i < arr.length; i++) {
-        if (value === arr[i][$key]) {
+        if (value == arr[i][$key]) {
             return arr[i];
         }
     }
@@ -53,7 +53,7 @@ function in_array(value, arr ) {
 function getObjectValue(objs, id) {
     var obj = null;
     for (var i in objs) {
-        if (parseInt(objs[i].id) === parseInt(id)) {
+        if (parseInt(objs[i].id) == parseInt(id)) {
             return objs[i];
         }
     }
