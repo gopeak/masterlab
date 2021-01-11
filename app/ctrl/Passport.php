@@ -5,6 +5,11 @@
 
 namespace main\app\ctrl;
 
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\SystemLogic;
@@ -112,6 +117,52 @@ class Passport extends BaseCtrl
             }
         }
         $this->render('gitlab/passport/login.php', $data);
+    }
+
+
+    /**
+     * @throws \Exception
+     */
+    public function pageJwtLogin()
+    {
+        error_reporting(E_ERROR);
+        $jwt = $_GET['jwt'] ?? '';
+        $signer = new Sha256();
+        $key = new Key(JWT_KEY);
+
+        try {
+            $parse = (new Parser())->parse($jwt);
+            //验证token合法性
+            if (!$parse->verify($signer, $key)) {
+                $this->error('提示', '认证令牌不匹配，请回到平台首页刷新再重试');
+                return;
+            }
+            if ($parse->isExpired()) {
+                $this->error('提示', '认证令牌已经过期');
+                return;
+            }
+            $headers = $parse->headers();
+            $platformUserId = $headers->get('uid');
+            $platformPhone = $headers->get('phone');
+            $userModel = new UserModel();
+            $user = $userModel->getByPhone($platformPhone);
+            if(empty($user)){
+                $user = $userModel->getByUsername($platformPhone);
+            }
+            if(empty($user)){
+                $this->error('提示', "手机号码:{$platformPhone}已经失效了");
+                return;
+            }
+            $cookieLifetime = getCommonConfigVar('session')['session.cookie_lifetime'];
+            $this->auth->login($user, $cookieLifetime);
+            header('location: /');
+        } catch (\Exception $e) {
+            $result['msg'] = 'Invalid token.';
+            $result['available'] = false;
+            $this->error('提示', '认证令牌异常，请回到平台首页刷新再重试');
+            return;
+        }
+
     }
 
     /**
