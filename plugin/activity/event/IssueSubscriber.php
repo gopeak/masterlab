@@ -327,14 +327,16 @@ class IssueSubscriber implements EventSubscriberInterface
      */
     public function onIssueFollow(CommonPlacedEvent $event)
     {
-        $issueId = $event->pluginDataArr;
-        $issue = IssueModel::getInstance()->getById($issueId);
+        $issue = $event->pluginDataArr;
+        if(empty($issue)){
+            return;
+        }
         $currentUid = UserAuth::getId();
         $activityModel = new ActivityModel();
         $activityInfo = [];
         $activityInfo['action'] = '关注了事项';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['obj_id'] = $issue['id'];
         $activityInfo['title'] = $issue['summary'];
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
         unset($issue);
@@ -348,6 +350,9 @@ class IssueSubscriber implements EventSubscriberInterface
     {
         $issueId = $event->pluginDataArr;
         $issue = IssueModel::getInstance()->getById($issueId);
+        if(empty($issue)){
+            return;
+        }
         $currentUid = UserAuth::getId();
         $activityModel = new ActivityModel();
         $activityInfo = [];
