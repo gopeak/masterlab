@@ -5,16 +5,16 @@ namespace main\app\model\issue;
 use main\app\model\BaseDictionaryModel;
 
 /**
- *  系统自带的字段
+ *
  *
  */
 class IssueTypeSchemeModel extends BaseDictionaryModel
 {
     public $prefix = 'issue_';
 
-    public $table = 'ui_scheme';
+    public $table = 'type_scheme';
 
-    const   DATA_KEY = 'issue_ui_scheme/';
+    const   DATA_KEY = 'issue_type_scheme/';
 
     public $fields = '*';
 
