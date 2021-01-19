@@ -388,7 +388,6 @@ class User extends BaseAdminCtrl
         if ($userId == UserAuth::getId()) {
             $this->ajaxFailed('逻辑错误', '不能自己');
         }
-
         // @todo 要处理删除后该用户关联的事项
         $userModel = new UserModel();
         $user = $userModel->getByUid($userId);
