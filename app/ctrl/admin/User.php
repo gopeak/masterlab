@@ -291,9 +291,6 @@ class User extends BaseAdminCtrl
             $this->ajaxFailed('用户名已经被使用了');
         }
         unset($user, $user2);
-
-
-
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
             $updateInfo = [];
