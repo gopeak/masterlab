@@ -291,9 +291,6 @@ class User extends BaseAdminCtrl
             $this->ajaxFailed('用户名已经被使用了');
         }
         unset($user, $user2);
-
-
-
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
             $updateInfo = [];
@@ -388,7 +385,6 @@ class User extends BaseAdminCtrl
         if ($userId == UserAuth::getId()) {
             $this->ajaxFailed('逻辑错误', '不能自己');
         }
-
         // @todo 要处理删除后该用户关联的事项
         $userModel = new UserModel();
         $user = $userModel->getByUid($userId);
