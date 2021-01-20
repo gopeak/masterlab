@@ -129,7 +129,6 @@ class Passport extends BaseCtrl
         $jwt = $_GET['jwt'] ?? '';
         $signer = new Sha256();
         $key = new Key(JWT_KEY);
-
         try {
             $parse = (new Parser())->parse($jwt);
             //验证token合法性
@@ -144,6 +143,12 @@ class Passport extends BaseCtrl
             $headers = $parse->headers();
             $platformUserId = $headers->get('uid');
             $platformPhone = $headers->get('phone');
+            $jwtIp = $headers->get('ip');
+            $userIp = getIp();
+            if($jwtIp!=$userIp){
+                $this->error('提示', '您的IP地址已经变更，请回到平台重新登录');
+                return;
+            }
             $userModel = new UserModel();
             $user = $userModel->getByPhone($platformPhone);
             if(empty($user)){
