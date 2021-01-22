@@ -153,7 +153,7 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name"><a href="/' + user.username + '"><image width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-placement="left" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
+        html += '<span class="list-item-name"><a   title="'+user.display_name+'"  href="/' + user.username + '"><image width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-placement="left" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
         return new Handlebars.SafeString(html);
     });
 
@@ -166,7 +166,7 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '">' +
+        html += '<span class="list-item-name"><a   title="'+user.display_name+'"  href="/user/profile/' + user.uid + '">' +
             '<img width="26px" height="26px" class=" float-none" style="border-radius: 50%;"   data-toggle="tooltip" data-placement="bottom"  title="' + user.username + ' ' + user.display_name + '" src="' + user.avatar + '" />' +
             '</a></span>';
         return new Handlebars.SafeString(html);
@@ -190,20 +190,20 @@ $(function () {
     });
     //
     Handlebars.registerHelper('issue_assistants_avatar', function (uid_arr) {
-        //console.log(uid_arr);
+       // console.log('issue_assistants_avatar:');
+       // console.log(uid_arr);
         var users = _issueConfig.users;
         //console.log(users);
         var html = '';
         for (i = 0; i < uid_arr.length; i++) {
-
-            var uid = parseInt(uid_arr[i]);
-            var user = getArrayValue(_issueConfig.users, 'uid', uid);
-            console.log(user);
-            if (user == null) {
+            let uid = _.toString(uid_arr[i]);
+            let user = getArrayValue(_issueConfig.users, 'uid', uid);
+            if (!_.has(user, 'uid')) {
                 return '';
             }
-            html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-placement="left" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
+            html += '<span class="list-item-name"><a title="'+user.display_name+'" href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-placement="left" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
         }
+        //console.log(html);
         return new Handlebars.SafeString(html);
     });
 
@@ -217,7 +217,7 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '">' + user.username + ' ' + user.display_name + '</a></span>';
+        html += '<span class="list-item-name"><a   title="'+user.display_name+'"  href="/user/profile/' + user.uid + '">' + user.username + ' ' + user.display_name + '</a></span>';
         return new Handlebars.SafeString(html);
     });
 
@@ -233,7 +233,7 @@ $(function () {
                 return '';
             }
             html += '<div class="participants-author js-participants-author">';
-            html += '    <a class="author_link has-tooltip" title="" data-container="body" href="' + root_url + 'user/profile/' + uid + '" data-original-title="' + user.display_name + '" ><img width="24" class="avatar avatar-inline s24 " alt="" src="' + user.avatar + '"></a>';
+            html += '    <a class="author_link has-tooltip"  title="'+user.display_name+'" data-container="body" href="' + root_url + 'user/profile/' + uid + '" data-original-title="' + user.display_name + '" ><img width="24" class="avatar avatar-inline s24 " alt="" src="' + user.avatar + '"></a>';
             html += '    </div>';
         }
         return new Handlebars.SafeString(html);
@@ -243,14 +243,14 @@ $(function () {
         //console.log(uid_arr);
         var html = '';
         for (i = 0; i < uid_arr.length; i++) {
-            var uid = parseInt(uid_arr[i]);
-            var user = getArrayValue(_issueConfig.users, 'uid', uid);
+            let uid = parseInt(uid_arr[i]);
+            let user = getArrayValue(_issueConfig.users, 'uid', uid);
             console.log(user);
             if (user == null) {
                 return '';
             }
             html += '<div class="participants-author js-participants-author">';
-            html += '    <a class="author_link has-tooltip" title="" data-container="body" href="/' + user.username + '" data-original-title="' + user.display_name + '" ><img width="24" class="avatar avatar-inline s24 " alt="" src="' + user.avatar + '"></a>';
+            html += '    <a class="author_link has-tooltip"  title="'+user.display_name+'" data-container="body" href="/' + user.username + '" data-original-title="' + user.display_name + '" ><img width="24" class="avatar avatar-inline s24 " alt="" src="' + user.avatar + '"></a>';
             html += '    </div>';
         }
         return new Handlebars.SafeString(html);

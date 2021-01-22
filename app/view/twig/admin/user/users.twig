@@ -67,6 +67,7 @@
                                     <a  title="已经被禁用的用户" href="#"><span>禁用</span></a>
                                 </li>
                             </ul>
+                            {% if ( _app_status!='sass') %}
                             <div class="nav-controls margin-md-l">
                                 <a class="btn btn-new new-project-item-select-button js-key-create" data-target="#modal-user_add" data-toggle="modal" href="#modal-user_add">
                                         <i class="fa fa-plus"></i> 新 增
@@ -74,8 +75,8 @@
                                 <a class="btn has-tooltip " title="邀请用户加入"   id="btn-invite">
                                     <i class="fa fa-send-o"></i> 邀 请
                                 </a>
-
                             </div>
+                            {% endif %}
                             <div class="nav-controls">
                                 <form id="user_filter_form" action="" onsubmit="return fetchUsers('/admin/user/filter','user_tpl','render_id')" accept-charset="UTF-8" method="get">
                                     <input name="page" id="filter_page" type="hidden" value="1">
@@ -297,7 +298,7 @@
                             </div>
                         </div>
                     </div>
-
+                    {% if ( _app_status!='sass') %}
                     <div class="form-group">
                         <label class="control-label" for="edit_password">密码:</label>
                         <div class="col-sm-6">
@@ -306,6 +307,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
 
                     <div class="form-group">
                         <label class="control-label" for="edit_display_name">显示名称:<span class="required"> *</span></label>
@@ -561,10 +563,14 @@
                     {{/if_eq}}
                     {{#if_eq is_system '0'}}
                         {{#if_eq myself '0'}}
+                            {% endverbatim %}
+                            {% if ( _app_status!='sass') %}
                             <a class="user_for_delete btn btn-transparent"   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
                                 <i class="fa fa-trash"></i>
                                 <span class="sr-only">删除</span>
                             </a>
+                            {% endif %}
+                            {% verbatim %}
                         {{/if_eq}}
                     {{/if_eq}}
                 </div>

@@ -492,6 +492,7 @@ class Passport extends BaseCtrl
         }
 
         $passwordStrategy = $settingModel->getSettingValue('password_strategy');
+        //var_dump($passwordStrategy);
         if ($passwordStrategy == 2) {
             // 密码需要6位及以上，并且包含大写字母、小写字母、数字至少两种
             // $pattern = '/^(?=.{6,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$/';

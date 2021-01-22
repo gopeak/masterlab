@@ -40,6 +40,9 @@
 								<div class="col-lg-1">
 								</div>
 								<div class="col-lg-11">
+
+
+
 									<div class="top-area">
 										<ul class="nav-links user-state-filters" style="float:left">
 											<li class="active" data-value="">
@@ -61,12 +64,14 @@
 													</td>
 													<td><?= sys_domain ?></td>
 												</tr>
+												{% if ( _app_status!='sass') %}
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>当前工作目录</strong>
 													</td>
 													<td><?= sys_workpath ?></td>
 												</tr>
+												{% endif %}
 												<tr class="commit">
 													<td  class="td_title">
 														<strong>版本</strong>
@@ -117,8 +122,9 @@
 											</table>
 										</div>
 									</div>
-									<hr>
 
+									{% if ( _app_status!='sass') %}
+									<hr>
 									<div class="top-area">
 										<ul class="nav-links user-state-filters" style="float:left">
 											<li class="active" data-value="">
@@ -331,7 +337,7 @@
 											</table>
 										</div>
 									</div>
-
+									{% endif %}
 								</div>
 							</div>
 						</div>

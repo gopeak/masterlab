@@ -1,0 +1,79 @@
+# Masterlab主配置文件
+app_url: ''
+version: '3.0rc3'
+error_reporting: 'E_ALL'
+xdebug: true
+trace: true
+write_request_log: false
+security_map: false
+date_default_timezone: 'Asia/Shanghai'
+encrypy_key: '1234567890abc'
+
+xhprof:
+  enable: false
+  rate: 1
+
+cache:
+  enable: false
+  expire: 864000
+  gc_rate: 10
+  server:
+    - ['127.0.0.1', '6379', '']
+
+session:
+  handle: file
+  cache_expire: 86400
+  gc_maxlifetime: 864000
+  cookie_lifetime: 864000
+  gc_divisor: 100
+  gc_probability: 1
+
+database:
+  default:
+    host: '139.9.49.224'
+    port: 3306
+    user: 'dev_user'
+    password: 'Masterlab@123'
+    db_name: 'masterlab_dev'
+    charset: 'utf8'
+    timeout: 10
+    show_field_info: false
+  log_db:
+    host: '139.9.49.224'
+    port: 3306
+    user: 'dev_user'
+    password: 'Masterlab@123'
+    db_name: 'masterlab_dev'
+    charset: 'utf8'
+    timeout: 10
+    show_field_info: false
+
+config_map_model:
+  default:
+    -
+  log_db:
+    - UnitTestUnitModel
+
+socket:
+  port: 9002
+  port_websocket: 9003
+
+schedule:
+  -
+    name: 'ProjectStat'
+    exe_bin: 'C:/xampp7.4/php/php.exe'
+    exp: '0 */30 * * * ?'
+    file: 'app/server/timer/project.php'
+    arg: '-f'
+  -
+    name: 'ProjectReport'
+    exe_bin: 'C:/xampp7.4/php/php.exe'
+    exp: '0 58 23 * * ?'
+    file: 'app/server/timer/projectDayReport.php'
+    arg: '-f'
+  -
+    name: 'SprintReport'
+    exe_bin: 'C:/xampp7.4/php/php.exe'
+    exp: '0 59 23 * * ?'
+    file: 'app/server/timer/sprintDayReport.php'
+    arg: '-f'
