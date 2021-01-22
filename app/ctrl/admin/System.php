@@ -90,10 +90,12 @@ class System extends BaseAdminCtrl
         $rows = $settingModel->getSettingByModule($module);
         if (!empty($rows)) {
             $json_type = ['radio', 'select', 'checkbox'];
-            foreach ($rows as &$row) {
+            foreach ($rows as $k=> &$row) {
                 $_value = $row['_value'];
                 $row['text'] = $_value;
-
+                if(APP_STATUS=='sass' && $row['_key']=='attachment_dir'){
+                    unset($rows[$k]);
+                }
                 if (in_array($row['form_input_type'], $json_type)) {
                     $row['form_optional_value'] = json_decode($row['form_optional_value'], true);
                     // 单选值显示
@@ -120,6 +122,7 @@ class System extends BaseAdminCtrl
                 }
             }
         }
+        sort($rows);
         $data = [];
         $data['settings'] = $rows;
         $this->ajaxSuccess('操作成功', $data);

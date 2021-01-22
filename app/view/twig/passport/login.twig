@@ -29,7 +29,8 @@
                     }
                 },
                 error: function (resp) {
-                    notify_error(resp.msg, resp.data);
+                    console.log(resp);
+                    notify_error('网络异常无法连接服务器' );
                 }
             });
         });
@@ -64,7 +65,7 @@
                     }
                 },
                 error: function (resp) {
-                    notify_error(resp.msg.resp.data);
+                    notify_error('网络异常无法连接服务器' );
                 }
             });
         });
@@ -121,7 +122,7 @@
                     }
                 },
                 error: function (resp) {
-                    notify_error(resp.msg.resp.data);
+                    notify_error('网络异常无法连接服务器' );
                 }
             });
         });
