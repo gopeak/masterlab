@@ -6537,7 +6537,11 @@ MM.App = {
 		} else {
 			mindSideBar.style.top = "145px"
 		}
-		this.portSize = [window.innerWidth - ui.offsetWidth - sideBar.offsetWidth - padding - 280, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
+		let offsetWidth = 0;
+		if(sideBar && sideBar.offsetWidth){
+			offsetWidth = sideBar.offsetWidth;
+		}
+		this.portSize = [window.innerWidth - ui.offsetWidth - offsetWidth - padding - 280, window.innerHeight - navbar.offsetHeight - navControl.offsetHeight - mindTools.offsetHeight];
 		this._port.style.width = this.portSize[0] + "px";
 		this._port.style.height = this.portSize[1] + "px";
 

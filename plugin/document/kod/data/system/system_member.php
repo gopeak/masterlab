@@ -14,7 +14,7 @@
         },
         "createTime": 1589187576,
         "status": 1,
-        "lastLogin": 1610184444
+        "lastLogin": 1611628386
     },
     "100": {
         "userID": "100",
@@ -51,5 +51,23 @@
         "status": 1,
         "lastLogin": "",
         "createTime": 1608801308
+    },
+    "102": {
+        "userID": "102",
+        "name": "project1",
+        "nickName": "project1",
+        "password": "cdc4c5cc90e916bee8a68a49213bcc46",
+        "role": "2",
+        "config": {
+            "sizeMax": 5,
+            "sizeUse": 1048576
+        },
+        "groupInfo": {
+            "1": "write"
+        },
+        "path": "project1_102",
+        "status": 1,
+        "lastLogin": 1611628386,
+        "createTime": 1611628386
     }
 }
