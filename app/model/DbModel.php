@@ -196,6 +196,7 @@ class DbModel extends BaseModel
                 'dbname' => $dbConfig['db_name'],
                 'user' => $dbConfig['user'],
                 'password' => $dbConfig['password'],
+                'port' => $dbConfig['port'],
                 'host' => $dbConfig['host'],
                 'charset' => $dbConfig['charset'],
                 'driver' => 'pdo_mysql',

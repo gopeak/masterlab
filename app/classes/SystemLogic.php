@@ -218,7 +218,6 @@ class SystemLogic
                     }
                 }
             }
-
             $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; //当邮件不支持html时备用显示，可以省略
             $mail->WordWrap = 80; // 设置每行字符串的长度
             $contentType = isset($others['content_type']) ? $others['content_type'] : 'html';
@@ -229,11 +228,6 @@ class SystemLogic
                 $msg = 'Mailer Error: ' . $mail->ErrorInfo;
                 return [false, $msg];
             }
-        } catch (\phpmailerException $e) {
-           // print_r($e->getCode());
-            //print_r($e->getTrace());
-            $msg = "邮件发送失败：" . $e->errorMessage();
-            return [false, $msg];
         } catch (\Exception $e) {
             $msg = "邮件发送失败：" . $e->getMessage();
             return [false, $msg];
