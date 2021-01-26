@@ -11,6 +11,7 @@ namespace main\app\classes;
 
 use main\app\async\email;
 use main\app\model\agile\SprintModel;
+use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
@@ -1683,6 +1684,14 @@ class IssueFilterLogic
         return $rows;
     }
 
+    /**
+     * @param int $curUserId
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public static function getMyFollow($curUserId = 0, $page = 1, $pageSize = 10)
     {
         $start = $pageSize * ($page - 1);
@@ -1695,14 +1704,56 @@ class IssueFilterLogic
             foreach ($issueFollows as $issueFollow) {
                 $followIssueIdArr[] = $issueFollow['issue_id'];
             }
+            unset($issueFollows);
             $followIssueIdArr = array_unique($followIssueIdArr);
             if (!empty($followIssueIdArr)) {
                 $issueIdStr = implode(',', $followIssueIdArr);
                 $inWhere = " id IN ({$issueIdStr})";
-
                 $model = new IssueModel();
                 $table = $model->getTable();
+                $fields = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,status,created,updated,sprint,master_id,start_date,due_date';
+                $sql = "SELECT {$fields} FROM {$table} WHERE {$inWhere} {$appendSql}";
+                //echo $sql;
+                $rows = $model->db->fetchAll($sql);
+                $count = $model->getFieldBySql("SELECT count(*) as cc FROM {$table} WHERE {$inWhere}");
+                foreach ($rows as &$row) {
+                    self::formatIssue($row);
+                }
+                return [$rows, $count];
+            }
+            return [[], 0];
+        } else {
+            return [[], 0];
+        }
+    }
 
+    /**
+     * @param int $curUserId
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public static function getMyAssistant($curUserId = 0, $page = 1, $pageSize = 10)
+    {
+        $start = $pageSize * ($page - 1);
+        $appendSql = " Order by id desc  limit {$start}, " . $pageSize;
+
+        $issueFollowModel = new IssueAssistantsModel();
+        $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
+        $followIssueIdArr = [];
+        if (!empty($issueFollows)) {
+            foreach ($issueFollows as $issueFollow) {
+                $followIssueIdArr[] = $issueFollow['issue_id'];
+            }
+            unset($issueFollows);
+            $followIssueIdArr = array_unique($followIssueIdArr);
+            if (!empty($followIssueIdArr)) {
+                $issueIdStr = implode(',', $followIssueIdArr);
+                $inWhere = " id IN ({$issueIdStr})";
+                $model = new IssueModel();
+                $table = $model->getTable();
                 $fields = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,status,created,updated,sprint,master_id,start_date,due_date';
 
                 $sql = "SELECT {$fields} FROM {$table} WHERE {$inWhere} {$appendSql}";
@@ -1712,7 +1763,6 @@ class IssueFilterLogic
                 foreach ($rows as &$row) {
                     self::formatIssue($row);
                 }
-
                 return [$rows, $count];
             }
             return [[], 0];

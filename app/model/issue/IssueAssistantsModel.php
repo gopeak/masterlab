@@ -35,4 +35,25 @@ class IssueAssistantsModel extends BaseIssueItemsModel
         }
         return self::$instance[$index] ;
     }
+
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getItemsByUserId($userId)
+    {
+        $conditions['user_id'] = $userId;
+        return $this->getRows('*', $conditions);
+    }
+
+    /**
+     * @param $issueId
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getCountByUserId($issueId)
+    {
+        $conditions['user_id'] = $issueId;
+        return max(0, (int)$this->getField('count(distinct issue_id) as cc', $conditions));
+    }
 }

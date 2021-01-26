@@ -260,9 +260,6 @@
     {{/issues}}
 </script>
 
-
-
-
 <script id="activity-body_tpl" type="text/html">
     <ul  id="activity_wrap" class="event-list">
     </ul>
@@ -307,14 +304,7 @@
                     </div>
                 </span>
             </h4>
-            <time class="event-time js-time" title=""
-                  datetime="{{time}}"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  data-container="body"
-                  data-original-title="{{time_full}}"
-                  data-tid="449">{{time_text}}
-            </time>
+            <span  style="font-size: 14px;line-height: 22px;color: #aaa;" title="{{time_full}}"   >{{time_text}}</span>
         </div>
     </li>
     {{/activity}}

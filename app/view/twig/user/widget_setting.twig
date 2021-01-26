@@ -32,6 +32,15 @@
 
                 <div class="content padding-0" id="content-body1">
                     <div class="cover-block user-cover-block">
+                        <div class="cover-controls">
+                            <a class="btn btn-gray has-tooltip" title="编辑用户资料" aria-label="编辑用户资料" href="/user/profile_edit">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            <!--<a class="btn btn-gray has-tooltip" title="Subscribe" aria-label="Subscribe" href="/sven.atom?private_token=vyxEf937XeWRN9gDqyXk">
+                                <i class="fa fa-rss"></i>
+                            </a>-->
+                        </div>
+                        {% include 'twig/user/common-profile-header.twig' %}
                         <div class="scrolling-tabs-container">
                             <div class="fade-left">
                                 <i class="fa fa-angle-left"></i>
@@ -40,7 +49,7 @@
                                 <i class="fa fa-angle-right"></i>
                             </div>
                             {% set profile_nav='custom_index' %}
-                            {% include  'twig/user/common-setting-nav.twig' %}
+                            {% include  'twig/user/common-profile-nav.twig' %}
                         </div>
                     </div>
                     <div class="nav-controls">

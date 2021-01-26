@@ -371,8 +371,12 @@ class SettingsLogic
      */
     public function timeFormat()
     {
-        $setting = SettingModel::getInstance()->getSettingByKey('time_format');
-        return $setting['_value'];
+        static $timeFormat;
+        if(is_null($timeFormat)){
+            $setting = SettingModel::getInstance()->getSettingByKey('time_format');
+            $timeFormat = $setting['_value'];
+        }
+        return $timeFormat;
     }
 
     /**
@@ -382,8 +386,12 @@ class SettingsLogic
      */
     public function weekFormat()
     {
-        $setting = SettingModel::getInstance()->getSettingByKey('week_format');
-        return $setting['_value'];
+        static $weekFormat;
+        if(is_null($weekFormat)){
+            $setting = SettingModel::getInstance()->getSettingByKey('week_format');
+            $weekFormat = $setting['_value'];
+        }
+        return $weekFormat;
     }
 
     /**
@@ -393,8 +401,12 @@ class SettingsLogic
      */
     public function fullDatetimeFormat()
     {
-        $setting = SettingModel::getInstance()->getSettingByKey('full_datetime_format');
-        return $setting['_value'];
+        static $fullDatetimeFormat;
+        if(is_null($fullDatetimeFormat)){
+            $setting = SettingModel::getInstance()->getSettingByKey('full_datetime_format');
+            $fullDatetimeFormat = $setting['_value'];
+        }
+        return $fullDatetimeFormat;
     }
 
     /**
@@ -404,8 +416,12 @@ class SettingsLogic
      */
     public function datetimeFormat()
     {
-        $setting = SettingModel::getInstance()->getSettingByKey('datetime_format');
-        return $setting['_value'];
+        static $datetimeFormat;
+        if(is_null($datetimeFormat)){
+            $setting = SettingModel::getInstance()->getSettingByKey('datetime_format');
+            $datetimeFormat = $setting['_value'];
+        }
+        return $datetimeFormat;
     }
 
     /**
