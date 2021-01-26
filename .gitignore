@@ -3,6 +3,7 @@
 *.log
 !.gitignore
 config.development.yml
+config.sass.yml
 /composer.lock
 /vendor
 /app/config/development
