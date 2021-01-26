@@ -16,5 +16,5 @@ env.ini
 /app/public/node_modules
 /public/install/lock
 config.test.yml
-/plugin/document/kod/data/system
-/plugin/document/kod/data/system/system_member.php
+plugin/document/kod/data/system
+plugin/document/kod/data/system/system_member.php
