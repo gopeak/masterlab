@@ -138,7 +138,7 @@
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/handlebars.helper.js?v=<?=_version?>"></script>
-<script src="/dev/js/user/follow_issues.js"></script>
+<script src="/dev/js/user/assistant_issues.js"></script>
 <script type="text/javascript">
     var _issueConfig = {
         "priority":<?=priority|json_encode()|raw?>,
@@ -161,7 +161,7 @@
         var options = {
             user_id:_user_id
         }
-        window.$follow_issues = new FollowIssues( options );
+        window.$follow_issues = new AssistantIssues( options );
         window.$follow_issues.fetchByUser( window._cur_page );
 
         $('#more_follow').bind('click', function(){

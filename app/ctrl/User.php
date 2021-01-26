@@ -471,7 +471,7 @@ class User extends BaseUserCtrl
         if (isset($_GET['page'])) {
             $page = max(1, (int)$_GET['page']);
         }
-        list($data['issues'], $total) = IssueFilterLogic::getMyFollow($curUserId, $page, $pageSize);
+        list($data['issues'], $total) = IssueFilterLogic::getMyAssistant($curUserId, $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
