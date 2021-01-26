@@ -568,7 +568,36 @@
                     $("#tree-slider").show();
                 }
 
+                var timer = null;
+
                 window.$IssueAdvQuery = new IssueAdvQuery(_issueConfig);
+
+
+
+                // 显示右侧浮动窗
+                function showFloatDetail(dataId, dataSummary) {
+                    if(timer) {
+                        return
+                    }else{
+                        getFineUploader(dataId, dataSummary);
+                        getRightPartData(dataId);
+                        $('.float-right-side').show();
+                        timer = setTimeout(function(){
+                            timer = null
+                        }, 1000)
+                    }
+
+                }
+                function linkIssue(id) {
+                    if(issue_view!='detail'){
+                        window.location.href = '/issue/detail/index/'+id;
+                        return;
+                    }
+                    let dataSummary = $('#tree_tr_'+id).data("summary") || "";
+                    $('#tree_tr_'+id).addClass("active").siblings(".tree-item").removeClass("active");
+                    showFloatDetail(id, dataSummary);
+                }
+
 
                 $(function () {
                     var options = {
@@ -869,7 +898,6 @@
                             var dataId = $(this).data("id");
                             var dataSummary = $(this).data("summary") || "";
                             $(this).addClass("active").siblings(".tree-item").removeClass("active");
-                            
                             showFloatDetail(dataId, dataSummary);
                             
                             return false;
@@ -997,33 +1025,6 @@
 
                     // 右侧详情上下事项切换
 
-                    // 获取详情页信息
-                    function getRightPartData(dataId) {
-                        $('.maskLayer').removeClass('hide'); // 可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
-                        _issue_id = dataId;                        
-
-                        IssueMain.prototype.initIssueItem();
-
-                        $IssueDetail = new IssueDetail({});
-                        $IssueDetail.fetchIssue(dataId, true);
-                    }
-
-                    // 显示右侧浮动窗
-                    var timer = null;
-                    
-                    function showFloatDetail(dataId, dataSummary) {
-                        if(timer) {
-                            return
-                        }else{
-                            getFineUploader(dataId, dataSummary);
-                            getRightPartData(dataId);
-                            $('.float-right-side').show();
-                            timer = setTimeout(function(){
-                                timer = null
-                            }, 1000)
-                        }
-                        
-                    }
 
                     /*详情页的ajax*/
                     $('#save_filter-btn').qtip({
@@ -1243,58 +1244,72 @@
                         }
                     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 
-                    // 获取上传插件
-                    function getFineUploader(issue_id, sum = "121") {
-                        _fineUploader = null;
-                        $("#issue_right_attachments_uploder").html("");
-                        _fineUploader = new qq.FineUploader({
-                            element: document.getElementById('issue_right_attachments_uploder'),
-                            template: 'qq-template-gallery',
-                            multiple: true,
-                            request: {
-                                endpoint: '/issue/main/upload?project_id=' + _cur_project_id + '&issue_id=' + issue_id + '&summary=' + sum + '&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
-                            },
-                            deleteFile: {
-                                enabled: true,
-                                forceConfirm: true,
-                                endpoint: "/issue/main/upload_delete/" + _cur_project_id
-                            },
-                            validation: {
-                                allowedExtensions: [
-                                    'mp3',
-                                    'aac',
-                                    'wma',
-                                    'avi',
-                                    'rm',
-                                    'rmvb',
-                                    'flv',
-                                    'mpg',
-                                    'mov',
-                                    'mkv',
-                                    'mp4',
-                                    'jpeg',
-                                    'jpg',
-                                    'gif',
-                                    'png',
-                                    '7z',
-                                    'zip',
-                                    'rar',
-                                    'bmp',
-                                    'csv',
-                                    'doc',
-                                    'docx',
-                                    'xls',
-                                    'xlsx',
-                                    'ppt',
-                                    'pdf',
-                                    'xlt',
-                                    'xltx',
-                                    'txt'
-                                ]
-                            }
-                        });                      
-                    }
+
                 });
+
+                // 获取详情页信息
+                function getRightPartData(dataId) {
+                    $('.maskLayer').removeClass('hide'); // 可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
+                    _issue_id = dataId;
+
+                    IssueMain.prototype.initIssueItem();
+
+                    $IssueDetail = new IssueDetail({});
+                    $IssueDetail.fetchIssue(dataId, true);
+                }
+
+                // 获取上传插件
+                function getFineUploader(issue_id, sum = "121") {
+                    _fineUploader = null;
+                    $("#issue_right_attachments_uploder").html("");
+                    _fineUploader = new qq.FineUploader({
+                        element: document.getElementById('issue_right_attachments_uploder'),
+                        template: 'qq-template-gallery',
+                        multiple: true,
+                        request: {
+                            endpoint: '/issue/main/upload?project_id=' + _cur_project_id + '&issue_id=' + issue_id + '&summary=' + sum + '&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
+                        },
+                        deleteFile: {
+                            enabled: true,
+                            forceConfirm: true,
+                            endpoint: "/issue/main/upload_delete/" + _cur_project_id
+                        },
+                        validation: {
+                            allowedExtensions: [
+                                'mp3',
+                                'aac',
+                                'wma',
+                                'avi',
+                                'rm',
+                                'rmvb',
+                                'flv',
+                                'mpg',
+                                'mov',
+                                'mkv',
+                                'mp4',
+                                'jpeg',
+                                'jpg',
+                                'gif',
+                                'png',
+                                '7z',
+                                'zip',
+                                'rar',
+                                'bmp',
+                                'csv',
+                                'doc',
+                                'docx',
+                                'xls',
+                                'xlsx',
+                                'ppt',
+                                'pdf',
+                                'xlt',
+                                'xltx',
+                                'txt'
+                            ]
+                        }
+                    });
+                }
+
                 //startWS();关闭websocket
 
                 var _curFineAttachmentUploader = null;

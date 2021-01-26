@@ -27,7 +27,7 @@
             {% verbatim %}
 						<script type="text/html" id="list_tpl">
 							{{#issues}}
-								<tr class="tree-item " data-id="{{id}}"  data-have_children="{{have_children}}"  data-summary="{{summary}}">
+								<tr id="tree_tr_{{id}}" class="tree-item " data-id="{{id}}"  data-have_children="{{have_children}}"  data-summary="{{summary}}">
 									<td class="width_6">
 										<div class="checkbox">
 											<label>
@@ -81,7 +81,7 @@
 
 									{{#if_in_array 'summary'  ../display_fields}}
 										<td class="show-tooltip width_35" title="快捷键 E 可呼出当前事项的编辑界面">
-											<a href="/issue/detail/index/{{id}}" class="commit-row-message">
+											<a href="javascript:linkIssue({{id}})" class="commit-row-message">
 												{{lightSearch summary '{{search}}'}}
 											</a>
 											{{#if_in_array 'label'  ../display_fields}}
