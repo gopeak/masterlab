@@ -716,6 +716,9 @@
             case 'fetchFollowIssues':
                 $widgetsAjax.fetchFollowIssues(data._key, 1);
                 break;
+            case 'fetchAssistantIssues':
+                $widgetsAjax.fetchAssistantIssues(data._key, 1);
+                break;
         }
 
         $(`#toolform_${data._key}`).hide();

@@ -1728,6 +1728,8 @@ INSERT INTO `main_widget` (`id`, `name`, `_key`, `method`, `module`, `pic`, `typ
 (22, '迭代-事项统计', 'sprint_issue_type_stat', 'fetchSprintIssueTypeStat', '迭代', 'issue_type_stat.png', 'list', 1, 0, 1, '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', 0),
 (23, '分配给我未解决的事项', 'unresolve_assignee_my', 'fetchUnResolveAssigneeIssues', '通用', 'assignee_my.png', 'list', 1, 1, 0, '', '[]', 0),
 (24, '我关注的事项', 'my_follow', 'fetchFollowIssues', '通用', 'my_follow.png', 'list', 1, 0, 0, '', '[]', 0);
+INSERT INTO `main_widget` (`id`, `name`, `_key`, `method`, `module`, `pic`, `type`, `status`, `is_default`, `required_param`, `description`, `parameter`, `order_weight`) VALUES
+(25, '我协助的事项', 'my_assistant_issue', 'fetchAssistantIssues', '通用', 'my_assistant_issue.png', 'list', '1', '0', '0', '', '[]', '0');
 
 -- --------------------------------------------------------
 

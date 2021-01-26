@@ -370,7 +370,6 @@ class IssueFilterLogic
             $curUserId = UserAuth::getInstance()->getId();
             $issueFollowModel = new IssueFollowModel();
             $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
-
             $followIssueIdArr = [];
             if (!empty($issueFollows)) {
                 foreach ($issueFollows as $issueFollow) {
@@ -385,6 +384,27 @@ class IssueFilterLogic
                 $sql .= " AND  id in (0) ";
             }
             unset($issueFollowModel, $issueFollows, $followIssueIdArr);
+        }
+
+        // 我协助的
+        if ($sysFilter == 'my_assistant_issue') {
+            $curUserId = UserAuth::getInstance()->getId();
+            $issueAssistantModel = new IssueAssistantsModel();
+            $issueFollows = $issueAssistantModel->getItemsByUserId($curUserId);
+            $followIssueIdArr = [];
+            if (!empty($issueFollows)) {
+                foreach ($issueFollows as $issueFollow) {
+                    $followIssueIdArr[] = $issueFollow['issue_id'];
+                }
+                $followIssueIdArr = array_unique($followIssueIdArr);
+                if (!empty($followIssueIdArr)) {
+                    $issueIdStr = implode(',', $followIssueIdArr);
+                    $sql .= "  AND id in ({$issueIdStr})";
+                }
+            } else {
+                $sql .= " AND  id in (0) ";
+            }
+            unset($issueAssistantModel, $issueFollows, $followIssueIdArr);
         }
 
         // 未解决的
