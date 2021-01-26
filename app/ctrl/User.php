@@ -73,27 +73,36 @@ class User extends BaseUserCtrl
         $data['nav'] = 'profile';
         $this->getUserInfoByArg($data);
         //print_r($data);
-        $this->render('gitlab/user/profile.php', $data);
+        $this->render('twig/user/profile.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageLogOperation()
     {
         $data = [];
         $data['title'] = '操作日志';
         $data['nav'] = 'log_operation';
         $this->getCurrentUserInfo($data);
-        $this->render('gitlab/user/log_operation.php', $data);
+        $this->render('twig/user/log_operation.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageHaveJoinProjects()
     {
         $data = [];
         $data['title'] = '参与的项目';
         $data['nav'] = 'profile';
         $this->getCurrentUserInfo($data);
-        $this->render('gitlab/user/have_join_projects.php', $data);
+        $this->render('twig/user/have_join_projects.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageFollowedIssues()
     {
         $data = [];
@@ -102,9 +111,27 @@ class User extends BaseUserCtrl
         $this->getCurrentUserInfo($data);
 
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/user/follow_issues.php', $data);
+        $this->render('twig/user/follow_issues.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function pageAssistantIssues()
+    {
+        $data = [];
+        $data['title'] = '协助的事项';
+        $data['nav'] = 'assistant_issues';
+        $this->getCurrentUserInfo($data);
+
+        ConfigLogic::getAllConfigs($data);
+        $this->render('twig/user/assistant_issues.php', $data);
+    }
+
+    /**
+     * @param $data
+     * @throws \Exception
+     */
     private function getUserInfoByArg(&$data){
         $userId = '';
         if (isset($_GET['_target'][2])) {
@@ -126,6 +153,10 @@ class User extends BaseUserCtrl
         $data['user_id'] = $userId;
     }
 
+    /**
+     * @param $data
+     * @throws \Exception
+     */
     private function getCurrentUserInfo(&$data){
 
         $userId = UserAuth::getId();
@@ -142,21 +173,27 @@ class User extends BaseUserCtrl
         $data['user_id'] = $userId;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pagePreferences()
     {
         $data = [];
         $data['title'] = '界面设置';
         $data['nav'] = 'profile';
-        $this->render('gitlab/user/preferences.php', $data);
+        $this->render('twig/user/preferences.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageFilters()
     {
         $data = [];
         $data['title'] = '用户实现过滤器';
         $data['nav'] = 'profile';
         $data['projects'] = ConfigLogic::getAllProjects();
-        $this->render('gitlab/user/user_filters.php', $data);
+        $this->render('twig/user/user_filters.php', $data);
     }
 
     /**
@@ -411,9 +448,30 @@ class User extends BaseUserCtrl
         if (isset($_GET['page'])) {
             $page = max(1, (int)$_GET['page']);
         }
-
-
         list($data['issues'], $total) = IssueFilterLogic::getMyFollow($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 获取我协助的事项
+     * @throws \Exception
+     */
+    public function fetchMyAssistantIssues()
+    {
+        $curUserId = UserAuth::getInstance()->getId();
+        if (isset($_REQUEST['user_id'])) {
+            $curUserId = $_REQUEST['user_id'];
+        }
+        $page = 1;
+        $pageSize = 20;
+        if (isset($_GET['page'])) {
+            $page = max(1, (int)$_GET['page']);
+        }
+        list($data['issues'], $total) = IssueFilterLogic::getMyAssistant($curUserId, $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

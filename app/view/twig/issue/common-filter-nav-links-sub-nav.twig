@@ -30,6 +30,10 @@
                 <a title="我关注的事项" href="<?= issue_main_url?>?sys_filter=my_followed"><span>我关注的</span>
                 </a>
             </li>
+            <li class="filter_nav_li  {% if (sys_filter == 'my_assistant_issue') %} <?= 'active_underline' ?>{% endif %}">
+                <a title="我协助的事项" href="<?= issue_main_url?>?sys_filter=my_assistant_issue"><span>我协助的</span>
+                </a>
+            </li>
             <li class="filter_nav_li  {% if (sys_filter == 'my_report') %} <?= 'active_underline' ?>{% endif %}">
                 <a title="我报告的事项" href="<?= issue_main_url?>?sys_filter=my_report"><span>我报告的</span>
                 </a>

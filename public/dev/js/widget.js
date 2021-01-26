@@ -945,7 +945,6 @@ var Widgets = (function () {
         });
     }
 
-
     Widgets.prototype.fetchFollowIssues = function (_key,page) {
         var params = {format: 'json'};
         if(is_empty(page)){
@@ -973,6 +972,48 @@ var Widgets = (function () {
                     var pages = parseInt(resp.data.pages);
                     if (pages > 1) {
                         $('#my_follow_more').show();
+                    }
+                    $(`#toolform_${_key}`).hide();
+                    $(`#tool_${_key}`).show();
+
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '数据为空',
+                        name: 'computer',
+                        handleHtml: ''
+                    })
+                    $(`#tool_${_key}`).append(emptyHtml.html)
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+
+    Widgets.prototype.fetchAssistantIssues = function (_key,page) {
+        var params = {format: 'json'};
+        if(is_empty(page)){
+            page = 1;
+        }
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url+'widget/fetchAssistantIssues',
+            data: {page: page},
+            success: function (resp) {
+                auth_check(resp);
+                if(resp.data.issues.length){
+                    var source = $('#'+_key+'_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#'+_key+'_wrap').html(result);
+                    window._cur_page = parseInt(page);
+                    var pages = parseInt(resp.data.pages);
+                    if (pages > 1) {
+                        $('#my_assistant_issue_more').show();
                     }
                     $(`#toolform_${_key}`).hide();
                     $(`#tool_${_key}`).show();

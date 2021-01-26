@@ -21,8 +21,12 @@ function is_datetime_format($date = '2020-04-16')
  * @return false|string
  * @throws Exception
  */
-function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_datetime_format')
+function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'default')
 {
+    static $settingLogic;
+    if(is_null($settingLogic)){
+        $settingLogic = new \main\app\classes\SettingsLogic();
+    }
     $formatTime = intval($formatTime);
     $startTime = intval($startTime);
     if (empty($startTime)) {
@@ -31,17 +35,11 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_dat
     if (empty($formatTime)) {
         return '';
     }
-    if (empty($formatSystem)) {
-        $formatSystem = 'full_datetime_format';
-    }
+    $str_time = '';
 
     if (isApp()) {
         $formatSystem = 'app_week_format';
     }
-
-    $str_time = '';
-    $settingLogic = new \main\app\classes\SettingsLogic();
-
     if ($formatSystem == 'time_format') {
         return date($settingLogic->timeFormat(), $formatTime);
     }
@@ -51,14 +49,17 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_dat
     if ($formatSystem == 'full_datetime_format') {
         return date($settingLogic->fullDatetimeFormat(), $formatTime);
     }
-
+    if ($formatSystem == 'datetime_format') {
+        return date($settingLogic->datetimeFormat(), $formatTime);
+    }
+    // 往下是默认格式
     $time = $startTime - $formatTime;
     if ($time >= 86400) {
         if ($formatSystem == 'app_week_format' && $formatTime > strtotime('-1 week')) {
             $weekNumArr = array('日', '一', '二', '三', '四', '五', '六');
             return '星期' . $weekNumArr[date('w', $formatTime)];
         }
-        return $str_time = date($settingLogic->datetimeFormat(), $formatTime);
+        return date($settingLogic->fullDatetimeFormat(), $formatTime);
     }
     if ($time >= 3600) {
         $str_time .= intval($time / 3600) . '小时';
@@ -100,6 +101,12 @@ if (!function_exists('msectime')) {
 
 /**
  *  计算两个时间的工作日, 同时计算手工设置假期的日期和额外的工作日
+ * @param $startDate
+ * @param $endDate
+ * @param $workDates
+ * @param $holidays
+ * @param $addDays
+ * @return float|int
  * @example
  * $startDate = '2020-03-03';
  * $endDate = '2020-03-22';
@@ -108,23 +115,17 @@ if (!function_exists('msectime')) {
  * var_dump(getWorkingDays($startDate,$endDate));
  * var_dump(getWorkingDays($startDate,$endDate,$holidays));
  * var_dump(getWorkingDays($startDate,$endDate,$holidays,$addDays));
- * @param $startDate
- * @param $endDate
- * @param $workDates
- * @param $holidays
- * @param $addDays
- * @return float|int
  */
 function getWorkingDays($startDate, $endDate, $workDates, $holidays = [], $addDays = [])
 {
     if ($startDate == '000-00-00' || $endDate == '000-00-00') {
         return 0;
     }
-    if(!is_array($workDates)){
+    if (!is_array($workDates)) {
         $workDates = json_decode($workDates, true);
     }
-    if(is_null($workDates)){
-        $workDates = [1,2,3,4,5];
+    if (is_null($workDates)) {
+        $workDates = [1, 2, 3, 4, 5];
     }
     $startUnixTime = strtotime($startDate);
     $endUnixTime = strtotime($endDate);
@@ -156,10 +157,10 @@ function getWorkingDays($startDate, $endDate, $workDates, $holidays = [], $addDa
         $dateArr[] = $date;
         if (!in_array($date, $addDays)) {
             // 节假日不算
-            if (in_array($date, $holidays) ) {
+            if (in_array($date, $holidays)) {
                 $finalDays--;
-            }else{
-                if (!in_array($week, $workDates) ) {
+            } else {
+                if (!in_array($week, $workDates)) {
                     $finalDays--;
                 }
             }

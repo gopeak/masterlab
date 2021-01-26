@@ -176,16 +176,14 @@ var Profile = (function() {
             url: url,
             data: $("#edit_user").serialize(),
             success: function (resp) {
-
                 auth_check(resp);
                 //alert(resp.msg);
-                if( resp.ret=='200'){
+                if( _.toInteger(resp.ret)===200){
                     notify_success('保存成功');
-                    //window.location.reload();
+                    window.location.reload();
                 }else {
                     notify_error(resp.msg);
                 }
-
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

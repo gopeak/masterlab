@@ -849,6 +849,22 @@ class Widget extends BaseUserCtrl
     }
 
     /**
+     * 获取我协助的事项
+     * @throws \Exception
+     */
+    public function fetchAssistantIssues()
+    {
+        $pageSize = 20;
+        $page = 1;
+        $curUserId = UserAuth::getId();
+        list($data['issues'], $total) = IssueFilterLogic::getMyAssistant($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+    /**
      * 计算百分比
      * @param $rows
      * @param $count

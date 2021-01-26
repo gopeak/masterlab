@@ -261,7 +261,47 @@
 </script>
 
 
+<script id="my_assistant_issue-body_tpl" type="text/html">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#id</th>
+            <th>优先级</th>
+            <th>主题</th>
+        </tr>
+        </thead>
+        <tbody id="my_assistant_issue_wrap">
 
+        </tbody>
+    </table>
+    <div id="my_assistant_issue_more" class="assignee-more" style="display: none">
+        <a href="/issue/main?sys_filter=my_assistant_issue" style="float: right"
+           data-toggle="tooltip"
+           data-placement="top"
+           data-container="body"
+           data-original-title="更多关注事项">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+</script>
+<script id="my_assistant_issue_tpl" type="text/html">
+    {{#issues}}
+    <tr>
+        <th scope="row">#{{issue_num}}</th>
+        <td>{{priority_html priority }}</td>
+        <td><a href="/issue/detail/index/{{id}}">
+                {{summary}}
+                {{#if_eq warning_delay 1 }}
+                <span style="color:#fc9403" title="即将延期">即将延期</span>
+                {{/if_eq}}
+                {{#if_eq postponed 1 }}
+                <span style="color:#db3b21" title="逾期">逾期</span>
+                {{/if_eq}}
+                {{status_html status }}
+            </a></td>
+    </tr>
+    {{/issues}}
+</script>
 
 <script id="activity-body_tpl" type="text/html">
     <ul  id="activity_wrap" class="event-list">
@@ -307,14 +347,7 @@
                     </div>
                 </span>
             </h4>
-            <time class="event-time js-time" title=""
-                  datetime="{{time}}"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  data-container="body"
-                  data-original-title="{{time_full}}"
-                  data-tid="449">{{time_text}}
-            </time>
+            <span  style="font-size: 14px;line-height: 22px;color: #aaa;" title="{{time_full}}"   >{{time_text}}</span>
         </div>
     </li>
     {{/activity}}
