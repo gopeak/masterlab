@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="http://www.masterlab.vip ">
-    <img width="200" src="http://www.masterlab.vip/Images/logo.png">
+    <img width="200" src="https://www.masterlab.vip/assets/img/logo.png">
   </a>
 </p>
 
@@ -64,6 +64,7 @@ http://demo.masterlab.vip
      -  masterlab\storage  
      -  masterlab\public\attachment  
      -  masterlab\public\install 
+     -  masterlab\plugin 
      ```
  2. 下载3.0版本或master分支代码，将根目录的运行依赖库`vendor.zip`解压出来  
        ```text
@@ -161,21 +162,14 @@ http://demo.masterlab.vip
 
  4. 重启web服务器  
 
- 5. 运行 masterlab_socket（可选）  
-    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,下载地址 https://github.com/gopeak/masterlab_socket/releases  
+ 5. 运行 masterlab_socket（Windows操作系统）  
     
-     Windows操作系统的
+      masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,下载地址 https://github.com/gopeak/masterlab_socket/releases  
      ```text
     # 在masterlab目录直接运行
     ./bin/masterlab_socket.exe start -d 
     ```
-     Linux操作系统的
-     ```text
-    # 在masterlab目录直接运行
-    chmod +x bin/masterlab_socket 
-    ./bin/masterlab_socket start -d
-    ```
-     其他操作系统 参考 https://github.com/gopeak/masterlab_socket 的文档自行编译  
+ 
      
  6. 如果是Linux系统， 安装php的swoole扩展， 可代替masterlab_socket：
     ```text
