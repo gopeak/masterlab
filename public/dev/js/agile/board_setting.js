@@ -344,7 +344,7 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.renderSwimSelect = function (swim_data, i) {
-        //console.log(swim_data)
+        console.log(swim_data)
         if (swim_data) {
             let selects = {};
             for (let source in swim_data) {
@@ -404,7 +404,7 @@ var BoardSetting = (function () {
 
                 }
                 if (source === 'assignee') {
-                    let source_data = swim_data[source];
+                    var source_data = swim_data[source];
                     selects[source] = $('#select_' + source + '_column_' + i);
                     selects[source].empty();
                     let select_datas = window._issueConfig.users;
@@ -415,7 +415,7 @@ var BoardSetting = (function () {
                         let title = row.display_name;
                         let avatar = row.avatar;
                         let selected = '';
-                        if (!source_data && ("undefined" !== typeof swim_data[source]) && isInArray(source_data, value)) {
+                        if (source_data && isInArray(source_data, value)) {
                             selected = 'selected';
                         }
                         let content = "<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='" + avatar + "' /> " + title;
@@ -435,8 +435,8 @@ var BoardSetting = (function () {
         let board_id = $('#form_board_id').val();
         let board_name = $('#board_name').val();
         let range_type = $('#range_type').val();
-        let is_filter_backlog = $('#checkbox_is_filter_backlog').is(':checked') ? '0' : '1';
-        let is_filter_closed = $('#checkbox_is_filter_closed').is(':checked') ? '0' : '1';
+        let is_filter_backlog = $('#checkbox_is_filter_backlog').is(':checked') ? '1' : '0';
+        let is_filter_closed = $('#checkbox_is_filter_closed').is(':checked') ? '1' : '0';
         let columns_data = [];
         let i = 0;
         $('.board_swim_item').each(function (el) {

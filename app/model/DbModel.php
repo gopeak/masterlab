@@ -352,8 +352,53 @@ class DbModel extends BaseModel
      */
     public function getFieldBySql($sql, $params = array())
     {
+        //echo $sql;
+        $this->removeInSqlParams($sql, $params);
         $result = $this->db->fetchColumn($sql, $params);
         return $result;
+    }
+
+    /**
+     * In语句将不会参数化
+     * @param $sql
+     * @param array $params
+     */
+    public function removeInSqlParams(&$sql, &$params)
+    {
+        if(empty($params)){
+            return ;
+        }
+        $sqlTest = strtolower($sql);
+        if (!preg_match('/in\s+\(\s*:.+?\s*\)/i', $sqlTest)) {
+            return ;
+        }
+        $arr =  [];
+        $newParams = [];
+        foreach ($params as $k => $item) {
+            if(!is_integer($k)){
+                $key = ':'.$k;
+                if(is_string($item)){
+                    $item = explode(',', $item);
+                }
+                if(is_array($item)){
+                    foreach ($item as &$v) {
+                        if(is_string($v)){
+                            $v =  "'{$v}'";
+                        }
+                    }
+                    $item = implode(',', $item);
+                }else{
+                    if( is_string($item) && trimStr($item)===''){
+                        $item = "''";
+                    }
+                }
+                $arr[$key] = $item;
+            }else{
+                $newParams[] = $item;
+            }
+        }
+        $sql = str_replace(array_keys($arr), array_values($arr), $sql);
+        $params = $newParams;
     }
 
 

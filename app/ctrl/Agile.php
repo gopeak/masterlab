@@ -1087,7 +1087,6 @@ class Agile extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目不存在');
         }
-
         $model = new AgileBoardColumnModel();
         $columns = $model->getsByBoard($id);
         if (empty($columns)) {
@@ -1100,9 +1099,7 @@ class Agile extends BaseUserCtrl
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
         unset($userLogic);
-
         $data['backlogs'] = [];
-
         if ($board['is_filter_backlog'] == '0') {
             list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
             if ($fetchRet) {
@@ -1111,8 +1108,6 @@ class Agile extends BaseUserCtrl
                 $this->ajaxFailed('服务器错误:', $issues);
             }
         }
-
-
         list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $board, $columns);
         if ($board['is_filter_closed'] == '0') {
             $closedColumn = $column;

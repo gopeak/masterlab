@@ -504,13 +504,11 @@ class IssueFilterLogic
             // echo $sqlCount;
             // print_r($params);
             $count = $model->getFieldBySql($sqlCount, $params);
-
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
-
             $sql .= ' ' . $order . $limit;
             //print_r($params);
             //echo $sql;die;
-
+            $model->removeInSqlParams($sql, $params);
             $arr = $model->db->fetchAll($sql, $params);
             $idArr = [];
             foreach ($arr as &$item) {

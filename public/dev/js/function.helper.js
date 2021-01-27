@@ -43,7 +43,7 @@ function getArrayValue(arr, $key, value ) {
 
 function in_array(value, arr ) {
     for (var i = 0; i < arr.length; i++) {
-        if (value === arr[i]) {
+        if (value == arr[i]) {
             return true;
         }
     }
@@ -239,9 +239,8 @@ function isInArray(arr, value) {
     if(is_empty(arr)){
         return false;
     }
-
     for (var i = 0; i < arr.length; i++) {
-        if (value === arr[i]) {
+        if (value == arr[i]) {
             return true;
         }
     }
