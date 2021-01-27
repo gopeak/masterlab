@@ -69,7 +69,7 @@ class Index extends BasePluginCtrl
         $kodSdk = new KodSdk();
         list($ret, $accessToken) =  $kodSdk->getAccessToken($docAdmin);
         if(!$ret){
-            echo '文档模块集成失败,请联系管理员';
+            echo '文档模块集成失败, 请尝试给 plugin/document/kod 目录及子目录赋予读写权限';
             return;
         }
         list($ret, $kodUsers) = $kodSdk->getUsers($accessToken);
@@ -77,13 +77,11 @@ class Index extends BasePluginCtrl
             echo '文档模块获取用户信息失败,请联系管理员';
             return;
         }
-        //print_r($kodUsers);
         list($ret, $kodRoles) = $kodSdk->getRoles($accessToken);
         if(!$ret){
             echo '文档模块获取角色信息失败,请联系管理员';
             return;
         }
-
         $expectProjectDocUsername = 'project'.$data['project_id'];
         $actUserArr = null;
         foreach ($kodUsers as $kodUser) {
@@ -105,16 +103,28 @@ class Index extends BasePluginCtrl
             //$homePath = STORAGE_PATH.'document/'.$expectProjectDocUsername;
             //@mkdir($homePath);
             //$dataArr['homePath'] = $homePath;
-            list($ret) = $kodSdk->createUser($dataArr, $accessToken);
+            list($ret, $msg) = $kodSdk->createUser($dataArr, $accessToken);
             if(!$ret){
                 echo '文档模块创建用户信息失败,请联系管理员';
                 return;
             }
-            FileUtil::copyDir(APP_PATH.'plugin/document/kod/data/User/project0', APP_PATH.'plugin/document/kod/data/User/'.$expectProjectDocUsername);
-        }
+            list($ret, $userArr) = $kodSdk->getUser($expectProjectDocUsername, $accessToken);
+            $userPath = $expectProjectDocUsername;
+            if($ret && isset($userArr['path']) && !empty($userArr['path'])){
+                $userPath = $userArr['path'];
+            }
+            $originPath = PRE_APP_PATH.'plugin/document/kod/data/User/'.$expectProjectDocUsername;
+            $projectPath = PRE_APP_PATH.'plugin/document/kod/data/User/'.$userPath;
+            if(!file_exists($projectPath) && !file_exists($projectPath.'/data') ){
+                if(!file_exists($originPath)){
+                    FileUtil::copyDir(PRE_APP_PATH.'plugin/document/kod/data/User/project0',  $projectPath);
+                }
+            }
+            if(file_exists($originPath)){
+                FileUtil::copyDir($originPath,  $projectPath);
+            }
 
-        // print_r($actUserArr);
-        // die;
+        }
         //base64Encode('admin')+'|'+md5('admin'+'aabbcckod')
         require_once realpath(__DIR__) . '/kod/config/setting_user.php';
         $loginToken = base64_encode($expectProjectDocUsername).'|'.md5($expectProjectDocUsername.$GLOBALS['config']['settings']['apiLoginTonken']);
