@@ -2688,9 +2688,9 @@ CREATE TABLE `project_template` (
 --
 
 INSERT INTO `project_template` (`id`, `name`, `category_id`, `description`, `image_bg`, `order_weight`, `created_at`, `updated_at`, `user_id`, `issue_type_scheme_id`, `issue_workflow_scheme_id`, `issue_ui_scheme_id`, `nav_type`, `ui_style`, `theme_color`, `is_fix_header`, `is_fix_left`, `subsystem_json`, `is_system`, `page_layout`, `project_view`, `issue_view`, `default_issue_type_id`) VALUES
-(1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/react.png', 100000, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"gantt\",\"mind\",\"kanban\",\"activity\",\"document\",\"chart\",\"stat\"]', 1, 'fluid', 'summary', '', 1),
-(2, '软件开发', 1, '模板描述', '/dev/img/project_tpl/vuejs.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"kanban\",\"mind\",\"gantt\",\"activity\",\"chart\",\"stat\",\"document\"]', 0, 'fluid', 'issues', 'detail', 1),
-(3, 'Scrum敏捷开发', 1, '模板描述', '/dev/img/project_tpl/preact.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"backlog\",\"sprints\",\"kanban\",\"mind\",\"chart\",\"stat\",\"activity\",\"document\"]', 0, '', 'issues', '', 1);
+(1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/default.png', 100000, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"gantt\",\"mind\",\"kanban\",\"activity\",\"document\",\"chart\",\"stat\"]', 1, 'fluid', 'summary', '', 1),
+(2, '软件开发', 1, '模板描述', '/dev/img/project_tpl/software.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"kanban\",\"mind\",\"gantt\",\"activity\",\"chart\",\"stat\",\"document\"]', 0, 'fluid', 'issues', 'detail', 1),
+(3, 'Scrum敏捷开发', 1, '模板描述', '/dev/img/project_tpl/scrum.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"backlog\",\"sprints\",\"kanban\",\"mind\",\"chart\",\"stat\",\"activity\",\"document\"]', 0, '', 'issues', '', 1);
 
 -- --------------------------------------------------------
 
