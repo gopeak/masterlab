@@ -196,15 +196,13 @@ var BoardColumn = (function () {
         });
     }
 
-    BoardColumn.prototype.fetchBoardById = function (board_id ,keyword) {
+    BoardColumn.prototype.fetchBoardById = function (board_id) {
 
         var params = { format: 'json' };
         var project_id = window._cur_project_id;
-        var keyword = arguments[1] ? arguments[1] : null;
-
+        var keyword = $('#kanban-keyword').val();
         var urls = parseURL(window.location.href);
         var post_data = { id: board_id, project_id: project_id ,keyword:keyword };
-        Object.assign(post_data, urls.searchObject);
 
         $.ajax({
             type: "GET",

@@ -194,12 +194,16 @@ class Agile extends BaseUserCtrl
 
         $projectFlagModel = new ProjectFlagModel();
         $boardDefaultId = (int)$projectFlagModel->getValueByFlag($data['project_id'], 'board_default_id');
+        if(isset($_GET['boards_select'])){
+            $boardDefaultId = (int)$_GET['boards_select'];
+        }
         $agileBoardModel = new AgileBoardModel();
         $boardDefault = $agileBoardModel->getById($boardDefaultId);
         if(empty($boardDefaultId) || empty($boardDefault)){
             $boardDefaultId = $data['boards'][0]['id'] ?? 1;
         }
         $data['board_default_id'] = $boardDefaultId;
+        $data['keyword'] = $_GET['keyword'] ?? '';
 
         $this->render('gitlab/agile/board.php', $data);
     }
