@@ -5,7 +5,7 @@
 
     <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
-    <!-- <script src="/dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script> -->
+     <script src="/dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/agile/board_column.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/agile/board_setting.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
@@ -105,7 +105,7 @@
                                                                    data-project-id="31"
                                                                    data-username-params="[]"
                                                                    id="filtered-search-issues"
-                                                                   placeholder="搜索或过滤结果..."
+                                                                   placeholder="通过事项标题过滤结果..."
                                                                    autocomplete="off">
                                                         </li>
                                                     </ul>
@@ -257,7 +257,7 @@
                                             </div>
                                             <div class="filter-dropdown-container">
                                                 <div class="board-extra-actions">
-                                                    <button class="btn btn-default" type="submit" id="btn-submit"
+                                                    <button class="btn btn-default" type="button" id="btn-search"
                                                             style="margin-left: 0px"><i class="fa fa-search"></i>
                                                     </button>
                                                     <a id="toggle_focus_mode" href="#" role="button" aria-label=""
@@ -415,7 +415,7 @@
                             <button type="button" class="btn btn-info" id="btn-show_add_board">
                                 <i  class="fa fa-plus"></i> 创建看板
                             </button>
-                            <a class="btn btn-cancel" data-dismiss="modal" href="#">关 闭</a>
+                            <a  class="btn btn-cancel" data-dismiss="modal" href="javascript:;" onclick="$board_setting.refreshBoards()">关 闭</a>
                         </div>
 
                         <div id="board_add_form" class="modal-body hide" style="min-height: 400px">
@@ -490,9 +490,9 @@
                                                 <p style="margin-top: 5px;">未列入迭代的事项</p>
                                                 <div class="row  ">
                                                     <div class="col-sm-8">
-                                                        <div class="checkbox" title="是否显示">
+                                                        <div class="checkbox" title="隐藏">
                                                             <label>
-                                                                <input type="checkbox" id="checkbox_is_filter_backlog" name="checkbox_is_filter_backlog"> 是否显示
+                                                                <input type="checkbox" id="checkbox_is_filter_backlog" name="checkbox_is_filter_backlog"> 隐藏
                                                             </label>
                                                         </div>
                                                     </div>
@@ -528,9 +528,9 @@
                                                 <p style="margin-top: 5px;">已经关闭的事项</p>
                                                 <div class="row  ">
                                                     <div class="col-sm-8">
-                                                        <div class="checkbox" title="是否显示">
+                                                        <div class="checkbox" title="隐藏">
                                                             <label>
-                                                                <input type="checkbox" id="checkbox_is_filter_closed" name="checkbox_is_filter_closed"> 是否显示
+                                                                <input type="checkbox" id="checkbox_is_filter_closed" name="checkbox_is_filter_closed"> 隐藏
                                                             </label>
                                                         </div>
                                                     </div>
@@ -929,7 +929,13 @@
         //$('.selectpicker').selectpicker();
         $("#boards_select").change(function () {
             console.log($(this).val());
+            //$('.selectpicker').selectpicker('refresh');
             window.$board.fetchBoardById($(this).val());
+        });
+
+        $("#btn-search").bind("click", function () {
+
+            window.$board.fetchBoardById($('#boards_select').val(), $('#filtered-search-issues').val());
         });
 
         $("#btn-create-issue").bind("click", function () {

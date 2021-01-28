@@ -714,6 +714,11 @@ class AgileLogic
                 $sql .= "  ) AND project_id=:project_id ";
                 $params['project_id'] = $projectId;
 
+                if (isset($_GET['keyword']) && !empty($_GET['keyword'])) {
+                    $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
+                    $params['summary'] = $_GET['keyword'];
+                }
+
                 if ($board['range_type'] == 'sprints') {
                     $rangeDataArr = json_decode($board['range_data'], true);
                     $sql .= " AND   sprint  in (:sprints) ";
