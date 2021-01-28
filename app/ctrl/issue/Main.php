@@ -2436,7 +2436,6 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('当前项目中您没有权限进行此操作,需要导入事项权限');
             }
         }
-
         $filename = null;
         $projectId = null;
         if (isset($_REQUEST['project_id']) && !empty($_REQUEST['project_id'])) {
@@ -2463,6 +2462,7 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '找不到上传文件');
         }
         $issueLogic = new IssueLogic();
+        error_reporting(E_ERROR);
         list($ret, $successRows, $errArr) = $issueLogic->importExcel($projectId, $filename);
         if ($ret) {
             @unlink($filename);

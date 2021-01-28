@@ -75,6 +75,41 @@ var BoardSetting = (function () {
         });
     };
 
+    BoardSetting.prototype.refreshBoards = function () {
+        var params = { format: 'json' };
+        var project_id = window._cur_project_id;
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url + 'agile/fetchBoardsByProject',
+            data: { project_id: project_id },
+            success: function (resp) {
+                var boards_select = $('#boards_select');
+                var selectedId = boards_select.val();
+                boards_select.empty();
+                for (let i = 0; i < resp.data.boards.length; i++) {
+                    let row = resp.data.boards[i];
+                    let id = row.id;
+                    let title = row.name;
+                    let selected = '';
+                    if (selectedId == id) {
+                        selected = 'selected';
+                    }
+                    var opt = "<option  value='" + id + "' " + selected + ">" + title + "</option>";
+                    console.log(opt);
+                    boards_select.append(opt);
+                }
+                $('.selectpicker').selectpicker('refresh');
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+
+    }
+
     BoardSetting.prototype.initBoardFormSprint = function (sprints, id_arr) {
         //console.log(sprints, id_arr)
         var range_sprints = $('#range_sprints');
@@ -310,20 +345,19 @@ var BoardSetting = (function () {
         let board_name = board_data.name;
         $('#board_name').val(board_name);
         let columns = board_data.columns;
-        let is_display_backlog = board_data.is_filter_backlog;
-        let is_display_closed = board_data.is_filter_closed;
-
-        if (is_display_backlog === '1') {
+        let is_display_backlog = _.toInteger(board_data.is_filter_backlog);
+        let is_display_closed = _.toInteger(board_data.is_filter_closed);
+        // alert(is_display_closed);
+        if (is_display_backlog === 1) {
             $('#checkbox_is_filter_backlog').attr("checked", true);
         } else {
             $('#checkbox_is_filter_backlog').removeAttr("checked");
         }
-        if (is_display_closed === '1') {
+        if (is_display_closed === 1) {
             $('#checkbox_is_filter_closed').attr("checked", true);
         } else {
             $('#checkbox_is_filter_closed').removeAttr("checked");
         }
-
         for (let i = 0; i < columns.length; i++) {
             console.log(columns[i].name)
             let name = columns[i].name;
@@ -344,7 +378,7 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.renderSwimSelect = function (swim_data, i) {
-        //console.log(swim_data)
+        console.log(swim_data)
         if (swim_data) {
             let selects = {};
             for (let source in swim_data) {
@@ -404,7 +438,7 @@ var BoardSetting = (function () {
 
                 }
                 if (source === 'assignee') {
-                    let source_data = swim_data[source];
+                    var source_data = swim_data[source];
                     selects[source] = $('#select_' + source + '_column_' + i);
                     selects[source].empty();
                     let select_datas = window._issueConfig.users;
@@ -415,7 +449,7 @@ var BoardSetting = (function () {
                         let title = row.display_name;
                         let avatar = row.avatar;
                         let selected = '';
-                        if (!source_data && ("undefined" !== typeof swim_data[source]) && isInArray(source_data, value)) {
+                        if (source_data && isInArray(source_data, value)) {
                             selected = 'selected';
                         }
                         let content = "<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='" + avatar + "' /> " + title;
@@ -435,8 +469,8 @@ var BoardSetting = (function () {
         let board_id = $('#form_board_id').val();
         let board_name = $('#board_name').val();
         let range_type = $('#range_type').val();
-        let is_filter_backlog = $('#checkbox_is_filter_backlog').is(':checked') ? '0' : '1';
-        let is_filter_closed = $('#checkbox_is_filter_closed').is(':checked') ? '0' : '1';
+        let is_filter_backlog = $('#checkbox_is_filter_backlog').is(':checked') ? '1' : '0';
+        let is_filter_closed = $('#checkbox_is_filter_closed').is(':checked') ? '1' : '0';
         let columns_data = [];
         let i = 0;
         $('.board_swim_item').each(function (el) {
@@ -506,7 +540,9 @@ var BoardSetting = (function () {
                             auth_check(resp);
                             if (resp.ret === '200') {
                                 notify_success(resp.msg, resp.data);
-                                BoardSetting.prototype.fetchBoards();
+                                // BoardSetting.prototype.fetchBoards();
+                                // BoardSetting.prototype.refreshBoards();
+                                window.location.reload();
                             } else {
                                 notify_error(resp.msg);
                             }

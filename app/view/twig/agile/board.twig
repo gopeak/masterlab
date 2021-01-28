@@ -5,7 +5,7 @@
 
     <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
-    <!-- <script src="/dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script> -->
+     <script src="/dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/agile/board_column.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/agile/board_setting.js?v=<?= _version ?>" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
@@ -78,11 +78,8 @@
                             <div class="issues-filters">
                                 <div class="filtered-search-block issues-details-filters row-content-block second-block"
                                      v-pre="false">
-                                    <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
-                                          method="get">
-                                        <input name="utf8" type="hidden" value="&#x2713;"/>
+                                    <form class="filter-form js-filter-form" action="/<?=G_project.org_path?>/<?=G_project.key?>/kanban" accept-charset="UTF-8"  method="get">
                                         <div class="issues-other-filters filtered-search-wrapper">
-
                                             <div class="filter-dropdown-container">
                                                 <div class="dropdown inline prepend-right-10">
                                                     <select id="boards_select" name="boards_select"
@@ -95,169 +92,24 @@
                                             </div>
 
                                             <div class="filtered-search-box" style="left:5px">
-                                                {% verbatim %}
+
                                             <div class="filtered-search-box-input-container">
-                                                <div class="scroll-container">
+
                                                     <ul class="tokens-container list-unstyled">
                                                         <li class="input-token">
-                                                            <input class="form-control filtered-search"
-                                                                   data-base-endpoint="/ismond/xphp"
-                                                                   data-project-id="31"
-                                                                   data-username-params="[]"
-                                                                   id="filtered-search-issues"
-                                                                   placeholder="搜索或过滤结果..."
-                                                                   autocomplete="off">
+                                                            <input type="text" class="form-control"  name="keyword"  value="<?=keyword?>"  id="kanban-keyword"  placeholder="输入关键字可模糊匹配事项标题"/>
                                                         </li>
                                                     </ul>
                                                     <i class="fa fa-filter"></i>
                                                     <button class="clear-search hidden" type="button">
                                                         <i class="fa fa-times"></i>
                                                     </button>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu hint-dropdown"
-                                                     id="js-dropdown-hint">
-                                                    <ul data-dropdown>
-                                                        <li class="filter-dropdown-item" data-action="submit">
-                                                            <button class="btn btn-link">
-                                                                <i class="fa fa-search"></i>
-                                                                <span>提示:按"回车键"进行查询</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <i class="fa {{icon}}"></i>
-                                                                <span class="js-filter-hint">{{hint}}</span>
-                                                                <span class="js-filter-tag dropdown-light-content">{{tag}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="报告人" data-icon="pencil" data-tag="@author"
-                                                     id="js-dropdown-author">
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link dropdown-user">
-                                                                <img alt="{{name}}&#39;s avatar" class="avatar"
-                                                                     data-src="{{avatar_url}}" width="30">
-                                                                <div class="dropdown-user-details">
-                                                                    <span>{{name}}</span>
-                                                                    <span class="dropdown-light-content">@{{username}}</span>
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="经办人" data-icon="user" data-tag="@assignee"
-                                                     id="js-dropdown-assignee">
-                                                    <ul data-dropdown>
-                                                        <li class="filter-dropdown-item" data-value="none">
-                                                            <button class="btn btn-link">
-                                                                --
-                                                            </button>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                    </ul>
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link dropdown-user">
-                                                                <img alt="{{name}}&#39;s avatar" class="avatar"
-                                                                     data-src="{{avatar_url}}" width="30">
-                                                                <div class="dropdown-user-details">
-                                                                    <span>{{name}}</span>
-                                                                    <span class="dropdown-light-content">@{{username}}</span>
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="迭代" data-icon="rocket" data-tag="sprint"
-                                                     data-type="input" id="js-dropdown-sprint">
-                                                    <ul data-dropdown>
-                                                        <li class="filter-dropdown-item" data-value="none">
-                                                            <button class="btn btn-link">
-                                                                --
-                                                            </button>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                    </ul>
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span class="label-title js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="模块" data-icon="square" data-tag="module"
-                                                     data-type="input" id="js-dropdown-module">
-                                                    <ul data-dropdown>
-                                                        <li class="filter-dropdown-item" data-value="none">
-                                                            <button class="btn btn-link">
-                                                                --
-                                                            </button>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                    </ul>
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span class="label-title js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="状态" data-icon="info" data-tag="status"
-                                                     data-type="input"
-                                                     id="js-dropdown-status">
-
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span class="label label-{{color}} js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="解决结果" data-icon="info" data-tag="resolve"
-                                                     data-type="input" id="js-dropdown-resolve">
-
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span style="color:{{color}}"
-                                                                      class="label-title js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="优先级" data-icon="info" data-tag="priority"
-                                                     data-type="input" id="js-dropdown-priority">
-
-                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                        <li class="filter-dropdown-item">
-                                                            <button class="btn btn-link">
-                                                                <span style="color:{{status_color}}"
-                                                                      class="label-title js-data-value">{{name}}</span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
                                             </div>
-                                            {% endverbatim %}
+
                                             </div>
                                             <div class="filter-dropdown-container">
                                                 <div class="board-extra-actions">
-                                                    <button class="btn btn-default" type="submit" id="btn-submit"
+                                                    <button class="btn btn-default" type="submit" id="btn-search"
                                                             style="margin-left: 0px"><i class="fa fa-search"></i>
                                                     </button>
                                                     <a id="toggle_focus_mode" href="#" role="button" aria-label=""
@@ -415,7 +267,7 @@
                             <button type="button" class="btn btn-info" id="btn-show_add_board">
                                 <i  class="fa fa-plus"></i> 创建看板
                             </button>
-                            <a class="btn btn-cancel" data-dismiss="modal" href="#">关 闭</a>
+                            <a  class="btn btn-cancel" data-dismiss="modal" href="javascript:;" onclick="$board_setting.refreshBoards()">关 闭</a>
                         </div>
 
                         <div id="board_add_form" class="modal-body hide" style="min-height: 400px">
@@ -490,9 +342,9 @@
                                                 <p style="margin-top: 5px;">未列入迭代的事项</p>
                                                 <div class="row  ">
                                                     <div class="col-sm-8">
-                                                        <div class="checkbox" title="是否显示">
+                                                        <div class="checkbox" title="隐藏">
                                                             <label>
-                                                                <input type="checkbox" id="checkbox_is_filter_backlog" name="checkbox_is_filter_backlog"> 是否显示
+                                                                <input type="checkbox" id="checkbox_is_filter_backlog" name="checkbox_is_filter_backlog"> 隐藏
                                                             </label>
                                                         </div>
                                                     </div>
@@ -528,9 +380,9 @@
                                                 <p style="margin-top: 5px;">已经关闭的事项</p>
                                                 <div class="row  ">
                                                     <div class="col-sm-8">
-                                                        <div class="checkbox" title="是否显示">
+                                                        <div class="checkbox" title="隐藏">
                                                             <label>
-                                                                <input type="checkbox" id="checkbox_is_filter_closed" name="checkbox_is_filter_closed"> 是否显示
+                                                                <input type="checkbox" id="checkbox_is_filter_closed" name="checkbox_is_filter_closed"> 隐藏
                                                             </label>
                                                         </div>
                                                     </div>
@@ -929,6 +781,7 @@
         //$('.selectpicker').selectpicker();
         $("#boards_select").change(function () {
             console.log($(this).val());
+            //$('.selectpicker').selectpicker('refresh');
             window.$board.fetchBoardById($(this).val());
         });
 

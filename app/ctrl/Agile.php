@@ -194,10 +194,16 @@ class Agile extends BaseUserCtrl
 
         $projectFlagModel = new ProjectFlagModel();
         $boardDefaultId = (int)$projectFlagModel->getValueByFlag($data['project_id'], 'board_default_id');
-        if(empty($boardDefaultId)){
+        if(isset($_GET['boards_select'])){
+            $boardDefaultId = (int)$_GET['boards_select'];
+        }
+        $agileBoardModel = new AgileBoardModel();
+        $boardDefault = $agileBoardModel->getById($boardDefaultId);
+        if(empty($boardDefaultId) || empty($boardDefault)){
             $boardDefaultId = $data['boards'][0]['id'] ?? 1;
         }
         $data['board_default_id'] = $boardDefaultId;
+        $data['keyword'] = $_GET['keyword'] ?? '';
 
         $this->render('gitlab/agile/board.php', $data);
     }
@@ -1087,7 +1093,6 @@ class Agile extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目不存在');
         }
-
         $model = new AgileBoardColumnModel();
         $columns = $model->getsByBoard($id);
         if (empty($columns)) {
@@ -1100,10 +1105,8 @@ class Agile extends BaseUserCtrl
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
         unset($userLogic);
-
         $data['backlogs'] = [];
-
-        if ($board['is_filter_backlog'] == '0') {
+        if ((int)$board['is_filter_backlog'] == 0) {
             list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
             if ($fetchRet) {
                 $data['backlogs'] = $issues;
@@ -1111,10 +1114,8 @@ class Agile extends BaseUserCtrl
                 $this->ajaxFailed('服务器错误:', $issues);
             }
         }
-
-
         list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $board, $columns);
-        if ($board['is_filter_closed'] == '0') {
+        if ((int)$board['is_filter_closed'] == 0) {
             $closedColumn = $column;
             $closedColumn['name'] = 'Closed';
             $closedColumn['data'] = '';
@@ -1130,6 +1131,10 @@ class Agile extends BaseUserCtrl
         }
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public function deleteBoard()
     {
         $boardId = null;
@@ -1142,19 +1147,22 @@ class Agile extends BaseUserCtrl
         if (empty($boardId)) {
             $this->ajaxFailed('参数错误', '看板id不能为空');
         }
-
         $boardModel = new AgileBoardModel();
         $board = $boardModel->getItemById($boardId);
         if (empty($board)) {
             $this->ajaxFailed('参数错误', '看板数据错误');
         }
-
         // email
         // $notifyLogic = new NotifyLogic();
         // $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_REMOVE, $board['project_id'], $board);
 
         $ret = $boardModel->deleteItem($boardId);
         if ($ret) {
+            $projectFlagModel = new ProjectFlagModel();
+            $boardDefaultId = (int)$projectFlagModel->getValueByFlag($board['project_id'], 'board_default_id');
+            if($boardDefaultId==$boardId){
+                $projectFlagModel->add($board['project_id'],'board_default_id', 0);
+            }
             $activityModel = new ActivityModel();
             $activityInfo = [];
             $activityInfo['action'] = '删除了看板';

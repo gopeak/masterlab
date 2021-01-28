@@ -200,10 +200,9 @@ var BoardColumn = (function () {
 
         var params = { format: 'json' };
         var project_id = window._cur_project_id;
-
+        var keyword = $('#kanban-keyword').val();
         var urls = parseURL(window.location.href);
-        var post_data = { id: board_id, project_id: project_id };
-        Object.assign(post_data, urls.searchObject);
+        var post_data = { id: board_id, project_id: project_id ,keyword:keyword };
 
         $.ajax({
             type: "GET",

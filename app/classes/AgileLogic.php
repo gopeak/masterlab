@@ -662,7 +662,6 @@ class AgileLogic
                     if ($type == 'status' && !empty($itemArr)) {
                         $filtered = true;
                         $idArr = self::getIdArrByKeys($statusKeyArr, $itemArr);
-
                         // 按状态搜索事项
                         $statusId = null;
                         if (isset($_GET[urlencode('状态')])) {
@@ -676,38 +675,36 @@ class AgileLogic
                         if (isset($_GET['status_id'])) {
                             $statusId = (int)$_GET['status_id'];
                         }
-
                         if (empty($statusId)) {
-                            $sql .= "     status in ( :status ) ";
+                            $sql .= "  `status` in ( :status ) ";
                             $params['status'] = implode(',', $idArr);
                         } else if (in_array($statusId, $idArr)) {
-                            $sql .= "     status=:status";
+                            $sql .= "  `status`=:status";
                             $params['status'] = $statusId;
                         } else if (!in_array($statusId, $idArr)) {
-                            $sql .= "     status=:status";
+                            $sql .= "  `status`=:status";
                             $params['status'] = 0;
                         } else {
-                            $sql .= "     status in ( :status ) ";
+                            $sql .= "  `status` in (:status) ";
                             $params['status'] = implode(',', $idArr);
                         }
-
                     }
                     if ($type == 'resolve' && !empty($itemArr)) {
                         $filtered = true;
-                        $sql .= " OR   resolve in ( :resolve ) ";
+                        $sql .= " OR   `resolve` in (:resolve) ";
                         $idArr = self::getIdArrByKeys($resolveKeyArr, $itemArr);
                         $params['resolve'] = implode(',', $idArr);
                     }
                     if ($type == 'assignee' && !empty($itemArr)) {
                         $filtered = true;
-                        $sql .= " OR   assignee in ( :assignee ) ";
+                        $sql .= " OR   `assignee` in (:assignee) ";
                         $params['assignee'] = implode(',', $itemArr);
                     }
                     if ($type == 'label' && !empty($itemArr)) {
                         $filtered = true;
                         $issueIdArr = $issueLabelDataModel->getIssueIdArrByIds($itemArr);
                         $issueIdStr = implode(',', $issueIdArr);
-                        $sql .= " OR   id  in ( :label_issue_ids ) ";
+                        $sql .= " OR   `id`  in (:label_issue_ids) ";
                         $params['label_issue_ids'] = $issueIdStr;
                     }
                 }
@@ -717,9 +714,14 @@ class AgileLogic
                 $sql .= "  ) AND project_id=:project_id ";
                 $params['project_id'] = $projectId;
 
+                if (isset($_GET['keyword']) && !empty($_GET['keyword'])) {
+                    $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
+                    $params['summary'] = $_GET['keyword'];
+                }
+
                 if ($board['range_type'] == 'sprints') {
                     $rangeDataArr = json_decode($board['range_data'], true);
-                    $sql .= " AND   sprint  in ( :sprints ) ";
+                    $sql .= " AND   sprint  in (:sprints) ";
                     $params['sprints'] = implode(',', $rangeDataArr);
                 }
                 if ($board['range_type'] == 'current_sprint') {
@@ -739,7 +741,6 @@ class AgileLogic
                     $sql .= " AND   issue_type in ( :issue_types ) ";
                     $params['issue_types'] = implode(',', $rangeDataArr);
                 }
-
                 // 按经办人搜索事项
                 $assigneeUid = null;
                 if (isset($_GET[urlencode('经办人')])) {
@@ -757,7 +758,6 @@ class AgileLogic
                     $sql .= " AND assignee=:assignee";
                     $params['assignee'] = $assigneeUid;
                 }
-
                 // 按报告人搜索事项
                 $reporterUid = null;
                 if (isset($_GET[urlencode('报告人')])) {
@@ -775,7 +775,6 @@ class AgileLogic
                     $sql .= " AND reporter=:reporter";
                     $params['reporter'] = $reporterUid;
                 }
-
                 // 按模块搜索事项
                 $moduleId = null;
                 if (isset($_GET[urlencode('模块')])) {
@@ -794,7 +793,6 @@ class AgileLogic
                     $sql .= " AND module=:module";
                     $params['module'] = $moduleId;
                 }
-
                 // 按迭代搜索事项
                 $sprintId = null;
                 if (isset($_GET[urlencode('迭代')])) {
@@ -814,7 +812,6 @@ class AgileLogic
                     $sql .= " AND sprint=:sprint";
                     $params['sprint'] = $sprintId;
                 }
-
                 // 按优先级搜索事项
                 $priorityId = null;
                 if (isset($_GET[urlencode('优先级')])) {
@@ -832,7 +829,6 @@ class AgileLogic
                     $sql .= " AND priority=:priority";
                     $params['priority'] = $priorityId;
                 }
-
                 // 按解决结果搜索事项
                 $resolveId = null;
                 if (isset($_GET[urlencode('解决结果')])) {
@@ -847,9 +843,6 @@ class AgileLogic
                     $params['resolve'] = $resolveId;
                 }
 
-
-
-
                 $orderBy = 'id';
                 $sortBy = 'DESC';
                 $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
@@ -857,10 +850,7 @@ class AgileLogic
                 $table = $issueModel->getTable();
                 // 获取总数
                 $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
-                //echo $sqlCount;
-                //print_r($params);
                 $count = $issueModel->getFieldBySql($sqlCount, $params);
-                // var_dump($count);
                 $column['count'] = $count;
 
                 $fields = '*';
@@ -868,7 +858,9 @@ class AgileLogic
                 $sql .= ' ' . $order;
                 //print_r($params);
                 //echo $sql;die;
+                $issueModel->removeInSqlParams($sql, $params);
                 $arr = $issueModel->db->fetchAll($sql, $params);
+                //print_r($arr);
                 $column['issues'] = $arr;
             }
             return [true, 'ok'];
