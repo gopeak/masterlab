@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="http://www.masterlab.vip ">
-    <img width="200" src="http://www.masterlab.vip/Images/logo_orange.png">
+    <img width="200" src="https://www.masterlab.vip/assets/img/logo.png">
   </a>
 </p>
 
@@ -40,41 +40,40 @@ http://demo.masterlab.vip
 
 ## **安装**
 
-详细的安装示例  
 
-[Windows安装教程](http://www.masterlab.vip/help.php?md=install-windows "Windows安装教程")  
-[Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
-[Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
-
-通用安装步骤如下:  
+3.0版本安装步骤如下:  
 
  1. 搭建php的运行环境 
      ```
-     - Web Server : Nginx 或 Apache
+     - Web服务器 : Nginx 或 Apache
      
-     - Php
+     - Php程序
        - 版本 >= 7.1
-       - 必备扩展 ：curl,mysqlnd,pdo,mysqli,mbstring
+       - 必备扩展 ：curl,mysqlnd,pdo,mysqli,mbstring,redis,swoole
        - php.ini   修改 upload_max_filesize = 8M
        - php.ini   修改 post_max_size = 8M
        - php.ini   修改 memory_limit = 128M  
        - php.ini   修改 max_execution_time = 30  
        
-     - Mysql
+     - Mysql数据库
        - 版本 >= 5.7
-     
-     -  masterlab\app\storage 目录要求写入权限
-     -  masterlab\app\public\attachment 目录要求写入权限
-     -  masterlab\app\public\install 目录要求写入权限
+       
+     -  程序目录(含子目录)读写权限
+     -  masterlab\bin  
+     -  masterlab\upgrade  
+     -  masterlab\storage  
+     -  masterlab\public\attachment  
+     -  masterlab\public\install 
+     -  masterlab\plugin 
      ```
- 2. 下载代码，将根目录的运行依赖库`vendor.zip`解压出来  
+ 2. 下载3.0版本或master分支代码，将根目录的运行依赖库`vendor.zip`解压出来  
        ```text
          # 解压后的vendor目录结构
          - masterlab
            - vendor
                - autoload.php 
        ```
- 3. 在web服务器添加虚拟主机并映射到masterlab的 app/public 目录  
+ 3. 在web服务器添加虚拟主机并映射到masterlab的 /public 目录  
     如果Web服务器是Apache,首先编辑主配置文件`httpd.conf`将  
       ```
       <Directory />
@@ -94,7 +93,7 @@ http://demo.masterlab.vip
       ```text
       <VirtualHost *:80>
         # 请更改为实际的masterlab目录
-        DocumentRoot "c:/phpenv/www/masterlab/app/public"
+        DocumentRoot "c:/phpenv/www/masterlab/public"
         # 这里使用的是示例域名，你可以更改为你的域名
         ServerName  www.yoursite.com
         <Directory />
@@ -103,7 +102,7 @@ http://demo.masterlab.vip
             #Allow from All
         </Directory>
         # 请更改为实际的masterlab目录
-        <Directory "c:/phpenv/www/masterlab/app/public">
+        <Directory "c:/phpenv/www/masterlab/public">
             Options  Indexes FollowSymLinks
             AllowOverride All
             #Order allow,deny
@@ -118,7 +117,7 @@ http://demo.masterlab.vip
         # 这里使用的是示例域名，你可以更改为你的域名
         server_name www.yoursite.com;
         # masterlab的入口访问路径,请更改为实际的masterlab目录
-        root /data/www/masterlab/app/public;
+        root /data/www/masterlab/public;
         index index.html index.htm index.php; 
         gzip on;
         gzip_min_length 1k;
@@ -163,25 +162,31 @@ http://demo.masterlab.vip
 
  4. 重启web服务器  
 
- 5. 运行 masterlab_socket  
-    masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,下载地址 https://github.com/gopeak/masterlab_socket/releases  
+ 5. 运行 masterlab_socket（Windows操作系统）  
     
-     Windows操作系统的
+      masterlab_socket 是用于执行异步任务和定时计算事项的后台程序,下载地址 https://github.com/gopeak/masterlab_socket/releases  
      ```text
     # 在masterlab目录直接运行
-    bin/masterlab_socket.exe start -d 
+    ./bin/masterlab_socket.exe start -d 
     ```
-     Linux操作系统的
-     ```text
-    # 在masterlab目录直接运行
-    chmod +x bin/masterlab_socket 
-    ./bin/masterlab_socket start -d
-    ```
-     其他操作系统 参考 https://github.com/gopeak/masterlab_socket 的文档自行编译  
+ 
      
- 6. 在浏览器访问 /install ,根据提示进行安装  
+ 6. 如果是Linux系统， 安装php的swoole扩展， 可代替masterlab_socket：
+    ```text
+    # 进入 masterlab/bin 目录，执行
+    php swoole_server.php
+    ``` 
+     
+ 7. 在浏览器访问 /install ,根据提示进行安装  
  
+
  
+## 2.1及以下版本的安装示例  
+
+[Windows安装教程](http://www.masterlab.vip/help.php?md=install-windows "Windows安装教程")  
+[Linux安装示例](http://www.masterlab.vip/help.php?md=install-linux "Linux安装教程")  
+[Linux 宝塔安装示例](http://www.masterlab.vip/help.php?md=install-linux-bt "基于宝塔(bt.cn)的安装教程")  
+
 ## **更多文档**
 http://www.masterlab.vip/help.php
 

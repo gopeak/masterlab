@@ -87,8 +87,8 @@ function bindAppConfig($envVarArr)
         }
         //var_dump($configFile);
         if(!file_exists($configFile)){
-            print_r($envVarArr);
-            echo $configFile;
+            //print_r($envVarArr);
+            echo "配置文件: {$configFile} 不存在请检查!";
         }
         $GLOBALS['_yml_config'] = Yaml::parseFile($configFile);
         if ($cacheYamlConfig) {
