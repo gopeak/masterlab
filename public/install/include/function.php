@@ -87,6 +87,7 @@ function importSql(&$install_error, &$install_recover)
 
     writeConfigYml();
     writeSocketConfig();
+    resetPluginKodPassword();
     $ret = file_put_contents(INSTALL_PATH . '/../env.ini', "APP_STATUS = deploy\n");
     showJsMessage("env.ini文件写入结果:" . $ret);
 
@@ -198,8 +199,6 @@ function showJsMessage($message)
 }
 
 
-
-
 function writeConfigYml()
 {
     $searchArr = [];
@@ -257,6 +256,20 @@ function writeSocketConfig()
     $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
     $ret = file_put_contents(INSTALL_PATH . '/../bin/cron.json', $content);
     showJsMessage("MasterlabSocket cron.json 文件写入结果:" . (bool)$ret);
+}
+
+/**
+ * 设置一个随机的kod管理员密码
+ */
+function resetPluginKodPassword()
+{
+    $tplFile = INSTALL_PATH . '/../plugin/document/kod/data/system/system_member.php';
+    $tplContent = file_get_contents($tplFile);
+    $password = md5(random(28).mt_rand(10000,99999));
+    $content = preg_replace('/"password":\s*"([^"])*"/m', '"password": "'.$password.'"', $tplContent);
+    $ret = file_put_contents($tplFile, $content);
+    showJsMessage("Plugin kod system_member.php 文件写入结果:" . (bool)$ret);
+
 }
 
 /**
