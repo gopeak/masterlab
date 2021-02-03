@@ -318,7 +318,7 @@ class SystemLogic
             $bin_total_size = uInt32($total_size);
             $bin_type = uInt32(1);
             $bin_header_size = uInt32($header_len);
-            if($socketType=='swoole'){
+            if($socketType!='swoole'){
                 $bin_data = $bin_total_size . $bin_type . $bin_header_size . $header . $body;
             }else{
                 $sendArr['cmd'] = 'Mail';

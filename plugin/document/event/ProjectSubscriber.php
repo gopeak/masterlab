@@ -69,10 +69,10 @@ class ProjectSubscriber implements EventSubscriberInterface
         //$homePath = STORAGE_PATH.'document/'.$expectProjectDocUsername;
         //@mkdir($homePath);
         //$dataArr['homePath'] = $homePath;
-        list($ret) = $kodSdk->createUser($dataArr, $accessToken);
+        list($ret, $msg) = $kodSdk->createUser($dataArr, $accessToken);
         if(!$ret){
             $title =  '项目创建异常';
-            $content =  '文档模块创建失败,请联系管理员';
+            $content =  '文档模块创建失败,请联系管理员,错误提示：'.$msg;
             $model->setMsg2User(UserAuth::getId(), UserMessageModel::TYPE_SYSTEM, $title, $content);
             return;
         }

@@ -61,6 +61,8 @@ class User extends BaseUserCtrl
         }
         parent::addGVar('is_in_same_team', $this->isInSameTeam);
         parent::addGVar('is_current_user', $this->isCurrentUser);
+        parent::addGVar('top_menu_active', 'profile');
+
     }
 
     /**
@@ -373,11 +375,9 @@ class User extends BaseUserCtrl
         if (isset($_POST['id'])) {
             $id = (int)$_POST['id'];
         }
-
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-
         $id = (int)$id;
         $model = new IssueFilterModel();
         $row = $model->getItemById($id);

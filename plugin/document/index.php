@@ -105,7 +105,7 @@ class Index extends BasePluginCtrl
             //$dataArr['homePath'] = $homePath;
             list($ret, $msg) = $kodSdk->createUser($dataArr, $accessToken);
             if(!$ret){
-                echo '文档模块创建用户信息失败,请联系管理员';
+                echo '文档模块创建用户信息失败,请联系管理员,错误信息:'.$msg;
                 return;
             }
             list($ret, $userArr) = $kodSdk->getUser($expectProjectDocUsername, $accessToken);

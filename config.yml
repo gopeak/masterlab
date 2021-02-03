@@ -51,10 +51,10 @@ database:
     show_field_info: false
 
 config_map_model:
-    default:
-      -
-    log_db:
-      - UnitTestUnitModel
+  default:
+    -
+  log_db:
+    - UnitTestUnitModel
 
 socket:
   host: '127.0.0.1'

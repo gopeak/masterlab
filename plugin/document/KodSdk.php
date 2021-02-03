@@ -78,7 +78,7 @@ class KodSdk
             return [false, 'response status:' . $statusCode];
         }
         $bodyArr = json_decode($response->getBody(), true);
-        if (!$bodyArr['code']) {
+        if (is_null($bodyArr) || !$bodyArr['code']) {
             return [false, "创建用户失败\r\n" . $response->getBody()];
         }
         return [true, $bodyArr['data']];

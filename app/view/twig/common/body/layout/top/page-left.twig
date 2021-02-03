@@ -12,37 +12,37 @@
     <ul class="sidebar-menu">
         <li class="menu-item  {% if (top_menu_active == 'index') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/dashboard">
-                <i class="fa fa-dashboard"></i> <span>首页</span>
+                <i class="fa fa-dashboard"></i> <span>首 页</span>
             </a>
         </li>
         <li class="menu-item  {% if (top_menu_active == 'org') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/org">
                 <i class="fa fa-files-o"></i>
-                <span>组织</span>
+                <span>组 织</span>
             </a>
         </li>
         <li class="menu-item  {% if (top_menu_active == 'project') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/projects">
-                <i class="fa fa-th"></i> <span>项目</span>
+                <i class="fa fa-th"></i> <span>项 目</span>
             </a>
         </li>
-        <!--<li class="menu-item  {% if (top_menu_active == 'issue') %} <?= 'menu-open' ?>{% endif %}">
+         <li class="menu-item  {% if (top_menu_active == 'profile') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/issue/main">
-                <i class="fa fa-th"></i> <span>所有事项</span>
+                <i class="fa fa-user-md"></i> <span>个 人</span>
             </a>
-        </li>-->
+        </li>
         {% if ( is_admin ) %}
 
         <li class="menu-item  {% if (top_menu_active == 'system') %} <?= 'menu-open' ?>{% endif %}">
             <a href="javascript:;">
                 <i class="fa fa-laptop"></i>
-                <span>管理</span>
+                <span>管 理</span>
                 <span class="pull-right-container">
                   <i class="fa fa-angle-down pull-right"></i>
                 </span>
             </a>
             <ul class="sub-menu">
-                <li><a href="/admin/system">管理</a></li>
+                <li><a href="/admin/system">管 理</a></li>
             </ul>
         </li>
         {% endif %}

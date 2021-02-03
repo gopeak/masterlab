@@ -15,18 +15,23 @@
     <ul class="sidebar-menu">
         <li class="menu-item  {% if (top_menu_active == 'index') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/dashboard">
-                <i class="fa fa-dashboard"></i> <span>首页</span>
+                <i class="fa fa-dashboard"></i> <span>首 页</span>
             </a>
         </li>
         <li class="menu-item  {% if (top_menu_active == 'org') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/org">
                 <i class="fa fa-sitemap"></i>
-                <span>组织</span>
+                <span>组 织</span>
             </a>
         </li>
         <li class="menu-item  {% if (top_menu_active == 'project') %} <?= 'menu-open' ?>{% endif %}">
             <a href="/projects">
-                <i class="fa fa-product-hunt"></i> <span>项目</span>
+                <i class="fa fa-product-hunt"></i> <span>项 目</span>
+            </a>
+        </li>
+        <li class="menu-item  {% if (top_menu_active == 'profile') %} <?= 'menu-open' ?>{% endif %}">
+            <a href="/user/profile">
+                <i class="fa fa-user-md"></i> <span>个 人</span>
             </a>
         </li>
         {% if ( is_admin ) %}
@@ -35,14 +40,14 @@
                 <i class="fa fa-wrench"></i> <span>管理</span>
             </a-->
             <a href="/admin/main">
-                <i class="fa fa-wrench"></i> <span>管理</span>
+                <i class="fa fa-wrench"></i> <span>管 理</span>
             </a>
         </li>
         {% endif %}
 
         <li class="menu-item  {% if (top_menu_active == 'help') %} <?= 'menu-open' ?>{% endif %}">
             <a href="http://www.masterlab.vip/help.php" target="_blank">
-                <i class="fa fa-question-circle"></i> <span>帮助</span>
+                <i class="fa fa-question-circle"></i> <span>帮 助</span>
             </a>
         </li>
     </ul>
