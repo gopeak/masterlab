@@ -1,13 +1,13 @@
 # Masterlab主配置文件
 app_url: ''
-version: '3.0rc6'
+version: '3.0rc7'
 error_reporting: 'E_ERROR'
 xdebug: false
 trace: false
 write_request_log: false
 security_map: false
 date_default_timezone: 'Asia/Shanghai'
-encrypy_key: '1234567890abc'
+encrypy_key: '{{encrypy_key}}'
 
 xhprof:
   enable: false
