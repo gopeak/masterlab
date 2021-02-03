@@ -792,7 +792,7 @@ class Passport extends BaseCtrl
             $url = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verify_code=' . $verifyCode;
             $args['{{url}}'] = $url;
             $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['reset_password']);
-            //echo $body;
+            // echo strlen($body);
             //@TODO 异步发送
             $systemLogic = new SystemLogic();
             list($ret, $errMsg) = $systemLogic->mail($email, '找回密码邮箱通知', $body);
