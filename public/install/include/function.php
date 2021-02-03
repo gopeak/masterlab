@@ -203,12 +203,12 @@ function writeConfigYml()
 {
     $searchArr = [];
 
+    $searchArr['{{encrypy_key}}'] = random(16).mt_rand(1000,9999);
     $searchArr['{{db_host}}'] = trimString($_POST['db_host']);
     $searchArr['{{db_port}}'] =trimString( $_POST['db_port']);
     $searchArr['{{db_user}}'] = trimString($_POST['db_user']);
     $searchArr['{{db_password}}'] = trimString($_POST['db_pwd']);
     $searchArr['{{db_name}}'] = trimString($_POST['db_name']);
-
 
     $searchArr['{{cache_enable}}'] = trimString($_POST['enable_redis'])=='1' ? 'true':'false';
     $searchArr['{{redis_host}}'] = trimString($_POST['redis_host']);
