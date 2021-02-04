@@ -10,7 +10,7 @@ use main\plugin\BasePluginCtrl;
 /**
  *
  *   插件的入口类
- * @package main\app\ctrl\project
+ * @package main\plugin\plugin_tpl
  */
 class Index extends BasePluginCtrl
 {

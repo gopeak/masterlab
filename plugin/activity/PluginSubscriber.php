@@ -62,5 +62,4 @@ class PluginSubscriber extends BasePluginSubscriber implements EventSubscriberIn
         var_dump($pluginPlacedEvent);
     }
 
-
 }

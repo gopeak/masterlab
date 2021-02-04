@@ -85,7 +85,7 @@ function importSql(&$install_error, &$install_recover)
     $auto_site_url = strtolower($http_type . $_SERVER['HTTP_HOST'] . $sitepath);
     $auto_site_url = substr($auto_site_url, -1) == '/' ? $auto_site_url : $auto_site_url . '/';
 
-    writeConfigYml();
+    $writeConfigYmlRet = writeConfigYml();
     writeSocketConfig();
     resetPluginKodPassword();
     $ret = file_put_contents(INSTALL_PATH . '/../env.ini', "APP_STATUS = deploy\n");
@@ -130,6 +130,12 @@ function importSql(&$install_error, &$install_recover)
     $mysqli->query("UPDATE `main_setting` SET `_value` = '{$siteSame}' WHERE  `_key` = 'title'");
     $mysqli->query("UPDATE `main_setting` SET `_value` = '{$linkman}' WHERE `_key` = 'company_linkman'");
     $mysqli->query("UPDATE `main_setting` SET `_value` = '{$phone}' WHERE `_key` = 'company_phone'");
+    if($writeConfigYmlRet){
+        $socketHost = trimString($_POST['socket_host']);
+        $mysqli->query("UPDATE `main_setting` SET `_value` = '{$socketHost}' WHERE `_key` = 'socket_server_host'");
+        $socketPort = trimString($_POST['socket_port']);
+        $mysqli->query("UPDATE `main_setting` SET `_value` = '{$socketPort}' WHERE `_key` = 'socket_server_port'");
+    }
     $mysqli->query("COMMIT;");
 
     // 测试数据
@@ -190,7 +196,10 @@ function runSql($sql, $db_prefix, $mysqli)
 }
 
 
-//抛出JS信息
+/**
+ * 抛出JS信息
+ * @param $message
+ */
 function showJsMessage($message)
 {
     echo '<script type="text/javascript">showmessage(\'' . addslashes($message) . ' \');</script>' . "\r\n";
@@ -198,7 +207,10 @@ function showJsMessage($message)
     ob_flush();
 }
 
-
+/**
+ * 生成主配置文件
+ * @return false|int
+ */
 function writeConfigYml()
 {
     $searchArr = [];
@@ -227,7 +239,7 @@ function writeConfigYml()
     $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
     $ret = file_put_contents(INSTALL_PATH . '/../config.yml', $content);
     showJsMessage("主配置文件 config.yml 文件写入结果:" . (bool)$ret);
-
+    return $ret;
 }
 
 function writeSocketConfig()
@@ -256,6 +268,7 @@ function writeSocketConfig()
     $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
     $ret = file_put_contents(INSTALL_PATH . '/../bin/cron.json', $content);
     showJsMessage("MasterlabSocket cron.json 文件写入结果:" . (bool)$ret);
+    return $ret;
 }
 
 /**
@@ -269,6 +282,7 @@ function resetPluginKodPassword()
     $content = preg_replace('/"password":\s*"([^"])*"/m', '"password": "'.$password.'"', $tplContent);
     $ret = file_put_contents($tplFile, $content);
     showJsMessage("Plugin kod system_member.php 文件写入结果:" . (bool)$ret);
+    return $ret;
 
 }
 
