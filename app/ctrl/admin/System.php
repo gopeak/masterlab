@@ -262,6 +262,35 @@ class System extends BaseAdminCtrl
     /**
      * @throws \Exception
      */
+    public function pageApi()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'setting';
+        $data['left_nav_active'] = 'api';
+
+        $settingModel = new SettingModel();
+        $data['enable_api'] = $settingModel->getSettingValue('enable_api');
+        $data['app_key']  = $settingModel->getSettingValue('app_key');
+        $data['app_secret']  = $settingModel->getSettingValue('app_secret');
+        $this->render('twig/admin/system/system_api.twig', $data);
+    }
+
+    /**
+     * 清空redis缓存中的数据
+     * @throws \Exception
+     */
+    public function saveApi()
+    {
+        $issueModel = new IssueModel();
+
+        $this->ajaxSuccess('操作成功');
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function pageLdap()
     {
         $data = [];
