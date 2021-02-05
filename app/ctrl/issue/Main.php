@@ -455,7 +455,7 @@ class Main extends BaseUserCtrl
         //$qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
         //$qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
         // Set advanced options
-        $qrCode->setLogoPath(APP_PATH . 'public/gitlab/images/logo.png');
+        $qrCode->setLogoPath(PRE_APP_PATH . 'public/gitlab/images/logo.png');
         $qrCode->setLogoSize(40, 40);
         echo $qrCode->writeString();
     }

@@ -32,7 +32,7 @@ session:
 
 database:
   default:
-    host: 'localhost'
+    host: '127.0.0.1'
     port: '3306'
     user: 'root'
     password: ''
@@ -41,7 +41,7 @@ database:
     timeout: 10
     show_field_info: false
   log_db:
-    host: 'localhost'
+    host: '127.0.0.1'
     port: 3306
     user: 'root'
     password: ''
