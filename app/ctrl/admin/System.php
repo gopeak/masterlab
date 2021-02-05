@@ -303,7 +303,7 @@ class System extends BaseAdminCtrl
             $this->ajaxFailed('请求失败', '缺少错误');
         }
 
-        $cacheConfigFile = APP_PATH."config/".APP_STATUS."/cache.cfg.php";
+        $cacheConfigFile = APP_PATH."config/cache.cfg.php";
         if (file_exists($cacheConfigFile)) {
             if ((int)$params['enable'] && !empty($params['redis'])) {
                 try {
@@ -345,7 +345,11 @@ class System extends BaseAdminCtrl
         $issueModel = new IssueModel();
         try {
             if (!$issueModel->cache->use) {
-                $this->ajaxFailed('操作失败', 'redis缓存没有启动,请检查配置文件:cache.cfg.php');
+                $configFile = 'config.yml';
+                if($GLOBALS['_yml_config']['app_status']!='deploy'){
+                    $configFile = 'config.'.$GLOBALS['_yml_config']['app_status'].'.yml';
+                }
+                $this->ajaxFailed('操作失败', 'redis缓存没有启动,请检查配置文件:'.$configFile);
             }
             $issueModel->cache->connect();
             $ret = $issueModel->cache->flush();

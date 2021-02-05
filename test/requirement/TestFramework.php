@@ -333,7 +333,7 @@ class TestFramework extends BaseTestCase
         $config->appPath = APP_PATH;
         $config->appStatus = APP_STATUS;
         $config->enableTrace = ENABLE_TRACE;
-        $config->xhprofRoot = APP_PATH . 'public/xhprof/';
+        $config->xhprofRoot = PRE_APP_PATH . 'public/xhprof/';
         $config->enableXhprof = true;
         $config->xhprofRate = 1000;
         $config->enableWriteReqLog = WRITE_REQUEST_LOG;
@@ -351,7 +351,7 @@ class TestFramework extends BaseTestCase
             return;
         }
 
-        if (!file_exists(APP_PATH . 'public/xhprof/')) {
+        if (!file_exists(PRE_APP_PATH . 'public/xhprof/')) {
             $this->fail("Path public/xhprof not exist");
             return;
         }

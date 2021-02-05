@@ -102,7 +102,7 @@ class TestSearch extends BaseAppTestCase
         $curl->get(ROOT_URL . 'search?format=json&data_type=json&keyword=test-Search&scope=project');
         //echo self::$userCurl->rawResponse;
         $this->assertNotRegExp('/查询错误/', self::$userCurl->rawResponse);
-        // f(APP_PATH.'/test/testSearchProject.log',self::$userCurl->rawResponse);
+        // f(PRE_APP_PATH.'/test/testSearchProject.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if (!$respArr) {
@@ -122,7 +122,7 @@ class TestSearch extends BaseAppTestCase
         $curl->get(ROOT_URL . 'search?data_type=json&scope=issue&keyword=' . urlencode('测试事项'));
         // echo self::$userCurl->rawResponse;
         $this->assertNotRegExp('/查询错误/', self::$userCurl->rawResponse);
-        // f(APP_PATH.'/test/testSearchIssue.log',self::$userCurl->rawResponse);
+        // f(PRE_APP_PATH.'/test/testSearchIssue.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if (!$respArr) {

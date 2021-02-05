@@ -77,9 +77,9 @@ class ProjectSubscriber implements EventSubscriberInterface
             return;
         }
         // @todo 判断是否存在
-        $projectPath = APP_PATH.'plugin/document/kod/data/User/'.$expectProjectDocUsername;
+        $projectPath = PRE_APP_PATH.'plugin/document/kod/data/User/'.$expectProjectDocUsername;
         if(!file_exists($projectPath) || !file_exists($projectPath.'/data') || !file_exists($projectPath.'/home')){
-            FileUtil::copyDir(APP_PATH.'plugin/document/kod/data/User/project0', APP_PATH.'plugin/document/kod/data/User/'.$expectProjectDocUsername);
+            FileUtil::copyDir(PRE_APP_PATH.'plugin/document/kod/data/User/project0', PRE_APP_PATH.'plugin/document/kod/data/User/'.$expectProjectDocUsername);
         }
 
     }
@@ -100,7 +100,7 @@ class ProjectSubscriber implements EventSubscriberInterface
     {
         $pluginDataArr = $event->pluginDataArr;
         $projectUserName = 'project'.$pluginDataArr['id'];
-        $projectPath = APP_PATH.'plugin/document/kod/data/User/'.$projectUserName;
+        $projectPath = PRE_APP_PATH.'plugin/document/kod/data/User/'.$projectUserName;
         FileUtil::unlinkDir($projectPath);
         $this->deleteKodUser($pluginDataArr);
     }
@@ -109,7 +109,7 @@ class ProjectSubscriber implements EventSubscriberInterface
     {
         $pluginDataArr = $event->pluginDataArr;
         $projectUserName = 'project'.$pluginDataArr['id'];
-        $projectPath = APP_PATH.'plugin/document/kod/data/User/'.$projectUserName;
+        $projectPath = PRE_APP_PATH.'plugin/document/kod/data/User/'.$projectUserName;
         FileUtil::moveDir($projectPath, $projectPath.'_archive');
         $this->deleteKodUser($pluginDataArr);
 
@@ -119,7 +119,7 @@ class ProjectSubscriber implements EventSubscriberInterface
     {
         $pluginDataArr = $event->pluginDataArr;
         $projectUserName = 'project'.$pluginDataArr['id'];
-        $projectPath = APP_PATH.'plugin/document/kod/data/User/'.$projectUserName;
+        $projectPath = PRE_APP_PATH.'plugin/document/kod/data/User/'.$projectUserName;
         FileUtil::moveDir($projectPath.'_archive', $projectPath, true );
         $this->deleteKodUser($pluginDataArr);
 

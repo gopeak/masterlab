@@ -127,7 +127,7 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('错误：' . $upgradePath . ' 目录权限不足，无法写入。');
             $checkOk = false;
         }
-        $appConfigPath = realpath(APP_PATH . 'config' . DS . APP_STATUS . DS . 'app.cfg.php');
+        $appConfigPath = realpath(APP_PATH . 'config' . DS .  'app.cfg.php');
         if (!$this->isPathWritable($appConfigPath)) {
             $this->showLine('错误：' . $appConfigPath . ' 文件权限不足，无法写入。');
             $checkOk = false;
@@ -525,7 +525,7 @@ class Upgrade extends BaseUserCtrl
      */
     private function writeVersionConfig($version)
     {
-        $appFile = APP_PATH . 'config' . DS . APP_STATUS . DS . 'app.cfg.php';
+        $appFile = APP_PATH . 'config' . DS . 'app.cfg.php';
         $appContent = file_get_contents($appFile);
         $appContent = preg_replace('/define\s*\(\s*\'MASTERLAB_VERSION\'\s*,\s*\'([^\']*)\'\);/m', "define('MASTERLAB_VERSION', '" . $version . "');", $appContent);
         $ret = file_put_contents($appFile, $appContent);
