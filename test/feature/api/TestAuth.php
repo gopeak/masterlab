@@ -38,7 +38,8 @@ class TestAuth extends BaseTestCase
     public function testGet()
     {
         $curl =   new \Curl\Curl();
-        $curl->get(ROOT_URL.'api/auth/?account=master&password=testtest' );
+        $curl->get(ROOT_URL.'api/auth?app_key=xxxxxxxxxxxx&app_secret=xxxxxxxxxxxxxx' );
+        echo $curl->rawResponse;
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'api/auth failed');
         $this->assertEquals('20000', $respArr['ret']);

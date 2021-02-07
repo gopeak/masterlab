@@ -48,16 +48,14 @@ class JWTLogic
 
         $time = time();
         $token = $builder
-            ->issuedBy(ROOT_URL)
-            ->permittedFor($uid)
-            ->identifiedBy($uid.'-'.$time, true)
+            // ->issuedBy(ROOT_URL)
+            // ->identifiedBy($uid.'-'.$time, true)
             ->issuedAt($time)
-            ->canOnlyBeUsedAfter($time + 60)
+            //->canOnlyBeUsedAfter($time + 60)
             ->expiresAt($time + $expired)
-            ->withClaim('uid', $uid)
-            ->withClaim('account', $account)
+            ->withHeader('uid', $uid)
+            ->withHeader('account', $account)
             ->getToken($signer, $key);
-
         return $token;
     }
 
@@ -76,16 +74,14 @@ class JWTLogic
 
         $time = time();
         $refreshToken = $builder
-            ->issuedBy(ROOT_URL) // iss: jwt签发者
-            ->permittedFor($uid) // aud: jwt的接收方
-            ->identifiedBy($uid.'-refresh-'.$time, true) // jti: jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
-            ->issuedAt($time) // iat: jwt的签发时间
-            ->canOnlyBeUsedAfter($time + 60) // nbf: 定义在什么时间之前，该jwt都是不可用的.  这里虽然定义但并未在业务上使用
-            ->expiresAt($time + $expired) // exp: 30天后过期
-            ->withClaim('uid', $uid) // 自定义
-            ->withClaim('account', $account)
+            // ->issuedBy(ROOT_URL)
+            // ->identifiedBy($uid.'-'.$time, true)
+            ->issuedAt($time)
+            //->canOnlyBeUsedAfter($time + 60)
+            ->expiresAt($time + $expired)
+            ->withHeader('uid', $uid)
+            ->withHeader('account', $account)
             ->getToken($signer, $key);
-
         return $refreshToken;
     }
 

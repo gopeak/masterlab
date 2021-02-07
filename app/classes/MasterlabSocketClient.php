@@ -42,6 +42,7 @@ class MasterlabSocketClient
         $socketHost = '127.0.0.1';
         $socketPort = 9002;
         $socketConnectTimeout = 10;
+        $socketType = 'swoole';
         if (isset($config['socket_server_host']) && !empty($config['socket_server_host'])) {
             $socketHost = trimStr($config['socket_server_host']);
         }
@@ -56,21 +57,28 @@ class MasterlabSocketClient
             $err = 'fsockopen failed:' . mb_convert_encoding($errno . ' ' . $errstr, "UTF-8", "GBK");
             return [false, $err];
         } else {
-            $header = '{"cmd":"' . $command . '","sid":"' . $sid . '","ver":"1.0","seq":' . $sendArr['seq'] . ',"token":"' . $token . '"}';
-            $body = json_encode($sendArr);
-            $headerLen = mbstrlen($header);
-            $bodyLen = mbstrlen($body);
-            $totalSize = mbstrlen($header) + $bodyLen + 4;
+            if($socketType=='swoole'){
+                $sendArr['cmd'] = $command;
+                $sendArr['sid'] = $sid;
+                $sendArr['token'] = $token;
+                $sendArr['ver'] = '1.0';
+                $body = json_encode($sendArr);
+                $binData = pack('N',strlen($body)).$body;
+            }else{
+                $header = '{"cmd":"' . $command . '","sid":"' . $sid . '","ver":"1.0","seq":' . $sendArr['seq'] . ',"token":"' . $token . '"}';
+                $body = json_encode($sendArr);
+                $headerLen = mbstrlen($header);
+                $bodyLen = mbstrlen($body);
+                $totalSize = mbstrlen($header) + $bodyLen + 4;
 
-            $binTotalSize = uInt32($totalSize);
-            $binType = uInt32(1);
-            $binHeaderSize = uInt32($headerLen);
-            $binData = $binTotalSize . $binType . $binHeaderSize . $header . $body;
-
+                $binTotalSize = uInt32($totalSize);
+                $binType = uInt32(1);
+                $binHeaderSize = uInt32($headerLen);
+                $binData = $binTotalSize . $binType . $binHeaderSize . $header . $body;
+            }
             fwrite($fp, $binData);
             fclose($fp);
         }
-
         return [true, 'send data to async server success'];
     }
 

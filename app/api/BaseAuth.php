@@ -49,8 +49,8 @@ class BaseAuth extends BaseApi
             $this->masterAccount = $parserTokenArr['account'];
         }
 
-        $this->dispatcher = new EventDispatcher();
-        $this->loadPlugin();
+        //$this->dispatcher = new EventDispatcher();
+       // $this->loadPlugin();
     }
 
     /**

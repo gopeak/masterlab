@@ -262,6 +262,65 @@ class System extends BaseAdminCtrl
     /**
      * @throws \Exception
      */
+    public function pageApi()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'setting';
+        $data['left_nav_active'] = 'api';
+
+        $settingModel = new SettingModel();
+        $data['enable_api'] = $settingModel->getSettingValue('enable_api');
+        $data['app_key']  = $settingModel->getSettingValue('app_key');
+        $data['app_secret']  = $settingModel->getSettingValue('app_secret');
+        $this->render('twig/admin/system/system_api.twig', $data);
+    }
+
+    /**
+     * 保存API设置
+     * @throws \Exception
+     */
+    public function saveApi()
+    {
+        $settingModel = new SettingModel();
+        $arr = [];
+        if(isset($_POST['enable_api'])){
+            $arr['title'] = '是否启用';
+            $arr['_key'] = 'enable_api';
+            $arr['module'] = 'api';
+            $arr['_value'] = (int)$_POST['enable_api'];
+            $arr['module'] = 'api';
+            $arr['format'] = 'int';
+            $arr['form_input_type'] = 'radio';
+            $settingModel->replace($arr);
+        }
+        if(isset($_POST['app_key'])){
+            $arr['title'] = '是否启用';
+            $arr['_key'] = 'app_key';
+            $arr['module'] = 'api';
+            $arr['_value'] = $_POST['app_key'];
+            $arr['module'] = 'api';
+            $arr['format'] = 'string';
+            $arr['form_input_type'] = 'text';
+            $settingModel->replace($arr);
+        }
+        if(isset($_POST['app_secret'])){
+            $arr['title'] = '是否启用';
+            $arr['_key'] = 'app_secret';
+            $arr['module'] = 'api';
+            $arr['_value'] = $_POST['app_secret'];
+            $arr['module'] = 'api';
+            $arr['format'] = 'string';
+            $arr['form_input_type'] = 'text';
+            $settingModel->replace($arr);
+        }
+        $this->ajaxSuccess('操作成功');
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function pageLdap()
     {
         $data = [];

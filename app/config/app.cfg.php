@@ -36,7 +36,7 @@ define('XPHP_DEBUG', (boolean)$appConfig['xdebug']);
 define('ENABLE_TRACE', (boolean)$appConfig['trace']);
 
 // 是否开启反射和检验返回值格式功能
-define('ENABLE_REFLECT_METHOD', true);
+define('ENABLE_REFLECT_METHOD', false);
 
 // 启用过滤接口机制
 define('SECURITY_MAP_ENABLE', (boolean)$appConfig['security_map']);

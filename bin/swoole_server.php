@@ -3,8 +3,11 @@
 require_once realpath(dirname(__FILE__)) . '/bootstrap.php';
 require_once $rootDir . '/vendor/autoload.php';
 
+use main\app\classes\UserAuth;
+use main\app\model\DbModel;
 use main\app\model\SettingModel;
 use main\app\model\system\MailQueueModel;
+use main\plugin\webhook\model\WebHookLogModel;
 
 $socketConfig = $GLOBALS['_yml_config']['socket'];
 print_r($socketConfig);
@@ -72,6 +75,12 @@ $server->on('task', function ($serv, $task_id, $from_id, $data) {
         echo "Send mail started \n";
         sendMail($serv, $sendArr);
     }
+    if ($cmd == 'webhookpost') {
+        echo "webhook post  started \n";
+        print_r($sendArr);
+        webhookPost($serv, $sendArr);
+    }
+    //
     $serv->finish("cmd not in array");
 });
 
@@ -230,6 +239,9 @@ function sendMail($serv ,$sendArr)
     $sendArr['attach'] = isset($sendArr['attach']) ? $sendArr['attach'] : '';
 
     $mailQueModel = new MailQueueModel();
+    $mailQueModel->db->close();
+    DbModel::$dalDriverInstances = [];
+    $mailQueModel->connect();
     $settingModel = new SettingModel();
     $settings = $settingModel->getSettingByModule('mail');
     $config = [];
@@ -328,6 +340,53 @@ function sendMail($serv ,$sendArr)
         $serv->finish("send mail -> failed: {$msg}");
     }
     $mailQueModel->update(['status' => MailQueueModel::STATUS_DONE, 'error' => ''], ['seq' => $sendArr['seq']]);
+    //返回任务执行的结果
+    $serv->finish("send mail -> OK");
+}
+
+/**
+ * @param $serv
+ * @param $sendArr
+ * @return array
+ * @throws \Doctrine\DBAL\DBALException
+ * @throws \Exception
+ */
+function webhookPost($serv ,$sendArr)
+{
+    $pushArr = [];
+    $pushArr['project_id'] = (int)$sendArr['project_id'];
+    $pushArr['webhook_id'] = (int)$sendArr['webhook_id'];
+    $pushArr['event_name'] = $sendArr['event_name'];
+    $pushArr['url'] = $sendArr['url'];
+    $pushArr['data'] = $sendArr['data'];;
+    $pushArr['status'] = WebHookLogModel::STATUS_READY;
+    $pushArr['time'] = time();
+    $pushArr['user_id'] =  (int)$sendArr['user_id'];
+    $pushArr['err_msg'] = '';
+    // 0准备;1执行成功;2队列中;3出队列后执行失败
+    $webhooklogModel = new WebHookLogModel();
+    $webhooklogModel->db->close();
+    DbModel::$dalDriverInstances = [];
+    $webhooklogModel->connect();
+    list($logRet, $logId) = $webhooklogModel->insert($pushArr);
+    if ($logRet) {
+        $pushArr['log_id'] = (int)$logId;
+    } else {
+        $pushArr['log_id'] = 0;
+    }
+    $ch = curl_init($pushArr['url']);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,  $pushArr['data'] );
+    curl_setopt($ch, CURLOPT_TIMEOUT,  20);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $body = curl_exec($ch);
+    //echo $body;
+    $getinfo = curl_getinfo($ch);
+    if ($getinfo['http_code'] == 200) {
+        $webhooklogModel->updateById($logId, ['err_msg' => '', 'status' => WebHookLogModel::STATUS_SUCCESS]);
+    }else{
+        $webhooklogModel->updateById($logId, ['err_msg' => 'Response status code:'.$statusCode." \r\n".$body, 'status' => WebHookLogModel::STATUS_FAILED]);
+    }
     //返回任务执行的结果
     $serv->finish("send mail -> OK");
 }
