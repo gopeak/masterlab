@@ -278,13 +278,43 @@ class System extends BaseAdminCtrl
     }
 
     /**
-     * 清空redis缓存中的数据
+     * 保存API设置
      * @throws \Exception
      */
     public function saveApi()
     {
-        $issueModel = new IssueModel();
-
+        $settingModel = new SettingModel();
+        $arr = [];
+        if(isset($_POST['enable_api'])){
+            $arr['title'] = '是否启用';
+            $arr['_key'] = 'enable_api';
+            $arr['module'] = 'api';
+            $arr['_value'] = (int)$_POST['enable_api'];
+            $arr['module'] = 'api';
+            $arr['format'] = 'int';
+            $arr['form_input_type'] = 'radio';
+            $settingModel->replace($arr);
+        }
+        if(isset($_POST['app_key'])){
+            $arr['title'] = '是否启用';
+            $arr['_key'] = 'app_key';
+            $arr['module'] = 'api';
+            $arr['_value'] = $_POST['app_key'];
+            $arr['module'] = 'api';
+            $arr['format'] = 'string';
+            $arr['form_input_type'] = 'text';
+            $settingModel->replace($arr);
+        }
+        if(isset($_POST['app_secret'])){
+            $arr['title'] = '是否启用';
+            $arr['_key'] = 'app_secret';
+            $arr['module'] = 'api';
+            $arr['_value'] = $_POST['app_secret'];
+            $arr['module'] = 'api';
+            $arr['format'] = 'string';
+            $arr['form_input_type'] = 'text';
+            $settingModel->replace($arr);
+        }
         $this->ajaxSuccess('操作成功');
     }
 

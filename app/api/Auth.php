@@ -18,6 +18,7 @@ class Auth extends BaseApi
      */
     public function index()
     {
+        //error_reporting(E_ERROR);
         if ($this->requestMethod != 'get') {
             return self::returnHandler('请求失败', [], Constants::HTTP_BAD_REQUEST);
         }
@@ -48,10 +49,11 @@ class Auth extends BaseApi
         $accountId = $user['uid'];
         $jwt = JWTLogic::getInstance();
         $accessToken = $jwt->publish($accountId, $account);
+
         $accessToken = strval($accessToken);
         $accessRefreshToken = $jwt->publishRefreshToken($accountId, $account);
         $accessRefreshToken = strval($accessRefreshToken);
-        // var_dump($accessToken);
+       // var_dump($accessToken);
         return self::returnHandler('授权成功', [
             'account' => $account,
             'api_access_token' => $accessToken,

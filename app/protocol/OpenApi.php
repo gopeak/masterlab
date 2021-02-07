@@ -107,7 +107,7 @@ class OpenApi implements Iprotocol
 
         $traceArr = [];
         if ($this->enableTrace) {
-            $traceArr = debug_backtrace();
+            //$traceArr = debug_backtrace();
         }
 
         if (!isset($data['code'])) {

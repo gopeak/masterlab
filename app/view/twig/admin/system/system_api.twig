@@ -87,18 +87,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>
-                                        <div class="form-group">
-                                            <label class="control-label"></label>
-                                            <div class="col-sm-5">
-                                                <div class="form-group">
-                                                    <a class="btn  btn-default" id="btn-submit" href="#">保 存</a>
-                                                    <span style="font-size: 10px">APP KEY 和 APP SECRET 不能为空且长度不小于16位</span>
-                                                </div>
-                                            </div>
+
+                                        <div class="form-actions text-right">
+                                            <input type="button" id="btn-submit" name="btn-submit" value="保 存" class="btn btn-save js-key-enter">
                                         </div>
 
-                                        <hr>
                                     </form>
                                 </div>
                             </div>
@@ -137,6 +130,7 @@
                     auth_check(resp);
                     if (resp.ret == "200") {
                         notify_success(resp.msg);
+                        setTimeout("window.location.reload();", 1000)
                     } else {
                         notify_error(resp.msg, resp.data);
                     }
