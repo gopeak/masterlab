@@ -9,6 +9,8 @@ use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
+use main\app\model\issue\IssueLabelDataModel;
+use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -193,14 +195,33 @@ class Label extends BaseUserCtrl
         }
         $projectLabelModel = new ProjectLabelModel();
         $info = $projectLabelModel->getById($labelId);
+        //var_dump($info);
         if ($info['project_id'] != $this->projectId) {
             $this->ajaxFailed('参数错误,非当前项目的标签无法删除');
         }
+        $ret = $projectLabelModel->deleteItem($labelId);
+        if($ret){
+            $issueLabelModel = new IssueLabelDataModel();
+            $issueLabelModel->delete(['label_id'=>$labelId]);
+            $projectCatalogLabelModel = new ProjectCatalogLabelModel();
+            $projectCatalogArr =  $projectCatalogLabelModel->getByProject($this->projectId);
+            foreach ($projectCatalogArr as $item) {
+                $labelIdArr = json_decode($item['label_id_json'], true);
+                if(in_array($labelId, $labelIdArr)){
+                    foreach ($labelIdArr as $k=> $lid) {
+                        if($labelId==$lid){
+                            unset($labelIdArr[$k]);
+                        }
+                    }
+                    sort($labelIdArr);
+                    $labelIdJson = json_encode($labelIdArr);
+                    $projectCatalogLabelModel->updateById($item['id'], ['label_id_json'=>$labelIdJson]);
+                }
 
-        $projectLabelModel->deleteItem($labelId);
+            }
+
+        }
         $currentUid = $this->getCurrentUid();
-
-
         $callFunc = function ($value) {
             return '已删除';
         };

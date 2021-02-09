@@ -243,7 +243,9 @@
                 {{description}}
             </span>
         </span>
+        {{#if_eq project_id '0'}}
 
+        {{^}}
         <div class="pull-right hidden-xs hidden-sm hidden-md">
             <a title="编辑" class="btn btn-transparent btn-action label_edit_link"  href="#modal-edit-label-href" data-toggle="modal" data-id="{{id}}" href="javascript:void(0)">
                 <i class="fa fa-pencil-square-o"></i>
@@ -253,6 +255,7 @@
                 <i class="fa fa-trash-o"></i>
             </a>
         </div>
+         {{/if_eq}}
 
     </li>
     {{/labels}}

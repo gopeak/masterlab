@@ -45,6 +45,7 @@ class Catalog extends BaseUserCtrl
         }
         $model = new ProjectCatalogLabelModel();
         $arr = $model->getById($id);
+        $arr['label_id_json'] = json_decode($arr['label_id_json'], true);
         $this->ajaxSuccess('success', $arr);
     }
 
@@ -200,7 +201,6 @@ class Catalog extends BaseUserCtrl
         }
         $ret = $model->updateById($id, $updateArr);
         if ($ret[0]) {
-
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];
