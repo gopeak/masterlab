@@ -4,6 +4,7 @@
 !.gitignore
 config.development.yml
 config.sass.yml
+config.migrate.yml
 /composer.lock
 /vendor
 /app/config/development
