@@ -172,10 +172,14 @@ http://demo.masterlab.vip
  
      
  6. 如果是Linux系统， 安装php的swoole扩展， 可代替masterlab_socket：
-    ```text
+```text
     # 进入 masterlab/bin 目录，执行
-    php swoole_server.php
-    ``` 
+    php ./swoole_server.php start
+    # 参数 start  正常启动 
+    # 参数 daemon 以守护进程方式启动 
+    # 参数 stop 结束进程 
+    
+``` 
      
  7. 在浏览器访问 /install ,根据提示进行安装  
  
