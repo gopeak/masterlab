@@ -108,7 +108,7 @@ let Catalog = (function () {
 
 
     Catalog.prototype.initProjectLabel = function (label_id_arr) {
-        // console.log(label_id_arr)
+        //console.log(label_id_arr)
         let el_select = $('#select-label_id_arr');
         el_select.empty();
         for (let i=0; i< _issueConfig.issue_labels.length;i++) {

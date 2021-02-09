@@ -14,63 +14,84 @@ $version2Dir = '';
 if (isset($argv[1]) && !empty($argv[1])) {
     $version2Dir = $argv[1];
 }
-if(empty($version2Dir)){
+if (empty($version2Dir)) {
     echo "请指定2.1版本的根目录\n";
     die;
 }
 $version2Status = 'deploy';
-if(file_exists($version2Dir.'/env.ini')){
-    $envArr = parse_ini_file($version2Dir.'/env.ini');
+if (file_exists($version2Dir . '/env.ini')) {
+    $envArr = parse_ini_file($version2Dir . '/env.ini');
     $version2Status = $envArr['APP_STATUS'];
     unset($envArr);
 }
-$ver2DbConfigFile = $version2Dir.'/app/config/'.$version2Status.'/database.cfg.php';
-if(!file_exists($ver2DbConfigFile)){
+$ver2DbConfigFile = $version2Dir . '/app/config/' . $version2Status . '/database.cfg.php';
+if (!file_exists($ver2DbConfigFile)) {
     echo "2.1版本的数据库配置文件不存在:{$ver2DbConfigFile}\n";
     die;
 }
 include $ver2DbConfigFile;
-
+$issueModel = new \main\app\model\issue\IssueModel();
 $ver2DbConfig = $_config['database']['default'];
 $ver2Db = getDb($ver2DbConfig);
-if(empty($ver2Db)){
+if (empty($ver2Db)) {
     echo "数据库连接失败\n";
     die;
 }
 
 // 先清空demo数据库
 clearDemoData();
+$issueModel->db->beginTransaction();
+$issueModel->connect();
+try {
+    // 1.导入用户信息
+    migrateUsers($ver2Db);
 
-// 1.导入用户信息
-migrateUsers($ver2Db);
+    // 2.导入配置
+    migrateMainSetting($ver2Db);
 
-// 2.导入配置
-migrateMainSetting($ver2Db);
+    // 3.导入事项配置
+    migrateIssueConfig($ver2Db);
 
-// 3.导入事项配置
-migrateIssueConfig($ver2Db);
+    // 4.导入组织
+    migrateOrgs($ver2Db);
 
-// 4.导入组织
-migrateOrgs($ver2Db);
+    // 5.导入项目,角色，权限，迭代，版本，标签，分类等
+    migrateProjects($ver2Db);
 
-// 5.导入项目,角色，权限，迭代，版本，标签，分类等
-migrateProjects($ver2Db);
+    // 6.导入事项及相关数据
+    migrateIssues($ver2Db);
 
-// 6.导入事项及相关数据
-migrateIssues($ver2Db);
+    // 7. 导入其他数据
+    migrateOther($ver2Db);
 
-// 7. 导入其他数据
-migrateOther($ver2Db);
+} catch (\Exception $e) {
+    $issueModel->db->rollBack();
+    echo $e->getFile()."\n";
+    echo $e->getLine()."\n";
+    echo $e->getMessage()."\n";
+   // print_r($e->getTrace());
+    echo "导入数据失败,请联系管理员\n";
+    exit();
+}
+echo "导入数据成功\n";
+
+
 
 // 7. 复制上传的附件到新目录
+$src = $version2Dir . '/app/public/attachment';
+$dst =  PUBLIC_PATH.'attachment';
+recurseCopy( $src , $dst);
+echo "迁移文件成功\n";
+echo "导入完成\n";
+exit;
+
 
 
 /**
  *
  */
-function clearDemoData(){
-
-
+function clearDemoData()
+{
 
 }
 
@@ -80,8 +101,8 @@ function clearDemoData(){
  * @param \Doctrine\DBAL\Connection $ver2Db
  * @throws \Doctrine\DBAL\DBALException
  */
-function migrateUsers(\Doctrine\DBAL\Connection $ver2Db){
-
+function migrateUsers(\Doctrine\DBAL\Connection $ver2Db)
+{
     $userModel = new \main\app\model\user\UserModel();
     $userModel->truncate($userModel->getTable());
 
@@ -110,8 +131,8 @@ function migrateUsers(\Doctrine\DBAL\Connection $ver2Db){
  * @throws \Doctrine\DBAL\DBALException
  * @throws \Exception
  */
-function migrateMainSetting(\Doctrine\DBAL\Connection $ver2Db){
-
+function migrateMainSetting(\Doctrine\DBAL\Connection $ver2Db)
+{
     $settingModel = new \main\app\model\SettingModel();
     $rows = $ver2Db->fetchAll("select * from  main_setting");
     foreach ($rows as $row) {
@@ -125,8 +146,8 @@ function migrateMainSetting(\Doctrine\DBAL\Connection $ver2Db){
  * @throws \Doctrine\DBAL\DBALException
  * @throws \Exception
  */
-function migrateIssueConfig(\Doctrine\DBAL\Connection $ver2Db){
-
+function migrateIssueConfig(\Doctrine\DBAL\Connection $ver2Db)
+{
     $issueTypeModel = new \main\app\model\issue\IssueTypeModel();
     $issueTypeModel->truncate($issueTypeModel->getTable());
     $rows = $ver2Db->fetchAll("select * from  issue_type");
@@ -153,7 +174,7 @@ function migrateIssueConfig(\Doctrine\DBAL\Connection $ver2Db){
     }
     $issueResolveModel = new \main\app\model\issue\IssueResolveModel();
     $issueResolveModel->truncate($issueResolveModel->getTable());
-    $rows = $ver2Db->fetchAll("select * from  issue_status");
+    $rows = $ver2Db->fetchAll("select * from  issue_resolve");
     foreach ($rows as $row) {
         $issueResolveModel->replace($row);
     }
@@ -162,12 +183,6 @@ function migrateIssueConfig(\Doctrine\DBAL\Connection $ver2Db){
     $rows = $ver2Db->fetchAll("select * from  issue_priority");
     foreach ($rows as $row) {
         $issuePriorityModel->replace($row);
-    }
-    $issueUiScheme = new \main\app\model\issue\IssueUiSchemeModel();
-    $issueUiScheme->truncate($issueUiScheme->getTable());
-    $rows = $ver2Db->fetchAll("select * from  issue_ui_scheme");
-    foreach ($rows as $row) {
-        $issueUiScheme->replace($row);
     }
     $issueUiModel = new \main\app\model\issue\IssueUiModel();
     $issueUiModel->truncate($issueUiModel->getTable());
@@ -237,8 +252,8 @@ function migrateIssueConfig(\Doctrine\DBAL\Connection $ver2Db){
  * @throws \Doctrine\DBAL\DBALException
  * @throws \Exception
  */
-function migrateOrgs(\Doctrine\DBAL\Connection $ver2Db){
-
+function migrateOrgs(\Doctrine\DBAL\Connection $ver2Db)
+{
     $orgModel = new \main\app\model\OrgModel();
     $orgModel->truncate($orgModel->getTable());
 
@@ -249,13 +264,16 @@ function migrateOrgs(\Doctrine\DBAL\Connection $ver2Db){
     }
 }
 
-function migrateProjects(\Doctrine\DBAL\Connection $ver2Db){
-
+function migrateProjects(\Doctrine\DBAL\Connection $ver2Db)
+{
+    $master =  $ver2Db->fetchAssoc("select * from user_main where uid=1");
+    //print_r($master);
     $projectModel = new \main\app\model\project\ProjectModel();
     $projectModel->truncate($projectModel->getTable());
     $sql = "select * from project_main";
     $rows = $ver2Db->fetchAll($sql);
     foreach ($rows as $row) {
+        $row['workflow_scheme_id'] = '1';
         $projectModel->replace($row);
     }
     $projectMainExtraModel = new \main\app\model\project\ProjectMainExtraModel();
@@ -293,12 +311,26 @@ function migrateProjects(\Doctrine\DBAL\Connection $ver2Db){
     foreach ($rows as $row) {
         $projectLabelModel->replace($row);
     }
-    $projectRoleModel = new \main\app\model\project\ProjectRoleModel();
-    $projectRoleModel->truncate($projectRoleModel->getTable());
-    $sql = "select * from project_role";
+    $projectCategoryModel = new \main\app\model\project\ProjectCategoryModel();
+    $projectCategoryModel->truncate($projectCategoryModel->getTable());
+    $sql = "select * from project_category";
     $rows = $ver2Db->fetchAll($sql);
     foreach ($rows as $row) {
-        $projectRoleModel->replace($row);
+        $projectCategoryModel->replace($row);
+    }
+    $projectCatalogLabelModel = new \main\app\model\project\ProjectCatalogLabelModel();
+    $projectCatalogLabelModel->truncate($projectCatalogLabelModel->getTable());
+    $sql = "select * from project_catalog_label";
+    $rows = $ver2Db->fetchAll($sql);
+    foreach ($rows as $row) {
+        $projectCatalogLabelModel->replace($row);
+    }
+    $projectRoleRelationModel = new \main\app\model\project\ProjectRoleRelationModel();
+   // $projectRoleRelationModel->truncate($projectRoleRelationModel->getTable());
+    $sql = "select * from project_role_relation";
+    $rows = $ver2Db->fetchAll($sql);
+    foreach ($rows as $row) {
+        $projectRoleRelationModel->replace($row);
     }
     $projectUserRoleModel = new \main\app\model\project\ProjectUserRoleModel();
     $projectUserRoleModel->truncate($projectUserRoleModel->getTable());
@@ -306,6 +338,20 @@ function migrateProjects(\Doctrine\DBAL\Connection $ver2Db){
     $rows = $ver2Db->fetchAll($sql);
     foreach ($rows as $row) {
         $projectUserRoleModel->replace($row);
+    }
+    $projectRoleModel = new \main\app\model\project\ProjectRoleModel();
+    $projectRoleModel->truncate($projectRoleModel->getTable());
+    $sql = "select * from project_role";
+    $rows = $ver2Db->fetchAll($sql);
+    foreach ($rows as $row) {
+        $projectRoleModel->replace($row);
+        if(!empty($master['uid'])){
+            $arr = [];
+            $arr['user_id'] = $master['uid'];
+            $arr['project_id'] = $row['project_id'];
+            $arr['role_id'] = $row['id'];
+            $projectUserRoleModel->replace($arr);
+        }
     }
     $sprintModel = new \main\app\model\agile\SprintModel();
     $sprintModel->truncate($sprintModel->getTable());
@@ -322,8 +368,8 @@ function migrateProjects(\Doctrine\DBAL\Connection $ver2Db){
  * @throws \Doctrine\DBAL\DBALException
  * @throws \Exception
  */
-function migrateIssues(\Doctrine\DBAL\Connection $ver2Db){
-
+function migrateIssues(\Doctrine\DBAL\Connection $ver2Db)
+{
     $issueModel = new \main\app\model\issue\IssueModel();
     $issueModel->truncate($issueModel->getTable());
     $sql = "select * from issue_main";
@@ -336,7 +382,7 @@ function migrateIssues(\Doctrine\DBAL\Connection $ver2Db){
     $sql = "select * from issue_assistant";
     $rows = $ver2Db->fetchAll($sql);
     foreach ($rows as $row) {
-        $issueModel->insert($row);
+        $issueAssistantsModel->insert($row);
     }
     $issueEffectVersionModel = new \main\app\model\issue\IssueEffectVersionModel();
     $issueEffectVersionModel->truncate($issueEffectVersionModel->getTable());
@@ -395,14 +441,22 @@ function migrateIssues(\Doctrine\DBAL\Connection $ver2Db){
         $timelineModel->insert($row);
     }
 }
+
 /**
  * 迁移其他数据
  * @param \Doctrine\DBAL\Connection $ver2Db
  * @throws \Doctrine\DBAL\DBALException
  * @throws \Exception
  */
-function migrateOther(\Doctrine\DBAL\Connection $ver2Db){
-
+function migrateOther(\Doctrine\DBAL\Connection $ver2Db)
+{
+    $activityModel = new \main\app\model\ActivityModel();
+    $activityModel->truncate($activityModel->getTable());
+    $sql = "select * from main_activity";
+    $rows = $ver2Db->fetchAll($sql);
+    foreach ($rows as $row) {
+        $activityModel->insert($row);
+    }
     $notifySchemeModel = new \main\app\model\system\NotifySchemeModel();
     $notifySchemeModel->truncate($notifySchemeModel->getTable());
     $sql = "select * from main_notify_scheme";
@@ -424,9 +478,10 @@ function migrateOther(\Doctrine\DBAL\Connection $ver2Db){
  * @return \Doctrine\DBAL\Connection|null
  * @throws \Doctrine\DBAL\DBALException
  */
-function getDb($dbConfig){
+function getDb($dbConfig)
+{
     $db = null;
-    try{
+    try {
         $connectionParams = array(
             'dbname' => $dbConfig['db_name'],
             'user' => $dbConfig['user'],
@@ -439,16 +494,35 @@ function getDb($dbConfig){
         $db = \Doctrine\DBAL\DriverManager::getConnection($connectionParams);
         $sqlMode = "SET SQL_MODE='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'";
         $db->exec($sqlMode);
-    }catch(\Doctrine\DBAL\DBALException $e){
-        echo "数据库链接失败:".print_r($dbConfig, true)."\n";
+    } catch (\Doctrine\DBAL\DBALException $e) {
+        echo "数据库链接失败:" . print_r($dbConfig, true) . "\n";
         return null;
-    }catch(\Exception $e){
-        echo "数据库链接失败:".print_r($dbConfig, true)."\n";
+    } catch (\Exception $e) {
+        echo "数据库链接失败:" . print_r($dbConfig, true) . "\n";
         return null;
     }
     return $db;
 }
 
+/**
+ * @param $src
+ * @param $dst
+ */
+function recurseCopy($src, $dst)
+{
+    $dir = opendir($src);
+    @mkdir($dst);
+    while (false !== ($file = readdir($dir))) {
+        if (($file != '.') && ($file != '..')) {
+            if (is_dir($src . '/' . $file)) {
+                recurseCopy($src . '/' . $file, $dst . '/' . $file);
+            } else {
+                copy($src . '/' . $file, $dst . '/' . $file);
+            }
+        }
+    }
+    closedir($dir);
+}
 
 
 

@@ -426,9 +426,11 @@ var IssueForm = (function () {
         if (default_value !== null) {
             for (var i = 0; i < default_value.length; i++) {
                 var item_value = getArrayValue(_issueConfig.issue_labels, 'id', default_value[i]);
-                item_value['id'] = default_value[i];
-                if (item_value) {
-                    edit_data.push(item_value);
+                if( item_value && default_value[i]){
+                    item_value['id'] = default_value[i];
+                    if (item_value) {
+                        edit_data.push(item_value);
+                    }
                 }
             }
         }
