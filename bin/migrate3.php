@@ -108,7 +108,9 @@ function migrateUsers(\Doctrine\DBAL\Connection $ver2Db)
 
     $sql = "select * from user_main";
     $users = $ver2Db->fetchAll($sql);
-    $userModel->insertRows($users);
+    foreach ($users as $user) {
+        $userModel->replace($user);
+    }
 
     // delete from user_setting
     $userSettingModel = new \main\app\model\user\UserSettingModel();
