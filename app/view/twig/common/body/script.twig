@@ -40,7 +40,7 @@
 
     $(function () {
         if(cur_project_id){
-            if(_issueConfig.projects && Array.isArray(_issueConfig.projects)){
+            if( typeof(_issueConfig)!='undefined' &&  _.has(_issueConfig, 'projects') ){
                 var projects = _issueConfig.projects;
                 var $content = $(".js-dropdown-menu-projects .dropdown-content");
                 var $ul = $("<ul></ul>");
