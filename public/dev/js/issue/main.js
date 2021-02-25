@@ -1252,7 +1252,7 @@ var IssueMain = (function () {
                     return;
                 }
                 notify_success('操作成功');
-                window.location.reload();
+                // window.location.reload();
             },
             error: function (res) {
                 loading.hide('#displayMoveProject');
