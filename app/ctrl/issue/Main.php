@@ -1938,6 +1938,7 @@ class Main extends BaseUserCtrl
         }
 
         $updateArr = [];
+        $updateArr['project_id'] = $projectId;
         if (isset($_POST['module'])) {
             $updateArr['module'] = (int)$_POST['module'];
         }
@@ -2014,7 +2015,6 @@ class Main extends BaseUserCtrl
                     $this->deletedAfter($issueId, $issue);
                 }
             }
-
             $successIssueIdArr[] = $issueId;
         }
 
@@ -2042,6 +2042,7 @@ class Main extends BaseUserCtrl
             'target_project_id' => $projectId,
             'issue_id_arr' => $successIssueIdArr
         ];
+        // print_r($eventData);
         $event = new CommonPlacedEvent($this, $eventData);
         $this->dispatcher->dispatch($event, Events::onIssueBatchMoveProject);
         $this->ajaxSuccess('success');
