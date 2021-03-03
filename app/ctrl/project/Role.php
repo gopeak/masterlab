@@ -538,7 +538,6 @@ class Role extends BaseUserCtrl
         if (!PermissionLogic::check($role['project_id'], $userId, PermissionLogic::ADMINISTER_PROJECTS)) {
             //$this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
         }
-
         $model = new ProjectUserRoleModel();
         $data['role_users'] = $model->getsRoleId($roleId);
         unset($model);

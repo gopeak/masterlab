@@ -332,7 +332,8 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        users:<?=users|json_encode()|raw?>
+        users:<?=users|json_encode()|raw?>,
+        "projects":<?=projects|json_encode()|raw?>
     };
     //console.log(_issueConfig.users);
     window.$role = null;

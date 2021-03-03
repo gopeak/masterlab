@@ -39,7 +39,7 @@
     gon.current_user_fullname="<?=user.display_name?>";
 
     $(function () {
-        if(cur_project_id){
+        if(typeof(cur_project_id)!='undefined' && cur_project_id){
             if( typeof(_issueConfig)!='undefined' &&  _.has(_issueConfig, 'projects') ){
                 var projects = _issueConfig.projects;
                 var $content = $(".js-dropdown-menu-projects .dropdown-content");

@@ -203,7 +203,6 @@
     {{/catalogs}}
 </script>
 {% endverbatim %}
-
 <script>
     var query_str = '<?=query_str?>';
     var urls = parseURL(window.location.href);
@@ -212,6 +211,7 @@
 
     var _issueConfig = {
         "issue_labels": <?= project_labels|json_encode()|raw ?>,
+        "projects":<?=projects|json_encode()|raw?>
     };
 
     $(function() {
