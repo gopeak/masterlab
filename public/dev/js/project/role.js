@@ -139,8 +139,6 @@ var Role = (function () {
     }
 
     Role.prototype.addRoleUser = function () {
-
-
         var roleId = $('#role_user-role_id').val();
         var userId =  $("#role_user_selected_user_id").val();
 

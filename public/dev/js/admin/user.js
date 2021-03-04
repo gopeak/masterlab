@@ -46,6 +46,7 @@ function fetchUsers(url, tpl_id, parent_id) {
 
                 $(".user_for_group").click(function () {
                     userGroup($(this).attr("data-uid"));
+
                 });
 
                 $(".select_group_li").click(function () {
@@ -280,7 +281,7 @@ $(function () {
 function userGroup(uid) {
 
     var method = 'get';
-    var url = '/admin/user/user_group/?uid=' + uid;
+    var url = '/admin/project_roles/user_project_tree_roles/?uid=' + uid;
     $.ajax({
         type: method,
         dataType: "json",
@@ -291,17 +292,68 @@ function userGroup(uid) {
 
             auth_check(resp);
             $("#modal-user_group").modal();
-            $("#group_for_uid").val(uid);
 
-            var obj3 = document.getElementById('for_group');
-            obj3.options.length = 0;
-            for (var i = 0; i < resp.data.groups.length; i++) {
-                obj3.options.add(new Option(resp.data.groups[i].name, resp.data.groups[i].id));
-            }
-            $('.selectpicker').selectpicker('refresh');
-            $('#for_group').selectpicker('refresh');
-            $('#for_group').selectpicker('val', resp.data.user_groups);
-            $('.selectpicker').selectpicker();
+            $table.bootstrapTable({
+                data:data,
+                idField: 'id',
+                dataType:'jsonp',
+                columns: [
+                    { field: 'check',  checkbox: true, formatter: function (value, row, index) {
+                            if (row.check == true) {
+                                // console.log(row.serverName);
+                                //设置选中
+                                return {  checked: true };
+                            }
+                        }
+                    },
+                    { field: 'name',  title: '角色' },
+                    // {field: 'id', title: '编号', sortable: true, align: 'center'},
+                    // {field: 'pid', title: '所属上级'},
+                    { field: 'permissionValue', title: '描述'  }
+                ],
+                //在哪一列展开树形
+                treeShowField: 'name',
+                //指定父id列
+                parentIdField: 'pid',
+
+                onResetView: function(data) {
+                    //console.log('load');
+                    $table.treegrid({
+                        initialState: 'collapsed',// 所有节点都折叠
+                        // initialState: 'expanded',// 所有节点都展开，默认展开
+                        treeColumn: 1,
+                        // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
+                        // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                        onChange: function() {
+                            $table.bootstrapTable('resetWidth');
+                        }
+                    });
+
+                    //只展开树形的第一级节点
+                    $table.treegrid('getRootNodes').treegrid('expand');
+
+                },
+                onCheck:function(row){
+                    var datas = $table.bootstrapTable('getData');
+                    // 勾选子类
+                    selectChilds(datas,row,"id","pid",true);
+
+                    // 勾选父类
+                    selectParentChecked(datas,row,"id","pid")
+
+                    // 刷新数据
+                    $table.bootstrapTable('load', datas);
+                },
+
+                onUncheck:function(row){
+                    var datas = $table.bootstrapTable('getData');
+                    selectChilds(datas,row,"id","pid",false);
+                    $table.bootstrapTable('load', datas);
+                },
+                // bootstrap-table-treetreegrid.js 插件配置 -- end
+            });
+
+
 
         },
         error: function (res) {

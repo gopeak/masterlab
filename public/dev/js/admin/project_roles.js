@@ -105,17 +105,57 @@ var ProjectRoles = (function () {
             var id = row.uid;
             joinUserIdArr.push(id);
         }
-        for (var _key in  users) {
+        var empty = "<option  value=''>请选择</option>";
+        $('#role_user_selected_user_id').append(empty);
+        for (var _key=0; _key<users.length;_key++ ) {
             var row = users[_key];
             var id = row.uid;
             if(_.indexOf(joinUserIdArr, id)===-1){
                 var title = row.display_name;
-                var opt = "<option value='"+id+"'>"+title+"</option>";
+                var avatar = row.avatar;
+                var content ='data-content="<img class=\'float-none\' width=\'26px\' height=\'26px\'   style=\'border-radius: 50%;\' src=\''+avatar+'\'> '+title+'"';
+                var opt = "<option "+content+" value='"+id+"'>"+title+"</option>";
                 $('#role_user_selected_user_id').append(opt);
             }
         }
-        //data-content="<span style='color:red'>紧 急</span>"
         $('.selectpicker').selectpicker('refresh');
+    }
+
+    ProjectRoles.prototype.addRoleUser = function () {
+        var roleId = $('#role_user-role_id').val();
+        var userId =  $("#role_user_selected_user_id").val();
+        if(is_empty(userId) || userId==0){
+            return false;
+        }
+        let method = 'post';
+        // alert(userId);
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.role_user_add_url,
+            data: {role_id: roleId, user_id: userId},
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret == 200) {
+                    isChanged = true;
+                    notify_success("提示", '操作成功');
+                    let source = $('#role_user_list_tpl').html();
+                    let template = Handlebars.compile(source);
+                    let result = template(resp.data);
+                    $('#role_user_list_render_id').html(result);
+
+                    $(".role_user_remove").click(function () {
+                        ProjectRoles.prototype._deleteProjectRolesUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
+                    });
+                } else {
+                    notify_error( resp.msg );
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     }
 
     ProjectRoles.prototype.editProjectRolesUser = function (id) {
@@ -180,63 +220,6 @@ var ProjectRoles = (function () {
                     });
                 } else {
                     notify_error( resp.msg );
-                }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    }
-
-    ProjectRoles.prototype.permEdit = function (id, name) {
-        $("#modal-permission_edit").modal();
-        $('#perm_role_id').val(id);
-        $("#perm_role_name").val(name);
-
-        var treeContainer = $('#container');
-        //清空树状
-        treeContainer.data('jstree', false).empty();
-        treeContainer.unbind();
-        //请求生成
-        treeContainer.jstree({
-            "plugins": ["checkbox"],
-            'core': {
-                'data': {
-                    "url": _options.tree_url + '?role_id=' + id,
-                    "dataType": "json"
-                }
-            }
-        });
-
-        //点击切换
-        $('#container').on("changed.jstree", function (e, data) {
-            $("#permission_ids").val(data.selected);
-        });
-        //全选和展开
-        $(document).on("click", "#checkall", function () {
-            treeContainer.jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
-        });
-    }
-
-    ProjectRoles.prototype.updatePerm = function () {
-
-        var method = 'post';
-        var params = $('#form_permission_edit').serialize();
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: true,
-            url: _options.update_perm_url,
-            data: params,
-            success: function (resp) {
-
-                auth_check(resp);
-                if (resp.ret == 200) {
-                    notify_success("执行成功");
-                    $("#modal-permission_edit").modal('hide');
-                    //window.location.reload();
-                } else {
-                    notify_error(resp.msg, resp.data);
                 }
             },
             error: function (res) {
@@ -331,8 +314,9 @@ var ProjectRoles = (function () {
                 auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
+                    isChanged = true;
                     $('#role_user_id_'+id).remove();
-                    $("li[data-user-id='0'] a")[0].click();
+                    //$("li[data-user-id='0'] a")[0].click();
                 }
             },
             error: function (res) {

@@ -149,7 +149,6 @@
 										</div>
 										<a id="a-assign-to-me-link" class="assign-to-me-link" href="#">选择自己</a>
 
-
 									</div>
 									<!--<div class="col-md-3">
                                         <button id="btn-role_user_save" name="btn-role_user_save" type="button" class="btn " >添 加</button>
@@ -180,8 +179,8 @@
 <script type="text/html"  id="role_user_list_tpl">
     {{#role_users}}
     <tr class="commit" id="role_user_id_{{id}}">
-        <td>{{user_html user_id}}</td>
-        <td>{{user_account_str user_id}}</td>
+        <td></td>
+        <td>{{user_html user_id}} {{user_account_str user_id}}</td>
         <td>
             <a class="role_user_remove btn btn-transparent "
                href="javascript:;"
@@ -199,27 +198,48 @@
 {% endverbatim %}
 
 
+<script>
+	var _issueConfig = {
+		users:<?=users|json_encode()|raw?>,
+		"projects":<?=projects|json_encode()|raw?>,
 
-		<script>
-			var _issueConfig = {
-				users:<?=users|json_encode()|raw?>,
-			"projects":<?=projects|json_encode()|raw?>
-			};
-			var projectRoles = null;
-			var options = {
-				filter_url:'/admin/project_roles/gets',
-				role_user_fetch_url:"/admin/project_roles/fetchRoleUser",
-				role_user_add_url:"/project/role/addRoleUser",
-			};
-			$(function () {
-				projectRoles = new ProjectRoles(options);
-				//projectRoles.fetchProjectRoles();
+	};
+	var projectRoles = null;
+	var options = {
+		filter_url:'/admin/project_roles/gets',
+		role_user_fetch_url:"/admin/project_roles/fetchRoleUser",
+		role_user_add_url:"/project/role/addRoleUser",
+		delete_role_user_url:"/project/role/deleteRoleUser"
+	};
+	var isChanged = false;
+	$(function () {
+		projectRoles = new ProjectRoles(options);
+		//projectRoles.fetchProjectRoles();
 
-				$(".list_add_user").click(function () {
-					projectRoles.editProjectRolesUser($(this).data("id"));
-				});
-			});
-		</script>
+		$(".list_add_user").click(function () {
+			projectRoles.editProjectRolesUser($(this).data("id"));
+		});
+
+		$('#role_user_selected_user_id').bind('change',function (e) {
+			//alert($(this).val())
+			projectRoles.addRoleUser();
+		});
+
+		$('#a-assign-to-me-link').bind('click',function (e) {
+			//alert($(this).val())
+			$('#role_user_selected_user_id').val(window.current_uid);
+			$('.selectpicker').selectpicker('refresh');
+			projectRoles.addRoleUser();
+		});
+
+		$("#modal-role_user").on('hidden.bs.modal', function (e) {
+			if(isChanged){
+				window.location.reload();
+			}
+		})
+
+	});
+</script>
 
 
 	</body>

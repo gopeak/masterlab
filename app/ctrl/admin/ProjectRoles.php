@@ -53,14 +53,14 @@ class ProjectRoles extends BaseAdminCtrl
     public function pageIndex()
     {
         $data = [];
-        $data['title'] = 'Projects';
-        $data['nav_links_active'] = 'project';
-        $data['left_nav_active'] = 'list';
+        $data['title'] = '项目角色';
+        $data['nav_links_active'] = 'user';
+        $data['left_nav_active'] = 'project_roles';
         $model = new ProjectModel();
         $projectsArr = $model->getRows('id,name',['archived'=>'N']);
 
         $userModel = new UserModel();
-        $usersArr = $userModel->getRows('uid, username,display_name,avatar', ['status'=>UserModel::STATUS_NORMAL]);
+        $usersArr = $userModel->getAll(false);
         $usersKeyArr = array_column($usersArr, null, 'uid');
 
         $projectRoleModel = new ProjectRoleModel();
@@ -70,7 +70,7 @@ class ProjectRoles extends BaseAdminCtrl
         $projectUserRoleArr = $projectUserRoleModel->getAll(false);
         $projectUserRoleKeyArr = [];
         foreach ($projectUserRoleArr as $item) {
-            $projectUserRoleKeyArr[$item['project_id'].'@'.$item['id']] = $item;
+            $projectUserRoleKeyArr[$item['project_id'].'@'.$item['user_id']] = $item;
         }
         foreach ($projectsArr as &$project) {
             $rolesArr = [];
@@ -84,11 +84,9 @@ class ProjectRoles extends BaseAdminCtrl
                 foreach ($rolesArr as &$role) {
                     $userArr = [];
                     foreach ($projectUserRoleArr as $projectUserRole) {
-                        $fetchKey = $project['id'].'@'.$projectUserRole['role_id'];
-                        if(isset($projectUserRoleKeyArr[$fetchKey])){
-                            $projectUserRole = $projectUserRoleKeyArr[$fetchKey];
-                            if(isset($usersKeyArr[$projectUserRole['user_id']]) && !isset($userArr[$projectUserRole['user_id']])){
-                                $userArr[$projectUserRole['user_id']] = $usersKeyArr[$projectUserRole['user_id']];
+                        if($projectUserRole['role_id']==$role['id']){
+                            if(isset($usersKeyArr[$projectUserRole['user_id']])){
+                                $userArr[] = $usersKeyArr[$projectUserRole['user_id']];
                             }
                         }
                     }
@@ -98,7 +96,6 @@ class ProjectRoles extends BaseAdminCtrl
             $project['roles'] = $rolesArr;
         }
         $data['project_roles'] = $projectsArr;
-
         $userModel = new UserModel();
         $users = $userModel->getAll(false);
         foreach ($users as &$user) {
@@ -134,15 +131,23 @@ class ProjectRoles extends BaseAdminCtrl
         if (!PermissionLogic::check($role['project_id'], $userId, PermissionLogic::ADMINISTER_PROJECTS)) {
             //$this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
         }
-        $model = new ProjectUserRoleModel();
-        $data['role_users'] = $model->getsRoleId($roleId);
         $userModel = new UserModel();
         $users = $userModel->getAll(false);
         foreach ($users as &$user) {
             $user = UserLogic::format($user);
         }
         $data['users'] = $users;
-        unset($model);
+        $usersKeyArr = array_column($users, null, 'uid');
+        $model = new ProjectUserRoleModel();
+        $rolesArr = $model->getsRoleId($roleId);
+        foreach ($rolesArr as $k =>$role) {
+            if(!isset($usersKeyArr[$role['user_id']])){
+                unset($rolesArr[$k]);
+            }
+        }
+        sort($rolesArr);
+        $data['role_users'] = $rolesArr;
+        unset($model, $userModel);
         $this->ajaxSuccess('ok', $data);
     }
 

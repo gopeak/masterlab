@@ -13,7 +13,11 @@
 
     <script src="/dev/vendor/cropper.min.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/css/cropper.min.css" rel="stylesheet">
-
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/jquery-treegrid/0.2.0/css/jquery.treegrid.min.css"  rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.12.0/extensions/treegrid/bootstrap-table-treegrid.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-treegrid/0.2.0/js/jquery.treegrid.min.js"></script>
     <style>
         .list-item-name img{
             display: block;
@@ -429,16 +433,11 @@
             <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">编辑用户组</h3>
+                    <h3 class="modal-header-title">所属项目角色</h3>
                 </div>
                 <div class="modal-body overflow-visible">
-                    <div class="form-group">
-                        <label class="control-label" for="id_display_name">勾选所属用户组:</label>
-                        <div class="col-sm-10">
-                                <select id="for_group" name="params[groups][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择用户组">
-                                </select>
-                        </div>
-                    </div>
+                    <table id="table"></table>
+                    <br/>
                 </div>
 
                 <div class="modal-footer">
@@ -554,7 +553,7 @@
             </td>
             <td  >
                 <div class="controls member-controls " >
-                    <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">用户组 </a>
+                    <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">项目角色 </a>
                     <a class="user_for_edit btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
                     {{#if_eq status '0'}}
                         <a class="user_for_active btn btn-transparent " data-uid="{{uid}}"   href="#"  >
@@ -689,7 +688,6 @@
                 url: root_url + 'invite/send',
                 data: $('#form-invite').serialize(),
                 success: function (resp) {
-
                      notify_success(resp.msg, resp.data);
                 },
                 error: function (res) {
@@ -769,6 +767,101 @@
         });
 
     });
+
+</script>
+
+<script type="text/javascript">
+    var $table = $('#table');
+    var data = JSON.parse(
+        '[{"id":1,"pid":0,"status":1,"name":"用户管理","permissionValue":"open:user:manage"},' +
+        '{"id":2,"pid":0,"status":1,"name":"系统管理","permissionValue":"open:system:manage"},' +
+        '{"id":3,"pid":1,"status":1,"name":"新增用户","permissionValue":"open:user:add"},' +
+        '{"id":4,"pid":1,"status":1,"name":"修改用户","permissionValue":"open:user:edit"},' +
+        '{"id":5,"pid":1,"status":0,"name":"删除用户","permissionValue":"open:user:del"},' +
+        '{"id":6,"pid":2,"status":1,"name":"系统配置管理","permissionValue":"open:systemconfig:manage"},' +
+        '{"id":7,"pid":6,"status":1,"name":"新增配置","permissionValue":"open:systemconfig:add"},' +
+        '{"id":8,"pid":6,"status":1,"name":"修改配置","permissionValue":"open:systemconfig:edit"},' +
+        '{"id":9,"pid":6,"status":0,"name":"删除配置","permissionValue":"open:systemconfig:del"},' +
+        '{"id":10,"pid":2,"status":1,"name":"系统日志管理","permissionValue":"open:log:manage"},' +
+        '{"id":11,"pid":10,"status":1,"name":"新增日志","permissionValue":"open:log:add"},' +
+        '{"id":12,"pid":10,"status":1,"name":"修改日志","permissionValue":"open:log:edit"},' +
+        '{"id":13,"pid":10,"status":0,"name":"删除日志","permissionValue":"open:log:del"}]');
+
+    $(function() {
+
+        //控制台输出一下数据
+        console.log(data);
+
+    });
+
+
+    //初始化操作按钮的方法
+    window.operateEvents = {
+        'click .RoleOfadd': function (e, value, row, index) {
+            add(row.id);
+        },
+        'click .RoleOfdelete': function (e, value, row, index) {
+            del(row.id);
+        },
+        'click .RoleOfedit': function (e, value, row, index) {
+            update(row.id);
+        }
+    };
+</script>
+<script>
+    /**
+     * 选中父项时，同时选中子项
+     * @param datas 所有的数据
+     * @param row 当前数据
+     * @param id id 字段名
+     * @param pid 父id字段名
+     */
+    function selectChilds(datas,row,id,pid,checked) {
+        for(var i in datas){
+            if(datas[i][pid] == row[id]){
+                datas[i].check=checked;
+                selectChilds(datas,datas[i],id,pid,checked);
+            };
+        }
+    }
+
+    function selectParentChecked(datas,row,id,pid){
+        for(var i in datas){
+            if(datas[i][id] == row[pid]){
+                datas[i].check=true;
+                selectParentChecked(datas,datas[i],id,pid);
+            };
+        }
+    }
+
+    function test() {
+        var selRows = $table.bootstrapTable("getSelections");
+        if(selRows.length == 0){
+            alert("请至少选择一行");
+            return;
+        }
+
+        var postData = "";
+        $.each(selRows,function(i) {
+            postData +=  this.id;
+            if (i < selRows.length - 1) {
+                postData += "， ";
+            }
+        });
+        alert("你选中行的 id 为："+postData);
+
+    }
+
+    function add(id) {
+        alert("add 方法 , id = " + id);
+    }
+    function del(id) {
+        alert("del 方法 , id = " + id);
+    }
+    function update(id) {
+        alert("update 方法 , id = " + id);
+    }
+
 
 </script>
 </body>
