@@ -44,9 +44,8 @@ function fetchUsers(url, tpl_id, parent_id) {
                     userActive($(this).attr("data-uid"));
                 });
 
-                $(".user_for_group").click(function () {
-                    userGroup($(this).attr("data-uid"));
-
+                $(".user_for_roles").click(function () {
+                    userProjectRoles($(this).attr("data-uid"));
                 });
 
                 $(".select_group_li").click(function () {
@@ -278,81 +277,47 @@ $(function () {
 
 })
 
-function userGroup(uid) {
-
+var UserProjectRoleSelected = [];
+function userProjectRoles(uid) {
+    $('#project_roles_user_id').val(uid);
     var method = 'get';
-    var url = '/admin/project_roles/user_project_tree_roles/?uid=' + uid;
+    var url = '/admin/project_roles/fetchUserProjectTreeRoles/?user_id=' + uid;
     $.ajax({
         type: method,
         dataType: "json",
         async: true,
         url: url,
-        data: {},
+        data: {user_id:uid},
         success: function (resp) {
-
             auth_check(resp);
-            $("#modal-user_group").modal();
-
-            $table.bootstrapTable({
-                data:data,
-                idField: 'id',
-                dataType:'jsonp',
-                columns: [
-                    { field: 'check',  checkbox: true, formatter: function (value, row, index) {
-                            if (row.check == true) {
-                                // console.log(row.serverName);
-                                //设置选中
-                                return {  checked: true };
-                            }
-                        }
+            $("#modal-project_roles").modal();
+            console.log(resp.data.user_project_roles);
+            // data format demo
+            $('#project_roles_tree')
+                .on('changed.jstree', function (e, data) {
+                    var i, j, r = [];
+                    for(i = 0, j = data.selected.length; i < j; i++) {
+                        r.push(data.instance.get_node(data.selected[i]).id);
+                    }
+                    UserProjectRoleSelected = r;
+                    console.log('Selected: ' + r.join(', '));
+                })
+                .jstree({
+                'core' : {
+                    "multiple" : true,
+                    "animation" : 0,
+                    "themes" : {
+                        "theme" : "default" ,
+                        "dots" : true,
+                        "icons" : false
                     },
-                    { field: 'name',  title: '角色' },
-                    // {field: 'id', title: '编号', sortable: true, align: 'center'},
-                    // {field: 'pid', title: '所属上级'},
-                    { field: 'permissionValue', title: '描述'  }
-                ],
-                //在哪一列展开树形
-                treeShowField: 'name',
-                //指定父id列
-                parentIdField: 'pid',
-
-                onResetView: function(data) {
-                    //console.log('load');
-                    $table.treegrid({
-                        initialState: 'collapsed',// 所有节点都折叠
-                        // initialState: 'expanded',// 所有节点都展开，默认展开
-                        treeColumn: 1,
-                        // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
-                        // expanderCollapsedClass: 'glyphicon glyphicon-plus',
-                        onChange: function() {
-                            $table.bootstrapTable('resetWidth');
-                        }
-                    });
-
-                    //只展开树形的第一级节点
-                    $table.treegrid('getRootNodes').treegrid('expand');
-
+                    'data' :resp.data.user_project_roles
                 },
-                onCheck:function(row){
-                    var datas = $table.bootstrapTable('getData');
-                    // 勾选子类
-                    selectChilds(datas,row,"id","pid",true);
-
-                    // 勾选父类
-                    selectParentChecked(datas,row,"id","pid")
-
-                    // 刷新数据
-                    $table.bootstrapTable('load', datas);
+                "checkbox" : {
+                    "keep_selected_style" : false
                 },
-
-                onUncheck:function(row){
-                    var datas = $table.bootstrapTable('getData');
-                    selectChilds(datas,row,"id","pid",false);
-                    $table.bootstrapTable('load', datas);
-                },
-                // bootstrap-table-treetreegrid.js 插件配置 -- end
+                "plugins" : [  "checkbox" ]
             });
-
 
 
         },
@@ -430,22 +395,24 @@ function userUpdate() {
     });
 }
 
-function userJoinGroup() {
+function userJoinRoles() {
 
     var method = 'post';
-    var url = '/admin/user/updateUserGroup';
+    var url = '/admin/project_roles/updateUserRole';
     var params = $('#form-update_user_group').serialize();
+    var user_id = $('#project_roles_user_id').val();
     $.ajax({
         type: method,
         dataType: "json",
         async: true,
         url: url,
-        data: params,
+        data: {user_id:user_id, roles_id:UserProjectRoleSelected},
         success: function (resp) {
             auth_check(resp);
             if (resp.ret == 200) {
-                notify_success(resp.msg, resp.data);
-                setTimeout("window.location.reload();", 2000)
+                notify_success(resp.msg);
+                //setTimeout("window.location.reload();", 2000);
+                $("#modal-project_roles").modal('hide')
             } else {
                 notify_success(resp.msg);
             }

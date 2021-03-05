@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\SettingsLogic;
 use main\app\classes\UserLogic;
@@ -23,7 +24,6 @@ use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionLogic;
 use main\app\model\user\UserModel;
-use main\app\service\ProjectService;
 
 /**
  * 后台的项目管理模块
@@ -149,6 +149,100 @@ class ProjectRoles extends BaseAdminCtrl
         $data['role_users'] = $rolesArr;
         unset($model, $userModel);
         $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchUserProjectTreeRoles()
+    {
+        $userId = null;
+        if (isset($_GET['_target'][3])) {
+            $userId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['user_id'])) {
+            $userId = (int)$_GET['user_id'];
+        }
+        if (!$userId) {
+            $this->ajaxFailed('参数错误', 'user_id不能为空');
+        }
+        $userId = intval($userId);
+        $model = new ProjectModel();
+        $projectsArr = $model->getRows('id, name, description',['archived'=>'N']);
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        $userRolesIdArr = $projectUserRoleModel->getsByUid($userId);
+        $projectRoleModel = new ProjectRoleModel();
+        $projectRolesArr =  $projectRoleModel->getsAll();
+        $arr = [];
+        foreach ($projectsArr as $project) {
+            $children = [];
+            foreach ($projectRolesArr as $role) {
+                if($role['project_id']!=$project['id']){
+                    continue;
+                }
+                $checked = false;
+                if(in_array($role['id'], $userRolesIdArr)){
+                    $checked = true;
+                }
+                $children[] = ['id'=> $role['id'], 'state'=>['opened'=>true, 'selected'=>$checked],  'text'=>$role['name'],'description'=>$role['description']];
+            }
+            $arr[] = ['id'=>'p'.$project['id'],  'children'=>$children, 'state'=>['opened'=>true],  'text'=>$project['name'],'description'=>$project['description']];
+        }
+        $data['user_project_roles'] = $arr;
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
+
+    /**
+     * 更新用户角色
+     * @throws \Exception
+     */
+    public function updateUserRole()
+    {
+        $roleIdArr = [];
+        $userId = null;
+        if (isset($_POST['user_id'])) {
+            $userId = (int)$_POST['user_id'];
+        }
+        if (!$userId) {
+            $this->ajaxFailed('参数错误', 'user_id不能为空');
+        }
+        if (isset($_POST['roles_id'])) {
+            $roleIdArr =  $_POST['roles_id'];
+        }
+        $userId = intval($userId);
+        $model = new ProjectUserRoleModel();
+        $projectRoleModel = new ProjectRoleModel();
+        try{
+            $model->db->beginTransaction();
+            $model->deleteByUid($userId);
+            foreach ($roleIdArr as $roleId) {
+                if(!is_int($roleId)){
+                    continue;
+                }
+                $projectRole = $projectRoleModel->getById($roleId);
+                $model->insertRole($userId, $projectRole['project_id'], $roleId);
+            }
+        }catch (\Exception $e){
+            $model->db->rollBack();
+            $this->ajaxFailed('服务器执行失败:'.$e->getMessage());
+        }
+        //写入操作日志
+        $user = (new UserModel())->getByUid(UserAuth::getId());
+        $logData = [];
+        $logData['user_name'] = $user['username'];
+        $logData['real_name'] = $user['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_ADD;
+        $logData['remark'] = '添加项目角色用户';
+        $logData['pre_data'] = [];
+        $logData['cur_data'] = ['user_id' => $userId,  'roles_id' => $roleIdArr];
+        LogOperatingLogic::add(UserAuth::getId(), 0, $logData);
+
+        $this->ajaxSuccess('操作成功', $logData['cur_data']);
     }
 
     /**
