@@ -291,7 +291,7 @@ function userProjectRoles(uid) {
         success: function (resp) {
             auth_check(resp);
             $("#modal-project_roles").modal();
-            console.log(resp.data.user_project_roles);
+            //console.log(resp.data.user_project_roles);
             // data format demo
             $('#project_roles_tree')
                 .on('changed.jstree', function (e, data) {
@@ -300,7 +300,7 @@ function userProjectRoles(uid) {
                         r.push(data.instance.get_node(data.selected[i]).id);
                     }
                     UserProjectRoleSelected = r;
-                    console.log('Selected: ' + r.join(', '));
+                    //console.log('Selected: ' + r.join(', '));
                 })
                 .jstree({
                 'core' : {
