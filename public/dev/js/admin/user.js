@@ -44,8 +44,8 @@ function fetchUsers(url, tpl_id, parent_id) {
                     userActive($(this).attr("data-uid"));
                 });
 
-                $(".user_for_group").click(function () {
-                    userGroup($(this).attr("data-uid"));
+                $(".user_for_roles").click(function () {
+                    userProjectRoles($(this).attr("data-uid"));
                 });
 
                 $(".select_group_li").click(function () {
@@ -277,31 +277,48 @@ $(function () {
 
 })
 
-function userGroup(uid) {
-
+var UserProjectRoleSelected = [];
+function userProjectRoles(uid) {
+    $('#project_roles_user_id').val(uid);
     var method = 'get';
-    var url = '/admin/user/user_group/?uid=' + uid;
+    var url = '/admin/project_roles/fetchUserProjectTreeRoles/?user_id=' + uid;
     $.ajax({
         type: method,
         dataType: "json",
         async: true,
         url: url,
-        data: {},
+        data: {user_id:uid},
         success: function (resp) {
-
             auth_check(resp);
-            $("#modal-user_group").modal();
-            $("#group_for_uid").val(uid);
+            $("#modal-project_roles").modal();
+            //console.log(resp.data.user_project_roles);
+            // data format demo
+            $('#project_roles_tree')
+                .on('changed.jstree', function (e, data) {
+                    var i, j, r = [];
+                    for(i = 0, j = data.selected.length; i < j; i++) {
+                        r.push(data.instance.get_node(data.selected[i]).id);
+                    }
+                    UserProjectRoleSelected = r;
+                    //console.log('Selected: ' + r.join(', '));
+                })
+                .jstree({
+                'core' : {
+                    "multiple" : true,
+                    "animation" : 0,
+                    "themes" : {
+                        "theme" : "default" ,
+                        "dots" : true,
+                        "icons" : false
+                    },
+                    'data' :resp.data.user_project_roles
+                },
+                "checkbox" : {
+                    "keep_selected_style" : false
+                },
+                "plugins" : [  "checkbox" ]
+            });
 
-            var obj3 = document.getElementById('for_group');
-            obj3.options.length = 0;
-            for (var i = 0; i < resp.data.groups.length; i++) {
-                obj3.options.add(new Option(resp.data.groups[i].name, resp.data.groups[i].id));
-            }
-            $('.selectpicker').selectpicker('refresh');
-            $('#for_group').selectpicker('refresh');
-            $('#for_group').selectpicker('val', resp.data.user_groups);
-            $('.selectpicker').selectpicker();
 
         },
         error: function (res) {
@@ -378,22 +395,24 @@ function userUpdate() {
     });
 }
 
-function userJoinGroup() {
+function userJoinRoles() {
 
     var method = 'post';
-    var url = '/admin/user/updateUserGroup';
+    var url = '/admin/project_roles/updateUserRole';
     var params = $('#form-update_user_group').serialize();
+    var user_id = $('#project_roles_user_id').val();
     $.ajax({
         type: method,
         dataType: "json",
         async: true,
         url: url,
-        data: params,
+        data: {user_id:user_id, roles_id:UserProjectRoleSelected},
         success: function (resp) {
             auth_check(resp);
             if (resp.ret == 200) {
-                notify_success(resp.msg, resp.data);
-                setTimeout("window.location.reload();", 2000)
+                notify_success(resp.msg);
+                //setTimeout("window.location.reload();", 2000);
+                $("#modal-project_roles").modal('hide')
             } else {
                 notify_success(resp.msg);
             }

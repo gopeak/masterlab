@@ -13,7 +13,8 @@
 
     <script src="/dev/vendor/cropper.min.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/css/cropper.min.css" rel="stylesheet">
-
+    <link href="/dev/lib/jstree/dist/themes/default/style.css" rel="stylesheet">
+    <script src="/dev/lib/jstree/dist/jstree.min.js"></script>
     <style>
         .list-item-name img{
             display: block;
@@ -87,16 +88,16 @@
                                     <input type="search" name="username" id="filter_username" placeholder="全名或用户名或邮箱地址"
                                            class="form-control search-text-input input-short" spellcheck="false" value="" />
       
-                                    <div class="dropdown inline">
+                                    <!--<div class="dropdown inline hide">
                                         <button class="dropdown-menu-toggle" data-toggle="dropdown" type="button">
                                             <span class="light" id="select_group_view" data-title-origin="所属用户组&nbsp;&nbsp;&nbsp;&nbsp;">
                                                 所属用户组&nbsp;&nbsp;&nbsp;&nbsp;
                                             </span>
                                             <i class="fa fa-chevron-down"></i>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-align-left dropdown-menu-selectable" id="select_group"><!--dropdown-menu-align-right-->
+                                        <ul class="dropdown-menu dropdown-menu-align-left dropdown-menu-selectable" id="select_group">
                                         </ul>
-                                    </div>
+                                    </div>-->
 
                                     <div class="dropdown inline prepend-left-10">
                                         <button class="dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="false">
@@ -418,27 +419,22 @@
     </form>
 </div>
 
-<div class="modal" id="modal-user_group">
+<div class="modal" id="modal-project_roles">
     <form id="form-update_user_group"
           class="js-quick-submit js-upload-blob-form form-horizontal"
-          action="/admin/user/update_user_group"
+          action="/admin/project_roles/updateUserRole"
           accept-charset="UTF-8"
           method="post">
-        <input type="hidden" name="uid" id="group_for_uid" value="">
+        <input type="hidden" name="project_roles_user_id" id="project_roles_user_id" value="">
         <div class="modal-dialog">
             <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">编辑用户组</h3>
+                    <h3 class="modal-header-title">所属项目角色</h3>
                 </div>
-                <div class="modal-body overflow-visible">
-                    <div class="form-group">
-                        <label class="control-label" for="id_display_name">勾选所属用户组:</label>
-                        <div class="col-sm-10">
-                                <select id="for_group" name="params[groups][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择用户组">
-                                </select>
-                        </div>
-                    </div>
+                <div class="modal-body min-height400"  >
+                    <table id="project_roles_tree"></table>
+                    <br/>
                 </div>
 
                 <div class="modal-footer">
@@ -554,7 +550,7 @@
             </td>
             <td  >
                 <div class="controls member-controls " >
-                    <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">用户组 </a>
+                    <a class="user_for_roles btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">项目角色 </a>
                     <a class="user_for_edit btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
                     {{#if_eq status '0'}}
                         <a class="user_for_active btn btn-transparent " data-uid="{{uid}}"   href="#"  >
@@ -618,7 +614,7 @@
             userUpdate();
         });
         $("#btn-save-user-group").click(function(){
-            userJoinGroup();
+            userJoinRoles();
         });
 
         function initRoles(project_id){
@@ -689,7 +685,6 @@
                 url: root_url + 'invite/send',
                 data: $('#form-invite').serialize(),
                 success: function (resp) {
-
                      notify_success(resp.msg, resp.data);
                 },
                 error: function (res) {
@@ -771,5 +766,7 @@
     });
 
 </script>
+
+
 </body>
 </html>

@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\classes\ConfigLogic;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
@@ -35,7 +36,6 @@ use main\app\classes\RewriteUrl;
 use main\app\model\ProjectTemplateDisplayCategoryModel;
 use main\app\model\ProjectTemplateModel;
 use main\app\model\user\UserModel;
-use main\app\service\ProjectService;
 
 /**
  * 项目
@@ -50,6 +50,7 @@ class Main extends Base
     {
         parent::__construct();
         parent::addGVar('top_menu_active', 'project');
+        parent::addGVar('projects', ConfigLogic::getJoinProjects());
     }
 
     public function pageIndex()

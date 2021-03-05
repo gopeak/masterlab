@@ -1,30 +1,30 @@
-var Role = (function () {
+var ProjectRoles = (function () {
 
     var _options = {};
 
     // constructor
-    function Role(options) {
+    function ProjectRoles(options) {
         _options = options;
 
         $("#btn-role_add").click(function () {
-            Role.prototype.add();
+            ProjectRoles.prototype.add();
         });
 
         $("#btn-update").click(function () {
-            Role.prototype.update();
+            ProjectRoles.prototype.update();
         });
 
         $("#btn-permission_update").click(function () {
-            Role.prototype.updatePerm();
+            ProjectRoles.prototype.updatePerm();
         });
 
     };
 
-    Role.prototype.getOptions = function () {
+    ProjectRoles.prototype.getOptions = function () {
         return _options;
     };
 
-    Role.prototype.setOptions = function (options) {
+    ProjectRoles.prototype.setOptions = function (options) {
         for (i in  options) {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
@@ -32,7 +32,7 @@ var Role = (function () {
         }
     };
 
-    Role.prototype.fetchRoles = function () {
+    ProjectRoles.prototype.fetchProjectRoles = function () {
 
         // url,  list_tpl_id, list_render_id
         var params = {format: 'json'};
@@ -41,30 +41,21 @@ var Role = (function () {
             dataType: "json",
             async: true,
             url: _options.filter_url,
-            data: $('#' + _options.filter_form_id).serialize(),
+            data: {},
             success: function (resp) {
                 auth_check(resp);
+                return;
                 if (resp.data.roles.length) {
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
 
-                    $(".list_edit_perm").click(function () {
-                        Role.prototype.permEdit($(this).data('id'), $(this).data('name'));
-                    });
 
                     $(".list_add_user").click(function () {
-                        Role.prototype.editRoleUser($(this).data("id"));
+                        ProjectRoles.prototype.editProjectRolesUser($(this).data("id"));
                     });
 
-                    $(".list_for_edit").click(function () {
-                        Role.prototype.edit($(this).data('id'));
-                    });
-
-                    $(".list_for_delete").click(function () {
-                        Role.prototype._delete($(this).data("id"));
-                    });
                 } else {
                     defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
@@ -78,7 +69,7 @@ var Role = (function () {
         });
     }
 
-    Role.prototype.edit = function (id) {
+    ProjectRoles.prototype.edit = function (id) {
 
         var method = 'get';
         $.ajax({
@@ -104,12 +95,74 @@ var Role = (function () {
         });
     }
 
-    Role.prototype.editRoleUser = function (id) {
+    ProjectRoles.prototype.initUsersSelect = function (users, join_users) {
+        //console.log(prioritys)
+        var issue_types_select = document.getElementById('role_user_selected_user_id');
+        $('#role_user_selected_user_id').empty();
+        var joinUserIdArr = [];
+        for (var _key in  join_users) {
+            var row = join_users[_key];
+            var id = row.uid;
+            joinUserIdArr.push(id);
+        }
+        var empty = "<option  value=''>请选择</option>";
+        $('#role_user_selected_user_id').append(empty);
+        for (var _key=0; _key<users.length;_key++ ) {
+            var row = users[_key];
+            var id = row.uid;
+            if(_.indexOf(joinUserIdArr, id)===-1){
+                var title = row.display_name;
+                var avatar = row.avatar;
+                var content ='data-content="<img class=\'float-none\' width=\'26px\' height=\'26px\'   style=\'border-radius: 50%;\' src=\''+avatar+'\'> '+title+'"';
+                var opt = "<option "+content+" value='"+id+"'>"+title+"</option>";
+                $('#role_user_selected_user_id').append(opt);
+            }
+        }
+        $('.selectpicker').selectpicker('refresh');
+    }
+
+    ProjectRoles.prototype.addRoleUser = function () {
+        var roleId = $('#role_user-role_id').val();
+        var userId =  $("#role_user_selected_user_id").val();
+        if(is_empty(userId) || userId==0){
+            return false;
+        }
+        let method = 'post';
+        // alert(userId);
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.role_user_add_url,
+            data: {role_id: roleId, user_id: userId},
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret == 200) {
+                    isChanged = true;
+                    notify_success("提示", '操作成功');
+                    let source = $('#role_user_list_tpl').html();
+                    let template = Handlebars.compile(source);
+                    let result = template(resp.data);
+                    $('#role_user_list_render_id').html(result);
+
+                    $(".role_user_remove").click(function () {
+                        ProjectRoles.prototype._deleteProjectRolesUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
+                    });
+                } else {
+                    notify_error( resp.msg );
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    ProjectRoles.prototype.editProjectRolesUser = function (id) {
 
         $("#modal-role_user").modal();
         $("#role_user-role_id").val(id);
         $('#role_user_list_render_id').html('');
-
         var method = 'get';
         $.ajax({
             type: method,
@@ -120,13 +173,14 @@ var Role = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret == 200) {
+                    ProjectRoles.prototype.initUsersSelect(resp.data.users);
                     var source = $('#role_user_list_tpl').html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#role_user_list_render_id').html(result);
 
                     $(".role_user_remove").click(function () {
-                        Role.prototype._deleteRoleUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
+                        ProjectRoles.prototype._deleteProjectRolesUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
                     });
                 } else {
                     notify_error("请求数据错误:" + resp.msg);
@@ -138,10 +192,9 @@ var Role = (function () {
         });
     }
 
-    Role.prototype.addRoleUser = function () {
+    ProjectRoles.prototype.addProjectRolesUser = function () {
         var roleId = $('#role_user-role_id').val();
         var userId =  $("#role_user_selected_user_id").val();
-
         if(is_empty(userId) || userId==0){
             return false;
         }
@@ -163,7 +216,7 @@ var Role = (function () {
                     $('#role_user_list_render_id').html(result);
 
                     $(".role_user_remove").click(function () {
-                        Role.prototype._deleteRoleUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
+                        ProjectRoles.prototype._deleteProjectRolesUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
                     });
                 } else {
                     notify_error( resp.msg );
@@ -175,65 +228,8 @@ var Role = (function () {
         });
     }
 
-    Role.prototype.permEdit = function (id, name) {
-        $("#modal-permission_edit").modal();
-        $('#perm_role_id').val(id);
-        $("#perm_role_name").val(name);
 
-        var treeContainer = $('#container');
-        //清空树状
-        treeContainer.data('jstree', false).empty();
-        treeContainer.unbind();
-        //请求生成
-        treeContainer.jstree({
-            "plugins": ["checkbox"],
-            'core': {
-                'data': {
-                    "url": _options.tree_url + '?role_id=' + id,
-                    "dataType": "json"
-                }
-            }
-        });
-
-        //点击切换
-        $('#container').on("changed.jstree", function (e, data) {
-            $("#permission_ids").val(data.selected);
-        });
-        //全选和展开
-        $(document).on("click", "#checkall", function () {
-            treeContainer.jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
-        });
-    }
-
-    Role.prototype.updatePerm = function () {
-
-        var method = 'post';
-        var params = $('#form_permission_edit').serialize();
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: true,
-            url: _options.update_perm_url,
-            data: params,
-            success: function (resp) {
-
-                auth_check(resp);
-                if (resp.ret == 200) {
-                    notify_success("执行成功");
-                    $("#modal-permission_edit").modal('hide');
-                    //window.location.reload();
-                } else {
-                    notify_error(resp.msg, resp.data);
-                }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    }
-
-
-    Role.prototype.add = function () {
+    ProjectRoles.prototype.add = function () {
 
         var method = 'post';
         var params = $('#form_add_role').serialize();
@@ -256,7 +252,7 @@ var Role = (function () {
         });
     }
 
-    Role.prototype.update = function () {
+    ProjectRoles.prototype.update = function () {
 
         var method = 'post';
         //var params = $('#form_add_role').serialize();
@@ -279,7 +275,7 @@ var Role = (function () {
         });
     }
 
-    Role.prototype._delete = function (id) {
+    ProjectRoles.prototype._delete = function (id) {
         if (!window.confirm('您确认删除该项吗?')) {
             return false;
         }
@@ -303,7 +299,7 @@ var Role = (function () {
         });
     }
 
-    Role.prototype._deleteRoleUser = function (id, user_id, project_id, role_id) {
+    ProjectRoles.prototype._deleteProjectRolesUser = function (id, user_id, project_id, role_id) {
         if (!window.confirm('您确认删除该项吗?')) {
             return false;
         }
@@ -318,8 +314,9 @@ var Role = (function () {
                 auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
+                    isChanged = true;
                     $('#role_user_id_'+id).remove();
-                    $("li[data-user-id='0'] a")[0].click();
+                    //$("li[data-user-id='0'] a")[0].click();
                 }
             },
             error: function (res) {
@@ -328,7 +325,7 @@ var Role = (function () {
         });
     }
 
-    return Role;
+    return ProjectRoles;
 })();
 
 

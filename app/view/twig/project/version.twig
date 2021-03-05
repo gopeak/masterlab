@@ -119,9 +119,7 @@
     let query_str = '<?=query_str?>';
     let urls = parseURL(window.location.href);
 
-
     $(function() {
-
         let options = {
             query_str: window.query_str,
             query_param_obj: urls.searchObject,
@@ -137,7 +135,6 @@
                 window.$versions.fetchAll(this.value);
             }
         });
-
     });
 
 </script>
