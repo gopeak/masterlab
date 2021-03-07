@@ -568,7 +568,6 @@ class Passport extends BaseCtrl
         $userModel = new UserModel();
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
-
             // 生成默认头像
             if (empty($avatar)) {
                 if (empty($user['display_name'])) {
