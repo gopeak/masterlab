@@ -22,7 +22,6 @@ $envVarArr = getEnvVar(PRE_APP_PATH);
 bindAppConfig($envVarArr);
 // 加载公共常量定义文件
 include_once APP_PATH . "constants.php";
-
 // 测试环境
 try {
     testEnvAutoTransactionRollback();
