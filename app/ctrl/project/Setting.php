@@ -64,7 +64,7 @@ class Setting extends BaseUserCtrl
                 $this->ajaxFailed('表单验证失败,项目名称已经被使用了,请更换一个吧');
             }
 
-            if (!isset($params['lead']) || empty($params['lead'])) {
+            if (!isset($params['lead'])  && empty($preData['lead'])) {
                 $params['lead'] = $uid;
             }
             $info = [];
@@ -78,6 +78,7 @@ class Setting extends BaseUserCtrl
                     $isUpdateLeader = true;
                 }
             }
+            // var_dump($isUpdateLeader);
             if (isset($params['description'])) {
                 $info['description'] = $params['description'];
             }
@@ -114,7 +115,7 @@ class Setting extends BaseUserCtrl
                 if ($ret1[0]) {
                     if ($isUpdateLeader) {
                         $retModifyLeader = ProjectLogic::assignProjectRoles($projectId, $info['lead']);
-                        if (!$retModifyLeader[0]) {
+                        if (!$retModifyLeader) {
                             $projectModel->db->rollBack();
                             $this->ajaxFailed('错误服务器执行错误,更新项目负责人失败');
                         }
