@@ -3,7 +3,7 @@
 <head  >
 
     {% include 'twig/common/header/include.twig' %}
-    <script src="/dev/lib/jquery.form.js"></script>
+    <script src="/dev/lib/jquery.form.min.js"></script>
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
@@ -162,7 +162,6 @@
     $("#issue_type_scheme_id").selectpicker('val', '<?=issue_type_scheme_id?>');
     // 初始化状态流方案
     $("#workflow_scheme_id").selectpicker('val', '<?=project.workflow_scheme_id?>');
-
 
     var options = {
         beforeSubmit: function (arr, $form, options) {
