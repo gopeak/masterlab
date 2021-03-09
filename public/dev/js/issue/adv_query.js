@@ -61,51 +61,53 @@ var IssueAdvQuery = (function () {
                 type: value.type
             });
         }
-
-        for (var [key, value] of Object.entries(tempOptions.issue_module)) {
+        for(var i=0; i<tempOptions.issue_module.length; i++){
+            let row = tempOptions.issue_module[i];
             adv_options.modules.push({
-                name: value.name,
-                value: key
+                name: row.name,
+                value: row.id
             });
         }
-
-        for (var [key, value] of Object.entries(tempOptions.issue_resolve)) {
+        for(var i=0; i<tempOptions.issue_resolve.length; i++){
+            let row = tempOptions.issue_resolve[i];
             adv_options.resolves.push({
-                name: value.name,
-                value: key
+                name: row.name,
+                value: row.id
             });
         }
-
-        for (var [key, value] of Object.entries(tempOptions.issue_status)) {
+        for(var i=0; i<tempOptions.issue_status.length; i++){
+            let row = tempOptions.issue_status[i];
             adv_options.status.push({
-                name: value.name,
-                value: key
+                name: row.name,
+                value: row.id
             });
         }
-
-        for (var [key, value] of Object.entries(tempOptions.issue_types)) {
+        for(var i=0; i<tempOptions.issue_types.length; i++){
+            let row = tempOptions.issue_types[i];
             adv_options.issueTypes.push({
-                name: value.name,
-                value: key
+                name: row.name,
+                value: row.id
             });
         }
-
-        for (var [key, value] of Object.entries(tempOptions.priority)) {
+        for(var i=0;  i<tempOptions.priority.length; i++){
+            let row = tempOptions.priority[i];
             adv_options.priority.push({
-                name: value.name,
-                value: key
+                name: row.name,
+                value: row.id
             });
         }
+        console.log(adv_options.priority)
 
         adv_options.sprints = tempOptions.sprint;
 
-        for (var [key, value] of Object.entries(tempOptions.users)) {
+        for(var i=0;i<tempOptions.users.length; i++){
+            let row = tempOptions.users[i];
             adv_options.users.push({
-                name: value.username,
-                value: key,
-                avatar: value.avatar
+                name: row.name,
+                value: row.id
             });
         }
+        console.log(adv_options)
     };
 
     IssueAdvQuery.prototype.renderAdvQuery = function (details) {
@@ -219,12 +221,21 @@ var IssueAdvQuery = (function () {
         } else {
             temp.data = []
         }
-
-        temp.data.forEach(function (n) {
-            if (n.value === temp.value) {
-                n.selected = true;
+        console.log(temp.data);
+        if(_.isArray(temp.data)){
+            for(var i=0;i++;i<temp.data.length){
+                if(temp.value===temp.data[i]){
+                    temp.data[i].selected = true;
+                }
             }
-        });
+        }else{
+            temp.data.forEach(function (n) {
+                if (n.value === temp.value) {
+                    n.selected = true;
+                }
+            });
+        }
+
 
         var source = $('#adv_query_form_tpl').html();
         var template = Handlebars.compile(source);
