@@ -31,18 +31,18 @@ class TestAuth extends BaseTestCase
         parent::tearDownAfterClass();
     }
 
-
     /**
      * @throws \Exception
      */
     public function testGet()
     {
         $curl =   new \Curl\Curl();
-        $curl->get(ROOT_URL.'api/auth?app_key=xxxxxxxxxxxx&app_secret=xxxxxxxxxxxxxx' );
+        $url = ROOT_URL.'api/auth?app_key=xxxxxxxxxxxx&app_secret=xxxxxxxxxxxxxx';
+        $curl->get($url );
         echo $curl->rawResponse;
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'api/auth failed');
-        $this->assertEquals('20000', $respArr['ret']);
+        $this->assertEquals('0', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
     }

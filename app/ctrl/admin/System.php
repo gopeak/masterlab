@@ -274,6 +274,7 @@ class System extends BaseAdminCtrl
         $data['enable_api'] = $settingModel->getSettingValue('enable_api');
         $data['app_key']  = $settingModel->getSettingValue('app_key');
         $data['app_secret']  = $settingModel->getSettingValue('app_secret');
+        $data['api_ip_addr']  = $settingModel->getSettingValue('api_ip_addr') ?? '';
         $this->render('twig/admin/system/system_api.twig', $data);
     }
 
@@ -310,6 +311,16 @@ class System extends BaseAdminCtrl
             $arr['_key'] = 'app_secret';
             $arr['module'] = 'api';
             $arr['_value'] = $_POST['app_secret'];
+            $arr['module'] = 'api';
+            $arr['format'] = 'string';
+            $arr['form_input_type'] = 'text';
+            $settingModel->replace($arr);
+        }
+        if(isset($_POST['api_ip_addr'])){
+            $arr['title'] = 'Api调用IP白名单';
+            $arr['_key'] = 'api_ip_addr';
+            $arr['module'] = 'api';
+            $arr['_value'] = str_replace([',',' '],[';',''], $_POST['api_ip_addr']);
             $arr['module'] = 'api';
             $arr['format'] = 'string';
             $arr['form_input_type'] = 'text';
