@@ -135,22 +135,28 @@ var IssueAdvQuery = (function () {
 
     IssueAdvQuery.prototype.saveAdvQuery = function (name) {
 
+
         if(is_empty(name)){
             notify_warn('提示','过滤器名称不能为空!');
             return;
         }
+        // sort_by
         var filterJson =  JSON.stringify(adv_details);
         if(is_empty(adv_details)){
             notify_warn('提示','查询条件为空!');
             return;
         }
-        var params = { format: 'json' };
+        var sort_field = $('#adv_sort_field').val();
+        var sort_by = $('#adv_sort_by').val();
+        var postData = { project_id: window._cur_project_id, name: name, filter: filterJson, sort_field:sort_field, sort_by:sort_by };
+        console.log(postData);
+        //return;
         $.ajax({
             type: "POST",
             dataType: "json",
             async: true,
             url: root_url + 'issue/main/save_adv_filter',
-            data: { project_id: window._cur_project_id, name: name, filter: filterJson },
+            data: postData,
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret == '200') {

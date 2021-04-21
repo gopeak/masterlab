@@ -236,14 +236,18 @@ $(function () {
 
     $(document).on("click", "#btn_adv_sort_by", function () {
         var sort_by = $("#adv_sort_by").val();
+        console.log($(".adv-sort-by-asc"))
         if (sort_by === "asc") {
-            $("#adv-sort-by-asc").removeClass("hidden");
-            $("#adv-sort-by-desc").addClass("hidden");
+            //$(".adv-sort-by-asc").removeClass("hidden");
+           // $(".adv-sort-by-desc").addClass("hidden");
+            $(this).html('<svg class="s16 adv-sort-img" ><use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use></svg>');
             $("#adv_sort_by").val("desc");
             $(this).prop("title", "升序");
         } else {
-            $("#adv-sort-by-asc").addClass("hidden");
-            $("#adv-sort-by-desc").removeClass("hidden");
+            //$(".adv-sort-by-asc").addClass("hidden");
+           // $(".adv-sort-by-desc").removeClass("hidden");
+            //console.log($("#adv_sort_by"))
+            $(this).html('<svg class="s16 adv-sort-img" ><use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use></svg>');
             $("#adv_sort_by").val("asc");
             $(this).prop("title", "降序");
         }

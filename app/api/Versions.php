@@ -3,15 +3,24 @@
 
 namespace main\app\api;
 
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
+use main\app\model\SettingModel;
 
+/**
+ * Class Versions
+ * @package main\app\api
+ */
 class Versions extends BaseAuth
 {
+    public $isTriggerEvent = false;
+
     /**
-     * 项目版本接口
      * @return array
+     * @throws \Exception
      */
     public function v1()
     {
@@ -19,6 +28,7 @@ class Versions extends BaseAuth
             $handleFnc = $this->requestMethod . 'Handler';
             return $this->$handleFnc();
         }
+        $this->isTriggerEvent = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_event');
         return self::returnHandler('api方法错误');
     }
 
@@ -38,11 +48,9 @@ class Versions extends BaseAuth
         if (isset($_GET['project_id'])) {
             $projectId = intval($_GET['project_id']);
         }
-
         if (isset($_GET['_target'][3])) {
             $versionId = intval($_GET['_target'][3]);
         }
-
         $final = [];
         $list = [];
         $row = [];
@@ -117,6 +125,11 @@ class Versions extends BaseAuth
         $ret = $projectVersionModel->insert($info);
 
         if ($ret[0]) {
+            if($this->isTriggerEvent){
+                $info['id'] = $ret[1];
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event,  Events::onVersionCreate);
+            }
             return self::returnHandler('操作成功', ['id' => $ret[1]]);
         } else {
             return self::returnHandler('添加版本失败.', [], Constants::HTTP_BAD_REQUEST);
@@ -153,8 +166,12 @@ class Versions extends BaseAuth
         }
 
         $projectVersionModel = new ProjectVersionModel();
+        $version = $projectVersionModel->getById($versionId);
         $projectVersionModel->deleteByVersinoId($projectId, $versionId);
-
+        if($this->isTriggerEvent){
+            $event = new CommonPlacedEvent($this, $version);
+            $this->dispatcher->dispatch($event,  Events::onVersionDelete);
+        }
         return self::returnHandler('操作成功');
     }
 
@@ -213,8 +230,13 @@ class Versions extends BaseAuth
         }
 
         $projectModuleModel = new ProjectVersionModel();
+        $version = $projectModuleModel->getById($versionId);
         $ret = $projectModuleModel->updateById($versionId, $row);
-
+        if($this->isTriggerEvent){
+            $curVersion = $projectModuleModel->getById($versionId);
+            $event = new CommonPlacedEvent($this, ['pre_data' => $version, 'cur_data' => $curVersion]);
+            $this->dispatcher->dispatch($event,  Events::onVersionUpdate);
+        }
         return self::returnHandler('修改成功', array_merge($row, ['id' => $versionId]));
     }
 }

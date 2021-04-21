@@ -9,6 +9,8 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\ProjectLogic;
 use main\app\classes\SettingsLogic;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\issue\IssueModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectCatalogLabelModel;
@@ -17,12 +19,22 @@ use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\project\ProjectVersionModel;
+use main\app\model\SettingModel;
 use main\app\model\user\UserModel;
 
+/**
+ * Class Projects
+ * @package main\app\api
+ */
 class Projects extends BaseAuth
 {
+
+    public $isTriggerEvent = false;
+
+
     /**
      * @return array
+     * @throws \Exception
      */
     public function v1()
     {
@@ -30,6 +42,7 @@ class Projects extends BaseAuth
             $handleFnc = $this->requestMethod . 'Handler';
             return $this->$handleFnc();
         }
+        $this->isTriggerEvent = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_event');
         return self::returnHandler('api方法错误');
     }
 
@@ -46,9 +59,6 @@ class Projects extends BaseAuth
         if (isset($_GET['_target'][3])) {
             $projectId = intval($_GET['_target'][3]);
         }
-
-        $final = [];
-
         if ($projectId > 0) {
             $projectLogic = new ProjectLogic();
             $final = $projectLogic->info($projectId);
@@ -85,7 +95,8 @@ class Projects extends BaseAuth
 
         $reqDataArr = self::_PATCH();
         $fields = ['name', 'description'];
-
+        $projectModel = new ProjectModel();
+        $preData = $projectModel->getById($projectId);
         $row = [];
         foreach ($reqDataArr as $attrName => $attrVal) {
             if (in_array($attrName, $fields)) {
@@ -96,9 +107,13 @@ class Projects extends BaseAuth
         if (empty($row)) {
             return self::returnHandler('更新项目失败.', [], Constants::HTTP_BAD_REQUEST);
         }
-        $projectModel = new ProjectModel();
-        $ret = $projectModel->update($row, array('id' => $projectId));
 
+        $ret = $projectModel->update($row, array('id' => $projectId));
+        if($this->isTriggerEvent) {
+            $afterData = $projectModel->getById($projectId);
+            $event = new CommonPlacedEvent($this, ['pre_data' => $preData, 'cur_data' => $afterData]);
+            $this->dispatcher->dispatch($event, Events::onProjectUpdate);
+        }
         if ($ret[0]) {
             return self::returnHandler('更新项目成功');
         }
@@ -157,7 +172,6 @@ class Projects extends BaseAuth
             $projectUserRoleModel->deleteByProject($projectId);
 
         }
-
         $model->db->commit();
 
         return self::returnHandler('操作成功');
@@ -276,6 +290,12 @@ class Projects extends BaseAuth
                 'org_name' => $orgInfo['name'],
                 'path' => $orgInfo['path'] . '/' . $params['key'],
             );
+            $info['id'] = $ret['data']['project_id'];
+            if($this->isTriggerEvent) {
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event, Events::onProjectCreate);
+            }
+
             return self::returnHandler('操作成功', $final);
         } else {
             $projectModel->db->rollBack();

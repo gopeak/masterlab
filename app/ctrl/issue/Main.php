@@ -139,7 +139,12 @@ class Main extends BaseUserCtrl
                     } else {
                         $data['adv_filter_json'] = [];
                     }
-
+                    if(!empty($fav['adv_query_sort_field'])){
+                        $data['sort_field'] = $fav['adv_query_sort_field'];
+                    }
+                    if(!empty($fav['adv_query_sort_by'])){
+                        $data['sort_by'] = $fav['adv_query_sort_by'];
+                    }
                     $data['is_adv_filter'] = '1';
                 }
 
@@ -595,13 +600,32 @@ class Main extends BaseUserCtrl
      */
     public function autocomplete()
     {
+        $issueModel = new IssueModel();
+        if(isset($_GET['init'])){
+            $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : 0;
+            $projectId = $issueModel->getFieldById('project_id', $issueId);
+            $issues = [];
+            if($projectId){
+                $issues = $issueModel->getRows('id,summary,created', ['project_id'=>$projectId], null, 'id', 'desc', 50);
+                if($issues){
+                    $arr = [];
+                    foreach ($issues as $issue) {
+                        $text = '#'.$issue['id'].' '.$issue['summary'].'   '.format_unix_time($issue['created']);
+                        $arr[] = ['id'=>$issue['id'], 'text'=>$text];
+                    }
+                    $issues = $arr;
+                }
+            }
+            $this->ajaxSuccess('success', $issues);
+        }
+
         $keyword = isset($_GET['query']) ? $_GET['query'] : null;
         if (empty(trimStr($keyword))) {
             $this->ajaxSuccess('none', []);
         }
         $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
         $limitSql = "   limit 20";
-        $issueModel = new IssueModel();
+
         $table = $issueModel->getTable();
         $where = "WHERE locate(:keyword,`summary`) > 0  AND project_id={$projectId} ";
         $params['keyword'] = $keyword;
@@ -837,6 +861,12 @@ class Main extends BaseUserCtrl
         $info['projectid'] = $projectId;
         $info['filter'] = $_POST['filter'];
         $info['is_adv_query'] = '1';
+        if(isset($_POST['sort_field'])){
+            $info['adv_query_sort_field'] = $_POST['sort_field'];
+        }
+        if(isset($_POST['sort_by'])){
+            $info['adv_query_sort_by'] = $_POST['sort_by'];
+        }
         list($ret, $msg) = $filterModel->insert($info);
         if ($ret) {
             $event = new CommonPlacedEvent($this, $info);

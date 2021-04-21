@@ -9,6 +9,10 @@ use main\app\classes\UserAuth;
 use main\app\model\SettingModel;
 use main\app\model\user\UserModel;
 
+/**
+ * Class Auth
+ * @package main\app\api
+ */
 class Auth extends BaseApi
 {
 
@@ -61,6 +65,11 @@ class Auth extends BaseApi
         ]);
     }
 
+    /**
+     * 刷新token
+     * @return array
+     * @throws \Exception
+     */
     public function refreshToken()
     {
         if ($this->requestMethod != 'get') {

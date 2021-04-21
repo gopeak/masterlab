@@ -851,7 +851,20 @@ var IssueMain = (function () {
 
         $('#current_issue_id').val(issue_id);
         $('#btn-parent_select_issue').data('issue-id', issue_id);
-        $('#modal-choose_parent').modal('show');
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url:  "/issue/main/autocomplete",
+            data: { issue_id: issue_id, init: true },
+            success: function (resp) {
+                $('#parent_select_issue_id').select2({data: resp.data});
+                $('#modal-choose_parent').modal('show');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     };
 
     IssueMain.prototype.convertChild = function (issue_id) {

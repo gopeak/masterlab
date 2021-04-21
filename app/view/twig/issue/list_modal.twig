@@ -691,16 +691,13 @@
                             <input type="hidden" id="adv_sort_by" name="sort_by" value="<?= sort_by ?>">
                             <a id="btn_adv_sort_by" type="button"
                                class="btn btn-default reverse-sort-btn qa-reverse-sort"
-                               title="<?= sort_by == 'desc' ? '升序' : '降序' ?>" style="height:35px"
+                               title="<?= sort_by == 'desc' ? '降序' : '升序' ?>" style="height:35px"
                                href="javascript:">
-                                <svg class="s16 adv-sort-img <?= sort_by == 'asc' ? '' : 'hidden' ?>"
-                                     id="adv-sort-by-desc">
-                                    <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
-                                </svg>
-                                <svg class="s16 <?= sort_by == 'asc' ? 'hidden' : '' ?> adv-sort-img"
-                                     id="adv-sort-by-asc">
-                                    <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
-                                </svg>
+                                {% if sort_by == 'desc' %}
+                                <svg class="s16 adv-sort-img" ><use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use></svg>
+                                {% else %}
+                                <svg class="s16 adv-sort-img" ><use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use></svg>
+                                {% endif %}
                             </a>
                         </div>
                     </div>

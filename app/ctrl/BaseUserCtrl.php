@@ -232,7 +232,7 @@ class BaseUserCtrl extends BaseCtrl
         if ($this->isAdmin) {
             $checkVersionFile = STORAGE_PATH . 'tmp/' . date('Y-m-d') . '.-check-version.log';
             if (!file_exists($checkVersionFile)) {
-                $sourceHost = 'http://www.masterlab.vip/';
+                $sourceHost = 'https://www.masterlab.vip/';
                 $url = $sourceHost . 'upgrade.php?action=get_patch_info&current_version=' . MASTERLAB_VERSION;
                 $curl = new \Curl\Curl();
                 $curl->setTimeout(5);

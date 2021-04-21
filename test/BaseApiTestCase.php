@@ -9,6 +9,10 @@ use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\project\ProjectVersionModel;
 
+/**
+ * Class BaseApiTestCase
+ * @package main\test
+ */
 class BaseApiTestCase extends BaseTestCase
 {
     public static $accessToken = '';

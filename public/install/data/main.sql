@@ -466,7 +466,9 @@ CREATE TABLE `issue_filter` (
                                 `filter` mediumtext,
                                 `fav_count` decimal(18,0) DEFAULT NULL,
                                 `name_lower` varchar(255) DEFAULT NULL,
-                                `is_adv_query` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级查询'
+                                `is_adv_query` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级查询',
+                                `adv_query_sort_field` varchar(40) NOT NULL DEFAULT '' COMMENT '高级查询的排序字段',
+                                `adv_query_sort_by` varchar(12) NOT NULL DEFAULT 'desc' COMMENT '高级查询的排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -5010,6 +5012,7 @@ ALTER TABLE `workflow_scheme`
 --
 ALTER TABLE `workflow_scheme_data`
     MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

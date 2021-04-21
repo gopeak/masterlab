@@ -11,12 +11,20 @@ use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
 use main\app\model\project\ProjectCatalogLabelModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\SettingModel;
 
+/**
+ * Class CataLogs
+ * @package main\app\api
+ */
 class CataLogs extends BaseAuth
 {
+    public $isTriggerEvent = false;
+
+
     /**
-     * 项目的分类接口
      * @return array
+     * @throws \Exception
      */
     public function v1()
     {
@@ -24,6 +32,7 @@ class CataLogs extends BaseAuth
             $handleFnc = $this->requestMethod . 'Handler';
             return $this->$handleFnc();
         }
+        $this->isTriggerEvent = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_event');
         return self::returnHandler('api方法错误');
     }
 
@@ -91,9 +100,10 @@ class CataLogs extends BaseAuth
             LogOperatingLogic::add($uid, $projectId, $logData);
 
             $insertArr['id'] = $id;
-            $event = new CommonPlacedEvent($this, $insertArr);
-            $this->dispatcher->dispatch($event, Events::onCataloglCreate);
-
+            if($this->isTriggerEvent){
+                $event = new CommonPlacedEvent($this, $insertArr);
+                $this->dispatcher->dispatch($event, Events::onCataloglCreate);
+            }
             return self::returnHandler('分类添加成功', ['id' => $id]);
         } else {
             return self::returnHandler('服务器执行失败' . $id, [], Constants::HTTP_BAD_REQUEST);
@@ -231,8 +241,10 @@ class CataLogs extends BaseAuth
             LogOperatingLogic::add($uid, $catalog['project_id'], $logData);
 
             $updateArr['id'] = $cataLoglabelId;
-            $event = new CommonPlacedEvent($this, $updateArr);
-            $this->dispatcher->dispatch($event, Events::onCatalogUpdate);
+            if($this->isTriggerEvent){
+                $event = new CommonPlacedEvent($this, $updateArr);
+                $this->dispatcher->dispatch($event, Events::onCatalogUpdate);
+            }
 
             return self::returnHandler('分类修改成功', array_merge($updateArr, ['id' => $cataLoglabelId]));
         } else {
@@ -279,9 +291,10 @@ class CataLogs extends BaseAuth
         $logData['pre_data'] = $info;
         $logData['cur_data'] = $info2;
         LogOperatingLogic::add($uid, $info['project_id'], $logData);
-
-        $event = new CommonPlacedEvent($this, $info);
-        $this->dispatcher->dispatch($event, Events::onCatalogDelete);
+        if($this->isTriggerEvent){
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event, Events::onCatalogDelete);
+        }
 
         return self::returnHandler('操作成功');
     }

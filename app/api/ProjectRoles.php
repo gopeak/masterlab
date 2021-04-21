@@ -7,11 +7,21 @@ use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\SettingModel;
 
+/**
+ * Class ProjectRoles
+ * @package main\app\api
+ */
 class ProjectRoles extends BaseAuth
 {
+    public $isTriggerEvent = false;
+
+
     /**
+     * 入口
      * @return array
+     * @throws \Exception
      */
     public function v1()
     {
@@ -19,6 +29,7 @@ class ProjectRoles extends BaseAuth
             $handleFnc = $this->requestMethod . 'Handler';
             return $this->$handleFnc();
         }
+        $this->isTriggerEvent = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_event');
         return self::returnHandler('api方法错误');
     }
 
@@ -82,8 +93,11 @@ class ProjectRoles extends BaseAuth
             LogOperatingLogic::add($uid, $projectId, $logData);
 
             $info['id'] = $msg;
-            $event = new CommonPlacedEvent($this, $info);
-            $this->dispatcher->dispatch($event, Events::onProjectRoleAdd);
+            if($this->isTriggerEvent){
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event, Events::onProjectRoleAdd);
+            }
+
             return self::returnHandler('项目角色添加成功', ['id' => $msg]);
         } else {
             return self::returnHandler('数据库插入失败,详情 :' . $msg, [], Constants::HTTP_BAD_REQUEST);
@@ -183,8 +197,11 @@ class ProjectRoles extends BaseAuth
             LogOperatingLogic::add($uid, $currentRow['project_id'], $logData);
 
             $info['id'] = $roleId;
-            $event = new CommonPlacedEvent($this, ['pre_data' => $currentRow, 'cur_data' => $info]);
-            $this->dispatcher->dispatch($event, Events::onProjectRoleUpdate);
+            if($this->isTriggerEvent){
+                $event = new CommonPlacedEvent($this, ['pre_data' => $currentRow, 'cur_data' => $info]);
+                $this->dispatcher->dispatch($event, Events::onProjectRoleUpdate);
+            }
+
             return self::returnHandler('修改成功', array_merge($row, ['id' => $roleId]));
         } else {
             return self::returnHandler('更新数据失败', [], Constants::HTTP_BAD_REQUEST);
@@ -258,9 +275,11 @@ class ProjectRoles extends BaseAuth
         $logData['pre_data'] = $role;
         $logData['cur_data'] = $role2;
         LogOperatingLogic::add($uid, $role['project_id'], $logData);
+        if($this->isTriggerEvent){
+            $event = new CommonPlacedEvent($this, $role);
+            $this->dispatcher->dispatch($event, Events::onProjectRoleRemove);
+        }
 
-        $event = new CommonPlacedEvent($this, $role);
-        $this->dispatcher->dispatch($event, Events::onProjectRoleRemove);
         return self::returnHandler('操作成功');
     }
 }
