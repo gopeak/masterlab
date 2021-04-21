@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 注:以下配置已经弃用
+ */
 $_config = array(
     'host' => 'smtpdm.aliyun.com',
     'port' => 25,
