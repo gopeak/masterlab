@@ -7,6 +7,10 @@ namespace main\test\featrue\api;
 use main\app\api\Constants;
 use main\test\BaseApiTestCase;
 
+/**
+ * Class TestIssues
+ * @package main\test\featrue\api
+ */
 class TestIssues extends BaseApiTestCase
 {
     public static $clean = [];
@@ -87,7 +91,6 @@ class TestIssues extends BaseApiTestCase
         $this->assertEquals('20000', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
-
     }
 
     /**
@@ -128,8 +131,6 @@ class TestIssues extends BaseApiTestCase
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
     }
-
-
 
     /**
      * @throws \Exception

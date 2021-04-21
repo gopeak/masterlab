@@ -6,9 +6,12 @@ namespace main\app\api;
 
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\SettingModel;
 
 class Labels extends BaseAuth
 {
+    public $isTriggerEvent = false;
+
     /**
      * 项目标签接口
      * @return array
@@ -19,6 +22,7 @@ class Labels extends BaseAuth
             $handleFnc = $this->requestMethod . 'Handler';
             return $this->$handleFnc();
         }
+        $this->isTriggerEvent = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_event');
         return self::returnHandler('api方法错误');
     }
 

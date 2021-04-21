@@ -5,16 +5,30 @@ namespace main\app\api;
 
 
 use main\app\classes\AgileLogic;
+use main\app\classes\NotifyLogic;
+use main\app\event\CommonPlacedEvent;
+use main\app\event\Events;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\SettingModel;
 
+/**
+ * Class Sprints
+ * @package main\app\api
+ */
 class Sprints extends BaseAuth
 {
+    public $isTriggerEvent = false;
+
+    public $isTriggerEmail = false;
+
+
     /**
-     * 项目迭代接口
+     * 入口
      * @return array
+     * @throws \Exception
      */
     public function v1()
     {
@@ -22,6 +36,8 @@ class Sprints extends BaseAuth
             $handleFnc = $this->requestMethod . 'Handler';
             return $this->$handleFnc();
         }
+        $this->isTriggerEvent = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_event');
+        $this->isTriggerEmail = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_email');
         return self::returnHandler('api方法错误');
     }
 
@@ -111,9 +127,18 @@ class Sprints extends BaseAuth
         }
 
         $sprintModel = new SprintModel();
-        $ret = $sprintModel->insertItem($row);
+        $ret = $sprintModel->insert($row);
 
         if ($ret[0]) {
+            if($this->isTriggerEmail){
+                $notifyLogic = new NotifyLogic();
+                $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_CREATE, $projectId, $ret[1]);
+            }
+            if($this->isTriggerEvent){
+                $info['id'] = $ret[1];
+                $event = new CommonPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event, Events::onSprintCreate);
+            }
             return self::returnHandler('操作成功', ['id' => $ret[1]]);
         } else {
             return self::returnHandler('添加迭代失败.', [], Constants::HTTP_BAD_REQUEST);
@@ -231,7 +256,21 @@ class Sprints extends BaseAuth
             }
         }
         if ($changed) {
+
             list($ret, $msg) = $sprintModel->updateItem($sprintId, $row);
+            if($ret){
+                $info['id'] = $sprintId;
+                if($this->isTriggerEvent){
+                    $event = new CommonPlacedEvent($this, ['pre_data' => $sprint, 'cur_data' => $row]);
+                    $this->dispatcher->dispatch($event, Events::onSprintUpdate);
+                }
+                if($this->isTriggerEmail){
+                    $notifyLogic = new NotifyLogic();
+                    $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_UPDATE, $sprint['project_id'], $sprintId);
+                }
+
+            }
+
             return self::returnHandler('修改成功', array_merge($row, ['id' => $sprintId]));
         }
 
@@ -243,7 +282,6 @@ class Sprints extends BaseAuth
      * Restful DELETE ,删除某个迭代
      * {{API_URL}}/api/sprints/v1/36?access_token==xyz
      * @return array
-     * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      * @throws \Exception
@@ -272,6 +310,10 @@ class Sprints extends BaseAuth
             $updateInfo = ['sprint' => AgileLogic::BACKLOG_VALUE, 'backlog_weight' => 0];
             $condition = ['sprint' => $sprintId];
             $issueModel->update($updateInfo, $condition);
+            if($this->isTriggerEvent){
+                $event = new CommonPlacedEvent($this, $sprint);
+                $this->dispatcher->dispatch($event, Events::onSprintDelete);
+            }
         }
 
         return self::returnHandler('操作成功');

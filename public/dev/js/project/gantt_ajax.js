@@ -226,7 +226,7 @@ var Gantt = (function () {
                 $('#gantt_master_issue_id').val(issue.master_id);
                 $('#gantt_issue_type').val(issue.issue_type);
                 $('#gantt_priority').val(issue.priority);
-                $('#gantt_status').val(issue.gantt_status);
+                $('#gantt_status').val(issue.status);
                 $('#assignee').val(issue.assignee);
                 $('#gantt_assignee').val(issue.assignee);
                 $('#gantt_sprint').val(issue.sprint);

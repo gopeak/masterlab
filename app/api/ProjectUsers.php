@@ -7,11 +7,20 @@ use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\SettingModel;
 
+/**
+ * Class ProjectUsers
+ * @package main\app\api
+ */
 class ProjectUsers extends BaseAuth
 {
+    public $isTriggerEvent = false;
+
+
     /**
      * @return array
+     * @throws \Exception
      */
     public function v1()
     {
@@ -19,6 +28,7 @@ class ProjectUsers extends BaseAuth
             $handleFnc = $this->requestMethod . 'Handler';
             return $this->$handleFnc();
         }
+        $this->isTriggerEvent = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_event');
         return self::returnHandler('api方法错误');
     }
 
@@ -86,9 +96,11 @@ class ProjectUsers extends BaseAuth
         $logData['pre_data'] = [];
         $logData['cur_data'] = ['user_id' => $userId, 'project_id' => $role['project_id'], 'role_id' => $roleId];
         LogOperatingLogic::add($uid, $role['project_id'], $logData);
+        if($this->isTriggerEvent){
+            $event = new CommonPlacedEvent($this, ['user_id' => $userId, 'role_id' => $roleId]);
+            $this->dispatcher->dispatch($event, Events::onProjectRoleAddUser);
+        }
 
-        $event = new CommonPlacedEvent($this, ['user_id' => $userId, 'role_id' => $roleId]);
-        $this->dispatcher->dispatch($event, Events::onProjectRoleAddUser);
         unset($model);
         return self::returnHandler('用户添加成功', ['id' => $msg]);
     }
@@ -155,9 +167,10 @@ class ProjectUsers extends BaseAuth
 
         $model = new ProjectUserRoleModel();
         $model->delProjectUser($projectId, $delUserId);
-
-        $event = new CommonPlacedEvent($this, ['user_id' => $delUserId, 'project_id' => $projectId]);
-        $this->dispatcher->dispatch($event, Events::onProjectUserRemove);
+        if($this->isTriggerEvent){
+            $event = new CommonPlacedEvent($this, ['user_id' => $delUserId, 'project_id' => $projectId]);
+            $this->dispatcher->dispatch($event, Events::onProjectUserRemove);
+        }
 
         return self::returnHandler('操作成功');
     }

@@ -12,6 +12,7 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\NotifyLogic;
 use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectGantt;
+use main\app\classes\SettingsLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
@@ -39,13 +40,23 @@ use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectVersionModel;
+use main\app\model\SettingModel;
 use main\app\model\user\UserModel;
 
+/**
+ * Class Issues
+ * @package main\app\api\issue
+ */
 class Issues extends BaseAuth
 {
+
+    public $isTriggerEvent = false;
+
+    public $isTriggerEmail = false;
+
     /**
-     * 项目事项接口
      * @return array
+     * @throws \Exception
      */
     public function v1()
     {
@@ -53,6 +64,9 @@ class Issues extends BaseAuth
             $handleFnc = $this->requestMethod . 'Handler';
             return $this->$handleFnc();
         }
+        $this->isTriggerEvent = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_event');
+        $this->isTriggerEmail = (bool)SettingModel::getInstance()->getSettingValue('api_trigger_email');
+
         return self::returnHandler('api方法错误');
     }
 
@@ -66,14 +80,10 @@ class Issues extends BaseAuth
      */
     private function getHandler()
     {
-        $uid = $this->masterUid;
-        $projectId = 0;
         $issueId = 0;
-
         if (isset($_GET['_target'][4])) {
             $issueId = intval($_GET['_target'][4]);
         }
-
         if ($issueId > 0) {
             $final = $this->format($issueId);
         } else {
@@ -83,7 +93,6 @@ class Issues extends BaseAuth
             }
             $final = $this->filter();
         }
-
         return self::returnHandler('OK', $final);
     }
 
@@ -104,13 +113,11 @@ class Issues extends BaseAuth
         if (empty($issueId)) {
             return self::returnHandler('事项id不能为空', [], Constants::HTTP_BAD_REQUEST);
         }
-
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         if (empty($issue)) {
             return self::returnHandler('参数错误:事项不存在', [], Constants::HTTP_BAD_REQUEST);
         }
-
         try {
             $issueModel->db->beginTransaction();
             $ret = $issueModel->deleteById($issueId);
@@ -146,10 +153,10 @@ class Issues extends BaseAuth
         } catch (\Exception $e) {
         }
         $issue['id'] = $issueId;
-        $event = new CommonPlacedEvent($this, $issue);
-        $this->dispatcher->dispatch($event, Events::onIssueDelete);
-
-
+        if($this->isTriggerEvent){
+            $event = new CommonPlacedEvent($this, $issue);
+            $this->dispatcher->dispatch($event, Events::onIssueDelete);
+        }
         return self::returnHandler('删除成功');
     }
 
@@ -170,10 +177,8 @@ class Issues extends BaseAuth
         if (empty($issueId)) {
             return self::returnHandler('事项id不能为空', [], Constants::HTTP_BAD_REQUEST);
         }
-
         $patch = self::_PATCH();
         $params = $patch;
-
         $info = [];
         if (isset($params['summary'])) {
             $info['summary'] = htmlentities($params['summary']);
@@ -183,54 +188,17 @@ class Issues extends BaseAuth
         if (empty($info)) {
             return self::returnHandler('参数错误,数据为空', [], Constants::HTTP_BAD_REQUEST);
         }
-
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-
-        $event = new CommonPlacedEvent($this, $_REQUEST);
-        $this->dispatcher->dispatch($event, Events::onIssueUpdateBefore);
-
-        $issueType = $issue['issue_type'];
-        if (isset($params['issue_type'])) {
-            $issueType = $params['issue_type'];
+        if($this->isTriggerEvent) {
+            $event = new CommonPlacedEvent($this, $_REQUEST);
+            $this->dispatcher->dispatch($event, Events::onIssueUpdateBefore);
         }
-
-
-        /* API不需要校验所有字段
-        // 事项UI配置判断输入是否为空
-        $issueUiModel = new IssueUiModel();
-        $fieldModel = new FieldModel();
-        $fieldsArr = $fieldModel->getAll();
-        $uiConfigs = $issueUiModel->getsByUiType($issueType, 'edit');
-        //print_r($uiConfigs);
-        // 迭代字段不会判断输入
-        $excludeFieldArr = ['sprint'];
-        foreach ($uiConfigs as $uiConfig) {
-            if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
-                $field = $fieldsArr[$uiConfig['field_id']];
-                $fieldName = $field['name'];
-                if (in_array($fieldName, $excludeFieldArr)) {
-                    continue;
-                }
-                if (isset($info[$fieldName]) && isset($params[$fieldName]) && empty(trimStr($params[$fieldName]))) {
-                    $err[$fieldName] = $field['title'] . '不能为空';
-                }
-            }
-        }
-        */
-
-
-
-        if (!empty($err)) {
-            return self::returnHandler('表单验证失败', $err, Constants::HTTP_BAD_REQUEST);
-        }
-
         foreach ($info as $k => $v) {
             if ($v == $issue[$k]) {
                 unset($info[$k]);
             }
         }
-
         // 实例化邮件通知
         $notifyLogic = new NotifyLogic();
         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_UPDATE;
@@ -317,14 +285,6 @@ class Issues extends BaseAuth
         // 自定义字段值
         $issueLogic->updateCustomFieldValue($issueId, $params, $issue['project_id']);
 
-        // 记录活动日志
-        $fromModule = null;
-        if (isset($params['from_module'])) {
-            $fromModule = strtolower(trim($params['from_module']));
-        } elseif (isset($_GET['from_module'])) {
-            $fromModule = strtolower(trim($_GET['from_module']));
-        }
-
         // 操作日志
         $logData = [];
         $logData['user_name'] = $this->masterAccount;
@@ -339,16 +299,17 @@ class Issues extends BaseAuth
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
         // email通知
-        if (isset($notifyFlag)) {
+        if (isset($notifyFlag) && $this->isTriggerEmail) {
             $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
         }
         $updatedIssue = $issueModel->getById($issueId);
-        $event = new CommonPlacedEvent($this, $updatedIssue);
-        $this->dispatcher->dispatch($event, Events::onIssueUpdateAfter);
+        if($this->isTriggerEvent) {
+            $event = new CommonPlacedEvent($this, $updatedIssue);
+            $this->dispatcher->dispatch($event, Events::onIssueUpdateAfter);
+        }
 
         return self::returnHandler('更新成功', array_merge($updatedIssue, ['id' => $issueId]));
     }
-
 
 
     /**
@@ -375,14 +336,15 @@ class Issues extends BaseAuth
         }
 
         // 分发事件
-        $event = new CommonPlacedEvent($this, $params);
-        $this->dispatcher->dispatch($event, Events::onIssueCreateBefore);
+        if($this->isTriggerEvent){
+            $event = new CommonPlacedEvent($this, $params);
+            $this->dispatcher->dispatch($event, Events::onIssueCreateBefore);
+        }
 
         // 优先级 , @todo 数据库字段增加一个默认值，管理页面可以修改
         $getDefaultPriorityId = function () {
             return (new IssuePriorityModel())->getIdByKey('normal');
         };
-
 
         $priorityId = null;
         if (isset($params['priority'])) {
@@ -395,29 +357,6 @@ class Issues extends BaseAuth
         } else {
             $priorityId = $getDefaultPriorityId();
         }
-
-        /* API不需要校验所有字段
-        // 事项UI配置判断输入是否为空
-        $issueUiModel = new IssueUiModel();
-        $fieldModel = new FieldModel();
-        $fieldsArr = $fieldModel->getAll();
-        $uiConfigs = $issueUiModel->getsByUiType($params['issue_type'], 'create');
-        //print_r($uiConfigs);
-        // 迭代字段不会判断输入
-        $excludeFieldArr = ['sprint', 'priority'];
-        foreach ($uiConfigs as $uiConfig) {
-            if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
-                $field = $fieldsArr[$uiConfig['field_id']];
-                $fieldName = $field['name'];
-                if (in_array($fieldName, $excludeFieldArr)) {
-                    continue;
-                }
-                if (!isset($params[$fieldName]) || empty(trimStr($params[$fieldName]))) {
-                    $err[$fieldName] = $field['title'] . '不能为空';
-                }
-            }
-        }
-        */
 
         if (!empty($err)) {
             return self::returnHandler('表单验证失败', $err, Constants::HTTP_BAD_REQUEST);
@@ -468,8 +407,10 @@ class Issues extends BaseAuth
             $master = $model->getById($masterId);
             if (!empty($master)) {
                 $info['id'] = $issueId;
-                $event = new CommonPlacedEvent($this, ['master'=>$master,'child'=>$info]);
-                $this->dispatcher->dispatch($event, Events::onIssueCreateChild);
+                if($this->isTriggerEvent){
+                    $event = new CommonPlacedEvent($this, ['master'=>$master,'child'=>$info]);
+                    $this->dispatcher->dispatch($event, Events::onIssueCreateChild);
+                }
             }
         }
         $model->updateById($issueId, $issueUpdateInfo);
@@ -515,14 +456,17 @@ class Issues extends BaseAuth
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
         // email
-        $notifyLogic = new NotifyLogic();
-        $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
+        if($this->isTriggerEmail){
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
+        }
 
         // 分发事件
         $info['id'] = $issueId;
-        $event = new CommonPlacedEvent($this, $info);
-        $this->dispatcher->dispatch($event, Events::onIssueCreateAfter);
-
+        if($this->isTriggerEvent){
+            $event = new CommonPlacedEvent($this, $info);
+            $this->dispatcher->dispatch($event, Events::onIssueCreateAfter);
+        }
 
         return self::returnHandler('添加成功', ['id' => $issueId]);
     }
@@ -643,7 +587,6 @@ class Issues extends BaseAuth
     private function getAddFormInfo(&$params = [])
     {
         $info = [];
-
         // 标题
         if (isset($params['summary'])) {
             $info['summary'] = htmlentities($params['summary']);
@@ -1057,16 +1000,10 @@ class Issues extends BaseAuth
                 $issue['assistants_info_arr'][] = $users[$assistantUserId];
             }
         }
-
-
         $issue['assignee_info'] = isset($users[$issue['assignee']])?$users[$issue['assignee']]:$emptyObj;
-
         $issue['reporter_info'] = isset($users[$issue['reporter']])?$users[$issue['reporter']]:$emptyObj;
-
         $issue['modifier_info'] = isset($users[$issue['modifier']])?$users[$issue['modifier']]:$emptyObj;
-
         $issue['creator_info'] = isset($users[$issue['creator']])?$users[$issue['creator']]:$emptyObj;
-
 
         $issue['master_info'] = new \stdClass();
         if (!empty($issue['master_id'])) {

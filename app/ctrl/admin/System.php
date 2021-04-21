@@ -614,9 +614,9 @@ class System extends BaseAdminCtrl
         $conditions['status'] = MailQueueModel::STATUS_ERROR;
         $ret = $model->delete($conditions);
         if (!$ret) {
-            $this->ajaxFailed('server_error');
+            $this->ajaxFailed('服务器执行错误');
         }
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('操作成功');
     }
 
     /**
@@ -625,12 +625,8 @@ class System extends BaseAdminCtrl
     public function emailQueueAllClear()
     {
         $model = MailQueueModel::getInstance();
-        $conditions = [];
-        $ret = $model->delete($conditions);
-        if (!$ret) {
-            $this->ajaxFailed('server_error');
-        }
-        $this->ajaxSuccess('ok');
+        $model->truncate($model->getTable());
+        $this->ajaxSuccess('操作成功');
     }
 
     /**
