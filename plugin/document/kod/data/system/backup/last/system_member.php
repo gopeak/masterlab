@@ -2,7 +2,7 @@
     "1": {
         "name": "admin",
         "path": "admin",
-        "password": "3642e90a171134dc385113f845707a3a",
+        "password": "333c5253ccb85fdb290cce37bb57cb7e",
         "userID": "1",
         "role": "1",
         "config": {
@@ -14,13 +14,13 @@
         },
         "createTime": 1589187576,
         "status": 1,
-        "lastLogin": 1618904324
+        "lastLogin": 1625476398
     },
     "100": {
         "userID": "100",
         "name": "project92",
         "nickName": "project92",
-        "password": "2e941280dccb0c5a2526bd7995f7dc19",
+        "password": "333c5253ccb85fdb290cce37bb57cb7e",
         "role": "2",
         "config": {
             "sizeMax": 5,
@@ -38,7 +38,7 @@
         "userID": "101",
         "name": "project1",
         "nickName": "project1",
-        "password": "cdc4c5cc90e916bee8a68a49213bcc46",
+        "password": "333c5253ccb85fdb290cce37bb57cb7e",
         "role": "2",
         "config": {
             "sizeMax": 5,
@@ -56,7 +56,7 @@
         "userID": "102",
         "name": "project3",
         "nickName": "project3",
-        "password": "32f15966adc040fd0ad442d4c4d5b22b",
+        "password": "333c5253ccb85fdb290cce37bb57cb7e",
         "role": "2",
         "config": {
             "sizeMax": 5,
@@ -74,7 +74,7 @@
         "userID": "103",
         "name": "project36",
         "nickName": "project36",
-        "password": "772cd77852207e51167d8ab45a9fb1b5",
+        "password": "333c5253ccb85fdb290cce37bb57cb7e",
         "role": "2",
         "config": {
             "sizeMax": 5,
@@ -87,5 +87,23 @@
         "status": 1,
         "lastLogin": 1618904326,
         "createTime": 1618904325
+    },
+    "104": {
+        "userID": "104",
+        "name": "project91",
+        "nickName": "project91",
+        "password": "5946efebafeebac79a19cbbc9a5e5b0d",
+        "role": "2",
+        "config": {
+            "sizeMax": 5,
+            "sizeUse": 1048576
+        },
+        "groupInfo": {
+            "1": "write"
+        },
+        "path": "project91",
+        "status": 1,
+        "lastLogin": 1625476399,
+        "createTime": 1625476399
     }
 }

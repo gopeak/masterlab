@@ -91,7 +91,7 @@ class Index extends BasePluginCtrl
         }
         if(empty($actUserArr) ){
             if(count($kodUsers)>15){
-                echo '文档模块获取用户信息失败,请联系管理员';
+                echo '已经超过了创建的限额,无法继续使用';
                 return;
             }
             $dataArr = [];

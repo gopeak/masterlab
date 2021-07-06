@@ -616,7 +616,6 @@ class BaseCtrl
                 $plugins[] = $tmp;
             }
         }
-
         if ($plugins) {
             foreach ($plugins as $plugin) {
                 $pluginName = $plugin['name'];

@@ -84,6 +84,11 @@ class KodSdk
         return [true, $bodyArr['data']];
     }
 
+    /**
+     * @param $userName
+     * @param $accessToken
+     * @return array
+     */
     public function getUser($userName, $accessToken)
     {
         $url = sprintf($this->rootUrl . "?systemMember/getByName&name={$userName}&accessToken=".$accessToken);
@@ -101,6 +106,11 @@ class KodSdk
         return [true, $bodyArr['data']];
     }
 
+    /**
+     * @param $userId
+     * @param $accessToken
+     * @return array
+     */
     public function deleteUser($userId, $accessToken)
     {
         $url = sprintf($this->rootUrl . '?systemMember/doAction&accessToken='.$accessToken);

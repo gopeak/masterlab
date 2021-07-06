@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+	{% include 'twig/common/header/include.twig' %}
+	<script src="/dev/js/admin/setting.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+	<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+	<link href="/dev/lib/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+	<!-- Fine Uploader jQuery JS file-->
+	<link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+	<link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+	<script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
+	<script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+<script src="/dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+
+<section class="has-sidebar page-layout max-sidebar">
+	{% include 'twig/common/body/page-left.twig' %}
+
+	<div class="page-layout page-content-body system-page">
+		{% include 'twig/common/body/header-content.twig' %}
+
+		<script>
+			var findFileURL = "";
+		</script>
+		<div class="page-with-sidebar">
+			{% include 'twig/admin/common-page-nav-admin.twig' %}
+
+
+			<div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+				<div class="alert-wrapper">
+
+					<div class="flash-container flash-container-page">
+					</div>
+
+				</div>
+				<div class="container-fluid ">
+
+					<div class="content" id="content-body">
+
+						{% include 'twig/admin/common_system_left_nav.twig' %}
+						<div class="row has-side-margin-left">
+							<div class="col-lg-12">
+								<div class="top-area">
+									<ul class="nav-links">
+										<li class="active">
+											<a href="#">公司设置</a>
+										</li>
+									</ul>
+									<div class="nav-controls">
+										<div class="btn-group" role="group">
+
+										</div>
+									</div>
+								</div>
+								<div class="content-list">
+									<form class="form-horizontal" action="/admin/system/company_save"  method="post">
+										<div id="form_id" class="prepend-top-default">
+											<div class="form-group">
+												<label class="control-label" for="company">公司名称
+													<i class="required">*</i>
+												</label>
+												<div class="col-sm-6">
+													<input placeholder="公司名称,最多12字符" class="form-control" type="text" name="company" id="company"  >
+													<p id="tip-company" class="gl-field-error hide"></p>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label" for="company_logo">
+													<span>公司logo</span>
+												</label>
+												<div class="col-sm-2">
+													<input type="hidden" name="company_logo" id="company_logo" value=""/>
+													<div id="fine-uploader-gallery"></div>
+												</div>
+												<div class="col-sm-6">
+													<div class="help-block">图片大小被限制为200KB.</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label" for="company_linkman">联系人
+													<i class="required">*</i>
+												</label>
+												<div class="col-sm-6">
+													<input  class="form-control" type="text" name="company_linkman" id="company_linkman"  >
+													<p id="tip-company_linkman" class="gl-field-error hide"></p>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label" for="company_phone">联系电话
+													<i class="required">*</i>
+												</label>
+												<div class="col-sm-6">
+													<input  class="form-control" type="text" name="company_phone" id="company_phone"  >
+													<p id="tip-company_phone" class="gl-field-error hide"></p>
+												</div>
+											</div>
+										</div>
+										<div class="form-actions text-right">
+											<input type="button" name="commit" value="保存修改" class="btn btn-save js-key-enter">
+											<a class="btn btn-cancel" href="/admin/main" style="float: none">取消</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<script type="text/template" id="qq-template-gallery">
+	<div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="">
+		<div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+			<div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+		</div>
+		<div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+			<span class="qq-upload-drop-area-text-selector"></span>
+		</div>
+		<div class="qq-upload-button-selector qq-upload-button">
+			<div>点击上传</div>
+		</div>
+		<span class="qq-drop-processing-selector qq-drop-processing">
+					<span>Processing dropped files...</span>
+					<span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+				</span>
+		<ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+			<li>
+				<span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+				<div class="qq-progress-bar-container-selector qq-progress-bar-container">
+					<div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+				</div>
+				<span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+				<div class="qq-thumbnail-wrapper">
+					<a href="javascript:;" class="qq-file-link qq-upload-file-url">
+						<img class="qq-thumbnail-selector" qq-max-size="198" qq-server-scale>
+					</a>
+				</div>
+				<button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+				<button type="button" class="qq-upload-retry-selector qq-upload-retry">
+					<span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
+					重试
+				</button>
+
+				<div class="qq-file-info">
+					<div class="qq-file-name">
+						<span class="qq-upload-file-selector qq-upload-file"></span>
+						<span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+					</div>
+					<input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+					<span class="qq-upload-size-selector qq-upload-size"></span>
+					<button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+						<span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+					</button>
+					<button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+						<span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+					</button>
+					<button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+						<span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+					</button>
+				</div>
+			</li>
+		</ul>
+
+		<dialog class="qq-alert-dialog-selector">
+			<div class="qq-dialog-message-selector"></div>
+			<div class="qq-dialog-buttons">
+				<button type="button" class="qq-cancel-button-selector">Close</button>
+			</div>
+		</dialog>
+
+		<dialog class="qq-confirm-dialog-selector">
+			<div class="qq-dialog-message-selector"></div>
+			<div class="qq-dialog-buttons">
+				<button type="button" class="qq-cancel-button-selector">否</button>
+				<button type="button" class="qq-ok-button-selector">是</button>
+			</div>
+		</dialog>
+
+		<dialog class="qq-prompt-dialog-selector">
+			<div class="qq-dialog-message-selector"></div>
+			<input type="text">
+			<div class="qq-dialog-buttons">
+				<button type="button" class="qq-cancel-button-selector">取消</button>
+				<button type="button" class="qq-ok-button-selector">好的</button>
+			</div>
+		</dialog>
+	</div>
+</script>
+
+
+<script>
+
+
+	$(function () {
+
+		$('#fine-uploader-gallery').fineUploader({
+			template: 'qq-template-gallery',
+			multiple: false,
+			request: {
+				endpoint: '/admin/upload/img' + '?_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
+			},
+			deleteFile: {
+				enabled: false
+			},
+			retry: {
+				enableAuto: true
+			},
+			validation: {
+				allowedExtensions: [
+					'jpeg', 'jpg', 'png'
+				],
+				sizeLimit: 1024 * 200
+			},
+			callbacks: {
+				onComplete: function (id, fileName, responseJSON) { // console.log(responseJSON);
+					if (responseJSON.error == '') {
+						$('#company_logo').val(responseJSON.relate_path);
+					}
+				}
+			}
+		});
+
+	});
+</script>
+
+<script>
+
+	$(function() {
+
+		//fetchSetting('/admin/system/setting_fetch','basic','settings_form_tpl', 'form_id');
+
+	});
+
+
+</script>
+
+
+</body>
+</html>
