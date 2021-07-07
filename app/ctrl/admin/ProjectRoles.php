@@ -218,12 +218,17 @@ class ProjectRoles extends BaseAdminCtrl
             $model->db->beginTransaction();
             $model->deleteByUid($userId);
             foreach ($roleIdArr as $roleId) {
-                if(!is_int($roleId)){
+                $projectRole = $projectRoleModel->getById($roleId);
+                if(empty($projectRole)){
                     continue;
                 }
-                $projectRole = $projectRoleModel->getById($roleId);
-                $model->insertRole($userId, $projectRole['project_id'], $roleId);
+                list($ret, $msg) = $model->insertRole($userId, $projectRole['project_id'], $roleId);
+                if(!$ret){
+                    $model->db->rollBack();
+                    $this->ajaxFailed('服务器执行失败,请刷新页面重试', $msg);
+                }
             }
+            $model->db->commit();
         }catch (\Exception $e){
             $model->db->rollBack();
             $this->ajaxFailed('服务器执行失败:'.$e->getMessage());

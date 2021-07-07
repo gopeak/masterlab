@@ -186,6 +186,7 @@ class Project extends BaseAdminCtrl
      */
     public function delete()
     {
+        set_time_limit(600);
         $projectId = null;
         $projectTypeId = null;
 
@@ -198,8 +199,6 @@ class Project extends BaseAdminCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
-
-
         if (isset($_GET['project_type_id'])) {
             $projectTypeId = (int)$_GET['project_type_id'];
         }
