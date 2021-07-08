@@ -246,34 +246,30 @@ var Gantt = (function () {
                 if(!is_empty(user)){
                     $('#user_dropdown-toggle-text').html(user.display_name);
                 }
-
                 let sprint = getArrayValue(window._issueConfig.sprint, 'id', issue.sprint);
-                if(is_empty(sprint.id)){
+                if(!sprint){
                     $('#sprint_name').html('待办事项');
                 }else{
-                    $('#sprint_name').html(sprint.name);
+                    if(is_empty(sprint.id)){
+                        $('#sprint_name').html('待办事项');
+                    }else{
+                        $('#sprint_name').html(sprint.name);
+                    }
                 }
-                if(typeof(_gantt_editor_md)==='object'){
-                    _gantt_editor_md.setMarkdown(issue.description);
-                }else{
-                    _gantt_editor_md = editormd('description_md', {
-                        width: "640px",
-                        height: 220,
-                        watch: false,
-                        markdown: issue.description,
-                        path: root_url + 'dev/lib/editor.md/lib/',
-                        imageUpload: true,
-                        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                        imageUploadURL: root_url + "issue/detail/editormd_upload",
-                        tocm: true,    // Using [TOCM]
-                        emoji: true,
-                        toolbarIcons: "custom"
-                    });
-                }
-
-
-
-
+                console.log(_gantt_editor_md);
+                _gantt_editor_md = editormd('description_md', {
+                    width: "640px",
+                    height: 220,
+                    watch: false,
+                    markdown: issue.description,
+                    path: root_url + 'dev/lib/editor.md/lib/',
+                    imageUpload: true,
+                    imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                    imageUploadURL: root_url + "issue/detail/editormd_upload",
+                    tocm: true,    // Using [TOCM]
+                    emoji: true,
+                    toolbarIcons: "custom"
+                });
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
