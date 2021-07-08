@@ -237,6 +237,98 @@ class UploadLogic
     }
 
     /**
+     * @param $fieldName
+     * @return array
+     */
+    public function movePluginZip($fieldName)
+    {
+        //文件保存目录URL
+        //$saveUrl = ATTACHMENT_URL;
+        $savePath = STORAGE_PATH . "plugin_zip/";
+        $relatePath = '';
+        //PHP上传失败
+        if ($_FILES[$fieldName]['error'] != UPLOAD_ERR_OK) {
+            switch ($_FILES[$fieldName]['error']) {
+                case '1':
+                    $error = '超过php.ini允许的大小';
+                    break;
+                case '2':
+                    $error = '超过表单允许的大小';
+                    break;
+                case '3':
+                    $error = '图片只有部分被上传';
+                    break;
+                case '4':
+                    $error = '没有文件被上传';
+                    break;
+                case '6':
+                    $error = '找不到临时目录';
+                    break;
+                case '7':
+                    $error = '写文件到硬盘出错';
+                    break;
+                case '8':
+                    $error = '不允许的扩展名';
+                    break;
+                case '999':
+                default:
+                    $error = '未知错误。';
+            }
+            return $this->uploadError($error, (int)$_FILES[$fieldName]['error']);
+        }
+        //有上传文件时
+        if (empty($_FILES) === false) {
+            //原文件名
+            $fileName = $_FILES[$fieldName]['name'];
+            if (empty($originName)) {
+                $originName = $fileName;
+            }
+            //服务器上临时文件名
+            $tmpName = $_FILES[$fieldName]['tmp_name'];
+            //检查文件名
+            if (!$fileName) {
+                return $this->uploadError('请选择文件');
+            }
+            //检查目录
+            if (@is_dir($savePath) === false) {
+                return $this->uploadError("上传目录不存在");
+            }
+            //检查目录写权限
+            if (@is_writable($savePath) === false) {
+                return $this->uploadError("上传目录没有写权限");
+            }
+            //获得文件扩展名
+            $tempArr = explode(".", $fileName);
+            $fileExt = array_pop($tempArr);
+            $fileExt = trim($fileExt);
+            $fileExt = strtolower($fileExt);
+            if ($fileExt != 'zip') {
+                $msg = "上传文件的扩展名错误.只允许zip格式.";
+                return $this->uploadError($msg);
+            }
+            //新文件名
+            $newFileName = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $fileExt;
+            //移动文件
+            $filePath = $savePath . $newFileName;
+            if (move_uploaded_file($tmpName, $filePath) === false) {
+                return $this->uploadError("上传文件失败.");
+            }
+            @chmod($filePath, 0644);
+            //$fileUrl = $saveUrl . $newFileName;
+            $relatePath .= $newFileName;
+            $uuid = quickRandom() . mt_rand(10000, 999999);
+            return [
+                'message' => '上传成功',
+                'error' => 0,
+                'url' => '',
+                'filename' => $originName,
+                'relate_path' => $relatePath,
+                'uuid' => $uuid
+            ];
+        }
+        return $this->uploadError('上传失败', 4);
+    }
+    /**
      * 统一返回上传返回值
      * @param string $msg
      * @param int $code
