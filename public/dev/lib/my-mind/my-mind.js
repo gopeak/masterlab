@@ -5435,7 +5435,10 @@ MM.UI.IO.prototype._syncBackend = function () {
  * @param {MM.UI.Backend} backend
  */
 MM.UI.IO.prototype._setCurrentBackend = function (backend) {
-	if (this._currentBackend && this._currentBackend != backend) { this._currentBackend.reset(); }
+	if (this._currentBackend && this._currentBackend != backend) {
+		//console.log(this._currentBackend);
+		this._currentBackend.reset();
+	}
 
 	if (backend) { localStorage.setItem(this._prefix + "backend", backend.id); }
 	this._currentBackend = backend;

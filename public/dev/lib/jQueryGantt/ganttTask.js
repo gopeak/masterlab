@@ -257,6 +257,8 @@ Task.prototype.setPeriod = function (start, end) {
   if (todoOk) {
     todoOk = this.propagateToInferiors(end);
   }
+  this.start_date = formatDate(this.start);
+  this.end_date = formatDate(this.end);
   return todoOk;
 };
 
@@ -332,6 +334,10 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
           return false;
       }
     }
+    this.start_date = formatDate(this.start);
+    this.end_date = formatDate(this.end);
+    console.log('Task.prototype.moveTo task start:',this.start_date);
+    console.log('Task.prototype.moveTo task end:',this.end_date);
   }
 
   return true;

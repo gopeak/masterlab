@@ -283,12 +283,15 @@ Ganttalendar.prototype.drawTask = function (task) {
         canDrag:    !task.depends && (this.master.permissions.canWrite || task.canWrite),
         resizeZoneWidth:self.resizeZoneWidth,
         startDrag:  function (e) {
+          console.log('startDrag:',e)
           $(".ganttSVGBox .focused").removeClass("focused");
         },
         drag:       function (e) {
+          //console.log('drag:',e )
           $("[from=" + task.id + "],[to=" + task.id + "]").trigger("update");
         },
         drop:       function (e) {
+          console.log('drop:',e )
           self.resDrop = true; //hack to avoid select
           var taskbox = $(this);
           var task = self.master.getTask(taskbox.attr("taskid"));
