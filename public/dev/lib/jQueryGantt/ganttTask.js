@@ -207,6 +207,8 @@ Task.prototype.setPeriod = function (start, end) {
     return false;
   }
 
+
+
   var todoOk = true;
 
   //I'm restricting
@@ -257,8 +259,17 @@ Task.prototype.setPeriod = function (start, end) {
   if (todoOk) {
     todoOk = this.propagateToInferiors(end);
   }
+  // originalPeriod
   this.start_date = formatDate(this.start);
   this.end_date = formatDate(this.end);
+  var originStartDate = formatDate(originalPeriod.start);
+  var originEndDate = formatDate(originalPeriod.end);
+  if(this.id!='-1'){
+    if(this.start_date!=originStartDate || this.end_date!=originEndDate){
+      this.syncMoveToServer(this.id, this.start_date,this.end_date, newDuration);
+    }
+  }
+
   return todoOk;
 };
 
@@ -338,11 +349,39 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
     this.end_date = formatDate(this.end);
     console.log('Task.prototype.moveTo task start:',this.start_date);
     console.log('Task.prototype.moveTo task end:',this.end_date);
+
+    var originStartDate = formatDate(originalPeriod.start);
+    var originEndDate = formatDate(originalPeriod.end);
+    if(this.id!='-1'){
+      if(this.start_date!=originStartDate || this.end_date!=originEndDate){
+        this.syncMoveToServer(this.id, this.start_date,this.end_date);
+      }
+    }
+
   }
 
   return true;
 };
 
+Task.prototype.syncMoveToServer = function (current_id, start_date, end_date, duration) {
+  if(this.id=='-1'){
+    return;
+  }
+  var method = 'post';
+  var params = {"issue_id":current_id,"start_date":start_date,"due_date":end_date,duration:duration }
+  console.log("params",params);
+  $.post("/project/gantt/updateIssueDate", params,
+      function(resp){
+        console.log(resp);
+        if (resp.ret == 200) {
+          notify_success(resp.msg);
+        }else{
+          notify_error(resp.msg);
+        }
+      },
+      "json"
+  );
+}
 
 Task.prototype.checkMilestonesConstraints = function (newStart,newEnd,ignoreMilestones) {
 

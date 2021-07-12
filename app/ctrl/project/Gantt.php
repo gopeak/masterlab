@@ -624,7 +624,68 @@ class Gantt extends BaseUserCtrl
         $this->ajaxSuccess('下移成功');
     }
 
+    /**
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public function updateIssueDate()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+        $startDate = '';
+        if (isset($_POST['start_date'])) {
+            $startDate = $_POST['start_date'];
+        }
+        $endDate = '';
+        if (isset($_POST['due_date'])) {
+            $endDate = $_POST['due_date'];
+        }
+        $duration = null;
+        if (isset($_POST['duration'])) {
+            $duration = $_POST['duration'];
+        }
+        if (!$issueId) {
+            $this->ajaxFailed('参数错误', $_POST);
+        }
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
+        if (!$updatePerm) {
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
+        }
 
+        $updateArr = [];
+        if($issue['start_date']!=$startDate){
+            $updateArr['start_date'] = $startDate;
+        }
+        if($issue['due_date']!=$endDate){
+            $updateArr['due_date'] = $endDate;
+        }
+        if($duration!=null){
+            $updateArr['duration'] = $duration;
+        }else{
+            $holidays = (new HolidayModel())->getDays($issue['project_id']);
+            $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
+            $ganttSetting = (new ProjectGanttSettingModel())->getByProject($issue['project_id']);
+            if (empty($ganttSetting)) {
+                $workDates = null;
+            } else {
+                $workDates = json_decode($ganttSetting['work_dates'], true);
+            }
+            $updateArr['duration'] = getWorkingDays($updateArr['start_date'], $updateArr['due_date'], $workDates, $holidays, $extraWorkerDays);
+        }
+
+        if(!empty($updateArr)){
+            list($ret, $msg) = $issueModel->updateItemById($issueId, $updateArr);
+            if (!$ret) {
+                $this->ajaxFailed('操作失败,数据库执行失败：' . $msg);
+            }
+        }
+        $this->ajaxSuccess('同步成功');
+    }
     /**
      * 向左移动事项
      * @throws \Exception
@@ -681,7 +742,7 @@ class Gantt extends BaseUserCtrl
         if (!empty($issue['master_id']) && $issue['master_id'] != '0') {
             $issueModel->dec('have_children', $issue['master_id'], 'id');
         }
-        $this->ajaxSuccess('向左移动成功', []);
+        $this->ajaxSuccess('向左同步成功', []);
     }
 
     /**
@@ -733,7 +794,7 @@ class Gantt extends BaseUserCtrl
             $this->ajaxFailed($msg);
         }
 
-        $this->ajaxSuccess('向右移动成功', $_POST);
+        $this->ajaxSuccess('向右同步成功', $_POST);
     }
 
     /**

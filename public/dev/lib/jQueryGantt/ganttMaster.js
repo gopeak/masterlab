@@ -610,7 +610,7 @@ GanttMaster.prototype.changeTaskDeps = function (task) {
 };
 
 GanttMaster.prototype.changeTaskDates = function (task, start, end) {
-  //console.debug("changeTaskDates",task, start, end)
+  console.debug("changeTaskDates",task, start, end);
   return task.setPeriod(start, end);
 };
 
