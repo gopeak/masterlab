@@ -566,7 +566,7 @@ class BaseCtrl
             );
             $curl = new \Curl\Curl();
             $curl->setTimeout(10);
-            $curl->post('http://www.masterlab.vip/client_info.php', $postInfo);
+            $curl->post('https://www.masterlab.vip/client_info.php', $postInfo);
 
             $date = date('Y-m-d');
             $ip = getIp();

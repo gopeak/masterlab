@@ -286,7 +286,6 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
     start: this.start,
     end:   this.end
   };
-
   var wantedStartMillis = start;
 
   //set a legal start
@@ -296,7 +295,6 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
   start = this.computeStartBySuperiors(start);
 
   var end = computeEndByDuration(start, this.duration);
-
 
   //check milestones compatibility
   if (!this.checkMilestonesConstraints(start,end,ignoreMilestones))
@@ -317,8 +315,6 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
       this.master.setErrorOnTransaction("\"" + this.name + "\"\n" +GanttMaster.messages["CHANGE_OUT_OF_SCOPE"], this);
       return false;
     }
-
-
     // bicch 22/4/2016: quando si sposta un task con child a cavallo di holidays, i figli devono essere shiftati in workingDays, non in millisecondi, altrimenti si cambiano le durate
     // when moving children you MUST consider WORKING days,
     var panDeltaInWM = getDistanceInUnits(new Date(originalPeriod.start),new Date(this.start));
@@ -334,7 +330,6 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
     if (!updateTree(this)) {
       return false;
     }
-
     if (propagateToInferiors) {
       this.propagateToInferiors(end);
       var todoOk = true;
@@ -349,23 +344,23 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
     this.end_date = formatDate(this.end);
     console.log('Task.prototype.moveTo task start:',this.start_date);
     console.log('Task.prototype.moveTo task end:',this.end_date);
-
     var originStartDate = formatDate(originalPeriod.start);
     var originEndDate = formatDate(originalPeriod.end);
     if(this.id!='-1'){
       if(this.start_date!=originStartDate || this.end_date!=originEndDate){
-        this.syncMoveToServer(this.id, this.start_date,this.end_date);
+        this.syncMoveToServer(this.id, this.start_date,this.end_date, this.duration);
       }
     }
-
   }
-
   return true;
 };
 
 Task.prototype.syncMoveToServer = function (current_id, start_date, end_date, duration) {
-  if(this.id=='-1'){
+  if(parseInt(this.id)<=0){
     return;
+  }
+  if(typeof(duration)=="undefined"){
+    duration = null;
   }
   var method = 'post';
   var params = {"issue_id":current_id,"start_date":start_date,"due_date":end_date,duration:duration }
@@ -374,7 +369,8 @@ Task.prototype.syncMoveToServer = function (current_id, start_date, end_date, du
       function(resp){
         console.log(resp);
         if (resp.ret == 200) {
-          notify_success(resp.msg);
+          //notify_success(resp.msg);
+          console.log('Task.prototype.syncMoveToServer ',params,resp.msg);
         }else{
           notify_error(resp.msg);
         }
@@ -488,7 +484,6 @@ function updateTree(task) {
     }
   }
 
-
   //propagate updates if needed
   if (newStart != p.start || newEnd != p.end) {
 
@@ -503,7 +498,6 @@ function updateTree(task) {
       task.master.setErrorOnTransaction(GanttMaster.messages["TASK_HAS_EXTERNAL_DEPS"] + "\n\"" + p.name + "\"", task);
       return false;
     }
-
     return p.setPeriod(newStart, newEnd);
   }
 

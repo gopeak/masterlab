@@ -67,6 +67,7 @@ var Gantt = (function () {
                 if(resp.ret==="200"){
                     $("#source_"+resp.data.source_type).attr('checked', 'true');
                     $("#is_display_backlog_"+resp.data.is_display_backlog).attr('checked', 'true');
+                    $("#is_check_date_"+resp.data.is_check_date).attr('checked', 'true');
                     $('#hide_issue_types').val(resp.data.hide_issue_types);
                     let source = $('#tpl_holiday_a').html();
                     let template = Handlebars.compile(source);
@@ -87,7 +88,6 @@ var Gantt = (function () {
                             $("#work_dates"+value).attr("checked",true);
                         }
                     }
-
                     $('.selectpicker').selectpicker('refresh');
                     $('#modal-setting').modal('show');
                 }else{

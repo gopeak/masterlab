@@ -46,6 +46,15 @@ function fetGanttIssues(project_id, callback){
             ret = resp.data;
             loading.hide('#TWGanttArea');
             (callback && typeof(callback) === "function") && callback();
+
+            let source = $('#un_date_tasks_list_tpl').html();
+            let template = Handlebars.compile(source);
+            let result = template(resp.data);
+            $('#tbody-un-tasks-list' ).html(result);
+            if(resp.data.unDateTasks.length>0){
+                $('#modal-undate-issues').modal('show');
+            }
+
         },
         error: function (res) {
             //notify_error("请求数据错误" + res);

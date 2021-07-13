@@ -146,6 +146,11 @@ class Gantt extends BaseUserCtrl
         if (isset($ganttSetting['is_display_backlog'])) {
             $isDisplayBacklog = $ganttSetting['is_display_backlog'];
         }
+        // is_check_date
+        $isCheckDate = '0';
+        if (isset($ganttSetting['is_check_date'])) {
+            $isCheckDate = $ganttSetting['is_check_date'];
+        }
         $hideIssueTypes = [];
         if (isset($ganttSetting['hide_issue_types'])) {
             $hideIssueTypes = explode(',', $ganttSetting['hide_issue_types']);
@@ -161,6 +166,7 @@ class Gantt extends BaseUserCtrl
         $data = [];
         $data['source_type'] = $sourceType;
         $data['is_display_backlog'] = $isDisplayBacklog;
+        $data['is_check_date'] = $isCheckDate;
         $data['hide_issue_types'] = $hideIssueTypes;
         $data['work_dates'] = $workDates;
 
@@ -189,7 +195,9 @@ class Gantt extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
-
+        if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
+            $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
+        }
         $projectGanttModel = new ProjectGanttSettingModel();
         $sourceType = 'project';
         $sourceArr = ['project', 'active_sprint', 'module'];
@@ -199,14 +207,19 @@ class Gantt extends BaseUserCtrl
             }
         }
         $updateInfo['source_type'] = $sourceType;
-
+        // 是否显示待办的事项
         $isDisplayBacklog = '0';
         if (isset($_POST['is_display_backlog']) && $_POST['is_display_backlog'] == '1') {
             $isDisplayBacklog = '1';
         }
         $updateInfo['is_display_backlog'] = $isDisplayBacklog;
-
-        // hide_issue_types
+        // 是否检查日期
+        $isCheckDate = '0';
+        if (isset($_POST['is_check_date']) && $_POST['is_check_date'] == '1') {
+            $isCheckDate = '1';
+        }
+        $updateInfo['is_check_date'] = $isCheckDate;
+        // 隐藏的事项类型
         if (isset($_POST['hide_issue_types'])) {
             $hideIssueTypes = $_POST['hide_issue_types'];
             if (is_array($hideIssueTypes)) {
@@ -336,6 +349,7 @@ class Gantt extends BaseUserCtrl
         $issueTypeIdArr = $issueTypeModel->getAllItem(true);
 
         $filteredArr = [];
+        $unDateArr = [];
         foreach ($issues as &$task) {
             $assigs = [];
             if (isset($users[$task['assigs']]['display_name'])) {
@@ -347,7 +361,6 @@ class Gantt extends BaseUserCtrl
                 $assigs[] = $tmp;
             }
             $task['assigs'] = $assigs;
-
             // 只有事项的才进行过滤
             if ($task['type'] != 'sprint') {
                 $issueTypeKey = isset($issueTypeIdArr[$task['typeId']]) ? $issueTypeIdArr[$task['typeId']]['_key'] : null;
@@ -357,10 +370,13 @@ class Gantt extends BaseUserCtrl
             } else {
                 $filteredArr[] = $task;
             }
-
+            if( intval($task['id'])>0 && (empty($task['start_date']) || empty($task['due_date']))){
+                $unDateArr[] = $task;
+            }
         }
         unset($users);unset($task);
         $data['tasks'] = $filteredArr;
+        $data['unDateTasks'] = $unDateArr;
         $data['selectedRow'] = 2;
         $data['deletedTaskIds'] = [];
         $data['resources'] = $resources;
@@ -469,7 +485,10 @@ class Gantt extends BaseUserCtrl
         $issueModel = new IssueModel();
         $currentIsuse = $issueModel->getRow($fields, ['id' => $currentId]);
         $targetIssue = $issueModel->getRow($fields, ['id' => $targetId]);
-
+        $projectId = $currentIsuse['project_id'];
+        if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
+            $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
+        }
         if (!isset($currentIsuse[$fieldWeight]) || !isset($targetIssue[$fieldWeight])) {
             $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
         }
@@ -556,7 +575,10 @@ class Gantt extends BaseUserCtrl
         $issueModel = new IssueModel();
         $currentIsuse = $issueModel->getRow($fields, ['id' => $currentId]);
         $targetIssue = $issueModel->getRow($fields, ['id' => $targetId]);
-
+        $projectId = $currentIsuse['project_id'];
+        if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
+            $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
+        }
         if (!isset($currentIsuse[$fieldWeight]) || !isset($targetIssue[$fieldWeight])) {
             $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
         }
@@ -650,13 +672,23 @@ class Gantt extends BaseUserCtrl
         if (!$issueId) {
             $this->ajaxFailed('参数错误', $_POST);
         }
+        if(intval($issueId)<=0){
+            $this->ajaxSuccess("事项id {$issueId} 无效");
+        }
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-        $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
+        if (empty($issue)) {
+            $this->ajaxSuccess("事项id {$issueId} 无效");
+        }
+
+        $projectId = $issue['project_id'];
+        $updatePerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
         if (!$updatePerm) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
         }
-
+        if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
+            $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
+        }
         $updateArr = [];
         if($issue['start_date']!=$startDate){
             $updateArr['start_date'] = $startDate;
@@ -712,6 +744,10 @@ class Gantt extends BaseUserCtrl
         }
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
+        $projectId = $issue['project_id'];
+        if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
+            $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
+        }
         $level = 0;
         if ($masterId != '0') {
             $masterIssue = $issueModel->getById($masterId);
@@ -773,7 +809,10 @@ class Gantt extends BaseUserCtrl
         if (!isset($issue['id'])) {
             $this->ajaxFailed('参数错误', $_POST);
         }
-
+        $projectId = $issue['project_id'];
+        if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
+            $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
+        }
         $currentInfo = [];
         $currentInfo['level'] = max(0, (int)$issue['level'] - 1);
         $currentInfo['master_id'] = $masterId;
