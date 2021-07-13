@@ -134,8 +134,10 @@ var Gantt = (function () {
         let holiday_dates_str = $('#holiday_dates').val();
         let extra_holiday_dates_str = $('#extra_holiday_dates').val();
         let is_display_backlog_value = $("input[name='is_display_backlog']:checked").val();
+        let is_check_date_value = $("input[name='is_check_date']:checked").val();
         let post_data = {source_type:source_type_value, holiday_dates:holiday_dates_str,extra_holiday_dates:extra_holiday_dates_str}
         post_data['is_display_backlog'] = is_display_backlog_value;
+        post_data['is_check_date'] = is_check_date_value;
         post_data['hide_issue_types'] = $('#hide_issue_types').val();
         let work_dates = [];
         $("input[name='work_dates']:checked").each(function(){
@@ -151,7 +153,7 @@ var Gantt = (function () {
                 auth_check(resp);
                 if( resp.ret === "200" ){
                     notify_success(resp.msg);
-                    setTimeout("window.location.reload();", 1200)
+                    setTimeout("window.location.reload();", 1200);
                     //window.ge.loadProject(loadGanttFromServer(window._cur_project_id));
                 } else {
                     notify_error(resp.msg);

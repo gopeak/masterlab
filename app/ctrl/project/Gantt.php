@@ -212,13 +212,19 @@ class Gantt extends BaseUserCtrl
         if (isset($_POST['is_display_backlog']) && $_POST['is_display_backlog'] == '1') {
             $isDisplayBacklog = '1';
         }
-        $updateInfo['is_display_backlog'] = $isDisplayBacklog;
+        if(isset($ganttSetting['is_display_backlog'])){
+            $updateInfo['is_display_backlog'] = $isDisplayBacklog;
+        }
         // 是否检查日期
         $isCheckDate = '0';
         if (isset($_POST['is_check_date']) && $_POST['is_check_date'] == '1') {
             $isCheckDate = '1';
         }
-        $updateInfo['is_check_date'] = $isCheckDate;
+        $ganttSetting = $projectGanttModel->getByProject($projectId);
+        if(isset($ganttSetting['is_check_date'])){
+            $updateInfo['is_check_date'] = $isCheckDate;
+        }
+
         // 隐藏的事项类型
         if (isset($_POST['hide_issue_types'])) {
             $hideIssueTypes = $_POST['hide_issue_types'];

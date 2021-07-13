@@ -238,7 +238,7 @@ class BaseUserCtrl extends BaseCtrl
                 $curl->setTimeout(5);
                 $curl->get($url);
                 $responseArr = json_decode($curl->rawResponse, true);
-                if($responseArr['ret']=='200'){
+                if($responseArr && $responseArr['ret']=='200'){
                     // print_r($responseArr);
                     $lastVersionArr = $responseArr['data']['last_version'];
                     $title = isset($lastVersionArr['title']) ? $lastVersionArr['title']:$lastVersionArr['version'].'升级通知';

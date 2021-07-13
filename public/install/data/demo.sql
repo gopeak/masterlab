@@ -263,10 +263,10 @@ INSERT INTO `project_flag` (`id`, `project_id`, `flag`, `value`, `update_time`) 
 -- 转存表中的数据 `project_gantt_setting`
 --
 
-INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_from`, `is_display_backlog`, `hide_issue_types`, `work_dates`) VALUES
-(1, 1, 'project', NULL, 0, 'bug,gantt', '[1,2,3,4,5]'),
-(6, 36, 'project', NULL, 0, '', '[1,2,3,4,5]'),
-(16, 91, 'project', NULL, 1, '', '[1,2,3,4,5]');
+INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_from`, `is_display_backlog`, `hide_issue_types`, `work_dates`, `is_check_date`) VALUES
+(1, 1, 'project', NULL, 0, 'bug,gantt', '[1,2,3,4,5]','0'),
+(6, 36, 'project', NULL, 0, '', '[1,2,3,4,5]','0'),
+(16, 91, 'project', NULL, 1, '', '[1,2,3,4,5]','0');
 
 -- --------------------------------------------------------
 
