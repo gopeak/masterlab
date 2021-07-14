@@ -782,53 +782,68 @@
 
 <div class="modal" id="modal-undate-issues">
     <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-undate-issues"
-          action="/project/gantt/set_undate_issues" accept-charset="UTF-8" method="POST">
-        <input type="hidden" name="cur_project_id" value="<?= project_id ?>">
-        <div class="modal-dialog">
+          action="/project/gantt/saveUnDateData" accept-charset="UTF-8" method="POST">
+        <input type="hidden" name="project_id" value="<?=project_id ?>">
+        <div class="modal-dialog" style="min-width: 700px;">
             <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">提示！事项数据缺失</h3>
+                    <h3 class="modal-header-title">提示！甘特图数据缺失</h3>
                 </div>
-
-                <div class="modal-body overflow-x-hidden">
+                <div class="modal-body overflow-x-hidden min-height500"  style="min-width: 600px">
 
                     <div class="form-group">
-                        <label class="control-label"  ></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">注：检测到如下事项的开始和结束日期为空请设置，否则使用过程中将会产生bug</div>
+                          <div style="padding: 10px">注：检测到如下迭代或事项的<span style="color: red">开始和结束日期为空</span>,请务必设置，否则使用过程中将会产生bug </div>
+                    </div>
+                    <div class="form-group hide" id="wrap_un_date_sprints">
+                        <div class="col-sm-1">
+                            <span style="font-weight: bold">迭代</span>
+                        </div>
+                        <div class="col-sm-11">
+                            <table class="table table-bordered table-condensed" style="padding: 10px">
+                                <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th style="width: 50%">迭代名称</th>
+                                    <th>开始日期</th>
+                                    <th>结束日期</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody-un-sprints-list">
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_description"></label>
-                        <div class="col-sm-8">
-                            <div class="form-group">
-                                <table class="table table-bordered table-condensed">
-                                    <thead>
-                                    <tr>
-                                        <th>#ID</th>
-                                        <th>事项名称</th>
-                                        <th>开始日期</th>
-                                        <th>结束日期</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="tbody-un-tasks-list">
+                    <div class="form-group hide" id="wrap_un_date_issues">
+                        <div class="col-sm-1">
+                            <span style="font-weight: bold">事项</span>
+                        </div>
+                        <div class="col-sm-11">
+                            <table class="table table-bordered table-condensed" style="padding: 10px">
+                                <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th style="width: 50%">事项名称</th>
+                                    <th>开始日期</th>
+                                    <th>结束日期</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody-un-tasks-list">
 
-
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <hr>
-
                 </div>
 
                 <div class="modal-footer form-actions">
                     <button name="btn-setting_columns" type="button"
-                            class="btn btn-create js-key-modal-enter1" id="btn-setting_columns">保 存
+                            onclick='window.$_gantAjax.saveUndate();'
+                            class="btn btn-create js-key-modal-enter1" id="btn-un_date_save">保 存
                     </button>
-                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取 消</a>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">忽 略</a>
                 </div>
             </div>
         </div>
@@ -839,14 +854,32 @@
 <script type="text/html" id="un_date_tasks_list_tpl">
     {{#unDateTasks}}
     <tr>
-        <td>{{ id }}<input type="hidden"  name="id[]"  value=""></td>
-        <td>{{ summary }}</td>
-        <td><input type="text"  name="start_date[]"  value="{{start_date}}">
+        <td>{{id}}<input type="hidden"  name="issue_id_arr[]"  value="{{id}}"></td>
+        <td style="width: 50%">{{name}}</td>
+        <td>
+        <input type="text" style="height:22px;" class="laydate_input_date form-control"  id="task_un_start_date_{{id}}"  name="issue_start_date_arr[]"  value="{{start_date}}" autocomplete="off"  />
         </td>
-        <td><input type="text"  name="due_date[]"  value="{{due_date}}"></td>
+        <td>
+        <input type="text" style="height:22px;" class="laydate_input_date form-control"  id="task_un_due_date_{{id}}"  name="issue_due_date_arr[]"   value="{{due_date}}" autocomplete="off"  />
+        </td>
     </tr>
     {{/unDateTasks}}
 </script>
+<script type="text/html" id="un_date_sprints_list_tpl">
+    {{#unDateSprints}}
+    <tr>
+        <td>{{id}}<input type="hidden"  name="sprint_id_arr[]"  value="{{id}}"></td>
+        <td style="width: 50%">{{name}}</td>
+        <td>
+        <input type="text" style="height:22px;"  class="laydate_input_date form-control" id="sprint_un_start_date_{{id}}" name="sprint_start_date_arr[]"   value="{{start_date}}" autocomplete="off"  />
+        </td>
+        <td>
+        <input type="text" style="height:22px;"   class="laydate_input_date form-control" id="sprint_un_due_date_{{id}}" name="sprint_due_date_arr[]" value="{{due_date}}" autocomplete="off"  />
+        </td>
+    </tr>
+    {{/unDateSprints}}
+</script>
+
 
 <script type="text/html" id="be_hidden_issue_list_tpl">
     {{#tasks}}

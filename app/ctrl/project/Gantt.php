@@ -212,7 +212,7 @@ class Gantt extends BaseUserCtrl
         if (isset($_POST['is_display_backlog']) && $_POST['is_display_backlog'] == '1') {
             $isDisplayBacklog = '1';
         }
-        if(isset($ganttSetting['is_display_backlog'])){
+        if (isset($ganttSetting['is_display_backlog'])) {
             $updateInfo['is_display_backlog'] = $isDisplayBacklog;
         }
         // 是否检查日期
@@ -221,7 +221,7 @@ class Gantt extends BaseUserCtrl
             $isCheckDate = '1';
         }
         $ganttSetting = $projectGanttModel->getByProject($projectId);
-        if(isset($ganttSetting['is_check_date'])){
+        if (isset($ganttSetting['is_check_date'])) {
             $updateInfo['is_check_date'] = $isCheckDate;
         }
 
@@ -299,7 +299,6 @@ class Gantt extends BaseUserCtrl
         foreach ($data['project_roles'] as $project_role) {
             $roles[] = ['id' => $project_role['id'], 'name' => $project_role['name']];
         }
-
         $userLogic = new UserLogic();
         $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
         $resources = [];
@@ -334,8 +333,6 @@ class Gantt extends BaseUserCtrl
         if ($sprintModel->getCountByProject($projectId) <= 0) {
             $isDisplayBacklog = '1';
         }
-
-
         $issues = [];
         if ($sourceType == 'project') {
             $issues = $class->getIssuesGroupBySprint($projectId, $isDisplayBacklog);
@@ -343,7 +340,6 @@ class Gantt extends BaseUserCtrl
         if ($sourceType == 'active_sprint') {
             $issues = $class->getIssuesGroupByActiveSprint($projectId, $isDisplayBacklog);
         }
-
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
 
@@ -353,9 +349,13 @@ class Gantt extends BaseUserCtrl
         }
         $issueTypeModel = new IssueTypeModel();
         $issueTypeIdArr = $issueTypeModel->getAllItem(true);
-
+        $isCheckDate = '0';
+        if (isset($ganttSetting['is_check_date'])) {
+            $isCheckDate = $ganttSetting['is_check_date'];
+        }
         $filteredArr = [];
-        $unDateArr = [];
+        $unDateIssuesArr = [];
+        $unDateSprintsArr = [];
         foreach ($issues as &$task) {
             $assigs = [];
             if (isset($users[$task['assigs']]['display_name'])) {
@@ -367,22 +367,53 @@ class Gantt extends BaseUserCtrl
                 $assigs[] = $tmp;
             }
             $task['assigs'] = $assigs;
+            $task['filtered'] = '0';
             // 只有事项的才进行过滤
             if ($task['type'] != 'sprint') {
                 $issueTypeKey = isset($issueTypeIdArr[$task['typeId']]) ? $issueTypeIdArr[$task['typeId']]['_key'] : null;
                 if (empty($task['gant_hide']) && !in_array($issueTypeKey, $hideIssueTypeKeyArr)) {
                     $filteredArr[] = $task;
+                }else{
+                    $task['filtered'] = '1';
                 }
             } else {
                 $filteredArr[] = $task;
             }
-            if( intval($task['id'])>0 && (empty($task['start_date']) || empty($task['due_date']))){
-                $unDateArr[] = $task;
+            if ( $isCheckDate=='1'
+                 && $task['filtered']=='0'
+                 &&
+                (
+                    empty($task['start_date'])
+                    || $task['start_date'] == '0000-00-00'
+                    || empty($task['due_date'])
+                    || $task['due_date'] == '0000-00-00')
+            ) {
+                $row = $task;
+                $name = $row['name'];
+                if (mb_strlen($name) > 16) {
+                    $name = mb_substr($name, 0, 16) . '...';
+                }
+                if ($row['start_date'] == '0000-00-00') {
+                    $row['start_date'] = '';
+                }
+                if ($row['due_date'] == '0000-00-00') {
+                    $row['due_date'] = '';
+                }
+                $row['name'] = $name;
+                if(intval($task['id']) > 0){
+                    $unDateIssuesArr[] = $row;
+                }else{
+                    $row['id'] = abs($row['id']);
+                    $unDateSprintsArr[] = $row;
+                }
+
             }
         }
-        unset($users);unset($task);
+        unset($users);
+        unset($task);
         $data['tasks'] = $filteredArr;
-        $data['unDateTasks'] = $unDateArr;
+        $data['unDateTasks'] = $unDateIssuesArr;
+        $data['unDateSprints'] = $unDateSprintsArr;
         $data['selectedRow'] = 2;
         $data['deletedTaskIds'] = [];
         $data['resources'] = $resources;
@@ -653,6 +684,123 @@ class Gantt extends BaseUserCtrl
     }
 
     /**
+     * @throws \Exception
+     */
+    public function saveUnDateData()
+    {
+        $issueIdArr = [];
+        if (isset($_POST['issue_id_arr'])) {
+            $issueIdArr = $_POST['issue_id_arr'];
+        }
+        $startDateArr = [];
+        if (isset($_POST['issue_start_date_arr'])) {
+            $startDateArr = $_POST['issue_start_date_arr'];
+        }
+        $dueDateArr = [];
+        if (isset($_POST['issue_due_date_arr'])) {
+            $dueDateArr = $_POST['issue_due_date_arr'];
+        }
+        $sprintIdArr = [];
+        if (isset($_POST['sprint_id_arr'])) {
+            $sprintIdArr = $_POST['sprint_id_arr'];
+        }
+        $sprintStartDateArr = [];
+        if (isset($_POST['sprint_start_date_arr'])) {
+            $sprintStartDateArr = $_POST['sprint_start_date_arr'];
+        }
+        $sprintDueDateArr = [];
+        if (isset($_POST['sprint_due_date_arr'])) {
+            $sprintDueDateArr = $_POST['sprint_due_date_arr'];
+        }
+        print_r($issueIdArr);
+        print_r($startDateArr);
+        print_r($dueDateArr);
+        print_r($sprintIdArr);
+        print_r($sprintStartDateArr);
+        print_r($sprintDueDateArr);
+        $projectId = null;
+        if (isset($_POST['project_id'])) {
+            $projectId = $_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误,提交的项目id为空', $_POST);
+        }
+        $updatePerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
+        if (!$updatePerm) {
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
+        }
+        if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
+            $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
+        }
+        $holidays = (new HolidayModel())->getDays($projectId);
+        $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
+        $ganttSetting = (new ProjectGanttSettingModel())->getByProject($projectId);
+        if (empty($ganttSetting)) {
+            $workDates = null;
+        } else {
+            $workDates = json_decode($ganttSetting['work_dates'], true);
+        }
+        $issueModel = new IssueModel();
+        $testArr = [];
+        if (empty($issueIdArr)) {
+            foreach ($issueIdArr as $k => $issueId) {
+                $issue = $issueModel->getById($issueId);
+                if (empty($issue)) {
+                    continue;
+                }
+                $updateArr = [];
+                if(isset($startDateArr[$k])){
+                    $startDate = $startDateArr[$k];
+                    if ($issue['start_date'] != $startDate && $startDate!='') {
+                        $issue['start_date'] = $updateArr['start_date'] = $startDate;
+                    }
+                }
+                if(isset($dueDateArr[$k])){
+                    $endDate = $dueDateArr[$k];
+                    if ($issue['due_date'] != $endDate  && $endDate!='') {
+                        $issue['due_date'] = $updateArr['due_date'] = $endDate;
+                    }
+                }
+                $newDuration = getWorkingDays($issue['start_date'], $issue['due_date'], $workDates, $holidays, $extraWorkerDays);
+                if($newDuration!=$issue['duration']){
+                    $updateArr['duration'] = $newDuration;
+                }
+                if (!empty($updateArr)) {
+                    $testArr[$issueId] = $updateArr;
+                    $issueModel->updateItemById($issueId, $updateArr);
+                }
+            }
+        }
+        $sprintModel = new SprintModel();
+        if(empty($sprintIdArr)){
+            foreach ($sprintIdArr as $k =>$sprintId) {
+                $sprint = $sprintModel->getById($sprintId);
+                if (empty($sprint)) {
+                    continue;
+                }
+                $updateArr = [];
+                if(isset($sprintStartDateArr[$k])){
+                    $startDate = $sprintStartDateArr[$k];
+                    if ($sprint['start_date'] != $startDate && $startDate!='') {
+                        $sprint['start_date'] = $updateArr['start_date'] = $startDate;
+                    }
+                }
+                if(isset($sprintDueDateArr[$k])){
+                    $endDate = $sprintDueDateArr[$k];
+                    if ($sprint['end_date'] != $endDate && $endDate!='') {
+                        $sprint['end_date'] = $updateArr['end_date'] = $endDate;
+                    }
+                }
+                if(!empty($updateArr)){
+                    $sprintModel->updateById($sprintId, $updateArr);
+                }
+            }
+
+        }
+        $this->ajaxSuccess('保存成功', $testArr);
+    }
+
+    /**
      *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
@@ -678,7 +826,7 @@ class Gantt extends BaseUserCtrl
         if (!$issueId) {
             $this->ajaxFailed('参数错误', $_POST);
         }
-        if(intval($issueId)<=0){
+        if (intval($issueId) <= 0) {
             $this->ajaxSuccess("事项id {$issueId} 无效");
         }
         $issueModel = new IssueModel();
@@ -696,15 +844,15 @@ class Gantt extends BaseUserCtrl
             $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
         }
         $updateArr = [];
-        if($issue['start_date']!=$startDate){
+        if ($issue['start_date'] != $startDate) {
             $updateArr['start_date'] = $startDate;
         }
-        if($issue['due_date']!=$endDate){
+        if ($issue['due_date'] != $endDate) {
             $updateArr['due_date'] = $endDate;
         }
-        if($duration!=null){
+        if ($duration != null) {
             $updateArr['duration'] = $duration;
-        }else{
+        } else {
             $holidays = (new HolidayModel())->getDays($issue['project_id']);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($issue['project_id']);
             $ganttSetting = (new ProjectGanttSettingModel())->getByProject($issue['project_id']);
@@ -716,7 +864,7 @@ class Gantt extends BaseUserCtrl
             $updateArr['duration'] = getWorkingDays($updateArr['start_date'], $updateArr['due_date'], $workDates, $holidays, $extraWorkerDays);
         }
 
-        if(!empty($updateArr)){
+        if (!empty($updateArr)) {
             list($ret, $msg) = $issueModel->updateItemById($issueId, $updateArr);
             if (!$ret) {
                 $this->ajaxFailed('操作失败,数据库执行失败：' . $msg);
@@ -724,6 +872,7 @@ class Gantt extends BaseUserCtrl
         }
         $this->ajaxSuccess('同步成功');
     }
+
     /**
      * 向左移动事项
      * @throws \Exception

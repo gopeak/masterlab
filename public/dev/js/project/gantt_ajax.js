@@ -122,7 +122,34 @@ var Gantt = (function () {
         });
     };
 
-
+    Gantt.prototype.saveUndate = function( ) {
+        if(!_is_admin_gantt){
+            //notify_error('提示', '您甘特图管理权限才能进行此操作');
+            //return;
+        }
+        let method = 'POST';
+        let url = '/project/gantt/saveUnDateData/'+window._cur_project_id;
+        var post_data  = $('#form-undate-issues').serialize();
+        $.ajax({
+            type: method,
+            dataType: "json",
+            data: post_data,
+            url: url,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret === "200" ){
+                    notify_success(resp.msg);
+                    //setTimeout("window.location.reload();", 1200);
+                    //window.ge.loadProject(loadGanttFromServer(window._cur_project_id));
+                } else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
     Gantt.prototype.saveGanttSetting = function( ) {
         if(!_is_admin_gantt){
             notify_error('提示', '您没有权限进行此操作');
