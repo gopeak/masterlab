@@ -46,6 +46,31 @@ function fetGanttIssues(project_id, callback){
             ret = resp.data;
             loading.hide('#TWGanttArea');
             (callback && typeof(callback) === "function") && callback();
+
+            let source = $('#un_date_tasks_list_tpl').html();
+            let template = Handlebars.compile(source);
+            let result = template(resp.data);
+            $('#tbody-un-tasks-list' ).html(result);
+            source = $('#un_date_sprints_list_tpl').html();
+            template = Handlebars.compile(source);
+            result = template(resp.data);
+            $('#tbody-un-sprints-list' ).html(result);
+            if(resp.data.unDateSprints.length>0){
+                $('#wrap_un_date_sprints').removeClass('hide');
+            }
+            if(resp.data.unDateTasks.length>0){
+                $('#wrap_un_date_issues').removeClass('hide');
+            }
+            if(resp.data.unDateTasks.length>0 || resp.data.unDateSprints.length>0){
+                /*
+                laydate.render({
+                    elem: '.laydate_input_date' //指定元素
+                    //,trigger: 'click'
+                });
+                */
+                $('#modal-undate-issues').modal('show');
+            }
+
         },
         error: function (res) {
             //notify_error("请求数据错误" + res);

@@ -8,7 +8,6 @@
 -- PHP 版本： 7.4.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -1528,10 +1527,8 @@ CREATE TABLE `main_plugin` (
 -- 转存表中的数据 `main_plugin`
 --
 
-INSERT INTO `main_plugin` (`id`, `name`, `title`, `index_page`, `description`, `version`, `status`, `type`, `chmod_json`, `url`, `icon_file`, `company`, `install_time`, `order_weight`, `is_system`, `enable`, `is_display`) VALUES
-(1, 'activity', '活动日志', 'ctrl@index@pageIndex', '默认自带的插件：活动日志', '1.0', 1, 'project_module', '', 'http://www.masterlab.vip', '/attachment/plugin/1.png', 'Masterlab官方', 0, 0, 1, 1, 1),
-(22, 'webhook', 'webhook', '', '默认自带的插件：webhook', '1.0', 1, 'admin_module', '', 'http://www.masterlab.vip', '/attachment/plugin/webhook.png', 'Masterlab官方', 0, 0, 1, 1, 1),
-(26, 'document', '文档管理', '', 'KodExplorer可道云，原名芒果云，是基于Web技术的私有云在线文档管理解决方案', '1.0', 1, 'project_module', '', 'http://kodcloud.com/', '/attachment/plugin/logo-kod.png', '可道云', 0, 0, 0, 1, 1);
+INSERT INTO `main_plugin` VALUES (1, 'activity', '活动日志', 'ctrl@index@pageIndex', '默认自带的插件：活动日志', '1.0', 1, 'project_module', '', 'http://www.masterlab.vip', '/attachment/plugin/1.png', 'Masterlab官方', 0, 0, 1, 1, 1);
+INSERT INTO `main_plugin` VALUES (22, 'webhook', 'webhook', '', '默认自带的插件：webhook', '1.0', 1, 'admin_module', '', 'http://www.masterlab.vip', '/attachment/plugin/webhook.png', 'Masterlab官方', 0, 0, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2361,8 +2358,9 @@ CREATE TABLE `project_gantt_setting` (
                                          `source_from` varchar(20) DEFAULT NULL,
                                          `is_display_backlog` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在甘特图中显示待办事项',
                                          `hide_issue_types` varchar(100) NOT NULL DEFAULT '' COMMENT '要隐藏的事项类型key以逗号分隔',
-                                         `work_dates` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+                                         `work_dates` varchar(100) DEFAULT NULL,
+                                         `is_check_date` tinyint(1) unsigned zerofill NOT NULL DEFAULT '1' COMMENT '是否检查开始和结束日期'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2689,10 +2687,9 @@ CREATE TABLE `project_template` (
 -- 转存表中的数据 `project_template`
 --
 
-INSERT INTO `project_template` (`id`, `name`, `category_id`, `description`, `image_bg`, `order_weight`, `created_at`, `updated_at`, `user_id`, `issue_type_scheme_id`, `issue_workflow_scheme_id`, `issue_ui_scheme_id`, `nav_type`, `ui_style`, `theme_color`, `is_fix_header`, `is_fix_left`, `subsystem_json`, `is_system`, `page_layout`, `project_view`, `issue_view`, `default_issue_type_id`) VALUES
-(1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/default.png', 100000, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"gantt\",\"mind\",\"kanban\",\"activity\",\"document\",\"chart\",\"stat\"]', 1, 'fluid', 'summary', '', 1),
-(2, '软件开发', 1, '模板描述', '/dev/img/project_tpl/software.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"kanban\",\"mind\",\"gantt\",\"activity\",\"chart\",\"stat\",\"document\"]', 0, 'fluid', 'issues', 'detail', 1),
-(3, 'Scrum敏捷开发', 1, '模板描述', '/dev/img/project_tpl/scrum.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"backlog\",\"sprints\",\"kanban\",\"mind\",\"chart\",\"stat\",\"activity\",\"document\"]', 0, '', 'issues', '', 1);
+INSERT INTO `project_template` VALUES (1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/default.png', 100000, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"gantt\",\"mind\",\"kanban\",\"activity\",\"chart\",\"stat\"]', 1, 'fluid', 'summary', '', 1);
+INSERT INTO `project_template` VALUES (2, '软件开发', 1, '模板描述', '/dev/img/project_tpl/software.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"kanban\",\"mind\",\"gantt\",\"activity\",\"chart\",\"stat\"]', 0, 'fluid', 'issues', 'detail', 1);
+INSERT INTO `project_template` VALUES (3, 'Scrum敏捷开发', 1, '模板描述', '/dev/img/project_tpl/scrum.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"backlog\",\"sprints\",\"kanban\",\"mind\",\"chart\",\"stat\",\"activity\"]', 0, '', 'issues', '', 1);
 
 -- --------------------------------------------------------
 
@@ -5013,7 +5010,6 @@ ALTER TABLE `workflow_scheme`
 ALTER TABLE `workflow_scheme_data`
     MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
 
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

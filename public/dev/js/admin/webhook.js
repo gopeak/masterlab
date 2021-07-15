@@ -61,6 +61,11 @@ var Webhook = (function() {
                     $(".list_for_edit").click(function(){
                         Webhook.prototype.edit( $(this).attr("data-value") );
                     });
+                    // list_for_view_secret
+                    $(".list_for_view_secret").click(function(){
+                        $('#view-secret').html( $(this).attr("data-value") );
+                        $("#modal-view-secret").modal('show');
+                    });
 
                     $(".list_for_delete").click(function(){
                         Webhook.prototype._delete( $(this).attr("data-value") );

@@ -88,63 +88,65 @@ $server->on('task', function ($serv, $task_id, $from_id, $data) {
 $server->on('finish', function ($serv, $task_id, $data) {
     echo "AsyncTask[$task_id] Finished " . PHP_EOL;
 });
-
-Swoole\Timer::tick(1000, function () {
-
-    //echo "crontab checking \n";
-    $rootDir = realpath(dirname(__FILE__) . '/../');
-    $json = file_get_contents($rootDir . '/bin/cron.json');
-    $cronArr = json_decode($json, true);
-    if (!$cronArr['schedule']) {
-        return;
-    }
-    foreach ($cronArr['schedule'] as $item) {
-        $exp = substr($item['exp'], 2);
-        $exp = str_replace('?', '*', $exp);
-        //echo $exp . " " . PHP_EOL;
-        try {
-            $cron = Cron\CronExpression::factory($exp);
-            //echo $cron->getNextRunDate()->format('Y-m-d H:i:s')." \n";
-            $runTime = $cron->getNextRunDate()->getTimestamp();
-            $offsetTime = $runTime - time();
-            if ($offsetTime < 2 && $offsetTime > -2) {
-                log_cron("脚本:" . $item['name'] . " " . $item['file'] . " 触发");
-                echo $item['name'] . ' ' . $cron->getNextRunDate()->format('Y-m-d H:i:s') . " \n";
-                // 达到时间要求
-                $cronPhpBin = $item['exe_bin'];
-                if (!file_exists($cronPhpBin)) {
-                    list($phpBinRet, $phpBin) = get_php_bin_dir();
-                    if (!$phpBinRet) {
+// 启动后启动定时任务检查
+$server->on('start', function ($serv) {
+    $serv->tick(1000, function () {
+        //echo "crontab checking \n";
+        $rootDir = realpath(dirname(__FILE__) . '/../');
+        $json = file_get_contents($rootDir . '/bin/cron.json');
+        $cronArr = json_decode($json, true);
+        if (!$cronArr['schedule']) {
+            return;
+        }
+        foreach ($cronArr['schedule'] as $item) {
+            $exp = substr($item['exp'], 2);
+            $exp = str_replace('?', '*', $exp);
+            //echo $exp . " " . PHP_EOL;
+            try {
+                $cron = Cron\CronExpression::factory($exp);
+                //echo $cron->getNextRunDate()->format('Y-m-d H:i:s')." \n";
+                $runTime = $cron->getNextRunDate()->getTimestamp();
+                $offsetTime = $runTime - time();
+                if ($offsetTime < 2 && $offsetTime > -2) {
+                    log_cron("脚本:" . $item['name'] . " " . $item['file'] . " 触发");
+                    echo $item['name'] . ' ' . $cron->getNextRunDate()->format('Y-m-d H:i:s') . " \n";
+                    // 达到时间要求
+                    $cronPhpBin = $item['exe_bin'];
+                    if (!file_exists($cronPhpBin)) {
+                        list($phpBinRet, $phpBin) = get_php_bin_dir();
+                        if (!$phpBinRet) {
+                            continue;
+                        }
+                        $cronPhpBin = $phpBin;
+                    }
+                    $execFile = $item['file'];
+                    $pathParts = pathinfo($execFile);
+                    if (!file_exists($execFile)) {
+                        $newFile = $rootDir . '/app/server/timer/' . $pathParts['basename'];
+                        if (file_exists($newFile)) {
+                            $execFile = $newFile;
+                        }
+                    }
+                    exec("ps aux | grep " . $pathParts['basename'], $output, $return);
+                    if ($return == 0) {
+                        echo $item['file'] . ", process is running\n";
                         continue;
                     }
-                    $cronPhpBin = $phpBin;
+                    $command = $cronPhpBin . ' ' . $item['arg'] . ' ' . $execFile;
+                    log_cron($command);
+                    exec($command, $output);
+                    log_cron(print_r($output, true));
+                    log_cron("脚本:" . $item['name'] . " " . $execFile . " 执行结束");
                 }
-                $execFile = $item['file'];
-                $pathParts = pathinfo($execFile);
-                if (!file_exists($execFile)) {
-                    $newFile = $rootDir . '/app/server/timer/' . $pathParts['basename'];
-                    if (file_exists($newFile)) {
-                        $execFile = $newFile;
-                    }
-                }
-                exec("ps aux | grep " . $pathParts['basename'], $output, $return);
-                if ($return == 0) {
-                    echo $item['file'] . ", process is running\n";
-                    continue;
-                }
-                $command = $cronPhpBin . ' ' . $item['arg'] . ' ' . $execFile;
-                log_cron($command);
-                exec($command, $output);
-                log_cron(print_r($output, true));
-                log_cron("脚本:" . $item['name'] . " " . $execFile . " 执行结束");
+            } catch (\Exception $e) {
+                echo $e->getMessage() . PHP_EOL;
             }
-        } catch (\Exception $e) {
-            echo $e->getMessage() . PHP_EOL;
+
         }
 
-    }
-
+    });
 });
+
 
 $server->start();
 

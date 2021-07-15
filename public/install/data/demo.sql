@@ -83,16 +83,6 @@ INSERT INTO `issue_follow` (`id`, `issue_id`, `user_id`) VALUES
 --
 
 INSERT INTO `issue_holiday` (`id`, `project_id`, `day`, `name`) VALUES
-(770, 1, '2020-05-01', ''),
-(771, 1, '2020-05-02', ''),
-(772, 1, '2020-05-03', ''),
-(773, 1, '2020-05-04', ''),
-(774, 1, '2020-10-01', ''),
-(775, 1, '2021-01-01', ''),
-(776, 1, '2021-05-01', ''),
-(777, 1, '2021-05-02', ''),
-(778, 1, '2021-05-03', ''),
-(779, 1, '2021-05-04', ''),
 (780, 1, '2021-10-01', ''),
 (781, 1, '2022-01-01', ''),
 (782, 1, '2020-10-02', ''),
@@ -263,10 +253,10 @@ INSERT INTO `project_flag` (`id`, `project_id`, `flag`, `value`, `update_time`) 
 -- 转存表中的数据 `project_gantt_setting`
 --
 
-INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_from`, `is_display_backlog`, `hide_issue_types`, `work_dates`) VALUES
-(1, 1, 'project', NULL, 0, 'bug,gantt', '[1,2,3,4,5]'),
-(6, 36, 'project', NULL, 0, '', '[1,2,3,4,5]'),
-(16, 91, 'project', NULL, 1, '', '[1,2,3,4,5]');
+INSERT INTO `project_gantt_setting` (`id`, `project_id`, `source_type`, `source_from`, `is_display_backlog`, `hide_issue_types`, `work_dates`, `is_check_date`) VALUES
+(1, 1, 'project', NULL, 0, 'bug,gantt', '[1,2,3,4,5]','0'),
+(6, 36, 'project', NULL, 0, '', '[1,2,3,4,5]','0'),
+(16, 91, 'project', NULL, 1, '', '[1,2,3,4,5]','0');
 
 -- --------------------------------------------------------
 

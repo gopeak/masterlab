@@ -12,6 +12,8 @@ use main\app\event\PluginPlacedEvent;
 use main\app\model\issue\IssueStatusModel;
 use main\app\classes\IssueStatusLogic;
 use main\app\model\PluginModel;
+use main\lib\FileUtil;
+use ZipArchive;
 
 /**
  * 插件管理控制器
@@ -61,11 +63,11 @@ class PluginManager extends BaseAdminCtrl
      */
     public function fetchAll()
     {
-        $filterType = isset($_GET['type']) ? $_GET['type']:'all';
-        $filterRange = isset($_GET['range']) ? $_GET['range']:'all';
+        $filterType = isset($_GET['type']) ? $_GET['type'] : 'all';
+        $filterRange = isset($_GET['range']) ? $_GET['range'] : 'all';
 
         $conditionArr = [];
-        if($filterType!='all'){
+        if ($filterType != 'all') {
             $conditionArr['type'] = trimStr($filterType);
         }
 
@@ -73,11 +75,11 @@ class PluginManager extends BaseAdminCtrl
         $model = new PluginModel();
         $dbPluginsArr = $model->getRows('*', $conditionArr);
         foreach ($dbPluginsArr as $dbPlugin) {
-            if($filterType=='all' || $dbPlugin['type']==$filterType){
+            if ($filterType == 'all' || $dbPlugin['type'] == $filterType) {
                 $plugins[] = $dbPlugin;
             }
         }
-        $uninstallPlugins  = [];
+        $uninstallPlugins = [];
         $pluginsKeyArr = array_column($dbPluginsArr, null, 'name');
         $dirPluginArr = $this->getPluginDirArr(PLUGIN_PATH);
         foreach ($dirPluginArr as $dirName => $item) {
@@ -87,36 +89,48 @@ class PluginManager extends BaseAdminCtrl
                 $tmp['status'] = PluginModel::STATUS_UNINSTALLED;
                 $tmp['is_system'] = '0';
                 if ($filterType == 'all' || $tmp['type'] == $filterType) {
-                     $uninstallPlugins[] = $tmp;
+                    $uninstallPlugins[] = $tmp;
                 }
             }
         }
 
         // var_dump($filterRange);
-        if($filterRange=='all') {
+        if ($filterRange == 'all') {
             foreach ($uninstallPlugins as $uninstallPlugin) {
                 $plugins[] = $uninstallPlugin;
             }
         }
-        if($filterRange=='uninstalled') {
-           $plugins = $uninstallPlugins;
+        if ($filterRange == 'uninstalled') {
+            $dbUninstalledPluginsArr = $model->getRows('*', ['status'=>PluginModel::STATUS_UNINSTALLED]);
+            $plugins = $dbUninstalledPluginsArr + $uninstallPlugins;
+        }
+        if ($filterRange == 'installed') {
+            $plugins = $model->getRows('*', ['status'=>PluginModel::STATUS_INSTALLED]);
         }
         // print_r($uninstallPlugins);
         // 判断目录是否存在
-        if($plugins){
+        if ($plugins) {
             foreach ($plugins as & $plugin) {
                 $name = $plugin['name'];
                 if (!isset($dirPluginArr[$name])) {
+                    $plugin['status'] = PluginModel::STATUS_INVALID;
+                }
+                $jsonFile = PLUGIN_PATH . $name . '/plugin.json';
+                if ( !file_exists($jsonFile) ) {
+                    $plugin['status'] = PluginModel::STATUS_INVALID;
+                }
+                $jsonArr = json_decode(file_get_contents($jsonFile, true));
+                if ( !$jsonArr ) {
                     $plugin['status'] = PluginModel::STATUS_INVALID;
                 }
                 $plugin['status_text'] = PluginModel::$statusArr[$plugin['status']];
                 $plugin['type_text'] = @PluginModel::$typeArr[$plugin['type']];
             }
         }
-
+        sort($plugins);
         $data = [];
-        $data['installed_count'] = count($dbPluginsArr);
-        $data['uninstalled_count'] = count($uninstallPlugins);
+        $data['installed_count'] = $model->getCount(['status'=>PluginModel::STATUS_INSTALLED]);
+        $data['uninstalled_count'] = count($uninstallPlugins)+$model->getCount(['status'=>PluginModel::STATUS_UNINSTALLED]);
         $data['plugins'] = $plugins;
         $this->ajaxSuccess('', $data);
     }
@@ -146,6 +160,75 @@ class PluginManager extends BaseAdminCtrl
     }
 
     /**
+     * 导入插件
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public function import()
+    {
+        if (empty($_POST)) {
+            $this->ajaxFailed('错误', '没有提交表单数据');
+        }
+        $_POST['name'] = trimStr($_POST['name']);
+        if (isset($_POST['name']) && empty($_POST['name'])) {
+            $errorMsg['name'] = '插件名称不能为空';
+        }
+        $model = new PluginModel();
+        if (isset($model->getByName($_POST['name'])['id'])) {
+            $errorMsg['name'] = '名称已经被使用或已经安装了，请先删除';
+        }
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
+        $pluginName = $_POST['name'];
+        $zipFile = $_POST['zip'];
+        $filePath = STORAGE_PATH . "plugin_zip/" . $zipFile;
+        if (!file_exists($filePath)) {
+            $this->ajaxFailed('提示', '参数错误,上传的zip文件丢失');
+        }
+        if (file_exists(PLUGIN_PATH . $pluginName)) {
+            $this->ajaxFailed('提示', '相同的插件目录名称已经存在，请先删除');
+        }
+        //var_dump($filePath);
+        $zip = new ZipArchive;
+        $res = $zip->open($filePath);
+        if ($res !== true) {
+            $this->ajaxFailed('提示', '上传的zip打开失败,错误代码：'.$res);
+        }
+        $zip->extractTo(PRE_APP_PATH);
+        $zip->close();
+        $jsonFile = PLUGIN_PATH . $pluginName . '/plugin.json';
+        if (!file_exists($jsonFile)) {
+            $this->ajaxFailed('提示', '参数错误,配置文件plugin.json缺失');
+        }
+        $jsonArr = json_decode(file_get_contents($jsonFile), true);
+        if (!$jsonArr) {
+            $this->ajaxFailed('提示', '配置文件plugin.json格式错误，请检查');
+        }
+        $info = [];
+        $info['name'] = $pluginName;
+        $info['title'] = $jsonArr['title'];
+        $info['type'] = $jsonArr['type'];
+        $info['url'] = $jsonArr['url'];
+        $info['version'] = $jsonArr['version'];
+        $info['icon_file'] = $jsonArr['icon_file'];
+        $info['company'] = $jsonArr['company'];
+        $info['description'] = $jsonArr['description'];
+        $info['status'] = PluginModel::STATUS_UNINSTALLED;
+        $info['is_system'] = '0';
+        list($ret, $msg) = $model->replace($info);
+        if ($ret) {
+            @unlink($filePath);
+            $this->ajaxSuccess('提示', '导入成功');
+        } else {
+            $this->ajaxFailed('服务器错误:', $msg);
+        }
+
+    }
+
+
+    /**
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
@@ -159,43 +242,46 @@ class PluginManager extends BaseAdminCtrl
         if (isset($_POST['name']) && empty($_POST['name'])) {
             $errorMsg['name'] = '名称不能为空';
         }
-        $model = new PluginModel();
-        if (isset($model->getByName($_POST['name'])['id'])) {
-            $errorMsg['name'] = '名称已经被使用或已经安装了';
-        }
         if (!empty($errorMsg)) {
             $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
-
         $pluginName = $_POST['name'];
-        $jsonFile = PLUGIN_PATH . $pluginName . '/plugin.json';
-        if (!file_exists($jsonFile)) {
-            $this->ajaxFailed('提示', '参数错误,配置文件plugin.json缺失');
-        }
+        $model = new PluginModel();
+        $pluginRow = $model->getByName($_POST['name']);
+        if (isset($pluginRow['id'])) {
+            $event = new PluginPlacedEvent($this, $pluginRow);
+            $this->dispatcher->dispatch($event,    $pluginName . '@' .Events::onPluginInstall);
+            $model->updateById($pluginRow['id'], ['status'=>PluginModel::STATUS_INSTALLED]);
+        }else{
 
-        $jsonArr = json_decode(file_get_contents($jsonFile), true);
-        $info = [];
-        $info['name'] = $pluginName;
-        $info['title'] = $jsonArr['title'];
-        $info['type'] = $jsonArr['type'];
-        $info['url'] = $jsonArr['url'];
-        $info['version'] = $jsonArr['version'];
-        $info['icon_file'] = $jsonArr['icon_file'];
-        $info['icon_file'] = $jsonArr['icon_file'];
-        $info['company'] = $jsonArr['company'];
-        $info['description'] = $jsonArr['description'];
-        $info['status'] = PluginModel::STATUS_INSTALLED;
-        $info['is_system'] = '0';
-
-        list($ret, $msg) = $model->replace($info);
-        if ($ret) {
-            // 发布安装事件
-            $event = new PluginPlacedEvent($this, $info);
-            $this->dispatcher->dispatch($event, $pluginName.'@'.Events::onPluginInstall);
-            $this->ajaxSuccess('提示', '安装成功');
-        } else {
-            $this->ajaxFailed('服务器错误:', $msg);
+            $jsonFile = PLUGIN_PATH . $pluginName . '/plugin.json';
+            if (!file_exists($jsonFile)) {
+                $this->ajaxFailed('提示', '参数错误,配置文件plugin.json缺失');
+            }
+            $jsonArr = json_decode(file_get_contents($jsonFile), true);
+            $info = [];
+            $info['name'] = $pluginName;
+            $info['title'] = $jsonArr['title'];
+            $info['type'] = $jsonArr['type'];
+            $info['url'] = $jsonArr['url'];
+            $info['version'] = $jsonArr['version'];
+            $info['icon_file'] = $jsonArr['icon_file'];
+            $info['icon_file'] = $jsonArr['icon_file'];
+            $info['company'] = $jsonArr['company'];
+            $info['description'] = $jsonArr['description'];
+            $info['status'] = PluginModel::STATUS_INSTALLED;
+            $info['is_system'] = '0';
+            list($ret, $msg) = $model->replace($info);
+            if ($ret) {
+                // 发布安装事件
+                $event = new PluginPlacedEvent($this, $info);
+                $this->dispatcher->dispatch($event, $pluginName . '@' . Events::onPluginInstall);
+            } else {
+                $this->ajaxFailed('服务器错误:', $msg);
+            }
         }
+        $this->ajaxSuccess('提示', '安装成功');
+
     }
 
     /**
@@ -223,7 +309,7 @@ class PluginManager extends BaseAdminCtrl
         } else {
             // 发布卸载事件
             $event = new PluginPlacedEvent($this, $plugin);
-            $this->dispatcher->dispatch($event, $plugin['name'].'@'.Events::onPluginUnInstall);
+            $this->dispatcher->dispatch($event, $plugin['name'] . '@' . Events::onPluginUnInstall);
             $this->ajaxSuccess('操作成功');
         }
     }
@@ -286,22 +372,22 @@ class PluginManager extends BaseAdminCtrl
             mkdir($pluginDirName);
         }
         $this->rcopy(PLUGIN_PATH . 'plugin_tpl', $pluginDirName);
-        $pluginClassName = Inflector::classify($name.'_plugin');
-        $pluginClassFile = $pluginDirName."/PluginSubscriber.php";
-        $pluginSrc = str_replace(["plugin_tpl","TplPlugin"],[$name,$pluginClassName], file_get_contents($pluginClassFile));
+        $pluginClassName = Inflector::classify($name . '_plugin');
+        $pluginClassFile = $pluginDirName . "/PluginSubscriber.php";
+        $pluginSrc = str_replace(["plugin_tpl", "TplPlugin"], [$name, $pluginClassName], file_get_contents($pluginClassFile));
         file_put_contents($pluginClassFile, $pluginSrc);
 
-        $pluginIndexFile = $pluginDirName."/index.php";
-        file_put_contents($pluginIndexFile, str_replace(["plugin_tpl"],[$name], file_get_contents($pluginIndexFile)));
+        $pluginIndexFile = $pluginDirName . "/index.php";
+        file_put_contents($pluginIndexFile, str_replace(["plugin_tpl"], [$name], file_get_contents($pluginIndexFile)));
         rename($pluginDirName . '/plugin.json.tpl', $pluginDirName . '/plugin.json');
 
         $replaceArr = [];
-        foreach ($info as $key =>$item) {
-            $replaceArr['{{'.$key.'}}'] = $item;
+        foreach ($info as $key => $item) {
+            $replaceArr['{{' . $key . '}}'] = $item;
         }
         $replaceArr['{{main_class}}'] = $pluginClassName;
         $jsonFile = $pluginDirName . '/plugin.json';
-        $jsonSrc = str_replace(array_keys($replaceArr),array_values($replaceArr), file_get_contents($jsonFile));
+        $jsonSrc = str_replace(array_keys($replaceArr), array_values($replaceArr), file_get_contents($jsonFile));
         file_put_contents($jsonFile, $jsonSrc);
 
         //list($ret, $msg) = $model->insert($info);
@@ -435,7 +521,7 @@ class PluginManager extends BaseAdminCtrl
         $pluginRow = $model->getByName($name);
         if (!empty($pluginRow)) {
             //$errorMsg['name'] = '插件已卸载或不存在';
-            if($pluginRow['is_system']=='1'){
+            if ($pluginRow['is_system'] == '1') {
                 $this->ajaxFailed('参数错误', '系统自带的插件不能删除');
             }
 

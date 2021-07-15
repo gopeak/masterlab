@@ -186,8 +186,8 @@ class Project extends BaseAdminCtrl
      */
     public function delete()
     {
+        set_time_limit(600);
         $projectId = null;
-        $projectTypeId = null;
 
         if (isset($_GET['_target'][3])) {
             $projectId = (int)$_GET['_target'][3];
@@ -199,15 +199,6 @@ class Project extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
-
-        if (isset($_GET['project_type_id'])) {
-            $projectTypeId = (int)$_GET['project_type_id'];
-        }
-        if (empty($projectTypeId)) {
-            $this->ajaxFailed('参数错误', '项目类型id不能为空');
-        }
-
-        $currentUid = $uid = UserAuth::getId();
         $model = $projectModel = new ProjectModel($uid);
         $project = $projectModel->getById($projectId);
 

@@ -88,6 +88,11 @@
     </div>
 </div>
 
+
+
+
+    </div>
+</section>
 <div class="modal" id="modal-plugin">
     <form class="js-quick-submit js-upload-blob-form form-horizontal"
           id="form-plugin"
@@ -114,7 +119,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4">
-                                <span id="tip_name"></span>
+                            <span id="tip_name"></span>
                         </div>
 
                     </div>
@@ -188,11 +193,29 @@
         </div>
     </form>
 </div>
+<div class="modal" id="modal-view-secret">
+
+        <div class="modal-dialog">
+            <div class="modal-content modal-middle">
+                <div class="modal-header">
+                    <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title"  >秘 钥</h3>
+                </div>
+                <div class="modal-body min-height300"  >
 
 
-    </div>
-</section>
+                    <div class="form-group">
+                       <span id="view-secret"></span>
+                    </div>
 
+                </div>
+                <div class="modal-footer footer-block row-content-block">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">关闭</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
 <style>
     .qq-gallery.qq-uploader {
@@ -219,7 +242,7 @@
                 {{url}}
             </td>
             <td>
-                {{secret_token}}
+                 <a class="list_for_view_secret  " href="#" data-value="{{secret_token}}"  >点击查看</a>
             </td>
             <td>
                 {{description}}

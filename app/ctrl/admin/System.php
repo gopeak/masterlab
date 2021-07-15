@@ -69,6 +69,19 @@ class System extends BaseAdminCtrl
     /**
      * @throws \Exception
      */
+    public function pageCompanySetting()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'setting';
+        $data['left_nav_active'] = 'company_setting';
+        $this->render('twig/admin/system/system_company.twig', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function pageBasicSettingEdit()
     {
         $data = [];

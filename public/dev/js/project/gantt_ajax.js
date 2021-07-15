@@ -67,6 +67,7 @@ var Gantt = (function () {
                 if(resp.ret==="200"){
                     $("#source_"+resp.data.source_type).attr('checked', 'true');
                     $("#is_display_backlog_"+resp.data.is_display_backlog).attr('checked', 'true');
+                    $("#is_check_date_"+resp.data.is_check_date).attr('checked', 'true');
                     $('#hide_issue_types').val(resp.data.hide_issue_types);
                     let source = $('#tpl_holiday_a').html();
                     let template = Handlebars.compile(source);
@@ -87,7 +88,6 @@ var Gantt = (function () {
                             $("#work_dates"+value).attr("checked",true);
                         }
                     }
-
                     $('.selectpicker').selectpicker('refresh');
                     $('#modal-setting').modal('show');
                 }else{
@@ -122,7 +122,34 @@ var Gantt = (function () {
         });
     };
 
-
+    Gantt.prototype.saveUndate = function( ) {
+        if(!_is_admin_gantt){
+            //notify_error('提示', '您甘特图管理权限才能进行此操作');
+            //return;
+        }
+        let method = 'POST';
+        let url = '/project/gantt/saveUnDateData/'+window._cur_project_id;
+        var post_data  = $('#form-undate-issues').serialize();
+        $.ajax({
+            type: method,
+            dataType: "json",
+            data: post_data,
+            url: url,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret === "200" ){
+                    notify_success(resp.msg);
+                    setTimeout("window.location.reload();", 1200);
+                    //window.ge.loadProject(loadGanttFromServer(window._cur_project_id));
+                } else {
+                    notify_error(resp.msg, resp.data);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
     Gantt.prototype.saveGanttSetting = function( ) {
         if(!_is_admin_gantt){
             notify_error('提示', '您没有权限进行此操作');
@@ -134,8 +161,10 @@ var Gantt = (function () {
         let holiday_dates_str = $('#holiday_dates').val();
         let extra_holiday_dates_str = $('#extra_holiday_dates').val();
         let is_display_backlog_value = $("input[name='is_display_backlog']:checked").val();
+        let is_check_date_value = $("input[name='is_check_date']:checked").val();
         let post_data = {source_type:source_type_value, holiday_dates:holiday_dates_str,extra_holiday_dates:extra_holiday_dates_str}
         post_data['is_display_backlog'] = is_display_backlog_value;
+        post_data['is_check_date'] = is_check_date_value;
         post_data['hide_issue_types'] = $('#hide_issue_types').val();
         let work_dates = [];
         $("input[name='work_dates']:checked").each(function(){
@@ -151,7 +180,7 @@ var Gantt = (function () {
                 auth_check(resp);
                 if( resp.ret === "200" ){
                     notify_success(resp.msg);
-                    setTimeout("window.location.reload();", 1200)
+                    setTimeout("window.location.reload();", 1200);
                     //window.ge.loadProject(loadGanttFromServer(window._cur_project_id));
                 } else {
                     notify_error(resp.msg);
@@ -246,34 +275,30 @@ var Gantt = (function () {
                 if(!is_empty(user)){
                     $('#user_dropdown-toggle-text').html(user.display_name);
                 }
-
                 let sprint = getArrayValue(window._issueConfig.sprint, 'id', issue.sprint);
-                if(is_empty(sprint.id)){
+                if(!sprint){
                     $('#sprint_name').html('待办事项');
                 }else{
-                    $('#sprint_name').html(sprint.name);
+                    if(is_empty(sprint.id)){
+                        $('#sprint_name').html('待办事项');
+                    }else{
+                        $('#sprint_name').html(sprint.name);
+                    }
                 }
-                if(typeof(_gantt_editor_md)==='object'){
-                    _gantt_editor_md.setMarkdown(issue.description);
-                }else{
-                    _gantt_editor_md = editormd('description_md', {
-                        width: "640px",
-                        height: 220,
-                        watch: false,
-                        markdown: issue.description,
-                        path: root_url + 'dev/lib/editor.md/lib/',
-                        imageUpload: true,
-                        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                        imageUploadURL: root_url + "issue/detail/editormd_upload",
-                        tocm: true,    // Using [TOCM]
-                        emoji: true,
-                        toolbarIcons: "custom"
-                    });
-                }
-
-
-
-
+                console.log(_gantt_editor_md);
+                _gantt_editor_md = editormd('description_md', {
+                    width: "640px",
+                    height: 220,
+                    watch: false,
+                    markdown: issue.description,
+                    path: root_url + 'dev/lib/editor.md/lib/',
+                    imageUpload: true,
+                    imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                    imageUploadURL: root_url + "issue/detail/editormd_upload",
+                    tocm: true,    // Using [TOCM]
+                    emoji: true,
+                    toolbarIcons: "custom"
+                });
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

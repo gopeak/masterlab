@@ -142,7 +142,7 @@ class FileUtil
             }
         }
         closedir($dirHandle);
-        return rmdir($aimDir);
+        return @rmdir($aimDir);
     }
 
     /**

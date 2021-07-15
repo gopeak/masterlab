@@ -17,6 +17,14 @@ var Plugin_manager = (function() {
             PluginManager.prototype.create();
         });
 
+        $("#btn-import_plugin").click(function(){
+            PluginManager.prototype.import_modal();
+        });
+        $("#btn-plugin_import").click(function(){
+            PluginManager.prototype.import();
+        });
+
+
     };
 
     PluginManager.prototype.getOptions = function() {
@@ -82,7 +90,39 @@ var Plugin_manager = (function() {
             }
         });
     };
+    PluginManager.prototype.import_modal = function( ) {
+        $("#modal-plugin-import").modal('show');
+        $('#form-plugin-import')[0].reset();
+        $("#id_zip").val('');
+        console.log(window.uploader)
+        window.uploader.reset();
 
+    };
+
+
+    PluginManager.prototype.import = function(  ) {
+
+        var method = 'post';
+        var params = $('#form-plugin-import').serialize();
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.import_url,
+            data: params ,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret ==='200'  ){
+                    window.location.reload();
+                }else{
+                    notify_error( resp.msg ,resp.data);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
 
     PluginManager.prototype.create = function( ) {
         $("#modal-plugin").modal('show');

@@ -39,7 +39,13 @@ class BasePluginSubscriber implements EventSubscriberInterface
      */
     protected function getEventSubscriberFile($subscriberDir)
     {
+        if(!file_exists($subscriberDir)){
+            return;
+        }
         $currentDir = dir($subscriberDir);
+        if(!$currentDir){
+            return;
+        }
         while ($file = $currentDir->read()) {
             if ((is_dir($subscriberDir . $file)) and ($file != ".") and ($file != "..")) {
                  $this->getEventSubscriberFile($subscriberDir . $file . DS);

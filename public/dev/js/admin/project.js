@@ -200,7 +200,7 @@ var Project = (function() {
                             let ret = window.prompt(question);
                             if(parseInt(ret)===(a+b)){
                                 Project.prototype.projectRemove(projectId, projectTypeId);
-                                Project.prototype.fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, false);
+                                //Project.prototype.fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1, false);
                             }else{
                                 alert('回答错误');
                             }

@@ -568,7 +568,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label"  title="定义哪些类型的事项不会出现在甘特图中">隐藏的类型：</label>
+                        <label class="control-label"  title="定义哪些类型的事项不会出现在甘特图中">隐藏的事项类型：</label>
                         <div class="col-sm-10">
                             <div class="form-group col-md-8">
                                 <select id="hide_issue_types" name="hide_issue_types" title="事项类型" class="selectpicker" multiple>
@@ -577,6 +577,24 @@
                                         <option value="<?=row._key?>"  data-content="<i class='fa <?= row.font_awesome ?>'  ></i> <?=row.name?>"  ><?=row.name?></option>
                                     {% endfor %}
                                 </select>
+                            </div>
+                            <div class="form-group  col-md-1">
+                            </div>
+                            <div class="form-group col-md-2">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"  title="定义哪些类型的事项不会出现在甘特图中">日期检查：</label>
+                        <div class="col-sm-10">
+                            <div class="form-group col-md-8">
+                                <label class="radio-inline">
+                                    <input type="radio" name="is_check_date" id="is_check_date_0" value="0"> 否
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="is_check_date" id="is_check_date_1" value="1"> 是（检查事项开始日期和结束日期有效）
+                                </label>
                             </div>
                             <div class="form-group  col-md-1">
                             </div>
@@ -634,7 +652,6 @@
                             </div>
                         </div>
                     </div>
-                    <hr style="display: block;">
                     <div class="form-group">
                         <label class="control-label" for="label_holiday">额外上班日：</label>
                         <div class="col-sm-10">
@@ -763,7 +780,107 @@
     </div>
 </div>
 
+<div class="modal" id="modal-undate-issues">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-undate-issues"
+          action="/project/gantt/saveUnDateData" accept-charset="UTF-8" method="POST">
+        <input type="hidden" name="project_id" value="<?=project_id ?>">
+        <div class="modal-dialog" style="min-width: 700px;">
+            <div class="modal-content modal-middle">
+                <div class="modal-header">
+                    <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">提示！甘特图数据缺失</h3>
+                </div>
+                <div class="modal-body overflow-x-hidden min-height500"  style="min-width: 640px">
+
+                    <div class="form-group">
+                          <div style="padding: 10px">注：检测到如下迭代或事项的<span style="color: red">开始和结束日期为空</span>,请务必设置，否则使用过程中将会产生问题 </div>
+                    </div>
+                    <div class="form-group hide" id="wrap_un_date_sprints">
+                        <div class="col-sm-1">
+                            <span style="font-weight: bold">迭代</span>
+                        </div>
+                        <div class="col-sm-11">
+                            <table class="table table-bordered table-condensed" style="padding: 10px">
+                                <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th style="width: 50%">迭代名称</th>
+                                    <th>开始日期</th>
+                                    <th>结束日期</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody-un-sprints-list">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group hide" id="wrap_un_date_issues">
+                        <div class="col-sm-1">
+                            <span style="font-weight: bold">事项</span>
+                        </div>
+                        <div class="col-sm-11">
+                            <table class="table table-bordered table-condensed" style="padding: 10px">
+                                <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th style="width: 50%">事项名称</th>
+                                    <th>开始日期</th>
+                                    <th>结束日期</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody-un-tasks-list">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+
+                <div class="modal-footer form-actions">
+                    <button name="btn-setting_columns" type="button"
+                            onclick='window.$_gantAjax.saveUndate();'
+                            class="btn btn-create js-key-modal-enter1" id="btn-un_date_save">保 存
+                    </button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">忽 略</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 {% verbatim %}
+
+<script type="text/html" id="un_date_tasks_list_tpl">
+    {{#unDateTasks}}
+    <tr>
+        <td>{{id}}<input type="hidden"  name="issue_id_arr[]"  value="{{id}}"></td>
+        <td style="width: 50%">{{name}}</td>
+        <td>
+        <input type="text" style="height:22px;" class="laydate_input_date form-control"  id="task_un_start_date_{{id}}"  name="issue_start_date_arr[]"  value="{{start_date}}" autocomplete="off"  />
+        </td>
+        <td>
+        <input type="text" style="height:22px;" class="laydate_input_date form-control"  id="task_un_due_date_{{id}}"  name="issue_due_date_arr[]"   value="{{due_date}}" autocomplete="off"  />
+        </td>
+    </tr>
+    {{/unDateTasks}}
+</script>
+<script type="text/html" id="un_date_sprints_list_tpl">
+    {{#unDateSprints}}
+    <tr>
+        <td>{{id}}<input type="hidden"  name="sprint_id_arr[]"  value="{{id}}"></td>
+        <td style="width: 50%">{{name}}</td>
+        <td>
+        <input type="text" style="height:22px;"  class="laydate_input_date form-control" id="sprint_un_start_date_{{id}}" name="sprint_start_date_arr[]"   value="{{start_date}}" autocomplete="off"  />
+        </td>
+        <td>
+        <input type="text" style="height:22px;"   class="laydate_input_date form-control" id="sprint_un_due_date_{{id}}" name="sprint_due_date_arr[]" value="{{due_date}}" autocomplete="off"  />
+        </td>
+    </tr>
+    {{/unDateSprints}}
+</script>
+
+
 <script type="text/html" id="be_hidden_issue_list_tpl">
     {{#tasks}}
     <tr class="js-hidden-row-id-{{id}}">
@@ -779,9 +896,8 @@
         </td>
     </tr>
     {{/tasks}}
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}
 <script id="tpl_holiday_a" type="text/tpl">
 {{#holidays}}
     <a style="width: 80px;" href="#" title="点击可移除" data-date="{{this}}">&nbsp;{{this}}</a>

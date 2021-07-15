@@ -23,87 +23,93 @@
     {% include 'twig/common/body/page-left.twig' %}
 
     <div class="page-layout page-content-body system-page">
-{% include 'twig/common/body/header-content.twig' %}
+        {% include 'twig/common/body/header-content.twig' %}
 
-<script>
-    var findFileURL = "";
-</script>
-<div class="page-with-sidebar">
-    {% include 'twig/admin/common-page-nav-admin.twig' %}
-
-
-    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
-        <div class="alert-wrapper">
-            <div class="flash-container flash-container-page">
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="content" id="content-body">
-                {% include 'twig/admin/common_plugin_left_nav.twig' %}
-                <div class="row has-side-margin-left">
-                    <div class="col-lg-12">
-                        <div class="top-area">
-
-                            <form id="filter_form" action="" onsubmit="return false" accept-charset="UTF-8" method="get">
-                                <input name="page" id="filter_page" type="hidden" value="1">
-                                <input name="type" id="filter_type" type="hidden" value="all">
-                                <input name="range" id="filter_range" type="hidden" value="all">
-                                <input name="sort_by" id="filter_sort_by" type="hidden" value="desc">
-                                <input name="sort_field" id="filter_sort_field" type="hidden" value="id">
-                            <ul class="nav-links">
-                                <li id="state-all"  class="li_plugin_range state_li active" data-range="all">
-                                    <a  title="全部插件" href="#" >插件列表
-                                    </a>
-                                </li>
-                                <li id="state-install"  class="li_plugin_range state_li" data-range="installed">
-                                    <a title="已安装的插件" href="#">已安装<span id="installed_count"></span>
-                                    </a>
-                                </li>
-                                <li id="state-ready" class="li_plugin_range state_li" data-range="uninstalled">
-                                    <a  title="未安装的插件" href="#">未安装<span id="uninstalled_count"></span></a>
-                                </li>
-                            </ul>
-                            <div class="nav-controls">
-                                <div class="btn-group" role="group">
-                                    <a class="btn btn-new js-key-create"  id="btn-create_plugin">
-                                        <i class="fa fa-plus"></i>
-                                        创建插件
-                                    </a>
-                                </div>
-                            </div>
-                            </form>
-                        </div>
-                        <div class="content-list">
-                            <div class="table-holder">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th class="js-pipeline-info pipeline-info">名称</th>
-                                        <th class="js-pipeline-stages pipeline-info">标题</th>
-                                        <th class="js-pipeline-stages pipeline-info">提供者</th>
-                                        <th class="js-pipeline-stages pipeline-info">类型</th>
-                                        <th class="js-pipeline-stages pipeline-info">描述</th>
-                                        <th class="js-pipeline-stages pipeline-info">版本</th>
-                                        <th class="js-pipeline-stages pipeline-info">状态</th>
-                                        <th class="pipeline-info" >操作</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="list_render_id">
+        <script>
+            var findFileURL = "";
+        </script>
+        <div class="page-with-sidebar">
+            {% include 'twig/admin/common-page-nav-admin.twig' %}
 
 
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="gl-pagination" id="pagination">
-                            </div>
-                        </div>
+            <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+                <div class="alert-wrapper">
+                    <div class="flash-container flash-container-page">
                     </div>
                 </div>
+                <div class="container-fluid">
+                    <div class="content" id="content-body">
+                        {% include 'twig/admin/common_plugin_left_nav.twig' %}
+                        <div class="row has-side-margin-left">
+                            <div class="col-lg-12">
+                                <div class="top-area">
 
+                                    <form id="filter_form" action="" onsubmit="return false" accept-charset="UTF-8" method="get">
+                                        <input name="page" id="filter_page" type="hidden" value="1">
+                                        <input name="type" id="filter_type" type="hidden" value="all">
+                                        <input name="range" id="filter_range" type="hidden" value="all">
+                                        <input name="sort_by" id="filter_sort_by" type="hidden" value="desc">
+                                        <input name="sort_field" id="filter_sort_field" type="hidden" value="id">
+                                    <ul class="nav-links">
+                                        <li id="state-all"  class="li_plugin_range state_li active" data-range="all">
+                                            <a  title="全部插件" href="#" >插件列表
+                                            </a>
+                                        </li>
+                                        <li id="state-install"  class="li_plugin_range state_li" data-range="installed">
+                                            <a title="已安装的插件" href="#">已安装<span id="installed_count"></span>
+                                            </a>
+                                        </li>
+                                        <li id="state-ready" class="li_plugin_range state_li" data-range="uninstalled">
+                                            <a  title="未安装的插件" href="#">未安装<span id="uninstalled_count"></span></a>
+                                        </li>
+                                    </ul>
+                                    <div class="nav-controls">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn  js-key-create"  id="btn-import_plugin">
+                                                <i class="fa fa-upload"></i>
+                                                导入插件
+                                            </a>
+                                            <a style="margin-left: 10px" class="btn btn-new js-key-create"  id="btn-create_plugin">
+                                                <i class="fa fa-plus"></i>
+                                                创建插件
+                                            </a>
+                                        </div>
+                                    </div>
+                                    </form>
+                                </div>
+                                <div class="content-list">
+                                    <div class="table-holder">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th class="js-pipeline-info pipeline-info">名称</th>
+                                                <th class="js-pipeline-stages pipeline-info">标题</th>
+                                                <th class="js-pipeline-stages pipeline-info">提供者</th>
+                                                <th class="js-pipeline-stages pipeline-info">类型</th>
+                                                <th class="js-pipeline-stages pipeline-info">描述</th>
+                                                <th class="js-pipeline-stages pipeline-info">版本</th>
+                                                <th class="js-pipeline-stages pipeline-info">状态</th>
+                                                <th class="pipeline-info" >操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="list_render_id">
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="gl-pagination" id="pagination">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <div class="modal" id="modal-plugin">
     <form class="js-quick-submit js-upload-blob-form form-horizontal"
@@ -131,7 +137,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4">
-                                <span id="tip_name">名称只能以英文字母开始，不能包含特殊字符和中文</span>
+                            <span id="tip_name">名称只能以英文字母开始，不能包含特殊字符和中文</span>
                         </div>
 
                     </div>
@@ -214,11 +220,72 @@
         </div>
     </form>
 </div>
+<div class="modal" id="modal-plugin-import">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          id="form-plugin-import"
+          action="/admin/plugin_manager/import"
+          accept-charset="UTF-8"
+          method="post">
+        <input type="hidden" id="id_import_name" name="name" value="">
+        <div class="modal-dialog">
+            <div class="modal-content modal-middle">
+                <div class="modal-header">
+                    <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title"  >导入插件</h3>
+                </div>
+                <div class="modal-body min-height300" id="modal-body">
 
+                    <div class="form-group">
+                        <label class="control-label" for="id_zip">
+                            <span>插件压缩文件</span>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="hidden" name="zip" id="id_zip" value=""/>
+                            <div id="fine-uploader-gallery-zip"></div>
+                            <div class="help-block">.</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="plugin-info" class="hide">
+                        <div class="form-group" style="padding-left: 60px">
+                            <span   >名称: </span>
+                            <span id="span_title"></span>
+                        </div>
+                        <div class="form-group" style="padding-left: 60px">
+                            <span   >类型: </span>
+                            <span id="span_type"></span>
+                        </div>
+                        <div class="form-group" style="padding-left: 60px">
+                            <span   >版本: </span>
+                            <span id="span_version"></span>
+                        </div>
+                        <div class="form-group" style="padding-left: 60px">
+                            <span   >URL: </span>
+                            <span id="span_url"></span>
+                        </div>
+                        <div class="form-group" style="padding-left: 60px">
+                            <span   >提供方: </span>
+                            <span id="span_company"></span>
+                        </div>
+                        <div class="form-group" style="padding-left: 60px">
+                            <span   >描述: </span>
+                            <span id="span_description"></span>
+                        </div>
 
-    </div>
-</section>
-
+                    </div>
+                </div>
+                <div class="modal-footer footer-block row-content-block">
+                    <button name="submit"
+                            type="button"
+                            class="btn btn-create js-key-modal-enter1"
+                            id="btn-plugin_import"
+                            title="在app/plugin下取插件名称作为目录名，为插件源码目录">导 入</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取 消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 <!-- Fine Uploader Gallery template
             ====================================================================== -->
 <script type="text/template" id="qq-template-gallery">
@@ -371,7 +438,7 @@
 
     var $pluginManager = null;
     var uploader = null;
-
+    var uploader_zip = null;
     $(function() {
         $('.selectpicker').selectpicker('refresh');
         var options = {
@@ -385,6 +452,7 @@
             install_url:"/admin/plugin_manager/install",
             uninstall_url:"/admin/plugin_manager/uninstall",
             delete_url:"/admin/plugin_manager/delete",
+            import_url:"/admin/plugin_manager/import",
             pagination_id:"pagination"
 
         }
@@ -410,7 +478,6 @@
 
 
         $("#modal-plugin").on('show.bs.modal', function (e) {
-
             keyMaster.addKeys([
                 {
                     key: ['command+enter', 'ctrl+enter'],
@@ -447,6 +514,36 @@
                 }
             }
         });
+        uploader_zip = new qq.FineUploader({
+            element: document.getElementById('fine-uploader-gallery-zip'),
+            template: 'qq-template-gallery',
+            multiple: false,
+            request: {
+                endpoint: '/admin/upload/pluginZip'
+            },
+            validation: {
+                allowedExtensions: [
+                    'zip'
+                ]
+            },
+            callbacks: {
+                onComplete: function (id, fileName, responseJSON) {
+                    console.log(responseJSON);
+                    if (responseJSON.error == '' || responseJSON.error == 0) {
+                        $('#id_zip').val(responseJSON.relate_path);
+                        $('#id_import_name').val(responseJSON.name);
+                        $('#span_title').html(responseJSON.plugin_arr.title);
+                        $('#span_company').html(responseJSON.plugin_arr.company);
+                        $('#span_version').html(responseJSON.plugin_arr.version);
+                        $('#span_url').html(responseJSON.plugin_arr.url);
+                        $('#span_type').html(responseJSON.plugin_arr.type);
+                        $('#span_description').html(responseJSON.plugin_arr.description);
+                        $('#plugin-info').show();
+                    }
+                }
+            }
+        });
+
 
     });
 

@@ -566,7 +566,7 @@ class BaseCtrl
             );
             $curl = new \Curl\Curl();
             $curl->setTimeout(10);
-            $curl->post('http://www.masterlab.vip/client_info.php', $postInfo);
+            $curl->post('https://www.masterlab.vip/client_info.php', $postInfo);
 
             $date = date('Y-m-d');
             $ip = getIp();
@@ -605,17 +605,7 @@ class BaseCtrl
     public function loadPlugin()
     {
         $pluginModel = new PluginModel();
-        $plugins = $pluginModel->getRows('id, name, title');
-        $pluginsKeyArr = array_column($plugins, null, 'name');
-        $dirPluginArr = $this->getPluginDirArr(PLUGIN_PATH);
-        foreach ($dirPluginArr as $dirName => $item) {
-            if (!isset($pluginsKeyArr[$dirName])) {
-                $tmp = $item;
-                $tmp['status'] = PluginModel::STATUS_UNINSTALLED;
-                $tmp['is_system'] = '0';
-                $plugins[] = $tmp;
-            }
-        }
+        $plugins = $pluginModel->getRows('id, name, title, status',['status'=>PluginModel::STATUS_INSTALLED]);
 
         if ($plugins) {
             foreach ($plugins as $plugin) {

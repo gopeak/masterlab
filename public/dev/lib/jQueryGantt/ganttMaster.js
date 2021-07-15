@@ -610,13 +610,17 @@ GanttMaster.prototype.changeTaskDeps = function (task) {
 };
 
 GanttMaster.prototype.changeTaskDates = function (task, start, end) {
-  //console.debug("changeTaskDates",task, start, end)
+  console.debug("changeTaskDates",task, start, end);
   return task.setPeriod(start, end);
 };
 
 
 GanttMaster.prototype.moveTask = function (task, newStart) {
-  return task.moveTo(newStart, true,true);
+  console.log('GanttMaster.prototype.moveTask:',task);
+  // console.log('newStart:',newStart);
+  var ret =  task.moveTo(newStart, true,true);
+  console.log('GanttMaster.prototype.movedTask:',task);
+  return ret;
 };
 
 

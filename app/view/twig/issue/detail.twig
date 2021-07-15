@@ -1461,6 +1461,27 @@
                 template: 'btn-fine-uploader'
             });
 
+            $(".js-sidebar-toggle").on('click', function(){
+                var $icon = $(this).find(".fa");
+                var $sidebar = $(".js-right-sidebar");
+                var $wrap = $(".page-with-sidebar");
+                if ($sidebar.hasClass("right-sidebar-expanded")) {
+                    $sidebar.removeClass("right-sidebar-expanded");
+                    $sidebar.addClass("right-sidebar-collapsed");
+                    $icon.removeClass("fa-angle-double-right");
+                    $icon.addClass("fa-angle-double-left");
+                    $wrap.removeClass("right-sidebar-expanded");
+                    $wrap.addClass("right-sidebar-collapsed");
+                } else {
+                    $sidebar.removeClass("right-sidebar-collapsed");
+                    $sidebar.addClass("right-sidebar-expanded");
+                    $icon.removeClass("fa-angle-double-left");
+                    $icon.addClass("fa-angle-double-right");
+                    $wrap.removeClass("right-sidebar-collapsed");
+                    $wrap.addClass("right-sidebar-expanded");
+                }
+            });
+
             laydate.render({
                 elem: '#small_start_date'
                 , eventElem: '#a_start_date_edit'
