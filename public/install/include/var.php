@@ -4,7 +4,6 @@ $dirfile_items = array(
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../public/install/data')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../public/install')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../public/attachment')),
-    array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../plugin/document')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../upgrade')),
     array('type' => 'dir', 'path' => realpath(INSTALL_PATH . '/../storage')),
     array('type' => 'file', 'path' => realpath(INSTALL_PATH . '/../config.yml')),
