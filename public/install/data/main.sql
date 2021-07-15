@@ -2359,8 +2359,8 @@ CREATE TABLE `project_gantt_setting` (
                                          `is_display_backlog` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在甘特图中显示待办事项',
                                          `hide_issue_types` varchar(100) NOT NULL DEFAULT '' COMMENT '要隐藏的事项类型key以逗号分隔',
                                          `work_dates` varchar(100) DEFAULT NULL,
-                                         `is_check_date` tinyint(1) unsigned zerofill NOT NULL DEFAULT '1' COMMENT '是否检查开始和结束日期',
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+                                         `is_check_date` tinyint(1) unsigned zerofill NOT NULL DEFAULT '1' COMMENT '是否检查开始和结束日期'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

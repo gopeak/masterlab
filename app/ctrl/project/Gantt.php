@@ -373,40 +373,42 @@ class Gantt extends BaseUserCtrl
                 $issueTypeKey = isset($issueTypeIdArr[$task['typeId']]) ? $issueTypeIdArr[$task['typeId']]['_key'] : null;
                 if (empty($task['gant_hide']) && !in_array($issueTypeKey, $hideIssueTypeKeyArr)) {
                     $filteredArr[] = $task;
-                }else{
+                } else {
                     $task['filtered'] = '1';
                 }
             } else {
                 $filteredArr[] = $task;
             }
-            if ( $isCheckDate=='1'
-                 && $task['filtered']=='0'
-                 &&
-                (
-                    empty($task['start_date'])
-                    || $task['start_date'] == '0000-00-00'
-                    || empty($task['due_date'])
-                    || $task['due_date'] == '0000-00-00')
-            ) {
+            if ($isCheckDate == '1'  && $task['filtered'] == '0'  ) {
                 $row = $task;
                 $name = $row['name'];
                 if (mb_strlen($name) > 16) {
                     $name = mb_substr($name, 0, 16) . '...';
                 }
-                if ($row['start_date'] == '0000-00-00') {
-                    $row['start_date'] = '';
-                }
-                if ($row['due_date'] == '0000-00-00') {
-                    $row['due_date'] = '';
-                }
                 $row['name'] = $name;
-                if(intval($task['id']) > 0){
-                    $unDateIssuesArr[] = $row;
-                }else{
-                    $row['id'] = abs($row['id']);
-                    $unDateSprintsArr[] = $row;
+                if (intval($task['id']) > 0 ) {
+                    if(empty($task['start_date'])|| $task['start_date'] == '0000-00-00'|| empty($task['due_date']) || $task['due_date'] == '0000-00-00'){
+                        if ($row['start_date'] == '0000-00-00') {
+                            $row['start_date'] = '';
+                        }
+                        if ($row['due_date'] == '0000-00-00') {
+                            $row['due_date'] = '';
+                        }
+                        $unDateIssuesArr[] = $row;
+                    }
+                } else {
+                    $sprint = $task['sprint_info'];
+                    if(empty($sprint['start_date'])|| $sprint['start_date'] == '0000-00-00'|| empty($sprint['end_date']) || $sprint['end_date'] == '0000-00-00'){
+                        if ($row['start_date'] == '0000-00-00') {
+                            $row['start_date'] = '';
+                        }
+                        if ($row['end_date'] == '0000-00-00') {
+                            $row['end_date'] = '';
+                        }
+                        $row['id'] = abs($row['id']);
+                        $unDateSprintsArr[] = $row;
+                    }
                 }
-
             }
         }
         unset($users);
@@ -712,25 +714,19 @@ class Gantt extends BaseUserCtrl
         if (isset($_POST['sprint_due_date_arr'])) {
             $sprintDueDateArr = $_POST['sprint_due_date_arr'];
         }
-        print_r($issueIdArr);
-        print_r($startDateArr);
-        print_r($dueDateArr);
-        print_r($sprintIdArr);
-        print_r($sprintStartDateArr);
-        print_r($sprintDueDateArr);
         $projectId = null;
         if (isset($_POST['project_id'])) {
             $projectId = $_POST['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('参数错误,提交的项目id为空', $_POST);
+            $this->ajaxFailed('提示','参数错误,提交的项目id为空', $_POST);
         }
         $updatePerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
         if (!$updatePerm) {
-            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
+            $this->ajaxFailed('提示','当前项目中您没有权限进行此操作,需要编辑事项权限');
         }
         if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
-            $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
+            $this->ajaxFailed('提示','您没有权限访问该项目,请联系管理员申请加入该项目');
         }
         $holidays = (new HolidayModel())->getDays($projectId);
         $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
@@ -741,63 +737,112 @@ class Gantt extends BaseUserCtrl
             $workDates = json_decode($ganttSetting['work_dates'], true);
         }
         $issueModel = new IssueModel();
-        $testArr = [];
-        if (empty($issueIdArr)) {
-            foreach ($issueIdArr as $k => $issueId) {
-                $issue = $issueModel->getById($issueId);
-                if (empty($issue)) {
-                    continue;
-                }
-                $updateArr = [];
-                if(isset($startDateArr[$k])){
-                    $startDate = $startDateArr[$k];
-                    if ($issue['start_date'] != $startDate && $startDate!='') {
-                        $issue['start_date'] = $updateArr['start_date'] = $startDate;
+        $updatedArr = [];
+        $errTaskArr = [];
+        $errSprintArr = [];
+        try {
+            $issueModel->beginTransaction();
+            if (!empty($issueIdArr)) {
+                foreach ($issueIdArr as $k => $issueId) {
+                    $issue = $issueModel->getById($issueId);
+                    if (empty($issue)) {
+                        continue;
                     }
-                }
-                if(isset($dueDateArr[$k])){
-                    $endDate = $dueDateArr[$k];
-                    if ($issue['due_date'] != $endDate  && $endDate!='') {
-                        $issue['due_date'] = $updateArr['due_date'] = $endDate;
+                    if($issue['start_date']=='0000-00-00'){
+                        $issue['start_date'] = '';
                     }
-                }
-                $newDuration = getWorkingDays($issue['start_date'], $issue['due_date'], $workDates, $holidays, $extraWorkerDays);
-                if($newDuration!=$issue['duration']){
-                    $updateArr['duration'] = $newDuration;
-                }
-                if (!empty($updateArr)) {
-                    $testArr[$issueId] = $updateArr;
-                    $issueModel->updateItemById($issueId, $updateArr);
+                    if($issue['due_date']=='0000-00-00'){
+                        $issue['due_date'] = '';
+                    }
+                    $updateArr = [];
+                    if (isset($startDateArr[$k])) {
+                        $startDate = $startDateArr[$k];
+                        if ($issue['start_date'] != $startDate && $startDate != '') {
+                            $issue['start_date'] = $updateArr['start_date'] = $startDate;
+                        }
+                    }
+                    if (isset($dueDateArr[$k])) {
+                        $endDate = $dueDateArr[$k];
+                        if ($endDate != '') {
+                            $issue['due_date'] = $updateArr['due_date'] = $endDate;
+                        }
+                    }
+                    if (strtotime($issue['due_date']) < strtotime($issue['start_date'])) {
+                        $errTaskArr[] = $issue;
+                        continue;
+                    }
+                    $newDuration = getWorkingDays($issue['start_date'], $issue['due_date'], $workDates, $holidays, $extraWorkerDays);
+                    if ($newDuration != $issue['duration']) {
+                        $updateArr['duration'] = $newDuration;
+                    }
+                    if (!empty($updateArr)) {
+                        $updatedArr['task-' . $issueId] = $updateArr;
+                        $issueModel->updateItemById($issueId, $updateArr);
+                    }
                 }
             }
-        }
-        $sprintModel = new SprintModel();
-        if(empty($sprintIdArr)){
-            foreach ($sprintIdArr as $k =>$sprintId) {
-                $sprint = $sprintModel->getById($sprintId);
-                if (empty($sprint)) {
-                    continue;
-                }
-                $updateArr = [];
-                if(isset($sprintStartDateArr[$k])){
-                    $startDate = $sprintStartDateArr[$k];
-                    if ($sprint['start_date'] != $startDate && $startDate!='') {
-                        $sprint['start_date'] = $updateArr['start_date'] = $startDate;
+            $sprintModel = new SprintModel();
+           // print_r($sprintIdArr);
+            if (!empty($sprintIdArr)) {
+                foreach ($sprintIdArr as $k => $sprintId) {
+                    $sprint = $sprintModel->getById($sprintId);
+                    if (empty($sprint)) {
+                        continue;
                     }
-                }
-                if(isset($sprintDueDateArr[$k])){
-                    $endDate = $sprintDueDateArr[$k];
-                    if ($sprint['end_date'] != $endDate && $endDate!='') {
-                        $sprint['end_date'] = $updateArr['end_date'] = $endDate;
+                    if($sprint['start_date']=='0000-00-00'){
+                        $sprint['start_date'] = '';
                     }
-                }
-                if(!empty($updateArr)){
-                    $sprintModel->updateById($sprintId, $updateArr);
+                    if($sprint['end_date']=='0000-00-00'){
+                        $sprint['end_date'] = '';
+                    }
+                    $updateArr = [];
+                    if (isset($sprintStartDateArr[$k])) {
+                        $startDate = $sprintStartDateArr[$k];
+                        if ($startDate != '') {
+                            $sprint['start_date'] = $updateArr['start_date'] = $startDate;
+                        }
+                    }
+                    if (isset($sprintDueDateArr[$k])) {
+                        $endDate = $sprintDueDateArr[$k];
+                        if ( $endDate != '') {
+                            $sprint['end_date'] = $updateArr['end_date'] = $endDate;
+                        }
+                    }
+                    if (strtotime($sprint['end_date']) < strtotime($sprint['start_date'])) {
+                        $errSprintArr[] = $sprint;
+                        continue;
+                    }
+                    if (!empty($updateArr)) {
+                        $updatedArr['sprint-' . $sprintId] = $updateArr;
+                        $sprintModel->updateById($sprintId, $updateArr);
+                    }
                 }
             }
-
+            if(!empty($errSprintArr) || !empty($errTaskArr)){
+                $issueModel->rollBack();
+                $errSprintStr = '迭代:';
+                foreach ($errSprintArr as $errSprint){
+                    $errSprintStr.="{$errSprint['name']},";
+                }
+                if($errSprintStr!='迭代:'){
+                    $errSprintStr.="截止日期不能小于开始日期";
+                    $this->ajaxFailed('提示',$errSprintStr);
+                }
+                $errTaskStr = '事项id:';
+                foreach ($errTaskArr as $errTask){
+                    $errTaskStr.="{$errTask['id']},";
+                }
+                if($errTaskStr!='事项:'){
+                    $errTaskStr.="截止日期不能小于开始日期";
+                    $this->ajaxFailed('提示',$errTaskStr);
+                }
+            }
+            $issueModel->commit();
+        } catch (\Exception $e) {
+            $issueModel->rollBack();
+            $this->ajaxFailed('提示','服务器执行错误:'.$e->getMessage());
         }
-        $this->ajaxSuccess('保存成功', $testArr);
+        $this->ajaxSuccess('保存成功', $updatedArr);
     }
 
     /**

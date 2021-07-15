@@ -139,10 +139,10 @@ var Gantt = (function () {
                 auth_check(resp);
                 if( resp.ret === "200" ){
                     notify_success(resp.msg);
-                    //setTimeout("window.location.reload();", 1200);
+                    setTimeout("window.location.reload();", 1200);
                     //window.ge.loadProject(loadGanttFromServer(window._cur_project_id));
                 } else {
-                    notify_error(resp.msg);
+                    notify_error(resp.msg, resp.data);
                 }
             },
             error: function (res) {
