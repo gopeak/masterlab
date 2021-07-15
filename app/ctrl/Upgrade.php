@@ -127,7 +127,12 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('错误：' . $upgradePath . ' 目录权限不足，无法写入。');
             $checkOk = false;
         }
-        $appConfigPath = realpath(APP_PATH . 'config' . DS .  'app.cfg.php');
+        list($appStatus) = getEnvVar(PRE_APP_PATH);
+        if(!$appStatus || $appStatus=='deploy'){
+            $appConfigPath = realpath(PRE_APP_PATH . 'config.yml');
+        }else{
+            $appConfigPath = realpath(PRE_APP_PATH . 'config.' . $appStatus .  '.yml');
+        }
         if (!$this->isPathWritable($appConfigPath)) {
             $this->showLine('错误：' . $appConfigPath . ' 文件权限不足，无法写入。');
             $checkOk = false;
@@ -525,9 +530,14 @@ class Upgrade extends BaseUserCtrl
      */
     private function writeVersionConfig($version)
     {
-        $appFile = APP_PATH . 'config' . DS . 'app.cfg.php';
+        list($appStatus) = getEnvVar(PRE_APP_PATH);
+        if(!$appStatus || $appStatus=='deploy'){
+            $appFile = realpath(PRE_APP_PATH . 'config.yml');
+        }else{
+            $appFile = realpath(PRE_APP_PATH . 'config.' . $appStatus .  '.yml');
+        }
         $appContent = file_get_contents($appFile);
-        $appContent = preg_replace('/define\s*\(\s*\'MASTERLAB_VERSION\'\s*,\s*\'([^\']*)\'\);/m', "define('MASTERLAB_VERSION', '" . $version . "');", $appContent);
+        $appContent = preg_replace('/version:\s*\'([^\']+)\'/m', "version: '{$version}'", $appContent);
         $ret = file_put_contents($appFile, $appContent);
         $result = $ret === false ? '失败' : '成功';
         $this->showLine("主配置文件写入" . $result);
