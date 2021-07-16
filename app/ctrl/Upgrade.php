@@ -71,6 +71,11 @@ class Upgrade extends BaseUserCtrl
 
         $curl = new \Curl\Curl();
         $curl->setOpt(CURLOPT_FOLLOWLOCATION, false);
+        $scheme = parse_url($url,PHP_URL_SCHEME);
+        if(is_string($scheme) && $scheme=='https'){
+            $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
+            $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+        }
         $curl->get($url);
         $response = $curl->rawResponse;
         $response = json_decode($response);
@@ -78,12 +83,10 @@ class Upgrade extends BaseUserCtrl
             $this->showLine('获取升级信息失败，请重试！');
             die;
         }
-
         if ($response->ret !== '200') {
             $this->showLine($response->msg);
             die;
         }
-
         // 版本和补丁包URL
         $data = $response->data;
         $url = $data->url;
