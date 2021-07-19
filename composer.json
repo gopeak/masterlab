@@ -23,17 +23,16 @@
     "symfony/yaml": "4.4.7",
     "guzzlehttp/guzzle": "6.5.3",
     "ext-json": "*",
-    "ext-ldap": "*",
     "ext-pdo": "*",
     "ext-curl": "*",
-    "ext-redis": "*",
     "lcobucci/jwt": "3.3.0",
     "lasserafn/php-initial-avatar-generator": "4.1",
     "dragonmantank/cron-expression": "3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "7.0",
-    "ext-redis": "*"
+    "ext-redis": "*",
+    "ext-ldap": "*"
   },
   "minimum-stability": "beta"
 }

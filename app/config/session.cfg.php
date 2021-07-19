@@ -11,7 +11,6 @@ $_config['session.gc_probability'] = (int)$sessionConfig['gc_probability'] ?? 1;
 if (isset($sessionConfig['save_path'])) {
     $_config['session.save_path'] = $sessionConfig['save_path'];
 }
-
 // 设置Api不需要进行 session_start
 $_config['no_session_cmd'] = $sessionConfig['no_session_cmd'] ?? array('version.getVersion');
 
