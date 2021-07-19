@@ -48,7 +48,7 @@ http://demo.masterlab.vip
      - Web服务器 : Nginx 或 Apache
      
      - Php程序
-       - 版本 >= 7.1
+       - 版本 >= 7.1 , 建议使用php7.4
        - 必备扩展 ：curl,mysqlnd,pdo,mysqli,mbstring,redis,swoole
        - php.ini   修改 upload_max_filesize = 8M
        - php.ini   修改 post_max_size = 8M
@@ -62,11 +62,10 @@ http://demo.masterlab.vip
      -  masterlab\bin  
      -  masterlab\upgrade  
      -  masterlab\storage  
-     -  masterlab\public\attachment  
      -  masterlab\public\install 
      -  masterlab\plugin 
      ```
- 2. 下载3.0版本或master分支代码，将根目录的运行依赖库`vendor.zip`解压出来  
+ 2. 下载最新版本或master分支代码，将根目录的运行依赖库`vendor.zip`(php7.2 php7.1的使用`vendor-7172.zip`)解压出来,   
        ```text
          # 解压后的vendor目录结构
          - masterlab
