@@ -48,7 +48,7 @@ http://demo.masterlab.vip
      - Web服务器 : Nginx 或 Apache
      
      - Php程序
-       - 版本 >= 7.1 , 建议使用php7.4
+       - 版本 >= 7.3 , 建议使用php7.4
        - 必备扩展 ：curl,mysqlnd,pdo,mysqli,mbstring,redis,swoole
        - php.ini   修改 upload_max_filesize = 8M
        - php.ini   修改 post_max_size = 8M
