@@ -1,14 +1,14 @@
 {
-	"php_ext":"pathinfo,redis,ldap",
+	"php_ext":"pathinfo,redis,ldap,swoole",
 	"chmod":[
 		{"mode":777,"path":"/bin"}
 	],
 	"success_url":"/",
-	"php_versions":"71,72,73,74",
+	"php_versions":"73,74",
 	"db_config":"/config.yml",
 	"admin_username":"master",
 	"admin_password":"testtest",
 	"run_path":"/public",
 	"remove_file":[],
-	"enable_functions":[]
+	"enable_functions":["system","exec"]
 }
