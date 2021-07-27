@@ -108,7 +108,7 @@ $(function () {
         if (resolve == null) {
             return '';
         }
-        html += '<span style="color:#1aaa55;">' + resolve.name + '</span>';
+        html += '<span style="color:' + resolve.color + '">' + resolve.name + '</span>';
         return new Handlebars.SafeString(html);
     });
 
