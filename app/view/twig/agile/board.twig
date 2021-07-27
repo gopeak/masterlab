@@ -133,8 +133,12 @@
                                                     </span>
                                                     </a>
                                                     <button class="btn btn-default" type="button" title="看板设置"
-                                                            id="btn-setting_board" style="margin-left: 0px"><i
+                                                            id="btn-setting_board" style="margin-left: -1px"><i
                                                                 class="fa fa-cog"></i>
+                                                    </button>
+                                                    <button class="btn btn-default" type="button" title="创建自定义看板"
+                                                            id="btn-display-create-board" style="margin-left: -1px"><i
+                                                                class="fa fa-plus"></i>
                                                     </button>
 
                                                 </div>
@@ -764,6 +768,11 @@
             $('#board_table').hide();
             $('#action-board_list').hide();
             window.$board_setting.showCreateBoardById('');
+        });
+        //
+        $('#btn-display-create-board').bind('click', function () {
+            $('#btn-setting_board').click();
+            $('#btn-show_add_board').click();
         });
 
         window.$board_setting.initBoardFormSprint(window._issueConfig.project_sprints,[]);
