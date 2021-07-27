@@ -348,11 +348,33 @@ var IssueMain = (function () {
     IssueMain.prototype.skipPager = function (page, success) {
         $("#filter_page").val(page);
         _options.query_param_obj["page"] = page;
-        IssueMain.prototype.fetchIssueMains(function () {
-            if (typeof (success) != 'undefined' && typeof (success) === "function") {
-                success();
-            }
-        });
+
+        console.log(adv_details);
+        // 判断是不是高级查询
+        if( adv_details.length<=0){
+            IssueMain.prototype.fetchIssueMains(function () {
+                if (typeof (success) != 'undefined' && typeof (success) === "function") {
+                    success();
+                }
+            });
+        }else{
+            var tempData = JSON.parse(JSON.stringify(adv_details));
+            var temp = tempData.map(function (n) {
+                return {
+                    logic: n.logic,
+                    start_braces: n.start_braces,
+                    field: n.field,
+                    opt: n.opt,
+                    value: n.value,
+                    end_braces: n.end_braces
+                }
+            });
+            var adv_data = tempData.map(function (n) {
+                return n
+            });
+            var queryData = JSON.stringify(temp);
+            IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData,success, adv_data, page);
+        }
     }
 
     IssueMain.prototype.fetchIssueMains = function (success) {
@@ -376,7 +398,7 @@ var IssueMain = (function () {
         });
     };
 
-    IssueMain.prototype.fetchIssuesByAdvQueryIssue = function (jsonData, success, adv_data) {
+    IssueMain.prototype.fetchIssuesByAdvQueryIssue = function (jsonData, success, adv_data, page=1) {
 
         // let query_json = [
         //     {"logic":"and", "start_braces":"(", "field":"assignee",   "opt":"=",    "value":"1",                    "end_braces":""},
@@ -400,7 +422,7 @@ var IssueMain = (function () {
             type: 'get',
             dataType: "json",
             url: "/issue/main/adv_filter",
-            data: { project_id: window.cur_project_id, adv_query_json: jsonData, sort_field: sort_field, sort_by: sort_by },
+            data: { project_id: window.cur_project_id, adv_query_json: jsonData, sort_field: sort_field, sort_by: sort_by,page: page },
             success: function (resp) {
                 btn_adv_sumit.removeClass('disabled');
                 $('#modal-adv_query').modal('hide');

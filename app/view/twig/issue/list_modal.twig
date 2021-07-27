@@ -590,9 +590,8 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-sm-2"><select id="adv_opt" name="params[opt]"
-                                                      class="selectpicker form-control"
-                                                      dropdownalignright="true" title="操作符">
+                        <div class="col-sm-2 opt-form"  id="opt-form">
+                            <select id="adv_opt" name="params[opt]"  class="selectpicker form-control"  dropdownalignright="true" title="操作符">
                                 <option value="LIKE">LIKE</option>
                                 <option value="LIKE %...%">LIKE %...%</option>
                                 <!--option value="NOT LIKE">NOT LIKE</option-->
@@ -621,7 +620,7 @@
                                    placeholder="查询内容"/>
                         </div>
                         <div class="col-sm-2">
-                            <button type="button" class="btn" id="btn-adv_add_condition">
+                            <button type="button" class="btn btn-gray" id="btn-adv_add_condition">
                                 <i class="fa fa-plus"></i>
                                 添加条件
                             </button>
@@ -634,7 +633,7 @@
                         <div class="panel panel-info"
                              style="border: 1px solid transparent;border-radius: 4px;">
                             <div class="panel-heading">
-                                <h3 class="panel-title">查询条件</h3>
+                                <h3 class="panel-title">查询条件：</h3>
                             </div>
                             <table class="table table-hover table-adv-query" id="adv-query-box">
                                 <thead>

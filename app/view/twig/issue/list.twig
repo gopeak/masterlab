@@ -619,10 +619,6 @@
                             }
                         }
                     }
-
-
-
-
                     window.$IssueMain = new IssueMain(options);
 //                    window.$FilteredSearch = new FilteredSearch(urls.searchObject, _issueConfig, _cur_project_id);
                     if(is_adv_filter==='0' || is_empty(adv_filter_json)){
@@ -645,7 +641,7 @@
                         });
 
                         var queryData = JSON.stringify(temp);
-                        IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData,null, adv_data);
+                        IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData,null, adv_data, 1);
                     }
 
                     $('#btn-add').bind('click', function () {
