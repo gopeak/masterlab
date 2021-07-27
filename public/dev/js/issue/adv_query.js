@@ -43,22 +43,24 @@ var IssueAdvQuery = (function () {
         braces: [
             { value: ""},
             { value: "("},
-            { value: ")"},
-            { value: "{"},
-            { value: "}"}
+            { value: ")"}
         ],
         fields: []
     };
 
     function IssueAdvQuery(options) {
         var tempOptions = JSON.parse(JSON.stringify(options));
-        console.log("options", options);
-        for (var value of Object.values(advFields)) {
+        //console.log("options", options);
+        //console.log("advFields", advFields);
+        for (  key in  advFields ) {
+            var value = advFields[key];
             adv_options.fields.push({
                 value: value.title,
                 title: value.title,
                 source: value.source,
-                type: value.type
+                type: value.type,
+                opt:value.opt,
+                name:key
             });
         }
         for(var i=0; i<tempOptions.issue_module.length; i++){
@@ -96,7 +98,7 @@ var IssueAdvQuery = (function () {
                 value: row.id
             });
         }
-        console.log(adv_options.priority)
+        //console.log(adv_options.priority)
 
         adv_options.sprints = tempOptions.sprint;
 
@@ -107,14 +109,29 @@ var IssueAdvQuery = (function () {
                 value: row.id
             });
         }
-        console.log(adv_options)
+        //console.log(adv_options)
     };
 
     IssueAdvQuery.prototype.renderAdvQuery = function (details) {
-        var source = $('#content_table_adv_tpl').html();
-        var template = Handlebars.compile(source);
-        var result = template({tableList: details});
 
+        console.log('details:');
+        console.log(details);
+        var result = '<tr ><td colspan="8" style="cursor: default" >' +
+            '<div class="status status-search" data-direction="vertical">\n' +
+            '            <div class="img" ></div>\n' +
+            '            <div class="inner">\n' +
+            '            <div class="message">\n' +
+            '            查询条件为空,请添加\n' +
+            '            </div> \n' +
+            '        </div>\n' +
+            '        </div>' +
+            '</td></tr>';
+
+        if(details.length>0){
+            var source = $('#content_table_adv_tpl').html();
+            var template = Handlebars.compile(source);
+            var result = template({tableList: details});
+        }
         $("#adv-tbody").html(result);
     }
 
@@ -134,7 +151,6 @@ var IssueAdvQuery = (function () {
     }
 
     IssueAdvQuery.prototype.saveAdvQuery = function (name) {
-
 
         if(is_empty(name)){
             notify_warn('提示','过滤器名称不能为空!');
@@ -174,10 +190,35 @@ var IssueAdvQuery = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-
-
     }
 
+    IssueAdvQuery.prototype.requestAdvQuery = function (page=1, success=null) {
+
+        var tempData = JSON.parse(JSON.stringify(adv_details));
+        var temp = tempData.map(function (n) {
+            return {
+                logic: n.logic,
+                start_braces: n.start_braces,
+                field: n.field,
+                opt: n.opt,
+                value: n.value,
+                end_braces: n.end_braces
+            }
+        });
+        var adv_data = tempData.map(function (n) {
+            return n
+        });
+        if (window.qtipApi) {
+            window.qtipApi.hide();
+            $('#btn-save_adv_filter').qtip('api').toggle(false);
+        }
+        if (is_empty(temp)) {
+            notify_warn('提示', '查询条件为空!提示：选择查询条件后要点击"添加条件"按钮哦');
+            return;
+        }
+        var queryData = JSON.stringify(temp);
+        IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData, success, adv_data, page);
+    }
 
     IssueAdvQuery.prototype.renderTableAdvQuery = function (field_name, dataType, data, index, title, source) {
         var html = '';
@@ -188,6 +229,9 @@ var IssueAdvQuery = (function () {
                 break;
             case "select":
                 html = IssueAdvQuery.prototype.makeFieldSelect(data, index, field_name, title, source);
+                break;
+            case "opt":
+                html = IssueAdvQuery.prototype.makeFieldOpt(data, index, field_name, title, source);
                 break;
             case "date":
                 html = IssueAdvQuery.prototype.makeFieldDate(data, index, field_name);
@@ -200,6 +244,34 @@ var IssueAdvQuery = (function () {
         return html;
     }
 
+    IssueAdvQuery.prototype.makeOptSelect = function (field_name) {
+        var adv_opt_select = document.getElementById('adv_opt');
+        $('#adv_opt').empty();
+
+        var fields = adv_options['fields'];
+        //console.log('fields:');
+        //console.log(fields);
+        var opt_arr = [];
+        for(var i=0;i<fields.length;i++){
+            if(field_name===fields[i]['name']){
+                opt_arr = fields[i]['opt'].split(',');
+            }
+        }
+        if(!opt_arr){
+            opt_arr = ['='];
+        }
+        for(var i=0;i<opt_arr.length;i++){
+            var opt_value = opt_arr[i];
+            var selected = '';
+            if(i==0){
+                selected = 'selected';
+            }
+            var opt = "<option "+selected+" value='"+opt_value+"'>"+opt_value+"</option>";
+            $('#adv_opt').append(opt);
+        }
+        $('.selectpicker').selectpicker('refresh');
+    }
+
     IssueAdvQuery.prototype.makeFieldText = function (data, index, field_name) {
         var html = '';
         var inputName = field_name + '-' + index;
@@ -210,7 +282,32 @@ var IssueAdvQuery = (function () {
 
         return html;
     }
+    //
+    IssueAdvQuery.prototype.makeFieldOpt = function (data, index, field_name, title, source) {
+        var fields = adv_options['fields'];
+        var opt_arr = [];
+        for(var i=0;i<fields.length;i++){
+            if(source===fields[i]['name']){
+                opt_arr = fields[i]['opt'].split(',');
+            }
+        }
+        if(!opt_arr){
+            opt_arr = ['='];
+        }
+        var inputName = field_name + '-' + index;
+        var html = '<select  class="form-control" name="' + inputName + '" data-index="' + index + '" data-name="' + field_name + '"   >';
+        for(var i=0;i<opt_arr.length;i++){
+            var opt_value = opt_arr[i];
+            var selected = '';
+            if(data==opt_value){
+                selected = 'selected';
+            }
+            html += "<option "+selected+" value='"+opt_value+"'>"+opt_value+"</option>";
 
+        }
+        html += "</select>";
+        return html;
+    }
     IssueAdvQuery.prototype.makeFieldSelect = function (data, index, field_name, title, source) {
         var temp = {
             value: data,
