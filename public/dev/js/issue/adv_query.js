@@ -99,14 +99,13 @@ var IssueAdvQuery = (function () {
             });
         }
         //console.log(adv_options.priority)
-
         adv_options.sprints = tempOptions.sprint;
 
         for(var i=0;i<tempOptions.users.length; i++){
             let row = tempOptions.users[i];
             adv_options.users.push({
-                name: row.name,
-                value: row.id
+                name: row.display_name,
+                value: row.uid
             });
         }
         //console.log(adv_options)
@@ -316,15 +315,21 @@ var IssueAdvQuery = (function () {
             title: title,
             data: []
         }
-
-        if (source && source !== "status" && source !== "priority") {
-            temp.data = adv_options[source + "s"];
-        } else if (source === "status" || source === "priority") {
-            temp.data = adv_options[source];
-        } else {
+        if(source){
+            if(_.has(adv_options, source)){
+                temp.data = adv_options[source]
+            }else{
+                source= source + "s";
+                if(_.has(adv_options, source)){
+                    temp.data = adv_options[source]
+                }else{
+                    temp.data = []
+                }
+            }
+        }else{
             temp.data = []
         }
-        console.log(temp.data);
+        //console.log(temp.data);
         if(_.isArray(temp.data)){
             for(var i=0;i++;i<temp.data.length){
                 if(temp.value===temp.data[i]){
