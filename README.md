@@ -40,6 +40,11 @@ http://demo.masterlab.vip
 
 ## **安装**
 
+### Docker方式安装  
+https://github.com/gopeak/masterlab-docker
+
+
+### 传统方式安装  
 
 3.0版本安装步骤如下:  
 
