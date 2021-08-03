@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl;
 
+use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -130,23 +131,28 @@ class Passport extends BaseCtrl
         $signer = new Sha256();
         $key = new Key(JWT_KEY);
         try {
+            $builder = new Builder();
             $parse = (new Parser())->parse($jwt);
+            $headers = $parse->getHeaders();
+            $builder = $builder->sign($signer, $key);
+            $token = $builder->getToken();
             //验证token合法性
-            if (!$parse->verify($signer, $key)) {
-                $this->error('提示', '认证令牌不匹配，请回到平台首页刷新再重试');
+            // var_dump($token->verify($signer, JWT_KEY));
+            if (!$token->verify($signer, JWT_KEY)) {
+                $this->error('提示', '认证令牌不匹配');
                 return;
             }
+            // 是否过期
             if ($parse->isExpired()) {
                 $this->error('提示', '认证令牌已经过期');
                 return;
             }
-            $headers = $parse->headers();
-            $platformUserId = $headers->get('uid');
-            $platformPhone = $headers->get('phone');
-            $jwtIp = $headers->get('ip');
+            $platformUserId = $headers['uid'];
+            $platformPhone = $headers['phone'];
+            $jwtIp = $headers['ip'];
             $userIp = getIp();
             if($jwtIp!=$userIp){
-                $this->error('提示', '您的IP地址已经变更，请回到平台重新登录');
+                $this->error('提示', '您的IP地址已经变更');
                 return;
             }
             $userModel = new UserModel();
@@ -161,13 +167,13 @@ class Passport extends BaseCtrl
             $cookieLifetime = getCommonConfigVar('session')['session.cookie_lifetime'];
             $this->auth->login($user, $cookieLifetime);
             header('location: /');
+
         } catch (\Exception $e) {
             $result['msg'] = 'Invalid token.';
             $result['available'] = false;
-            $this->error('提示', '认证令牌异常，请回到平台首页刷新再重试');
+            $this->error('提示', '认证令牌异常:'.$e->getMessage());
             return;
         }
-
     }
 
     /**
