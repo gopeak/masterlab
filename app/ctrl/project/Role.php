@@ -140,7 +140,8 @@ class Role extends BaseUserCtrl
         }
 
         $model = new ProjectRoleModel();
-        if (isset($model->getByName($info['name'])['id'])) {
+        $checkRole = $model->getByName($info['name']);
+        if (isset($checkRole['id']) && $checkRole['project_id']==$projectId) {
             $this->ajaxFailed('提示', '名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
@@ -162,7 +163,7 @@ class Role extends BaseUserCtrl
             $info['id'] = $msg;
             $event = new CommonPlacedEvent($this, $info);
             $this->dispatcher->dispatch($event, Events::onProjectRoleAdd);
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
         }
