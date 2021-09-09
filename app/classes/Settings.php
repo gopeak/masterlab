@@ -72,20 +72,19 @@ class Settings
     {
         $settingModel = new SettingModel();
         $rows = $settingModel->getSettingByModule('attachment');
-
         $data = [];
         if (!empty($rows)) {
             foreach ($rows as $row) {
                 $data[$row['_key']] = $row['_value'];
             }
-            $attachmentDir = $data['attachment_dir'];
-            if (!empty($attachmentDir)) {
-                preg_match_all("/(?:\{{)(.*)(?:\}})/i", $attachmentDir, $rs);
-                $dirName = str_replace($rs[0][0], '', $attachmentDir);
-                $data['attachment_dir'] = constant($rs[1][0]) . $dirName . '/';
-                $data['attachment_size'] = (int)$data['attachment_size'] * 1024 * 1024;
+            $data['attachment_dir'] = PUBLIC_PATH . 'attachment/';
+            if (isset($data['attachment_size'])) {
+                $data['attachment_size'] = intval($data['attachment_size']) * 1024 * 1024;
+            }else{
+                $data['attachment_size'] = 16 * 1024 * 1024;
             }
         }
+        //var_dump($data);
         return $data;
     }
 }

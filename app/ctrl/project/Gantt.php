@@ -398,15 +398,17 @@ class Gantt extends BaseUserCtrl
                     }
                 } else {
                     $sprint = $task['sprint_info'];
-                    if(empty($sprint['start_date'])|| $sprint['start_date'] == '0000-00-00'|| empty($sprint['end_date']) || $sprint['end_date'] == '0000-00-00'){
-                        if ($row['start_date'] == '0000-00-00') {
-                            $row['start_date'] = '';
+                    if(!empty($sprint['id'])){
+                        if(empty($sprint['start_date'])|| $sprint['start_date'] == '0000-00-00'|| empty($sprint['end_date']) || $sprint['end_date'] == '0000-00-00'){
+                            if (@$row['start_date'] == '0000-00-00') {
+                                $row['start_date'] = '';
+                            }
+                            if (@$row['end_date'] == '0000-00-00') {
+                                $row['end_date'] = '';
+                            }
+                            $row['id'] = abs($row['id']);
+                            $unDateSprintsArr[] = $row;
                         }
-                        if ($row['end_date'] == '0000-00-00') {
-                            $row['end_date'] = '';
-                        }
-                        $row['id'] = abs($row['id']);
-                        $unDateSprintsArr[] = $row;
                     }
                 }
             }
