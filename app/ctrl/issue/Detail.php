@@ -314,6 +314,12 @@ class Detail extends BaseUserCtrl
         foreach ($attachmentDatas as $f) {
             $file = [];
             $file['thumbnailUrl'] = ATTACHMENT_URL . $f['file_name'];
+
+            // 支持office文件实时预览
+            $file_suffix = substr(strrchr( $f['file_name'], '.'), 1);
+            if (IS_OFFICE_PREVIEW && in_array($file_suffix, OFFICE_PREVIEW_SUFFIX_MAP)) {
+                $file['thumbnailUrl'] = OFFICE_PREVIEW_API . ATTACHMENT_URL . $f['file_name'];
+            }
             $file['size'] = $f['file_size'];
             $file['name'] = $f['origin_name'];
             $file['uuid'] = $f['uuid'];
