@@ -210,8 +210,8 @@ class WebhookSubscriber implements EventSubscriberInterface
             return false;
         }
 
-        $dst_im = imagecreatefrompng($source);
-        $dst_info = getimagesize($source);
+        $dst_im = @imagecreatefrompng($source);
+        $dst_info = @getimagesize($source);
 
         $im = @imagecreatetruecolor($width, $height);
         $cc = @imagecolorallocate($im,255,255,255);

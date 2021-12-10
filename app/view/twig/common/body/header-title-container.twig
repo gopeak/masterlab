@@ -42,7 +42,8 @@
         {% endif %}
         {% if  _GET._target[0] == 'admin'%}
         {% set header_title = '管 理' %}
-        {% set header_title_link = site_url~'admin/system' %}
+        {% set header_title_link = site_url~'admin/main' %}
+
         {% endif %}
         <span class="group-title">
             <a class="group-path" href="<?=header_title_link?>">
