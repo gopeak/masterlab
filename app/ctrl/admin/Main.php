@@ -55,6 +55,7 @@ class Main extends BaseAdminCtrl
         $mysqlVersionStr = $settingModel->getFieldBySql($versionSql);
 
         $dbConf = getYamlConfigByModule('database');
+        $socketConf = getYamlConfigByModule('socket');
 
         $data['sys_domain'] = ROOT_URL;//ServerInfo::getDomain();
         $data['sys_datetime'] = date('Y-m-d  H:i:s', time());
@@ -82,7 +83,7 @@ class Main extends BaseAdminCtrl
 
         $settingMailArr = $settingModel->getSettingByModule('mail');
         $data['setting_mail'] = array_column($settingMailArr,'_value', '_key');
-
+        $data['socket'] = $socketConf;
         $socketServerConnectMsg = '<span style="color:green">连接成功</span>';
         $fp = @fsockopen($data['setting_mail']['socket_server_host'], (int)$data['setting_mail']['socket_server_port'], $errno, $errstr, 5);
         if (!$fp) {

@@ -3,6 +3,7 @@
 namespace main\plugin\webhook\event;
 
 use main\app\classes\MasterlabSocketClient;
+use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\event\CommonPlacedEvent;
@@ -90,19 +91,38 @@ class WebhookSubscriber implements EventSubscriberInterface
         } else {
             $currentUserInfo = UserLogic::format($currentUserInfo);
         }
-
+        $projectInfo = null;
+        if(isset($event->pluginDataArr['project_info']) && !empty($event->pluginDataArr['project_info'])){
+            $projectArr =  $event->pluginDataArr['project_info'];
+            $projectInfo = [];
+            $projectInfo['id'] = $projectArr['id'];
+            $projectInfo['name'] = $projectArr['name'];
+            $projectInfo['description'] = $projectArr['description'];
+            list($projectInfo['avatar'], $exist) = ProjectLogic::formatAvatar($projectArr['avatar']);
+            $projectInfo['avatar-thum'] = $projectInfo['avatar'];
+            if($exist){
+                $thumPic = PUBLIC_PATH. 'attachment/project/avatar/'.$projectArr['id'].'-wechat-thum.png';
+                $ret =  self::waterZoom(PUBLIC_PATH. 'attachment/' . $projectArr['avatar'],800,455,300,180 ,$thumPic);
+                if($ret){
+                    $projectInfo['avatar-thum'] = ROOT_URL . 'attachment/project/avatar/'.$projectArr['id'].'-wechat-thum.png'.'?t='.time();
+                }
+            }
+            unset($projectArr, $event->pluginDataArr['project_info']);
+        }
         $postData = [];
         $postData['current_user_id'] = $currentUserId;
-        $postData['current_user_info'] = json_encode($currentUserInfo);
-        $postData['json'] = is_array($event->pluginDataArr) ? json_encode($event->pluginDataArr) :strval($event->pluginDataArr);
+        $postData['current_user_info'] = $currentUserInfo;
+        $postData['project_id'] = $event->pluginDataArr['project_id'] ?? null;
+        $postData['project_info'] = $projectInfo;
+        $postData['json'] = $event->pluginDataArr;
         $postData['event_name'] = $this->currentFuc;
+        $postData['root_url'] = ROOT_URL;
         $model = new WebHookModel();
         $webhooks = $model->getEnableItems();
 
         //$resArr = $this->multipleThreadsRequest($webhooks, $postData);
         //print_r($resArr);
         foreach ($webhooks as $i => $webhook) {
-            $url = $webhook['url'];
             $webhook['project_id'] = 0;
             if (isset($event->pluginDataArr['project_id'])) {
                 $webhook['project_id'] = (int)$event->pluginDataArr['project_id'];
@@ -114,192 +134,97 @@ class WebhookSubscriber implements EventSubscriberInterface
             if (!in_array($this->currentFuc, $hookEventsArr)) {
                 continue;
             }
-            $postData['secret_token'] = $webhook['secret_token'];
-            $this->requestByMasterlabSocket($webhook, $postData);
-            //$this->fsockopenPost($url, $postData, (int)$webhook['timeout']);
-        }
-    }
-
-
-    /**
-     * 通过fsockopenPost方式请求
-     * @param $url
-     * @param $data
-     * @param $timeout
-     * @return string
-     */
-    private function fsockopenPost($url, $data, $timeout)
-    {
-        $urlInfo = parse_url($url);
-        if (!isset($urlInfo["port"])) {
-            $urlInfo["port"] = 80;
-        }
-        $fp = fsockopen($urlInfo["host"], $urlInfo["port"], $errno, $errStr, $timeout);
-        $content = http_build_query($data);
-        fwrite($fp, "POST " . $urlInfo["path"] . " HTTP/1.1\r\n");
-        fwrite($fp, "Host: " . $urlInfo["host"] . "\r\n");
-        fwrite($fp, "Content-Type: application/x-www-form-urlencoded\r\n");
-        fwrite($fp, "Content-Length: " . strlen($content) . "\r\n");
-        fwrite($fp, "Connection: close\r\n");
-        fwrite($fp, "\r\n");
-        fwrite($fp, $content);
-        $result = "";
-        //while (!feof($fp)) {
-        //$result .= fgets($fp, 1024);
-        //}
-        fclose($fp);
-        return $result;
-    }
-
-
-    /**
-     * 通过curl
-     */
-    private function multipleThreadsRequest($webhooks, $postData)
-    {
-        // print_r($webhooks);
-        $mh = curl_multi_init();
-        $curl_array = array();
-        foreach ($webhooks as $i => $webhook) {
-            $url = $webhook['url'];
-            $hookEventsArr = json_decode($webhook['hook_event_json'], true);
-            if (empty($hookEventsArr)) {
-                $hookEventsArr = [];
-            }
-            if (!in_array($this->currentFuc, $hookEventsArr)) {
-                continue;
+            $filterProjectArr = json_decode($webhook['filter_project_json'], true);
+            if(!in_array('',$filterProjectArr)){
+                if($webhook['project_id'] && $filterProjectArr){
+                    if(!in_array($webhook['project_id'], $filterProjectArr)){
+                        //return [false, '此webhook忽略当前项目的事件'];
+                        continue;
+                    }
+                }
             }
             $postData['secret_token'] = $webhook['secret_token'];
-            $curl_array[$i] = curl_init($url);
-            curl_setopt($curl_array[$i], CURLOPT_POST, 1);
-            curl_setopt($curl_array[$i], CURLOPT_POSTFIELDS, $postData);
-            curl_setopt($curl_array[$i], CURLOPT_TIMEOUT, (int)$webhook['timeout']);
-            curl_setopt($curl_array[$i], CURLOPT_RETURNTRANSFER, true);
-            curl_multi_add_handle($mh, $curl_array[$i]);
+            $postData['timeout'] = $webhook['timeout'];
+            $postData['url'] = $webhook['url'];
+            $postDataStr = http_build_query($postData);
+            $logArr = [];
+            $logArr['project_id'] = @$webhook['project_id'];
+            $logArr['webhook_id'] = $webhook['id'];
+            $logArr['event_name'] = $postData['event_name'];
+            $logArr['url'] = $webhook['url'];
+            $logArr['data'] = $postDataStr;
+            $logArr['status'] = WebHookLogModel::STATUS_READY;
+            $logArr['time'] = time();
+            $logArr['user_id'] = UserAuth::getId();
+            $logArr['err_msg'] = '';
+            $webhooklogModel = new WebHookLogModel();
+            list($logRet, $logId) = $webhooklogModel->insert($logArr);
+            if ($logRet) {
+                $postData['log_id'] = (int)$logId;
+            } else {
+                $postData['log_id'] = 0;
+            }
+            list($ret, $msg) = $this->requestByMasterlabSocket($webhook, $postData);
+            if (!$ret && $logRet) {
+                $webhooklogModel->updateById($logId, ['err_msg' => $msg, 'status' => WebHookLogModel::STATUS_ASYNC_FAILED]);
+            }
         }
-        $running = NULL;
-        do {
-            usleep(10000);
-            curl_multi_exec($mh, $running);
-        } while ($running > 0);
-
-        $res = array();
-        foreach ($webhooks as $i => $webhook) {
-            $url = $webhook['url'];
-            $res[$url] = curl_multi_getcontent($curl_array[$i]);
-        }
-
-        foreach ($webhooks as $i => $webhook) {
-            curl_multi_remove_handle($mh, $curl_array[$i]);
-        }
-        curl_multi_close($mh);
-        return $res;
     }
 
-    /**
-     * @param $url
-     * @param $data
-     * @param $timeout
-     * @throws \Exception
-     */
-    private function requestByRedis($url, $data, $timeout)
-    {
-        $issueModel = new IssueModel();
-        $issueModel->cache->connect();
-        if (!$issueModel->cache) {
-            return;
-        }
-        $pushArr = [];
-        $pushArr['url'] = $url;
-        $pushArr['data'] = $data;
-        $pushArr['timeout'] = $timeout;
-        $key = 'webhook';
-        $ret = $issueModel->cache->redis->rPush($key, $pushArr);
-        //var_dump($ret);
-
-    }
 
     /**
      * 通过masterlab异步发送webhook请求
      * @param array $webhook
-     * @param array $dataArr
+     * @param array $postDataArr
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    private function requestByMasterlabSocket($webhook, $dataArr)
+    private function requestByMasterlabSocket($webhook, $postDataArr)
     {
-        $dataStr = http_build_query($dataArr);
-        $pushArr = [];
-        $pushArr['project_id'] = $webhook['project_id'];
-        $pushArr['webhook_id'] = $webhook['id'];
-        $pushArr['event_name'] = $dataArr['event_name'];
-        $pushArr['url'] = $webhook['url'];
-        $pushArr['data'] = $dataStr;
-        $pushArr['status'] = WebHookLogModel::STATUS_READY;
-        $pushArr['time'] = time();
-        $pushArr['user_id'] = UserAuth::getId();
-        $pushArr['err_msg'] = '';
-
-        // 0准备;1执行成功;2队列中;3出队列后执行失败
-        $webhooklogModel = new WebHookLogModel();
-        list($logRet, $logId) = $webhooklogModel->insert($pushArr);
-        if ($logRet) {
-            $pushArr['log_id'] = (int)$logId;
-        } else {
-            $pushArr['log_id'] = 0;
+        $command = 'WebhookHelper.post';
+        // 如果是钉钉机器人
+        if($webhook['type']=='dingding'){
+            $command = 'DingdingMessageHelper.push';
         }
-
-        list($ret, $msg) = MasterlabSocketClient::send("WebhookPost", $pushArr);
-        if (!$ret && $logRet) {
-            $webhooklogModel->updateById($logId, ['err_msg' => $msg, 'status' => WebHookLogModel::STATUS_ASYNC_FAILED]);
+        // 如果是企业微信机器人
+        if($webhook['type']=='wechat'){
+            $command = 'WechatWorkMessageHelper.push';
         }
-        return [$ret, $msg];
+        //print_r($pushArr);
+        return  MasterlabSocketClient::send($command, $postDataArr);
     }
 
     /**
-     * @param $webhook
-     * @param $dataArr
-     * @return array
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
+     * 更改图片画布大小
+     * @static public
+     * @param string $source 原文件名
+     * @param string $width $height 要生成的图片宽，高
+     * @param string $posX $posX 图片添加到画布位置
+     * @param string $$savename  修改后的图片名
+     * @return bool
      */
-    private function requestByGuzzleHttp($webhook, $dataArr)
-    {
-        $dataStr = http_build_query($dataArr);
-        $pushArr = [];
-        $pushArr['project_id'] = $webhook['project_id'];
-        $pushArr['webhook_id'] = $webhook['id'];
-        $pushArr['event_name'] = $dataArr['event_name'];
-        $pushArr['url'] = $webhook['url'];
-        $pushArr['data'] = $dataStr;
-        $pushArr['status'] = WebHookLogModel::STATUS_READY;
-        $pushArr['time'] = time();
-        $pushArr['user_id'] = UserAuth::getId();
-        $pushArr['err_msg'] = '';
-
-        // 0准备;1执行成功;2队列中;3出队列后执行失败
-        $webhooklogModel = new WebHookLogModel();
-        list($logRet, $logId) = $webhooklogModel->insert($pushArr);
-        if ($logRet) {
-            $pushArr['log_id'] = (int)$logId;
-        } else {
-            $pushArr['log_id'] = 0;
+    static function waterZoom($source, $width, $height,$posX,$posY, $savename=null) {
+        //检查文件是否存在
+        if (!file_exists($source)){
+            return false;
         }
 
-        $client = new \GuzzleHttp\Client();
-        // Send an asynchronous request.
-        $response = $client->post($pushArr['url'], ['form_params' => $dataArr]);
-        $statusCode = $response->getStatusCode(); // 200
-        $webhooklogModel = new WebHookLogModel();
-        if ($statusCode == 200) {
-            $webhooklogModel->updateById($logId, ['err_msg' => '', 'status' => WebHookLogModel::STATUS_SUCCESS]);
-        }else{
-            $body = $response->getBody();
-            $webhooklogModel->updateById($logId, ['err_msg' => 'Response status code:'.$statusCode." \r\n".$body, 'status' => WebHookLogModel::STATUS_FAILED]);
-        }
+        $dst_im = imagecreatefrompng($source);
+        $dst_info = getimagesize($source);
 
-        return [true, '异步执行'];
+        $im = @imagecreatetruecolor($width, $height);
+        $cc = @imagecolorallocate($im,255,255,255);
+        imagefill($im, 0, 0, $cc);
+        @imagecopy($im, $dst_im, $posX, $posY, 0, 0, $dst_info[0],$dst_info[1]);
+        header("Content-type:image/png");
+        if (!$savename) {
+            $savename = $source;
+            @unlink($source);
+        }
+        imagejpeg($im, $savename);
+        imagedestroy($im);
+        return true;
     }
 
 }
