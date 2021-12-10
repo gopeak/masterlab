@@ -366,6 +366,8 @@ class User extends BaseAdminCtrl
         $userModel = UserModel::getInstance($userId);
         $userModel->uid = $userId;
         $userModel->updateUser($info);
+        // userModel->updateById($userId, $info);
+
         // 分发事件
         $event = new CommonPlacedEvent($this, $info);
         $this->dispatcher->dispatch($event,  Events::onUserUpdateByAdmin);

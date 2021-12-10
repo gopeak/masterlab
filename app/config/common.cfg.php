@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 
 $_config['mods'] = array( 'admin','framework' ,'project','issue','module_test');

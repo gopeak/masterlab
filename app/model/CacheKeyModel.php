@@ -176,17 +176,14 @@ class CacheKeyModel extends CacheModel
         if (!is_object($this->cache)) {
             return false;
         }
-
         $curRate = mt_rand(0, 1000);
         $_config = getYamlConfigByModule('cache');
         if (!isset($_config['gc_rate'])) {
             $_config['gc_rate'] = 1;
         }
-
         if (intval($_config['gc_rate']) < $curRate) {
             return false;
         }
-
         /*
          * INSERT INTO `cache_key` (`key`, `module`, `expire`, `datetime`) VALUES
          * ('msg/4111/page/1', 'msg/4111', 11111111, '2014-12-23 00:00:00'),

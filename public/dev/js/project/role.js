@@ -245,7 +245,6 @@ var Role = (function () {
             data: params,
             success: function (resp) {
                 auth_check(resp);
-                notify_success(resp.msg);
                 if (resp.ret == 200) {
                     notify_success(resp.msg, resp.data);
                     window.location.reload();

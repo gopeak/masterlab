@@ -584,20 +584,16 @@ class Passport extends BaseCtrl
                 $defaultAvatar = UserLogic::makeDefaultAvatar($user['uid'], $avatarName);
                 $userModel->updateUserById(['avatar' => $defaultAvatar['short_path']], $user['uid']);
             }
+			// 分发事件
+            $event = new CommonPlacedEvent($this, $user);
+            $this->dispatcher->dispatch($event,  Events::onUserRegister);
 
-			list($mailRet, $msg) = $this->sendActiveEmail($user, $email, $displayName);
+            list($mailRet, $msg) = $this->sendActiveEmail($user, $email, $displayName);
             if ($mailRet) {
                 $this->ajaxSuccess('提示', '注册已经提交，请查看邮箱的激活邮件');
             } else {
                 $this->ajaxSuccess('提示', '但发送激活邮件失效，请联系管理手动激活');
             }
-
-			// 分发事件
-            $event = new CommonPlacedEvent($this, $user);
-            $this->dispatcher->dispatch($event,  Events::onUserRegister);
-
-            $this->sendActiveEmail($user, $email, $displayName);
-            $this->ajaxSuccess('注册成功');
         } else {
             $this->ajaxFailed('服务器错误', '注册失败,详情:' . $user);
         }
@@ -664,7 +660,6 @@ class Passport extends BaseCtrl
         }
         list($flag, $insertId) = $emailVerifyCodeModel->add($user['uid'], $email, $username, $verifyCode);
         if ($flag && APP_STATUS != 'travis') {
-
             return $this->sendActiveEmailByVerifyCode($user, $email, $verifyCode);
         } else {
             //'很抱歉,服务器繁忙，请重试!!';
