@@ -51,6 +51,7 @@ class IssueFilterLogic
         'due_date' => '截止日期',
     ];
 
+
     public static $advFields = [
         'issue_num' => ['title' => '编 号', 'opt' => '=,!=,like,like %...%,<,>,<=,>=', 'type' => 'text', 'source' => ''],
         'summary' => ['title' => '标 题', 'opt' => '=,!=,like,like %...%,regexp,regexp ^...$', 'type' => 'text', 'source' => ''],

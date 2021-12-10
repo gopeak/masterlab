@@ -199,27 +199,6 @@ class SettingsLogic
         return $setting['_value'];
     }
 
-    /**
-     * 允许使用Gravatars用户头像
-     * allow_gravatars
-     * @throws \Exception
-     */
-    public function allowGravatars()
-    {
-        $setting = SettingModel::getInstance()->getSettingByKey('allow_gravatars');
-        return $setting['_value'];
-    }
-
-    /**
-     * Gravatar服务器
-     * gravatar_server
-     * @throws \Exception
-     */
-    public function gravatarServer()
-    {
-        $setting = SettingModel::getInstance()->getSettingByKey('gravatar_server');
-        return $setting['_value'];
-    }
 
     /**
      * 自动更新搜索结果

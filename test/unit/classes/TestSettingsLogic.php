@@ -146,26 +146,6 @@ class TestSettingsLogic extends BaseUnitTranTestCase
     /**
      * @throws \Exception
      */
-    public function testAllowGravatars()
-    {
-        $logic = new SettingsLogic();
-        $ret = $logic->allowGravatars();
-        $this->assertTrue(is_numeric($ret));
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function testGravatarServer()
-    {
-        $logic = new SettingsLogic();
-        $ret = $logic->gravatarServer();
-        $this->assertTrue(is_string($ret));
-    }
-
-    /**
-     * @throws \Exception
-     */
     public function testSendMailFormat()
     {
         $logic = new SettingsLogic();

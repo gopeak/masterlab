@@ -1567,8 +1567,6 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (12, 'max_project_name', '项目名称最大长度', 'basic', 0, '80', '80', 'int', 'text', NULL, ''),
 (13, 'max_project_key', '项目键值最大长度', 'basic', 0, '20', '20', 'int', 'text', NULL, ''),
 (15, 'email_public', '邮件地址可见性', 'basic', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
-(20, 'allow_gravatars', '允许使用Gravatars用户头像', 'basic', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', ''),
-(21, 'gravatar_server', 'Gravatar服务器', 'basic', 0, '', '', 'string', 'text', NULL, ''),
 (24, 'send_mail_format', '默认发送个邮件的格式', 'user_default', 0, 'text', 'text', 'string', 'radio', '{\"text\":\"text\",\"html\":\"html\"}', ''),
 (25, 'issue_page_size', '事项分页数量', 'user_default', 0, '100', '100', 'int', 'text', NULL, ''),
 (39, 'time_format', '时间格式', 'datetime', 0, 'H:i:s', 'HH:mm:ss', 'string', 'text', NULL, '例如 11:55:47'),
@@ -1576,7 +1574,7 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (41, 'full_datetime_format', '完整日期/时间格式', 'datetime', 0, 'Y-m-d H:i:s', 'yyyy-MM-dd  HH:mm:ss', 'string', 'text', NULL, '例如 2007-05-23  11:55:47'),
 (42, 'datetime_format', '日期格式(年月日)', 'datetime', 0, 'Y-m-d', 'yyyy-MM-dd', 'string', 'text', NULL, '例如 2007-05-23'),
 (43, 'use_iso', '在日期选择器中使用 ISO8601 标准', 'datetime', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '打开这个选项，在日期选择器中，以星期一作为每周的开始第一天'),
-(45, 'attachment_dir', '附件路径', 'attachment', 0, '{{PUBLIC_PATH}}attachment', '{{STORAGE_PATH}}attachment', 'string', 'text', NULL, '附件存放的绝对或相对路径, 一旦被修改, 你需要手工拷贝原来目录下所有的附件到新的目录下'),
+(45, 'attachment_dir', '附件路径', 'attachment_hide', 0, '{{PUBLIC_PATH}}attachment', '{{PUBLIC_PATH}}attachment', 'string', 'text', NULL, '附件存放的绝对或相对路径, 一旦被修改, 你需要手工拷贝原来目录下所有的附件到新的目录下'),
 (46, 'attachment_size', '附件大小(单位M)', 'attachment', 0, '128.0', '10.0', 'float', 'text', NULL, '超过大小,无法上传,修改该值后同时还要修改 php.ini 的 post_max_size 和 upload_max_filesize'),
 (47, 'enbale_thum', '启用缩略图', 'attachment', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '允许创建图像附件的缩略图'),
 (48, 'enable_zip', '启用ZIP支持', 'attachment', 0, '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '允许用户将一个问题的所有附件打包成一个ZIP文件下载'),
@@ -3162,7 +3160,9 @@ CREATE TABLE `user_main` (
                              `is_system` tinyint UNSIGNED DEFAULT '0' COMMENT '是否系统自带的用户,不可删除',
                              `login_counter` int UNSIGNED DEFAULT '0' COMMENT '登录次数',
                              `title` varchar(32) DEFAULT NULL,
-                             `sign` varchar(64) DEFAULT NULL
+                             `sign` varchar(64) DEFAULT NULL,
+                             `is_verified` tinyint(2)  UNSIGNED NULL  default 1,
+                             `verify_code` varchar(20) COLLATE utf8mb4_unicode_ci COMMENT '验证邮箱的验证码'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

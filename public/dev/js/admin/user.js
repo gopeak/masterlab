@@ -44,6 +44,10 @@ function fetchUsers(url, tpl_id, parent_id) {
                     userActive($(this).attr("data-uid"));
                 });
 
+                $(".resend_verify_email").click(function () {
+                    reSendVerifyEmail($(this).attr("data-uid"));
+                });
+
                 $(".user_for_roles").click(function () {
                     userProjectRoles($(this).attr("data-uid"));
                 });
@@ -355,7 +359,7 @@ function userAdd() {
 
                 $('#modal-user_add').modal('hide');
             } else {
-                notify_error('添加失败,' + resp.msg);
+                notify_error( resp.msg);
             }
         },
         error: function (res) {
@@ -472,3 +476,24 @@ function userActive(id) {
     });
 }
 
+function reSendVerifyEmail(id) {
+    var method = 'POST';
+    var url = '/admin/user/reSendVerifyEmail';
+    $.ajax({
+        type: method,
+        dataType: "json",
+        url: url,
+        data:{user_id:id},
+        success: function (resp) {
+            auth_check(resp);
+            if (resp.ret === '200') {
+                notify_success(resp.msg, resp.data);
+            } else {
+                notify_error(resp.msg, resp.data);
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}

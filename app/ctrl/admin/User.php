@@ -59,6 +59,7 @@ class User extends BaseAdminCtrl
         $data['status_normal'] = UserModel::STATUS_NORMAL;
         $data['status_disabled'] = UserModel::STATUS_DISABLED;
         $data['status_approval'] = UserModel::STATUS_PENDING_APPROVAL;
+        $data['default_avatar'] = '/gitlab/images/default_user.png';
         $this->render('twig/admin/user/users.twig', $data);
     }
 
@@ -273,6 +274,7 @@ class User extends BaseAdminCtrl
         $userInfo['username'] = $username;
         $userInfo['display_name'] = $display_name;
         $userInfo['password'] = UserAuth::createPassword($password);
+        $userInfo['is_verified'] = '0';
         $userInfo['create_time'] = time();
         $userInfo['title'] = isset($params['title']) ? $params['title'] : '';
         if ($disabled) {
@@ -366,6 +368,8 @@ class User extends BaseAdminCtrl
         $userModel = UserModel::getInstance($userId);
         $userModel->uid = $userId;
         $userModel->updateUser($info);
+        // userModel->updateById($userId, $info);
+
         // 分发事件
         $event = new CommonPlacedEvent($this, $info);
         $this->dispatcher->dispatch($event,  Events::onUserUpdateByAdmin);
@@ -456,4 +460,65 @@ class User extends BaseAdminCtrl
         $this->dispatcher->dispatch($event,  Events::onUserBatchRecoveryByAdmin);
         $this->ajaxSuccess('提示', '操作成功');
     }
+
+    /**
+     * @param $email
+     * @param $userId
+     * @param $displayName
+     * @param $verifyCode
+     * @return array
+     * @throws \Exception
+     */
+    private function sendVerifyEmail($email, $userId, $displayName,  $verifyCode)
+    {
+        $args = [];
+        $args['{{site_name}}'] = 'Masterlab';
+        $args['{{name}}'] = $displayName;
+        $args['{{display_name}}'] = $displayName;
+        $args['{{email}}'] = $email;
+        $args['{{url}}'] = ROOT_URL . 'passport/verify_email?user_id=' . $userId . '&verify_code=' . $verifyCode;
+        $body = str_replace(array_keys($args), array_values($args), getCommonConfigVar('mail_tpl')['tpl']['reg_verify_email']);
+        // echo $body;die;
+        $systemLogic = new SystemLogic();
+        list($ret, $errMsg) = $systemLogic->mail($email, 'Masterlab验证邮箱通知', $body, $replyTo = [], $others = [], $checkEnableMail=false);
+        //var_dump($ret, $errMsg);
+        if (!$ret) {
+            return [false, '发送邮件失败,请联系管理员:' . $errMsg];
+        }
+        return [true, 'ok'];
+    }
+
+    /**
+     * 重发验证邮件
+     * @throws \Exception
+     */
+    public function reSendVerifyEmail()
+    {
+        if (!isset($_POST['user_id']) ||  empty($_POST['user_id'])) {
+            $this->ajaxFailed('参数错误', 'user_id为空');
+        }
+        $userId = $_POST['user_id'];
+        $userModel = new UserModel();
+        $user = $userModel->getByUid($userId);
+        if(empty($user) || empty($user['email'])){
+            $this->ajaxFailed('提示', '用户数据为空，请刷新页面');
+        }
+        if($user['is_verified']==1){
+            $this->ajaxFailed('提示', '该用户邮箱已经验证过了');
+        }
+        if(isset($_SESSION['reSendVerifyEmailTime']) && $_SESSION['reSendVerifyEmailTime']>time()-60){
+            $this->ajaxFailed('提示', '请1分钟后再重发');
+        }
+        $_SESSION['reSendVerifyEmailTime'] = time();
+        $verifyCode = randString(12);
+        $updateInfo['verify_code'] = $verifyCode;
+        $userModel->updateUserById($updateInfo, $user['uid']);
+        list($ret, $errMsg) = $this->sendVerifyEmail($user['uid'], $user['email'], $user['display_name'], $verifyCode);
+        //var_dump($ret, $errMsg);
+        if (!$ret) {
+            $this->ajaxFailed('提示', $errMsg);
+        }
+        $this->ajaxSuccess('操作成功');
+    }
+
 }

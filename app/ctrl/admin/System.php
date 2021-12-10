@@ -502,8 +502,8 @@ class System extends BaseAdminCtrl
             $this->ajaxFailed('公告发布失败', '内容不能为空');
         }
 
-        if (date("Y-m-d H:i:s", strtotime($expire_time)) != $expire_time) {
-            $this->ajaxFailed('公告发布失败', '时间格式不对');
+        if ( strtotime($expire_time)< time() ) {
+            $this->ajaxFailed('参数错误', '有效期不能小于当前时间');
         }
 
         $model = new AnnouncementModel();
@@ -706,16 +706,17 @@ class System extends BaseAdminCtrl
         if ($params['send_to'] == 'project') {
             $emails = $systemLogic->getUserEmailByProject($params['to_project']);
         }
-        if ($params['send_to'] == 'group') {
-            $tmp = $systemLogic->getUserEmailByGroup($params['to_group']);
+        if ($params['send_to'] == 'all') {
+            $tmp = $systemLogic->getUserEmailByAll();
             //$emails = $emails + $tmp;
             foreach ($tmp as $item) {
                 $emails[] = $item;
             }
             unset($tmp);
         }
+        //print_r($emails);
         if (empty($emails)) {
-            $this->ajaxFailed('user_no_found');
+            $this->ajaxFailed('提示', '无可发送的邮箱');
         }
         $title = $params['title'];
         $content = $params['content'];
@@ -795,7 +796,6 @@ class System extends BaseAdminCtrl
                     $user_role_list[$v] = [];
                 }
             }
-
             foreach ($user_role_list as $flag => $item) {
                 $model->update(['user' => json_encode($item)], ['flag' => $flag]);
             }

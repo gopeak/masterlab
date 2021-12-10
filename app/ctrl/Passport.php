@@ -570,7 +570,7 @@ class Passport extends BaseCtrl
         $userInfo['status'] = UserModel::STATUS_PENDING_APPROVAL;
         $userInfo['create_time'] = time();
         $userInfo['avatar'] = $avatar;
-
+        $userInfo['is_verified'] = '0';
         $userModel = new UserModel();
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
@@ -584,20 +584,16 @@ class Passport extends BaseCtrl
                 $defaultAvatar = UserLogic::makeDefaultAvatar($user['uid'], $avatarName);
                 $userModel->updateUserById(['avatar' => $defaultAvatar['short_path']], $user['uid']);
             }
+			// 分发事件
+            $event = new CommonPlacedEvent($this, $user);
+            $this->dispatcher->dispatch($event,  Events::onUserRegister);
 
-			list($mailRet, $msg) = $this->sendActiveEmail($user, $email, $displayName);
+            list($mailRet, $msg) = $this->sendActiveEmail($user, $email, $displayName);
             if ($mailRet) {
                 $this->ajaxSuccess('提示', '注册已经提交，请查看邮箱的激活邮件');
             } else {
                 $this->ajaxSuccess('提示', '但发送激活邮件失效，请联系管理手动激活');
             }
-
-			// 分发事件
-            $event = new CommonPlacedEvent($this, $user);
-            $this->dispatcher->dispatch($event,  Events::onUserRegister);
-
-            $this->sendActiveEmail($user, $email, $displayName);
-            $this->ajaxSuccess('注册成功');
         } else {
             $this->ajaxFailed('服务器错误', '注册失败,详情:' . $user);
         }
@@ -664,7 +660,6 @@ class Passport extends BaseCtrl
         }
         list($flag, $insertId) = $emailVerifyCodeModel->add($user['uid'], $email, $username, $verifyCode);
         if ($flag && APP_STATUS != 'travis') {
-
             return $this->sendActiveEmailByVerifyCode($user, $email, $verifyCode);
         } else {
             //'很抱歉,服务器繁忙，请重试!!';
@@ -697,6 +692,49 @@ class Passport extends BaseCtrl
         }
         return [true, 'ok'];
     }
+
+    /**
+     * 打开邮箱,激活用户
+     * @throws \Exception
+     */
+    public function pageVerifyEmail()
+    {
+        if (!isset($_GET['user_id'])) {
+            $this->error('参数错误', '参数错误,user_id缺失');
+            return;
+        }
+        if (!isset($_GET['verify_code'])) {
+            $this->error('参数错误', '参数错误,verify_code缺失');
+            return;
+        }
+        $userId = intval($_GET['user_id']);
+        $verifyCode = trimStr($_GET['verify_code']);
+
+        $userModel = UserModel::getInstance($userId);
+        $user = $userModel->getByUid($userId);
+        if (!isset($user['uid'])) {
+            $this->error('错误信息', '参数错误');
+            return;
+        }
+        if ($user['is_verified']=='1') {
+            $this->info('提示', '亲,该邮箱已经验证过了');
+            return;
+        }
+        if ( $verifyCode != $user['verify_code']) {
+            $this->error('错误信息', '亲,激活链接已经失效或已经被激活过了');
+            return;
+        }
+        //参数检查
+        $userInfo = [];
+        $userInfo['is_verified'] = '1';
+        list($ret, $msg) = $userModel->updateById($userId, $userInfo);
+        if ($ret) {
+            $this->info('信息提示', '验证邮箱成功!');
+        } else {
+            $this->info('信息提示', '验证邮箱失败:' . $msg);
+        }
+    }
+
 
     /**
      * 打开邮箱,激活用户
@@ -740,6 +778,7 @@ class Passport extends BaseCtrl
         //参数检查
         $userInfo = [];
         $userInfo['status'] = UserModel::STATUS_NORMAL;
+        $userInfo['is_verified'] = '1';
         // $userInfo['email'] = $find['email'];
         // $userInfo['username'] = $find['username'];
         $userId = $find['uid'];

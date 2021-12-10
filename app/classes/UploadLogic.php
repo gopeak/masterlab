@@ -46,7 +46,7 @@ class UploadLogic
         //文件保存目录路径
         $savePath = $settings['attachment_dir'];
         //最大文件大小
-        $max_size = $settings['attachment_size'];
+        $maxSize = $settings['attachment_size'];
         //文件保存目录URL
         $saveUrl = ATTACHMENT_URL;
         $relatePath = '';
@@ -134,7 +134,7 @@ class UploadLogic
             }
 
             //检查文件大小
-            if ($fileSize > $max_size) {
+            if ($fileSize > $maxSize) {
                 return $this->uploadError("上传文件大小超过限制");
             }
             //检查目录名

@@ -179,6 +179,50 @@ class UserModel extends DbModel
         return $rows;
     }
 
+    public function getVerifyEmailsByIds($uids)
+    {
+        if (empty($uids)) {
+            return [];
+        }
+        $uids = implode(',', $uids);
+        $sql = "select * from " . $this->getTable() . " where uid in({$uids}) AND is_verified=1";
+        $rows = $this->db->fetchAll($sql);
+        return $rows;
+    }
+
+    public function getVerifyEmailByIds($userIds)
+    {
+        if (empty($userIds)) {
+            return [];
+        }
+
+        $params['user_ids'] = $userIds = implode(',', $userIds);
+        $sql = "select uid as k,email  from " . $this->getTable() . " where uid in({$userIds}) AND is_verified=1 ";
+        $rows = $this->db->fetchAll($sql, $params);
+
+        $ret = [];
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $ret[] = $row['email'];
+            }
+        }
+        return $ret;
+    }
+
+    public function getVerifyEmailByAll()
+    {
+        $sql = "select uid as k,email  from " . $this->getTable() . " where  is_verified=1 ";
+        $rows = $this->db->fetchAll($sql);
+
+        $ret = [];
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $ret[] = $row['email'];
+            }
+        }
+        return $ret;
+    }
+
     public function getFieldByIds($field, $userIds)
     {
         if (empty($userIds)) {

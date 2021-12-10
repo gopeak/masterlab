@@ -1715,7 +1715,7 @@ var IssueMain = (function () {
                     endpoint: root_url + "issue/main/upload_delete/" + window._cur_project_id
                 },
                 validation: {
-                    allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
+                    allowedExtensions: ['jpeg', 'jpg', 'gif', 'png','JPEG', 'JPG', 'GIF', 'PNG']
                 }
             });
             window._fineUploader[id] = uploader;
