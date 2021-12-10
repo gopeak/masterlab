@@ -124,7 +124,7 @@
                     if (res.ret == "200") {
                         notify_success(res.msg);
                     } else {
-                        notify_error(res.msg);
+                        notify_error(res.msg, res.data);
                     }
                 },
                 error: function (res) {
@@ -151,7 +151,7 @@
                     if (res.ret == "200") {
                         notify_success(res.msg);
                     } else {
-                        notify_error(res.msg);
+                        notify_error(res.msg, res.data);
                     }
                 },
                 error: function (res) {

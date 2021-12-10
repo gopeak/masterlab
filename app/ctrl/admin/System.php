@@ -502,8 +502,8 @@ class System extends BaseAdminCtrl
             $this->ajaxFailed('公告发布失败', '内容不能为空');
         }
 
-        if (date("Y-m-d H:i:s", strtotime($expire_time)) != $expire_time) {
-            $this->ajaxFailed('公告发布失败', '时间格式不对');
+        if ( strtotime($expire_time)< time() ) {
+            $this->ajaxFailed('参数错误', '有效期不能小于当前时间');
         }
 
         $model = new AnnouncementModel();
