@@ -74,7 +74,7 @@ class WebhookSubscriber implements EventSubscriberInterface
     public function post(CommonPlacedEvent $event)
     {
         if(is_array($event->pluginDataArr)){
-            $event->pluginDataArr['project_info'] = new \stdClass();
+            $event->pluginDataArr['project_info'] = null;
         }
 
         if (isset($event->pluginDataArr['project_id'])) {

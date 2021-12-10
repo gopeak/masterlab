@@ -143,7 +143,7 @@ class UserLogic
     )
     {
         $field = "U.uid as k,U.uid as uid,username,display_name,email,avatar,
-        create_time,last_login_time,status,is_system,login_counter";
+        create_time,last_login_time,status,is_system,login_counter,is_verified";
         $start = $pageSize * ($page - 1);
         $limit = " limit $start, " . $pageSize;
         $order = empty($orderBy) ? '' : " Order By  $orderBy  $sort";
@@ -199,6 +199,14 @@ class UserLogic
         unset($userModel, $userGroupModel, $groupModel);
 
         if (!empty($rows)) {
+            $projectUserRoleModel = new ProjectUserRoleModel();
+            $projectRoleModel = new ProjectRoleModel();
+            $rolesArr = array_column($projectRoleModel->getsAll(), 'name', 'id');
+            $projectUserRoleArr = $projectUserRoleModel->getRows('*', []);
+            $userRoleIdArr = [];
+            foreach ($projectUserRoleArr as $item) {
+                $userRoleIdArr[$item['user_id']][] = $item['role_id'];
+            }
             foreach ($rows as &$row) {
                 $rowUid = $row['uid'];
                 $row['group'] = [];
@@ -213,9 +221,20 @@ class UserLogic
                 if (isset($row['password'])) {
                     unset($row['password']);
                 }
-
+                $userHaveRoleIdArr = [];
+                $userHaveRoleIdStr = '';
+                if (isset($userRoleIdArr[$rowUid]) && !empty($userRoleIdArr[$rowUid])) {
+                    foreach ($rolesArr as $roleId => $roleName) {
+                        if(in_array($roleId, $userRoleIdArr[$rowUid])){
+                            $userHaveRoleIdArr[] = $roleId;
+                            $userHaveRoleIdStr .= $roleName.',';
+                        }
+                    }
+                    $userHaveRoleIdStr = substr($userHaveRoleIdStr, 0, -1);
+                }
+                $row['user_have_role_arr'] = $userHaveRoleIdArr;
+                $row['user_have_role_str'] = $userHaveRoleIdStr;
                 $row['avatar'] = self::formatAvatar($row['avatar'], trimStr($row['email']));
-
                 $row['create_time_text'] = format_unix_time($row['create_time']);
                 $row['last_login_time_text'] = format_unix_time($row['last_login_time']);
                 $row['user_status_text'] = '';

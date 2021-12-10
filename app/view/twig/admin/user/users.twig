@@ -132,7 +132,7 @@
                                             <th class="js-pipeline-commit pipeline-commit">账号</th>
                                             <th class="js-pipeline-commit pipeline-commit">Email</th>
                                             <th class="js-pipeline-stages pipeline-info">最近登录时间</th>
-                                            <th class="js-pipeline-stages pipeline-info">用户组</th>
+                                            <!--<th class="js-pipeline-stages pipeline-info">用户角色</th>-->
                                             <th class="js-pipeline-date pipeline-date">创建时间</th>
                                             <th class="js-pipeline-date pipeline-date">状态</th>
                                             <th >操作</th>
@@ -176,7 +176,7 @@
                         <label class="control-label" for="id_avatar">头像:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <img alt="" id="js-user-avatar-create" class="avatar s60 js-user-avatar-create" src="">
+                                <img alt="" id="js-user-avatar-create" class="avatar s60 js-user-avatar-create" src="<?=default_avatar?>">
                                 <a class="btn js-choose-user-avatar-button-create">浏览文件...</a>
                                 <input type="text" class="form-control hidden"  name="params[avatar]"  id="id_avatar"  value="" name="params[avatar]" />
                             </div>
@@ -527,20 +527,16 @@
             </td>
             <td>
                 <a href="mailto:{{email}}">{{email}}</a>
+                {{#if_eq is_verified 1 }}
+                {{else}}
+                    <span class="label label-warning prepend-left-5">待验证</span>
+                     <a href="#"  data-uid="{{uid}}" class="resend_verify_email" style="color: blue">
+                        重发验证邮件
+                    </a>
+                {{/if_eq}}
             </td>
             <td>
                 <span  class="monospace branch-name">{{last_login_time_text}}</span>
-            </td>
-            <td>
-                <ul>
-                    {{#each group }}
-                        <li>
-                            <a href="/admin/group/edit_users/{{id}}">
-                                {{name}}
-                            </a>
-                        </li>
-                    {{/each}}
-                </ul>
             </td>
             <td>
                 {{create_time_text}}

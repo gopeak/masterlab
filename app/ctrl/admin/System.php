@@ -714,8 +714,9 @@ class System extends BaseAdminCtrl
             }
             unset($tmp);
         }
+        //print_r($emails);
         if (empty($emails)) {
-            $this->ajaxFailed('user_no_found');
+            $this->ajaxFailed('提示', '无可发送的邮箱');
         }
         $title = $params['title'];
         $content = $params['content'];

@@ -313,7 +313,7 @@ class SystemLogic
         }
         $fp = @fsockopen($socketHost, $socketPort, $errno, $errstr, $socketConnectTimeout);
         if (!$fp) {
-            $err = 'fsockopen failed:' . mb_convert_encoding($errno . ' ' . $errstr, "UTF-8", "GBK");
+            $err = 'fsockopen failed:' .  $errno . ' ' . $errstr;
             $queue['status'] = 'error';
             $queue['error'] = $err;
             $mailQueModel->add($queue);

@@ -570,7 +570,7 @@ class Passport extends BaseCtrl
         $userInfo['status'] = UserModel::STATUS_PENDING_APPROVAL;
         $userInfo['create_time'] = time();
         $userInfo['avatar'] = $avatar;
-
+        $userInfo['is_verified'] = '0';
         $userModel = new UserModel();
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
@@ -735,6 +735,7 @@ class Passport extends BaseCtrl
         }
     }
 
+
     /**
      * 打开邮箱,激活用户
      * @throws \Exception
@@ -777,6 +778,7 @@ class Passport extends BaseCtrl
         //参数检查
         $userInfo = [];
         $userInfo['status'] = UserModel::STATUS_NORMAL;
+        $userInfo['is_verified'] = '1';
         // $userInfo['email'] = $find['email'];
         // $userInfo['username'] = $find['username'];
         $userId = $find['uid'];

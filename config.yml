@@ -1,6 +1,6 @@
 # Masterlab主配置文件
 app_url: ''
-version: '3.1.7'
+version: '3.1.8'
 error_reporting: 'E_ERROR'
 xdebug: false
 trace: false
@@ -57,7 +57,7 @@ config_map_model:
       - UnitTestUnitModel
 
 socket:
-  host: '127.0.0.1'
+  host: '0.0.0.0'
   port: '9002'
   port_websocket: 9003
 
