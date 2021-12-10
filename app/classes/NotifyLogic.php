@@ -199,7 +199,7 @@ class NotifyLogic
         //print_r($toTargetUidArr);
         // 提取用户的email
         $userModel = new UserModel();
-        $userRows = $userModel->getUsersByIds($toTargetUidArr);
+        $userRows = $userModel->getVerifyEmailsByIds($toTargetUidArr);
         $toEmails = array_column($userRows, 'email');
         if ($schemeDataFlagArr[1] == 'comment') {
             $sourceType = 'issue_comment';

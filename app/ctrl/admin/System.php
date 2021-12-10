@@ -706,8 +706,8 @@ class System extends BaseAdminCtrl
         if ($params['send_to'] == 'project') {
             $emails = $systemLogic->getUserEmailByProject($params['to_project']);
         }
-        if ($params['send_to'] == 'group') {
-            $tmp = $systemLogic->getUserEmailByGroup($params['to_group']);
+        if ($params['send_to'] == 'all') {
+            $tmp = $systemLogic->getUserEmailByAll();
             //$emails = $emails + $tmp;
             foreach ($tmp as $item) {
                 $emails[] = $item;
@@ -795,7 +795,6 @@ class System extends BaseAdminCtrl
                     $user_role_list[$v] = [];
                 }
             }
-
             foreach ($user_role_list as $flag => $item) {
                 $model->update(['user' => json_encode($item)], ['flag' => $flag]);
             }

@@ -697,6 +697,48 @@ class Passport extends BaseCtrl
      * 打开邮箱,激活用户
      * @throws \Exception
      */
+    public function pageVerifyEmail()
+    {
+        if (!isset($_GET['user_id'])) {
+            $this->error('参数错误', '参数错误,user_id缺失');
+            return;
+        }
+        if (!isset($_GET['verify_code'])) {
+            $this->error('参数错误', '参数错误,verify_code缺失');
+            return;
+        }
+        $userId = intval($_GET['user_id']);
+        $verifyCode = trimStr($_GET['verify_code']);
+
+        $userModel = UserModel::getInstance($userId);
+        $user = $userModel->getByUid($userId);
+        if (!isset($user['uid'])) {
+            $this->error('错误信息', '参数错误');
+            return;
+        }
+        if ($user['is_verified']=='1') {
+            $this->info('提示', '亲,该邮箱已经验证过了');
+            return;
+        }
+        if ( $verifyCode != $user['verify_code']) {
+            $this->error('错误信息', '亲,激活链接已经失效或已经被激活过了');
+            return;
+        }
+        //参数检查
+        $userInfo = [];
+        $userInfo['is_verified'] = '1';
+        list($ret, $msg) = $userModel->updateById($userId, $userInfo);
+        if ($ret) {
+            $this->info('信息提示', '验证邮箱成功!');
+        } else {
+            $this->info('信息提示', '验证邮箱失败:' . $msg);
+        }
+    }
+
+    /**
+     * 打开邮箱,激活用户
+     * @throws \Exception
+     */
     public function pageActiveEmail()
     {
         if (!isset($_GET['email'])) {

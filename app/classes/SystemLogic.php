@@ -58,7 +58,7 @@ class SystemLogic
         $userIds = $userProjectRoleModel->getUidsByProjectIds($projectIds);
 
         $userModel = new UserModel();
-        $emails = $userModel->getFieldByIds('email', $userIds);
+        $emails = $userModel->getVerifyEmailByIds( $userIds);
         return $emails;
     }
 
@@ -75,7 +75,18 @@ class SystemLogic
         $userGroupModel = new UserGroupModel();
         $userIds = $userGroupModel->getUserIdsByGroups($groups);
         $userModel = new UserModel();
-        $emails = $userModel->getFieldByIds('email', $userIds);
+        $emails = $userModel->getVerifyEmailByIds( $userIds);
+        return $emails;
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getUserEmailByAll()
+    {
+        $userModel = new UserModel();
+        $emails = $userModel->getVerifyEmailByAll();
         return $emails;
     }
 
@@ -86,15 +97,16 @@ class SystemLogic
      * @param $title  string 邮件标题
      * @param $content  string 邮件内容
      * @param $replyTo array 抄送人
-     * @param string $contentType
+     * @param array $others
+     * @param bool $checkEnableMail 是否检查开启推送选项
      * @return array
      * @throws \Exception
      */
-    public function mail($recipients, $title, $content, $replyTo = [], $others = [])
+    public function mail($recipients, $title, $content, $replyTo = [], $others = [], $checkEnableMail=true)
     {
         $settingModel = new SettingModel();
         $enableMail = $settingModel->getValue('enable_mail');
-        if ($enableMail != 1) {
+        if ($enableMail != 1 && $checkEnableMail) {
             return [false, "未开启邮件推送选项"];
         }
         if (is_string($recipients)) {
@@ -331,7 +343,6 @@ class SystemLogic
             fwrite($fp, $bin_data);
             fclose($fp);
         }
-
         return [true, 'send data to async server success'];
     }
 }
