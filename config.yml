@@ -57,7 +57,7 @@ config_map_model:
       - UnitTestUnitModel
 
 socket:
-  host: '0.0.0.0'
+  host: '127.0.0.1'
   port: '9002'
   port_websocket: 9003
 
