@@ -924,7 +924,7 @@ class IssueFilterLogic
     public static function getCount($projectId)
     {
         if (empty($projectId)) {
-            return [];
+            return 0;
         }
         $model = new IssueModel();
         $table = $model->getTable();

@@ -13,6 +13,7 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\ctrl\Org;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
+use main\app\model\issue\IssueTypeSchemeItemsModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectMainExtraModel;
@@ -145,6 +146,14 @@ class Setting extends BaseUserCtrl
                             $new = ['issue_type_scheme_id' => $issueTypeSchemeId, 'project_id' => $projectId];
                             $projectIssueTypeSchemeDataModel->insert($new);
                         }
+                        // 判断默认事项类型是否在类型方案中
+                        $schemeTypeItems = (new IssueTypeSchemeItemsModel())->getItemsBySchemeId($issueTypeSchemeId);
+                        $typeIdArr = array_column($schemeTypeItems, "type_id");
+                        $defaultIssueTypeId = $info['default_issue_type_id']  ?? $preData['default_issue_type_id'];
+                        if  (!in_array($defaultIssueTypeId, $typeIdArr)) {
+                            $defaultIssueTypeId = $typeIdArr[0] ?? 1;
+                            $projectModel->update(['default_issue_type_id'=>$defaultIssueTypeId], array('id' => $projectId));
+                        }
                     }
                     $projectModel->db->commit();
                     //写入操作日志
@@ -208,7 +217,7 @@ class Setting extends BaseUserCtrl
                 $this->ajaxFailed('错误', '更新数据失败,详情:' . $ret[1]);
             }
         } else {
-            $this->ajaxFailed('错误', '请求方式ERR');
+            $this->ajaxFailed('错误', '请求方式错误');
         }
     }
 

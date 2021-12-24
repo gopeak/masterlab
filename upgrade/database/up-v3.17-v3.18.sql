@@ -1,0 +1,1 @@
+ALTER TABLE `user_main` ADD  `is_verified` tinyint(2)  UNSIGNED NULL  default 1 AFTER `sign`, ADD `verify_code` varchar(20) COLLATE utf8mb4_unicode_ci COMMENT '验证邮箱的验证码' AFTER `is_verified`;
