@@ -261,7 +261,7 @@ function sendMail($serv ,$sendArr)
         $mail->CharSet = 'UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
         $mail->SMTPAuth = true; //开启认证
         $mail->Port = (int)$sendArr['port'];
-        $mail->SMTPDebug = 1;
+        $mail->SMTPDebug = 0;
         $mail->Host = $sendArr['host'];
         $mail->Username = $sendArr['user'];
         $mail->Password = $sendArr['password'];
