@@ -486,7 +486,7 @@ function reSendVerifyEmail(id) {
         data:{user_id:id},
         success: function (resp) {
             auth_check(resp);
-            if (resp.ret === '200') {
+            if (resp.ret == '200') {
                 notify_success(resp.msg, resp.data);
             } else {
                 notify_error(resp.msg, resp.data);

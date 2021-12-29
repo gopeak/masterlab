@@ -27,6 +27,20 @@ $_config['tpl']['active_email'] = '
 </div>
 ';
 
+
+$_config['tpl']['reg_verify_email'] = '
+<div >
+    <p>您好 {{display_name}}!</p>
+    <p>
+        感谢您注册 {{site_name}}，请点击以下链接激活邮件
+    </p>
+    <p><a href="{{url}}" target="_blank">{{url}}</a></p>
+
+    <p>{{site_name}} 祝您使用愉快!</p> 
+    <br><br> 
+</div>
+';
+
 $_config['tpl']['invite_email'] = '
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="zh_cn">
 <head>
