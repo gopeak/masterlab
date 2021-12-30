@@ -64,7 +64,6 @@ class Setting extends BaseUserCtrl
             if (isset($params['name']) && $projectModel->checkIdNameExist($projectId, $params['name'])) {
                 $this->ajaxFailed('表单验证失败,项目名称已经被使用了,请更换一个吧');
             }
-
             if (!isset($params['lead'])  && empty($preData['lead'])) {
                 $params['lead'] = $uid;
             }
@@ -92,6 +91,9 @@ class Setting extends BaseUserCtrl
             //$info['detail'] = $params['detail'];
             if (isset($params['workflow_scheme_id'])) {
                 $info['workflow_scheme_id'] = (int)$params['workflow_scheme_id'];
+            }
+            if (isset($params['is_strict_status'])) {
+                $info['is_strict_status'] = (int)$params['is_strict_status'];
             }
             if (isset($params['default_issue_type_id'])) {
                 $info['default_issue_type_id'] = (int)$params['default_issue_type_id'];

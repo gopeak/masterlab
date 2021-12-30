@@ -99,20 +99,31 @@ class WorkflowLogic
         $workflow = $model->getById($workflowId);
         $dataArr = json_decode($workflow['data'], true);
         $targetKeyArr = [];
-        foreach ($dataArr['blocks'] as $block) {
-            if ($block['id'] == 'state_begin') {
-                continue;
+        if (isset($project['is_strict_status']) && intval($project['is_strict_status'])==1) {
+            foreach ($dataArr['connections'] as $connection) {
+                if ($connection['sourceId'] == 'state_begin' ) {
+                    $targetKeyArr[] = str_replace('state_', '', $connection['targetId']);
+                }
             }
-            $targetKeyArr[] = str_replace('state_', '', $block['id']);
+        }else{
+            foreach ($dataArr['blocks'] as $block) {
+                if ($block['id'] == 'state_begin') {
+                    continue;
+                }
+                $targetKeyArr[] = str_replace('state_', '', $block['id']);
+            }
+        }
+        //print_r($targetKeyArr);
+        $statusRows = [];
+        if (!empty($targetKeyArr)){
+            foreach ($targetKeyArr as $key) {
+                $row = $statusModel->getByKey($key);
+                if (!empty($row)) {
+                    $statusRows [] = $row;
+                }
+            }
         }
 
-        $statusRows = [];
-        foreach ($targetKeyArr as $key) {
-            $row = $statusModel->getByKey($key);
-            if (!empty($row)) {
-                $statusRows [] = $row;
-            }
-        }
         return $statusRows;
     }
 

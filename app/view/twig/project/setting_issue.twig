@@ -69,22 +69,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label" for="workflow_scheme_id">
-                                                <span>事项状态流方案 <i class="required">*</i></span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <div class="select2-container">
-                                                    <select class="selectpicker" name="params[workflow_scheme_id]" id="workflow_scheme_id">
-                                                        {% for scheme in workflow_schemes %}
-                                                            <option value="<?=scheme['id']?>"><?=scheme['name']?></option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <div class="form-group">
                                             <label class="control-label" for="issue_type_scheme_id">
                                                 <span>创建事项时的默认类型 <i class="required"></i></span>
@@ -100,6 +84,34 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="control-label" for="workflow_scheme_id">
+                                                <span>事项状态流方案 <i class="required">*</i></span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="selectpicker" name="params[workflow_scheme_id]" id="workflow_scheme_id">
+                                                        {% for scheme in workflow_schemes %}
+                                                            <option value="<?=scheme['id']?>"><?=scheme['name']?></option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="is_strict_status">
+                                                <span>启用状态流严格模式 </span>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="select2-container">
+                                                    <select class="form-control selectpicker" name="params[is_strict_status]" id="is_strict_status">
+                                                        <option value="1" {% if 1==project.is_strict_status %} selected {% endif %} >是</option>
+                                                        <option value="0" {% if 0==project.is_strict_status %} selected {% endif %} >否</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
                                             <label class="control-label" for="issue_type_scheme_id">
                                                 <span>是否记住上次创建事项数据 <i class="required"></i></span>
                                             </label>
@@ -108,7 +120,6 @@
                                                     <select class="form-control selectpicker" name="params[is_remember_last_issue]" id="is_remember_last_issue">
                                                          <option value="1" {% if 1==project.is_remember_last_issue %} selected {% endif %} >是</option>
                                                          <option value="0" {% if 0==project.is_remember_last_issue %} selected {% endif %} >否</option>
-
                                                     </select>
                                                 </div>
                                             </div>
