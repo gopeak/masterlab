@@ -111,6 +111,7 @@ class IssueStatus extends BaseAdminCtrl
         $info = [];
         $info['name'] = $params['name'];
         $info['_key'] = $params['key'];
+        $info['sequence'] = (int)$params['sequence'];
         $info['is_system'] = '0';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
@@ -181,7 +182,9 @@ class IssueStatus extends BaseAdminCtrl
         if (isset($params['color'])) {
             $info['color'] = $params['color'];
         }
-
+        if (isset($params['sequence'])) {
+            $info['sequence'] = (int)$params['sequence'];
+        }
         $ret = $model->updateItem($id, $info);
         if ($ret) {
             $this->ajaxSuccess('操作成功');

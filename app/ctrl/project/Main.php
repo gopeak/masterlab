@@ -695,7 +695,6 @@ class Main extends Base
                 die;
             }
         }
-
         $memberCtrl = new Member();
         $memberCtrl->pageIndex();
     }

@@ -115,6 +115,31 @@ class IssueTypeLogic
         return $types;
     }
 
+
+    /**
+     * 获取一个项目相关的事项类型
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function getIssueTypeBySchemeID($issueTypeSchemeId)
+    {
+        $issueTypeModel = new IssueTypeModel();
+        $issueTypes = $issueTypeModel->getAll(true);
+
+        $model = new IssueTypeSchemeItemsModel();
+        $typeItems = $model->getItemsBySchemeId($issueTypeSchemeId);
+        $types = [];
+        foreach ($typeItems as $item) {
+            $typeId = $item['type_id'];
+            if (isset($issueTypes[$typeId])) {
+                $types[] = $issueTypes[$typeId];
+            }
+        }
+        return $types;
+    }
+
+
     /**
      * 属性结构的方式获取信息
      * @return array

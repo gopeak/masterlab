@@ -250,7 +250,7 @@ function isInArray(arr, value) {
 function auth_check(resp) {
     if (resp.ret == '401') {
         notify_warn(resp.msg, resp.data);
-        setTimeout("window.location.href = window.root_url + 'passport/login';", 3000)
+        setTimeout("window.location.href = window.root_url + 'passport/login';", 3000);
     }
 }
 

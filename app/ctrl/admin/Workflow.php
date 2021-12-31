@@ -284,6 +284,19 @@ class Workflow extends BaseAdminCtrl
             $info['description'] = $params['description'];
         }
         if (isset($params['data'])) {
+            $dataArr = json_decode($params['data'], true);
+            if (is_null($dataArr)) {
+                $this->ajaxFailed('提示', '流程图数据异常，请刷新页面重试');
+            }
+            $targetKeyArr = [];
+            foreach ($dataArr['connections'] as $connection) {
+                if ($connection['sourceId'] == 'state_begin' ) {
+                    $targetKeyArr[] = str_replace('state_', '', $connection['targetId']);
+                }
+            }
+            if (empty($targetKeyArr)){
+                $this->ajaxFailed('提示', '流程图数据异常，起始流程不能为空，需要指定一个起始的状态');
+            }
             $info['data'] = $params['data'];
         }
 

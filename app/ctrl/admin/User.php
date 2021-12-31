@@ -506,14 +506,14 @@ class User extends BaseAdminCtrl
         if($user['is_verified']==1){
             $this->ajaxFailed('提示', '该用户邮箱已经验证过了');
         }
-        if(isset($_SESSION['reSendVerifyEmailTime']) && $_SESSION['reSendVerifyEmailTime']>time()-60){
-            $this->ajaxFailed('提示', '请1分钟后再重发');
+        if(isset($_SESSION['reSendVerifyEmailTime']) && $_SESSION['reSendVerifyEmailTime']>time()-30){
+            $this->ajaxFailed('提示', '请30秒后再重发');
         }
         $_SESSION['reSendVerifyEmailTime'] = time();
         $verifyCode = randString(12);
         $updateInfo['verify_code'] = $verifyCode;
         $userModel->updateUserById($updateInfo, $user['uid']);
-        list($ret, $errMsg) = $this->sendVerifyEmail($user['uid'], $user['email'], $user['display_name'], $verifyCode);
+        list($ret, $errMsg) = $this->sendVerifyEmail($user['email'], $user['uid'],  $user['display_name'], $verifyCode);
         //var_dump($ret, $errMsg);
         if (!$ret) {
             $this->ajaxFailed('提示', $errMsg);

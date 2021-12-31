@@ -62,6 +62,7 @@
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
                                         <th class="js-pipeline-stages pipeline-info">Key</th>
+                                        <th class="js-pipeline-stages pipeline-info">排序权重</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <!--<th class="js-pipeline-date pipeline-date">关联状态流</th>-->
                                         <th class="pipeline-info" >操作</th>
@@ -117,6 +118,15 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="control-label" for="id_sequence">排序权重:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[sequence]" id="id_sequence"  value="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="control-label" for="id_color">背景颜色:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -131,7 +141,6 @@
                         </div>
                     </div>
 
-
                     <div class="form-group">
                         <label class="control-label" for="id_description">描述:</label>
                         <div class="col-sm-6">
@@ -140,7 +149,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <div class="form-group" style="display: none">
                         <label class="control-label" for="id_font_awesome">图标:</label>
@@ -192,7 +200,14 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <label class="control-label" for="edit_sequence">排序权重:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[sequence]" id="edit_sequence"  value="" />
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_color">背景颜色:</label>
                         <div class="col-sm-6">
@@ -245,6 +260,9 @@
             </td>
             <td>
                 {{_key}}
+            </td>
+            <td>
+                {{sequence}}
             </td>
             <td>
                 {{description}}

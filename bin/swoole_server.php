@@ -239,7 +239,6 @@ function sendMail($serv ,$sendArr)
     $title = $sendArr['subject'];
     $content = $sendArr['body'];
     $sendArr['attach'] = isset($sendArr['attach']) ? $sendArr['attach'] : '';
-
     $mailQueModel = new MailQueueModel();
     $mailQueModel->db->close();
     DbModel::$dalDriverInstances = [];

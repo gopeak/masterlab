@@ -166,9 +166,11 @@ var Workflow = (function() {
             data: $('#form_edit').serialize() ,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
-                if( resp.ret == 200 ){
+                if( resp.ret == '200' ){
+                    notify_success( resp.msg );
                     window.location.href='/admin/workflow';
+                }else{
+                    notify_error( resp.msg , resp.data);
                 }
             },
             error: function (res) {

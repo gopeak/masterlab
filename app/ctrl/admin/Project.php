@@ -198,7 +198,7 @@ class Project extends BaseAdminCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
-
+        $uid = UserAuth::getId();
         $model = $projectModel = new ProjectModel($uid);
         $project = $projectModel->getById($projectId);
 
@@ -229,13 +229,12 @@ class Project extends BaseAdminCtrl
             // 删除初始化的角色
             $projectUserRoleModel = new ProjectUserRoleModel();
             $projectUserRoleModel->deleteByProject($projectId);
-
-            // 分发事件
-            $event = new CommonPlacedEvent($this, $project);
-            $this->dispatcher->dispatch($event,  Events::onProjectDelete);
         }
-
         $model->db->commit();
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $project);
+        $this->dispatcher->dispatch($event,  Events::onProjectDelete);
+
         $this->ajaxSuccess('操作成功');
     }
 
@@ -352,7 +351,6 @@ class Project extends BaseAdminCtrl
                 $model->insertRows($cloneRawData['module_rows']);
             }
         }
-
         if (isset($_POST['label_selected']) && $_POST['label_selected'] == 1) {
             if (!empty($cloneRawData['label_rows'])) {
                 foreach ($cloneRawData['label_rows'] as $key=>$item) {
@@ -363,7 +361,6 @@ class Project extends BaseAdminCtrl
                 $model->insertRows($cloneRawData['label_rows']);
             }
         }
-
         if (isset($_POST['catalog_label_selected']) && $_POST['catalog_label_selected'] == 1) {
             if (!empty($cloneRawData['catalog_label_rows'])) {
                 foreach ($cloneRawData['catalog_label_rows'] as $key=>$item) {
@@ -374,8 +371,6 @@ class Project extends BaseAdminCtrl
                 $model->insertRows($cloneRawData['catalog_label_rows']);
             }
         }
-
-
         if (!empty($cloneRawData['role_rows'])) {
             $projectRoleModel = new ProjectRoleModel();
             $projectRoleRelationModel = new ProjectRoleRelationModel();
@@ -401,7 +396,6 @@ class Project extends BaseAdminCtrl
                         //print_r($tempRoleRelationRows);
                     }
                 }
-
                 if (!empty($cloneRawData['user_role_rows'])) {
                     $tempUserRoleRows = [];
                     foreach ($cloneRawData['user_role_rows'] as $userRoleRow) {
@@ -419,7 +413,6 @@ class Project extends BaseAdminCtrl
                 }
             }
         }
-
         $this->ajaxSuccess('项目克隆成功', $cloneRawData);
     }
 }

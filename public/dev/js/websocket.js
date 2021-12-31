@@ -10,7 +10,8 @@ var _is_ai_cmd_create = false;
 var _ws_summary = '';
 
 function startWS() {
-    ws = new WebSocket('ws://47.244.62.11:9891/ws');
+    // 测试代码
+    ws = new WebSocket(WSS_URL);
     ws.onopen = function (event) {
         console.log('WebSocket opened!');
         Auth();

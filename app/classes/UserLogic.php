@@ -287,11 +287,14 @@ class UserLogic
         if (strpos($avatar, 'http') === false) {
             if (empty($avatar)) {
                 $avatar = ROOT_URL . 'gitlab/images/default_user.png';
-                if (!empty($email)) {
-                    $avatar = getGravatar($email);
-                }
             } else {
-                $avatar = ATTACHMENT_URL . $avatar;
+                list($avatar) = explode("?", $avatar);
+                if (!file_exists(PUBLIC_PATH."attachment/".$avatar)){
+                    $avatar = ROOT_URL . 'gitlab/images/default_user.png';
+                }else{
+                    $avatar = ATTACHMENT_URL . $avatar;
+                }
+
             }
         }
         return $avatar;
