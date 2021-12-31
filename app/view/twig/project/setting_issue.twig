@@ -169,10 +169,48 @@
 
 {% include 'twig/project/common-projects-json.twig' %}
 <script>
+
+ $(function() {
     // 初始化事项类型方案
     $("#issue_type_scheme_id").selectpicker('val', '<?=issue_type_scheme_id?>');
     // 初始化状态流方案
     $("#workflow_scheme_id").selectpicker('val', '<?=project.workflow_scheme_id?>');
+
+    $("#issue_type_scheme_id").bind("change", function () {
+        console.log($(this).val());
+        var current_type_id = $("#default_issue_type_id").val();
+        var issue_type_scheme_id = $(this).val();
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url: root_url + "project/setting/fetchIssueTypeBySchemeID",
+            data: { id: issue_type_scheme_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    return;
+                }
+                var issue_types = resp.data.issue_types;
+                var issue_types_select = $('#default_issue_type_id');
+                issue_types_select.empty();
+
+                var first_issue_type = {};
+                for (var i = 0; i < issue_types.length; i++) {
+                    var selected = '';
+                    if (current_type_id == issue_types[i].id) {
+                        selected = 'selected';
+                    }
+                    var content = "<div class=issue-types-icon><i class=" + issue_types[i].font_awesome + "></i> " + issue_types[i].name + "</div>"
+                    issue_types_select.append("<option data-content='" + content + "' " +selected+" value='" + issue_types[i].id + "'>" + issue_types[i].name + "</option>")
+                }
+                $('.selectpicker').selectpicker('refresh');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    })
 
     var options = {
         beforeSubmit: function (arr, $form, options) {
@@ -219,6 +257,7 @@
         $(this).ajaxSubmit(update_key_options);
         return false;
     });
+  });
 </script>
 </body>
 

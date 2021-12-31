@@ -236,4 +236,17 @@ class Setting extends BaseUserCtrl
 
         $this->ajaxSuccess('ok', $data);
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchIssueTypeBySchemeID()
+    {
+        $schemeId = isset($_GET['id']) ? (int)$_GET['id'] : null;
+        $logic = new IssueTypeLogic();
+        $data['issue_types'] = $logic->getIssueTypeBySchemeID($schemeId);
+        $this->ajaxSuccess('success', $data);
+
+        $this->ajaxSuccess('ok', $data);
+    }
 }
