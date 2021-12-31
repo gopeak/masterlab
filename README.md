@@ -97,7 +97,7 @@ https://github.com/gopeak/masterlab-docker
       ```text
       <VirtualHost *:80>
         # 请更改为实际的masterlab目录
-        DocumentRoot "c:/phpenv/www/masterlab/public"
+        DocumentRoot "c:/www/masterlab/public"
         # 这里使用的是示例域名，你可以更改为你的域名
         ServerName  www.yoursite.com
         <Directory />
@@ -106,7 +106,7 @@ https://github.com/gopeak/masterlab-docker
             #Allow from All
         </Directory>
         # 请更改为实际的masterlab目录
-        <Directory "c:/phpenv/www/masterlab/public">
+        <Directory "c:/www/masterlab/public">
             Options  Indexes FollowSymLinks
             AllowOverride All
             #Order allow,deny
