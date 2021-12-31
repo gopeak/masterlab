@@ -272,9 +272,9 @@ var IssueMain = (function () {
             data: { issue_view: issue_view },
             success: function (resp) {
                 auth_check(resp);
-                if (issue_view !== 'detail') {
+               // if (issue_view !== 'detail') {
                     window.location.reload();
-                }
+               // }
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -467,6 +467,7 @@ var IssueMain = (function () {
             }
             resp.data.display_fields = window.display_fields;
             resp.data.uiDisplayFields = window.uiDisplayFields;
+            resp.data.issue_view  = window.issue_view ;
             var result = template(resp.data);
             let table_footer_operation_tpl = $('#table_footer_operation_tpl').html();
             if (table_footer_operation_tpl != null && table_footer_operation_tpl != undefined)

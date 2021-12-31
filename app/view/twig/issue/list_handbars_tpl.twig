@@ -81,8 +81,10 @@
 
 									{{#if_in_array 'summary'  ../display_fields}}
 										<td class="show-tooltip width_35" title="快捷键 E 可呼出当前事项的编辑界面">
-											<a href="javascript:linkIssue({{id}})" class="commit-row-message">
-												{{lightSearch summary '{{search}}'}}
+											<a
+											 {{#if_eq  ../issue_view "detail"}}   href="javascript:linkIssue({{id}})" {{else}} href="/issue/detail/index/{{id}}" {{/if_eq}}
+											  class="commit-row-message">
+											{{ ../issue_view}}	{{lightSearch summary '{{search}}'}}
 											</a>
 											{{#if_in_array 'label'  ../display_fields}}
                                                 {{make_label_html label_id_arr}}
