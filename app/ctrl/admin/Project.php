@@ -198,7 +198,7 @@ class Project extends BaseAdminCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
-
+        $uid = UserAuth::getId();
         $model = $projectModel = new ProjectModel($uid);
         $project = $projectModel->getById($projectId);
 

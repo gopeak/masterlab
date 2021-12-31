@@ -22,6 +22,7 @@ use main\app\model\ProjectTemplateDisplayCategoryModel;
 use main\app\model\ProjectTemplateModel;
 use main\app\model\ProjectTplCatalogLabelModel;
 use main\app\model\ProjectTplLabelModel;
+use main\app\model\ProjectTplModuleModel;
 
 /**
  *
@@ -198,6 +199,7 @@ class ProjectLogic
     }
 
     /**
+     * 创建项目业务流程
      * @param $projectArr
      * @param int $createUid
      * @return array
@@ -206,7 +208,7 @@ class ProjectLogic
     public static function create($projectArr, $createUid = 0)
     {
         if (empty($projectArr)) {
-            return self::retModel(-1, 'lose input data!');
+            return self::retModel(-1, 'lost input data!');
         }
 
         if (!isset($projectArr['name'])) {
@@ -257,9 +259,10 @@ class ProjectLogic
         list($flag, $insertId) = $projectModel->insert($insertArr);
         if ($flag) {
             $projectId =$insertId;
-            // 根据项目模板初始化角色和标签分类
+            // 根据项目模板初始化角色和标签分类以及模块
             self::initRole($projectId, $projectTemplate['id']);
             self::initLabelAndCatalog($projectId, $projectTemplate['id']);
+            self::initModule($projectId, $projectTemplate['id']);
             // 把项目负责人加入该项目的所有角色
             self::assignProjectRoles($projectId, $projectArr['lead']);
             // 把项目创建人添加到该项目所有角色
@@ -620,6 +623,34 @@ class ProjectLogic
     }
 
     /**
+     * 初始化项目的模块
+     * @param $projectId
+     * @param $projectTplId
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public static function initModule($projectId, $projectTplId)
+    {
+        try {
+            $moduleModel = new ProjectModuleModel();
+            $initModuleRows = ProjectTplModuleModel::getInstance()->getByProject($projectTplId);
+            $orderWeight = count($initModuleRows)+100;
+            foreach ($initModuleRows as $index => $initModule) {
+                $insertModuleArr = [];
+                $insertModuleArr['project_id'] = $projectId;
+                $insertModuleArr['name'] = $initModule['name'];
+                $insertModuleArr['description'] = $initModule['description'];
+                $insertModuleArr['order_weight'] =  $orderWeight - (int)$index;
+                $moduleModel->insert($insertModuleArr);
+            }
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return [false, $e->getMessage()];
+        }
+        return [true, 'ok'];
+    }
+    /**
      * 初始化项目的标签和分类
      * @param $projectId
      * @param $projectTplId
@@ -670,7 +701,6 @@ class ProjectLogic
         }
         return [true, 'ok'];
     }
-
 
     /**
      * 给用户加入到项目的所有角色
