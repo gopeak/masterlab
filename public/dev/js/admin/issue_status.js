@@ -86,6 +86,7 @@ var IssueStatus = (function() {
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
                 $("#edit_key").val(resp.data._key);
+                $("#edit_sequence").val(resp.data.sequence);
                 if(resp.data.is_system==='1'){
                     $("#edit_key").attr('readonly', true);
                 }else{

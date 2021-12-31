@@ -114,16 +114,7 @@ class WorkflowLogic
             }
         }
         //print_r($targetKeyArr);
-        $statusRows = [];
-        if (!empty($targetKeyArr)){
-            foreach ($targetKeyArr as $key) {
-                $row = $statusModel->getByKey($key);
-                if (!empty($row)) {
-                    $statusRows [] = $row;
-                }
-            }
-        }
-
+        $statusRows = $statusModel->getsByKeys($targetKeyArr);
         return $statusRows;
     }
 
@@ -171,13 +162,8 @@ class WorkflowLogic
                 }
             }
         }
-        $statusRows = [];
-        foreach ($targetKeyArr as $key) {
-            $row = $statusModel->getByKey($key);
-            if (!empty($row)) {
-                $statusRows [] = $row;
-            }
-        }
+        $statusRows = $statusModel->getsByKeys($targetKeyArr);
+
         return $statusRows;
     }
 }

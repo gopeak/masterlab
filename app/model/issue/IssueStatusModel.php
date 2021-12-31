@@ -84,5 +84,16 @@ class IssueStatusModel extends BaseDictionaryModel
         return $idArr;
     }
 
+    public function getsByKeys($keyArr)
+    {
+        $allStatusRows = $this->getAllItem();
+        $rows = [];
+        foreach ($allStatusRows as $row) {
+            if (in_array($row['_key'], $keyArr)) {
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
 
 }
