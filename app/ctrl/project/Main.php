@@ -442,7 +442,7 @@ class Main extends Base
         $data['issueTypeArr'] = (new IssueTypeModel())->getAllItems(false);
 
         $data['rememberFieldArr'] = [
-            'issue_type'=>'事项类型',
+           // 'issue_type'=>'事项类型',  // 因为与"默认事项类型"功能相冲突，新版本3.2.0 取消此选项
             'module'=>'模 块',
             'assignee'=>'经办人',
             'fix_version'=>'解决版本',
