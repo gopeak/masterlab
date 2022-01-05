@@ -15,6 +15,17 @@ use main\app\model\issue\IssueModel;
 
 class IssueFavFilterLogic
 {
+
+    public static $preDefinedFilter = [
+        'assignee_mine' => ['name' => '分配我的', 'description' => '分配我的事项'],
+        'my_unsolved' => ['name' => '我未解决', 'description' => '分配我未解决的事项'],
+        'my_followed' => ['name' => '我关注的', 'description' => '我关注的事项'],
+        'my_assistant_issue' => ['name' => '我协助的', 'description' => '我协助的事项'],
+        'my_report' => ['name' => '我报告的', 'description' => '我报告的事项'],
+        //'active_sprint_unsolved' => ['name' => '当前迭代未解决的', 'title' => '当前活跃迭代的未解决事项'],
+    ];
+
+
     public $displayNum = 8;
 
     public function getCurUserFavFilterByProject($projectId = null)
@@ -73,7 +84,7 @@ class IssueFavFilterLogic
      * @return array
      * @throws \Exception
      */
-    public function saveFilter($name, $filter, $description = '', $shared = '', $projectId=null)
+    public function saveFilter($name, $filter, $description = '', $shared = '', $projectId = null)
     {
         $filterModel = IssueFilterModel::getInstance();
         $info = [];

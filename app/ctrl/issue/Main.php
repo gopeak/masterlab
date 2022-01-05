@@ -29,6 +29,7 @@ use main\app\model\field\FieldCustomValueModel;
 use main\app\model\issue\ExtraWorkerDayModel;
 use main\app\model\issue\HolidayModel;
 use main\app\model\project\ProjectCatalogLabelModel;
+use main\app\model\project\ProjectFlagModel;
 use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -221,10 +222,22 @@ class Main extends BaseUserCtrl
         } else {
             $data['sprints'] = $sprintModel->getAllItems(false);
         }
-
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
-
         $data['last_create_data'] = UserLogic::getLastCreateIssueData($userId, $data['project']);
+
+        $data['preDefinedFilterArr'] = [];
+        $projectFlagModel = new ProjectFlagModel();
+        $filterFlagRow = $projectFlagModel->getByFlag($data['project_id'], "filter_json");
+        if (!isset($filterFlagRow['filter_json'])){
+            $data['preDefinedFilterArr'] = IssueFavFilterLogic::$preDefinedFilter;
+        }else{
+            $preDefinedFilterArr = json_decode($filterFlagRow['filter_json'], true);
+            foreach ($preDefinedFilterArr as $item) {
+                if (isset( IssueFavFilterLogic::$preDefinedFilter[$item])){
+                    $data['preDefinedFilterArr'][$item] = IssueFavFilterLogic::$preDefinedFilter[$item];
+                }
+            }
+        }
 
         $this->render('gitlab/issue/list.php', $data);
     }
@@ -815,9 +828,13 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
             $arr[] = 'sort_by:' . $_REQUEST['sort_by'];
         }
+        $shareScope = '';
+        if (isset($_REQUEST['is_project_filter']) &&  $_REQUEST['is_project_filter']=="1") {
+            $shareScope = 'project';
+        }
         //print_r($arr);
         $filter = implode(" ", $arr);
-        list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
+        list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shareScope, $projectId);
         if ($ret) {
             $info = [];
             $info['name'] = $name;
@@ -867,6 +884,11 @@ class Main extends BaseUserCtrl
         if(isset($_POST['sort_by'])){
             $info['adv_query_sort_by'] = $_POST['sort_by'];
         }
+        $shareScope = '';
+        if (isset($_REQUEST['is_project_filter']) &&  $_REQUEST['is_project_filter']=="1") {
+            $shareScope = 'project';
+        }
+        $info['share_scope'] = $shareScope;
         list($ret, $msg) = $filterModel->insert($info);
         if ($ret) {
             $event = new CommonPlacedEvent($this, $info);

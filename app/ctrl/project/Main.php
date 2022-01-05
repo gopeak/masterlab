@@ -387,6 +387,50 @@ class Main extends Base
      * @throws \Exception
      * @todo 此处有bug, 不能即是页面有时ajax的处理
      */
+    public function pageSettingsFilter()
+    {
+        if (!PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
+            if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
+                $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
+                die;
+            }
+        }
+
+        $projectModel = new ProjectModel();
+        $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        $projectMainExtra = new ProjectMainExtraModel();
+        $infoExtra = $projectMainExtra->getByProjectId($info['id']);
+        if ($infoExtra) {
+            $info['detail'] = $infoExtra['detail'];
+        } else {
+            $info['detail'] = '';
+        }
+
+        $data['title'] = '设置';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'filter';
+
+        $projectTpl = (new ProjectTemplateModel())->getById($info['project_tpl_id']);
+        if($projectTpl){
+            $info['project_tpl_text'] = $projectTpl['name'];
+        }
+        $data['info'] = $info;
+
+        $data['root_domain'] = ROOT_URL;
+
+
+        $data = RewriteUrl::setProjectData($data);
+
+        //print_r($data['project']);die;
+        $this->render('gitlab/project/setting_filter.twig', $data);
+    }
+
+
+    /**
+     * @throws \Exception
+     * @todo 此处有bug, 不能即是页面有时ajax的处理
+     */
     public function pageSettingIssue()
     {
         if (!PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {

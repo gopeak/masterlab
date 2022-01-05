@@ -13,35 +13,17 @@
                 <a title="所有事项" href="<?= issue_main_url?>"><span>所有事项</span>
                 </a>
             </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'assignee_mine') %} <?= 'active_underline' ?>{% endif %}">
-                <a title="分配我的事项" href="<?= issue_main_url?>?sys_filter=assignee_mine">
-                    <span>分配我的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'my_unsolved') %} <?= 'active_underline' ?>{% endif %}">
-                <a title="分配我未解决的事项" href="<?= issue_main_url?>?sys_filter=my_unsolved">
-                    <span>我未解决</span>
-                    {% if ( unResolveCount) %}
-                    <span style="color: #d41716;"> (<?= unResolveCount ?>)</span>
-                    {% endif %}
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'my_followed') %} <?= 'active_underline' ?>{% endif %}">
-                <a title="我关注的事项" href="<?= issue_main_url?>?sys_filter=my_followed"><span>我关注的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'my_assistant_issue') %} <?= 'active_underline' ?>{% endif %}">
-                <a title="我协助的事项" href="<?= issue_main_url?>?sys_filter=my_assistant_issue"><span>我协助的</span>
-                </a>
-            </li>
-            <li class="filter_nav_li  {% if (sys_filter == 'my_report') %} <?= 'active_underline' ?>{% endif %}">
-                <a title="我报告的事项" href="<?= issue_main_url?>?sys_filter=my_report"><span>我报告的</span>
-                </a>
-            </li>
-            <!--<li class="filter_nav_li  {% if (sys_filter == 'active_sprint_unsolved') %} <?= 'active_underline' ?>{% endif %}">
-                <a title="当前活跃迭代的未解决事项" href="<?= issue_main_url?>?sys_filter=active_sprint_unsolved"><span>当前迭代未解决的</span>
-                </a>
-            </li>-->
+            {% for  key, preDefinedFilter in preDefinedFilterArr %}
+                <li class="filter_nav_li  {% if (sys_filter == preDefinedFilter.name) %} <?= 'active_underline' ?>{% endif %}">
+                    <a title="<?=preDefinedFilter.description?>" href="<?= issue_main_url?>?sys_filter=<?=key?>">
+                        <span><?=preDefinedFilter.name?></span>
+                        {% if ( unResolveCount and key=='my_unsolved') %}
+                            <span style="color: #d41716;"> (<?= unResolveCount ?>)</span>
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+
             {% if ( project.is_display_issue_catalog and project_catalog) %}
                 <li class="filter_nav_li" style="border-left: 1px solid #ddd; padding-left: 12px;" title="通过标签进行分类">
                     分 类：
