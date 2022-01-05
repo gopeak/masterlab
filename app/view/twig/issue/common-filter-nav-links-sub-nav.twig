@@ -9,19 +9,21 @@
 
     <div class="nav-links sub-nav scrolling-tabs is-initialized">
         <ul class="container-fluid">
-            <li class="filter_nav_li  {% if (sys_filter == '' and active_id is empty) %} <?= 'active_underline' ?>{% endif %}">
-                <a title="所有事项" href="<?= issue_main_url?>"><span>所有事项</span>
+            <li style="padding-right: 4px;" class="filter_nav_li  {% if (sys_filter == '' and active_id is empty) %} <?= 'active_underline' ?>{% endif %}">
+                <a title="所有事项" href="<?= issue_main_url?>"><span >所有事项</span>
                 </a>
             </li>
-            {% for  key, preDefinedFilter in preDefinedFilterArr %}
-                <li class="filter_nav_li  {% if (sys_filter == preDefinedFilter.name) %} <?= 'active_underline' ?>{% endif %}">
-                    <a title="<?=preDefinedFilter.description?>" href="<?= issue_main_url?>?sys_filter=<?=key?>">
-                        <span><?=preDefinedFilter.name?></span>
-                        {% if ( unResolveCount and key=='my_unsolved') %}
+            {% for  key, projectFilter in ProjectFilterArr %}
+                {% if  projectFilter.is_show =='1' %}
+                <li class="filter_nav_li  {% if (sys_filter == projectFilter.name) %} <?= 'active_underline' ?>{% endif %}">
+                    <a title="<?=projectFilter.description?>" href="<?= issue_main_url?>?sys_filter=<?=projectFilter.key?>">
+                        <span><?=projectFilter.name?></span>
+                        {% if ( unResolveCount and projectFilter.key=='my_unsolved') %}
                             <span style="color: #d41716;"> (<?= unResolveCount ?>)</span>
                         {% endif %}
                     </a>
                 </li>
+                {% endif %}
             {% endfor %}
 
             {% if ( project.is_display_issue_catalog and project_catalog) %}

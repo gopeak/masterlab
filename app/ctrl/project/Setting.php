@@ -254,6 +254,85 @@ class Setting extends BaseUserCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function togglePreDefinedFilter()
+    {
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
+        $key = isset($_POST['key']) ? $_POST['key'] : null;
+        $action = isset($_POST['action']) ? $_POST['action'] : null;
+        $uid = $this->getCurrentUid();
+        $project = (new ProjectModel())->getById($projectId);
+        if(empty($project)){
+            $this->ajaxFailed("参数错误:project_id不存在");
+        }
+        if (!$action){
+            $this->ajaxFailed("参数错误:action缺失");
+        }
+
+        if (!isset(IssueFavFilterLogic::$preDefinedFilter[$key])){
+            $this->ajaxFailed("参数错误:key不存在");
+        }
+        $dbPreDefinedFilterArr = [];
+        $projectFlagModel = new ProjectFlagModel();
+        $filterFlagRow = $projectFlagModel->getByFlag($projectId, "filter_json");
+        if (!isset($filterFlagRow['flag'])){
+            if($action=='show'){
+                $filterJsonArr = array_keys(IssueFavFilterLogic::$preDefinedFilter);
+            }else{
+                $filterJsonArr = array_keys(IssueFavFilterLogic::$preDefinedFilter);
+                $index = array_search($key, $filterJsonArr);
+                if($index!==false){
+                    unset($filterJsonArr[$index]);
+                }
+            }
+            $ret = $projectFlagModel->add($projectId, 'filter_json' , json_encode($filterJsonArr));
+
+        }else{
+            $dbPreDefinedFilterArr = json_decode($filterFlagRow['value'], true);
+            if (is_null($dbPreDefinedFilterArr)){
+                $dbPreDefinedFilterArr = [];
+            }
+            if($action=='show') {
+                if (!in_array($key, $dbPreDefinedFilterArr)) {
+                    $dbPreDefinedFilterArr[] = $key;
+                }
+            }else{
+                if (in_array($key, $dbPreDefinedFilterArr)) {
+                    $index = array_search($key, $dbPreDefinedFilterArr);
+                    if($index!==false){
+                        unset($dbPreDefinedFilterArr[$index]);
+                    }
+                }
+            }
+            $filterJsonArr = $dbPreDefinedFilterArr;
+            $ret = $projectFlagModel->updateById($filterFlagRow['id'], ['value'=>json_encode($filterJsonArr)]);
+        }
+
+        if ($ret[0]) {
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT_SETTING;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '修改项目的过滤器';
+            $logData['pre_data'] = $dbPreDefinedFilterArr;
+            $logData['cur_data'] = $filterJsonArr;
+            LogOperatingLogic::add($uid, $projectId, $logData);
+            // 发布事件通知
+            $event = new CommonPlacedEvent($this, ['pre_data' => $dbPreDefinedFilterArr, 'cur_data' => $filterJsonArr]);
+            $this->dispatcher->dispatch($event,  Events::onProjectFilterUpdate);
+            $this->ajaxSuccess('操作成功');
+        } else {
+            $this->ajaxFailed('服务器执行失败，请重试');
+        }
+    }
+
+
 
     /**
      * @throws \Exception
@@ -374,38 +453,13 @@ class Setting extends BaseUserCtrl
      */
     public function fetchFilters()
     {
+        $data['filters'] = [];
         $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
-        $preDefinedFilterArr = [];
-        $projectFlagModel = new ProjectFlagModel();
-        $filterFlagRow = $projectFlagModel->getByFlag($projectId, "filter_json");
-        if (!isset($filterFlagRow['filter_json'])){
-            $preDefinedFilterArr = null;
-        }else{
-            $preDefinedFilterArr = json_decode($filterFlagRow['filter_json'], true);
+        $project = (new ProjectModel())->getById($projectId);
+        if(empty($project)){
+           $this->ajaxSuccess('ok', $data);
         }
-        $arr = [];
-        foreach (IssueFavFilterLogic::$preDefinedFilter as $key =>$item) {
-            $row = $item;
-            $row['key'] = $key;
-            $row['is_pre_defined'] = '1';
-            $row['filter'] = '';
-            $row['is_show'] = '0';
-            if ( is_array($preDefinedFilterArr) && in_array($key, $preDefinedFilterArr)){
-                $row['is_show'] = '1';
-            }
-            if (is_null($preDefinedFilterArr)){
-                $row['is_show'] = '1';
-            }
-            $arr[] = $row;
-        }
-        $issueFilterModel = new IssueFilterModel();
-        $userFilters =  $issueFilterModel->getRowsByKey("*", ['projectid'=>$projectId, 'share_scope'=>'project'], null, 'order_weight desc');
-        foreach ($userFilters as $userFilter) {
-            $userFilter['key'] = $userFilter['id'];
-            $userFilter['is_pre_defined'] = '0';
-            $arr[] = $userFilter;
-        }
-        $data['filters'] = $arr;
+        $data['filters'] = IssueFavFilterLogic::fetchProjectFilters($projectId);
 
         $this->ajaxSuccess('ok', $data);
     }
