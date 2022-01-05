@@ -229,13 +229,11 @@ class Project extends BaseAdminCtrl
             // 删除初始化的角色
             $projectUserRoleModel = new ProjectUserRoleModel();
             $projectUserRoleModel->deleteByProject($projectId);
-
-            // 分发事件
-            $event = new CommonPlacedEvent($this, $project);
-            $this->dispatcher->dispatch($event,  Events::onProjectDelete);
         }
-
         $model->db->commit();
+        // 分发事件
+        $event = new CommonPlacedEvent($this, $project);
+        $this->dispatcher->dispatch($event,  Events::onProjectDelete);
         $this->ajaxSuccess('操作成功');
     }
 
