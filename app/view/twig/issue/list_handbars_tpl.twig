@@ -3,6 +3,11 @@
     <div class="row">
         <div class="col-md-8">
             <input type="text" id="save_filter_text" placeholder="请输入过滤器名称" name="save_filter_text" class="form-control"/>
+            <div class="checkbox" style="min-width: 220px">
+                <label >
+                    <input type="checkbox" value="1" id="is_project_filter" name="is_project_filter">项目过滤器（项目成员均可见）
+                </label>
+            </div>
         </div>
         <div class="col-md-4">
             <a class="btn btn-sm" id="save_filter_btn" onclick="IssueMain.prototype.saveFilter($('#save_filter_text').val())" href="#">确定</a>
@@ -14,6 +19,11 @@
     <div class="row">
         <div class="col-md-8">
             <input type="text" id="save_adv_filter_text" placeholder="请输入过滤器名称" name="save_adv_filter_text" class="form-control"/>
+            <div class="checkbox" style="min-width: 220px">
+                <label >
+                    <input type="checkbox" value="1" id="is_adv_project_filter" name="is_project_filter">项目过滤器（项目成员均可见）
+                </label>
+            </div>
         </div>
         <div class="col-md-4">
             <a class="btn btn-sm" id="save_adv_filter_btn" onclick="IssueAdvQuery.prototype.saveAdvQuery($('#save_adv_filter_text').val())" href="#">确定</a>
@@ -81,8 +91,10 @@
 
 									{{#if_in_array 'summary'  ../display_fields}}
 										<td class="show-tooltip width_35" title="快捷键 E 可呼出当前事项的编辑界面">
-											<a href="javascript:linkIssue({{id}})" class="commit-row-message">
-												{{lightSearch summary '{{search}}'}}
+											<a
+											 {{#if_eq  ../issue_view "detail"}}   href="javascript:linkIssue({{id}})" {{else}} href="/issue/detail/index/{{id}}" {{/if_eq}}
+											  class="commit-row-message">
+											{{lightSearch summary '{{search}}'}}
 											</a>
 											{{#if_in_array 'label'  ../display_fields}}
                                                 {{make_label_html label_id_arr}}

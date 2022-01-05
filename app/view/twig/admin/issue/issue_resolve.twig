@@ -62,6 +62,7 @@
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
                                         <th class="js-pipeline-info pipeline-info">Key</th>
+                                        <th class="js-pipeline-stages pipeline-info">排序权重</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <th class="pipeline-info" >操作</th>
                                     </tr>
@@ -113,6 +114,14 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[key]" id="id_key"  value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_sequence">排序权重:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[sequence]" id="id_sequence"  value="0" />
                             </div>
                         </div>
                     </div>
@@ -190,6 +199,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label" for="edit_sequence">排序权重:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[sequence]" id="edit_sequence"  value="" />
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="control-label" for="id_name">字体颜色:<span class="required"> *</span></label>
@@ -243,6 +260,9 @@
             </td>
             <td>
                  {{_key}}
+            </td>
+            <td>
+                {{sequence}}
             </td>
             <td>
                 {{description}}

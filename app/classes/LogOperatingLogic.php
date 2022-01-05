@@ -27,6 +27,7 @@ class LogOperatingLogic
     const MODULE_NAME_ISSUE = '事项';
     const MODULE_NAME_ADMIN = '系统';
     const MODULE_NAME_USER = '用户';
+    const MODULE_NAME_PROJECT_SETTING = '项目设置';
 
     /**
      * 根据条件获取日志内容,并按照视图需要格式化数据

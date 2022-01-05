@@ -86,6 +86,7 @@ var IssueResolve = (function() {
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
                 $("#edit_key").val(resp.data._key);
+                $("#edit_sequence").val(resp.data.sequence);
                 $("#edit_color").val(resp.data.color);
                 $("#edit_font_awesome").val(resp.data.font_awesome);
                 $("#edit_description").val(resp.data.description);

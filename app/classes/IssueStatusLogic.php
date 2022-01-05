@@ -23,7 +23,7 @@ class IssueStatusLogic
 
         $sql = "Select t.*  From {$issueStatusTable} t 
                 Group by t.id 
-                Order by t.id ASC ";
+                Order by t.sequence DESC ";
         return  $issueStatusModel->db->fetchAll($sql);
     }
 

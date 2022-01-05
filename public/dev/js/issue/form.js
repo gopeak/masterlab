@@ -238,7 +238,7 @@ var IssueForm = (function () {
                 html += IssueForm.prototype.makeFieldPriority(config, field, ui_type);
                 break;
             case "STATUS":
-                html += IssueForm.prototype.makeFieldStatus(config, field, ui_type);
+                html += IssueForm.prototype.makeFieldStatusV2(config, field, ui_type);
                 break;
             case "RESOLUTION":
                 html += IssueForm.prototype.makeFieldResolution(config, field, ui_type);
@@ -775,6 +775,92 @@ var IssueForm = (function () {
 
         }
         html += '</select>';
+
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldStatusV2 = function (config, field, ui_type) {
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params[' + name + ']';
+        var default_value = field.default_value
+        var required_html = '';
+        if (required) {
+            required_html = '<span class="required"> *</span>';
+        }
+        var id = ui_type + '_issue_' + name;
+
+        var html = '';
+        html = '<div class="btn-group button_radio" data-toggle="buttons">';
+        html += '<input type="hidden" name="' + field_name + '" id="' + id + '" autocomplete="off"   value="' + default_value + '">';
+        var statusArr = _allow_add_status;
+        if (ui_type == 'edit') {
+            statusArr = _allow_update_status;
+        }
+        //console.log("default_value:"+default_value);
+        //console.log(statusArr);
+        for (var i = 0; i < statusArr.length; i++) {
+
+            var status_id = statusArr[i].id;
+            var status_title = statusArr[i].name;
+            var color = statusArr[i].color;
+            var selected = '';
+            var text_color = '#67626294';
+            if (status_id == default_value) {
+                selected = 'active';
+                text_color = statusArr[i].text_color;
+            }
+            html += ' <label class="btn btn-sm btn-default ' + selected + ' "';
+            html += ' data-for_value="' + status_id + ' " data-color="' + text_color + '"';
+            html += 'data-for_id="' + id + '" style=" color:'+text_color+' ">';
+            html += status_title;
+            html += ' </label>';
+        }
+        html += '</div>';
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldStatus = function (config, field, ui_type) {
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params[' + name + ']';
+        var default_value = field.default_value
+        var required_html = '';
+        if (required) {
+            required_html = '<span class="required"> *</span>';
+        }
+        var html = '';
+        if (default_value == null || default_value == 'null') {
+            default_value = '';
+        }
+        var project_id = '';
+        if (is_empty(_cur_form_project_id)) {
+            _cur_form_project_id = _cur_project_id;
+        }
+        project_id = _cur_form_project_id;
+        var statusArr = _allow_add_status;
+        if (ui_type == 'edit') {
+            statusArr = _allow_update_status;
+        }
+        console.log(statusArr)
+        var data = {
+            project_id: project_id,
+            project_key: _cur_project_key,
+            display_name: display_name,
+            default_value: default_value,
+            field_name: field_name,
+            list_data:statusArr,
+            name: field.name,
+            id: ui_type + "_issue_" + name
+        };
+        // console.log(data);
+        var source = $('#status_tpl').html();
+        var template = Handlebars.compile(source);
+        html = template(data);
 
         return IssueForm.prototype.wrapField(config, field, html);
     }

@@ -47,7 +47,7 @@ class IssueResolve extends BaseAdminCtrl
     public function fetchAll()
     {
         $model = new IssueResolveModel();
-        $issue_resolves = $model->getAll(false);
+        $issue_resolves = $model->getAllItem(false);
         $data = [];
         $data['issue_resolve'] = $issue_resolves;
 
@@ -110,6 +110,7 @@ class IssueResolve extends BaseAdminCtrl
         $info = [];
         $info['name'] = $params['name'];
         $info['_key'] = $params['key'];
+        $info['sequence'] = (int)$params['sequence'];
         $info['color'] = isset($params['color']) ? $params['color']:'';
 
         $info['is_system'] = '0';
@@ -170,6 +171,9 @@ class IssueResolve extends BaseAdminCtrl
         }
         if (isset($params['color'])) {
             $info['color'] = $params['color'];
+        }
+        if (isset($params['sequence'])) {
+            $info['sequence'] = (int)$params['sequence'];
         }
         $row = $model->getByName($info['name']);
         if (isset($row['id']) && ($row['id'] != $id)) {

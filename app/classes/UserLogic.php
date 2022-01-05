@@ -287,11 +287,14 @@ class UserLogic
         if (strpos($avatar, 'http') === false) {
             if (empty($avatar)) {
                 $avatar = ROOT_URL . 'gitlab/images/default_user.png';
-                if (!empty($email)) {
-                    $avatar = getGravatar($email);
-                }
             } else {
-                $avatar = ATTACHMENT_URL . $avatar;
+                list($avatar) = explode("?", $avatar);
+                if (!file_exists(PUBLIC_PATH."attachment/".$avatar)){
+                    $avatar = ROOT_URL . 'gitlab/images/default_user.png';
+                }else{
+                    $avatar = ATTACHMENT_URL . $avatar;
+                }
+
             }
         }
         return $avatar;
@@ -769,6 +772,17 @@ class UserLogic
                 $finalData = $arr;
             }
         }
+        if (isset($finalData["issue_type"])) {
+            $projectId = $project["id"];
+            $issueTypes = (new IssueTypeLogic())->getIssueType($projectId);
+            $issueTypesIdArr = array_column($issueTypes, "id");
+            if (!in_array($finalData["issue_type"], $issueTypesIdArr)){
+                $finalData["issue_type"] = $issueTypesIdArr[0];
+            }
+        }
+
+
+
         return $finalData;
     }
 }

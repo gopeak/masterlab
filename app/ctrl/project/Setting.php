@@ -2,7 +2,9 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\classes\IssueFavFilterLogic;
 use main\app\classes\LogOperatingLogic;
+use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectListCountLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\IssueTypeLogic;
@@ -13,7 +15,10 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\ctrl\Org;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
+use main\app\model\issue\IssueFilterModel;
+use main\app\model\issue\IssueTypeSchemeItemsModel;
 use main\app\model\OrgModel;
+use main\app\model\project\ProjectFlagModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
@@ -63,7 +68,6 @@ class Setting extends BaseUserCtrl
             if (isset($params['name']) && $projectModel->checkIdNameExist($projectId, $params['name'])) {
                 $this->ajaxFailed('表单验证失败,项目名称已经被使用了,请更换一个吧');
             }
-
             if (!isset($params['lead'])  && empty($preData['lead'])) {
                 $params['lead'] = $uid;
             }
@@ -91,6 +95,9 @@ class Setting extends BaseUserCtrl
             //$info['detail'] = $params['detail'];
             if (isset($params['workflow_scheme_id'])) {
                 $info['workflow_scheme_id'] = (int)$params['workflow_scheme_id'];
+            }
+            if (isset($params['is_strict_status'])) {
+                $info['is_strict_status'] = (int)$params['is_strict_status'];
             }
             if (isset($params['default_issue_type_id'])) {
                 $info['default_issue_type_id'] = (int)$params['default_issue_type_id'];
@@ -144,6 +151,14 @@ class Setting extends BaseUserCtrl
                         } else {
                             $new = ['issue_type_scheme_id' => $issueTypeSchemeId, 'project_id' => $projectId];
                             $projectIssueTypeSchemeDataModel->insert($new);
+                        }
+                        // 判断默认事项类型是否在类型方案中
+                        $schemeTypeItems = (new IssueTypeSchemeItemsModel())->getItemsBySchemeId($issueTypeSchemeId);
+                        $typeIdArr = array_column($schemeTypeItems, "type_id");
+                        $defaultIssueTypeId = $info['default_issue_type_id']  ?? $preData['default_issue_type_id'];
+                        if  (!in_array($defaultIssueTypeId, $typeIdArr)) {
+                            $defaultIssueTypeId = $typeIdArr[0] ?? 1;
+                            $projectModel->update(['default_issue_type_id'=>$defaultIssueTypeId], array('id' => $projectId));
                         }
                     }
                     $projectModel->db->commit();
@@ -208,7 +223,7 @@ class Setting extends BaseUserCtrl
                 $this->ajaxFailed('错误', '更新数据失败,详情:' . $ret[1]);
             }
         } else {
-            $this->ajaxFailed('错误', '请求方式ERR');
+            $this->ajaxFailed('错误', '请求方式错误');
         }
     }
 
@@ -222,6 +237,175 @@ class Setting extends BaseUserCtrl
         $logic = new IssueTypeLogic();
         $data['issue_types'] = $logic->getIssueType($projectId);
         $this->ajaxSuccess('success', $data);
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchIssueTypeBySchemeID()
+    {
+        $schemeId = isset($_GET['id']) ? (int)$_GET['id'] : null;
+        $logic = new IssueTypeLogic();
+        $data['issue_types'] = $logic->getIssueTypeBySchemeID($schemeId);
+        $this->ajaxSuccess('success', $data);
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
+
+    /**
+     * @throws \Exception
+     */
+    public function updateFilter()
+    {
+        $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;
+        $id = intval($id);
+        $uid = $this->getCurrentUid();
+        $issueFilterModel = new IssueFilterModel();
+
+        $filter = $issueFilterModel->getRowById($id);
+        if (!isset($filter['name'])) {
+            $this->ajaxFailed('param_error:id_not_exist');
+        }
+        $row = [];
+        if (isset($_POST['name']) && !empty($_POST['name'])) {
+            $row['name'] = $_POST['name'];
+        }
+        if (isset($_POST['description'])) {
+            $row['description'] = $_POST['description'];
+        }
+        if (isset($_POST['order_weight'])) {
+            $row['order_weight'] = intval($_POST['order_weight']);
+        }
+        if (isset($_POST['is_show'])) {
+            $row['is_show'] = intval($_POST['is_show']);
+        }
+        if (empty($row)) {
+            $this->ajaxFailed('param_error:data_is_empty');
+        }
+
+        $ret = $issueFilterModel->updateById($id, $row);
+        if ($ret[0]) {
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT_SETTING;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '修改项目的过滤器';
+            $logData['pre_data'] = $filter;
+            $logData['cur_data'] = $row;
+            LogOperatingLogic::add($uid, $filter['projectid'], $logData);
+
+            $event = new CommonPlacedEvent($this, ['pre_data' => $filter, 'cur_data' => $row]);
+            $this->dispatcher->dispatch($event,  Events::onProjectFilterUpdate);
+            $this->ajaxSuccess('操作成功');
+        } else {
+            $this->ajaxFailed('服务器执行失败，请重试');
+        }
+    }
+
+
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
+    public function deleteFilter()
+    {
+        $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;
+        $issueFilterMode = new IssueFilterModel();
+        $filter = $issueFilterMode->getRowById($id);
+        if (!isset($filter['name'])) {
+            $this->ajaxFailed('param_error:id_not_exist');
+        }
+        $projectId = $filter['projectid'];
+        $updatePerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::ADMINISTER_PROJECTS);
+        if (!$updatePerm) {
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要管理项目权限');
+        }
+
+        $deleted = $issueFilterMode->deleteItemById($id);
+        if (!$deleted){
+            $this->ajaxFailed('服务器执行失败');
+        }
+        $uid = $this->getCurrentUid();
+        $callFunc = function ($value) {
+            return '已删除';
+        };
+        $filter2 = array_map($callFunc, $filter);
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT_SETTING;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_DELETE;
+        $logData['remark'] = '删除项目过滤器';
+        $logData['pre_data'] = $filter;
+        $logData['cur_data'] = $filter2;
+        LogOperatingLogic::add($uid, $projectId, $logData);
+
+        $event = new CommonPlacedEvent($this, $filter);
+        $this->dispatcher->dispatch($event,  Events::onProjectFilterDelete);
+        $this->ajaxSuccess('操作成功');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchFilter()
+    {
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+        $issueFilterModel = new IssueFilterModel();
+        $userFilter =  $issueFilterModel->getItemById($id);
+        if(empty($userFilter)){
+            $this->ajaxFailed('数据不存在,可能已经被删除了,请刷新页面重试');
+        }
+        $this->ajaxSuccess('ok', $userFilter);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchFilters()
+    {
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
+        $preDefinedFilterArr = [];
+        $projectFlagModel = new ProjectFlagModel();
+        $filterFlagRow = $projectFlagModel->getByFlag($projectId, "filter_json");
+        if (!isset($filterFlagRow['filter_json'])){
+            $preDefinedFilterArr = null;
+        }else{
+            $preDefinedFilterArr = json_decode($filterFlagRow['filter_json'], true);
+        }
+        $arr = [];
+        foreach (IssueFavFilterLogic::$preDefinedFilter as $key =>$item) {
+            $row = $item;
+            $row['key'] = $key;
+            $row['is_pre_defined'] = '1';
+            $row['filter'] = '';
+            $row['is_show'] = '0';
+            if ( is_array($preDefinedFilterArr) && in_array($key, $preDefinedFilterArr)){
+                $row['is_show'] = '1';
+            }
+            if (is_null($preDefinedFilterArr)){
+                $row['is_show'] = '1';
+            }
+            $arr[] = $row;
+        }
+        $issueFilterModel = new IssueFilterModel();
+        $userFilters =  $issueFilterModel->getRowsByKey("*", ['projectid'=>$projectId, 'share_scope'=>'project'], null, 'order_weight desc');
+        foreach ($userFilters as $userFilter) {
+            $userFilter['key'] = $userFilter['id'];
+            $userFilter['is_pre_defined'] = '0';
+            $arr[] = $userFilter;
+        }
+        $data['filters'] = $arr;
 
         $this->ajaxSuccess('ok', $data);
     }

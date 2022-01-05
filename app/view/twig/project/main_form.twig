@@ -153,7 +153,7 @@
 													<select  name="params[lead]" id="project_lead" title="项目负责人" class="selectpicker">
 														{% for row in users %}
 															{% set  display_name = row['display_name'] %}
-															<option value="<?=row.uid?>"  data-content="<img width='20px' height='20px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/<?=row.uid?>.png' > <?=display_name?>"  ><?=display_name?></option>
+															<option value="<?=row.uid?>"  data-content="<img width='20px' height='20px' class=' float-none' style='border-radius: 50%;' src='<?=row.avatar?>' > <?=display_name?>"  ><?=display_name?></option>
 														{% endfor %}
 													</select>
 													<!--<a class="assign-to-me-link " href="#">赋予给我</a>-->

@@ -691,20 +691,23 @@ class AgileLogic
                     }
                     if ($type == 'resolve' && !empty($itemArr)) {
                         $filtered = true;
-                        $sql .= " OR   `resolve` in (:resolve) ";
+                        $or  =  trimStr($sql) == "WHERE (" ? '' : 'OR ';
+                        $sql .=  $or. "   `resolve` in (:resolve) ";
                         $idArr = self::getIdArrByKeys($resolveKeyArr, $itemArr);
                         $params['resolve'] = implode(',', $idArr);
                     }
                     if ($type == 'assignee' && !empty($itemArr)) {
                         $filtered = true;
-                        $sql .= " OR   `assignee` in (:assignee) ";
+                        $or  =  trimStr($sql) == "WHERE (" ? '' : 'OR ';
+                        $sql .=  $or. "   `assignee` in (:assignee) ";
                         $params['assignee'] = implode(',', $itemArr);
                     }
                     if ($type == 'label' && !empty($itemArr)) {
                         $filtered = true;
                         $issueIdArr = $issueLabelDataModel->getIssueIdArrByIds($itemArr);
                         $issueIdStr = implode(',', $issueIdArr);
-                        $sql .= " OR   `id`  in (:label_issue_ids) ";
+                        $or  =  trimStr($sql) == "WHERE (" ? '' : 'OR ';
+                        $sql .= $or. "  `id`  in (:label_issue_ids) ";
                         $params['label_issue_ids'] = $issueIdStr;
                     }
                 }
@@ -846,7 +849,7 @@ class AgileLogic
                 $orderBy = 'id';
                 $sortBy = 'DESC';
                 $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
-                //echo $sql;die;
+                // echo $sql;die;
                 $table = $issueModel->getTable();
                 // 获取总数
                 $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;

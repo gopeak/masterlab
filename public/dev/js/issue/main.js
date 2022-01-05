@@ -38,13 +38,12 @@ var IssueMain = (function () {
 
     var _temp_data = {};
     var _default_data = null;
-    var _default_issue_type_id = 1;
+    var   _default_issue_type_id = 1;
     var _last_create_issue_data = null;
 
     // constructor
     function IssueMain(options) {
         _options = options;
-
         if(window._default_issue_type_id){
             _default_issue_type_id = window._default_issue_type_id;
         }
@@ -129,7 +128,8 @@ var IssueMain = (function () {
     IssueMain.prototype.saveFilter = function (name) {
         window.is_save_filter = '1';
         var searchQuery = window.$filterSreach.getCurrentSearchesStr();
-        console.log(searchQuery);
+        var is_project_filter = $("#is_project_filter").is(':checked');
+        var is_project_filter_value = is_project_filter ? "1" :"0";
        // window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
@@ -139,7 +139,14 @@ var IssueMain = (function () {
                 dataType: "json",
                 async: true,
                 url: root_url + 'issue/main/save_filter',
-                data: { project_id: window._cur_project_id, name: name, filter: encodeURIComponent(searchQuery), sort_field: $sort_field, sort_by: $sort_by },
+                data: {
+                    project_id: window._cur_project_id,
+                    name: name,
+                    filter: encodeURIComponent(searchQuery),
+                    sort_field: $sort_field,
+                    sort_by: $sort_by ,
+                    is_project_filter:is_project_filter_value
+                },
                 success: function (resp) {
                     auth_check(resp);
                     if (resp.ret == '200') {
@@ -203,6 +210,9 @@ var IssueMain = (function () {
             })
         }
 
+        if(JSON.stringify(first_issue_type) == "{}"){
+            first_issue_type = issue_types[0];
+        }
         if (first_issue_type) {
             $("#create_issue_types_select").find("option[value='" + first_issue_type.id + "']").attr("selected", true);
             IssueMain.prototype.fetchCreateUiConfig(first_issue_type.id, issue_types);
@@ -272,9 +282,9 @@ var IssueMain = (function () {
             data: { issue_view: issue_view },
             success: function (resp) {
                 auth_check(resp);
-                if (issue_view !== 'detail') {
+               // if (issue_view !== 'detail') {
                     window.location.reload();
-                }
+               // }
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -428,7 +438,13 @@ var IssueMain = (function () {
                 $('#modal-adv_query').modal('hide');
                 IssueMain.prototype.handleRenderIssues(resp, success);
                 IssueAdvQuery.prototype.renderListAdvQuery(adv_data);
-
+                if (sort_field!=""){
+                    $(".sort_select ").removeClass("is-active");
+                    $('#btn-sort_field').data('sort_field', sort_field);
+                    //$('#btn-sort_field').dropdown('update')
+                    var text = $(".sort_select[data-field='"+sort_field+"']").text();
+                    $('#btn-sort_field').text(text);
+                }
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -467,6 +483,7 @@ var IssueMain = (function () {
             }
             resp.data.display_fields = window.display_fields;
             resp.data.uiDisplayFields = window.uiDisplayFields;
+            resp.data.issue_view  = window.issue_view ;
             var result = template(resp.data);
             let table_footer_operation_tpl = $('#table_footer_operation_tpl').html();
             if (table_footer_operation_tpl != null && table_footer_operation_tpl != undefined)

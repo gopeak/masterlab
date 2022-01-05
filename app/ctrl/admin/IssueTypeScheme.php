@@ -101,12 +101,14 @@ class IssueTypeScheme extends BaseAdminCtrl
         if (!isset($params['name']) || empty($params['name'])) {
             $err['name'] = '名称不能为空';
         }
-
-        $issueTypes = $params['issue_types'];
-        if (!is_array($issueTypes)) {
+        if (!isset($params['issue_types']) || empty($params['issue_types'])) {
             $err['issue_types'] = '事项类型不能为空';
+        }else{
+            $issueTypes = $params['issue_types'];
+            if (!is_array($issueTypes)) {
+                $err['issue_types'] = '事项类型不能为空';
+            }
         }
-
         $model = new IssueTypeSchemeModel();
         if (isset($model->getByName($params['name'])['id'])) {
             $err['name'] = '名称已经被使用';

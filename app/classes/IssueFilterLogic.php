@@ -463,9 +463,6 @@ class IssueFilterLogic
         }
 
         $orderBy = 'id';
-        if (isset($_GET['sort_field'])) {
-            $orderBy = trimStr($_GET['sort_field']);
-        }
         $sortBy = 'DESC';
         if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
             $sortBy = trimStr($_GET['sort_by']);
@@ -482,6 +479,9 @@ class IssueFilterLogic
         if ($sysFilter == 'update_recently') {
             $orderBy = 'updated';
             $sortBy = 'DESC';
+        }
+        if (isset($_GET['sort_field'])) {
+            $orderBy = trimStr($_GET['sort_field']);
         }
 
         $start = $pageSize * ($page - 1);
@@ -924,7 +924,7 @@ class IssueFilterLogic
     public static function getCount($projectId)
     {
         if (empty($projectId)) {
-            return [];
+            return 0;
         }
         $model = new IssueModel();
         $table = $model->getTable();

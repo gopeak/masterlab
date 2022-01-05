@@ -77,7 +77,10 @@
             font-size: 28px;
             margin-left: 10px;
         }
-
+        .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+            min-width: 120px !important;
+            max-width: 200px !important;
+        }
     </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="hornet" style="background-color: #fff;">
@@ -371,7 +374,7 @@
         <div class="modal-dialog issue-modal-dialog" style="width: 900px;">
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
-                    <h3 class="modal-header-title">事项维护</h3>
+                    <h3 class="modal-header-title">事项表单</h3>
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
                 <div id="modal-body" class="modal-body issue-modal-body form-horizontal" style="padding: 15px 50px;">
@@ -435,7 +438,6 @@
                                 {% endfor %}
                             </select>
                             <p id="tip-assignee" class="gl-field-error hide"></p>
-
                         </div>
                         <div class="col-sm-2"><span id="sprint_title">迭代:</span></div>
                         <div class="col-sm-4">

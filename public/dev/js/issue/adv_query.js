@@ -163,7 +163,16 @@ var IssueAdvQuery = (function () {
         }
         var sort_field = $('#adv_sort_field').val();
         var sort_by = $('#adv_sort_by').val();
-        var postData = { project_id: window._cur_project_id, name: name, filter: filterJson, sort_field:sort_field, sort_by:sort_by };
+        var is_project_filter = $("#is_adv_project_filter").is(':checked');
+        var is_project_filter_value = is_project_filter ? "1" :"0";
+        var postData = {
+            project_id: window._cur_project_id,
+            name: name,
+            filter: filterJson,
+            sort_field:sort_field,
+            sort_by:sort_by ,
+            is_project_filter:is_project_filter_value
+        };
         console.log(postData);
         //return;
         $.ajax({

@@ -18,6 +18,9 @@ use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\agile\AgileBoardModel;
 use main\app\model\agile\AgileBoardColumnModel;
+use main\app\model\field\FieldCustomValueModel;
+use main\app\model\field\FieldModel;
+use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueStatusModel;
@@ -1124,12 +1127,71 @@ class Agile extends BaseUserCtrl
             $columns[] = $closedColumn;
         }
         if ($fetchRet) {
+            $columns = $this->formatColumnsIssues($columns);
             $data['columns'] = $columns;
             $this->ajaxSuccess('success', $data);
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
         }
     }
+    /**
+     * @param $columns
+     * @throws \Exception
+     */
+    private function formatColumnsIssues($columns)
+    {
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllUser();
+        // 获取自定义字段值
+        $fieldCustomValueModel = new FieldCustomValueModel();
+        $fieldsArr = (new FieldModel())->getCustomFields();
+        $fieldsArr = array_column($fieldsArr, null, 'id');
+        $customFieldIdArr = array_column($fieldsArr, 'id');
+        foreach ($columns as &$column) {
+            $issueIdArr = array_column($column['issues'], 'id');
+            $labelDataRows = (new IssueLabelDataModel())->getsByIssueIdArr($issueIdArr);
+            $labelDataArr = [];
+            foreach ($labelDataRows as $labelData) {
+                $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
+            }
+            $customValuesIssueArr = [];
+            if ($fieldsArr) {
+                $customValuesArr = $fieldCustomValueModel->getsByIssueIdArr($issueIdArr, $customFieldIdArr);
+                foreach ($customValuesArr as $customValue) {
+                    $key = $customValue['value_type'] . '_value';
+                    $issueId = $customValue['issue_id'];
+                    $fieldId = $customValue['custom_field_id'];
+                    $fieldArr = $fieldsArr[$fieldId];
+                    if (isset($fieldArr['name'])) {
+                        $fieldValue = !isset($customValue[$key]) ? $customValue['string_value'] : $customValue[$key];
+                        $fieldName = $fieldArr['name'];
+                        $customValuesIssueArr[$issueId][$fieldName] = $fieldValue;
+                    }
+                }
+            }
+            foreach ($column['issues'] as &$issue) {
+                $issueId = $issue['id'];
+                if (isset($labelDataArr[$issueId])) {
+                    $arr = array_unique($labelDataArr[$issueId]);
+                    sort($arr);
+                    $issue['label_id_arr'] = $arr;
+                } else {
+                    $issue['label_id_arr'] = [];
+                }
+                if (isset($customValuesIssueArr[$issueId])) {
+                    $customValueArr = $customValuesIssueArr[$issueId];
+                    $issue = array_merge($customValueArr, $issue);
+                }
+                $emptyObj = new \stdClass();
+                $issue['creator_info'] = isset($users[$issue['creator']]) ? $users[$issue['creator']] : $emptyObj;
+                $issue['modifier_info'] = isset($users[$issue['modifier']]) ? $users[$issue['modifier']] : $emptyObj;
+                $issue['reporter_info'] = isset($users[$issue['reporter']]) ? $users[$issue['reporter']] : $emptyObj;
+                $issue['assignee_info'] = isset($users[$issue['assignee']]) ? $users[$issue['assignee']] : $emptyObj;
+            }
+       }
+        return $columns;
+    }
+
 
     /**
      * @throws \Doctrine\DBAL\DBALException

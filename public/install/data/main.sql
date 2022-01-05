@@ -2539,7 +2539,8 @@ CREATE TABLE `project_main` (
                                 `default_issue_type_id` int UNSIGNED NOT NULL DEFAULT '1' COMMENT '创建事项时默认的类型',
                                 `is_remember_last_issue` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否记住上次创建事项的数据',
                                 `remember_last_issue_field` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]' COMMENT '上次创建事项的数据字段',
-                                `remember_last_issue_data` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '{}' COMMENT '上次创建事项时的一些数据'
+                                `remember_last_issue_data` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '{}' COMMENT '上次创建事项时的一些数据',
+                                `is_strict_status`  tinyint(2) unsigned DEFAULT '0' COMMENT '是否严格启用状态流'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

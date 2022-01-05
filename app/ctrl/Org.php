@@ -569,8 +569,9 @@ class Org extends BaseUserCtrl
         $projModel = new ProjectModel();
         $projects = $projModel->getsByOrigin($id);
         if (!empty($projects)) {
+            $defaultOrg = $model->getById(1);
             foreach ($projects as $project) {
-                $projModel->updateById(['org_id' => '1'], $project['id']);
+                $projModel->updateById(['org_id' => '1', 'org_path'=>$defaultOrg['path']], $project['id']);
             }
         }
 
