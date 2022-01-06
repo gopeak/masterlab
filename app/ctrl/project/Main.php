@@ -6,6 +6,7 @@
 namespace main\app\ctrl\project;
 
 use main\app\classes\ConfigLogic;
+use main\app\classes\IssueLogic;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
@@ -19,11 +20,13 @@ use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\event\CommonPlacedEvent;
 use main\app\event\Events;
+use main\app\model\field\FieldModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
+use main\app\model\project\ProjectFlagModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectMainExtraModel;
@@ -382,10 +385,47 @@ class Main extends Base
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function pageSettingsDisplayField()
+    {
+        if (!PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::MANAGER_PROJECT_PERM_ID)) {
+            if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
+                $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
+                die;
+            }
+        }
+        $projectModel = new ProjectModel();
+        $data['title'] = '设置';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'display_field';
+
+        $data['root_domain'] = ROOT_URL;
+        $data = RewriteUrl::setProjectData($data);
+
+        // 表格视图的显示字段
+        $issueLogic = new IssueLogic();
+        $data['display_fields'] = $issueLogic->fetchProjectDisplayFields($data['project_id']);
+
+        $uiDisplayFields = IssueLogic::$uiDisplayFields;
+        $fieldsArr = FieldModel::getInstance()->getCustomFields();
+        $fieldsIdArr = array_column($fieldsArr, 'title', 'name');
+        $data['uiDisplayFields'] = array_merge($uiDisplayFields, $fieldsIdArr);
+
+        $projectFlagModel = new ProjectFlagModel();
+        $isUserDisplayField = $projectFlagModel->getValueByFlag($data['project_id'], "is_user_display_field");
+        if(is_null($isUserDisplayField)){
+            $data['is_user_display_field'] = "1";
+        }else{
+            $data['is_user_display_field'] = $isUserDisplayField;
+        }
+        $this->render('gitlab/project/setting_display_field.twig', $data);
+    }
+
 
     /**
      * @throws \Exception
-     * @todo 此处有bug, 不能即是页面有时ajax的处理
      */
     public function pageSettingsFilter()
     {
@@ -395,33 +435,11 @@ class Main extends Base
                 die;
             }
         }
-
-        $projectModel = new ProjectModel();
-        $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
-
-        $projectMainExtra = new ProjectMainExtraModel();
-        $infoExtra = $projectMainExtra->getByProjectId($info['id']);
-        if ($infoExtra) {
-            $info['detail'] = $infoExtra['detail'];
-        } else {
-            $info['detail'] = '';
-        }
-
         $data['title'] = '设置';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'filter';
-
-        $projectTpl = (new ProjectTemplateModel())->getById($info['project_tpl_id']);
-        if($projectTpl){
-            $info['project_tpl_text'] = $projectTpl['name'];
-        }
-        $data['info'] = $info;
-
         $data['root_domain'] = ROOT_URL;
-
-
         $data = RewriteUrl::setProjectData($data);
-
         //print_r($data['project']);die;
         $this->render('gitlab/project/setting_filter.twig', $data);
     }

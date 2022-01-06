@@ -24,6 +24,16 @@
                     <span>事项类型</span>
                 </a>
             </li>
+            <li class=" {% if (sub_nav_active == 'display_field') %} <?= 'active' ?>{% endif %}">
+                <a title="事项表格视图的显示字段" href="<?= project_root_url?>/settings_display_field">
+                    <span>表格字段</span>
+                </a>
+            </li>
+            <li class=" {% if (sub_nav_active == 'filter') %} <?= 'active' ?>{% endif %}">
+                <a title="项目的全局过滤器" href="<?= project_root_url?>/settings_filter">
+                    <span>项目过滤器</span>
+                </a>
+            </li>
             <li class=" {% if (sub_nav_active == 'sprint') %} <?= 'active' ?>{% endif %}">
                 <a title="迭 代" href="<?= project_root_url?>/settings_sprint">
                     <span>迭 代</span>
@@ -49,11 +59,7 @@
                     <span>分 类</span>
                 </a>
             </li>
-            <li class=" {% if (sub_nav_active == 'filter') %} <?= 'active' ?>{% endif %}">
-                <a title="项目的全局过滤器" href="<?= project_root_url?>/settings_filter">
-                    <span>过滤器</span>
-                </a>
-            </li>
+
             <li class=" {% if (sub_nav_active == 'project_member') %} <?= 'active' ?>{% endif %}">
                 <a title="项目成员" href="<?= project_root_url?>/settings_project_member"><span>项目成员</span>
                 </a>

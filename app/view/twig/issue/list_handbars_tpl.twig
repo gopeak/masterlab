@@ -90,7 +90,7 @@
 									{{/if_in_array}}
 
 									{{#if_in_array 'summary'  ../display_fields}}
-										<td class="show-tooltip width_35" title="快捷键 E 可呼出当前事项的编辑界面">
+										<td class="show-tooltip width_35" title="快捷键 E 可呼出当前事项的编辑界面" style="min-width: 248px;">
 											<a
 											 {{#if_eq  ../issue_view "detail"}}   href="javascript:linkIssue({{id}})" {{else}} href="/issue/detail/index/{{id}}" {{/if_eq}}
 											  class="commit-row-message">
@@ -172,7 +172,7 @@
 									{{/if_in_array}}
 
 									{{#if_in_array 'plan_date'  ../display_fields}}
-										<td class="width_8"  title="双击可直接修改">
+										<td class="width_8"  title="双击可直接修改" style="min-width: 180px">
 											<small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;cursor:pointer;">{{show_date_range}}
 											</small>
 										</td>

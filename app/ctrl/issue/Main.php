@@ -177,7 +177,19 @@ class Main extends BaseUserCtrl
         $data['description_templates'] = $descTplModel->getAll(false);
         // 表格视图的显示字段
         $issueLogic = new IssueLogic();
-        $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
+        $projectFlagModel = new ProjectFlagModel();
+        $isUserDisplayField = $projectFlagModel->getValueByFlag($data['project_id'], "is_user_display_field");
+        if(is_null($isUserDisplayField)){
+            $data['is_user_display_field'] = "1";
+        }else{
+            $data['is_user_display_field'] = $isUserDisplayField;
+        }
+        $data['user_display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
+        if ($data['is_user_display_field'] !=="1"){
+            $data['display_fields'] = IssueLogic::fetchProjectDisplayFields($data['project_id']);
+        }else{
+            $data['display_fields'] = $data['user_display_fields'];
+        }
         $uiDisplayFields = IssueLogic::$uiDisplayFields;
         $fieldsArr = FieldModel::getInstance()->getCustomFields();
         $fieldsIdArr = array_column($fieldsArr, 'title', 'name');

@@ -110,9 +110,7 @@
                                 <div class="table-holder">
                                     <table class="table  tree-table" id="tree-slider" style="display:none;">
                                         <thead>
-
                                         <tr>
-
                                             <th class="js-pipeline-info pipeline-info">
                                                 {% if ( 'issue_num' in  display_fields) %}编 号
                                                 {% endif %}
@@ -171,11 +169,11 @@
                                                 </th>
                                             {% endif %}
 
-                                            {% if ('summary'in display_fields) %}
-                                                <th class="js-pipeline-commit pipeline-commit">主 题</th>
+                                            {% if ('summary' in display_fields) %}
+                                                <th class="js-pipeline-commit pipeline-commit" style="min-width: 248px;">主 题</th>
                                             {% endif %}
 
-                                            {% if ('weight'in display_fields) %}
+                                            {% if ('weight' in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="weight"
                                                        data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
@@ -244,7 +242,7 @@
                                             {% endif %}
 
                                             {% if ('plan_date'in display_fields) %}
-                                                <th class="js-pipeline-date pipeline-date">
+                                                <th class="js-pipeline-date pipeline-date" style="min-width: 180px">
                                                     <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
                                                        data-sortby="<?= sort_by == 'desc' ? 'asc' : 'desc' ?>" href="#">
                                                         计划时间

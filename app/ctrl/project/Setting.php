@@ -332,8 +332,6 @@ class Setting extends BaseUserCtrl
         }
     }
 
-
-
     /**
      * @throws \Exception
      */
@@ -387,7 +385,6 @@ class Setting extends BaseUserCtrl
             $this->ajaxFailed('服务器执行失败，请重试');
         }
     }
-
 
     /**
      * @throws \Doctrine\DBAL\DBALException
@@ -463,4 +460,60 @@ class Setting extends BaseUserCtrl
 
         $this->ajaxSuccess('ok', $data);
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function updateDisplayField()
+    {
+        $projectId = isset($_REQUEST['project_id']) ? (int)$_REQUEST['project_id'] : null;
+        $projectId = intval($projectId);
+        $updatePerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::ADMINISTER_PROJECTS);
+        if (!$updatePerm) {
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要管理项目权限');
+        }
+        $isUserDisplayField = isset($_POST['is_user_display_field']) ? $_POST['is_user_display_field'] : null;
+        $fieldArr = [];
+        if (!empty($_POST['display_fields'])) {
+            $fieldArr = $_POST['display_fields'];
+        }
+        $uid = $this->getCurrentUid();
+        $project = (new ProjectModel())->getById($projectId);
+        if(empty($project)){
+            $this->ajaxFailed("参数错误:project_id不存在");
+        }
+        $projectFlagModel = new ProjectFlagModel();
+        $flagRow = $projectFlagModel->getByFlag($projectId, "display_field_json");
+        if (!isset($flagRow['flag'])){
+            $ret = $projectFlagModel->add($projectId, 'display_field_json' , json_encode($fieldArr));
+        }else{
+            $ret = $projectFlagModel->updateById($flagRow['id'], ['value'=>json_encode($fieldArr)]);
+        }
+        $flagRow = $projectFlagModel->getByFlag($projectId, "is_user_display_field");
+        if (!isset($flagRow['flag'])){
+            $ret = $projectFlagModel->add($projectId, 'is_user_display_field' , $isUserDisplayField);
+        }else{
+            $ret = $projectFlagModel->updateById($flagRow['id'], ['value'=>$isUserDisplayField]);
+        }
+        if ($ret[0]) {
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT_SETTING;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '修改项目的表格字段';
+            $logData['pre_data'] = $flagRow;
+            $logData['cur_data'] = [];
+            LogOperatingLogic::add($uid, $projectId, $logData);
+            $event = new CommonPlacedEvent($this, ['pre_data' => $flagRow, 'cur_data' => []]);
+            $this->dispatcher->dispatch($event,  Events::onProjectDisplayFieldUpdate);
+            $this->ajaxSuccess('操作成功');
+        } else {
+            $this->ajaxFailed('服务器执行失败，请重试');
+        }
+    }
+
 }

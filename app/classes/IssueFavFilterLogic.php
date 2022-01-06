@@ -64,7 +64,6 @@ class IssueFavFilterLogic
             $arr[] = $userFilter;
         }
         return $arr;
-
     }
 
     public function getCurUserFavFilterByProject($projectId = null)
