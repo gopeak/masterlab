@@ -15,14 +15,25 @@ let Filter = (function () {
 
     };
 
-
-    Filter.prototype.delete = function (id) {
-        $.post(_options.delete_url,{id:id},function (result) {
-            if (result.ret == 200) {
+    Filter.prototype.togglePreDefinedFilter = function(_key, action) {
+        $.post(_options.togglePreDefinedFilterUrl,{'key':_key, 'action':action},function (result) {
+            if (result.ret == '200') {
                 notify_success(result.msg);
                 window.location.reload();
             } else {
-                notify_error('删除失败');
+                notify_error(result.msg);
+            }
+        });
+    };
+
+
+    Filter.prototype.delete = function (id) {
+        $.post(_options.delete_url,{id:id},function (result) {
+            if (result.ret == '200') {
+                notify_success(result.msg);
+                window.location.reload();
+            } else {
+                notify_error(result.msg);
             }
         });
     };
@@ -32,7 +43,7 @@ let Filter = (function () {
             type: 'GET',
             dataType: "json",
             async: true,
-            url: _options.fetchFilter,
+            url: _options.fetchFilterUrl,
             data: {id: id},
             success: function (resp) {
                 auth_check(resp);
@@ -64,7 +75,7 @@ let Filter = (function () {
             type: 'POST',
             dataType: "json",
             async: true,
-            url: _options.updateFilter,
+            url: _options.updateFilterUrl,
             data: $('#form_edit_action').serialize(),
             success: function (resp) {
                 auth_check(resp);
@@ -102,9 +113,15 @@ let Filter = (function () {
                         Filter.prototype.edit($(this).data('id'));
                     });
 
+                    $(".list_for_show").bind("click", function () {
+                        Filter.prototype.togglePreDefinedFilter($(this).data('key'), 'show');
+                    });
+                    $(".list_for_hide").bind("click", function () {
+                        Filter.prototype.togglePreDefinedFilter($(this).data('key'), 'hide');
+                    });
+
                     $(".list_for_delete").bind("click",function () {
                         let filter_id =  $(this).data('id');
-
                         swal({
                                 title: "确认要删除该过滤器？",
                                 text: "注:删除后，过滤器是无法恢复的！",

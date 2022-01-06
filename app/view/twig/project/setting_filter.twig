@@ -58,7 +58,7 @@
                                                 <tr>
                                                     <th class="js-pipeline-info pipeline-info" style="min-width:50px">过滤器名称</th>
                                                     <th class="js-pipeline-info pipeline-info" style="max-width:30px">类型</th>
-                                                    <th class="js-pipeline-info pipeline-info" style="max-width:30px">是否展示</th>
+                                                    <th class="js-pipeline-info pipeline-info" style="max-width:30px">是否显示</th>
                                                     <th class="js-pipeline-stages pipeline-info" style="min-width:150px">过滤条件</th>
                                                     <th class="js-pipeline-info pipeline-info" >排序权重</th>
                                                     <th class="pipeline-info" style="min-width:60px">操作</th>
@@ -158,7 +158,7 @@
             </td>
             <td  >
                 {{#if_eq is_show 1 }}
-                     <span style="color:blue" title="出现在事项列表页面">展示</span>
+                     <span style="color:blue" title="出现在事项列表页面">显示</span>
                 {{^}}
                 <span style="color:#fc9403" title="不出现在事项列表页面">已隐藏</span>
                 {{/if_eq}}
@@ -172,11 +172,11 @@
             <td  >
             {{#if_eq is_pre_defined 1 }}
                 {{#if_eq is_show 1 }}
-                     <a title="隐藏，不显示" class="btn btn-transparent btn-action list_for_hide" data-id="{{key}}" href="javascript:void(0)">
+                     <a title="隐藏，不显示" class="btn btn-transparent btn-action list_for_hide" data-key="{{key}}" href="javascript:void(0)">
                         <i class="fa fa-ban"></i>
                     </a>
                 {{^}}
-                    <a title="展示出来" class="btn btn-transparent btn-action list_for_show"  data-id="{{key}}" href="javascript:void(0)">
+                    <a title="显示出来" class="btn btn-transparent btn-action list_for_show"  data-key="{{key}}" href="javascript:void(0)">
                         <i class="fa fa-eye"></i>
                     </a>
                 {{/if_eq}}
@@ -214,10 +214,9 @@
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_url:"/project/setting/fetchFilters?project_id=<?=project_id?>",
-            fetchFilter:"/project/setting/fetchFilter?project_id=<?=project_id?>",
-            updateFilter:"/project/setting/updateFilter?project_id=<?=project_id?>",
-            showFilter:"/project/setting/showFilter?project_id=<?=project_id?>",
-            hideFilter:"/project/setting/hideFilter?project_id=<?=project_id?>",
+            fetchFilterUrl:"/project/setting/fetchFilter?project_id=<?=project_id?>",
+            updateFilterUrl:"/project/setting/updateFilter?project_id=<?=project_id?>",
+            togglePreDefinedFilterUrl:"/project/setting/togglePreDefinedFilter?project_id=<?=project_id?>",
             delete_url:"/project/setting/deleteFilter?project_id=<?=project_id?>",
         }
         window.$filter = new Filter( options );

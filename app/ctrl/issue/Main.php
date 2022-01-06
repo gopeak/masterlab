@@ -225,19 +225,7 @@ class Main extends BaseUserCtrl
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
         $data['last_create_data'] = UserLogic::getLastCreateIssueData($userId, $data['project']);
 
-        $data['preDefinedFilterArr'] = [];
-        $projectFlagModel = new ProjectFlagModel();
-        $filterFlagRow = $projectFlagModel->getByFlag($data['project_id'], "filter_json");
-        if (!isset($filterFlagRow['filter_json'])){
-            $data['preDefinedFilterArr'] = IssueFavFilterLogic::$preDefinedFilter;
-        }else{
-            $preDefinedFilterArr = json_decode($filterFlagRow['filter_json'], true);
-            foreach ($preDefinedFilterArr as $item) {
-                if (isset( IssueFavFilterLogic::$preDefinedFilter[$item])){
-                    $data['preDefinedFilterArr'][$item] = IssueFavFilterLogic::$preDefinedFilter[$item];
-                }
-            }
-        }
+        $data['ProjectFilterArr'] = IssueFavFilterLogic::fetchProjectFilters($data['project_id']);
 
         $this->render('gitlab/issue/list.php', $data);
     }
