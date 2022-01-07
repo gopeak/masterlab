@@ -127,6 +127,16 @@ class Setting extends BaseUserCtrl
                             $this->ajaxFailed('错误服务器执行错误,更新项目负责人失败');
                         }
                     }
+                    if (isset($params['is_table_display_avatar'])) {
+                        $isTableDisplayAvatar= (int)$params['is_table_display_avatar'];
+                        $projectFlagModel = new ProjectFlagModel();
+                        $flagRow = $projectFlagModel->getByFlag($projectId, "is_table_display_avatar");
+                        if (!isset($flagRow['flag'])){
+                            $projectFlagModel->add($projectId, 'is_table_display_avatar' , $isTableDisplayAvatar);
+                        }else{
+                            $projectFlagModel->updateById($flagRow['id'], ['value'=>$isTableDisplayAvatar]);
+                        }
+                    }
                     if (isset($params['detail'])) {
                         $projectMainExtra = new ProjectMainExtraModel();
                         if ($projectMainExtra->getByProjectId($projectId)) {

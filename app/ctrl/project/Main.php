@@ -514,6 +514,14 @@ class Main extends Base
         $data = RewriteUrl::setProjectData($data);
         $data['project']['remember_last_issue_field'] = json_decode($data['project']['remember_last_issue_field'], true);
 
+
+        $projectFlagModel = new ProjectFlagModel();
+        $isTableDisplayAvatar = $projectFlagModel->getValueByFlag($data['project_id'], "is_table_display_avatar");
+        if(is_null($isTableDisplayAvatar)){
+            $data['project']['is_table_display_avatar'] = "1";
+        }else{
+            $data['project']['is_table_display_avatar'] = $isTableDisplayAvatar;
+        }
         //print_r($data['project']);die;
         $this->render('gitlab/project/setting_issue.php', $data);
     }

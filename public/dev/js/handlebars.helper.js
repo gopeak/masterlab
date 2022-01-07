@@ -171,6 +171,43 @@ $(function () {
             '</a></span>';
         return new Handlebars.SafeString(html);
     });
+
+    Handlebars.registerHelper('user_html_display_name', function (uid) {
+        var html = '';
+        if (uid == null || typeof(uid) == "undefined" || uid == '') {
+            return '';
+        }
+        var user = getArrayValue(_issueConfig.users, 'uid', uid);
+        if (user == null) {
+            return '';
+        }
+        if (user == null || typeof(user) == "undefined" || !user ) {
+            return '';
+        }
+        html += '<span class="list-item-name"><a   title="'+user.display_name+'"  href="/user/profile/' + user.uid + '">' +
+            user.display_name +
+            '</a></span>';
+        return new Handlebars.SafeString(html);
+    });
+
+    Handlebars.registerHelper('user_text_display_name', function (uid) {
+        var html = '';
+        if (uid == null || typeof(uid) == "undefined" || uid == '') {
+            return '';
+        }
+        var user = getArrayValue(_issueConfig.users, 'uid', uid);
+        if (user == null) {
+            return '';
+        }
+        if (user == null || typeof(user) == "undefined" || !user ) {
+            return '';
+        }
+        html += '<span class="list-item-name">' +
+            user.display_name +
+            '</span>';
+        return new Handlebars.SafeString(html);
+    });
+
     Handlebars.registerHelper('org_user_html', function (uid) {
         var html = '';
         if (uid == null || uid == undefined || uid == '') {
@@ -202,6 +239,24 @@ $(function () {
                 return '';
             }
             html += '<span class="list-item-name"><a title="'+user.display_name+'" href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-placement="left" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
+        }
+        //console.log(html);
+        return new Handlebars.SafeString(html);
+    });
+
+    Handlebars.registerHelper('issue_assistants_display_name', function (uid_arr) {
+        // console.log('issue_assistants_display_name:');
+        // console.log(uid_arr);
+        var users = _issueConfig.users;
+        //console.log(users);
+        var html = '';
+        for (i = 0; i < uid_arr.length; i++) {
+            let uid = _.toString(uid_arr[i]);
+            let user = getArrayValue(_issueConfig.users, 'uid', uid);
+            if (!_.has(user, 'uid')) {
+                return '';
+            }
+            html += '<span class="list-item-name" style="margin-right: 4px"><a title="'+user.display_name+'" href="/user/profile/' + user.uid + '">' + user.display_name + '</a></span>';
         }
         //console.log(html);
         return new Handlebars.SafeString(html);

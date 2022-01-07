@@ -236,9 +236,16 @@ class Main extends BaseUserCtrl
         }
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
         $data['last_create_data'] = UserLogic::getLastCreateIssueData($userId, $data['project']);
-
+        // 项目过滤器
         $data['ProjectFilterArr'] = IssueFavFilterLogic::fetchProjectFilters($data['project_id']);
-
+        // 表格显示头像还是名称
+        $projectFlagModel = new ProjectFlagModel();
+        $isTableDisplayAvatar = $projectFlagModel->getValueByFlag($data['project_id'], "is_table_display_avatar");
+        if(is_null($isTableDisplayAvatar)){
+            $data['is_table_display_avatar'] = "1";
+        }else{
+            $data['is_table_display_avatar'] = $isTableDisplayAvatar;
+        }
         $this->render('gitlab/issue/list.php', $data);
     }
 
@@ -673,6 +680,16 @@ class Main extends BaseUserCtrl
             }
 
         }
+        // 表格显示头像还是名称
+        $projectId =  isset($_GET['project']) ? intval($_GET['project']) : null;
+        $projectFlagModel = new ProjectFlagModel();
+        $isTableDisplayAvatar = $projectFlagModel->getValueByFlag($projectId, "is_table_display_avatar");
+        if(is_null($isTableDisplayAvatar)){
+            $data['is_table_display_avatar'] = "1";
+        }else{
+            $data['is_table_display_avatar'] = $isTableDisplayAvatar;
+        }
+
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
             $this->response($data, $total, $page, $pageSize);
