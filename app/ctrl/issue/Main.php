@@ -29,6 +29,7 @@ use main\app\model\field\FieldCustomValueModel;
 use main\app\model\issue\ExtraWorkerDayModel;
 use main\app\model\issue\HolidayModel;
 use main\app\model\project\ProjectCatalogLabelModel;
+use main\app\model\project\ProjectFlagModel;
 use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -176,7 +177,19 @@ class Main extends BaseUserCtrl
         $data['description_templates'] = $descTplModel->getAll(false);
         // 表格视图的显示字段
         $issueLogic = new IssueLogic();
-        $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
+        $projectFlagModel = new ProjectFlagModel();
+        $isUserDisplayField = $projectFlagModel->getValueByFlag($data['project_id'], "is_user_display_field");
+        if(is_null($isUserDisplayField)){
+            $data['is_user_display_field'] = "1";
+        }else{
+            $data['is_user_display_field'] = $isUserDisplayField;
+        }
+        $data['user_display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
+        if ($data['is_user_display_field'] !=="1"){
+            $data['display_fields'] = IssueLogic::fetchProjectDisplayFields($data['project_id']);
+        }else{
+            $data['display_fields'] = $data['user_display_fields'];
+        }
         $uiDisplayFields = IssueLogic::$uiDisplayFields;
         $fieldsArr = FieldModel::getInstance()->getCustomFields();
         $fieldsIdArr = array_column($fieldsArr, 'title', 'name');
@@ -221,11 +234,18 @@ class Main extends BaseUserCtrl
         } else {
             $data['sprints'] = $sprintModel->getAllItems(false);
         }
-
         $data['project_catalog'] = (new ProjectCatalogLabelModel())->getByProject($data['project_id']);
-
         $data['last_create_data'] = UserLogic::getLastCreateIssueData($userId, $data['project']);
-
+        // 项目过滤器
+        $data['ProjectFilterArr'] = IssueFavFilterLogic::fetchProjectFilters($data['project_id']);
+        // 表格显示头像还是名称
+        $projectFlagModel = new ProjectFlagModel();
+        $isTableDisplayAvatar = $projectFlagModel->getValueByFlag($data['project_id'], "is_table_display_avatar");
+        if(is_null($isTableDisplayAvatar)){
+            $data['is_table_display_avatar'] = "1";
+        }else{
+            $data['is_table_display_avatar'] = $isTableDisplayAvatar;
+        }
         $this->render('gitlab/issue/list.php', $data);
     }
 
@@ -660,6 +680,16 @@ class Main extends BaseUserCtrl
             }
 
         }
+        // 表格显示头像还是名称
+        $projectId =  isset($_GET['project']) ? intval($_GET['project']) : null;
+        $projectFlagModel = new ProjectFlagModel();
+        $isTableDisplayAvatar = $projectFlagModel->getValueByFlag($projectId, "is_table_display_avatar");
+        if(is_null($isTableDisplayAvatar)){
+            $data['is_table_display_avatar'] = "1";
+        }else{
+            $data['is_table_display_avatar'] = $isTableDisplayAvatar;
+        }
+
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
             $this->response($data, $total, $page, $pageSize);
@@ -815,9 +845,13 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
             $arr[] = 'sort_by:' . $_REQUEST['sort_by'];
         }
+        $shareScope = '';
+        if (isset($_REQUEST['is_project_filter']) &&  $_REQUEST['is_project_filter']=="1") {
+            $shareScope = 'project';
+        }
         //print_r($arr);
         $filter = implode(" ", $arr);
-        list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
+        list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shareScope, $projectId);
         if ($ret) {
             $info = [];
             $info['name'] = $name;
@@ -867,6 +901,11 @@ class Main extends BaseUserCtrl
         if(isset($_POST['sort_by'])){
             $info['adv_query_sort_by'] = $_POST['sort_by'];
         }
+        $shareScope = '';
+        if (isset($_REQUEST['is_project_filter']) &&  $_REQUEST['is_project_filter']=="1") {
+            $shareScope = 'project';
+        }
+        $info['share_scope'] = $shareScope;
         list($ret, $msg) = $filterModel->insert($info);
         if ($ret) {
             $event = new CommonPlacedEvent($this, $info);

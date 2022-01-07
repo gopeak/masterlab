@@ -1,6 +1,6 @@
 # Masterlab主配置文件
 app_url: ''
-version: '3.1.9'
+version: '3.2.0'
 error_reporting: 'E_ERROR'
 xdebug: false
 trace: false
@@ -36,7 +36,7 @@ database:
     port: '3306'
     user: 'root'
     password: '123456'
-    db_name: 'masterlab318'
+    db_name: 'masterlab'
     charset: 'utf8'
     timeout: 10
     show_field_info: false
@@ -51,10 +51,10 @@ database:
     show_field_info: false
 
 config_map_model:
-    default:
-      -
-    log_db:
-      - UnitTestUnitModel
+  default:
+    -
+  log_db:
+    - UnitTestUnitModel
 
 socket:
   host: '127.0.0.1'

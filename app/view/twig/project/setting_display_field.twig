@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/lib/jquery.form.min.js"></script>
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
+    <script src="/dev/js/project/display_field.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+        .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+            width: 100% !important;
+        }
+        .radio, .checkbox {
+            position: relative;
+            display: block;
+            margin-top: 0px;
+             margin-bottom: 0px;
+        }
+    </style>
+</head>
+<body class="" data-group="" data-page="projects:issues:new" data-project="xphp" >
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body">
+    {% include 'twig/common/body/header-content.twig' %}
+
+    <div class="page-with-sidebar">
+        {% include 'twig/project/common-page-nav-project.twig' %}
+        {% include 'twig/project/common-setting-nav-links-sub-nav.twig' %}
+
+        <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+            <div class="alert-wrapper">
+                <div class="flash-container flash-container-page">
+                </div>
+            </div>
+            <div class="container-fluid container-limited">
+                <div class="content" id="content-body">
+                    <div class="row prepend-top-default">
+                        <div class="col-lg-3">
+                            <h4 class="prepend-top-0">事项列表显示字段</h4>
+                            <p>该设置用于在事项列表页面中，表格视图所显示字段的配置</p>
+                            <p>默认情况下所有项目成员均使用此字段显示的配置</p>
+                            <p>每个成员可自定义显示字段，自定义显示字段后，该配置对该用户无效</p>
+                        </div>
+                        <div class="col-lg-9">
+                            <form id="form_add_action" class="setting-form clearfix" action="#" accept-charset="UTF-8" method="post">
+                                <div class="form-group  col-md-2">
+                                       <label style="margin-top: 5px;"> <span>是否允许成员自定义：</span></label>
+                                </div>
+                                <div class="form-group  col-md-4">
+                                    <select id="is_user_display_field" name="is_user_display_field" class="form-control selectpicker"     title="请选择"  >
+                                        <option value="1" {% if ( is_user_display_field =="1" ) %} selected  {% endif %}>允 许</option>
+                                        <option value="2" {% if ( is_user_display_field !="1" ) %} selected  {% endif %}>不允许</option>
+                                    </select>
+                                </div>
+                                <div class="form-group  col-md-2">
+
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <input type="button" name="commit" id="btn-setting_columns" value="保 存" class="btn btn-create">
+                                </div>
+                                <input name="utf8" type="hidden" value="✓">
+                                <input type="hidden" name="authenticity_token" value="">
+                            </form>
+
+                            <table class="table table-bordered table-condensed" style="margin-top: 10px">
+                                <thead>
+                                <tr>
+                                    <th>#打勾显示则表示</th>
+                                    <th>待选字段</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for field,fieldName in uiDisplayFields %}
+                                    {% set checked = '' %}
+                                    {% if ( field in display_fields) %}
+                                        {% set checked = 'checked' %}
+                                    {% endif %}
+                                    <tr>
+                                        <td >
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input <?= checked ?> type="checkbox"
+                                                    name="display_fields[]"
+                                                    value="<?= field ?>" />
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td><?= fieldName ?></td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+{% include 'twig/project/common-projects-json.twig' %}
+<script>
+
+ $(function() {
+
+  });
+</script>
+
+<script type="text/javascript">
+
+    var $displayField = null;
+    var _user_id = '<?=user_id?>';
+    $(function() {
+        var options = {
+            updateDisplayFieldUrl:"/project/setting/updateDisplayField?project_id=<?=project_id?>",
+        }
+        window.$displayField = new DisplayField( options );
+
+        $('#btn-setting_columns').click(function () {
+            window.$displayField.update();
+        });
+    });
+</script>
+
+
+</body>
+
+</html>

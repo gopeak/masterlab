@@ -307,6 +307,7 @@
                                         <i class="fa fa-filter"></i>
                                         管理自定义过滤器</a>
                                 </li>
+                                {% if ( is_user_display_field =="1" ) %}
                                 <li class="normal" data-stoppropagation="true">
                                     <a data-target="#modal-setting_columns"
                                        data-toggle="modal" id="a-setting_columns"
@@ -314,6 +315,7 @@
                                         <i class="fa fa-check-square-o"></i>
                                         设置显示列</a>
                                 </li>
+                                {% endif %}
                                 {% if (this.isAdmin or projectPermArr['IMPORT_EXCEL'] is defined) %}
 
                                     <li class="float-part" data-stoppropagation="true">
@@ -434,6 +436,7 @@
 
         </style>
     </div>
+
 </div>
 <script src="/dev/js/input_search.js"></script>
 

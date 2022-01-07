@@ -234,7 +234,6 @@ class Project extends BaseAdminCtrl
         // 分发事件
         $event = new CommonPlacedEvent($this, $project);
         $this->dispatcher->dispatch($event,  Events::onProjectDelete);
-
         $this->ajaxSuccess('操作成功');
     }
 

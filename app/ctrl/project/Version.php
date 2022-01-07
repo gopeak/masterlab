@@ -222,10 +222,7 @@ class Version extends BaseUserCtrl
         if (!isset($version['name'])) {
             $this->ajaxFailed('param_error:id_not_exist');
         }
-
-
         $row = [];
-
         if (isset($name) && !empty($name)) {
             $project_id = $version['project_id'];
             if ($projectVersionModel->checkNameExistExcludeCurrent($id, $project_id, $name)) {
@@ -233,7 +230,6 @@ class Version extends BaseUserCtrl
             }
             $row['name'] = $name;
         }
-
         if (isset($description) && !empty($description)) {
             $row['description'] = $description;
         }
@@ -260,7 +256,6 @@ class Version extends BaseUserCtrl
 
         $ret = $projectVersionModel->updateById($id, $row);
         if ($ret[0]) {
-
             //写入操作日志
             $logData = [];
             $logData['user_name'] = $this->auth->getUser()['username'];

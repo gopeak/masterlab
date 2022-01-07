@@ -14,6 +14,7 @@ use main\app\model\field\FieldCustomValueModel;
 use main\app\model\field\FieldModel;
 use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueFixVersionModel;
 use main\app\model\issue\IssueEffectVersionModel;
 use main\app\model\issue\IssueLabelDataModel;
@@ -22,6 +23,7 @@ use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
+use main\app\model\project\ProjectFlagModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\TimelineModel;
@@ -85,6 +87,22 @@ class IssueLogic
         'plan_date'
     ];
 
+    /**
+     * @param $projectId
+     * @return mixed|null
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public static function fetchProjectDisplayFields($projectId)
+    {
+        $projectFlagModel = new ProjectFlagModel();
+        $value = $projectFlagModel->getValueByFlag($projectId, "display_field_json");
+        if (is_null($value)){
+             return  self::$defaultDisplayFields;
+        }else{
+            $projectDisplayFieldArr = json_decode($value, true);
+        }
+        return $projectDisplayFieldArr;
+    }
 
     /**
      * @param $issueId
@@ -793,7 +811,7 @@ class IssueLogic
         $row = $displayFieldsModel->getByUserProject($userId, $projectId);
 
         if (!isset($row['fields'])) {
-            return $fields;
+            return self::fetchProjectDisplayFields($projectId);
         }
         $tmp = explode(',', $row['fields']);
         if (!empty($tmp)) {

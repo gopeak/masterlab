@@ -441,7 +441,7 @@
 
                                     {% for field,fieldName in uiDisplayFields %}
                                         {% set checked = '' %}
-                                        {% if ( field in display_fields) %}
+                                        {% if ( field in user_display_fields) %}
                                             {% set checked = 'checked' %}
                                         {% endif %}
                                         <tr>

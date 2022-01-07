@@ -772,6 +772,17 @@ class UserLogic
                 $finalData = $arr;
             }
         }
+        if (isset($finalData["issue_type"])) {
+            $projectId = $project["id"];
+            $issueTypes = (new IssueTypeLogic())->getIssueType($projectId);
+            $issueTypesIdArr = array_column($issueTypes, "id");
+            if (!in_array($finalData["issue_type"], $issueTypesIdArr)){
+                $finalData["issue_type"] = $issueTypesIdArr[0];
+            }
+        }
+
+
+
         return $finalData;
     }
 }

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+    <script src="/dev/lib/jquery.form.min.js"></script>
+    <script src="/dev/lib/url_param.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
+    <script src="/dev/js/project/filter.js?v=<?=_version?>" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+        .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body class="" data-group="" data-page="projects:issues:new" data-project="xphp" >
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body">
+    {% include 'twig/common/body/header-content.twig' %}
+
+    <div class="page-with-sidebar">
+        {% include 'twig/project/common-page-nav-project.twig' %}
+        {% include 'twig/project/common-setting-nav-links-sub-nav.twig' %}
+
+        <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+            <div class="alert-wrapper">
+                <div class="flash-container flash-container-page">
+                </div>
+            </div>
+            <div class="container-fluid container-limited">
+                <div class="content" id="content-body">
+                    <div class="row prepend-top-default">
+                        <div class="col-lg-3">
+                            <h4 class="prepend-top-0">项目过滤器</h4>
+                            <p>项目创建后系统内置一些常用的过滤器，你可以显示后隐藏它们,也可以在事项列表页面增加过滤器，这里的过滤器是全局可见的，也就是说所有项目成员均可见</p>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <strong>项目全局过滤器</strong>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="content-list">
+                                        <div class="table-holder">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th class="js-pipeline-info pipeline-info" style="min-width:50px">过滤器名称</th>
+                                                    <th class="js-pipeline-info pipeline-info" style="max-width:30px">类型</th>
+                                                    <th class="js-pipeline-info pipeline-info" style="max-width:30px">是否显示</th>
+                                                    <th class="js-pipeline-stages pipeline-info" style="min-width:150px">过滤条件</th>
+                                                    <th class="js-pipeline-info pipeline-info" >排序权重</th>
+                                                    <th class="pipeline-info" style="min-width:60px">操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="list_render_id">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="gl-pagination" id="pagination">
+
+                                        </div>
+                                    </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="modal-edit-label-href">
+    <form class="form-horizontal label-form" id="form_edit_action" action="/project/setting/updateFilter?project_id=<?=project_id?>" accept-charset="UTF-8" method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-edit-issue_title" class="modal-header-title">编辑过滤器</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="authenticity_token" value="">
+                    <input type="hidden" name="id" value="" id="form_filter_id">
+
+                    <div class="form-group">
+                        <label class="control-label" for="filter_title">名称</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" required="required" type="text" name="name" id="form_filter_name" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="filter_is_show">是否显示</label>
+                        <div class="col-sm-10">
+                            <select class="form-control selectpicker" name="is_show" id="form_filter_is_show">
+                                <option value="1"   >是</option>
+                                <option value="0"   >否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="filter_order_weight">排序权重</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" required="required" type="text" name="order_weight" id="form_filter_order_weight" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="filter_form_description">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="form_filter_description" name="description"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="btn_edit_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+{% verbatim %}<script type="text/html"  id="list_tpl">
+    {{#filters}}
+        <tr class="commit">
+            <td >
+             {{#if_eq is_pre_defined 1 }}
+                <strong><a style="color: #1890ff;" href="/issue/main?sys_filter={{key}}">{{name}}</a> </strong>
+                {{^}}
+                <strong><a style="color: #1890ff;" href="/issue/main?fav_filter={{id}}">{{name}}</a> </strong>
+             {{/if_eq}}
+            </td>
+            <td  >
+                {{#if_eq is_pre_defined 1 }}
+                     <span   title="系统内置的过滤器">预定义</span>
+                {{^}}
+                <span style="color:red" title="用户自己创建的过滤器">自定义</span>
+                {{/if_eq}}
+            </td>
+            <td  >
+                {{#if_eq is_show 1 }}
+                     <span style="color:blue" title="出现在事项列表页面">显示</span>
+                {{^}}
+                <span style="color:#fc9403" title="不出现在事项列表页面">已隐藏</span>
+                {{/if_eq}}
+            </td>
+            <td style="min-width: 150px;">
+                {{filter}}
+            </td>
+            <td  >
+                {{order_weight}}
+            </td>
+            <td  >
+            {{#if_eq is_pre_defined 1 }}
+                {{#if_eq is_show 1 }}
+                     <a title="隐藏，不显示" class="btn btn-transparent btn-action list_for_hide" data-key="{{key}}" href="javascript:void(0)">
+                        <i class="fa fa-ban"></i>
+                    </a>
+                {{^}}
+                    <a title="显示出来" class="btn btn-transparent btn-action list_for_show"  data-key="{{key}}" href="javascript:void(0)">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                {{/if_eq}}
+            {{^}}
+                <a title="编辑" class="btn btn-transparent btn-action list_for_edit"  href="#modal-edit-label-href" data-toggle="modal" data-id="{{id}}" href="javascript:void(0)">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+                <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-id="{{id}}" style="padding: 6px 2px;">
+                    <i class="fa fa-trash"></i>
+                    <span class="sr-only">删除</span>
+                </a>
+             {{/if_eq}}
+            </td>
+        </tr>
+    {{/filters}}
+</script>{% endverbatim %}
+
+
+{% include 'twig/project/common-projects-json.twig' %}
+<script>
+
+ $(function() {
+
+
+  });
+</script>
+
+<script type="text/javascript">
+
+    var $filter = null;
+    var _cur_page = 1;
+    var _user_id = '<?=user_id?>';
+    $(function() {
+        var options = {
+            list_render_id:"list_render_id",
+            list_tpl_id:"list_tpl",
+            filter_url:"/project/setting/fetchFilters?project_id=<?=project_id?>",
+            fetchFilterUrl:"/project/setting/fetchFilter?project_id=<?=project_id?>",
+            updateFilterUrl:"/project/setting/updateFilter?project_id=<?=project_id?>",
+            togglePreDefinedFilterUrl:"/project/setting/togglePreDefinedFilter?project_id=<?=project_id?>",
+            delete_url:"/project/setting/deleteFilter?project_id=<?=project_id?>",
+        }
+        window.$filter = new Filter( options );
+        window.$filter.fetchAll(  );
+
+        $('#btn_edit_save').click(function () {
+            window.$filter.update();
+        });
+    });
+</script>
+
+
+</body>
+
+</html>

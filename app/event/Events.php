@@ -118,7 +118,15 @@ final class Events
     public const onVersionDelete = 'onVersionDelete';
     public const onVersionRelease = 'onVersionRelease';
 
+    /**
+     * 项目过滤器事件
+     */
+    public const onProjectFilterCreate = 'onProjectFilterCreate';
+    public const onProjectFilterUpdate = 'onProjectFilterUpdate';
+    public const onProjectFilterDelete = 'onProjectFilterDelete';
 
+    // 修改项目表格字段
+    public const onProjectDisplayFieldUpdate = 'onProjectDisplayFieldUpdate';
     /**
      * 模块事件
      */
