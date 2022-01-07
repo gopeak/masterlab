@@ -186,6 +186,10 @@ class BaseUserCtrl extends BaseCtrl
                 '_permCreateIssue',
                 isset($this->projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? true : false
             );
+            $this->addGVar(
+                '_permProjectAdmin',
+                isset($this->projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS]) ? true : false
+            );
 
             $this->addGVar('_is_admin ', $this->isAdmin ? 'true' : 'false');
 

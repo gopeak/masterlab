@@ -130,42 +130,47 @@ var IssueMain = (function () {
         var searchQuery = window.$filterSreach.getCurrentSearchesStr();
         var is_project_filter = $("#is_project_filter").is(':checked');
         var is_project_filter_value = is_project_filter ? "1" :"0";
-       // window.is_save_filter = '0';
-        if (name != '' && searchQuery != null && searchQuery != '') {
-            //notify_success(searchQuery);
-            var params = { format: 'json' };
-            $.ajax({
-                type: "GET",
-                dataType: "json",
-                async: true,
-                url: root_url + 'issue/main/save_filter',
-                data: {
-                    project_id: window._cur_project_id,
-                    name: name,
-                    filter: encodeURIComponent(searchQuery),
-                    sort_field: $sort_field,
-                    sort_by: $sort_by ,
-                    is_project_filter:is_project_filter_value
-                },
-                success: function (resp) {
-                    auth_check(resp);
-                    if (resp.ret == '200') {
-                        notify_success('保存成功');
-                        setTimeout('window.location.reload()', 1000);
-                        //window.qtipApi.hide()
-                        $('#custom-filter-more').qtip('api').toggle(false);
-                    } else {
-                        notify_error('保存失败,错误信息:' + resp.msg);
-                    }
-
-                },
-                error: function (res) {
-                    notify_error("请求数据错误" + res);
-                }
-            });
-        } else {
-            notify_error('参数为空!');
+        if (trimStr(name) == '') {
+            notify_warn('过滤器名称不能为空哦!');
+            return;
         }
+        console.log(searchQuery)
+        if( searchQuery == null ||  trimStr(searchQuery) == ''){
+            notify_warn('过滤器为空或者你需要先点击“搜索”操作');
+            return;
+        }
+        //notify_success(searchQuery);
+        var params = { format: 'json' };
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url + 'issue/main/save_filter',
+            data: {
+                project_id: window._cur_project_id,
+                name: name,
+                filter: encodeURIComponent(searchQuery),
+                sort_field: $sort_field,
+                sort_by: $sort_by ,
+                is_project_filter:is_project_filter_value
+            },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret == '200') {
+                    notify_success('保存成功');
+                    setTimeout('window.location.reload()', 1000);
+                    //window.qtipApi.hide()
+                    $('#custom-filter-more').qtip('api').toggle(false);
+                } else {
+                    notify_error( resp.msg);
+                }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+
 
     }
 

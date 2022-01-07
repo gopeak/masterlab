@@ -467,7 +467,9 @@ CREATE TABLE `issue_filter` (
                                 `name_lower` varchar(255) DEFAULT NULL,
                                 `is_adv_query` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级查询',
                                 `adv_query_sort_field` varchar(40) NOT NULL DEFAULT '' COMMENT '高级查询的排序字段',
-                                `adv_query_sort_by` varchar(12) NOT NULL DEFAULT 'desc' COMMENT '高级查询的排序'
+                                `adv_query_sort_by` varchar(12) NOT NULL DEFAULT 'desc' COMMENT '高级查询的排序',
+                                `is_show` tinyint(1) unsigned DEFAULT '1' COMMENT '是否展示',
+                                `order_weight` int(11) DEFAULT NULL COMMENT '排序权重'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
