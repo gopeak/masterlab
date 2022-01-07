@@ -97,6 +97,16 @@ class Main extends BaseUserCtrl
         $data['avl_sort_fields'] = IssueFilterLogic::$avlSortFields;
         $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : IssueFilterLogic::$defaultSortField;
         $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : IssueFilterLogic::$defaultSortBy;
+        if (isset($_GET['fav_filter'])) {
+            $favFilterId = (int)$_GET['fav_filter'];
+            $data['fav_filter'] = $favFilterId;
+            $favFilterModel = new IssueFilterModel();
+            $fav = $favFilterModel->getItemById($favFilterId);
+            if (isset($fav['projectid']) && !empty($fav['projectid'])) {
+                $_GET['project'] = $_GET['project_id'] = $fav['projectid'];
+            }
+        }
+
         $data = RewriteUrl::setProjectData($data);
         $data['issue_main_url'] = ROOT_URL . 'issue/main';
         if (!empty($data['project_id'])) {
@@ -148,7 +158,6 @@ class Main extends BaseUserCtrl
                     }
                     $data['is_adv_filter'] = '1';
                 }
-
             }
         }
         // 用户的过滤器

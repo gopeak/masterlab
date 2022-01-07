@@ -641,6 +641,11 @@
                         IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData,null, adv_data, 1);
                     }
 
+                    if (window.is_adv_filter=="1"){
+                        $('#adv_sort_field').val(window.$sort_field);
+                        $('.selectpicker').selectpicker('refresh');
+                    }
+
                     $('#btn-add').bind('click', function () {
                         IssueMain.prototype.add();
                     });
