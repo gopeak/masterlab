@@ -160,6 +160,10 @@ class Main extends BaseUserCtrl
                 }
             }
         }
+        if(isset($_GET['sort_field'])){
+            $data['sort_field'] = $_GET['sort_field'];
+        }
+
         // 用户的过滤器
         $IssueFavFilterLogic = new IssueFavFilterLogic();
         $favFilters = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
