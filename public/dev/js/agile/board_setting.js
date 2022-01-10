@@ -242,6 +242,19 @@ var BoardSetting = (function () {
         var params = { format: 'json' };
         var project_id = window._cur_project_id;
         loading.show('#board_add_form', '正在加载看板数据');
+        $(".date-select-edit").bind("click", function () {
+            let $self = $(this);
+            let myDate = new Date();
+            laydate.render({
+                elem: this
+                , trigger: 'click'
+                , range: true
+                , done: function (value, date, endDate) {
+                    console.log(date, endDate)
+                }
+                //,value: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + ' - ' + myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate()
+            });
+        });
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -264,6 +277,7 @@ var BoardSetting = (function () {
                 }
                 $('#range_container div').addClass('hide');
                 $('#range-' + board_data.range_type).removeClass(('hide'));
+                $('#range_due_date').val(board_data.range_due_date);
                 let result = template(board_data);
                 $('#board_swim_render').html(result);
                 BoardSetting.prototype.renderSwims(board_data);
@@ -283,6 +297,7 @@ var BoardSetting = (function () {
         $('#action-board_list').hide();
         $('#board_add_form').show();
         $('#action-board_form').show();
+        $('#range_due_date').val('');
         let range_type = 'all';
         $("#range_type").val(range_type);
         BoardSetting.prototype.initBoardFormSprint(window._issueConfig.project_sprints, []);
@@ -290,7 +305,19 @@ var BoardSetting = (function () {
         BoardSetting.prototype.initBoardFormIssueType(window._issueConfig.issue_types, []);
         $('#range_container div').addClass('hide');
         $('#range-' + range_type).removeClass(('hide'));
-
+        $(".date-select-edit").bind("click", function () {
+            let $self = $(this);
+            let myDate = new Date();
+            laydate.render({
+                elem: this
+                , trigger: 'click'
+                , range: true
+                , done: function (value, date, endDate) {
+                    console.log(date, endDate)
+                }
+                //,value: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + ' - ' + myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate()
+            });
+        });
         let source = $('#board_column_tpl').html();
         let template = Handlebars.compile(source);
         let board_data = {
@@ -300,9 +327,9 @@ var BoardSetting = (function () {
             is_filter_backlog: "0",
             is_filter_closed: "0",
             columns: [
-                { i: 0, name: "准备中", data: { status: ['open', 'reopen', 'in_review', 'delay'], resolve: [], label: [], assignee: [] } },
-                { i: 1, name: "进行中", data: { status: ['in_progress'], resolve: [], label: [], assignee: [] } },
-                { i: 2, name: "已解决", data: { status: ['closed', 'done'], resolve: [], label: [], assignee: [] } }
+                { i: 0, name: "准备中", data: { status: ['open', 'reopen', 'in_review', 'delay'], resolve: [], label: [], assignee: [] , reporter: [] } },
+                { i: 1, name: "进行中", data: { status: ['in_progress'], resolve: [], label: [], assignee: [], reporter: [] } },
+                { i: 2, name: "已解决", data: { status: ['closed', 'done'], resolve: [], label: [], assignee: [] , reporter: []} }
             ]
         };
 
@@ -319,7 +346,7 @@ var BoardSetting = (function () {
         var timestamp = Date.parse(new Date());
         let board_data = {
             columns: [
-                { i: timestamp, name: "", data: { status: [], resolve: [], label: [], assignee: [] } }
+                { i: timestamp, name: "", data: { status: [], resolve: [], label: [], assignee: [], reporter: [] } }
             ]
         }
         let swim_html = template(board_data);
@@ -378,7 +405,7 @@ var BoardSetting = (function () {
     };
 
     BoardSetting.prototype.renderSwimSelect = function (swim_data, i) {
-        console.log(swim_data)
+        console.log(swim_data, i)
         if (swim_data) {
             let selects = {};
             for (let source in swim_data) {
@@ -437,14 +464,14 @@ var BoardSetting = (function () {
                     }
 
                 }
-                if (source === 'assignee') {
-                    var source_data = swim_data[source];
+                if (source === 'assignee' ) {
+                    let source_data = swim_data[source];
                     selects[source] = $('#select_' + source + '_column_' + i);
                     selects[source].empty();
                     let select_datas = window._issueConfig.users;
                     //console.log(select_datas);
-                    for (var i=0;i<select_datas.length;i++) {
-                        let row = select_datas[i];
+                    for (let j=0; j<select_datas.length;j++) {
+                        let row = select_datas[j];
                         let value = row.uid;
                         let title = row.display_name;
                         let avatar = row.avatar;
@@ -457,6 +484,31 @@ var BoardSetting = (function () {
                         //console.log(opt)
                         selects[source].append(opt);
                     }
+                }
+                if (source === 'reporter') {
+                    let source_data = swim_data[source];
+                    selects[source] = $('#select_' + source + '_column_' + i);
+                    selects[source].empty();
+                    let select_datas = window._issueConfig.users;
+                    //console.log(select_datas);
+                    for (let j=0; j<select_datas.length; j++) {
+                        let row = select_datas[j];
+                        let value = row.uid;
+                        let title = row.display_name;
+                        let avatar = row.avatar;
+                        let selected = '';
+                        if (source_data && isInArray(source_data, value)) {
+                            selected = 'selected';
+                        }
+                        let content = "<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='" + avatar + "' /> " + title;
+                        let opt = '<option value="' + value + '"  data-content="' + content + '"  ' + selected + '>' + title + '</option>';
+                        selects[source].append(opt);
+                    }
+                    //console.log(selects[source]);
+                }
+
+                if (source === 'range_due_date') {
+
                 }
             }
         }
@@ -480,6 +532,7 @@ var BoardSetting = (function () {
             filter_data.resolve = $('#select_resolve_column_' + seq).val();
             filter_data.label = $('#select_label_column_' + seq).val();
             filter_data.assignee = $('#select_assignee_column_' + seq).val();
+            filter_data.reporter = $('#select_reporter_column_' + seq).val();
             let column_name = $('#name_column_' + seq).val();
             let column_data = { i: i, name: column_name, data: filter_data };
             columns_data.push(column_data);
@@ -493,6 +546,7 @@ var BoardSetting = (function () {
             weight: $('#board_weight').val(),
             range_type: range_type,
             range_data: $('#range_' + range_type).val(),
+            range_due_date:$('#range_due_date').val(),
             is_filter_backlog: is_filter_backlog,
             is_filter_closed: is_filter_closed,
             columns: columns_data_str

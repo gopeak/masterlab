@@ -23,6 +23,9 @@
     <script src="/dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="/dev/lib/editor.md/editormd.js"></script>
 
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
+
     <!-- Fine Uploader jQuery JS file-->
     <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
@@ -37,6 +40,7 @@
 
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="/dev/lib/bootstrap-select/js/i18n/defaults-zh_CN.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= _version ?>"
             type="text/javascript"></script>
     <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
@@ -84,8 +88,9 @@
                                                 <div class="dropdown inline prepend-right-10">
                                                     <select id="boards_select" name="boards_select"
                                                             class="selectpicker">
+                                                        <option value="all@1" {% if board_default_id==1 %} selected {% endif %}>整个项目</option>
                                                         {% for board in boards %}
-                                                            <option value="<?= board['id'] ?>" {% if board_default_id==board['id'] %} selected {% endif %}><?= board['name'] ?></option>
+                                                            <option value="<?= board['range_type'] ?>@<?= board['id'] ?>" {% if board_default_id==board['id'] %} selected {% endif %}><?= board['name'] ?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -216,7 +221,7 @@
             <td>{{weight}}</td>
             <td>
                 {{#if_eq is_system '1'}}
-                系统自带
+                     {{#if_eq sprint_id  0}}系统内置{{^}}迭代{{/if_eq}}
                 {{^}}
                     <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  style="color:blue"  data-id="{{id}}">
                         <i class="fa fa-pencil-square-o"></i>
@@ -288,7 +293,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-sm-2">数据范围：</div>
+                                    <div class="col-sm-2">特定数据范围：</div>
                                     <div class="col-sm-3">
                                         <select id="range_type" name="range_type" class="selectpicker form-control"
                                                 dropdownAlignRight="true" title="当前项目">
@@ -311,12 +316,17 @@
                                                     dropdownAlignRight="true" title="模块列表"></select>
                                         </div>
                                         <div id="range-issue_types" class="hide">
-
                                             <select id="range_issue_types" name="range_issue_types" class="selectpicker" multiple data-none-selected-text="请选择"></select>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-2">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <div class="col-sm-2"> 截至日期范围：</div>
+                                    <div class="col-sm-3">
+                                        <input placeholder="双击触发" id="range_due_date" name="range_due_date" class="form-control form-control-inline date-select-edit">
                                     </div>
                                 </div>
                                 <hr>
@@ -534,6 +544,18 @@
                         </select>
                     </div>
                 </div>
+                <div class="row board-setting-line-item-row">
+                    <div class="col-sm-1">
+                         或
+                    </div>
+                    <div class="col-sm-10">
+                        <select id="select_reporter_column_{{i}}" name="select_reporter_column_{{i}}" class="selectpicker form-control" multiple data-selected-text-format="count > 3"
+                                dropdownAlignRight="true" title="报告人筛选">
+
+                        </select>
+                    </div>
+                </div>
+
             </div>
             <div  id="btn_delete_column_{{i}}" name="btn_delete_column_{{i}}" class="board-item-foot js-board-item-title-close-btn">
                 <i class="fa fa-close" title="删除"></i> 删除泳道

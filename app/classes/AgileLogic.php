@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\agile\AgileBoardColumnModel;
 use main\app\model\agile\AgileBoardModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
@@ -52,51 +53,87 @@ class AgileLogic
     public function getBoardsByProject($projectId)
     {
         $boards = [];
-        // 首先获取活动的Sprint
         $model = new AgileBoardModel();
-        $activeSprintBoard = $model->getById(self::ACTIVE_SPRINT_BOARD_ID);
-        $boards[] = &$activeSprintBoard;
-        // 其次获取其他Sprint
+        $allBoard = $model->getByRangeAll($projectId);
+        if (!empty($allBoard)) {
+            $boards[] = $allBoard;
+        }
         $sprintModel = new SprintModel();
-        $sprints = $sprintModel->getItemsByProject($projectId);
-        foreach ($sprints as $sprint) {
-            if ($sprint['active'] == '1') {
-                $activeSprintBoard['name'] = $sprint['name'] . '(进行中)';
-                $activeSprintBoard['type'] = 'sprint';
-                $activeSprintBoard['sprint_id'] = $sprint['id'];
+        $hideSprints = $sprintModel->getRows("*", ['project_id' => $projectId, 'status' => '3']);
+        $hideSprintIdArr = array_column($hideSprints, 'id');
+
+        $otherBoards = $model->getsByAll($projectId);
+        foreach ($otherBoards as $otherBoard) {
+            if ($otherBoard['sprint_id']!=0 && in_array($otherBoard['sprint_id'], $hideSprintIdArr)) {
                 continue;
             }
-            $board = $activeSprintBoard;
-            $board['id'] = self::ACTIVE_SPRINT_BOARD_ID;
-            $board['name'] = $sprint['name'];
-            $board['type'] = 'sprint';
-            $board['project_id'] = $projectId;
-            $board['sprint_id'] = $sprint['id'];
-            $boards[] = $board;
-        }
-
-        // 最后项目自定义的 board
-        $customBoards = $model->getsByProject($projectId);
-        foreach ($customBoards as $customBoard) {
-            $customBoard['type'] = 'custom_board';
-            $customBoard['sprint_id'] = '0';
-        }
-        foreach ($customBoards as $customBoard) {
-            $boards[] = $customBoard;
+            $boards[] = $otherBoard;
         }
         return $boards;
     }
 
+    /**
+     * @param $projectId
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function refreshSprintToBoard($projectId)
+    {
+        $agileBoardModel = new AgileBoardModel();
+        $sprintBoards = $agileBoardModel->getsByRangeSprint($projectId);
+        $insertSprintIdArr = array_column($sprintBoards, 'sprint_id');
+        $agileBoardColumnModel = new AgileBoardColumnModel();
+        $sprints = $this->getSprints($projectId);
+        $weight = 99999;
+        foreach ($sprints as $sprint) {
+            $weight--;
+            if (in_array($sprint['id'], $insertSprintIdArr)) {
+                continue;
+            }
+            $board = [];
+            $board['name'] = $sprint['name'];
+            if ($sprint['active'] == '1') {
+                $board['name'] .= "(进行中)";
+            }
+            $board['project_id'] = $projectId;
+            $board['sprint_id'] = $sprint['id'];
+            $board['type'] = 'sprint';
+            $board['is_filter_backlog'] = '1';
+            $board['is_filter_closed'] = '1';
+            $board['weight'] = $weight;
+            $board['range_type'] = 'sprint';
+            $board['range_data'] = $sprint['id'];
+            $board['is_system'] = '1';
+            list($ret, $insertId) = $agileBoardModel->insert($board);
+            if ($ret) {
+                $initColumnArr = [
+                    ['name' => '准 备', 'board_id' => $insertId, 'weight' => 3, 'data' => '{"status":["open","reopen","in_review","delay"],"resolve":[],"label":[],"assignee":[],"reporter":[]}'],
+                    ['name' => '进行中', 'board_id' => $insertId, 'weight' => 2, 'data' => '{"status":["in_progress"],"resolve":[],"label":[],"assignee":[],"reporter":[]}'],
+                    ['name' => '已完成', 'board_id' => $insertId, 'weight' => 1, 'data' => '{"status":["closed","done"],"resolve":[],"label":[],"assignee":[],"reporter":[]}']
+                ];
+                $agileBoardColumnModel->deleteByBoardId($insertId);
+                foreach ($initColumnArr as $column) {
+                    $agileBoardColumnModel->insert($column);
+                }
+            }
+        }
+        return true;
+    }
+
     public function getBoardsByProjectV2($projectId)
     {
-        // 首先获取活动的Sprint
+        $boards = [];
         $agileBoardModel = new AgileBoardModel();
-        $defaultBoards = $agileBoardModel->getsByDefault();
-        $projectBoards = $agileBoardModel->getsByProject($projectId);
-
-        $boards = $defaultBoards;
-        foreach ($projectBoards as $projectBoard) {
-            $boards[] = $projectBoard;
+        $defaultBoards = $agileBoardModel->getsBySystem($projectId);
+        foreach ($defaultBoards as $board) {
+            if ($board['range_type'] == 'current_sprint' || $board['name'] == '进行中的迭代') {
+                continue;
+            }
+            $boards[] = $board;
+        }
+        $userBoards = $agileBoardModel->getsByUserCreate($projectId);
+        foreach ($userBoards as $userBoard) {
+            $boards[] = $userBoard;
         }
         $i = 0;
         foreach ($boards as &$board) {
@@ -559,67 +596,6 @@ class AgileLogic
         return $issues;
     }
 
-    /**
-     * 获取看板的列的事项
-     * @param $sprintId
-     * @param $columns
-     * @return array
-     * @throws \Exception
-     */
-    public function getBoardColumnBySprint($sprintId, & $columns)
-    {
-        try {
-            $model = new IssueStatusModel();
-            $allStatus = $model->getAll();
-            $configsKeyForId = [];
-            foreach ($allStatus as $s) {
-                $index = $s['_key'];
-                $configsKeyForId[$index] = (int)$s['id'];
-            }
-            unset($allStatus);
-
-            $field = 'status';
-            $fetchRet = $this->getNotBacklogSprintIssues($sprintId);
-            //print_r($fetchRet);
-            if (empty($fetchRet)) {
-                return [true, 'fetch empty issues', []];
-            }
-            $issues = $fetchRet;
-            foreach ($columns as & $column) {
-                $column['count'] = 0;
-                $columnDataArr = json_decode($column['data'], true);
-                if (empty($columnDataArr)) {
-                    continue;
-                }
-                $tmp = [];
-                foreach ($columnDataArr as $item) {
-                    $item = trimStr($item);
-                    if (isset($configsKeyForId[$item])) {
-                        $tmp[] = (int)$configsKeyForId[$item];
-                    }
-                }
-                unset($columnDataArr);
-                $column['issues'] = [];
-                foreach ($issues as $key => $issue) {
-                    if (!isset($issue[$field])) {
-                        continue;
-                    }
-                    $fieldValue = (int)$issue[$field];
-                    //var_dump($fieldValue);
-                    if (in_array($fieldValue, $tmp)) {
-                        IssueFilterLogic::formatIssue($issue);
-                        $column['issues'][] = $issue;
-                        unset($issues[$key]);
-                    }
-                }
-                $column['count'] = count($column['issues']);
-            }
-            unset($issues);
-            return [true, 'ok'];
-        } catch (\PDOException $e) {
-            return [false, $e->getMessage()];
-        }
-    }
 
     /**
      * 获取看板的泳道数据
@@ -691,23 +667,29 @@ class AgileLogic
                     }
                     if ($type == 'resolve' && !empty($itemArr)) {
                         $filtered = true;
-                        $or  =  trimStr($sql) == "WHERE (" ? '' : 'OR ';
-                        $sql .=  $or. "   `resolve` in (:resolve) ";
+                        $or = trimStr($sql) == "WHERE (" ? '' : 'OR ';
+                        $sql .= $or . "   `resolve` in (:resolve) ";
                         $idArr = self::getIdArrByKeys($resolveKeyArr, $itemArr);
                         $params['resolve'] = implode(',', $idArr);
                     }
                     if ($type == 'assignee' && !empty($itemArr)) {
                         $filtered = true;
-                        $or  =  trimStr($sql) == "WHERE (" ? '' : 'OR ';
-                        $sql .=  $or. "   `assignee` in (:assignee) ";
+                        $or = trimStr($sql) == "WHERE (" ? '' : 'OR ';
+                        $sql .= $or . "   `assignee` in (:assignee) ";
                         $params['assignee'] = implode(',', $itemArr);
+                    }
+                    if ($type == 'reporter' && !empty($itemArr)) {
+                        $filtered = true;
+                        $or = trimStr($sql) == "WHERE (" ? '' : 'OR ';
+                        $sql .= $or . "   `reporter` in (:reporter) ";
+                        $params['reporter'] = implode(',', $itemArr);
                     }
                     if ($type == 'label' && !empty($itemArr)) {
                         $filtered = true;
                         $issueIdArr = $issueLabelDataModel->getIssueIdArrByIds($itemArr);
                         $issueIdStr = implode(',', $issueIdArr);
-                        $or  =  trimStr($sql) == "WHERE (" ? '' : 'OR ';
-                        $sql .= $or. "  `id`  in (:label_issue_ids) ";
+                        $or = trimStr($sql) == "WHERE (" ? '' : 'OR ';
+                        $sql .= $or . "  `id`  in (:label_issue_ids) ";
                         $params['label_issue_ids'] = $issueIdStr;
                     }
                 }
@@ -721,18 +703,14 @@ class AgileLogic
                     $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
                     $params['summary'] = $_GET['keyword'];
                 }
-
                 if ($board['range_type'] == 'sprints') {
                     $rangeDataArr = json_decode($board['range_data'], true);
                     $sql .= " AND   sprint  in (:sprints) ";
                     $params['sprints'] = implode(',', $rangeDataArr);
                 }
-                if ($board['range_type'] == 'current_sprint') {
-                    if (!$activeSprintId) {
-                        continue;
-                    }
-                    $sql .= " AND   sprint =:active_sprint_id ";
-                    $params['active_sprint_id'] = $activeSprintId;
+                if ($board['range_type'] == 'sprint') {
+                    $sql .= " AND   sprint =:sprint_id ";
+                    $params['sprint_id'] = $board['sprint_id'];
                 }
                 if ($board['range_type'] == 'modules') {
                     $rangeDataArr = json_decode($board['range_data'], true);
@@ -743,6 +721,12 @@ class AgileLogic
                     $rangeDataArr = json_decode($board['range_data'], true);
                     $sql .= " AND   issue_type in ( :issue_types ) ";
                     $params['issue_types'] = implode(',', $rangeDataArr);
+                }
+                if ($board['range_due_date'] != '') {
+                    $sql .= " AND  `due_date` between :start and :end ";
+                    list($start, $end) = explode(' - ', $board['range_due_date']);
+                    $params['start'] = $start;
+                    $params['end'] = $end;
                 }
                 // 按经办人搜索事项
                 $assigneeUid = null;
@@ -849,6 +833,7 @@ class AgileLogic
                 $orderBy = 'id';
                 $sortBy = 'DESC';
                 $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
+                // print_r($params);
                 // echo $sql;die;
                 $table = $issueModel->getTable();
                 // 获取总数

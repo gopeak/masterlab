@@ -130,7 +130,10 @@ class ChartLogic
                 unset($compareArr[$t]);
             }
         }
-        $minDate = $compareArr[min(array_keys($compareArr))];
+        $minDate = $sprintStartDate;
+        if(!empty($compareArr)){
+            $minDate = $compareArr[min(array_keys($compareArr))];
+        }
         $last2WeekDate = date('Y-m-d', strtotime('-14 day'));
         $minDate = max($minDate, $last2WeekDate);
         $maxDate = max(date('Y-m-d'), $sprintEndDate);

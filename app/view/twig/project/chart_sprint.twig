@@ -3,6 +3,7 @@
 <head>
 
     {% include 'twig/common/header/include.twig' %}
+    <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 {% include 'twig/common/body/script.twig' %}
@@ -25,7 +26,23 @@
 
             <div class="flash-container flash-container-page">
             </div>
-
+        </div>
+        <div  style="margin: 0 auto 6px;padding: 8px;">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownSprints" data-toggle="dropdown" aria-haspopup="true"  >
+                    {% if sprint %}
+                        <?=sprint['name']?>
+                    {% else %}
+                        暂无迭代
+                    {% endif %}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownSprints">
+                    {% for sprint in sprints %}
+                        <li data-sprint_id="<?=sprint['id']?>"><a href="<?= project_root_url?>/stat_sprint/<?=sprint['id']?>"><?=sprint['name']?></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
         <div class="content padding-0" id="content-body">
             <div class="container-fluid container-limited">
@@ -131,7 +148,7 @@
 <script>
 
     var _cur_project_id = '<?=project_id?>';
-    var _active_sprint_id = '<?=activeSprint['id']?>';
+    var _active_sprint_id = '<?=sprint['id']?>';
 
     var ctx_sprint_pie = document.getElementById('sprint_pie').getContext('2d');
     var ctx_sprint_bar = document.getElementById('sprint_bar').getContext('2d');

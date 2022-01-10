@@ -79,8 +79,10 @@ class SprintModel extends BaseDictionaryModel
     {
         $conditions = ['active' => 1];
         $conditions['project_id'] = intval($projectId);
-        $row = $this->getRow("*", $conditions);
-        return $row;
+        $table = $this->getTable();
+        $fields = " id as k,{$table}.*";
+        $rows = $this->getRows($fields, $conditions, null, 'id', 'desc', 1);
+        return count($rows)>0 ? $rows[0] : [];
     }
 
     /**

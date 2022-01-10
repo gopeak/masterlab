@@ -166,7 +166,9 @@ class Agile extends BaseUserCtrl
             }
         }
         $agileLogic = new AgileLogic();
+        $agileLogic->refreshSprintToBoard($data['project_id']);
         $data['boards'] = $agileLogic->getBoardsByProjectV2($data['project_id']);
+
         $data['active_sprint_id'] = '';
         $model = new SprintModel();
         $activeSprint = $model->getActive($data['project_id']);
@@ -178,23 +180,20 @@ class Agile extends BaseUserCtrl
                 $data['active_sprint_id'] = $sprints[0]['id'];
             }
         }
+        $data['active_sprint'] = [];
+        if (!empty($data['project_id'])) {
+            $data['active_sprint'] = $activeSprint;
+        }
         $data['sprints'] = $agileLogic->getSprints($data['project_id']);
 
         $issueLogic = new IssueLogic();
         $data['description_templates'] = $issueLogic->getDescriptionTemplates();
 
         ConfigLogic::getAllConfigs($data);
-
-        $data['active_sprint'] = [];
-        if (!empty($data['project_id'])) {
-            $sprintModel = new SprintModel();
-            $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
-        }
         $data['perm_kanban'] = false;
         if (!empty($data['project_id']) || !empty($this->isAdmin)) {
             $data['perm_kanban'] = PermissionLogic::check($data['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_KANBAN);
         }
-
         $projectFlagModel = new ProjectFlagModel();
         $boardDefaultId = (int)$projectFlagModel->getValueByFlag($data['project_id'], 'board_default_id');
         if(isset($_GET['boards_select'])){
@@ -350,6 +349,9 @@ class Agile extends BaseUserCtrl
                 }
                 $info['range_data'] = json_encode($_POST['range_data']);
             }
+        }
+        if (isset($_POST['range_due_date'])) {
+            $info['range_due_date'] = $_POST['range_due_date'];
         }
         if (isset($_POST['weight'])) {
             $info['weight'] = (int)$_POST['weight'];
@@ -787,14 +789,6 @@ class Agile extends BaseUserCtrl
         if (!isset($sprint['id'])) {
             $this->ajaxFailed('参数错误', '迭代数据不存在');
         }
-        $updateArr = ['active' => '0'];
-        $conditionArr = ['project_id' => $sprint['project_id']];
-        //var_dump($updateArr, $conditionArr);
-        list($upRet, $msg) = $sprintModel->update($updateArr, $conditionArr);
-        if (!$upRet) {
-            $this->ajaxFailed('server_error:' . $msg);
-        }
-        CacheKeyModel::getInstance()->clearCache('dict/' . $sprintModel->table);
         list($upRet, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
         if ($upRet) {
             $event = new CommonPlacedEvent($this, $sprint);
@@ -907,89 +901,6 @@ class Agile extends BaseUserCtrl
     }
 
     /**
-     * 获取活动的Sprint kanban信息
-     * @throws \Exception
-     * @throws \Exception
-     */
-    public function fetchBoardBySprint()
-    {
-        $projectId = null;
-        $sprintId = null;
-        if (isset($_GET['_target'][2])) {
-            $sprintId = (int)$_GET['_target'][2];
-        }
-        if (isset($_GET['id'])) {
-            $sprintId = (int)$_GET['id'];
-        }
-        if (isset($_GET['project_id'])) {
-            $projectId = (int)$_GET['project_id'];
-        }
-        if (empty($sprintId)) {
-            $this->ajaxFailed('参数错误');
-        }
-        $sprintModel = new SprintModel();
-        $sprint = $sprintModel->getItemById($sprintId);
-        if (empty($sprint)) {
-            $this->ajaxFailed('参数错误', '迭代不存在');
-        }
-        if (empty($projectId) && !empty($sprint['project_id'])) {
-            $projectId = $sprint['project_id'];
-        }
-        if (empty($projectId)) {
-            $this->ajaxFailed('参数错误', '项目数据错误');
-        }
-
-        $data['sprint'] = $sprint;
-        $agileLogic = new AgileLogic();
-
-        $boardId = AgileLogic::ACTIVE_SPRINT_BOARD_ID;
-        $agileBoardModel = new AgileBoardModel();
-        $board = $agileBoardModel->getById($boardId);
-        if (empty($board)) {
-            $this->ajaxFailed('参数错误', '看板不存在');
-        }
-        $data['board'] = $board;
-
-        $agileBoardColumn = new AgileBoardColumnModel();
-        $columns = $agileBoardColumn->getsByBoard($boardId);
-        if (empty($columns)) {
-            $this->ajaxFailed('board_no_column', []);
-        }
-        foreach ($columns as &$column) {
-            $column['issues'] = [];
-        }
-
-        list($fetchRet, $msg) = $agileLogic->getBoardColumnBySprint($sprintId, $columns);
-        if (!$fetchRet) {
-            $this->ajaxFailed('server_error:' . $msg);
-        }
-        $closedColumn = $column;
-        $closedColumn['name'] = 'Closed';
-        $closedColumn['data'] = '';
-        $closedColumn['issues'] = $agileLogic->getClosedIssues($projectId);
-        $closedColumn['count'] = count($closedColumn['issues']);
-        $columns[] = $closedColumn;
-
-        $userLogic = new UserLogic();
-        $data['users'] = $userLogic->getAllNormalUser();
-        unset($userLogic);
-
-        list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
-        if ($fetchRet) {
-            $data['backlogs'] = $issues;
-        } else {
-            $this->ajaxFailed('服务器错误', $issues);
-        }
-
-        if ($fetchRet) {
-            $data['columns'] = $columns;
-            $this->ajaxSuccess('success', $data);
-        } else {
-            $this->ajaxFailed('服务器错误', $msg);
-        }
-    }
-
-    /**
      * @throws \Exception
      */
     public function fetchBoardsByProject()
@@ -1001,16 +912,10 @@ class Agile extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目数据错误');
         }
-        $agileBoardModel = new AgileBoardModel();
-        $defaultBoards = $agileBoardModel->getsByDefault();
-        $projectBoards = $agileBoardModel->getsByProject($projectId);
+        $agileLogic = new AgileLogic();
+        $boards = $agileLogic->getBoardsByProject($projectId);
         $projectFlagModel = new ProjectFlagModel();
         $boardDefaultId = (int)$projectFlagModel->getValueByFlag($projectId, 'board_default_id');
-
-        $boards = $defaultBoards;
-        foreach ($projectBoards as $projectBoard) {
-            $boards[] = $projectBoard;
-        }
         $i = 0;
         foreach ($boards as &$board) {
             $i++;
@@ -1075,12 +980,20 @@ class Agile extends BaseUserCtrl
     {
         $projectId = null;
         $id = null;
+        $idStr = null;
+        $type = "all";
         if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+            $idStr = $_GET['_target'][2];
         }
         if (isset($_GET['id'])) {
-            $id = (int)$_GET['id'];
+            $idStr = $_GET['id'];
         }
+        if (strpos($idStr, '@')!==false){
+            list($type, $id) = explode("@", $idStr);
+        }else{
+            $id = $idStr;
+        }
+        $id = intval($id);
         if (isset($_GET['project_id'])) {
             $projectId = (int)$_GET['project_id'];
         }
