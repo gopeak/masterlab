@@ -81,13 +81,13 @@
     {{#filters}}
         <tr class="commit">
             <td >
-                <strong><a style="color: #1890ff;" href="/issue/main?fav_filter={{id}}">{{name}}</a> </strong>
+                <strong><a style="color: #1890ff;" href="/issue/main?fav_filter={{id}}&project_id={{projectid}}">{{name}}</a> </strong>
             </td>
             <td  >
                 {{make_project projectid}}
             </td>
             <td>
-                <a style="color: #1890ff;" href="/issue/main?fav_filter={{id}}">{{filter}}</a>
+               {{filter}}
             </td>
             <td  >
                 <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">

@@ -173,29 +173,6 @@ var BoardColumn = (function () {
     }
 
 
-    BoardColumn.prototype.fetchBoardBySprint = function (sprint_id) {
-
-        var params = { format: 'json' };
-        var project_id = window._cur_project_id;
-        var urls = parseURL(window.location.href);
-        urls.searchObject.id = sprint_id;
-        urls.searchObject.project_id = project_id;
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            async: true,
-            url: root_url + 'agile/fetchBoardBySprint',
-            data: urls.searchObject,
-            success: function (resp) {
-                auth_check(resp);
-                BoardColumn.prototype.handlerResponse(resp);
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    }
-
     BoardColumn.prototype.fetchBoardById = function (board_id) {
 
         var params = { format: 'json' };

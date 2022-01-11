@@ -62,26 +62,59 @@ class AgileBoardModel extends BaseDictionaryModel
         return $row;
     }
 
+    /**
+     * @param $projectId
+     * @return array
+     */
+    public function getsByAll($projectId)
+    {
+        $params = ['project_id'=>$projectId];
+        $rows = $this->getRows("*", $params);
+        return $rows;
+    }
 
     /**
      * 获取项目的所有board定义
      * @param $projectId
      * @return array
      */
-    public function getsByProject($projectId)
+    public function getsByUserCreate($projectId)
     {
-        $params = ['project_id' => (int)$projectId];
+        $params = ['project_id' => (int)$projectId, 'is_system'=>0];
         $rows = $this->getRows("*", $params);
         return $rows;
     }
 
     /**
+     * @param $projectId
      * @return array
      */
-    public function getsByDefault()
+    public function getsBySystem($projectId)
     {
-        $params = ['project_id' => 0];
+        $params = ['is_system'=>1, 'project_id'=>$projectId];
         $rows = $this->getRows("*", $params);
+        return $rows;
+    }
+
+    /**
+     * @param $projectId
+     * @return array
+     */
+    public function getsByRangeSprint($projectId)
+    {
+        $params = ['is_system'=>1, 'project_id'=>$projectId, 'range_type'=>'sprint'];
+        $rows = $this->getRows("*", $params);
+        return $rows;
+    }
+
+    /**
+     * @param $projectId
+     * @return array
+     */
+    public function getByRangeAll($projectId)
+    {
+        $params = ['is_system'=>1, 'project_id'=>0, 'range_type'=>'all'];
+        $rows = $this->getRow("*", $params);
         return $rows;
     }
 

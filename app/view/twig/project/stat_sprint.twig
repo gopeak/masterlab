@@ -33,7 +33,25 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
+        <div  style="margin: 0 auto 6px;padding: 8px;">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownSprints" data-toggle="dropdown" aria-haspopup="true"  >
+                    {% if sprint %}
+                    <?=sprint['name']?>
+                    {% else %}
+                        暂无迭代
+                    {% endif %}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownSprints">
+                    {% for sprint in sprints %}
+                        <li data-sprint_id="<?=sprint['id']?>"><a href="<?= project_root_url?>/stat_sprint/<?=sprint['id']?>"><?=sprint['name']?></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
         <div class="content" id="content-body">
+
             <div class="container-fluid padding-0">
                 <div class="content-block padding-lg margin-b-lg content-block-header">
                     <h3 class="header-title">迭代统计</h3>
@@ -362,7 +380,7 @@
 <script type="text/javascript">
 
     var _cur_project_id = '<?=project_id?>';
-    var _active_sprint_id = '<?=active_sprint_id?>';
+    var _active_sprint_id = '<?=sprint_id?>';
 
     var _issueConfig = {
         "priority":<?=priority|json_encode()|raw?>,

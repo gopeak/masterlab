@@ -27,25 +27,29 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `agile_board` (
-                               `id` int UNSIGNED NOT NULL,
-                               `name` varchar(128) NOT NULL,
-                               `project_id` int UNSIGNED NOT NULL,
-                               `type` enum('status','issue_type','label','module','resolve','priority','assignee') DEFAULT NULL,
-                               `is_filter_backlog` tinyint UNSIGNED NOT NULL DEFAULT '1',
-                               `is_filter_closed` tinyint UNSIGNED NOT NULL DEFAULT '1',
-                               `weight` int UNSIGNED NOT NULL DEFAULT '0',
-                               `range_type` enum('current_sprint','all','sprints','modules','issue_types') NOT NULL COMMENT '看板数据范围',
-                               `range_data` varchar(1024) NOT NULL COMMENT '范围数据',
-                               `is_system` tinyint NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `project_id` int(10) unsigned NOT NULL,
+  `type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `is_filter_backlog` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `is_filter_closed` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `weight` int(10) unsigned NOT NULL DEFAULT '0',
+  `range_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '看板数据范围',
+  `range_data` varchar(1024) NOT NULL COMMENT '范围数据',
+  `is_system` tinyint(4) NOT NULL DEFAULT '0',
+  `range_due_date` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '截至时间范围',
+  `sprint_id` int(11) unsigned DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `project_id` (`project_id`),
+  KEY `weight` (`weight`),
+  KEY `is_system` (`is_system`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `agile_board`
 --
 
-INSERT INTO `agile_board` (`id`, `name`, `project_id`, `type`, `is_filter_backlog`, `is_filter_closed`, `weight`, `range_type`, `range_data`, `is_system`) VALUES
-(1, '进行中的迭代', 0, 'status', 0, 1, 99999, 'current_sprint', '', 1),
-(2, '整个项目', 0, 'status', 0, 1, 99998, 'all', '', 1);
+INSERT INTO `agile_board` VALUES (2, '整个项目', 0, 'status', 0, 1, 99998, 'all', '', 1, NULL, 0);
 
 -- --------------------------------------------------------
 

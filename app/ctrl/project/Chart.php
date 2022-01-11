@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\classes\AgileLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\WidgetLogic;
@@ -69,7 +70,26 @@ class Chart extends BaseUserCtrl
             }
         }
         $model = new SprintModel();
-        $data['activeSprint'] = $model->getActive($data['project_id']);
+        $agileLogic = new AgileLogic();
+        $data['sprints'] = $agileLogic->getSprints($data['project_id']);
+        $sprintId = '';
+        if(isset($_GET['_target'][3])){
+            $sprintId = intval($_GET['_target'][3]);
+        }else{
+
+            $activeSprint = $model->getActive($data['project_id']);
+            if (isset($activeSprint['id'])) {
+                $sprintId = $activeSprint['id'];
+            } else {
+                $sprints = $model->getItemsByProject($data['project_id']);
+                if (isset($data['sprints']['id'])) {
+                    $sprintId = $sprints[0]['id'];
+                }
+            }
+        }
+        $data['sprint'] = $model->getById($sprintId);
+        $data['sprint_id'] = $sprintId;
+
         $data['count_down_date'] = '';
         if(isset($data['activeSprint']['end_date'])){
             $data['count_down_date'] = date('Y-m-d',strtotime($data['activeSprint']['end_date'])+86400);

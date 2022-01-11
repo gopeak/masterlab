@@ -431,6 +431,9 @@ var IssueMain = (function () {
         let sort_by = $('#adv_sort_by').val();
         let sort_field = $('#adv_sort_field').val();
 
+        if(window.is_adv_filter=="1" && sort_field==""){
+            sort_field = window.$sort_field;
+        }
 
         btn_adv_sumit.addClass('disabled');
         $.ajax({

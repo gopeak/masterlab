@@ -302,10 +302,17 @@
                             <ul class="dropdown-menu settings-list"
                                 aria-labelledby="dropdownMenuButton" for-id="list_opt"
                                 id="opt_choice">
+                                {% if ( _permProjectAdmin or is_admin) %}
+                                <li class="normal" data-stoppropagation="true">
+                                    <a href="<?= project_root_url?>/settings_filter">
+                                        <i class="fa fa-filter"></i>
+                                        管理项目过滤器</a>
+                                </li>
+                                {% endif %}
                                 <li class="normal" data-stoppropagation="true">
                                     <a href="/user/filters">
                                         <i class="fa fa-filter"></i>
-                                        管理自定义过滤器</a>
+                                        个人自定义过滤器</a>
                                 </li>
                                 {% if ( is_user_display_field =="1" ) %}
                                 <li class="normal" data-stoppropagation="true">
