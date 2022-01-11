@@ -981,7 +981,7 @@ class Agile extends BaseUserCtrl
         $projectId = null;
         $id = null;
         $idStr = null;
-        $type = "all";
+        $type = "";
         if (isset($_GET['_target'][2])) {
             $idStr = $_GET['_target'][2];
         }
@@ -998,7 +998,14 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$_GET['project_id'];
         }
         $model = new AgileBoardModel();
-        $board = $model->getById($id);
+        if($type=="all") {
+            $board = $model->getByRangeAll($projectId);
+            if(!empty($board)){
+                $id = $board['id'];
+            }
+        }else{
+            $board = $model->getById($id);
+        }
         if (empty($board)) {
             $this->ajaxFailed('参数错误', '看板数据不存在');
         }
