@@ -259,7 +259,12 @@ class Main extends BaseUserCtrl
         }else{
             $data['is_table_display_avatar'] = $isTableDisplayAvatar;
         }
-        $this->render('gitlab/issue/list.php', $data);
+        if(isset($_GET['tree']) && $_GET['tree']=='1'){
+            $this->render('gitlab/issue/tree.twig', $data);
+        }else{
+            $this->render('gitlab/issue/list.twig', $data);
+        }
+
     }
 
     /**

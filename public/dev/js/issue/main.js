@@ -479,9 +479,6 @@ var IssueMain = (function () {
         }
         if (_issue_length > 0) {
             loading.show('#' + _options.list_render_id);
-            var source = $('#' + _options.list_tpl_id).html();
-            var template = Handlebars.compile(source);
-
             for (let i in resp.data.issues) {
                 if (resp.data.issues[i].start_date == '' || resp.data.issues[i].due_date == '') {
                     resp.data.issues[i].show_date_range = '';
@@ -492,11 +489,18 @@ var IssueMain = (function () {
             resp.data.display_fields = window.display_fields;
             resp.data.uiDisplayFields = window.uiDisplayFields;
             resp.data.issue_view  = window.issue_view ;
+
+            var source = $('#' + _options.list_tpl_id).html();
+            var template = Handlebars.compile(source);
             var result = template(resp.data);
-            let table_footer_operation_tpl = $('#table_footer_operation_tpl').html();
-            if (table_footer_operation_tpl != null && table_footer_operation_tpl != undefined)
+            var table_footer_operation_tpl = $('#table_footer_operation_tpl').html();
+            if (table_footer_operation_tpl != null && table_footer_operation_tpl != undefined){
                 result += $('#table_footer_operation_tpl').html();
+            }
             $('#' + _options.list_render_id).html(result);
+            if(_options.list_tpl_id=="tree_tpl"){
+                IssueMain.prototype.renderTreeTable(resp);
+            }
 
             $('#issue_count').html(resp.data.total);
             $('#page_size').html(resp.data.page_size);
@@ -802,7 +806,6 @@ var IssueMain = (function () {
                 });
             });
 
-
             $(".date-select-edit").bind("click", function () {
                 let $self = $(this);
                 let issue_id = $self.data('issue_id');
@@ -894,8 +897,82 @@ var IssueMain = (function () {
             })
         }
     };
-    IssueMain.prototype.displayConvertChild = function (issue_id) {
 
+    IssueMain.prototype.renderTreeTable = function (resp) {
+        console.log(window.treeData);
+        $table.bootstrapTable({
+            data:window.treeData,
+            idField: 'id',
+            dataType:'json',
+            columns: [
+                { field: 'check',  checkbox: true, formatter: function (value, row, index) {
+                        if (row.check == true) {
+                            // console.log(row.serverName);
+                            //设置选中
+                            return {  checked: true };
+                        }
+                    }
+                },
+                { field: 'name',  title: '名称' },
+               {field: 'id', title: '编号', sortable: true, align: 'center'},
+                {field: 'pid', title: '所属上级'},
+                { field: 'status',  title: '状态', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                        if (value === 1) {
+                            return '<span class="label label-success">正常</span>';
+                        } else {
+                            return '<span class="label label-default">锁定</span>';
+                        }
+                    }
+                },
+                { field: 'permissionValue', title: '权限值'  },
+                { field: 'operate', title: '操作', align: 'center', events : operateEvents, formatter: function (value, row, index) {
+                        return [
+                            '<button type="button" class="RoleOfadd btn-small  btn-primary" style="margin-right:15px;"><i class="fa fa-plus" ></i>&nbsp;新增</button>',
+                            '<button type="button" class="RoleOfedit btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-pencil-square-o" ></i>&nbsp;修改</button>',
+                            '<button type="button" class="RoleOfdelete btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-trash-o" ></i>&nbsp;删除</button>'
+                        ].join('');
+                    }
+                },
+            ],
+            // bootstrap-table-treegrid.js 插件配置 -- start
+            //在哪一列展开树形
+            treeShowField: 'name',
+            //指定父id列
+            parentIdField: 'pid',
+            onResetView: function(data) {
+                //console.log('load');
+                $table.treegrid({
+                    initialState: 'collapsed',// 所有节点都折叠
+                    // initialState: 'expanded',// 所有节点都展开，默认展开
+                    treeColumn: 1,
+                    // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
+                    // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                    onChange: function() {
+                        $table.bootstrapTable('resetWidth');
+                    }
+                });
+                //只展开树形的第一级节点
+                $table.treegrid('getRootNodes').treegrid('expand');
+            },
+            onCheck:function(row){
+                var datas = $table.bootstrapTable('getData');
+                // 勾选子类
+                selectChilds(datas,row,"id","pid",true);
+                // 勾选父类
+                selectParentChecked(datas,row,"id","pid")
+                // 刷新数据
+                $table.bootstrapTable('load', datas);
+            },
+            onUncheck:function(row){
+                var datas = $table.bootstrapTable('getData');
+                selectChilds(datas,row,"id","pid",false);
+                $table.bootstrapTable('load', datas);
+            },
+            // bootstrap-table-treetreegrid.js 插件配置 -- end
+        });
+    };
+
+    IssueMain.prototype.displayConvertChild = function (issue_id) {
         $('#current_issue_id').val(issue_id);
         $('#btn-parent_select_issue').data('issue-id', issue_id);
         $.ajax({

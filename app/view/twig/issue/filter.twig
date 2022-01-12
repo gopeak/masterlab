@@ -254,16 +254,19 @@
                                 <i id="change_view_icon"
                                    class="fa {% if (issue_view == 'list') %}fa-table{% endif %} {% if (issue_view == 'detail') %}fa-outdent{% endif %} {% if (issue_view == 'responsive') %}fa-outdent{% endif %}"></i>
                                 <span id="change_view_span">
-                                                                {% if (issue_view == 'list') %}
-                                                                    表格视图
-                                                                {% endif %}
+                                    {% if (issue_view == 'list') %}
+                                        表格视图
+                                    {% endif %}
                                     {% if (issue_view == 'detail') %}
                                         左右视图
                                     {% endif %}
                                     {% if (issue_view == 'responsive') %}
                                         响应式视图
                                     {% endif %}
-																	</span>
+                                    {% if (issue_view == 'tree') %}
+                                        子任务视图
+                                    {% endif %}
+								 </span>
                                 <i aria-hidden="true" data-hidden="true"
                                    class="fa fa-chevron-down"></i>
                             </button>
@@ -276,18 +279,21 @@
                                     <i class="fa fa-table"></i>
                                     表格视图
                                 </li>
-
                                 <li data-issue_view="detail"
                                     class="float-part   {% if (issue_view == 'detail') %} active  {% endif %}"
                                     data-stoppropagation="true">
                                     <i class="fa fa-outdent"></i>
                                     左右视图
                                 </li>
-
                                 <li data-issue_view="responsive"
                                     class="float {% if (issue_view == 'responsive') %} active {% endif %}">
                                     <i class="fa fa-list"></i>
                                     响应式视图
+                                </li>
+                                <li data-issue_view="tree"
+                                    class="float {% if (issue_view == 'tree') %} active {% endif %}">
+                                    <i class="fa fa-th-list"></i>
+                                    子任务视图
                                 </li>
                             </ul>
                         </div>
