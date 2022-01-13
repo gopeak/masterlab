@@ -406,7 +406,7 @@
                                                         {% for key,item in project_modules %}
                                                             <li>
                                                                 <a class="btn_batch_update" data-field="module"
-                                                                   data-id="<?= key ?>" href="#"><?= item['name'] ?></a>
+                                                                   data-id="<?= item.id ?>" href="#"><?= item['name'] ?></a>
                                                             </li>
                                                         {% endfor %}
 
@@ -622,19 +622,19 @@
                 }
 
                 var treeData =  [
-                    {"id":1,"pid":0,"status":1,"name":"用户管理","permissionValue":"open:user:manage"},
-                    {"id":2,"pid":0,"status":1,"name":"系统管理","permissionValue":"open:system:manage"},
-                    {"id":3,"pid":1,"status":1,"name":"新增用户","permissionValue":"open:user:add"},
-                    {"id":4,"pid":1,"status":1,"name":"修改用户","permissionValue":"open:user:edit"},
-                    {"id":5,"pid":1,"status":0,"name":"删除用户","permissionValue":"open:user:del"},
-                    {"id":6,"pid":2,"status":1,"name":"系统配置管理","permissionValue":"open:systemconfig:manage"},
-                    {"id":7,"pid":6,"status":1,"name":"新增配置","permissionValue":"open:systemconfig:add"},
-                    {"id":8,"pid":6,"status":1,"name":"修改配置","permissionValue":"open:systemconfig:edit"},
-                    {"id":9,"pid":6,"status":0,"name":"删除配置","permissionValue":"open:systemconfig:del"},
-                    {"id":10,"pid":2,"status":1,"name":"系统日志管理","permissionValue":"open:log:manage"},
-                    {"id":11,"pid":10,"status":1,"name":"新增日志","permissionValue":"open:log:add"},
-                    {"id":12,"pid":10,"status":1,"name":"修改日志","permissionValue":"open:log:edit"},
-                    {"id":13,"pid":10,"status":0,"name":"删除日志","permissionValue":"open:log:del"}
+                    {"id":1,"master_id":0,"status":1,"name":"用户管理","permissionValue":"open:user:manage"},
+                    {"id":2,"master_id":0,"status":1,"name":"系统管理","permissionValue":"open:system:manage"},
+                    {"id":3,"master_id":1,"status":1,"name":"新增用户","permissionValue":"open:user:add"},
+                    {"id":4,"master_id":1,"status":1,"name":"修改用户","permissionValue":"open:user:edit"},
+                    {"id":5,"master_id":1,"status":0,"name":"删除用户","permissionValue":"open:user:del"},
+                    {"id":6,"master_id":2,"status":1,"name":"系统配置管理","permissionValue":"open:systemconfig:manage"},
+                    {"id":7,"master_id":6,"status":1,"name":"新增配置","permissionValue":"open:systemconfig:add"},
+                    {"id":8,"master_id":6,"status":1,"name":"修改配置","permissionValue":"open:systemconfig:edit"},
+                    {"id":9,"master_id":6,"status":0,"name":"删除配置","permissionValue":"open:systemconfig:del"},
+                    {"id":10,"master_id":2,"status":1,"name":"系统日志管理","permissionValue":"open:log:manage"},
+                    {"id":11,"master_id":10,"status":1,"name":"新增日志","permissionValue":"open:log:add"},
+                    {"id":12,"master_id":10,"status":1,"name":"修改日志","permissionValue":"open:log:edit"},
+                    {"id":13,"master_id":10,"status":0,"name":"删除日志","permissionValue":"open:log:del"}
                 ];
 
                 window.operateEvents = {
@@ -650,20 +650,20 @@
                 };
 
 
-                function selectChilds(datas,row,id,pid,checked) {
+                function selectChilds(datas,row,id,master_id,checked) {
                     for(var i in datas){
-                        if(datas[i][pid] == row[id]){
+                        if(datas[i][master_id] == row[id]){
                             datas[i].check=checked;
-                            selectChilds(datas,datas[i],id,pid,checked);
+                            selectChilds(datas,datas[i],id,master_id,checked);
                         };
                     }
                 }
 
-                function selectParentChecked(datas,row,id,pid){
+                function selectParentChecked(datas,row,id,master_id){
                     for(var i in datas){
-                        if(datas[i][id] == row[pid]){
+                        if(datas[i][id] == row[master_id]){
                             datas[i].check=true;
-                            selectParentChecked(datas,datas[i],id,pid);
+                            selectParentChecked(datas,datas[i],id,master_id);
                         };
                     }
                 }
@@ -862,7 +862,7 @@
 
 
                     $('#view_choice li').bind('click', function () {
-                        alert($(this));
+                        //alert($(this));
                         $('#view_choice .active').removeClass('active');
                         $(this).addClass('active');
                         var selectIssueView = $(this).data('issue_view');

@@ -681,7 +681,7 @@ class Main extends BaseUserCtrl
     {
         $issueFilterLogic = new IssueFilterLogic();
 
-        $pageSize = 20;
+        $pageSize = 50;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $page = max(1, $page);
         if (isset($_GET['page'])) {
@@ -1355,23 +1355,45 @@ class Main extends BaseUserCtrl
                 $belowIssueId = (int)$params['below_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $belowIssue = $model->getRow("gant_sprint_weight,sprint,master_id", ['id' => $belowIssueId]);
                 $fieldWeight = 'gant_sprint_weight';
-                $aboveWeight = (int)$belowIssue[$fieldWeight];
-                $sprintId = $belowIssue['sprint'];
-                $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
+                if($belowIssueId<0){
+                    $belowIssueId = abs($belowIssueId);
+                    $rows = $model->getRows("gant_sprint_weight,sprint,master_id", ['sprint' => $belowIssueId], null, "gant_sprint_weight", "desc", 2);
+                    if(count($rows)>1){
+                        $row1Weight = (int)$rows[0]['gant_sprint_weight'] ;
+                        $row2Weight = (int)$rows[1]['gant_sprint_weight'] ;
+                        $info[$fieldWeight] = max(0, $row1Weight + intval(($row1Weight - $row2Weight) / 2));
+                    }else{
+                        if(count($rows)>0){
+                            $row1Weight = (int)$rows[0]['gant_sprint_weight'] ;
+                            $info[$fieldWeight] = max(0, $row1Weight + 100000);
+                        }
+                        if(count($rows)==0){
+                            $info[$fieldWeight] = 1000000000;
+                        }
+                    }
+                    $info["sprint"] = $belowIssueId;
+                    $params['master_issue_id'] = 0;
+                }else{
+                    $belowIssue = $model->getRow("gant_sprint_weight,sprint,master_id", ['id' => $belowIssueId]);
+                    $aboveWeight = (int)$belowIssue[$fieldWeight];
+                    $sprintId = $belowIssue['sprint'];
+                    if(empty($sprintId) && isset($params['sprint'])){
+                        $sprintId =abs(intval($params['sprint']));
+                    }
+                    $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
+                    $nextWeight = (int)$model->getFieldBySql($sql);
+                    if (empty($nextWeight)) {
+                        $nextWeight = 0;
+                    }
+                    $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
 
-                $nextWeight = (int)$model->getFieldBySql($sql);
-                if (empty($nextWeight)) {
-                    $nextWeight = 0;
+                    if (!empty($belowIssue['master_id'])) {
+                        $params['master_issue_id'] = $belowIssue['master_id'];
+                    }
+                    // print_r($params);
+                    unset($model, $belowIssue);
                 }
-                $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
-
-                if (!empty($belowIssue['master_id'])) {
-                    $params['master_issue_id'] = $belowIssue['master_id'];
-                }
-                // print_r($params);
-                unset($model, $belowIssue);
             }
             // 如果是在某一事项之上,排序值是两个事项之间二分之一
             if (isset($params['above_id']) && !empty($params['above_id'])) {
@@ -1981,7 +2003,6 @@ class Main extends BaseUserCtrl
             }
             $successIssueIdArr[] = $issueId;
         }
-
         // 操作日志
         $logData = [];
         $logData['user_name'] = $this->auth->getUser()['username'];
@@ -1997,7 +2018,7 @@ class Main extends BaseUserCtrl
 
         $event = new CommonPlacedEvent($this, ['field' => $field, 'value' => $value, 'project_id' => $projectId, 'issue_id_arr' => $successIssueIdArr]);
         $this->dispatcher->dispatch($event, Events::onIssueBatchUpdate);
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('success', $errArr);
     }
 
     /**

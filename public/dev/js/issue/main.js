@@ -901,7 +901,7 @@ var IssueMain = (function () {
     IssueMain.prototype.renderTreeTable = function (resp) {
         console.log(window.treeData);
         $table.bootstrapTable({
-            data:window.treeData,
+            data: resp.data.issues,
             idField: 'id',
             dataType:'json',
             columns: [
@@ -913,10 +913,10 @@ var IssueMain = (function () {
                         }
                     }
                 },
-                { field: 'name',  title: '名称' },
-               {field: 'id', title: '编号', sortable: true, align: 'center'},
-                {field: 'pid', title: '所属上级'},
-                { field: 'status',  title: '状态', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                {field: 'summary',  title: '标 题' },
+                {field: 'issue_num', title: '编 号', sortable: true, align: 'center'},
+                {field: 'master_id', title: '所属上级'},
+                { field: 'status',  title: '状 态', sortable: true,  align: 'center', formatter:  function (value, row, index) {
                         if (value === 1) {
                             return '<span class="label label-success">正常</span>';
                         } else {
@@ -924,7 +924,8 @@ var IssueMain = (function () {
                         }
                     }
                 },
-                { field: 'permissionValue', title: '权限值'  },
+                { field: 'due_date', title: '截至日期'  },
+                { field: 'weight', title: '权重值'  },
                 { field: 'operate', title: '操作', align: 'center', events : operateEvents, formatter: function (value, row, index) {
                         return [
                             '<button type="button" class="RoleOfadd btn-small  btn-primary" style="margin-right:15px;"><i class="fa fa-plus" ></i>&nbsp;新增</button>',
@@ -936,13 +937,13 @@ var IssueMain = (function () {
             ],
             // bootstrap-table-treegrid.js 插件配置 -- start
             //在哪一列展开树形
-            treeShowField: 'name',
+            treeShowField: 'summary',
             //指定父id列
-            parentIdField: 'pid',
+            parentIdField: 'master_id',
             onResetView: function(data) {
                 //console.log('load');
                 $table.treegrid({
-                    initialState: 'collapsed',// 所有节点都折叠
+                    initialState: 'expanded',// 所有节点都折叠  collapsed | expanded
                     // initialState: 'expanded',// 所有节点都展开，默认展开
                     treeColumn: 1,
                     // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
@@ -957,15 +958,15 @@ var IssueMain = (function () {
             onCheck:function(row){
                 var datas = $table.bootstrapTable('getData');
                 // 勾选子类
-                selectChilds(datas,row,"id","pid",true);
+                selectChilds(datas,row,"id","master_id",true);
                 // 勾选父类
-                selectParentChecked(datas,row,"id","pid")
+                selectParentChecked(datas,row,"id","master_id")
                 // 刷新数据
                 $table.bootstrapTable('load', datas);
             },
             onUncheck:function(row){
                 var datas = $table.bootstrapTable('getData');
-                selectChilds(datas,row,"id","pid",false);
+                selectChilds(datas,row,"id","master_id",false);
                 $table.bootstrapTable('load', datas);
             },
             // bootstrap-table-treetreegrid.js 插件配置 -- end
