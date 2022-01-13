@@ -495,9 +495,10 @@ var Gantt = (function () {
 
         let assignee_user_id = parseInt($('#gantt_assignee').val());
         var assigneeObj = window.ge.getResource(assignee_user_id);
+        console.log(assigneeObj)
         task.assig = [];
         task.assig.push(assigneeObj)
-        task.rowElement.find(".taskAssigs").html(task.getAssigsString());
+        task.rowElement.find(".taskAssigs").html( assigneeObj.name);
         //set assignments
         var cnt=0;
 
@@ -532,6 +533,7 @@ var Gantt = (function () {
                     return;
                 }
                 if (resp.ret == 200) {
+                    task.rowElement.find(".taskAssigs").html( assigneeObj.name);
                     notify_success(resp.msg);
 
                 }else{

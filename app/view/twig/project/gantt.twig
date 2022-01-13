@@ -125,8 +125,9 @@
       <button onclick="$('#workSpace').trigger('moveUpCurrentTask.gantt');return false;" class="button textual icon requireWrite " title="向上移动"><span class="teamworkIcon">k</span></button>
       <button onclick="$('#workSpace').trigger('moveDownCurrentTask.gantt');return false;" class="button textual icon requireWrite " title="向下移动"><span class="teamworkIcon">j</span></button>
       <span class="ganttButtonSeparator requireWrite "></span>
-      <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon delete requireWrite" title="隐藏事项(删除事项需到事项列表操作)"><span class="teamworkIcon">&cent;</span></button>
-      <button onclick="show_be_hidden_list();" class="button textual icon delete requireWrite" title="隐藏的事项列表"><span class="teamworkIcon">q</span></button>
+      <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon  delete requireWrite" title="删除事项"><span class="fa fa-trash-o fa-lg"  style="color:#34495e;">&nbsp;</span></button>
+      <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon  requireWrite" title="隐藏事项"><span class="fa fa-ban fa-lg"  style="color:#34495e;">&nbsp;</span></button>
+      <button onclick="show_be_hidden_list();" class="button textual icon  requireWrite" title="隐藏的事项列表"><span class="fa fa-eye fa-lg" style="color:#34495e;">&nbsp;</span></button>
       <span class="ganttButtonSeparator"></span>
      {% if (projectPermArr['ADMIN_GANTT'] is defined and projectPermArr['ADMIN_GANTT'] =='1') %} {% endif %}
       <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;" class="button textual icon " title="展开"><span class="teamworkIcon">6</span></button>

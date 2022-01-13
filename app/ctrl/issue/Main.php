@@ -1359,18 +1359,12 @@ class Main extends BaseUserCtrl
                 if($belowIssueId<0){
                     $belowIssueId = abs($belowIssueId);
                     $rows = $model->getRows("gant_sprint_weight,sprint,master_id", ['sprint' => $belowIssueId], null, "gant_sprint_weight", "desc", 2);
-                    if(count($rows)>1){
+                    if(count($rows)>0){
                         $row1Weight = (int)$rows[0]['gant_sprint_weight'] ;
-                        $row2Weight = (int)$rows[1]['gant_sprint_weight'] ;
-                        $info[$fieldWeight] = max(0, $row1Weight + intval(($row1Weight - $row2Weight) / 2));
-                    }else{
-                        if(count($rows)>0){
-                            $row1Weight = (int)$rows[0]['gant_sprint_weight'] ;
-                            $info[$fieldWeight] = max(0, $row1Weight + 100000);
-                        }
-                        if(count($rows)==0){
-                            $info[$fieldWeight] = 1000000000;
-                        }
+                        $info[$fieldWeight] = max(0, $row1Weight + 100000);
+                    }
+                    if(count($rows)==0){
+                        $info[$fieldWeight] = 1000000000;
                     }
                     $info["sprint"] = $belowIssueId;
                     $params['master_issue_id'] = 0;
