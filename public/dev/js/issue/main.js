@@ -405,7 +405,6 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 IssueMain.prototype.handleRenderIssues(resp, success);
-                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -900,41 +899,203 @@ var IssueMain = (function () {
 
     IssueMain.prototype.renderTreeTable = function (resp) {
         console.log(window.treeData);
-        $table.bootstrapTable({
+        var columns = [
+            { field: 'check',  checkbox: true, formatter: function (value, row, index) {
+                    if (row.check == true) {
+                        // console.log(row.serverName);
+                        //设置选中
+                        return {  checked: true };
+                    }
+                }
+            },
+            {field: 'summary',  title: '标 题' , class:"min_width_300",  formatter:  function (value, row, index) {
+                    let html = '<a  href="/issue/detail/index/'+row.id+'" class="commit-row-message">';
+                    html += lightSearch(value, row.search);
+                    html += '</a>';
+                    if(row.warning_delay =='1'){
+                        html += '<span style="color:#fc9403" title="即将延期">即将延期</span>';
+                    }
+                    if(row.postponed =='1'){
+                        html += '<span style="color:#db3b21" title="逾期">逾期</span>';
+                    }
+                    if(row.have_children >0){
+                        html += '<span class="badge">'+row.have_children+'</span>';
+                    }
+                    return html
+                }
+            },
+        ];
+        if(isInArray(resp.data.display_fields,'issue_type')){
+            let column = {field: 'issue_type',  title: '类 型', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return issue_type_short_html(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'priority')){
+            let column = {field: 'priority',  title: '优先级', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return priority_html(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'project_id')){
+            let column = {field: 'project_id',  title: '项 目',   align: 'center', formatter:  function (value, row, index) {
+                    return make_project(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'module')){
+            let column = {field: 'module',  title: '模 块', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return module_html(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'sprint')){
+            let column = {field: 'sprint',  title: '迭 代', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return make_issue_sprint(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'label')){
+            let column = {field: 'label',  title: '标 签',  align: 'left', formatter:  function (value, row, index) {
+                    return make_label_html(row.label_id_arr)
+                }
+            }
+            columns.push( column)
+        }
+
+        if(isInArray(resp.data.display_fields,'weight')){
+            let column = {field: 'weight',  title: '权重值', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return value
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'assignee')){
+            let column = {field: 'assignee',  title: '经办人', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    if(resp.data.is_table_display_avatar=='1'){
+                        return user_html(value)
+                    }else{
+                        return user_html_display_name(value)
+                    }
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'reporter')){
+            let column = {field: 'reporter',  title: '报告人', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    if(resp.data.is_table_display_avatar=='1'){
+                        return user_html(value)
+                    }else{
+                        return user_html_display_name(value)
+                    }
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'assistants')){
+            let column = {field: 'assistants',  title: '协助人',  align: 'center', formatter:  function (value, row, index) {
+                    if(resp.data.is_table_display_avatar=='1'){
+                        return issue_assistants_avatar(row.assistants_arr)
+                    }else{
+                        return issue_assistants_display_name(row.assistants_arr)
+                    }
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'status')){
+            let column = {field: 'status',  title: '状 态', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return status_html(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'resolve')){
+            let column = {field: 'resolve',  title: '解决结果', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return resolve_html(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'environment')){
+            let column = {field: 'environment',  title: '环 境', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return value
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'plan_date')){
+            let column = {field: 'plan_date',  title: '计划日期', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                let html = '<small class="no-value date-select-edit" id="date-select-show-'+row.id+'" data-issue_id="'+row.id+'" style="display:block;width: 100%;height: 20px;cursor:pointer;">'+row.show_date_range+'\n' +
+                    '</small>';
+                return  html;
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'resolve_date')){
+            let column = {field: 'resolve_date',  title: '解决日期', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return value
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'modifier')){
+            let column = {field: 'modifier',  title: '修改人', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    if(resp.data.is_table_display_avatar=='1'){
+                        return user_html(value)
+                    }else{
+                        return user_html_display_name(value)
+                    }
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'master_id')){
+            let column = {field: 'master_id',  title: '父任务', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    if(row.have_children=='1'){
+                        return '是'
+                    }else{
+                        return '否'
+                    }
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'created')){
+            let column = {field: 'created',  title: '创建时间', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return row.created_text
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'updated')){
+            let column = {field: 'updated',  title: '更新时间', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return row.updated_text
+                }
+            }
+            columns.push( column)
+        }
+        let  columnOpt = {field: 'operate',  title: '操 作',  align: 'center',events : operateEvents, formatter:  function (value, row, index) {
+                return [
+                    '<a href="#" class="RoleOfadd  " style="margin-right:5px;"><i class="fa fa-plus" ></i>&nbsp;</a>',
+                    '<a href="#" class="RoleOfedit " style="margin-right:5px;"><i class="fa fa-pencil-square-o" ></i>&nbsp;</a>',
+                    '<a href="#" class="RoleOfdelete  " style="margin-right:5px;"><i class="fa fa-trash-o" ></i>&nbsp;</a>'
+                ].join('');
+            }
+        }
+        columns.push( columnOpt)
+
+        $tree_table.bootstrapTable({
             data: resp.data.issues,
             idField: 'id',
             dataType:'json',
-            columns: [
-                { field: 'check',  checkbox: true, formatter: function (value, row, index) {
-                        if (row.check == true) {
-                            // console.log(row.serverName);
-                            //设置选中
-                            return {  checked: true };
-                        }
-                    }
-                },
-                {field: 'summary',  title: '标 题' },
-                {field: 'issue_num', title: '编 号', sortable: true, align: 'center'},
-                {field: 'master_id', title: '所属上级'},
-                { field: 'status',  title: '状 态', sortable: true,  align: 'center', formatter:  function (value, row, index) {
-                        if (value === 1) {
-                            return '<span class="label label-success">正常</span>';
-                        } else {
-                            return '<span class="label label-default">锁定</span>';
-                        }
-                    }
-                },
-                { field: 'due_date', title: '截至日期'  },
-                { field: 'weight', title: '权重值'  },
-                { field: 'operate', title: '操作', align: 'center', events : operateEvents, formatter: function (value, row, index) {
-                        return [
-                            '<button type="button" class="RoleOfadd btn-small  btn-primary" style="margin-right:15px;"><i class="fa fa-plus" ></i>&nbsp;新增</button>',
-                            '<button type="button" class="RoleOfedit btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-pencil-square-o" ></i>&nbsp;修改</button>',
-                            '<button type="button" class="RoleOfdelete btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-trash-o" ></i>&nbsp;删除</button>'
-                        ].join('');
-                    }
-                },
-            ],
+            columns: columns,
             // bootstrap-table-treegrid.js 插件配置 -- start
             //在哪一列展开树形
             treeShowField: 'summary',
@@ -942,32 +1103,32 @@ var IssueMain = (function () {
             parentIdField: 'master_id',
             onResetView: function(data) {
                 //console.log('load');
-                $table.treegrid({
+                $tree_table.treegrid({
                     initialState: 'expanded',// 所有节点都折叠  collapsed | expanded
                     // initialState: 'expanded',// 所有节点都展开，默认展开
                     treeColumn: 1,
                     // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
                     // expanderCollapsedClass: 'glyphicon glyphicon-plus',
                     onChange: function() {
-                        $table.bootstrapTable('resetWidth');
+                        $tree_table.bootstrapTable('resetWidth');
                     }
                 });
                 //只展开树形的第一级节点
-                $table.treegrid('getRootNodes').treegrid('expand');
+                $tree_table.treegrid('getRootNodes').treegrid('expand');
             },
             onCheck:function(row){
-                var datas = $table.bootstrapTable('getData');
+                var datas = $tree_table.bootstrapTable('getData');
                 // 勾选子类
                 selectChilds(datas,row,"id","master_id",true);
                 // 勾选父类
                 selectParentChecked(datas,row,"id","master_id")
                 // 刷新数据
-                $table.bootstrapTable('load', datas);
+                $tree_table.bootstrapTable('load', datas);
             },
             onUncheck:function(row){
-                var datas = $table.bootstrapTable('getData');
+                var datas = $tree_table.bootstrapTable('getData');
                 selectChilds(datas,row,"id","master_id",false);
-                $table.bootstrapTable('load', datas);
+                $tree_table.bootstrapTable('load', datas);
             },
             // bootstrap-table-treetreegrid.js 插件配置 -- end
         });

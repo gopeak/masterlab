@@ -244,9 +244,23 @@
                     </div>
                 </div>
 
-                <div class="filter-dropdown-container">
-                    <div class="dropdown inline prepend-left-10" style="height: 38.5px">
 
+                <div class="filter-dropdown-container" style="z-index: 100">
+                    <div id="div-issue_view_tree_option" style="vertical-align: middle;text-align: center;margin-left: 5px">
+                        <span>范 围:</span>
+                        <select id="issue_view_tree_range" name="issue_view_tree_range" class=" " title="所有项目的事项还是某个迭代事项"
+                                style="width:90px;height:38.5px;border: 1px solid #e5e5e5; border-radius: 3px;">
+                            <option value="0" selected>&nbsp;&nbsp;所 有&nbsp;&nbsp;</option>
+                            {% for sprint in sprints %}
+                                <option value="<?= sprint['id'] ?>">&nbsp;&nbsp;<?= sprint['name'] ?></option>
+                            {% endfor %}
+                        </select>
+                        <span style="margin-left: 5px">已关闭事项:</span>
+                        <input title="是否显示已关闭事项"  id="issue_tree_is_closed" name="issue_tree_is_closed" type="checkbox" value="1">
+                        <span style="margin-left: 5px">展 开:</span>
+                        <input title="是否要展开子任务"  id="issue_tree_is_expand" name="issue_tree_is_expand" type="checkbox" value="1">
+                    </div>
+                    <div class="dropdown inline prepend-left-5" style="height: 38.5px">
                         <div class="list-settings">
                             <button id="change_view" class="dropdown-toggle " type="button"
                                     title="切换视图" data-toggle="dropdown" aria-haspopup="true"

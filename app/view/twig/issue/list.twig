@@ -75,6 +75,9 @@
                 margin: 0;
                 padding: 4px 2px 4px;
             }
+            .min_width_300{
+                min-width: 300px;
+            }
         </style>
 
         {% if ( issue_view =='tree') %}
@@ -621,22 +624,6 @@
                     showFloatDetail(id, dataSummary);
                 }
 
-                var treeData =  [
-                    {"id":1,"master_id":0,"status":1,"name":"用户管理","permissionValue":"open:user:manage"},
-                    {"id":2,"master_id":0,"status":1,"name":"系统管理","permissionValue":"open:system:manage"},
-                    {"id":3,"master_id":1,"status":1,"name":"新增用户","permissionValue":"open:user:add"},
-                    {"id":4,"master_id":1,"status":1,"name":"修改用户","permissionValue":"open:user:edit"},
-                    {"id":5,"master_id":1,"status":0,"name":"删除用户","permissionValue":"open:user:del"},
-                    {"id":6,"master_id":2,"status":1,"name":"系统配置管理","permissionValue":"open:systemconfig:manage"},
-                    {"id":7,"master_id":6,"status":1,"name":"新增配置","permissionValue":"open:systemconfig:add"},
-                    {"id":8,"master_id":6,"status":1,"name":"修改配置","permissionValue":"open:systemconfig:edit"},
-                    {"id":9,"master_id":6,"status":0,"name":"删除配置","permissionValue":"open:systemconfig:del"},
-                    {"id":10,"master_id":2,"status":1,"name":"系统日志管理","permissionValue":"open:log:manage"},
-                    {"id":11,"master_id":10,"status":1,"name":"新增日志","permissionValue":"open:log:add"},
-                    {"id":12,"master_id":10,"status":1,"name":"修改日志","permissionValue":"open:log:edit"},
-                    {"id":13,"master_id":10,"status":0,"name":"删除日志","permissionValue":"open:log:del"}
-                ];
-
                 window.operateEvents = {
                     'click .RoleOfadd': function (e, value, row, index) {
                         console.log("row add: "+row.id);
@@ -648,7 +635,6 @@
                         console.log("row update: "+row.id);
                     }
                 };
-
 
                 function selectChilds(datas,row,id,master_id,checked) {
                     for(var i in datas){
@@ -669,7 +655,7 @@
                 }
 
                 function treeTest() {
-                    var selRows = $table.bootstrapTable("getSelections");
+                    var selRows = $tree_table.bootstrapTable("getSelections");
                     if(selRows.length == 0){
                         alert("请至少选择一行");
                         return;
@@ -683,7 +669,7 @@
                     });
                     alert("你选中行的 id 为："+postData);
                 }
-                var $table = $('#tree_table');
+                var $tree_table = $('#tree_table');
                 $(function () {
                     var options = {
                         query_str: window.query_str,
