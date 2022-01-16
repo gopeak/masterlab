@@ -219,6 +219,7 @@ class Main extends BaseUserCtrl
         $data['advFields'] = IssueFilterLogic::$advFields;
         // 事项展示的视图方式
         $data['issue_view'] = SettingModel::getInstance()->getValue('issue_view');
+
         $userId = UserAuth::getId();
         $userSettingModel = new UserSettingModel($userId);
         $userIssueView = $userSettingModel->getSettingByKey($userId, 'issue_view');
@@ -227,6 +228,21 @@ class Main extends BaseUserCtrl
         }
         if (empty($data['issue_view'])) {
             $data['issue_view'] = 'list';
+        }
+        $data['tree_range_data'] = '0';
+        $issueViewTreeTange = $userSettingModel->getSettingByKey($userId, 'tree_range_data');
+        if ($issueViewTreeTange!==false) {
+            $data['tree_range_data'] = $issueViewTreeTange;
+        }
+        $data['issue_tree_is_closed'] = '1';
+        $issueTreeIsClosed = $userSettingModel->getSettingByKey($userId, 'issue_tree_is_closed');
+        if ($issueTreeIsClosed!==false) {
+            $data['issue_tree_is_closed'] = $issueTreeIsClosed;
+        }
+        $data['issue_tree_is_expand'] = '1';
+        $issueTreeIsExpand = $userSettingModel->getSettingByKey($userId, 'issue_tree_is_expand');
+        if ($issueTreeIsExpand!==false) {
+            $data['issue_tree_is_expand'] = $issueTreeIsExpand;
         }
 
         $data['is_all_issues'] = false;
@@ -259,12 +275,7 @@ class Main extends BaseUserCtrl
         }else{
             $data['is_table_display_avatar'] = $isTableDisplayAvatar;
         }
-        if(isset($_GET['tree']) && $_GET['tree']=='1'){
-            $this->render('gitlab/issue/tree.twig', $data);
-        }else{
-            $this->render('gitlab/issue/list.twig', $data);
-        }
-
+        $this->render('gitlab/issue/list.twig', $data);
     }
 
     /**
@@ -706,6 +717,12 @@ class Main extends BaseUserCtrl
             $data['is_table_display_avatar'] = "1";
         }else{
             $data['is_table_display_avatar'] = $isTableDisplayAvatar;
+        }
+        $data['issue_tree_is_expand'] = '1';
+        $userSettingModel = new UserSettingModel(UserAuth::getId());
+        $issueTreeIsExpand = $userSettingModel->getSettingByKey(UserAuth::getId(), 'issue_tree_is_expand');
+        if ($issueTreeIsExpand!==false) {
+            $data['issue_tree_is_expand'] = $issueTreeIsExpand;
         }
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
@@ -2048,15 +2065,15 @@ class Main extends BaseUserCtrl
             $updateArr['sprint'] = (int)$_POST['sprint'];
         }
         $updateLabelArr = [];
-        if (isset($_POST['labels']) && empty($_POST['labels'])) {
+        if (isset($_POST['labels']) && !empty($_POST['labels'])) {
             $updateLabelArr = $_POST['labels'];
         }
         $updateEffectVersionArr = [];
-        if (isset($_POST['effect_version']) && empty($_POST['effect_version'])) {
+        if (isset($_POST['effect_version']) && !empty($_POST['effect_version'])) {
             $updateEffectVersionArr = $_POST['effect_version'];
         }
         $updateFixVersionArr = [];
-        if (isset($_POST['fix_version']) && empty($_POST['fix_version'])) {
+        if (isset($_POST['fix_version']) && !empty($_POST['fix_version'])) {
             $updateFixVersionArr = $_POST['fix_version'];
         }
         $uid = $this->getCurrentUid();

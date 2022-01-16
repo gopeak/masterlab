@@ -459,7 +459,7 @@
 
                                             <span style="margin-left: 1em">
 														总数:<span id="issue_count"></span>
-														每页显示:<span id="page_size"></span>
+														{% if (issue_view!='tree') %}每页显示:<span id="page_size"></span>{% endif %}
 													</span>
                                         </div>
                                     </form>
@@ -615,7 +615,7 @@
 
                 }
                 function linkIssue(id) {
-                    if(issue_view!='detail'){
+                    if(issue_view=='list' || issue_view=='responsive'){
                         window.location.href = '/issue/detail/index/'+id;
                         return;
                     }
@@ -725,6 +725,30 @@
                     $('#btn-add').bind('click', function () {
                         IssueMain.prototype.add();
                     });
+
+                    $('#issue_tree_is_expand').bind('click', function () {
+                        let issue_tree_is_expand = '0';
+                        if ($(this).prop("checked")) {
+                            issue_tree_is_expand = '1'
+                        }else{
+                        }
+                        IssueMain.prototype.treeExpandOr(issue_tree_is_expand)
+                        IssueMain.prototype.updateUserTreeExpand(issue_tree_is_expand);
+                    });
+
+                    $('#issue_tree_is_closed').bind('click', function () {
+                        let issue_tree_is_closed = '0';
+                        if ($(this).prop("checked")) {
+                            issue_tree_is_closed = '1'
+                        }
+                        window.$IssueMain.updateUserTreeIsShowClosed(issue_tree_is_closed);
+                    });
+
+
+                    $('#issue_view_tree_range').bind('change', function () {
+                        IssueMain.prototype.updateUserTreeRangeData($(this).val());
+                    });
+
 
                     $("#btn-create-issue").bind("click", function () {
                         $('#master_issue_id').val('');

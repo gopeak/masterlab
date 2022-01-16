@@ -250,15 +250,15 @@
                         <span>范 围:</span>
                         <select id="issue_view_tree_range" name="issue_view_tree_range" class=" " title="所有项目的事项还是某个迭代事项"
                                 style="width:90px;height:38.5px;border: 1px solid #e5e5e5; border-radius: 3px;">
-                            <option value="0" selected>&nbsp;&nbsp;所 有&nbsp;&nbsp;</option>
+                            <option value="0" {% if (tree_range_data == '0') %} selected  {% endif %} >&nbsp;&nbsp;所 有&nbsp;&nbsp;</option>
                             {% for sprint in sprints %}
-                                <option value="<?= sprint['id'] ?>">&nbsp;&nbsp;<?= sprint['name'] ?></option>
+                                <option value="<?= sprint['id'] ?>"  {% if (tree_range_data == sprint['id']) %} selected  {% endif %}>&nbsp;&nbsp;<?= sprint['name'] ?></option>
                             {% endfor %}
                         </select>
                         <span style="margin-left: 5px">已关闭事项:</span>
-                        <input title="是否显示已关闭事项"  id="issue_tree_is_closed" name="issue_tree_is_closed" type="checkbox" value="1">
+                        <input title="是否显示已关闭事项"  id="issue_tree_is_closed" name="issue_tree_is_closed" type="checkbox"  value="1" {% if (issue_tree_is_closed == '1') %} checked  {% endif %}>
                         <span style="margin-left: 5px">展 开:</span>
-                        <input title="是否要展开子任务"  id="issue_tree_is_expand" name="issue_tree_is_expand" type="checkbox" value="1">
+                        <input title="是否要展开子任务"  id="issue_tree_is_expand" name="issue_tree_is_expand" type="checkbox" value="1" {% if (issue_tree_is_expand == '1') %} checked  {% endif %}>
                     </div>
                     <div class="dropdown inline prepend-left-5" style="height: 38.5px">
                         <div class="list-settings">
@@ -266,7 +266,7 @@
                                     title="切换视图" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false" style="height: 38.5px">
                                 <i id="change_view_icon"
-                                   class="fa {% if (issue_view == 'list') %}fa-table{% endif %} {% if (issue_view == 'detail') %}fa-outdent{% endif %} {% if (issue_view == 'responsive') %}fa-outdent{% endif %}"></i>
+                                   class="fa {% if (issue_view == 'list') %}fa-table{% endif %} {% if (issue_view == 'detail') %}fa-outdent{% endif %} {% if (issue_view == 'responsive') %}fa-align-justify{% endif %} {% if (issue_view == 'tree') %}fa-th-list{% endif %}"></i>
                                 <span id="change_view_span">
                                     {% if (issue_view == 'list') %}
                                         表格视图
@@ -301,7 +301,7 @@
                                 </li>
                                 <li data-issue_view="responsive"
                                     class="float {% if (issue_view == 'responsive') %} active {% endif %}">
-                                    <i class="fa fa-list"></i>
+                                    <i class="fa fa-align-justify"></i>
                                     响应式视图
                                 </li>
                                 <li data-issue_view="tree"

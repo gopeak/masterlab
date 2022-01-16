@@ -297,6 +297,63 @@ var IssueMain = (function () {
         });
     }
 
+
+    IssueMain.prototype.updateUserTreeIsShowClosed = function (issue_tree_is_closed) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'user/updateUserTreeIsShowClosed',
+            data: { issue_tree_is_closed: issue_tree_is_closed },
+            success: function (resp) {
+                // if (issue_view !== 'detail') {
+                // }
+                if(resp.ret=='200'){
+                    $('#btn-go_search').click();
+                }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.updateUserTreeExpand = function (issue_tree_is_expand) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'user/updateUserTreeExpand',
+            data: { issue_tree_is_expand: issue_tree_is_expand },
+            success: function (resp) {
+                // if (issue_view !== 'detail') {
+                // }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.updateUserTreeRangeData = function (range) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'user/updateUserTreeRangeData',
+            data: { tree_range_data: range },
+            success: function (resp) {
+                // if (issue_view !== 'detail') {
+                $('#btn-go_search').click();
+                // }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     IssueMain.prototype.initIssueItem = function () {
         _issues_list.forEach(function (val, index) {
             if (parseInt(val.id) === parseInt(_issue_id)) {
@@ -393,7 +450,13 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchIssueMains = function (success) {
-
+        if(window.issue_view=='tree'){
+            let  tree_range = $('#issue_view_tree_range').val();
+            _options.filter_url += "&tree_range=" + tree_range;
+            if ($("#issue_tree_is_closed").get(0).checked) {
+                _options.filter_url += "&issue_tree_is_closed=1" ;
+            }
+        }
         // url,  list_tpl_id, list_render_id
         var params = { format: 'json' };
         loading.show('#' + _options.list_render_id);
@@ -497,7 +560,7 @@ var IssueMain = (function () {
                 result += $('#table_footer_operation_tpl').html();
             }
             $('#' + _options.list_render_id).html(result);
-            if(_options.list_tpl_id=="tree_tpl"){
+            if(window.issue_view=='tree'){
                 IssueMain.prototype.renderTreeTable(resp);
             }
 
@@ -527,7 +590,10 @@ var IssueMain = (function () {
                     IssueMain.prototype.skipPager(page);
                 }
             };
-            $('#ampagination-bootstrap').bootstrapPaginator(options);
+            if(window.issue_view!='tree'){
+                $('#ampagination-bootstrap').bootstrapPaginator(options);
+            }
+
             //console.log(success);
             if (typeof (success) != 'undefined' && typeof (success) === "function") {
                 success(resp.data);
@@ -723,11 +789,10 @@ var IssueMain = (function () {
                 });                
             });
 
-            $(".resolve-select").bind("dblclick", function () {
+            $(".resolve-select2").bind("dblclick", function () {
                 var $self = $(this);
-                var issue_id = $self.data('issue_id');
-                var list_box = $self.children(".resolve-list");
-
+                let issue_id = $self.data('issue_id');
+                let list_box = $('#ul_tree_select_'+issue_id);
                 if (list_box.is(":visible")) {
                     return false;
                 }
@@ -735,20 +800,20 @@ var IssueMain = (function () {
 
                 var resolve_list = _issueConfig.issue_resolve;
                 console.log(resolve_list);
-                var html = "";
-                for (let resolve of resolve_list) {
-                    console.log(resolve_list[i]);
+                let html = "";
+                for (let i=0; i<resolve_list.length; i++) {
+                    let resolve = resolve_list[i];
+                   // html += `<li>1111</li>`;
                     html += `<li data-color="${resolve.color}" data-value="${resolve.id}"><span style="color:${resolve.color}" class="prepend-left-5">${resolve.name}</span></li>`;
                 }
                 list_box.html(html);
-
-                $(".resolve-list li").on("click", function () {
+                console.log(list_box, html);
+                list_box.children('li').on("click", function () {
                     var id = $(this).data("value");
                     var color = $(this).data("color")
                     var text = $(this).text()
                     IssueDetail.prototype.updateIssueResolve(issue_id, id, $self, text, color);
                 });
-
                 $(document).on("click", function () {
                     list_box.slideUp(100);
                 })
@@ -781,8 +846,8 @@ var IssueMain = (function () {
                         }
                         let status_list = resp.data.issue.allow_update_status;
                         let html = "";
-
-                        for (var status of status_list) {
+                        for (let i=0; i<status_list.length; i++) {
+                            let status = status_list[i];
                             html += `<li data-value="${status.id}" data-color="${status.color}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
                         }
                         list_box.html(html);
@@ -838,6 +903,12 @@ var IssueMain = (function () {
                 });
             });
 
+            $(".min_width_300").mouseenter(function() {
+                 $(this).children(".summary_children ").show();
+            });
+            $(".min_width_300").mouseleave(function() {
+                $(this).children(".summary_children ").hide();
+            });
 
             $(".have_children").bind("click", function () {
                 if (isFloatPart) {
@@ -898,7 +969,6 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.renderTreeTable = function (resp) {
-        console.log(window.treeData);
         var columns = [
             { field: 'check',  checkbox: true, formatter: function (value, row, index) {
                     if (row.check == true) {
@@ -909,18 +979,21 @@ var IssueMain = (function () {
                 }
             },
             {field: 'summary',  title: '标 题' , class:"min_width_300",  formatter:  function (value, row, index) {
-                    let html = '<a  href="/issue/detail/index/'+row.id+'" class="commit-row-message">';
+                    let html = '<a  href="javascript:linkIssue('+row.id+')"   class="commit-row-message" >';
                     html += lightSearch(value, row.search);
                     html += '</a>';
                     if(row.warning_delay =='1'){
-                        html += '<span style="color:#fc9403" title="即将延期">即将延期</span>';
+                        html += '<span style="color:#fc9403;margin-left: 4px" title="即将延期">即将延期</span>';
                     }
                     if(row.postponed =='1'){
-                        html += '<span style="color:#db3b21" title="逾期">逾期</span>';
+                        html += '<span style="color:#db3b21;margin-left: 4px" title="逾期">逾期</span>';
                     }
                     if(row.have_children >0){
-                        html += '<span class="badge">'+row.have_children+'</span>';
+                        html += '<span class="badge"  style=";margin-left: 4px" title="拥有的子任务数">'+row.have_children+'</span>';
                     }
+                    html += '<span class="summary_children hide">';
+                    html += IssueMain.prototype.getTreeOptHtml(row)
+                    html += '</span>';
                     return html
                 }
             },
@@ -934,7 +1007,12 @@ var IssueMain = (function () {
         }
         if(isInArray(resp.data.display_fields,'priority')){
             let column = {field: 'priority',  title: '优先级', sortable: true,  align: 'center', formatter:  function (value, row, index) {
-                    return priority_html(value)
+                    let html = ''
+                    html += '<div title="双击可直接修改" class="item-list-select priority-select" data-issue_id="'+row.id+'" id="priority-list-'+row.id+'" style="cursor: pointer;">'
+                    html += priority_html(value);
+                    html += '<ul class="item-data-list priority-list"></ul>';
+                    html += '</div>';
+                    return html
                 }
             }
             columns.push( column)
@@ -948,14 +1026,24 @@ var IssueMain = (function () {
         }
         if(isInArray(resp.data.display_fields,'module')){
             let column = {field: 'module',  title: '模 块', sortable: true,  align: 'center', formatter:  function (value, row, index) {
-                    return module_html(value)
+                    let html = ''
+                    html += '<div  title="双击可直接修改" class="item-list-select module-select" data-issue_id="'+row.id+'" id="module-list-'+row.id+'">'
+                    html += module_html(value);
+                    html += '<ul class="item-data-list module-list"></ul>';
+                    html += '</div>';
+                    return html
                 }
             }
             columns.push( column)
         }
         if(isInArray(resp.data.display_fields,'sprint')){
             let column = {field: 'sprint',  title: '迭 代', sortable: true,  align: 'center', formatter:  function (value, row, index) {
-                    return make_issue_sprint(value)
+                    let html = ''
+                    html += '<div  title="双击可直接修改" class="item-list-select sprint-select" data-issue_id="'+row.id+'" id="sprint-list-'+row.id+'">'
+                    html += make_issue_sprint(value);
+                    html += '<ul class="item-data-list sprint-list"></ul>';
+                    html += '</div>';
+                    return html
                 }
             }
             columns.push( column)
@@ -977,11 +1065,16 @@ var IssueMain = (function () {
         }
         if(isInArray(resp.data.display_fields,'assignee')){
             let column = {field: 'assignee',  title: '经办人', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    let html = ''
+                    html += '<div  title="双击可直接修改" class="item-list-select assignee-select" data-issue_id="'+row.id+'" id="assignee-list-'+row.id+'">'
                     if(resp.data.is_table_display_avatar=='1'){
-                        return user_html(value)
+                        html += user_html(value)
                     }else{
-                        return user_html_display_name(value)
+                        html += user_html_display_name(value)
                     }
+                    html += '<ul class="item-data-list assignee-list"></ul>';
+                    html += '</div>';
+                    return html
                 }
             }
             columns.push( column)
@@ -1010,14 +1103,24 @@ var IssueMain = (function () {
         }
         if(isInArray(resp.data.display_fields,'status')){
             let column = {field: 'status',  title: '状 态', sortable: true,  align: 'center', formatter:  function (value, row, index) {
-                    return status_html(value)
+                    let html = ''
+                    html += '<div title="双击可直接修改" class="item-list-select status-select" data-issue_id="'+row.id+'" id="status-list-'+row.id+'">'
+                    html += status_html(value);
+                    html += '<ul class="item-data-list status-list"></ul>';
+                    html += '</div>';
+                    return html
                 }
             }
             columns.push( column)
         }
         if(isInArray(resp.data.display_fields,'resolve')){
             let column = {field: 'resolve',  title: '解决结果', sortable: true,  align: 'center', formatter:  function (value, row, index) {
-                    return resolve_html(value)
+                    let html = ''
+                    html += '<div title="双击可直接修改" style="cursor: pointer"  class="item-list-select resolve-select2" data-issue_id="'+row.id+'" id="resolve-list-'+row.id+'">'
+                    html += resolve_html(value);
+                    html += '<ul id="ul_tree_select_'+row.id+'" class="item-data-list resolve-select2"></ul>';
+                    html += '</div>';
+                    return html
                 }
             }
             columns.push( column)
@@ -1082,11 +1185,11 @@ var IssueMain = (function () {
             columns.push( column)
         }
         let  columnOpt = {field: 'operate',  title: '操 作',  align: 'center',events : operateEvents, formatter:  function (value, row, index) {
-                return [
-                    '<a href="#" class="RoleOfadd  " style="margin-right:5px;"><i class="fa fa-plus" ></i>&nbsp;</a>',
-                    '<a href="#" class="RoleOfedit " style="margin-right:5px;"><i class="fa fa-pencil-square-o" ></i>&nbsp;</a>',
-                    '<a href="#" class="RoleOfdelete  " style="margin-right:5px;"><i class="fa fa-trash-o" ></i>&nbsp;</a>'
-                ].join('');
+                let html = '';
+                html += '<span class="summary_children">';
+                html += IssueMain.prototype.getTreeOptHtml(row)
+                html += '</span>';
+                return html;
             }
         }
         columns.push( columnOpt)
@@ -1132,8 +1235,35 @@ var IssueMain = (function () {
             },
             // bootstrap-table-treetreegrid.js 插件配置 -- end
         });
+        IssueMain.prototype.treeExpandOr(resp.data.issue_tree_is_expand)
     };
+    IssueMain.prototype.treeExpandOr = function (issue_tree_is_expand) {
+        if (issue_tree_is_expand=='1') {
+            $(".treegrid-expander-collapsed").each(function () {
+                    $(this).click();
+                }
+            );
+        }else{
+            $(".treegrid-expander-expanded").each(function () {
+                    $(this).click();
+                }
+            );
+        }
+    }
 
+    IssueMain.prototype.getTreeOptHtml = function (row) {
+        let html = '';
+        if(window._is_admin|| isInArray(window._projectPermArr,'CREATE_ISSUES')){
+            html += '<a title="添加子任务" id="i-add-children-'+row.id+'" href="#" class="RoleOfadd issue_create_child" style="margin-left:5px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-plus" ></i></a>';
+        }
+        if(window._is_admin|| isInArray(window._projectPermArr,'EDIT_ISSUES')){
+            html += '<a title="编辑事项" href="#" class="RoleOfedit issue_edit_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-pencil-square-o" ></i></a>';
+        }
+        if(window._is_admin|| isInArray(window._projectPermArr,'DELETE_ISSUES')){
+            html += '<a  title="删除事项"  href="#" class="RoleOfdelete issue_delete_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-trash-o" ></i></a>';
+        }
+        return html;
+    }
     IssueMain.prototype.displayConvertChild = function (issue_id) {
         $('#current_issue_id').val(issue_id);
         $('#btn-parent_select_issue').data('issue-id', issue_id);
@@ -1433,6 +1563,27 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.getSelectedIdArr = function () {
+        var checked_issue_id_arr = new Array();
+        if(window.issue_view=='tree'){
+            var selRows = $tree_table.bootstrapTable("getSelections");
+            if(selRows.length > 0){
+                $.each(selRows,function(i) {
+                    checked_issue_id_arr.push(this.id);
+                });
+            }
+
+        }else{
+            $.each($("input[name='check_issue_id_arr']"), function () {
+                if (this.checked) {
+                    checked_issue_id_arr.push($(this).val());
+                }
+            });
+        }
+        console.log(checked_issue_id_arr);
+        return checked_issue_id_arr;
+    }
+
     IssueMain.prototype.batchDelete = function () {
 
         swal({
@@ -1449,13 +1600,7 @@ var IssueMain = (function () {
         },
             function (isConfirm) {
                 if (isConfirm) {
-                    var checked_issue_id_arr = new Array()
-                    $.each($("input[name='check_issue_id_arr']"), function () {
-                        if (this.checked) {
-                            checked_issue_id_arr.push($(this).val());
-                        }
-                    });
-                    console.log(checked_issue_id_arr);
+                    var checked_issue_id_arr = IssueMain.prototype.getSelectedIdArr();
                     $.ajax({
                         type: 'post',
                         dataType: "json",
@@ -1482,14 +1627,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.batchUpdate = function (field, value) {
-
-        var checked_issue_id_arr = new Array()
-        $.each($("input[name='check_issue_id_arr']"), function () {
-            if (this.checked) {
-                checked_issue_id_arr.push($(this).val());
-            }
-        });
-        console.log(checked_issue_id_arr);
+        var checked_issue_id_arr = IssueMain.prototype.getSelectedIdArr();
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -1512,13 +1650,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.batchMoveProject = function (field, value) {
-
-        var checked_issue_id_arr = [];
-        $.each($("input[name='check_issue_id_arr']"), function () {
-            if (this.checked) {
-                checked_issue_id_arr.push($(this).val());
-            }
-        });
+        var checked_issue_id_arr = IssueMain.prototype.getSelectedIdArr();
         console.log(checked_issue_id_arr);
         let project_id = $('#move_project_id').val();
         let is_delete_current = $('#is_delete_current').val();
@@ -1551,7 +1683,7 @@ var IssueMain = (function () {
                     return;
                 }
                 notify_success('操作成功');
-                // window.location.reload();
+                window.location.reload();
             },
             error: function (res) {
                 loading.hide('#displayMoveProject');
@@ -1562,12 +1694,7 @@ var IssueMain = (function () {
 
     IssueMain.prototype.displayMoveProject = function (project_id, project_name) {
 
-        var checked_issue_id_arr = new Array()
-        $.each($("input[name='check_issue_id_arr']"), function () {
-            if (this.checked) {
-                checked_issue_id_arr.push($(this).val());
-            }
-        });
+        var checked_issue_id_arr = IssueMain.prototype.getSelectedIdArr();
         if(is_empty(checked_issue_id_arr)){
             notify_warn('请先选择事项');
             return false;
@@ -1653,9 +1780,13 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.checkedAll = function () {
-        $('input[name="check_issue_id_arr"]').each(function () {
-            $(this).prop("checked", !$(this).prop("checked"));
-        });
+        if(window.issue_view!='tree'){
+            $('input[name="check_issue_id_arr"]').each(function () {
+                $(this).prop("checked", !$(this).prop("checked"));
+            });
+        }else{
+            $('input[name="btSelectAll"]').click()
+        }
     }
 
 

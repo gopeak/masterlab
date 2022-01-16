@@ -225,6 +225,13 @@ class IssueFilterLogic
             $sql .= " AND sprint{$sprintOpt}:sprint";
             $params['sprint'] = $sprintId;
         }
+        if (isset($_GET['tree_range'])) {
+            $treeRange = (int)$_GET['tree_range'];
+            if($treeRange>0){
+                $sql .= " AND sprint=:tree_range";
+                $params['tree_range'] = $treeRange;
+            }
+        }
 
         // 所属模块
         $moduleId = null;
@@ -458,6 +465,11 @@ class IssueFilterLogic
             $updatedEndTime = (int)$_GET['updated_end'];
             $sql .= " AND updated<=:updated_end";
             $params['updated_end'] = $updatedEndTime;
+        }
+
+        if (isset($_GET['issue_tree_is_closed']) && $_GET['issue_tree_is_closed']=='1') {
+        }else{
+            $sql .=  self::getUnClosedSql();
         }
 
         $orderBy = 'id';
@@ -943,11 +955,11 @@ class IssueFilterLogic
         if (empty($projectId)) {
             return [];
         }
-        $resolveModel = new IssueResolveModel();
-        $closedResolveId = $resolveModel->getIdByKey('done');
+        $closedResolveId = IssueResolveModel::getInstance()->getIdByKey('done');
+        $closedStatusId = IssueStatusModel::getInstance()->getIdByKey('closed');
         $model = new IssueModel();
         $table = $model->getTable();
-        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  AND resolve ='$closedResolveId' ";
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  AND resolve ='$closedResolveId' AND status='$closedStatusId'";
         // echo $sql;
         $count = $model->getFieldBySql($sql);
         return intval($count);
@@ -973,6 +985,35 @@ class IssueFilterLogic
         $count = $model->getFieldBySql($sql);
         return intval($count);
     }
+
+    //$closedResolveId = IssueResolveModel::getInstance()->getIdByKey('done');
+    //        $closedStatusId = IssueStatusModel::getInstance()->getIdByKey('closed');
+
+
+    /**
+     * 获取关闭的sql
+     * @return string
+     */
+    public static function getClosedSql()
+    {
+        $closedResolveId = IssueResolveModel::getInstance()->getIdByKey('done');
+        $closedStatusId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $appendSql = "  `status` = '$closedStatusId' AND resolve='$closedResolveId' ";
+        return $appendSql;
+    }
+
+    /**
+     * 获取关闭的sql
+     * @return string
+     */
+    public static function getUnClosedSql()
+    {
+        $closedResolveId = IssueResolveModel::getInstance()->getIdByKey('done');
+        $closedStatusId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $appendSql = "  AND `status` != '$closedStatusId' AND resolve!='$closedResolveId' ";
+        return $appendSql;
+    }
+
 
     /**
      * 获取状态未完成的sql
