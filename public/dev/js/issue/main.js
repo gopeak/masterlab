@@ -903,6 +903,47 @@ var IssueMain = (function () {
                 });
             });
 
+            $(".span-labels_edit").bind("click", function () {
+                let $self = $(this);
+                let issue_id_arr = $self.data('issue_id_arr').split(',');
+                let issue_id = $self.data('issue_id')
+                let list_box = $('#labels-list-'+issue_id);
+
+                if (list_box.is(":visible")) {
+                    return false;
+                }
+                list_box.slideDown(100);
+                //list_box.show();
+                let labels_list = _issueConfig.issue_labels;
+                let html = "";
+                for (let i=0; i<labels_list.length; i++) {
+                    let label = labels_list[i];
+                    let checked = '';
+                    if(in_array(labels_list[i].id, issue_id_arr)){
+                        checked = '<span style="margin-left: 20px" class="fa fa-check check-mark"></span>';
+                    }
+                    html += `<li data-value="${label.id}"  ><span class="label color-label " style="background-color:${label.bg_color}; color:${label.color}">${label.title}</span>${checked}</li>`;
+                }
+                list_box.html(html);
+                console.log(html)
+                setTimeout( function(){
+                    $(document).on("click", function (event) {
+                        if($(event.target).is("#labels-list-"+issue_id+",#labels-list-"+issue_id+" *")){
+                            alert(event.target);
+                        }else{
+                            if($(event.target).is(".span-labels_edit *")){
+
+                            }else{
+                                list_box.slideUp(100);
+                            }
+                        }
+                    })
+                }, 1000)
+
+
+            });
+
+
             $(".min_width_300").mouseenter(function() {
                  $(this).children(".summary_children ").show();
             });
@@ -910,6 +951,12 @@ var IssueMain = (function () {
                 $(this).children(".summary_children ").hide();
             });
 
+            $(".td-labels-class").mouseenter(function() {
+                $(this).children(".span-labels_edit").show();
+            });
+            $(".td-labels-class").mouseleave(function() {
+                $(this).children(".span-labels_edit").hide();
+            });
             $(".have_children").bind("click", function () {
                 if (isFloatPart) {
                     var issue_id = $(this).data('issue_id');
@@ -1049,8 +1096,18 @@ var IssueMain = (function () {
             columns.push( column)
         }
         if(isInArray(resp.data.display_fields,'label')){
-            let column = {field: 'label',  title: '标 签',  align: 'left', formatter:  function (value, row, index) {
-                    return make_label_html(row.label_id_arr)
+            let column = {field: 'label',  title: '标 签', class:"td-labels-class",  align: 'left', formatter:  function (value, row, index) {
+                    let html = '';
+
+                    let issue_id_arr_str = row.label_id_arr.join(',');
+                    html += make_label_html(row.label_id_arr);
+                    html += '<span data-issue_id="'+row.id+'" data-issue_id_arr="'+issue_id_arr_str+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-labels_edit hide">';
+                    html +=  '<i class="fa fa-pencil">'
+                    html += '</span>';
+                    html += '<div id="div-labels-list-'+row.id+'"  class="item-list-select labels-select" data-issue_id="'+row.id+'">'
+                    html += '<ul  id="labels-list-'+row.id+'" class="item-data-list labels-list"></ul>';
+                    html += '</div>';
+                    return html;
                 }
             }
             columns.push( column)
