@@ -497,12 +497,20 @@ var IssueMain = (function () {
             sort_field = window.$sort_field;
         }
 
+        let req_data = { project_id: window.cur_project_id, adv_query_json: jsonData, sort_field: sort_field, sort_by: sort_by,page: page };
+        if(window.issue_view=='tree'){
+            let  tree_range = $('#issue_view_tree_range').val();
+            req_data['tree_range'] =  tree_range;
+            if ($("#issue_tree_is_closed").get(0).checked) {
+                req_data['issue_tree_is_closed'] =  '1';
+            }
+        }
         btn_adv_sumit.addClass('disabled');
         $.ajax({
             type: 'get',
             dataType: "json",
             url: "/issue/main/adv_filter",
-            data: { project_id: window.cur_project_id, adv_query_json: jsonData, sort_field: sort_field, sort_by: sort_by,page: page },
+            data: req_data,
             success: function (resp) {
                 btn_adv_sumit.removeClass('disabled');
                 $('#modal-adv_query').modal('hide');
@@ -903,60 +911,8 @@ var IssueMain = (function () {
                 });
             });
 
-            $(".span-labels_edit").bind("click", function () {
-                let $self = $(this);
-                let issue_id_arr = $self.data('issue_id_arr').split(',');
-                let issue_id = $self.data('issue_id')
-                let list_box = $('#labels-list-'+issue_id);
+            IssueMain.prototype.treeBindEvent();
 
-                if (list_box.is(":visible")) {
-                    return false;
-                }
-                list_box.slideDown(100);
-                //list_box.show();
-                let labels_list = _issueConfig.issue_labels;
-                let html = "";
-                for (let i=0; i<labels_list.length; i++) {
-                    let label = labels_list[i];
-                    let checked = '';
-                    if(in_array(labels_list[i].id, issue_id_arr)){
-                        checked = '<span style="margin-left: 20px" class="fa fa-check check-mark"></span>';
-                    }
-                    html += `<li data-value="${label.id}"  ><span class="label color-label " style="background-color:${label.bg_color}; color:${label.color}">${label.title}</span>${checked}</li>`;
-                }
-                list_box.html(html);
-                console.log(html)
-                setTimeout( function(){
-                    $(document).on("click", function (event) {
-                        if($(event.target).is("#labels-list-"+issue_id+",#labels-list-"+issue_id+" *")){
-                            alert(event.target);
-                        }else{
-                            if($(event.target).is(".span-labels_edit *")){
-
-                            }else{
-                                list_box.slideUp(100);
-                            }
-                        }
-                    })
-                }, 1000)
-
-
-            });
-
-
-            $(".min_width_300").mouseenter(function() {
-                 $(this).children(".summary_children ").show();
-            });
-            $(".min_width_300").mouseleave(function() {
-                $(this).children(".summary_children ").hide();
-            });
-
-            $(".td-labels-class").mouseenter(function() {
-                $(this).children(".span-labels_edit").show();
-            });
-            $(".td-labels-class").mouseleave(function() {
-                $(this).children(".span-labels_edit").hide();
-            });
             $(".have_children").bind("click", function () {
                 if (isFloatPart) {
                     var issue_id = $(this).data('issue_id');
@@ -1000,7 +956,6 @@ var IssueMain = (function () {
             if (window._permCreateIssue) {
                 var additionHtml = '<a class="btn btn-new js-create-issue">创建事项</a>';
             }
-
             var emptyHtml = defineStatusHtml({
                 message: '没有事项数据',
                 name: 'issue',
@@ -1014,7 +969,229 @@ var IssueMain = (function () {
             })
         }
     };
+    IssueMain.prototype.treeBindEvent = function () {
 
+        $(".span-labels_edit").bind("click", function () {
+            let $self = $(this);
+            let issue_id_arr = $self.data('issue_id_arr').split(',');
+            let issue_id = $self.data('issue_id')
+            let list_box = $('#labels-list-'+issue_id);
+            let is_can_ajax = 1;
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+            //list_box.show();
+            let labels_list = _issueConfig.issue_labels;
+            let html = "";
+            for (let i=0; i<labels_list.length; i++) {
+                let label = labels_list[i];
+                let checked = '';
+                if(in_array(labels_list[i].id, issue_id_arr)){
+                    checked = '<span style="margin-left: 20px" class="fa fa-check check-mark"></span>';
+                }
+                html += `<li data-value="${label.id}"  ><span class="label color-label " style="background-color:${label.bg_color}; color:${label.color}">${label.title}</span>${checked}</li>`;
+            }
+            list_box.html(html);
+            setTimeout( function(){
+                $(document).on("click", function (event) {
+                    if($(event.target).is("#labels-list-"+issue_id+",#labels-list-"+issue_id+" *")){
+                        console.log(event.target);
+                    }else{
+                        if($(event.target).is(".span-labels_edit *")){
+
+                        }else{
+                            list_box.slideUp(100);
+                            // 这里处理获取命中的
+                            var selectIdArr = [];
+                            list_box.find('li').each(function(){
+                                let id = $(this).data("value");
+                                let fa_check = $(this).find('.fa-check');
+                                if(fa_check.length>0){
+                                    selectIdArr.push(id);
+                                }
+                            });
+
+                            if(is_can_ajax!=1){
+                                return;
+                            }
+                            if(is_empty(selectIdArr) && is_empty(issue_id_arr)){
+                                return;
+                            }
+                            if( selectIdArr.join(',') == issue_id_arr.join(',')){
+                                return;
+                            }
+                            $.ajax({
+                                type: 'post',
+                                dataType: "json",
+                                async: true,
+                                url: root_url + "issue/main/update",
+                                data: { issue_id: issue_id, params: {labels: selectIdArr} ,ignore_param:1},
+                                success: function (resp) {
+                                    auth_check(resp);
+                                    if (resp.ret != '200') {
+                                        notify_error('操作失败:' + resp.msg);
+                                        return;
+                                    }
+                                    notify_success('操作成功');
+                                   // window.location.reload();
+                                    let html = '';
+                                    let issue_id_arr_str = selectIdArr.join(',');
+                                    html += make_label_html(selectIdArr);
+                                    html += '<span data-issue_id="'+issue_id+'" data-issue_id_arr="'+issue_id_arr_str+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-labels_edit hide">';
+                                    html +=  '<i class="fa fa-pencil">'
+                                    html += '</span>';
+                                    html += '<div id="div-labels-list-'+issue_id+'"  class="item-list-select labels-select" data-issue_id="'+issue_id+'">'
+                                    html += '<ul  id="labels-list-'+issue_id+'" class="item-data-list labels-list"></ul>';
+                                    html += '</div>';
+                                    $self.parent().html(html);
+                                    is_can_ajax = 0;
+                                    IssueMain.prototype.treeBindEvent()
+
+                                },
+                                error: function (res) {
+                                    notify_error("请求数据错误" + res);
+                                }
+                            });
+                        }
+                    }
+                })
+            }, 1000);
+            $(".labels-list li").on("click", function () {
+                let id = $(this).data("value");
+                let fa_check = $(this).find('.fa-check');
+                console.log(fa_check.length);
+                if(fa_check.length>0){
+                    fa_check.remove();
+                }else{
+                    $(this).append('<span style="margin-left: 20px" class="fa fa-check check-mark"></span>');
+                }
+            });
+        });
+
+        $(".span-assistants_edit").bind("click", function () {
+            let $self = $(this);
+            let assistants_arr = $self.data('assistants').split(',');
+            let issue_id = $self.data('issue_id')
+            let list_box = $('#assistants-list-'+issue_id);
+            let is_can_ajax = 1;
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+            //list_box.show();
+            let users_list = _issueConfig.users;
+            let html = "";
+            for (let i=0; i<users_list.length; i++) {
+                let user = users_list[i];
+                let checked = '';
+                if(in_array(users_list[i].uid, assistants_arr)){
+                    checked = '<span style="float: right" class="fa fa-check check-mark"></span>';
+                }
+                html += `<li data-value="${user.uid}" style="text-align: left;" > <img width="26px" height="26px"  style="border-radius: 50%;"  title="${user.username}@${user.display_name}" src="${user.avatar}" /> ${checked}</li>`;
+            }
+            list_box.html(html);
+            setTimeout( function(){
+                $(document).on("click", function (event) {
+                    if($(event.target).is("#assistants-list-"+issue_id+",#assistants-list-"+issue_id+" *")){
+                        console.log(event.target);
+                    }else{
+                        if($(event.target).is(".span-assistants_edit *")){
+
+                        }else{
+                            list_box.slideUp(100);
+                            // 这里处理获取命中的
+                            var selectIdArr = [];
+                            list_box.find('li').each(function(){
+                                let id = $(this).data("value");
+                                let fa_check = $(this).find('.fa-check');
+                                if(fa_check.length>0){
+                                    selectIdArr.push(id);
+                                }
+                            });
+
+                            if(is_can_ajax!=1){
+                                return;
+                            }
+                            if(is_empty(selectIdArr) && is_empty(assistants_arr)){
+                                return;
+                            }
+                            if( selectIdArr.join(',') == assistants_arr.join(',')){
+                                return;
+                            }
+                            $.ajax({
+                                type: 'post',
+                                dataType: "json",
+                                async: true,
+                                url: root_url + "issue/main/update",
+                                data: { issue_id: issue_id, params: {assistants: selectIdArr} ,ignore_param:1},
+                                success: function (resp) {
+                                    auth_check(resp);
+                                    if (resp.ret != '200') {
+                                        notify_error('操作失败:' + resp.msg);
+                                        return;
+                                    }
+                                    notify_success('操作成功');
+                                    // window.location.reload();
+                                    let html = '';
+                                    if(is_table_display_avatar=='1'){
+                                        html += issue_assistants_avatar(selectIdArr)
+                                    }else{
+                                        html += issue_assistants_display_name(selectIdArr)
+                                    }
+                                    let assistants_str = selectIdArr.join(',');
+                                    html += '<span data-issue_id="'+issue_id+'" data-assistants="'+assistants_str+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-assistants_edit hide">';
+                                    html +=  '<i class="fa fa-pencil">'
+                                    html += '</span>';
+                                    html += '<div id="div-assistants-list-'+issue_id+'"  class="item-list-select assistants-select" data-issue_id="'+issue_id+'">'
+                                    html += '<ul  style="text-align: left;"  id="assistants-list-'+issue_id+'" class="item-data-list assistants-list"></ul>';
+                                    html += '</div>';
+                                    $self.parent().html(html);
+                                    is_can_ajax = 0;
+                                    IssueMain.prototype.treeBindEvent()
+
+                                },
+                                error: function (res) {
+                                    notify_error("请求数据错误" + res);
+                                }
+                            });
+                        }
+                    }
+                })
+            }, 1000);
+            $(".assistants-list li").on("click", function () {
+                let id = $(this).data("value");
+                let fa_check = $(this).find('.fa-check');
+                console.log(fa_check.length);
+                if(fa_check.length>0){
+                    fa_check.remove();
+                }else{
+                    $(this).append('<span  style="float: right"  class="fa fa-check check-mark"></span>');
+                }
+            });
+        });
+        $(".min_width_300").mouseenter(function() {
+            $(this).children(".summary_children ").show();
+        });
+        $(".min_width_300").mouseleave(function() {
+            $(this).children(".summary_children ").hide();
+        });
+
+        $(".td-labels-class").mouseenter(function() {
+            $(this).children(".span-labels_edit").show();
+        });
+        $(".td-labels-class").mouseleave(function() {
+            $(this).children(".span-labels_edit").hide();
+        });
+        $(".td-assistants-class").mouseenter(function() {
+            $(this).children(".span-assistants_edit").show();
+        });
+        $(".td-assistants-class").mouseleave(function() {
+            $(this).children(".span-assistants_edit").hide();
+        });
+    }
     IssueMain.prototype.renderTreeTable = function (resp) {
         var columns = [
             { field: 'check',  checkbox: true, formatter: function (value, row, index) {
@@ -1039,12 +1216,20 @@ var IssueMain = (function () {
                         html += '<span class="badge"  style=";margin-left: 4px" title="拥有的子任务数">'+row.have_children+'</span>';
                     }
                     html += '<span class="summary_children hide">';
+                    html += '<a title="以新标签页打开此事项" target="_blank" href="/issue/detail/index/'+row.id+'" class="" style="margin-left:4px;"  ><i class="fa fa-link" ></i></a>';
                     html += IssueMain.prototype.getTreeOptHtml(row)
                     html += '</span>';
                     return html
                 }
             },
         ];
+
+        let column = {field: 'issue_num',  title: '编 号', sortable: true,  align: 'left', formatter:  function (value, row, index) {
+                return '#'+value
+            }
+        }
+        columns.push( column)
+
         if(isInArray(resp.data.display_fields,'issue_type')){
             let column = {field: 'issue_type',  title: '类 型', sortable: true,  align: 'center', formatter:  function (value, row, index) {
                     return issue_type_short_html(value)
@@ -1098,7 +1283,6 @@ var IssueMain = (function () {
         if(isInArray(resp.data.display_fields,'label')){
             let column = {field: 'label',  title: '标 签', class:"td-labels-class",  align: 'left', formatter:  function (value, row, index) {
                     let html = '';
-
                     let issue_id_arr_str = row.label_id_arr.join(',');
                     html += make_label_html(row.label_id_arr);
                     html += '<span data-issue_id="'+row.id+'" data-issue_id_arr="'+issue_id_arr_str+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-labels_edit hide">';
@@ -1148,12 +1332,20 @@ var IssueMain = (function () {
             columns.push( column)
         }
         if(isInArray(resp.data.display_fields,'assistants')){
-            let column = {field: 'assistants',  title: '协助人',  align: 'center', formatter:  function (value, row, index) {
+            let column = {field: 'assistants',  title: '协助人', class:"td-assistants-class", align: 'center', formatter:  function (value, row, index) {
+                    let html = '';
                     if(resp.data.is_table_display_avatar=='1'){
-                        return issue_assistants_avatar(row.assistants_arr)
+                        html += issue_assistants_avatar(row.assistants_arr)
                     }else{
-                        return issue_assistants_display_name(row.assistants_arr)
+                        html += issue_assistants_display_name(row.assistants_arr)
                     }
+                    html += '<span data-issue_id="'+row.id+'" data-assistants="'+row.assistants+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-assistants_edit hide">';
+                    html +=  '<i class="fa fa-pencil">'
+                    html += '</span>';
+                    html += '<div id="div-assistants-list-'+row.id+'"  class="item-list-select assistants-select" data-issue_id="'+row.id+'">'
+                    html += '<ul style="text-align: left;" id="assistants-list-'+row.id+'" class="item-data-list assistants-list"></ul>';
+                    html += '</div>';
+                    return html;
                 }
             }
             columns.push( column)
@@ -1250,49 +1442,55 @@ var IssueMain = (function () {
             }
         }
         columns.push( columnOpt)
+        if(is_tree_table_init==0){
+            $tree_table.bootstrapTable({
+                data: resp.data.issues,
+                idField: 'id',
+                dataType:'json',
+                columns: columns,
+                // bootstrap-table-treegrid.js 插件配置 -- start
+                //在哪一列展开树形
+                treeShowField: 'summary',
+                //指定父id列
+                parentIdField: 'master_id',
+                onResetView: function(data) {
+                    //console.log('load');
+                    $tree_table.treegrid({
+                        initialState: 'expanded',// 所有节点都折叠  collapsed | expanded
+                        // initialState: 'expanded',// 所有节点都展开，默认展开
+                        treeColumn: 1,
+                        // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
+                        // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                        onChange: function() {
+                            $tree_table.bootstrapTable('resetWidth');
+                        }
+                    });
+                    //只展开树形的第一级节点
+                    $tree_table.treegrid('getRootNodes').treegrid('expand');
+                },
+                onCheck:function(row){
+                    var datas = $tree_table.bootstrapTable('getData');
+                    // 勾选子类
+                   // selectChilds(datas,row,"id","master_id",true);
+                    // 勾选父类
+                    //selectParentChecked(datas,row,"id","master_id")
+                    // 刷新数据
+                    $tree_table.bootstrapTable('load', datas);
+                },
+                onUncheck:function(row){
+                    var datas = $tree_table.bootstrapTable('getData');
+                    selectChilds(datas,row,"id","master_id",false);
+                    $tree_table.bootstrapTable('load', datas);
+                },
+                // bootstrap-table-treetreegrid.js 插件配置 -- end
+            });
+            is_tree_table_init = 1;
+        }else{
+            $tree_table.bootstrapTable('load', resp.data.issues);
+        }
 
-        $tree_table.bootstrapTable({
-            data: resp.data.issues,
-            idField: 'id',
-            dataType:'json',
-            columns: columns,
-            // bootstrap-table-treegrid.js 插件配置 -- start
-            //在哪一列展开树形
-            treeShowField: 'summary',
-            //指定父id列
-            parentIdField: 'master_id',
-            onResetView: function(data) {
-                //console.log('load');
-                $tree_table.treegrid({
-                    initialState: 'expanded',// 所有节点都折叠  collapsed | expanded
-                    // initialState: 'expanded',// 所有节点都展开，默认展开
-                    treeColumn: 1,
-                    // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
-                    // expanderCollapsedClass: 'glyphicon glyphicon-plus',
-                    onChange: function() {
-                        $tree_table.bootstrapTable('resetWidth');
-                    }
-                });
-                //只展开树形的第一级节点
-                $tree_table.treegrid('getRootNodes').treegrid('expand');
-            },
-            onCheck:function(row){
-                var datas = $tree_table.bootstrapTable('getData');
-                // 勾选子类
-                selectChilds(datas,row,"id","master_id",true);
-                // 勾选父类
-                selectParentChecked(datas,row,"id","master_id")
-                // 刷新数据
-                $tree_table.bootstrapTable('load', datas);
-            },
-            onUncheck:function(row){
-                var datas = $tree_table.bootstrapTable('getData');
-                selectChilds(datas,row,"id","master_id",false);
-                $tree_table.bootstrapTable('load', datas);
-            },
-            // bootstrap-table-treetreegrid.js 插件配置 -- end
-        });
-        IssueMain.prototype.treeExpandOr(resp.data.issue_tree_is_expand)
+        $('.fixed-table-body').css("min-height", '600px');
+        IssueMain.prototype.treeExpandOr(resp.data.issue_tree_is_expand);
     };
     IssueMain.prototype.treeExpandOr = function (issue_tree_is_expand) {
         if (issue_tree_is_expand=='1') {

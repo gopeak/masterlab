@@ -80,6 +80,7 @@ class IssueLogic
         'priority',
         'module',
         'sprint',
+        'label',
         'summary',
         'assignee',
         'status',

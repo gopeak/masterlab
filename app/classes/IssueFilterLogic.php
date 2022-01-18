@@ -698,6 +698,20 @@ class IssueFilterLogic
             return [false, '查询条件的括号 ( ) 条件错误', 0];
         }
 
+        if (isset($_GET['tree_range'])) {
+            $treeRange = (int)$_GET['tree_range'];
+            if($treeRange>0){
+                $sql .= " AND sprint=:tree_range";
+                $params['tree_range'] = $treeRange;
+            }
+        }
+
+
+        if (isset($_GET['issue_tree_is_closed']) && $_GET['issue_tree_is_closed']=='1') {
+        }else{
+            $sql .=  self::getUnClosedSql();
+        }
+
         $orderBy = 'id';
         if (isset($_GET['sort_field']) && !empty($_GET['sort_field'])) {
             $orderBy = $_GET['sort_field'];

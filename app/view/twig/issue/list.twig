@@ -78,6 +78,23 @@
             .min_width_300{
                 min-width: 300px;
             }
+            .issue_view_tree_option{
+                padding-left: 10px;
+                padding-right: 10px;
+                vertical-align: middle;
+                text-align: center;
+                margin-left: 5px;
+                border: 1px  #e5e5e5;
+                border-radius: 1px;
+                border-style: dashed;
+            }
+            .issue_tree_range_select{
+                width: 90px;
+                height: 30.5px;
+                border: 1px solid #e5e5e5;
+                border-radius: 3px;
+                margin-top: 3px;
+            }
         </style>
 
         {% if ( issue_view =='tree') %}
@@ -571,6 +588,7 @@
                 var adv_filter_json = <?= adv_filter_json|raw ?>
                 var is_adv_filter = '<?= is_adv_filter ?>';
 
+                var is_table_display_avatar = '<?= is_table_display_avatar ?>';
                 var issue_view = '<?= issue_view ?>';
                 var list_render_id = 'list_render_id';
                 var list_tpl_id = 'list_tpl';
@@ -670,6 +688,7 @@
                     alert("你选中行的 id 为："+postData);
                 }
                 var $tree_table = $('#tree_table');
+                var is_tree_table_init = 0;
                 $(function () {
                     var options = {
                         query_str: window.query_str,

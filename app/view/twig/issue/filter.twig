@@ -246,10 +246,10 @@
 
 
                 <div class="filter-dropdown-container" style="z-index: 100">
-                    <div id="div-issue_view_tree_option" style="vertical-align: middle;text-align: center;margin-left: 5px">
-                        <span>范 围:</span>
-                        <select id="issue_view_tree_range" name="issue_view_tree_range" class=" " title="所有项目的事项还是某个迭代事项"
-                                style="width:90px;height:38.5px;border: 1px solid #e5e5e5; border-radius: 3px;">
+                    <div id="div-issue_view_tree_option" class="issue_view_tree_option  {% if (issue_view != 'tree') %} hide{% endif %} ">
+                        <span >范 围:</span>
+                        <select id="issue_view_tree_range" name="issue_view_tree_range" class="issue_tree_range_select" title="所有项目的事项还是某个迭代事项"
+                                >
                             <option value="0" {% if (tree_range_data == '0') %} selected  {% endif %} >&nbsp;&nbsp;所 有&nbsp;&nbsp;</option>
                             {% for sprint in sprints %}
                                 <option value="<?= sprint['id'] ?>"  {% if (tree_range_data == sprint['id']) %} selected  {% endif %}>&nbsp;&nbsp;<?= sprint['name'] ?></option>
@@ -259,6 +259,12 @@
                         <input title="是否显示已关闭事项"  id="issue_tree_is_closed" name="issue_tree_is_closed" type="checkbox"  value="1" {% if (issue_tree_is_closed == '1') %} checked  {% endif %}>
                         <span style="margin-left: 5px">展 开:</span>
                         <input title="是否要展开子任务"  id="issue_tree_is_expand" name="issue_tree_is_expand" type="checkbox" value="1" {% if (issue_tree_is_expand == '1') %} checked  {% endif %}>
+                        <a style="margin-left: 6px"
+                           aria-label="子任务视图说明"
+                           data-target="#modal-about-tree"
+                           data-toggle="modal"
+                           href="#modal-about-tree"
+                        ><i class="fa fa-question-circle-o" aria-hidden="true" style="color: #0c98e2"></i> </a>
                     </div>
                     <div class="dropdown inline prepend-left-5" style="height: 38.5px">
                         <div class="list-settings">

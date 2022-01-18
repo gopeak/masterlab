@@ -1759,7 +1759,9 @@ class Main extends BaseUserCtrl
 
         $info = $info + $this->getUpdateFormInfo($params);
         if (empty($info)) {
-            $this->ajaxFailed('参数错误,数据为空');
+            if(!isset($_REQUEST['ignore_param'])){
+                $this->ajaxFailed('参数错误,数据为空');
+            }
         }
 
         $event = new CommonPlacedEvent($this, $_REQUEST);
@@ -1946,7 +1948,6 @@ class Main extends BaseUserCtrl
         $this->dispatcher->dispatch($event, Events::onIssueUpdateAfter);
         $this->ajaxSuccess('更新成功', $updatedIssue);
     }
-
 
     /**
      * 批量修改
