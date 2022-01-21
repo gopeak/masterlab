@@ -869,6 +869,7 @@
         });
         $('#btn-back_board_list2').bind('click', function () {
             $('#modal-hided-boards').hide();
+            window.$board_setting.fetchBoards();
         });
 
         $('#btn-display-create-board').bind('click', function () {
