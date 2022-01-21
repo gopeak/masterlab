@@ -23,7 +23,6 @@ use main\app\model\SettingModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\user\LoginlogModel;
 use main\app\model\user\EmailVerifyCodeModel;
-use \main\lib\CaptchaBuilder;
 use main\app\classes\SettingsLogic;
 
 /**
@@ -214,16 +213,17 @@ class Passport extends BaseCtrl
         if (!in_array($mode, array('login', 'reg'))) {
             $mode = 'login';
         }
-        $builder = new CaptchaBuilder;
+        $builder = new \Gregwar\Captcha\CaptchaBuilder;
         $builder->build(150, 40);
         if ($mode == 'login') {
-            $_SESSION['captcha_login'] = $builder->getPhrase();
+            $_SESSION['login_captcha'] = $builder->getPhrase();
+            $_SESSION['login_captcha_time'] = time();
         }
         if ($mode == 'reg') {
-            $_SESSION['captcha_reg'] = $builder->getPhrase();
+            $_SESSION['reg_captcha'] = $builder->getPhrase();
+            $_SESSION['reg_captcha_time'] = time();
         }
-        header('Content-type: image/jpeg');
-        $builder->output();
+        echo $builder->inline();
     }
 
     /**
@@ -293,7 +293,13 @@ class Passport extends BaseCtrl
         $settingModel = SettingModel::getInstance();
         $muchErrTimesCaptcha = $settingModel->getSettingValue('muchErrorTimesCaptcha');
         $ipAddress = getIp();
-        $reqVerifyCode = isset($_REQUEST['vcode']) ? $_REQUEST['vcode'] : false;
+        $reqVerifyCode = isset($_REQUEST['vcode']) ? strtolower($_REQUEST['vcode']) : false;
+        $loginRequireCaptcha = SettingModel::getInstance()->getSettingValue('login_require_captcha');
+        if($loginRequireCaptcha=='1'){
+            if($reqVerifyCode===false || $reqVerifyCode!=strtolower($_SESSION['login_captcha'])){
+                $this->ajaxFailed('提 示', ['vcode'=>'验证码错误'], parent::AJAX_FAILED_TYPE_FORM_ERROR);
+            }
+        }
         $arr = $this->auth->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrTimesCaptcha);
         list($ret, $retCode, $tip) = $arr;
         if (!$ret) {

@@ -74,6 +74,24 @@ class AgileLogic
 
     /**
      * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function getHidedBoardsByProject($projectId)
+    {
+        $boards = [];
+        $model = new AgileBoardModel();
+        $otherBoards = $model->getsByAll($projectId);
+        foreach ($otherBoards as $otherBoard) {
+            if ($otherBoard['is_hide']==1 ) {
+                $boards[] = $otherBoard;;
+            }
+        }
+        return $boards;
+    }
+
+    /**
+     * @param $projectId
      * @return bool
      * @throws \Doctrine\DBAL\DBALException
      */

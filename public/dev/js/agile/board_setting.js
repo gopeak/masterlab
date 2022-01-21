@@ -107,7 +107,33 @@ var BoardSetting = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
+    }
 
+    BoardSetting.prototype.fetchHidedBoards = function () {
+        var params = { format: 'json' };
+        var project_id = window._cur_project_id;
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url + 'agile/fetchHidedBoards',
+            data: { project_id: project_id },
+            success: function (resp) {
+                loading.closeAll();
+                var source = $('#hide_board_list_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#hide_board_list_render_id').html(result);
+
+                $(".list_for_display").bind("click", function () {
+                    BoardSetting.prototype.display($(this).data('id'));
+                });
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     }
 
     BoardSetting.prototype.initBoardFormSprint = function (sprints, id_arr) {
@@ -228,6 +254,28 @@ var BoardSetting = (function () {
                 loading.closeAll();
                 notify_success(resp.msg);
                 BoardSetting.prototype.fetchBoards();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    BoardSetting.prototype.hided = function (board_id) {
+        var params = { format: 'json' };
+        var project_id = window._cur_project_id;
+        //loading.show('#board_add_form', '正在处理');
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'agile/setBoardHide',
+            data: { id: board_id, project_id: project_id },
+            success: function (resp) {
+                auth_check(resp);
+                loading.closeAll();
+                notify_success(resp.msg);
+                BoardSetting.prototype.fetchHidedBoards();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

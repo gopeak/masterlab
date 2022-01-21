@@ -39,6 +39,7 @@ CREATE TABLE `agile_board` (
   `is_system` tinyint(4) NOT NULL DEFAULT '0',
   `range_due_date` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '截至时间范围',
   `sprint_id` int(11) unsigned DEFAULT '0',
+  `is_hide` tinyint(1) unsigned DEFAULT '0' COMMENT '是否隐藏',
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
   KEY `weight` (`weight`),

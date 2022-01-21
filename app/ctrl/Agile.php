@@ -433,6 +433,37 @@ class Agile extends BaseUserCtrl
     }
 
     /**
+     * @throws \Exception
+     */
+    public function setBoardHide()
+    {
+        $projectId = null;
+        if (isset($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $boardId = null;
+        if (isset($_POST['id'])) {
+            $boardId = (int)$_POST['id'];
+        }
+        if (empty($boardId)) {
+            $err['id'] = '看板id不能为空';
+            $this->ajaxFailed('参数错误', $err, parent::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+        $model = new AgileBoardModel();
+        $board = $model->getById($boardId);
+        if($board['project_id']!=$projectId){
+            $this->ajaxFailed('参数错误', '项目id错误');
+        }
+        $model->updateById($boardId, ['is_hide'=>'1']);
+
+        $this->ajaxSuccess('操作成功', $_POST);
+    }
+
+    /**
      * 添加一个迭代
      * @throws \Exception
      */
@@ -921,6 +952,29 @@ class Agile extends BaseUserCtrl
             $i++;
             $board['i'] = $i;
             $board['is_default'] = $boardDefaultId==$board['id'] ? '1' :'0';
+        }
+        $data['boards'] = $boards;
+        $this->ajaxSuccess('success', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchHidedBoards()
+    {
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目数据错误');
+        }
+        $agileLogic = new AgileLogic();
+        $boards = $agileLogic->getHidedBoardsByProject($projectId);
+        $i = 0;
+        foreach ($boards as &$board) {
+            $i++;
+            $board['i'] = $i;
         }
         $data['boards'] = $boards;
         $this->ajaxSuccess('success', $data);
