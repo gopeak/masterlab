@@ -297,6 +297,63 @@ var IssueMain = (function () {
         });
     }
 
+
+    IssueMain.prototype.updateUserTreeIsShowClosed = function (issue_tree_is_closed) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'user/updateUserTreeIsShowClosed',
+            data: { issue_tree_is_closed: issue_tree_is_closed },
+            success: function (resp) {
+                // if (issue_view !== 'detail') {
+                // }
+                if(resp.ret=='200'){
+                    $('#btn-go_search').click();
+                }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.updateUserTreeExpand = function (issue_tree_is_expand) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'user/updateUserTreeExpand',
+            data: { issue_tree_is_expand: issue_tree_is_expand },
+            success: function (resp) {
+                // if (issue_view !== 'detail') {
+                // }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.updateUserTreeRangeData = function (range) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'user/updateUserTreeRangeData',
+            data: { tree_range_data: range },
+            success: function (resp) {
+                // if (issue_view !== 'detail') {
+                $('#btn-go_search').click();
+                // }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     IssueMain.prototype.initIssueItem = function () {
         _issues_list.forEach(function (val, index) {
             if (parseInt(val.id) === parseInt(_issue_id)) {
@@ -393,7 +450,13 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchIssueMains = function (success) {
-
+        if(window.issue_view=='tree'){
+            let  tree_range = $('#issue_view_tree_range').val();
+            _options.filter_url += "&tree_range=" + tree_range;
+            if ($("#issue_tree_is_closed").get(0).checked) {
+                _options.filter_url += "&issue_tree_is_closed=1" ;
+            }
+        }
         // url,  list_tpl_id, list_render_id
         var params = { format: 'json' };
         loading.show('#' + _options.list_render_id);
@@ -405,7 +468,6 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 IssueMain.prototype.handleRenderIssues(resp, success);
-                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -435,12 +497,20 @@ var IssueMain = (function () {
             sort_field = window.$sort_field;
         }
 
+        let req_data = { project_id: window.cur_project_id, adv_query_json: jsonData, sort_field: sort_field, sort_by: sort_by,page: page };
+        if(window.issue_view=='tree'){
+            let  tree_range = $('#issue_view_tree_range').val();
+            req_data['tree_range'] =  tree_range;
+            if ($("#issue_tree_is_closed").get(0).checked) {
+                req_data['issue_tree_is_closed'] =  '1';
+            }
+        }
         btn_adv_sumit.addClass('disabled');
         $.ajax({
             type: 'get',
             dataType: "json",
             url: "/issue/main/adv_filter",
-            data: { project_id: window.cur_project_id, adv_query_json: jsonData, sort_field: sort_field, sort_by: sort_by,page: page },
+            data: req_data,
             success: function (resp) {
                 btn_adv_sumit.removeClass('disabled');
                 $('#modal-adv_query').modal('hide');
@@ -479,9 +549,6 @@ var IssueMain = (function () {
         }
         if (_issue_length > 0) {
             loading.show('#' + _options.list_render_id);
-            var source = $('#' + _options.list_tpl_id).html();
-            var template = Handlebars.compile(source);
-
             for (let i in resp.data.issues) {
                 if (resp.data.issues[i].start_date == '' || resp.data.issues[i].due_date == '') {
                     resp.data.issues[i].show_date_range = '';
@@ -492,11 +559,18 @@ var IssueMain = (function () {
             resp.data.display_fields = window.display_fields;
             resp.data.uiDisplayFields = window.uiDisplayFields;
             resp.data.issue_view  = window.issue_view ;
+
+            var source = $('#' + _options.list_tpl_id).html();
+            var template = Handlebars.compile(source);
             var result = template(resp.data);
-            let table_footer_operation_tpl = $('#table_footer_operation_tpl').html();
-            if (table_footer_operation_tpl != null && table_footer_operation_tpl != undefined)
+            var table_footer_operation_tpl = $('#table_footer_operation_tpl').html();
+            if (table_footer_operation_tpl != null && table_footer_operation_tpl != undefined){
                 result += $('#table_footer_operation_tpl').html();
+            }
             $('#' + _options.list_render_id).html(result);
+            if(window.issue_view=='tree'){
+                IssueMain.prototype.renderTreeTable(resp);
+            }
 
             $('#issue_count').html(resp.data.total);
             $('#page_size').html(resp.data.page_size);
@@ -524,7 +598,10 @@ var IssueMain = (function () {
                     IssueMain.prototype.skipPager(page);
                 }
             };
-            $('#ampagination-bootstrap').bootstrapPaginator(options);
+            if(window.issue_view!='tree'){
+                $('#ampagination-bootstrap').bootstrapPaginator(options);
+            }
+
             //console.log(success);
             if (typeof (success) != 'undefined' && typeof (success) === "function") {
                 success(resp.data);
@@ -720,11 +797,10 @@ var IssueMain = (function () {
                 });                
             });
 
-            $(".resolve-select").bind("dblclick", function () {
+            $(".resolve-select2").bind("dblclick", function () {
                 var $self = $(this);
-                var issue_id = $self.data('issue_id');
-                var list_box = $self.children(".resolve-list");
-
+                let issue_id = $self.data('issue_id');
+                let list_box = $('#ul_tree_select_'+issue_id);
                 if (list_box.is(":visible")) {
                     return false;
                 }
@@ -732,20 +808,20 @@ var IssueMain = (function () {
 
                 var resolve_list = _issueConfig.issue_resolve;
                 console.log(resolve_list);
-                var html = "";
-                for (let resolve of resolve_list) {
-                    console.log(resolve_list[i]);
+                let html = "";
+                for (let i=0; i<resolve_list.length; i++) {
+                    let resolve = resolve_list[i];
+                   // html += `<li>1111</li>`;
                     html += `<li data-color="${resolve.color}" data-value="${resolve.id}"><span style="color:${resolve.color}" class="prepend-left-5">${resolve.name}</span></li>`;
                 }
                 list_box.html(html);
-
-                $(".resolve-list li").on("click", function () {
+                console.log(list_box, html);
+                list_box.children('li').on("click", function () {
                     var id = $(this).data("value");
                     var color = $(this).data("color")
                     var text = $(this).text()
                     IssueDetail.prototype.updateIssueResolve(issue_id, id, $self, text, color);
                 });
-
                 $(document).on("click", function () {
                     list_box.slideUp(100);
                 })
@@ -778,8 +854,8 @@ var IssueMain = (function () {
                         }
                         let status_list = resp.data.issue.allow_update_status;
                         let html = "";
-
-                        for (var status of status_list) {
+                        for (let i=0; i<status_list.length; i++) {
+                            let status = status_list[i];
                             html += `<li data-value="${status.id}" data-color="${status.color}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
                         }
                         list_box.html(html);
@@ -801,7 +877,6 @@ var IssueMain = (function () {
                     }
                 });
             });
-
 
             $(".date-select-edit").bind("click", function () {
                 let $self = $(this);
@@ -836,6 +911,7 @@ var IssueMain = (function () {
                 });
             });
 
+            IssueMain.prototype.treeBindEvent();
 
             $(".have_children").bind("click", function () {
                 if (isFloatPart) {
@@ -880,7 +956,6 @@ var IssueMain = (function () {
             if (window._permCreateIssue) {
                 var additionHtml = '<a class="btn btn-new js-create-issue">创建事项</a>';
             }
-
             var emptyHtml = defineStatusHtml({
                 message: '没有事项数据',
                 name: 'issue',
@@ -894,8 +969,557 @@ var IssueMain = (function () {
             })
         }
     };
-    IssueMain.prototype.displayConvertChild = function (issue_id) {
+    IssueMain.prototype.treeBindEvent = function () {
 
+        $(".span-labels_edit").bind("click", function () {
+            let $self = $(this);
+            let issue_id_arr = $self.data('issue_id_arr').split(',');
+            let issue_id = $self.data('issue_id')
+            let list_box = $('#labels-list-'+issue_id);
+            let is_can_ajax = 1;
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+            //list_box.show();
+            let labels_list = _issueConfig.issue_labels;
+            let html = "";
+            for (let i=0; i<labels_list.length; i++) {
+                let label = labels_list[i];
+                let checked = '';
+                if(in_array(labels_list[i].id, issue_id_arr)){
+                    checked = '<span style="margin-left: 20px" class="fa fa-check check-mark"></span>';
+                }
+                html += `<li data-value="${label.id}"  ><span class="label color-label " style="background-color:${label.bg_color}; color:${label.color}">${label.title}</span>${checked}</li>`;
+            }
+            list_box.html(html);
+            setTimeout( function(){
+                $(document).on("click", function (event) {
+                    if($(event.target).is("#labels-list-"+issue_id+",#labels-list-"+issue_id+" *")){
+                        console.log(event.target);
+                    }else{
+                        if($(event.target).is(".span-labels_edit *")){
+
+                        }else{
+                            list_box.slideUp(100);
+                            // 这里处理获取命中的
+                            var selectIdArr = [];
+                            list_box.find('li').each(function(){
+                                let id = $(this).data("value");
+                                let fa_check = $(this).find('.fa-check');
+                                if(fa_check.length>0){
+                                    selectIdArr.push(id);
+                                }
+                            });
+
+                            if(is_can_ajax!=1){
+                                return;
+                            }
+                            if(is_empty(selectIdArr) && is_empty(issue_id_arr)){
+                                return;
+                            }
+                            if( selectIdArr.join(',') == issue_id_arr.join(',')){
+                                return;
+                            }
+                            $.ajax({
+                                type: 'post',
+                                dataType: "json",
+                                async: true,
+                                url: root_url + "issue/main/update",
+                                data: { issue_id: issue_id, params: {labels: selectIdArr} ,ignore_param:1},
+                                success: function (resp) {
+                                    auth_check(resp);
+                                    if (resp.ret != '200') {
+                                        notify_error('操作失败:' + resp.msg);
+                                        return;
+                                    }
+                                    notify_success('操作成功');
+                                   // window.location.reload();
+                                    let html = '';
+                                    let issue_id_arr_str = selectIdArr.join(',');
+                                    html += make_label_html(selectIdArr);
+                                    html += '<span data-issue_id="'+issue_id+'" data-issue_id_arr="'+issue_id_arr_str+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-labels_edit hide">';
+                                    html +=  '<i class="fa fa-pencil">'
+                                    html += '</span>';
+                                    html += '<div id="div-labels-list-'+issue_id+'"  class="item-list-select labels-select" data-issue_id="'+issue_id+'">'
+                                    html += '<ul  id="labels-list-'+issue_id+'" class="item-data-list labels-list"></ul>';
+                                    html += '</div>';
+                                    $self.parent().html(html);
+                                    is_can_ajax = 0;
+                                    IssueMain.prototype.treeBindEvent()
+
+                                },
+                                error: function (res) {
+                                    notify_error("请求数据错误" + res);
+                                }
+                            });
+                        }
+                    }
+                })
+            }, 1000);
+            $(".labels-list li").on("click", function () {
+                let id = $(this).data("value");
+                let fa_check = $(this).find('.fa-check');
+                console.log(fa_check.length);
+                if(fa_check.length>0){
+                    fa_check.remove();
+                }else{
+                    $(this).append('<span style="margin-left: 20px" class="fa fa-check check-mark"></span>');
+                }
+            });
+        });
+
+        $(".span-assistants_edit").bind("click", function () {
+            let $self = $(this);
+            let assistants_arr = $self.data('assistants').split(',');
+            let issue_id = $self.data('issue_id')
+            let list_box = $('#assistants-list-'+issue_id);
+            let is_can_ajax = 1;
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+            //list_box.show();
+            let users_list = _issueConfig.users;
+            let html = "";
+            for (let i=0; i<users_list.length; i++) {
+                let user = users_list[i];
+                let checked = '';
+                if(in_array(users_list[i].uid, assistants_arr)){
+                    checked = '<span style="float: right" class="fa fa-check check-mark"></span>';
+                }
+                html += `<li data-value="${user.uid}" style="text-align: left;" > <img width="26px" height="26px"  style="border-radius: 50%;"  title="${user.username}@${user.display_name}" src="${user.avatar}" /> ${checked}</li>`;
+            }
+            list_box.html(html);
+            setTimeout( function(){
+                $(document).on("click", function (event) {
+                    if($(event.target).is("#assistants-list-"+issue_id+",#assistants-list-"+issue_id+" *")){
+                        console.log(event.target);
+                    }else{
+                        if($(event.target).is(".span-assistants_edit *")){
+
+                        }else{
+                            list_box.slideUp(100);
+                            // 这里处理获取命中的
+                            var selectIdArr = [];
+                            list_box.find('li').each(function(){
+                                let id = $(this).data("value");
+                                let fa_check = $(this).find('.fa-check');
+                                if(fa_check.length>0){
+                                    selectIdArr.push(id);
+                                }
+                            });
+
+                            if(is_can_ajax!=1){
+                                return;
+                            }
+                            if(is_empty(selectIdArr) && is_empty(assistants_arr)){
+                                return;
+                            }
+                            if( selectIdArr.join(',') == assistants_arr.join(',')){
+                                return;
+                            }
+                            $.ajax({
+                                type: 'post',
+                                dataType: "json",
+                                async: true,
+                                url: root_url + "issue/main/update",
+                                data: { issue_id: issue_id, params: {assistants: selectIdArr} ,ignore_param:1},
+                                success: function (resp) {
+                                    auth_check(resp);
+                                    if (resp.ret != '200') {
+                                        notify_error('操作失败:' + resp.msg);
+                                        return;
+                                    }
+                                    notify_success('操作成功');
+                                    // window.location.reload();
+                                    let html = '';
+                                    if(is_table_display_avatar=='1'){
+                                        html += issue_assistants_avatar(selectIdArr)
+                                    }else{
+                                        html += issue_assistants_display_name(selectIdArr)
+                                    }
+                                    let assistants_str = selectIdArr.join(',');
+                                    html += '<span data-issue_id="'+issue_id+'" data-assistants="'+assistants_str+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-assistants_edit hide">';
+                                    html +=  '<i class="fa fa-pencil">'
+                                    html += '</span>';
+                                    html += '<div id="div-assistants-list-'+issue_id+'"  class="item-list-select assistants-select" data-issue_id="'+issue_id+'">'
+                                    html += '<ul  style="text-align: left;"  id="assistants-list-'+issue_id+'" class="item-data-list assistants-list"></ul>';
+                                    html += '</div>';
+                                    $self.parent().html(html);
+                                    is_can_ajax = 0;
+                                    IssueMain.prototype.treeBindEvent()
+
+                                },
+                                error: function (res) {
+                                    notify_error("请求数据错误" + res);
+                                }
+                            });
+                        }
+                    }
+                })
+            }, 1000);
+            $(".assistants-list li").on("click", function () {
+                let id = $(this).data("value");
+                let fa_check = $(this).find('.fa-check');
+                console.log(fa_check.length);
+                if(fa_check.length>0){
+                    fa_check.remove();
+                }else{
+                    $(this).append('<span  style="float: right"  class="fa fa-check check-mark"></span>');
+                }
+            });
+        });
+        $(".min_width_300").mouseenter(function() {
+            $(this).children(".summary_children ").show();
+        });
+        $(".min_width_300").mouseleave(function() {
+            $(this).children(".summary_children ").hide();
+        });
+
+        $(".td-labels-class").mouseenter(function() {
+            $(this).children(".span-labels_edit").show();
+        });
+        $(".td-labels-class").mouseleave(function() {
+            $(this).children(".span-labels_edit").hide();
+        });
+        $(".td-assistants-class").mouseenter(function() {
+            $(this).children(".span-assistants_edit").show();
+        });
+        $(".td-assistants-class").mouseleave(function() {
+            $(this).children(".span-assistants_edit").hide();
+        });
+    }
+    IssueMain.prototype.renderTreeTable = function (resp) {
+        var columns = [
+            { field: 'check',  checkbox: true, formatter: function (value, row, index) {
+                    if (row.check == true) {
+                        // console.log(row.serverName);
+                        //设置选中
+                        return {  checked: true };
+                    }
+                }
+            },
+            {field: 'summary',  title: '标 题' , class:"min_width_300",  formatter:  function (value, row, index) {
+                    let html = '<a  href="javascript:linkIssue('+row.id+')"   class="commit-row-message" >';
+                    html += lightSearch(value, row.search);
+                    html += '</a>';
+                    if(row.warning_delay =='1'){
+                        html += '<span style="color:#fc9403;margin-left: 4px" title="即将延期">即将延期</span>';
+                    }
+                    if(row.postponed =='1'){
+                        html += '<span style="color:#db3b21;margin-left: 4px" title="逾期">逾期</span>';
+                    }
+                    if(row.have_children >0){
+                        html += '<span class="badge"  style=";margin-left: 4px" title="拥有的子任务数">'+row.have_children+'</span>';
+                    }
+                    html += '<span class="summary_children hide">';
+                    html += '<a title="以新标签页打开此事项" target="_blank" href="/issue/detail/index/'+row.id+'" class="" style="margin-left:4px;"  ><i class="fa fa-link" ></i></a>';
+                    html += IssueMain.prototype.getTreeOptHtml(row)
+                    html += '</span>';
+                    return html
+                }
+            },
+        ];
+
+        let column = {field: 'issue_num',  title: '编 号', sortable: true,  align: 'left', formatter:  function (value, row, index) {
+                return '#'+value
+            }
+        }
+        columns.push( column)
+
+        if(isInArray(resp.data.display_fields,'issue_type')){
+            let column = {field: 'issue_type',  title: '类 型', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return issue_type_short_html(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'priority')){
+            let column = {field: 'priority',  title: '优先级', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    let html = ''
+                    html += '<div title="双击可直接修改" class="item-list-select priority-select" data-issue_id="'+row.id+'" id="priority-list-'+row.id+'" style="cursor: pointer;">'
+                    html += priority_html(value);
+                    html += '<ul class="item-data-list priority-list"></ul>';
+                    html += '</div>';
+                    return html
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'project_id')){
+            let column = {field: 'project_id',  title: '项 目',   align: 'center', formatter:  function (value, row, index) {
+                    return make_project(value)
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'module')){
+            let column = {field: 'module',  title: '模 块', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    let html = ''
+                    html += '<div  title="双击可直接修改" class="item-list-select module-select" data-issue_id="'+row.id+'" id="module-list-'+row.id+'">'
+                    html += module_html(value);
+                    html += '<ul class="item-data-list module-list"></ul>';
+                    html += '</div>';
+                    return html
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'sprint')){
+            let column = {field: 'sprint',  title: '迭 代', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    let html = ''
+                    html += '<div  title="双击可直接修改" class="item-list-select sprint-select" data-issue_id="'+row.id+'" id="sprint-list-'+row.id+'">'
+                    html += make_issue_sprint(value);
+                    html += '<ul class="item-data-list sprint-list"></ul>';
+                    html += '</div>';
+                    return html
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'label')){
+            let column = {field: 'label',  title: '标 签', class:"td-labels-class",  align: 'left', formatter:  function (value, row, index) {
+                    let html = '';
+                    let issue_id_arr_str = row.label_id_arr.join(',');
+                    html += make_label_html(row.label_id_arr);
+                    html += '<span data-issue_id="'+row.id+'" data-issue_id_arr="'+issue_id_arr_str+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-labels_edit hide">';
+                    html +=  '<i class="fa fa-pencil">'
+                    html += '</span>';
+                    html += '<div id="div-labels-list-'+row.id+'"  class="item-list-select labels-select" data-issue_id="'+row.id+'">'
+                    html += '<ul  id="labels-list-'+row.id+'" class="item-data-list labels-list"></ul>';
+                    html += '</div>';
+                    return html;
+                }
+            }
+            columns.push( column)
+        }
+
+        if(isInArray(resp.data.display_fields,'weight')){
+            let column = {field: 'weight',  title: '权重值', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return value
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'assignee')){
+            let column = {field: 'assignee',  title: '经办人', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    let html = ''
+                    html += '<div  title="双击可直接修改" class="item-list-select assignee-select" data-issue_id="'+row.id+'" id="assignee-list-'+row.id+'">'
+                    if(resp.data.is_table_display_avatar=='1'){
+                        html += user_html(value)
+                    }else{
+                        html += user_html_display_name(value)
+                    }
+                    html += '<ul class="item-data-list assignee-list"></ul>';
+                    html += '</div>';
+                    return html
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'reporter')){
+            let column = {field: 'reporter',  title: '报告人', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    if(resp.data.is_table_display_avatar=='1'){
+                        return user_html(value)
+                    }else{
+                        return user_html_display_name(value)
+                    }
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'assistants')){
+            let column = {field: 'assistants',  title: '协助人', class:"td-assistants-class", align: 'center', formatter:  function (value, row, index) {
+                    let html = '';
+                    if(resp.data.is_table_display_avatar=='1'){
+                        html += issue_assistants_avatar(row.assistants_arr)
+                    }else{
+                        html += issue_assistants_display_name(row.assistants_arr)
+                    }
+                    html += '<span data-issue_id="'+row.id+'" data-assistants="'+row.assistants+'" style="margin-left: 4px;cursor: pointer;color:#1b69b6;" class="span-assistants_edit hide">';
+                    html +=  '<i class="fa fa-pencil">'
+                    html += '</span>';
+                    html += '<div id="div-assistants-list-'+row.id+'"  class="item-list-select assistants-select" data-issue_id="'+row.id+'">'
+                    html += '<ul style="text-align: left;" id="assistants-list-'+row.id+'" class="item-data-list assistants-list"></ul>';
+                    html += '</div>';
+                    return html;
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'status')){
+            let column = {field: 'status',  title: '状 态', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    let html = ''
+                    html += '<div title="双击可直接修改" class="item-list-select status-select" data-issue_id="'+row.id+'" id="status-list-'+row.id+'">'
+                    html += status_html(value);
+                    html += '<ul class="item-data-list status-list"></ul>';
+                    html += '</div>';
+                    return html
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'resolve')){
+            let column = {field: 'resolve',  title: '解决结果', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    let html = ''
+                    html += '<div title="双击可直接修改" style="cursor: pointer"  class="item-list-select resolve-select2" data-issue_id="'+row.id+'" id="resolve-list-'+row.id+'">'
+                    html += resolve_html(value);
+                    html += '<ul id="ul_tree_select_'+row.id+'" class="item-data-list resolve-select2"></ul>';
+                    html += '</div>';
+                    return html
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'environment')){
+            let column = {field: 'environment',  title: '环 境', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return value
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'plan_date')){
+            let column = {field: 'plan_date',  title: '计划日期', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                let html = '<small class="no-value date-select-edit" id="date-select-show-'+row.id+'" data-issue_id="'+row.id+'" style="display:block;width: 100%;height: 20px;cursor:pointer;">'+row.show_date_range+'\n' +
+                    '</small>';
+                return  html;
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'resolve_date')){
+            let column = {field: 'resolve_date',  title: '解决日期', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return value
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'modifier')){
+            let column = {field: 'modifier',  title: '修改人', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    if(resp.data.is_table_display_avatar=='1'){
+                        return user_html(value)
+                    }else{
+                        return user_html_display_name(value)
+                    }
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'master_id')){
+            let column = {field: 'master_id',  title: '父任务', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    if(row.have_children=='1'){
+                        return '是'
+                    }else{
+                        return '否'
+                    }
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'created')){
+            let column = {field: 'created',  title: '创建时间', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return row.created_text
+                }
+            }
+            columns.push( column)
+        }
+        if(isInArray(resp.data.display_fields,'updated')){
+            let column = {field: 'updated',  title: '更新时间', sortable: true,  align: 'center', formatter:  function (value, row, index) {
+                    return row.updated_text
+                }
+            }
+            columns.push( column)
+        }
+        let  columnOpt = {field: 'operate',  title: '操 作',  align: 'center',events : operateEvents, formatter:  function (value, row, index) {
+                let html = '';
+                html += '<span class="summary_children">';
+                html += IssueMain.prototype.getTreeOptHtml(row)
+                html += '</span>';
+                return html;
+            }
+        }
+        columns.push( columnOpt)
+        if(is_tree_table_init==0){
+            $tree_table.bootstrapTable({
+                data: resp.data.issues,
+                idField: 'id',
+                dataType:'json',
+                columns: columns,
+                // bootstrap-table-treegrid.js 插件配置 -- start
+                //在哪一列展开树形
+                treeShowField: 'summary',
+                //指定父id列
+                parentIdField: 'master_id',
+                onResetView: function(data) {
+                    //console.log('load');
+                    $tree_table.treegrid({
+                        initialState: 'expanded',// 所有节点都折叠  collapsed | expanded
+                        // initialState: 'expanded',// 所有节点都展开，默认展开
+                        treeColumn: 1,
+                        // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
+                        // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                        onChange: function() {
+                            $tree_table.bootstrapTable('resetWidth');
+                        }
+                    });
+                    //只展开树形的第一级节点
+                    $tree_table.treegrid('getRootNodes').treegrid('expand');
+                },
+                onCheck:function(row){
+                    var datas = $tree_table.bootstrapTable('getData');
+                    // 勾选子类
+                   // selectChilds(datas,row,"id","master_id",true);
+                    // 勾选父类
+                    //selectParentChecked(datas,row,"id","master_id")
+                    // 刷新数据
+                    $tree_table.bootstrapTable('load', datas);
+                },
+                onUncheck:function(row){
+                    var datas = $tree_table.bootstrapTable('getData');
+                    selectChilds(datas,row,"id","master_id",false);
+                    $tree_table.bootstrapTable('load', datas);
+                },
+                // bootstrap-table-treetreegrid.js 插件配置 -- end
+            });
+            is_tree_table_init = 1;
+        }else{
+            $tree_table.bootstrapTable('load', resp.data.issues);
+        }
+
+        $('.fixed-table-body').css("min-height", '600px');
+        IssueMain.prototype.treeExpandOr(resp.data.issue_tree_is_expand);
+    };
+    IssueMain.prototype.treeExpandOr = function (issue_tree_is_expand) {
+        if (issue_tree_is_expand=='1') {
+            $(".treegrid-expander-collapsed").each(function () {
+                    $(this).click();
+                }
+            );
+        }else{
+            $(".treegrid-expander-expanded").each(function () {
+                    $(this).click();
+                }
+            );
+        }
+    }
+
+    IssueMain.prototype.getTreeOptHtml = function (row) {
+        let html = '';
+        if(window._is_admin|| isInArray(window._projectPermArr,'CREATE_ISSUES')){
+            html += '<a title="添加子任务" id="i-add-children-'+row.id+'" href="#" class="RoleOfadd issue_create_child" style="margin-left:5px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-plus" ></i></a>';
+        }
+        if(window._is_admin|| isInArray(window._projectPermArr,'EDIT_ISSUES')){
+            html += '<a title="编辑事项" href="#" class="RoleOfedit issue_edit_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-pencil-square-o" ></i></a>';
+        }
+        if(window._is_admin|| isInArray(window._projectPermArr,'DELETE_ISSUES')){
+            html += '<a  title="删除事项"  href="#" class="RoleOfdelete issue_delete_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-trash-o" ></i></a>';
+        }
+        return html;
+    }
+    IssueMain.prototype.displayConvertChild = function (issue_id) {
         $('#current_issue_id').val(issue_id);
         $('#btn-parent_select_issue').data('issue-id', issue_id);
         $.ajax({
@@ -1194,6 +1818,27 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.getSelectedIdArr = function () {
+        var checked_issue_id_arr = new Array();
+        if(window.issue_view=='tree'){
+            var selRows = $tree_table.bootstrapTable("getSelections");
+            if(selRows.length > 0){
+                $.each(selRows,function(i) {
+                    checked_issue_id_arr.push(this.id);
+                });
+            }
+
+        }else{
+            $.each($("input[name='check_issue_id_arr']"), function () {
+                if (this.checked) {
+                    checked_issue_id_arr.push($(this).val());
+                }
+            });
+        }
+        console.log(checked_issue_id_arr);
+        return checked_issue_id_arr;
+    }
+
     IssueMain.prototype.batchDelete = function () {
 
         swal({
@@ -1210,13 +1855,7 @@ var IssueMain = (function () {
         },
             function (isConfirm) {
                 if (isConfirm) {
-                    var checked_issue_id_arr = new Array()
-                    $.each($("input[name='check_issue_id_arr']"), function () {
-                        if (this.checked) {
-                            checked_issue_id_arr.push($(this).val());
-                        }
-                    });
-                    console.log(checked_issue_id_arr);
+                    var checked_issue_id_arr = IssueMain.prototype.getSelectedIdArr();
                     $.ajax({
                         type: 'post',
                         dataType: "json",
@@ -1243,14 +1882,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.batchUpdate = function (field, value) {
-
-        var checked_issue_id_arr = new Array()
-        $.each($("input[name='check_issue_id_arr']"), function () {
-            if (this.checked) {
-                checked_issue_id_arr.push($(this).val());
-            }
-        });
-        console.log(checked_issue_id_arr);
+        var checked_issue_id_arr = IssueMain.prototype.getSelectedIdArr();
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -1273,13 +1905,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.batchMoveProject = function (field, value) {
-
-        var checked_issue_id_arr = [];
-        $.each($("input[name='check_issue_id_arr']"), function () {
-            if (this.checked) {
-                checked_issue_id_arr.push($(this).val());
-            }
-        });
+        var checked_issue_id_arr = IssueMain.prototype.getSelectedIdArr();
         console.log(checked_issue_id_arr);
         let project_id = $('#move_project_id').val();
         let is_delete_current = $('#is_delete_current').val();
@@ -1312,7 +1938,7 @@ var IssueMain = (function () {
                     return;
                 }
                 notify_success('操作成功');
-                // window.location.reload();
+                window.location.reload();
             },
             error: function (res) {
                 loading.hide('#displayMoveProject');
@@ -1323,12 +1949,7 @@ var IssueMain = (function () {
 
     IssueMain.prototype.displayMoveProject = function (project_id, project_name) {
 
-        var checked_issue_id_arr = new Array()
-        $.each($("input[name='check_issue_id_arr']"), function () {
-            if (this.checked) {
-                checked_issue_id_arr.push($(this).val());
-            }
-        });
+        var checked_issue_id_arr = IssueMain.prototype.getSelectedIdArr();
         if(is_empty(checked_issue_id_arr)){
             notify_warn('请先选择事项');
             return false;
@@ -1414,9 +2035,13 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.checkedAll = function () {
-        $('input[name="check_issue_id_arr"]').each(function () {
-            $(this).prop("checked", !$(this).prop("checked"));
-        });
+        if(window.issue_view!='tree'){
+            $('input[name="check_issue_id_arr"]').each(function () {
+                $(this).prop("checked", !$(this).prop("checked"));
+            });
+        }else{
+            $('input[name="btSelectAll"]').click()
+        }
     }
 
 

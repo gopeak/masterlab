@@ -676,7 +676,7 @@ var IssueForm = (function () {
         //console.log("sprint:");
         //console.log(sprint);
         //alert(window._is_created_backlog);
-        for (let i in sprint) {
+        for (let i=0; i<sprint.length; i++) {
             let sprint_id = sprint[i].id;
             let sprint_title = sprint[i].name;
             let sprint_status = sprint[i].status;

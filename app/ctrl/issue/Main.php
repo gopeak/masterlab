@@ -219,6 +219,7 @@ class Main extends BaseUserCtrl
         $data['advFields'] = IssueFilterLogic::$advFields;
         // 事项展示的视图方式
         $data['issue_view'] = SettingModel::getInstance()->getValue('issue_view');
+
         $userId = UserAuth::getId();
         $userSettingModel = new UserSettingModel($userId);
         $userIssueView = $userSettingModel->getSettingByKey($userId, 'issue_view');
@@ -227,6 +228,21 @@ class Main extends BaseUserCtrl
         }
         if (empty($data['issue_view'])) {
             $data['issue_view'] = 'list';
+        }
+        $data['tree_range_data'] = '0';
+        $issueViewTreeTange = $userSettingModel->getSettingByKey($userId, 'tree_range_data');
+        if ($issueViewTreeTange!==false) {
+            $data['tree_range_data'] = $issueViewTreeTange;
+        }
+        $data['issue_tree_is_closed'] = '1';
+        $issueTreeIsClosed = $userSettingModel->getSettingByKey($userId, 'issue_tree_is_closed');
+        if ($issueTreeIsClosed!==false) {
+            $data['issue_tree_is_closed'] = $issueTreeIsClosed;
+        }
+        $data['issue_tree_is_expand'] = '1';
+        $issueTreeIsExpand = $userSettingModel->getSettingByKey($userId, 'issue_tree_is_expand');
+        if ($issueTreeIsExpand!==false) {
+            $data['issue_tree_is_expand'] = $issueTreeIsExpand;
         }
 
         $data['is_all_issues'] = false;
@@ -259,7 +275,7 @@ class Main extends BaseUserCtrl
         }else{
             $data['is_table_display_avatar'] = $isTableDisplayAvatar;
         }
-        $this->render('gitlab/issue/list.php', $data);
+        $this->render('gitlab/issue/list.twig', $data);
     }
 
     /**
@@ -676,7 +692,7 @@ class Main extends BaseUserCtrl
     {
         $issueFilterLogic = new IssueFilterLogic();
 
-        $pageSize = 20;
+        $pageSize = 50;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $page = max(1, $page);
         if (isset($_GET['page'])) {
@@ -701,6 +717,12 @@ class Main extends BaseUserCtrl
             $data['is_table_display_avatar'] = "1";
         }else{
             $data['is_table_display_avatar'] = $isTableDisplayAvatar;
+        }
+        $data['issue_tree_is_expand'] = '1';
+        $userSettingModel = new UserSettingModel(UserAuth::getId());
+        $issueTreeIsExpand = $userSettingModel->getSettingByKey(UserAuth::getId(), 'issue_tree_is_expand');
+        if ($issueTreeIsExpand!==false) {
+            $data['issue_tree_is_expand'] = $issueTreeIsExpand;
         }
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
@@ -1350,23 +1372,39 @@ class Main extends BaseUserCtrl
                 $belowIssueId = (int)$params['below_id'];
                 $model = new IssueModel();
                 $table = $model->getTable();
-                $belowIssue = $model->getRow("gant_sprint_weight,sprint,master_id", ['id' => $belowIssueId]);
                 $fieldWeight = 'gant_sprint_weight';
-                $aboveWeight = (int)$belowIssue[$fieldWeight];
-                $sprintId = $belowIssue['sprint'];
-                $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
+                if($belowIssueId<0){
+                    $belowIssueId = abs($belowIssueId);
+                    $rows = $model->getRows("gant_sprint_weight,sprint,master_id", ['sprint' => $belowIssueId], null, "gant_sprint_weight", "desc", 2);
+                    if(count($rows)>0){
+                        $row1Weight = (int)$rows[0]['gant_sprint_weight'] ;
+                        $info[$fieldWeight] = max(0, $row1Weight + 100000);
+                    }
+                    if(count($rows)==0){
+                        $info[$fieldWeight] = 1000000000;
+                    }
+                    $info["sprint"] = $belowIssueId;
+                    $params['master_issue_id'] = 0;
+                }else{
+                    $belowIssue = $model->getRow("gant_sprint_weight,sprint,master_id", ['id' => $belowIssueId]);
+                    $aboveWeight = (int)$belowIssue[$fieldWeight];
+                    $sprintId = $belowIssue['sprint'];
+                    if(empty($sprintId) && isset($params['sprint'])){
+                        $sprintId =abs(intval($params['sprint']));
+                    }
+                    $sql = "Select {$fieldWeight} From {$table} Where `$fieldWeight` < {$aboveWeight}  AND `sprint` = {$sprintId} Order by {$fieldWeight} DESC  limit 1";
+                    $nextWeight = (int)$model->getFieldBySql($sql);
+                    if (empty($nextWeight)) {
+                        $nextWeight = 0;
+                    }
+                    $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
 
-                $nextWeight = (int)$model->getFieldBySql($sql);
-                if (empty($nextWeight)) {
-                    $nextWeight = 0;
+                    if (!empty($belowIssue['master_id'])) {
+                        $params['master_issue_id'] = $belowIssue['master_id'];
+                    }
+                    // print_r($params);
+                    unset($model, $belowIssue);
                 }
-                $info[$fieldWeight] = max(0, $nextWeight + intval(($aboveWeight - $nextWeight) / 2));
-
-                if (!empty($belowIssue['master_id'])) {
-                    $params['master_issue_id'] = $belowIssue['master_id'];
-                }
-                // print_r($params);
-                unset($model, $belowIssue);
             }
             // 如果是在某一事项之上,排序值是两个事项之间二分之一
             if (isset($params['above_id']) && !empty($params['above_id'])) {
@@ -1721,7 +1759,9 @@ class Main extends BaseUserCtrl
 
         $info = $info + $this->getUpdateFormInfo($params);
         if (empty($info)) {
-            $this->ajaxFailed('参数错误,数据为空');
+            if(!isset($_REQUEST['ignore_param'])){
+                $this->ajaxFailed('参数错误,数据为空');
+            }
         }
 
         $event = new CommonPlacedEvent($this, $_REQUEST);
@@ -1909,7 +1949,6 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('更新成功', $updatedIssue);
     }
 
-
     /**
      * 批量修改
      * @param $params
@@ -1976,7 +2015,6 @@ class Main extends BaseUserCtrl
             }
             $successIssueIdArr[] = $issueId;
         }
-
         // 操作日志
         $logData = [];
         $logData['user_name'] = $this->auth->getUser()['username'];
@@ -1992,7 +2030,7 @@ class Main extends BaseUserCtrl
 
         $event = new CommonPlacedEvent($this, ['field' => $field, 'value' => $value, 'project_id' => $projectId, 'issue_id_arr' => $successIssueIdArr]);
         $this->dispatcher->dispatch($event, Events::onIssueBatchUpdate);
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('success', $errArr);
     }
 
     /**
@@ -2028,15 +2066,15 @@ class Main extends BaseUserCtrl
             $updateArr['sprint'] = (int)$_POST['sprint'];
         }
         $updateLabelArr = [];
-        if (isset($_POST['labels']) && empty($_POST['labels'])) {
+        if (isset($_POST['labels']) && !empty($_POST['labels'])) {
             $updateLabelArr = $_POST['labels'];
         }
         $updateEffectVersionArr = [];
-        if (isset($_POST['effect_version']) && empty($_POST['effect_version'])) {
+        if (isset($_POST['effect_version']) && !empty($_POST['effect_version'])) {
             $updateEffectVersionArr = $_POST['effect_version'];
         }
         $updateFixVersionArr = [];
-        if (isset($_POST['fix_version']) && empty($_POST['fix_version'])) {
+        if (isset($_POST['fix_version']) && !empty($_POST['fix_version'])) {
             $updateFixVersionArr = $_POST['fix_version'];
         }
         $uid = $this->getCurrentUid();

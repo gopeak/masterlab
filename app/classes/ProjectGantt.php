@@ -321,7 +321,7 @@ class ProjectGantt
             }
             $finalArr[] = self::formatRowBySprint($sprint);
             $sprintId = $sprint['id'];
-            $condition = "project_id={$projectId} AND sprint={$sprintId}   {$orderBy}";
+            $condition = "project_id={$projectId} AND sprint={$sprintId}  AND gant_hide=0  {$orderBy}";
             $sql = "select * from {$table} where {$condition}";
             // echo $sql;
             $sprintRows[$sprint['id']]  = $issueModel->db->fetchAll($sql);
@@ -449,7 +449,7 @@ class ProjectGantt
 
             $finalArr[] = self::formatRowBySprint($sprint);
             $sprintId = $sprint['id'];
-            $condition = "project_id={$projectId} AND sprint={$sprintId}   {$orderBy}";
+            $condition = "project_id={$projectId} AND sprint={$sprintId}   AND gant_hide=0   {$orderBy}";
             $fields = "id,issue_num,issue_type,status,summary,assignee,have_children,master_id,level,depends,start_date,due_date,duration,progress,weight,gant_sprint_weight";
             $sql = "select {$fields} from {$table} where {$condition}";
             $sprintRows[$sprint['id']] = $rows = $issueModel->db->fetchAll($sql);

@@ -75,7 +75,40 @@
                 margin: 0;
                 padding: 4px 2px 4px;
             }
+            .min_width_300{
+                min-width: 300px;
+            }
+            .issue_view_tree_option{
+                padding-left: 10px;
+                padding-right: 10px;
+                vertical-align: middle;
+                text-align: center;
+                margin-left: 5px;
+                border: 1px  #e5e5e5;
+                border-radius: 1px;
+                border-style: dashed;
+            }
+            .issue_tree_range_select{
+                width: 90px;
+                height: 30.5px;
+                border: 1px solid #e5e5e5;
+                border-radius: 3px;
+                margin-top: 3px;
+            }
         </style>
+
+        {% if ( issue_view =='tree') %}
+            <!--<link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+            <script src="/dev/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>-->
+
+            <link href="/dev/lib/bootstrap-table/dist/bootstrap-table.min.css" rel="stylesheet">
+            <script src="/dev/lib/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+            <script src="/dev/lib/bootstrap-table/1.12.1/extensions/treegrid/bootstrap-table-treegrid.js"></script>
+
+            <link rel="stylesheet" href="/dev/lib/jquery-treegrid/0.2.0/css/jquery.treegrid.css">
+            <script src="/dev/lib/jquery-treegrid/0.2.0/js/jquery.treegrid.js"></script>
+        {% endif %}
+
 	</head>
 
 	<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -301,8 +334,15 @@
                                 <div class="table-holder">
                                     <div id="detail_render_id" style="display:none;"></div>
                                 </div>
-
                                 <ul class="issues-content-list" id="ul_issues" style="display:none;"></ul>
+
+                                <div class="container" id="tree-container" style="display:none;">
+
+                                    <table id="tree_table"></table>
+                                    <br/>
+
+                                </div>
+
                                 <div class="row-content-block second-block" v-pre="false">
                                     <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
                                           method="get">
@@ -386,7 +426,7 @@
                                                         {% for key,item in project_modules %}
                                                             <li>
                                                                 <a class="btn_batch_update" data-field="module"
-                                                                   data-id="<?= key ?>" href="#"><?= item['name'] ?></a>
+                                                                   data-id="<?= item.id ?>" href="#"><?= item['name'] ?></a>
                                                             </li>
                                                         {% endfor %}
 
@@ -436,7 +476,7 @@
 
                                             <span style="margin-left: 1em">
 														总数:<span id="issue_count"></span>
-														每页显示:<span id="page_size"></span>
+														{% if (issue_view!='tree') %}每页显示:<span id="page_size"></span>{% endif %}
 													</span>
                                         </div>
                                     </form>
@@ -548,6 +588,7 @@
                 var adv_filter_json = <?= adv_filter_json|raw ?>
                 var is_adv_filter = '<?= is_adv_filter ?>';
 
+                var is_table_display_avatar = '<?= is_table_display_avatar ?>';
                 var issue_view = '<?= issue_view ?>';
                 var list_render_id = 'list_render_id';
                 var list_tpl_id = 'list_tpl';
@@ -555,6 +596,13 @@
                     list_render_id = 'ul_issues';
                     list_tpl_id = 'responsive_tpl';
                     $("#ul_issues").show();
+                }
+                if (issue_view === 'tree') {
+                    list_render_id = 'tree_table';
+                    list_tpl_id = 'tree_tpl';
+                    $("#tree-container").show();
+                    $("#ul_issues").hide();
+                    $("#tree-slider").hide();
                 }
                 if (issue_view === 'detail') {
                     isFloatPart = true;
@@ -585,7 +633,7 @@
 
                 }
                 function linkIssue(id) {
-                    if(issue_view!='detail'){
+                    if(issue_view=='list' || issue_view=='responsive'){
                         window.location.href = '/issue/detail/index/'+id;
                         return;
                     }
@@ -594,6 +642,53 @@
                     showFloatDetail(id, dataSummary);
                 }
 
+                window.operateEvents = {
+                    'click .RoleOfadd': function (e, value, row, index) {
+                        console.log("row add: "+row.id);
+                    },
+                    'click .RoleOfdelete': function (e, value, row, index) {
+                        console.log("row delete: "+row.id);
+                    },
+                    'click .RoleOfedit': function (e, value, row, index) {
+                        console.log("row update: "+row.id);
+                    }
+                };
+
+                function selectChilds(datas,row,id,master_id,checked) {
+                    for(var i in datas){
+                        if(datas[i][master_id] == row[id]){
+                            datas[i].check=checked;
+                            selectChilds(datas,datas[i],id,master_id,checked);
+                        };
+                    }
+                }
+
+                function selectParentChecked(datas,row,id,master_id){
+                    for(var i in datas){
+                        if(datas[i][id] == row[master_id]){
+                            datas[i].check=true;
+                            selectParentChecked(datas,datas[i],id,master_id);
+                        };
+                    }
+                }
+
+                function treeTest() {
+                    var selRows = $tree_table.bootstrapTable("getSelections");
+                    if(selRows.length == 0){
+                        alert("请至少选择一行");
+                        return;
+                    }
+                    var postData = "";
+                    $.each(selRows,function(i) {
+                        postData +=  this.id;
+                        if (i < selRows.length - 1) {
+                            postData += "， ";
+                        }
+                    });
+                    alert("你选中行的 id 为："+postData);
+                }
+                var $tree_table = $('#tree_table');
+                var is_tree_table_init = 0;
                 $(function () {
                     var options = {
                         query_str: window.query_str,
@@ -649,6 +744,30 @@
                     $('#btn-add').bind('click', function () {
                         IssueMain.prototype.add();
                     });
+
+                    $('#issue_tree_is_expand').bind('click', function () {
+                        let issue_tree_is_expand = '0';
+                        if ($(this).prop("checked")) {
+                            issue_tree_is_expand = '1'
+                        }else{
+                        }
+                        IssueMain.prototype.treeExpandOr(issue_tree_is_expand)
+                        IssueMain.prototype.updateUserTreeExpand(issue_tree_is_expand);
+                    });
+
+                    $('#issue_tree_is_closed').bind('click', function () {
+                        let issue_tree_is_closed = '0';
+                        if ($(this).prop("checked")) {
+                            issue_tree_is_closed = '1'
+                        }
+                        window.$IssueMain.updateUserTreeIsShowClosed(issue_tree_is_closed);
+                    });
+
+
+                    $('#issue_view_tree_range').bind('change', function () {
+                        IssueMain.prototype.updateUserTreeRangeData($(this).val());
+                    });
+
 
                     $("#btn-create-issue").bind("click", function () {
                         $('#master_issue_id').val('');
@@ -770,13 +889,12 @@
                         window.location.href = url;
                     });
 
-
                     $('#view_choice li').bind('click', function () {
-
+                        //alert($(this));
                         $('#view_choice .active').removeClass('active');
                         $(this).addClass('active');
                         var selectIssueView = $(this).data('issue_view');
-                                    // alert(selectIssueView);
+                        //alert(selectIssueView);
                         if (selectIssueView === 'detail') {
                             IssueMain.prototype.updateUserIssueView(selectIssueView);
                             $('#change_view_span').html('左右视图');

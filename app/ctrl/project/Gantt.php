@@ -211,10 +211,10 @@ class Gantt extends BaseUserCtrl
         $isDisplayBacklog = '0';
         if (isset($_POST['is_display_backlog']) && $_POST['is_display_backlog'] == '1') {
             $isDisplayBacklog = '1';
+
         }
-        if (isset($ganttSetting['is_display_backlog'])) {
-            $updateInfo['is_display_backlog'] = $isDisplayBacklog;
-        }
+        $updateInfo['is_display_backlog'] = $isDisplayBacklog;
+
         // 是否检查日期
         $isCheckDate = '0';
         if (isset($_POST['is_check_date']) && $_POST['is_check_date'] == '1') {
@@ -224,7 +224,6 @@ class Gantt extends BaseUserCtrl
         if (isset($ganttSetting['is_check_date'])) {
             $updateInfo['is_check_date'] = $isCheckDate;
         }
-
         // 隐藏的事项类型
         if (isset($_POST['hide_issue_types'])) {
             $hideIssueTypes = $_POST['hide_issue_types'];
@@ -245,7 +244,7 @@ class Gantt extends BaseUserCtrl
             }
             $updateInfo['work_dates'] = $workDatesJson;
         }
-
+        //print_r($updateInfo);
         list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
         if ($ret) {
             $model = new HolidayModel();
@@ -994,7 +993,7 @@ class Gantt extends BaseUserCtrl
             $issueId = (int)$_POST['issue_id'];
         }
 
-        $masterId = '0';
+        $masterId = 0;
         if (isset($_POST['master_id'])) {
             $masterId = (int)$_POST['master_id'];
         }
@@ -1011,12 +1010,13 @@ class Gantt extends BaseUserCtrl
         if (!isset($issue['id'])) {
             $this->ajaxFailed('参数错误', $_POST);
         }
+        // print_r($_POST);
         $projectId = $issue['project_id'];
         if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $projectId)) {
             $this->ajaxFailed('您没有权限访问该项目,请联系管理员申请加入该项目');
         }
         $currentInfo = [];
-        $currentInfo['level'] = max(0, (int)$issue['level'] - 1);
+        $currentInfo['level'] = max(0, (int)$issue['level'] + 1);
         $currentInfo['master_id'] = $masterId;
         list($ret, $msg) = $issueModel->updateItemById($issueId, $currentInfo);
         if ($ret) {
@@ -1025,8 +1025,14 @@ class Gantt extends BaseUserCtrl
                     $issueModel->dec('level', $childId, 'id');
                 }
             }
-            if ($masterId != '0') {
-                $issueModel->inc('have_children', $masterId, 'id');
+            if ($masterId != 0) {
+                $master = $issueModel->getById($masterId);
+                if(!empty($master)){
+                    $issueModel->inc('have_children', $masterId, 'id');
+                    if($master['master_id']==$issueId){
+                        $issueModel->updateItemById($masterId, ['master_id'=>0]);
+                    }
+                }
             }
             if (!empty($issue['master_id']) && $issue['master_id'] != '0') {
                 $issueModel->dec('have_children', $issue['master_id'], 'id');

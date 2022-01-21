@@ -90,6 +90,7 @@ class RewriteUrl
     public static function setProjectData($data)
     {
         $projectId = null;
+        $data['project'] = [];
         $data['project_id'] = $projectId;
         if (isset($_GET['project_id'])) {
             $projectId = (int)$_GET['project_id'];
