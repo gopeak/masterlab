@@ -202,7 +202,7 @@ class Agile extends BaseUserCtrl
         $agileBoardModel = new AgileBoardModel();
         $boardDefault = $agileBoardModel->getById($boardDefaultId);
         if(empty($boardDefaultId) || empty($boardDefault)){
-            $boardDefaultId = $data['boards'][0]['id'] ?? 1;
+            $boardDefaultId = $data['boards'][0]['id'] ?? 2;
         }
         $data['board_default_id'] = $boardDefaultId;
         $data['keyword'] = $_GET['keyword'] ?? '';

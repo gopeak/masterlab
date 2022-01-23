@@ -88,7 +88,7 @@
                                                 <div class="dropdown inline prepend-right-10">
                                                     <select id="boards_select" name="boards_select"
                                                             class="selectpicker">
-                                                        <option value="all@1" {% if board_default_id==1 %} selected {% endif %}>整个项目</option>
+                                                        <option value="all@2" {% if board_default_id==1 %} selected {% endif %}>整个项目</option>
                                                         {% for board in boards %}
                                                             <option value="<?= board['id'] ?>" {% if board_default_id==board['id'] %} selected {% endif %}><?= board['name'] ?></option>
                                                         {% endfor %}
