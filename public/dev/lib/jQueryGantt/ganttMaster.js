@@ -125,11 +125,38 @@ GanttMaster.prototype.init = function (workSpace) {
   //bindings
   workSpace.bind("deleteFocused.gantt", function (e) {
     //delete task or link?
+    swal({
+          title: "您确定删除该事项吗?",
+          text: "你将无法恢复它",
+          html: true,
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "确 定",
+          cancelButtonText: "取 消！",
+          closeOnConfirm: false,
+          closeOnCancel: false
+        },
+        function (isConfirm) {
+          if (isConfirm) {
+            swal.close();
+            var focusedSVGElement=self.gantt.element.find(".focused.focused.linkGroup");
+            if (focusedSVGElement.size()>0)
+              self.removeLink(focusedSVGElement.data("from"), focusedSVGElement.data("to"));
+            else
+              self.deleteCurrentTask();
+          } else {
+            swal.close();
+          }
+        });
+
+  }).bind("hideFocused.gantt", function (e) {
+    //delete task or link?
     var focusedSVGElement=self.gantt.element.find(".focused.focused.linkGroup");
     if (focusedSVGElement.size()>0)
       self.removeLink(focusedSVGElement.data("from"), focusedSVGElement.data("to"));
     else
-    self.deleteCurrentTask();
+      self.hideCurrentTask();
   }).bind("showAddAboveCurrentTask.gantt", function () {
     self.showAddAboveCurrentTask();
   }).bind("showAddBelowCurrentTask.gantt", function () {
@@ -1212,7 +1239,7 @@ GanttMaster.prototype.deleteCurrentTask = function (taskId) {
   var row = task.getRow();
   if (task && (row > 0 || self.isMultiRoot || task.isNew()) ) {
     if(!task.isNew() && task.name!=''){
-      window.$_gantAjax.deleteTask(task.id, {gant_hide:1});
+      window.$_gantAjax.deleteTask(task.id);
     }
 
     var par = task.getParent();
@@ -1242,6 +1269,54 @@ GanttMaster.prototype.deleteCurrentTask = function (taskId) {
   }
 };
 
+
+GanttMaster.prototype.hideCurrentTask = function (taskId) {
+  //console.debug("hideCurrentTask",this.currentTask , this.isMultiRoot)
+  var self = this;
+
+  var task;
+  if (taskId)
+    task=self.getTask(taskId);
+  else
+    task=self.currentTask;
+
+  if (!task || !self.permissions.canDelete && !task.canDelete)
+    return;
+
+  var taskIsEmpty=task.name=="";
+
+  var row = task.getRow();
+  if (task && (row > 0 || self.isMultiRoot || task.isNew()) ) {
+    if(!task.isNew() && task.name!=''){
+      window.$_gantAjax.hideTask(task.id, {gant_hide:1});
+    }
+
+    var par = task.getParent();
+    self.beginTransaction();
+    task.deleteTask();
+    task = undefined;
+
+    //recompute depends string
+    self.updateDependsStrings();
+
+    //redraw
+    self.taskIsChanged();
+
+    //[expand]
+    if (par)
+      self.editor.refreshExpandStatus(par);
+
+
+    //focus next row
+    row = row > self.tasks.length - 1 ? self.tasks.length - 1 : row;
+    if (!taskIsEmpty && row >= 0) {
+      task = self.tasks[row];
+      task.rowElement.click();
+      task.rowElement.find("[name=name]").focus();
+    }
+    self.endTransaction();
+  }
+};
 
 
 

@@ -901,4 +901,100 @@ class User extends BaseUserCtrl
         }
         $this->ajaxSuccess('保存成功');
     }
+
+    /**
+     * 更新用户事项列表的数据范围
+     * @throws \Exception
+     */
+    public function updateUserTreeRangeData()
+    {
+        $key = 'tree_range_data';
+        // 校验参数
+        if (!isset($_POST[$key]) || !isset($_POST[$key])) {
+            $this->ajaxFailed('参数错误');
+        }
+        // 获取数据
+        $postValue = '0';
+        if (!empty($_POST[$key])) {
+            $postValue = $_POST[$key];
+        }
+        // 保存到数据库中
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $dbValue = $userModel->getSettingByKey($userId, $key);
+        // 如果表中不存在,则插入数据
+        if ($dbValue===false) {
+            $userModel->insertSetting($userId, $key, $postValue);
+        } else {
+            // 否则更新有变化的数据
+            if ($dbValue != $postValue) {
+                $userModel->updateSetting($userId, $key, $postValue);
+            }
+        }
+        $this->ajaxSuccess('保存成功');
+
+    }
+
+    /**
+     * 更新用户的子任务视图下是否开展子任务
+     * @throws \Exception
+     */
+    public function updateUserTreeExpand()
+    {
+        $key = 'issue_tree_is_expand';
+        if (!isset($_POST[$key]) || !isset($_POST[$key])) {
+            $this->ajaxFailed('参数错误');
+        }
+        // 获取数据
+        $postValue = '0';
+        if (!empty($_POST[$key])) {
+            $postValue = $_POST[$key];
+        }
+        // 保存到数据库中
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $dbValue = $userModel->getSettingByKey($userId, $key);
+        // 如果表中不存在,则插入数据
+        if ($dbValue===false) {
+            $userModel->insertSetting($userId, $key, $postValue);
+        } else {
+            // 否则更新有变化的数据
+            if ($dbValue != $postValue) {
+                $userModel->updateSetting($userId, $key, $postValue);
+            }
+        }
+        $this->ajaxSuccess('保存成功');
+    }
+
+    /**
+     * 更新用户的子任务视图下是否显示已关闭事项
+     * @throws \Exception
+     */
+    public function updateUserTreeIsShowClosed()
+    {
+        $key = 'issue_tree_is_closed';
+        // 校验参数
+        if (!isset($_POST[$key]) || !isset($_POST[$key])) {
+            $this->ajaxFailed('参数错误');
+        }
+        // 获取数据
+        $postValue = '0';
+        if (!empty($_POST[$key])) {
+            $postValue = $_POST[$key];
+        }
+        // 保存到数据库中
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $dbValue = $userModel->getSettingByKey($userId, $key);
+        // 如果表中不存在,则插入数据
+        if ($dbValue===false) {
+            $userModel->insertSetting($userId, $key, $postValue);
+        } else {
+            // 否则更新有变化的数据
+            if ($dbValue != $postValue) {
+                $userModel->updateSetting($userId, $key, $postValue);
+            }
+        }
+        $this->ajaxSuccess('保存成功');
+    }
 }

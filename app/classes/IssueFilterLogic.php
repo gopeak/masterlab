@@ -101,7 +101,6 @@ class IssueFilterLogic
                 }
             }
         }
-
         $getNotParam = function ($param){
             $assigneeOpt = '=';
             $value = $param;
@@ -116,7 +115,6 @@ class IssueFilterLogic
             }
             return [$assigneeOpt, $value];
         };
-
         // 项目筛选
         $projectId = null;
         if (!empty(trimStr($_GET['project']))) {
@@ -226,6 +224,13 @@ class IssueFilterLogic
         if (!empty($sprintId)) {
             $sql .= " AND sprint{$sprintOpt}:sprint";
             $params['sprint'] = $sprintId;
+        }
+        if (isset($_GET['tree_range'])) {
+            $treeRange = (int)$_GET['tree_range'];
+            if($treeRange>0){
+                $sql .= " AND sprint=:tree_range";
+                $params['tree_range'] = $treeRange;
+            }
         }
 
         // 所属模块
@@ -462,6 +467,11 @@ class IssueFilterLogic
             $params['updated_end'] = $updatedEndTime;
         }
 
+        if (isset($_GET['issue_tree_is_closed']) && $_GET['issue_tree_is_closed']=='1') {
+        }else{
+            $sql .=  self::getUnClosedSql();
+        }
+
         $orderBy = 'id';
         $sortBy = 'DESC';
         if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
@@ -686,6 +696,20 @@ class IssueFilterLogic
         $sql .= ' ) ';
         if ($startBracesNum != $endBracesNum) {
             return [false, '查询条件的括号 ( ) 条件错误', 0];
+        }
+
+        if (isset($_GET['tree_range'])) {
+            $treeRange = (int)$_GET['tree_range'];
+            if($treeRange>0){
+                $sql .= " AND sprint=:tree_range";
+                $params['tree_range'] = $treeRange;
+            }
+        }
+
+
+        if (isset($_GET['issue_tree_is_closed']) && $_GET['issue_tree_is_closed']=='1') {
+        }else{
+            $sql .=  self::getUnClosedSql();
         }
 
         $orderBy = 'id';
@@ -945,11 +969,11 @@ class IssueFilterLogic
         if (empty($projectId)) {
             return [];
         }
-        $resolveModel = new IssueResolveModel();
-        $closedResolveId = $resolveModel->getIdByKey('done');
+        $closedResolveId = IssueResolveModel::getInstance()->getIdByKey('done');
+        $closedStatusId = IssueStatusModel::getInstance()->getIdByKey('closed');
         $model = new IssueModel();
         $table = $model->getTable();
-        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  AND resolve ='$closedResolveId' ";
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  AND resolve ='$closedResolveId' AND status='$closedStatusId'";
         // echo $sql;
         $count = $model->getFieldBySql($sql);
         return intval($count);
@@ -975,6 +999,35 @@ class IssueFilterLogic
         $count = $model->getFieldBySql($sql);
         return intval($count);
     }
+
+    //$closedResolveId = IssueResolveModel::getInstance()->getIdByKey('done');
+    //        $closedStatusId = IssueStatusModel::getInstance()->getIdByKey('closed');
+
+
+    /**
+     * 获取关闭的sql
+     * @return string
+     */
+    public static function getClosedSql()
+    {
+        $closedResolveId = IssueResolveModel::getInstance()->getIdByKey('done');
+        $closedStatusId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $appendSql = "  `status` = '$closedStatusId' AND resolve='$closedResolveId' ";
+        return $appendSql;
+    }
+
+    /**
+     * 获取关闭的sql
+     * @return string
+     */
+    public static function getUnClosedSql()
+    {
+        $closedResolveId = IssueResolveModel::getInstance()->getIdByKey('done');
+        $closedStatusId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $appendSql = "  AND `status` != '$closedStatusId' AND resolve!='$closedResolveId' ";
+        return $appendSql;
+    }
+
 
     /**
      * 获取状态未完成的sql
@@ -1835,18 +1888,21 @@ class IssueFilterLogic
                 $issue['assistants_arr'] = explode(',', $assistantsStr);
             }
         }
-
         if (empty($issue['have_children'])) {
             $issue['have_children'] = '0';
         }
-
+        if (isset($issue['id'])) {
+            $issue['id'] = (int)$issue['id'];
+        }
+        if (isset($issue['master_id'])) {
+            $issue['master_id'] = (int)$issue['master_id'];
+        }
         if (isset($issue['start_date']) && $issue['start_date'] == '0000-00-00') {
             $issue['start_date'] = '';
         }
         if (isset($issue['due_date']) && $issue['due_date'] == '0000-00-00') {
             $issue['due_date'] = '';
         }
-
         if (isset($issue['resolve_date']) && $issue['resolve_date'] == '0000-00-00') {
             $issue['resolve_date'] = '';
         }

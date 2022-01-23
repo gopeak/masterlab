@@ -334,7 +334,7 @@
                                                     <select id="format_issue_assignee" title="经办人" class="selectpicker">
                                                         {% for row in project_users %}
                                                             {% set  display_name = row['display_name'] %}
-                                                            <option value="<?=row.uid?>"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='/attachment/avatar/<?=row.uid?>.png' > <?=display_name?>"  ><?=display_name?></option>
+                                                            <option value="<?=row.uid?>"  data-content="<img width='26px' height='26px' class=' float-none' style='border-radius: 50%;' src='<?=row.avatar?>' > <?=display_name?>"  ><?=display_name?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>

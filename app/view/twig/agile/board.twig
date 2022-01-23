@@ -90,7 +90,7 @@
                                                             class="selectpicker">
                                                         <option value="all@1" {% if board_default_id==1 %} selected {% endif %}>整个项目</option>
                                                         {% for board in boards %}
-                                                            <option value="<?= board['range_type'] ?>@<?= board['id'] ?>" {% if board_default_id==board['id'] %} selected {% endif %}><?= board['name'] ?></option>
+                                                            <option value="<?= board['id'] ?>" {% if board_default_id==board['id'] %} selected {% endif %}><?= board['name'] ?></option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -207,9 +207,9 @@
         </div>
 
 
-    {% verbatim %}<script type="text/html"  id="board_list_tpl">
+    {% verbatim %}
+<script type="text/html"  id="board_list_tpl">
     {{#boards}}
-
      <tr id="tr_data_id_{{id}}">
             <th scope="row"> {{i}}</th>
             <td>{{name}}</td>
@@ -220,39 +220,70 @@
             <a class="btn btn-transparent btn-action list_for_default " style="color:blue" title="设置默认"  href="javascript:void(0);"  data-id="{{id}}">设置</a>{{/if_eq}}</td>
             <td>{{weight}}</td>
             <td>
-                {{#if_eq is_system '1'}}
-                     {{#if_eq sprint_id  0}}系统内置{{^}}迭代{{/if_eq}}
+                {{#if_eq range_type 'all'}}
+                     {{#if_eq sprint_id  0}}系统内置{{/if_eq}}
                 {{^}}
                     <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  style="color:blue"  data-id="{{id}}">
                         <i class="fa fa-pencil-square-o"></i>
                     </a>
-                    <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"  class="list_for_delete"  style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
-                        <i class="fa fa-trash-o"></i>
+                     {{#if_eq is_hide '1'}}
+                     <a class="btn btn-transparent btn-action list_for_display" title="显示看板"    style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
+                            <i class="fa fa-eye"></i>
+                     </a>
+                    {{^}}
+                    <a class="btn btn-transparent btn-action list_for_hide" title="隐藏看板"    style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
+                            <i class="fa fa-ban"></i>
                     </a>
+                    {{/if_eq}}
+                    {{#if_eq is_system  0}}
+
+                        <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"    style="color:red" data-id="{{id}}"  href="javascript:void(0)">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    {{/if_eq}}
                 {{/if_eq}}
+
 
             </td>
       </tr>
     {{/boards}}
-</script>{% endverbatim %}
+</script>
+
+<script type="text/html"  id="hide_board_list_tpl">
+    {{#boards}}
+     <tr id="tr_data_id_{{id}}">
+            <th scope="row"> {{i}}</th>
+            <td>{{name}}</td>
+            <td>{{range_type}}</td>
+            <!--<td>{{#if_eq is_filter_backlog 1}} 是 {{^}} 否 {{/if_eq}}</td>
+            <td>{{#if_eq is_filter_closed 1}} 是 {{^}} 否 {{/if_eq}}</td>
+            <td>{{weight}}</td>-->
+            <td>
+
+                <a class="btn btn-transparent btn-action list_for_display" title="恢复显示"  class="list_for_display"  style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
+                    <i class="fa fa-eye"></i>
+                </a>
+
+
+            </td>
+      </tr>
+    {{/boards}}
+</script>
+
+{% endverbatim %}
 
         <form id="form-board_setting2" action="#" name="form-board_setting2" method="post">
         <div class="modal board_setting-modal" id="modal-board_setting">
-
             <div class="form-horizontal" id="form-board_setting">
-
                 <input type="hidden" name="project_id" value="<?= project_id ?>">
                 <input type="hidden" name="form_board_id" id ="form_board_id" value="">
-
                 <div class="modal-dialog" style="width: 60%;">
                     <div class="modal-content modal-middle">
                         <div class="modal-header">
                             <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                             <h3 id="board-header-title" class="modal-header-title">看板管理</h3>
                         </div>
-
                         <div id="board_table" class="modal-body" style="min-height: 400px">
-
                                 <div class="panel">
                                     <table class="table table-hover">
                                         <thead>
@@ -272,12 +303,14 @@
                                 </div>
                         </div>
                         <div class="modal-footer form-actions" id="action-board_list">
+                            <button type="button" class="btn btn-default" id="btn-show_hided_board">
+                                <i  class="fa fa-eye"></i> 已隐藏的看板
+                            </button>
                             <button type="button" class="btn btn-info" id="btn-show_add_board">
                                 <i  class="fa fa-plus"></i> 创建看板
                             </button>
                             <a  class="btn btn-cancel" data-dismiss="modal" href="javascript:;" onclick="$board_setting.refreshBoards()">关 闭</a>
                         </div>
-
                         <div id="board_add_form" class="modal-body hide" style="min-height: 400px">
                                 <div class="form-group">
                                     <div class="col-sm-2"> 看板名称：</div>
@@ -406,9 +439,6 @@
                                     </div>
                                     <!-- end -->
                                 </div>
-
-
-
                         </div>
                         <div class="modal-footer form-actions hide" id="action-board_form">
 
@@ -427,6 +457,43 @@
 
         </div>
         </form>
+        <div class="modal board_setting-modal" id="modal-hided-boards">
+                <input type="hidden" name="project_id" value="<?= project_id ?>">
+                <div class="modal-dialog" style="width: 60%;">
+                    <div class="modal-content modal-middle">
+                        <div class="modal-header">
+                            <a class="close js-key-modal-close1" data-dismiss="modal"  href="javascript:$('#modal-hided-boards').hide();" >×</a>
+                            <h3 id="board-header-title" class="modal-header-title">已隐藏的看板</h3>
+                        </div>
+                        <div id="board_table" class="modal-body" style="min-height: 400px">
+                            <div class="panel">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>名称</th>
+                                        <th>数据范围</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="hide_board_list_render_id">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer form-actions" id="action-board_list">
+                            <button type="button" class="btn btn-info" id="btn-back_board_list2">
+                                 返回看板管理
+                            </button>
+                            <a  class="btn btn-cancel" data-dismiss="modal" href="javascript:$('#modal-hided-boards').hide();"  >关 闭</a>
+                        </div>
+
+                    </div>
+
+            </div>
+
+        </div>
         <div class="modal" id="modal-issue_move">
             <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_issue_move"
                   action="/agile/board_issue_move"
@@ -789,9 +856,19 @@
             $('#action-board_form').show();
             $('#board_table').hide();
             $('#action-board_list').hide();
+            $('#modal-hided-boards').hide();
             window.$board_setting.showCreateBoardById('');
         });
-        //
+        // 显示已隐藏看板
+        $('#btn-show_hided_board').bind('click', function () {
+            $('#modal-hided-boards').show();
+            window.$board_setting.fetchHidedBoards();
+        });
+        $('#btn-back_board_list2').bind('click', function () {
+            $('#modal-hided-boards').hide();
+            window.$board_setting.fetchBoards();
+        });
+
         $('#btn-display-create-board').bind('click', function () {
             $('#btn-setting_board').click();
             $('#btn-show_add_board').click();

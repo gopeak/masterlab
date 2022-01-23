@@ -17,7 +17,6 @@ use main\app\model\SettingModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\user\LoginlogModel;
 use main\app\model\user\EmailVerifyCodeModel;
-use \main\lib\CaptchaBuilder;
 use main\app\classes\SettingsLogic;
 
 /**

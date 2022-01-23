@@ -39,6 +39,7 @@ CREATE TABLE `agile_board` (
   `is_system` tinyint(4) NOT NULL DEFAULT '0',
   `range_due_date` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '截至时间范围',
   `sprint_id` int(11) unsigned DEFAULT '0',
+  `is_hide` tinyint(1) unsigned DEFAULT '0' COMMENT '是否隐藏',
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
   KEY `weight` (`weight`),
@@ -1645,16 +1646,20 @@ CREATE TABLE `main_timeline` (
 --
 
 CREATE TABLE `main_webhook` (
-                                `id` int UNSIGNED NOT NULL,
-                                `name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `url` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `event_json` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `secret_token` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `enable` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
-                                `timeout` tinyint UNSIGNED NOT NULL DEFAULT '10',
-                                `description` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `hook_event_json` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '定义触发哪些事件'
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `event_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret_token` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `enable` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
+  `timeout` tinyint(3) UNSIGNED NOT NULL DEFAULT '10',
+  `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hook_event_json` text COLLATE utf8mb4_unicode_ci COMMENT '定义触发哪些事件',
+  `filter_project_json` text COLLATE utf8mb4_unicode_ci COMMENT '过滤的事件'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 
 --
 -- 转存表中的数据 `main_webhook`
@@ -2692,7 +2697,7 @@ CREATE TABLE `project_template` (
 -- 转存表中的数据 `project_template`
 --
 
-INSERT INTO `project_template` VALUES (1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/default.png', 100000, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"gantt\",\"mind\",\"kanban\",\"activity\",\"chart\",\"stat\"]', 1, 'fluid', 'summary', '', 1);
+INSERT INTO `project_template` VALUES (1, '默认模板', 0, '系统初始化创建的项目模板，不可编辑和删除', '/dev/img/project_tpl/default.png', 100000, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"backlog\",\"sprints\",\"gantt\",\"mind\",\"kanban\",\"activity\",\"chart\",\"stat\"]',  1, 'fluid', 'summary', '', 1);
 INSERT INTO `project_template` VALUES (2, '软件开发', 1, '模板描述', '/dev/img/project_tpl/software.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"kanban\",\"mind\",\"gantt\",\"activity\",\"chart\",\"stat\"]', 0, 'fluid', 'issues', 'detail', 1);
 INSERT INTO `project_template` VALUES (3, 'Scrum敏捷开发', 1, '模板描述', '/dev/img/project_tpl/scrum.png', 0, NULL, NULL, NULL, 1, 1, 1, 'left', 'dark', 'blue', 0, 0, '[\"issues\",\"backlog\",\"sprints\",\"kanban\",\"mind\",\"chart\",\"stat\",\"activity\"]', 0, '', 'issues', '', 1);
 

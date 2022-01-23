@@ -756,6 +756,9 @@ class UserLogic
     public static function getLastCreateIssueData($userId ,$project)
     {
         $finalData = null;
+        if(empty($project)){
+            return  $finalData;
+        }
         if($project['is_remember_last_issue']==1){
             $lastCreateData = (new UserIssueLastCreateDataModel())->getData($userId, $project['id']);
             if(isset($lastCreateData['issue_data'])){

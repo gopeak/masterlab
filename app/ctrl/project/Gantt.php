@@ -211,10 +211,10 @@ class Gantt extends BaseUserCtrl
         $isDisplayBacklog = '0';
         if (isset($_POST['is_display_backlog']) && $_POST['is_display_backlog'] == '1') {
             $isDisplayBacklog = '1';
+
         }
-        if (isset($ganttSetting['is_display_backlog'])) {
-            $updateInfo['is_display_backlog'] = $isDisplayBacklog;
-        }
+        $updateInfo['is_display_backlog'] = $isDisplayBacklog;
+
         // 是否检查日期
         $isCheckDate = '0';
         if (isset($_POST['is_check_date']) && $_POST['is_check_date'] == '1') {
@@ -224,7 +224,6 @@ class Gantt extends BaseUserCtrl
         if (isset($ganttSetting['is_check_date'])) {
             $updateInfo['is_check_date'] = $isCheckDate;
         }
-
         // 隐藏的事项类型
         if (isset($_POST['hide_issue_types'])) {
             $hideIssueTypes = $_POST['hide_issue_types'];
@@ -245,7 +244,7 @@ class Gantt extends BaseUserCtrl
             }
             $updateInfo['work_dates'] = $workDatesJson;
         }
-
+        //print_r($updateInfo);
         list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
         if ($ret) {
             $model = new HolidayModel();
