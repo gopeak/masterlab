@@ -134,17 +134,20 @@ class WebhookSubscriber implements EventSubscriberInterface
             if (!in_array($this->currentFuc, $hookEventsArr)) {
                 continue;
             }
-            $filterProjectArr = json_decode($webhook['filter_project_json'], true);
-            if(!in_array('',$filterProjectArr)){
-                if($webhook['project_id'] && $filterProjectArr){
-                    if(!in_array($webhook['project_id'], $filterProjectArr)){
-                        //return [false, '此webhook忽略当前项目的事件'];
-                        continue;
+            if(isset($webhook['filter_project_json'])){
+                $filterProjectArr = json_decode($webhook['filter_project_json'], true);
+                if(!in_array('',$filterProjectArr)){
+                    if($webhook['project_id'] && $filterProjectArr){
+                        if(!in_array($webhook['project_id'], $filterProjectArr)){
+                            //return [false, '此webhook忽略当前项目的事件'];
+                            continue;
+                        }
                     }
                 }
             }
             $postData['secret_token'] = $webhook['secret_token'];
             $postData['timeout'] = $webhook['timeout'];
+            $postData['webhook_id'] = $webhook['id'];
             $postData['url'] = $webhook['url'];
             $postDataStr = http_build_query($postData);
             $logArr = [];

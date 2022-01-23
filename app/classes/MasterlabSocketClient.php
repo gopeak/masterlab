@@ -52,6 +52,9 @@ class MasterlabSocketClient
         if (isset($config['socket_connect_timeout']) && !empty($config['socket_connect_timeout'])) {
             $socketConnectTimeout = trimStr($config['socket_connect_timeout']);
         }
+        if (isset($config['socket_server_type']) && !empty($config['socket_server_type'])) {
+            //$socketType = trimStr($config['socket_server_type']);
+        }
         $fp = @fsockopen($socketHost, $socketPort, $errno, $errstr, $socketConnectTimeout);
         if (!$fp) {
             $err = 'fsockopen failed:' . mb_convert_encoding($errno . ' ' . $errstr, "UTF-8", "GBK");
