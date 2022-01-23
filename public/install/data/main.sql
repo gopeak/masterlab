@@ -1646,16 +1646,20 @@ CREATE TABLE `main_timeline` (
 --
 
 CREATE TABLE `main_webhook` (
-                                `id` int UNSIGNED NOT NULL,
-                                `name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `url` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `event_json` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `secret_token` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `enable` tinyint UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
-                                `timeout` tinyint UNSIGNED NOT NULL DEFAULT '10',
-                                `description` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                `hook_event_json` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '定义触发哪些事件'
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `event_json` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret_token` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `enable` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否启用',
+  `timeout` tinyint(3) UNSIGNED NOT NULL DEFAULT '10',
+  `description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hook_event_json` text COLLATE utf8mb4_unicode_ci COMMENT '定义触发哪些事件',
+  `filter_project_json` text COLLATE utf8mb4_unicode_ci COMMENT '过滤的事件'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 
 --
 -- 转存表中的数据 `main_webhook`
