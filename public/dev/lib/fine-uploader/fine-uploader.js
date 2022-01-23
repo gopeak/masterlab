@@ -6667,18 +6667,18 @@
                 enableTooltip: true
             },
             messages: {
-                tooManyFilesError: "You may only drop one file",
-                unsupportedBrowser: "Unrecoverable error - this browser does not permit file uploading of any kind."
+                tooManyFilesError: "只能拖动一个文件",
+                unsupportedBrowser: "不支持的文件类型."
             },
             retry: {
                 showAutoRetryNote: true,
-                autoRetryNote: "Retrying {retryNum}/{maxAuto}..."
+                autoRetryNote: "尝试中 {retryNum}/{maxAuto}..."
             },
             deleteFile: {
                 forceConfirm: false,
                 confirmMessage: "确定要删除 {filename} 吗??",
-                deletingStatusText: "Deleting...",
-                deletingFailedText: "Delete failed"
+                deletingStatusText: "删除...",
+                deletingFailedText: "删除失败"
             },
             display: {
                 fileSizeOnSubmit: false,
