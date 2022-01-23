@@ -232,6 +232,11 @@ var BoardSetting = (function () {
                 $(".list_for_default").bind("click", function () {
                     BoardSetting.prototype.setDefault($(this).data('id'));
                 });
+
+                $(".list_for_hide").bind("click", function () {
+                    BoardSetting.prototype.hided($(this).data('id'));
+                });
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -270,6 +275,28 @@ var BoardSetting = (function () {
             dataType: "json",
             async: true,
             url: root_url + 'agile/setBoardHide',
+            data: { id: board_id, project_id: project_id },
+            success: function (resp) {
+                auth_check(resp);
+                loading.closeAll();
+                notify_success(resp.msg);
+                BoardSetting.prototype.fetchBoards();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    BoardSetting.prototype.display = function (board_id) {
+        var params = { format: 'json' };
+        var project_id = window._cur_project_id;
+        //loading.show('#board_add_form', '正在处理');
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url + 'agile/setBoardDisplay',
             data: { id: board_id, project_id: project_id },
             success: function (resp) {
                 auth_check(resp);

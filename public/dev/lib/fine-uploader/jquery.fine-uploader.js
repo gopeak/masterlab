@@ -24,6 +24,18 @@
                         $(this).removeAttr('download');
                         viewVideo(src, ext);
                     }
+                    if (ext === 'pdf') {
+                        $(this).removeAttr('target')
+                        let name =  $(this).attr('href');
+                        //$(this).attr("href","javascript:;");
+                        let findNameEles = $(this).parent().parent().find("span[class='qq-upload-file-selector qq-upload-file']");
+                        console.log(findNameEles)
+                        if(findNameEles.length>0){
+                            name = $(findNameEles[0]).attr('title')
+                        }
+                        console.log(name)
+                        $(this).attr('download', name);
+                    }
                 }
             }
         });

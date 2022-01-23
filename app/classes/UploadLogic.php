@@ -180,7 +180,7 @@ class UploadLogic
                 mkdir($savePath);
             }
             //新文件名
-            $newFileName = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $fileExt;
+            $newFileName = md5(date("YmdHis") . '_' . rand(10000, 99999) ). '.' . $fileExt;
 
             //移动文件
             $filePath = $savePath . $newFileName;
