@@ -50,7 +50,7 @@ CREATE TABLE `agile_board` (
 -- 转存表中的数据 `agile_board`
 --
 
-INSERT INTO `agile_board` VALUES (2, '整个项目', 0, 'status', 0, 1, 99998, 'all', '', 1, NULL, 0);
+INSERT INTO `agile_board` VALUES (2, '整个项目', 0, 'status', 0, 1, 99998, 'all', '', 1, NULL, 0, 0);
 
 -- --------------------------------------------------------
 
