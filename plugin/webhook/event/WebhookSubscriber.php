@@ -147,6 +147,7 @@ class WebhookSubscriber implements EventSubscriberInterface
             }
             $postData['secret_token'] = $webhook['secret_token'];
             $postData['timeout'] = $webhook['timeout'];
+            $postData['webhook_id'] = $webhook['id'];
             $postData['url'] = $webhook['url'];
             $postDataStr = http_build_query($postData);
             $logArr = [];

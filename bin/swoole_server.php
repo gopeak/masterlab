@@ -75,7 +75,7 @@ $server->on('task', function ($serv, $task_id, $from_id, $data) {
         echo "Send mail started \n";
         sendMail($serv, $sendArr);
     }
-    if ($cmd == 'webhookpost') {
+    if ($cmd == 'webhookpost' || $cmd=='webhookhelper.post') {
         echo "webhook post  started \n";
         print_r($sendArr);
         webhookPost($serv, $sendArr);
@@ -359,10 +359,10 @@ function webhookPost($serv ,$sendArr)
     $pushArr['webhook_id'] = (int)$sendArr['webhook_id'];
     $pushArr['event_name'] = $sendArr['event_name'];
     $pushArr['url'] = $sendArr['url'];
-    $pushArr['data'] = $sendArr['data'];;
+    $pushArr['data'] = json_encode($sendArr['json']);
     $pushArr['status'] = WebHookLogModel::STATUS_READY;
     $pushArr['time'] = time();
-    $pushArr['user_id'] =  (int)$sendArr['user_id'];
+    $pushArr['user_id'] =  (int)$sendArr['current_user_id'];
     $pushArr['err_msg'] = '';
     // 0准备;1执行成功;2队列中;3出队列后执行失败
     $webhooklogModel = new WebHookLogModel();
@@ -375,10 +375,19 @@ function webhookPost($serv ,$sendArr)
     } else {
         $pushArr['log_id'] = 0;
     }
+    $dataArr = $sendArr;
+    $timeout =  $dataArr['timeout'];
+    $logId  = (int)$dataArr['log_id'];
+    unset($dataArr['url'], $dataArr['timeout'],$dataArr['log_id']);
+    foreach ($dataArr as  $key => $item) {
+        if(!is_string($item)){
+            $dataArr[$key] = json_encode($item);
+        }
+    }
     $ch = curl_init($pushArr['url']);
     curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,  $pushArr['data'] );
-    curl_setopt($ch, CURLOPT_TIMEOUT,  20);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,  $dataArr );
+    curl_setopt($ch, CURLOPT_TIMEOUT,  $timeout);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $body = curl_exec($ch);
     //echo $body;
