@@ -154,11 +154,16 @@ class AgileLogic
             $boards[] = $userBoard;
         }
         $i = 0;
+        $filterBoards = [];
         foreach ($boards as &$board) {
+            if($board['is_hide']=='1'){
+                continue;
+            }
             $i++;
             $board['i'] = $i;
+            $filterBoards[] = $board;
         }
-        return $boards;
+        return $filterBoards;
     }
 
 

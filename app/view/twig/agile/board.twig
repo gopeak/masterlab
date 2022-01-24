@@ -221,7 +221,7 @@
             <td>{{weight}}</td>
             <td>
                 {{#if_eq range_type 'all'}}
-                     {{#if_eq sprint_id  0}}系统内置{{/if_eq}}
+                     {{#if_eq is_system  1}} {{#if_eq sprint_id  0}}系统内置{{/if_eq}} {{/if_eq}}
                 {{^}}
                     <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  style="color:blue"  data-id="{{id}}">
                         <i class="fa fa-pencil-square-o"></i>
