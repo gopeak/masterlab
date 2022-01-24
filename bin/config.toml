@@ -18,7 +18,7 @@ single_mode	=	true
     auth_cmds = ["Auth","Authorize"]
 
 [mysql]
-    database 	=	"masterlab33"
+    database 	=	"masterlab_dev"
     host        =   "localhost"
     port		=	"3306"
     user 		= 	"root"
