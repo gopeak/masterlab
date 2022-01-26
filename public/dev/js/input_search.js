@@ -265,7 +265,6 @@ var InputSearch = (function () {
         _currentSearchesArr = searchKeysArr;
         _currentSearchesParams = searchParams;
         _currentSearchesStr = $.trim(tempData);
-
         return _currentSearchesStr;
     };
 
@@ -330,7 +329,10 @@ var InputSearch = (function () {
             }
             html += '</li>';
         });
-
+        console.log(urls)
+        if(window.urls.searchObject['search']){
+            $('#filtered-search-issues').val(decodeURIComponent(window.urls.searchObject['search']));
+        }
         $(".tokens-container .input-token").before(html);
     };
 
@@ -430,7 +432,6 @@ var InputSearch = (function () {
             var name = $(this).find(".name").text();
             var value = $(this).find(".value").text();
             var operator = $(this).find(".operator").text();
-
             _options.forEach(function (n) {
                 if (n.key === name) {
                     value = value.replace(n.symbol, "");
@@ -442,6 +443,10 @@ var InputSearch = (function () {
                 searches[name] = value;
             }
         });
+        let input_search_value = $.trim($('#filtered-search-issues').val());
+        if(input_search_value!=''){
+            searches['search'] = input_search_value;
+        }
         var url = "?";
         var count = 0;
 
@@ -485,7 +490,6 @@ var InputSearch = (function () {
 
             html += tempHtml;
         });
-
         return html;
     };
 
@@ -501,7 +505,6 @@ var InputSearch = (function () {
                 tempData.push(n);
             }
         });
-
         self.setDropdownData(tempData, "operator");
     };
 
