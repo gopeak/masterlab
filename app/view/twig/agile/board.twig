@@ -220,30 +220,33 @@
             <a class="btn btn-transparent btn-action list_for_default " style="color:blue" title="设置默认"  href="javascript:void(0);"  data-id="{{id}}">设置</a>{{/if_eq}}</td>
             <td>{{weight}}</td>
             <td>
-                {{#if_eq range_type 'all'}}
-                     {{#if_eq is_system  1}} {{#if_eq sprint_id  0}}系统内置{{/if_eq}} {{/if_eq}}
-                {{^}}
-                    <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  style="color:blue"  data-id="{{id}}">
-                        <i class="fa fa-pencil-square-o"></i>
-                    </a>
-                     {{#if_eq is_hide '1'}}
-                     <a class="btn btn-transparent btn-action list_for_display" title="显示看板"    style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
-                            <i class="fa fa-eye"></i>
-                     </a>
-                    {{^}}
-                    <a class="btn btn-transparent btn-action list_for_hide" title="隐藏看板"    style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
-                            <i class="fa fa-ban"></i>
-                    </a>
-                    {{/if_eq}}
-                    {{#if_eq is_system  0}}
+            {{#if_eq is_system  1}}
+                     {{#if_eq range_type 'all'}} {{#if_eq sprint_id  0}}内置{{/if_eq}} {{/if_eq}}
+                {{/if_eq}}
+             {{#if_eq is_system  1}} {{#if_eq range_type 'sprint'}} 迭 代{{/if_eq}} {{/if_eq}}
+             {{#if_eq is_system  0}}  自定义 {{/if_eq}}
+            </td>
 
-                        <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"    style="color:red" data-id="{{id}}"  href="javascript:void(0)">
-                            <i class="fa fa-trash-o"></i>
-                        </a>
-                    {{/if_eq}}
+            <td>
+                 <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  style="color:blue"  data-id="{{id}}">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+                 {{#if_eq is_hide '1'}}
+                 <a class="btn btn-transparent btn-action list_for_display" title="显示看板"    style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
+                        <i class="fa fa-eye"></i>
+                 </a>
+                {{^}}
+                <a class="btn btn-transparent btn-action list_for_hide" title="隐藏看板"    style="color:blue" data-id="{{id}}"  href="javascript:void(0)">
+                        <i class="fa fa-ban"></i>
+                </a>
                 {{/if_eq}}
 
-
+                {{#if_eq is_system  1}}
+                {{^}}
+                    <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"    style="color:red" data-id="{{id}}"  href="javascript:void(0)">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                {{/if_eq}}
             </td>
       </tr>
     {{/boards}}
@@ -293,6 +296,7 @@
                                             <th>数据范围</th>
                                             <th>是否默认</th>
                                             <th>排序权重</th>
+                                            <th>来源</th>
                                             <th>操作</th>
                                         </tr>
                                         </thead>

@@ -784,7 +784,6 @@
                         }
                     });
 
-
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
                     });
@@ -808,7 +807,6 @@
                         IssueMain.prototype.saveUserIssueDisplayFields();
                     });
 
-
                     $('.btn_batch_update').bind('click', function () {
                         var field = $(this).data('field');
                         var value = $(this).data('id');
@@ -831,6 +829,7 @@
                             let key = decodeURIComponent(i);
                             searchObj[key] = decodeURIComponent(urls.searchObject[i]);
                         }
+
                         var field = $(this).data('field');
                         $('#btn-sort_field').data('sort_field', field)
                         var sortby = $('#btn_sort_by').data('sortby');
@@ -840,6 +839,7 @@
 
                         url = root_url + urls.pathname.substr(1) + '?' + parseParam(searchObj);
                         console.log(url);
+                        console.log(searchObj);
                         window.location.href = url;
                     });
 
@@ -1128,7 +1128,6 @@
                     });
                     */
                     // 右侧详情上下事项切换
-
 
                     /*详情页的ajax*/
                     $('#save_filter-btn').qtip({
