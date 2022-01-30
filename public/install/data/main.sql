@@ -3507,11 +3507,7 @@ INSERT INTO `workflow_scheme_data` (`id`, `scheme_id`, `issue_type_id`, `workflo
 --
 -- 表的索引 `agile_board`
 --
-ALTER TABLE `agile_board`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `project_id` (`project_id`),
-    ADD KEY `weight` (`weight`),
-    ADD KEY `test` (`name`) USING BTREE;
+
 
 --
 -- 表的索引 `agile_board_column`
