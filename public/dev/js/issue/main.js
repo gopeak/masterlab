@@ -621,22 +621,22 @@ var IssueMain = (function () {
                 $('#create_master_title').html($(this).data('title'));
             });
 
-
             $(".issue_convert_child_href").bind("click", function () {
                 IssueMain.prototype.displayConvertChild($(this).data('issue_id'));
             });
-
             $(".issue_backlog_href").bind("click", function () {
                 IssueMain.prototype.joinBacklog($(this).data('issue_id'));
             });
-
             $(".issue_sprint_href").bind("click", function () {
                 IssueMain.prototype.displayJoinSprint($(this).data('issue_id'));
             });
-
             $(".issue_delete_href").bind("click", function () {
                 IssueMain.prototype.delete($(this).data('issue_id'));
             });
+            $(".issue_cancel_href").bind("click", function () {
+                IssueMain.prototype.removeChild($(this).data('issue_id'));
+            });
+
             $("time").each(function (i, el) {
                 var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                 $(el).html(t)
@@ -1433,7 +1433,7 @@ var IssueMain = (function () {
             }
             columns.push( column)
         }
-        let  columnOpt = {field: 'operate',  title: '操 作',  align: 'center',events : operateEvents, formatter:  function (value, row, index) {
+        let  columnOpt = {field: 'operate', class:"min_width_100",  title: '操 作',  align: 'center',events : operateEvents, formatter:  function (value, row, index) {
                 let html = '';
                 html += '<span class="summary_children">';
                 html += IssueMain.prototype.getTreeOptHtml(row)
@@ -1509,14 +1509,20 @@ var IssueMain = (function () {
     IssueMain.prototype.getTreeOptHtml = function (row) {
         let html = '';
         if(window._is_admin|| isInArray(window._projectPermArr,'CREATE_ISSUES')){
-            html += '<a title="添加子任务" id="i-add-children-'+row.id+'" href="#" class="RoleOfadd issue_create_child" style="margin-left:5px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-plus" ></i></a>';
+            html += '<a title="添加子任务" id="i-add-children-'+row.id+'" href="#" class="RoleOfadd issue_create_child" style="margin-left:5px;"  data-issue_id="'+row.id+'"  ><i class="fa fa-plus" ></i></a>';
         }
         if(window._is_admin|| isInArray(window._projectPermArr,'EDIT_ISSUES')){
-            html += '<a title="编辑事项" href="#" class="RoleOfedit issue_edit_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-pencil-square-o" ></i></a>';
+            html += '<a title="编辑事项" href="#" class="RoleOfedit issue_edit_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" ><i class="fa fa-pencil-square-o" ></i></a>';
         }
         if(window._is_admin|| isInArray(window._projectPermArr,'DELETE_ISSUES')){
-            html += '<a  title="删除事项"  href="#" class="RoleOfdelete issue_delete_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-trash-o" ></i></a>';
+            html += '<a  title="删除事项"  href="#" class="RoleOfdelete issue_delete_href" style="margin-left:4px;"  data-issue_id="'+row.id+'"  ><i class="fa fa-trash-o" ></i></a>';
         }
+        if(row.master_id!="0"){
+            if(window._is_admin|| isInArray(window._projectPermArr,'EDIT_ISSUES')){
+                html += '<a  title="取消子任务"  href="#" class="issue_cancel_href" style="margin-left:4px;"  data-issue_id="'+row.id+'"   ><i class="fa fa-reply" ></i></a>';
+            }
+        }
+
         return html;
     }
     IssueMain.prototype.displayConvertChild = function (issue_id) {
@@ -1555,6 +1561,32 @@ var IssueMain = (function () {
                 }
                 notify_success('操作成功');
                 window.location.reload();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    IssueMain.prototype.removeChild = function (issue_id) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/removeChild",
+            data: { issue_id: issue_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('操作失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+
+                setTimeout(function(){
+                    window.location.reload();
+                }, 600)
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
