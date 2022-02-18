@@ -55,7 +55,21 @@
     position: relative;">
                     <div class="content" id="content-body">
 
-                        <h3 class="page-title"><?=tpl.name?>--配置</h3>
+                       <div class="top-area"><form id="filter_form" action="" onsubmit="return false" accept-charset="UTF-8" method="get">
+
+                            <ul class="nav-links">
+                                <li id="state-all" class="li_plugin_range state_li active" data-range="all">
+                                    <h3 class="page-title"><?=tpl.name?>--配置 </h3>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    <a  href="/admin/project_tpl" class="blue" role="button">返回</a>
+                                </div>
+                            </div>
+                        </form>
+                       </div>
+                        <p></p>
                         <p><?=tpl.description?></p>
 
                         <div class="row has-side-margin-left">

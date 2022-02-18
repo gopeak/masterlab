@@ -227,8 +227,11 @@ var PluginTemplate = (function() {
             success: function (resp) {
                 auth_check(resp);
                 if( resp.ret ==='200'  ){
-                    alert('保存成功,跳转下一页');
-                    window.location.href = '/admin/project_tpl/edit?id='+resp.data;
+                    notify_success('保存成功,跳转下一页');
+                    setTimeout(function(){
+                        window.location.href = '/admin/project_tpl/edit?id='+resp.data;
+                    }, 600);
+
                 }else{
                     notify_error( resp.msg ,resp.data);
                 }
@@ -253,7 +256,10 @@ var PluginTemplate = (function() {
             success: function (resp) {
                 auth_check(resp);
                 if( resp.ret ==='200'  ){
-                    //window.location.reload();
+                    notify_success('操作成功');
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 600);
                 }else{
                     notify_error( resp.msg );
                 }
@@ -277,7 +283,10 @@ var PluginTemplate = (function() {
             success: function (resp) {
                 auth_check(resp);
                 if( resp.ret ==='200'  ){
-                    window.location.reload();
+                    notify_success('操作成功');
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 600);
                 }else{
                     notify_error( resp.msg );
                 }
@@ -325,9 +334,13 @@ var PluginTemplate = (function() {
             url: _options.delete_url,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
                 if( resp.ret ==='200'  ){
-                    window.location.reload();
+                    notify_success('操作成功');
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 600);
+                }else{
+                    notify_error( resp.msg );
                 }
             },
             error: function (res) {

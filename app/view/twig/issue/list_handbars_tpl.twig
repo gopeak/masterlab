@@ -239,18 +239,15 @@
                                     {% endfor %}
                                     {% verbatim %}
 
-									<td class="pipeline-actions width_4">
+									<td class="pipeline-actions   min_width_60">
 										<div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
-
 											<div class="js-notification-toggle-btns">
 												<div class="">
-													<a class="dropdown-new  notifications-btn " style="color: #8b8f94;" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">
-														...
-														<i class="fa fa-caret-down"></i>
+													<a class="dropdown-new  notifications-btn " style="color: #8b8f94;" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown"  type="button" aria-expanded="false">
+														...<i class="fa fa-caret-down"></i>
 													</a>
 
 													<ul class="dropdown dropdown-menu dropdown-menu-no-wrap dropdown-menu-selectable" style="left:-120px;width:160px;min-width:140px; ">
-
 														<li class="aui-list-item active">
 															<a href="javascript:;" class="issue_edit_href" data-issue_id="{{id}}">编辑</a>
 														</li>
@@ -274,12 +271,20 @@
 																<a href="javascript:;" class="issue_convert_child_href" data-issue_id="{{id}}" data-issuekey="{{issue_num}}">转换为子任务</a>
 															</li>
 														{{/if_eq}}
-
+														{{#if_eq is_followed 2 }}
+															<li class="aui-list-item">
+																<a href="javascript:;" class="issue_follow_href" data-issue_id="{{id}}" data-issuekey="{{issue_num}}">关注</a>
+															</li>
+														{{else}}
+															<li class="aui-list-item ">
+																<a href="javascript:;" class="issue_unfollow_href" data-issue_id="{{id}}" data-issuekey="{{issue_num}}">取消关注</a>
+															</li>
+														{{/if_eq}}
                                                          {% endverbatim %}
 
                                                         {% if (projectPermArr['DELETE_ISSUES'] is defined) %}
                                                             <li class="aui-list-item">
-                                                                {% verbatim %}<a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"  data-issuekey="{{issue_num}}">删除</a>{% endverbatim %}
+                                                                {% verbatim %}<a href="javascript:;" style="color: red" class="issue_delete_href" data-issue_id="{{id}}"  data-issuekey="{{issue_num}}">删除</a>{% endverbatim %}
                                                             </li>
                                                         {% endif %}
 
