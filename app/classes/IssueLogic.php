@@ -69,6 +69,7 @@ class IssueLogic
         'master_id' => '是否父任务',
         'created' => '创建时间',
         'updated' => '最后修改时间',
+		'description' => '描述',
     ];
     /**
      * 默认显示的字段

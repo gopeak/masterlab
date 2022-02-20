@@ -1236,12 +1236,14 @@ var IssueMain = (function () {
                 }
             },
         ];
-
-        let column = {field: 'issue_num',  title: '编 号',  class: 'cursor_move', sortable: true,  align: 'left', formatter:  function (value, row, index) {
-                return '#'+value
-            }
-        }
-        columns.push( column)
+  
+        if(isInArray(resp.data.display_fields,'issue_num')){
+                let column = {field: 'issue_num',  title: '编 号', sortable: true,  align: 'left', formatter:  function (value, row, index) {
+                        return '#'+value
+                    }
+                }
+                columns.push( column)
+         }
 
         if(isInArray(resp.data.display_fields,'issue_type')){
             let column = {field: 'issue_type',  title: '类 型', sortable: true,  align: 'center', formatter:  function (value, row, index) {
@@ -1446,6 +1448,45 @@ var IssueMain = (function () {
             }
             columns.push( column)
         }
+		
+		if(isInArray(resp.data.display_fields,'description')){
+			let column = {field: 'description',  title: '描 述', sortable: true,  align: 'left', formatter:  function (value, row, index) {
+					let html = '<div id="xxx" class="description description-view markdown-body editormd-html-preview">' +  marked.parse(value) + '</div>';
+				   // html += '<script>editormd.markdownToHTML("description-view", {markdown:';
+					//html += value + '});</script>';
+					return html;
+				}
+			}
+			columns.push( column)
+		}
+			var customFileds=resp.data.custom_fields;
+			for(var i in customFileds)
+			{
+ 
+			console.log(customFileds[i].name + " " + customFileds[i].title);
+
+				if(isInArray(resp.data.display_fields,customFileds[i].name))
+				{
+					let column = {field: customFileds[i].name,  title: customFileds[i].title, sortable: true,  align: 'left', formatter:  function (value, row, index) 
+						{
+							if(customFileds[i].type=='MARKDOWN')
+							{
+								let html = '<div id="xxx" class="description description-view markdown-body editormd-html-preview">' +  marked.parse(value) + '</div>';
+							   // html += '<script>editormd.markdownToHTML("description-view", {markdown:';
+								//html += value + '});</script>';
+								return html;
+							}
+							else
+								return value;
+						}
+					}
+					columns.push( column);
+				}
+			}
+ 
+
+
+
         let  columnOpt = {field: 'operate', class:"min_width_80",  title: '操 作',  align: 'center',events : operateEvents, formatter:  function (value, row, index) {
                 let html = '';
                 html += '<span class="summary_children">';
@@ -1464,6 +1505,7 @@ var IssueMain = (function () {
                 // bootstrap-table-treegrid.js 插件配置 -- start
                 //在哪一列展开树形
                 treeShowField: 'summary',
+
                 //指定父id列
                 parentIdField: 'master_id',
                 onResetView: function(data) {
@@ -1472,8 +1514,8 @@ var IssueMain = (function () {
                         initialState: 'expanded',// 所有节点都折叠  collapsed | expanded
                         // initialState: 'expanded',// 所有节点都展开，默认展开
                         treeColumn: 1,
-                        // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
-                        // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                        //expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
+                        //expanderCollapsedClass: 'glyphicon glyphicon-plus',
                         onChange: function() {
                             $tree_table.bootstrapTable('resetWidth');
                         }
