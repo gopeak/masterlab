@@ -794,11 +794,13 @@ class IssueFilterLogic
         $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
             status,created,updated,sprint,master_id,start_date,due_date';
         $rows = $model->getRows($fields, $conditions, $appendSql);
+
         foreach ($rows as &$row) {
             self::formatIssue($row);
         }
-        $count = $model->getField('count(*) as cc', $conditions);
-        return [$rows, $count];
+        $sqlCount = "Select count(*) as cc From {$model->getTable()} Where  " . self::getUnDoneSql() . " AND assignee=:assignee ";
+        $count = $model->getFieldBySql($sqlCount, $conditions);
+        return [$rows, (int)$count];
     }
 
     /**

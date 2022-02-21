@@ -196,7 +196,7 @@ class Widget extends BaseUserCtrl
     public function fetchAssigneeIssues()
     {
         $curUserId = UserAuth::getId();
-        $pageSize = 10;
+        $pageSize = 20;
         $page = 1;
         list($data['issues'], $total) = IssueFilterLogic::getsByAssignee($curUserId, $page, $pageSize);
         $data['total'] = $total;
@@ -213,7 +213,7 @@ class Widget extends BaseUserCtrl
     public function fetchUnResolveAssigneeIssues()
     {
         $curUserId = UserAuth::getId();
-        $pageSize = 10;
+        $pageSize = 20;
         $page = 1;
         list($data['issues'], $total) = IssueFilterLogic::getsByUnResolveAssignee($curUserId, $page, $pageSize);
         $data['total'] = $total;
