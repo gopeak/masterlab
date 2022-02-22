@@ -727,6 +727,15 @@ class Main extends BaseUserCtrl
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
+            $followRows = (new IssueFollowModel())->getItemsByUserId(UserAuth::getId());
+            $followIssueIdArr = array_column($followRows,'issue_id' );
+            unset($followRows);
+            foreach ($data['issues'] as &$issue) {
+                $issue['is_followed'] = 2;
+                if(in_array($issue['id'], $followIssueIdArr)){
+                    $issue['is_followed'] = 1;
+                }
+            }
             $this->response($data, $total, $page, $pageSize);
         } else {
             $this->ajaxFailed('failed', $data['issues']);

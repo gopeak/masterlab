@@ -621,22 +621,29 @@ var IssueMain = (function () {
                 $('#create_master_title').html($(this).data('title'));
             });
 
-
             $(".issue_convert_child_href").bind("click", function () {
                 IssueMain.prototype.displayConvertChild($(this).data('issue_id'));
             });
-
             $(".issue_backlog_href").bind("click", function () {
                 IssueMain.prototype.joinBacklog($(this).data('issue_id'));
             });
-
             $(".issue_sprint_href").bind("click", function () {
                 IssueMain.prototype.displayJoinSprint($(this).data('issue_id'));
             });
-
             $(".issue_delete_href").bind("click", function () {
                 IssueMain.prototype.delete($(this).data('issue_id'));
             });
+            $(".issue_cancel_href").bind("click", function () {
+                IssueMain.prototype.removeChild($(this).data('issue_id'));
+            });
+            // issue_follow_href
+            $(".issue_follow_href").bind("click", function () {
+                IssueMain.prototype.follow($(this).data('issue_id'), 'follow');
+            });
+            $(".issue_unfollow_href").bind("click", function () {
+                IssueMain.prototype.follow($(this).data('issue_id'), 'un_follow');
+            });
+
             $("time").each(function (i, el) {
                 var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                 $(el).html(t)
@@ -1433,7 +1440,7 @@ var IssueMain = (function () {
             }
             columns.push( column)
         }
-        let  columnOpt = {field: 'operate',  title: '操 作',  align: 'center',events : operateEvents, formatter:  function (value, row, index) {
+        let  columnOpt = {field: 'operate', class:"min_width_80",  title: '操 作',  align: 'center',events : operateEvents, formatter:  function (value, row, index) {
                 let html = '';
                 html += '<span class="summary_children">';
                 html += IssueMain.prototype.getTreeOptHtml(row)
@@ -1509,14 +1516,49 @@ var IssueMain = (function () {
     IssueMain.prototype.getTreeOptHtml = function (row) {
         let html = '';
         if(window._is_admin|| isInArray(window._projectPermArr,'CREATE_ISSUES')){
-            html += '<a title="添加子任务" id="i-add-children-'+row.id+'" href="#" class="RoleOfadd issue_create_child" style="margin-left:5px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-plus" ></i></a>';
+            html += '<a title="添加子任务" id="i-add-children-'+row.id+'" href="#" class="RoleOfadd issue_create_child" style="margin-left:5px;"  data-issue_id="'+row.id+'"  ><i class="fa fa-plus" ></i></a>';
         }
         if(window._is_admin|| isInArray(window._projectPermArr,'EDIT_ISSUES')){
-            html += '<a title="编辑事项" href="#" class="RoleOfedit issue_edit_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-pencil-square-o" ></i></a>';
+            html += '<a title="编辑事项" href="#" class="RoleOfedit issue_edit_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" ><i class="fa fa-pencil-square-o" ></i></a>';
+        }
+        html += '<div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">';
+        html += '<div class="js-notification-toggle-btns">';
+        html += '<div class="">';
+        html += '<a class="dropdown-new  notifications-btn " style="margin-left:4px;" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown"  type="button" aria-expanded="false">';
+        html += '...';
+        html += '</a>';
+        html += '<ul class="dropdown dropdown-menu dropdown-menu-no-wrap dropdown-menu-selectable" style="left:-120px;width:160px;min-width:140px; ">';
+        if(window._is_admin || isInArray(window._projectPermArr,'CREATE_ISSUES')) {
+            html += '<li class="aui-list-item"><a href="javascript:;" class="issue_copy_href"  data-issue_id="'+row.id+'"  >复制</a></li>';
+        }
+        if(row.master_id!="0"){
+            if(window._is_admin || isInArray(window._projectPermArr,'EDIT_ISSUES')){
+                html += '<li class="aui-list-item"><a href="javascript:;" class="issue_cancel_href"   title="取消子任务"  data-issue_id="'+row.id+'" >取消子任务</a></li>';
+            }
+        }
+
+        if(window._is_admin || isInArray(window._projectPermArr,'EDIT_ISSUES')){
+            html += '<li class="aui-list-item"><a href="javascript:;" class="issue_convert_child_href"   title="转为子任务"  data-issue_id="'+row.id+'" >转为子任务</a></li>';
+        }
+
+        if(window._is_admin || isInArray(window._projectPermArr,'EDIT_ISSUES')) {
+            if (row.sprint == '0') {
+                html += '<li class="aui-list-item"><a href="javascript:;"  title="添加到迭代"  class="issue_sprint_href" data-issue_id="' + row.id + '" >添加到迭代</a></li>';
+            } else {
+                html += '<li class="aui-list-item"><a href="javascript:;"  title="转换为待办事项"  class="issue_backlog_href" data-issue_id="' + row.id + '" >转换为待办事项</a></li>';
+            }
+        }
+        if(row.is_followed==2){
+            html += '<li class="aui-list-item"><a href="javascript:;"  title="关注"  class="issue_follow_href" data-issue_id="'+row.id+'" >关注</a></li>';
+        }else{
+            html += '<li class="aui-list-item"><a href="javascript:;"  title="取消关注"  class="issue_unfollow_href" data-issue_id="'+row.id+'" >取消关注</a></li>';
         }
         if(window._is_admin|| isInArray(window._projectPermArr,'DELETE_ISSUES')){
-            html += '<a  title="删除事项"  href="#" class="RoleOfdelete issue_delete_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'"><i class="fa fa-trash-o" ></i></a>';
+            html += '<li class="aui-list-item"><a href="javascript:;" class="issue_delete_href"  style="color:red"  title="删除事项"  data-issue_id="'+row.id+'" >删除</a></li>';
         }
+        html += '</ul>';
+        html += '</div></div></div>';
+
         return html;
     }
     IssueMain.prototype.displayConvertChild = function (issue_id) {
@@ -1561,6 +1603,57 @@ var IssueMain = (function () {
             }
         });
     };
+
+    IssueMain.prototype.removeChild = function (issue_id) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/removeChild",
+            data: { issue_id: issue_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('操作失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+                setTimeout(function(){
+                    window.location.reload();
+                }, 600);
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    IssueMain.prototype.follow = function (issue_id, follow_action) {
+
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/" + follow_action,
+            data: { issue_id: issue_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret == '200') {
+                    notify_success('操作成功');
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 600);
+                } else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
 
     IssueMain.prototype.fetchChildren = function (issue_id, display_id) {
         loading.show('#' + display_id);
