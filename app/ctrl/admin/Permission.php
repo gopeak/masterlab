@@ -346,8 +346,8 @@ class Permission extends BaseAdminCtrl
     public function globalPermissionRoleDelete()
     {
         $globalRoleId = null;
-        if (isset($_GET['role_id'])) {
-            $globalRoleId = (int)$_GET['role_id'];
+        if (isset($_POST['role_id'])) {
+            $globalRoleId = (int)$_POST['role_id'];
         }
         if (!$globalRoleId) {
             $this->ajaxFailed('参数错误', 'ID不能为空');
@@ -368,11 +368,12 @@ class Permission extends BaseAdminCtrl
 
         $globalPermRoleRelationModel = new PermissionGlobalRoleRelationModel();
         $globalPermUserRoleModel = new PermissionGlobalUserRoleModel();
-        if ($model->deleteById($globalRoleId)
-            && $globalPermRoleRelationModel->deleteByRoleId($globalRoleId)
-            && $globalPermUserRoleModel->deleteByRoleId($globalRoleId)) {
+        $ret = $model->deleteById($globalRoleId);
+        if ( $ret ) {
+            $globalPermRoleRelationModel->deleteByRoleId($globalRoleId);
+            $globalPermUserRoleModel->deleteByRoleId($globalRoleId);
             $model->db->commit();
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $model->db->rollBack();
             $this->ajaxFailed('服务器错误', '删除角色失败');
@@ -454,7 +455,7 @@ class Permission extends BaseAdminCtrl
         $data['role_users'] = $model->getsRoleId($roleId);
 
         unset($model);
-        $this->ajaxSuccess('ok', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 
     /**

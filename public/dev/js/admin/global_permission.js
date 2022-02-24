@@ -52,9 +52,8 @@ function deleteGlobalPermRoleUser(id, user_id, role_id)
         return false;
     }
     console.log($("li[data-user-id='0'] a")[0]);
-    let method = 'POST';
     $.ajax({
-        type: method,
+        type: 'post',
         dataType: "json",
         data: {id: id, user_id: user_id, role_id: role_id},
         url: "/admin/permission/deleteGlobalPermRoleUser",
@@ -129,10 +128,9 @@ var GlobalPermission = (function () {
             return false;
         }
 
-        var ajaxUrl = "/admin/permission/global_permission_role_delete?role_id=" + global_role_id;
-        var method = 'GET';
+        var ajaxUrl = "/admin/permission/globalPermissionRoleDelete" ;
         $.ajax({
-            type: method,
+            type: 'post',
             dataType: "json",
             data: {role_id: global_role_id},
             url: ajaxUrl,
