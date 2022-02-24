@@ -734,6 +734,7 @@ var IssueMain = (function () {
                 $(document).on("click", function () {
                     list_box.slideUp(100);
                 });
+
                 return false;
             });
             
@@ -978,6 +979,8 @@ var IssueMain = (function () {
     };
     IssueMain.prototype.treeBindEvent = function () {
 
+        IssueMain.prototype.bindDragTable();
+
         $(".span-labels_edit").bind("click", function () {
             let $self = $(this);
             let issue_id_arr = $self.data('issue_id_arr').split(',');
@@ -1201,7 +1204,7 @@ var IssueMain = (function () {
     }
     IssueMain.prototype.renderTreeTable = function (resp) {
         var columns = [
-            { field: 'check',  checkbox: true, formatter: function (value, row, index) {
+            { field: 'check', title:'可拖拽到其他事项中',  checkbox: true, class: 'cursor_move', formatter: function (value, row, index) {
                     if (row.check == true) {
                         // console.log(row.serverName);
                         //设置选中
@@ -1209,10 +1212,13 @@ var IssueMain = (function () {
                     }
                 }
             },
-            {field: 'summary',  title: '标 题' , class:"min_width_300",  formatter:  function (value, row, index) {
+            {field: 'summary',  title: '可拖拽到其他事项中' , class:"min_width_300 cursor_move",  formatter:  function (value, row, index) {
                     let html = '<a  href="javascript:linkIssue('+row.id+')"   class="commit-row-message" >';
                     html += lightSearch(value, row.search);
                     html += '</a>';
+                    html += '<input type="hidden" name="tree_summary" value="'+value+'" />';
+
+                    html += '<input type="hidden" name="tree_master_id" value="'+row.master_id+'" />';
                     if(row.warning_delay =='1'){
                         html += '<span style="color:#fc9403;margin-left: 4px" title="即将延期">即将延期</span>';
                     }
@@ -1231,7 +1237,7 @@ var IssueMain = (function () {
             },
         ];
 
-        let column = {field: 'issue_num',  title: '编 号', sortable: true,  align: 'left', formatter:  function (value, row, index) {
+        let column = {field: 'issue_num',  title: '编 号',  class: 'cursor_move', sortable: true,  align: 'left', formatter:  function (value, row, index) {
                 return '#'+value
             }
         }
@@ -1516,7 +1522,7 @@ var IssueMain = (function () {
     IssueMain.prototype.getTreeOptHtml = function (row) {
         let html = '';
         if(window._is_admin|| isInArray(window._projectPermArr,'CREATE_ISSUES')){
-            html += '<a title="添加子任务" id="i-add-children-'+row.id+'" href="#" class="RoleOfadd issue_create_child" style="margin-left:5px;"  data-issue_id="'+row.id+'"  ><i class="fa fa-plus" ></i></a>';
+            html += '<a title="添加子任务" id="i-add-children-'+row.id+'" href="#" class="RoleOfadd issue_create_child" style="margin-left:5px;"  data-issue_id="'+row.id+'" data-title="'+row.summary+'" data-issuekey="'+row.issue_num+'" ><i class="fa fa-plus" ></i></a>';
         }
         if(window._is_admin|| isInArray(window._projectPermArr,'EDIT_ISSUES')){
             html += '<a title="编辑事项" href="#" class="RoleOfedit issue_edit_href" style="margin-left:4px;"  data-issue_id="'+row.id+'" ><i class="fa fa-pencil-square-o" ></i></a>';
@@ -1561,6 +1567,132 @@ var IssueMain = (function () {
 
         return html;
     }
+
+    IssueMain.prototype.bindDragTable = function () {
+
+        //点击时赋值
+        $("#tree_table tr").mousedown(function (e) {
+            //根节点不允许拖动
+            if ($(this).find("[name='btSelectItem']").val() !== "0") {
+                dragElem = this;
+                clickFlag = true;
+            }
+        })
+        //松开鼠标开始处理事件
+        $("#tree_table tr").mouseup(function (e) {
+            clickFlag = false;
+            dragFlag = false;
+            //当松开时存在拖拽元素及选中元素时开始一系列操作
+            if (dragElem && selectedElem) {
+                console.log(dragElem)
+                var categoryName = $(dragElem).find("[name='tree_summary']").val();
+                var targetCategoryName = $(selectedElem).find("[name='tree_summary']").val();
+                var pId = $(dragElem).find("[name='master_id']").val();
+                var selectedId = $(dragElem).find("[name='btSelectItem']").val();
+                var targetId = $(selectedElem).find("[name='btSelectItem']").val();
+                // console.log(categoryName, targetCategoryName, selectedId, targetId);
+                $(selectedElem).css("border", "2px dotted rgb(194, 200, 204)");
+                $(selectedElem).css("background", "rgba(252, 252, 252, 1)");
+                if (pId === targetId) {
+                    //如果当前父ID跟选中节点ID相同，视为无效操作
+                    $(dragElem).css("position", "unset");
+                    $(dragElem).css("background", "unset");
+                    // $(selectedElem).css("color", "#676a6c");
+                    dragElem = undefined;
+                    selectedElem = undefined;
+                } else {
+                    swal({
+                            title: "是否把【"+categoryName+"】切换至【"+targetCategoryName+"】下面",
+                            text: "你将无法恢复它",
+                            html: true,
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "确 定",
+                            cancelButtonText: "取 消！",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                $(selectedElem).css("border", "1px solid  rgb(240, 240, 240)");
+                                $(selectedElem).css("background", "unset)");
+                                $(dragElem).css("position", "unset");
+                                $(dragElem).css("background", "unset");
+                                dragElem = undefined;
+                                selectedElem = undefined;
+                                swal.close();
+                                $.ajax({
+                                    type: 'post',
+                                    dataType: "json",
+                                    async: true,
+                                    url: root_url + "issue/main/convertChild",
+                                    data: { issue_id: selectedId, master_id: targetId },
+                                    success: function (resp) {
+                                        auth_check(resp);
+                                        if (resp.ret != '200') {
+                                            notify_error('操作失败:' + resp.msg);
+                                            return;
+                                        }
+                                        notify_success('操作成功');
+                                        IssueMain.prototype.fetchIssueMains();
+                                    },
+                                    error: function (res) {
+                                        notify_error("请求数据错误" + res);
+                                    }
+                                });
+
+                            } else {
+                                swal.close();
+                                $(dragElem).css("position", "unset");
+                                $(dragElem).css("background", "unset");
+                                $(selectedElem).css("border", "1px solid  rgb(240, 240, 240)");
+                                $(selectedElem).css("background", "unset)");
+                                // $(selectedElem).css("color", "#676a6c");
+                                dragElem = undefined;
+                                selectedElem = undefined;
+                            }
+                        });
+
+                }
+            }
+        })
+        $("#tree_table tr").mouseout(function(e) {
+            var hoverEle = $(e.target).parent();
+            if (clickFlag) {
+                // console.log(this)
+                $(dragElem).css("background", "#f8ac59");
+                $(dragElem).css("position", "fixed");
+                dragFlag = true;
+                //if (dragFlag&&this!==selectedElem){
+                    //console.log(hoverEle)
+                //$(this).css("border", "0px dotted rgb(194, 200, 204)");
+                //$(this).css("background", "red");
+                // }
+            }
+
+        });
+
+        $('#tree_table tr').hover(function (e) {
+            if (dragFlag&&this!==dragElem){
+               // var hoverEle = $(e.target).parent();
+               // $(this).css("background", "white");
+                //$(this).css("border", "2px dotted rgb(194, 200, 204)");
+                // $(this).css("color","red")
+                selectedElem = this;
+            }
+        })
+        $('#tree_table tr').mousemove(function(e) {
+            if (dragFlag){
+                $(dragElem).offset({
+                    top:e.clientY,
+                    left:e.clientX
+                });
+            }
+        });
+    };
+
+
     IssueMain.prototype.displayConvertChild = function (issue_id) {
         $('#current_issue_id').val(issue_id);
         $('#btn-parent_select_issue').data('issue-id', issue_id);

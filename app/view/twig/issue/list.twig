@@ -87,6 +87,9 @@
             .min_width_60{
                 min-width: 60px;
             }
+            .cursor_move{
+                cursor:move
+            }
             .issue_view_tree_option{
                 padding-left: 10px;
                 padding-right: 10px;
@@ -698,6 +701,16 @@
                 }
                 var $tree_table = $('#tree_table');
                 var is_tree_table_init = 0;
+                //拖拽代码开始
+                //长按flag
+                var clickFlag = false;
+                //拖动flag
+                var dragFlag = false;
+                //拖动的节点
+                var dragElem;
+                //选中的节点
+                var selectedElem;
+
                 $(function () {
                     var options = {
                         query_str: window.query_str,
