@@ -62,7 +62,7 @@ var Project = (function() {
                     notify_success(resp.msg, '克隆成功');
                     $('#modal-project_clone').modal('hide');
                 } else {
-                    notify_error('克隆失败,' + resp.msg);
+                    notify_error('克隆失败,' + resp.msg + ": " + resp.data);
                 }
             },
             error: function (res) {
