@@ -24,8 +24,10 @@ use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
+use main\app\model\SettingModel;
 use main\app\model\user\UserModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\user\UserSettingModel;
 
 /**
  * Class IssueFilterLogic 事项过滤器
@@ -190,7 +192,6 @@ class IssueFilterLogic
                 if (strpos($versionStr, 'MariaDB') !== false) {
                     $versionNum = 0;
                 }
-
                 // 使用LOCATE模糊搜索
                 if (strlen($search) < 10) {
                     $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
@@ -200,7 +201,6 @@ class IssueFilterLogic
                     $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
                     $params['summary'] = $search;
                 }
-
             }
         }
 
@@ -467,9 +467,12 @@ class IssueFilterLogic
             $params['updated_end'] = $updatedEndTime;
         }
 
-        if (isset($_GET['issue_tree_is_closed']) && $_GET['issue_tree_is_closed']=='1') {
-        }else{
-            $sql .=  self::getUnClosedSql();
+        $issueView = IssueLogic:: getIssueView(UserAuth::getId());
+        if($issueView=='tree'){
+            if (isset($_GET['issue_tree_is_closed']) && $_GET['issue_tree_is_closed']=='1') {
+            }else{
+                $sql .=  self::getUnClosedSql();
+            }
         }
 
         $orderBy = 'id';
