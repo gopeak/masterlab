@@ -26,9 +26,11 @@ use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectFlagModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\SettingModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserIssueDisplayFieldsModel;
 use main\app\model\user\UserModel;
+use main\app\model\user\UserSettingModel;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
@@ -126,6 +128,25 @@ class IssueLogic
         }
         $rows = $issueModel->db->fetchAll($sqlPreNextSql, $params);
         return $rows;
+    }
+
+    /**
+     * 获取用户的事项页面视图
+     * @param $userId
+     * @return bool|false|float|int|mixed|string
+     * @throws \Exception
+     */
+    public static function getIssueView($userId){
+        $issueView = SettingModel::getInstance()->getValue('issue_view');
+        $userSettingModel = new UserSettingModel($userId);
+        $userIssueView = $userSettingModel->getSettingByKey($userId, 'issue_view');
+        if (!empty($userIssueView)) {
+            $issueView = $userIssueView;
+        }
+        if (empty($issueView)) {
+            $issueView = 'list';
+        }
+        return $issueView;
     }
 
     /**
