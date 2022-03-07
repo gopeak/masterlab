@@ -711,6 +711,7 @@ class Main extends BaseUserCtrl
         }
         // 表格显示头像还是名称
         $projectId =  isset($_GET['project']) ? intval($_GET['project']) : null;
+		$data['project_id']=$projectId;
         $projectFlagModel = new ProjectFlagModel();
         $isTableDisplayAvatar = $projectFlagModel->getValueByFlag($projectId, "is_table_display_avatar");
         if(is_null($isTableDisplayAvatar)){
@@ -756,6 +757,7 @@ class Main extends BaseUserCtrl
         foreach ($labelDataRows as $labelData) {
             $labelDataArr[$labelData['issue_id']][] = $labelData['label_id'];
         }
+
         // 获取自定义字段值
         $fieldsArr = (new FieldModel())->getCustomFields();
         if ($fieldsArr) {
@@ -774,7 +776,33 @@ class Main extends BaseUserCtrl
                     $customValuesIssueArr[$issueId][$fieldName] = $fieldValue;
                 }
             }
+			 $customFieldInfo =[];
+			 foreach ($fieldsArr as $field) {
+				 $customfieldobj=[];
+				$customfieldobj['title']=$field['title'];
+				 $customfieldobj['name']=$field['name'];
+				 $customfieldobj['type']=$field['type'];
+                $customFieldInfo[] = $customfieldobj;
+            }
+			
+			$data['custom_fields'] = $customFieldInfo; //array_column($fieldsArr, 'title', 'name');
         }
+
+		$issueLogic = new IssueLogic();
+        $projectFlagModel = new ProjectFlagModel();
+        $isUserDisplayField = $projectFlagModel->getValueByFlag($data['project_id'], "is_user_display_field");
+        if(is_null($isUserDisplayField)){
+            $data['is_user_display_field'] = "1";
+        }else{
+            $data['is_user_display_field'] = $isUserDisplayField;
+        }
+        $data['user_display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
+        if ($data['is_user_display_field'] !=="1"){
+            $data['display_fields'] = IssueLogic::fetchProjectDisplayFields($data['project_id']);
+        }else{
+            $data['display_fields'] = $data['user_display_fields'];
+        }
+
 
         $userLogic = new UserLogic();
         $users = $userLogic->getAllUser();
