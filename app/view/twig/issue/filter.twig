@@ -254,8 +254,8 @@
                                 <option value="<?= sprint['id'] ?>"  {% if (tree_range_data == sprint['id']) %} selected  {% endif %}>&nbsp;&nbsp;<?= sprint['name'] ?></option>
                             {% endfor %}
                         </select>
-                        <span style="margin-left: 5px">已关闭事项:</span>
-                        <input title="是否显示已关闭事项"  id="issue_tree_is_closed" name="issue_tree_is_closed" type="checkbox"  value="1" {% if (issue_tree_is_closed == '1') %} checked  {% endif %}>
+                        <span style="margin-left: 5px;">已关闭事项:</span>
+                        <input style="" title="是否显示已关闭事项"  id="issue_tree_is_closed" name="issue_tree_is_closed" type="checkbox"  value="1" {% if (issue_tree_is_closed == '1') %} checked  {% endif %}>
                         <span style="margin-left: 5px">展 开:</span>
                         <input title="是否要展开子任务"  id="issue_tree_is_expand" name="issue_tree_is_expand" type="checkbox" value="1" {% if (issue_tree_is_expand == '1') %} checked  {% endif %}>
                         <a style="margin-left: 6px"

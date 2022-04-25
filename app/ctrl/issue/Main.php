@@ -235,10 +235,12 @@ class Main extends BaseUserCtrl
             $data['tree_range_data'] = $issueViewTreeTange;
         }
         $data['issue_tree_is_closed'] = '1';
+
         $issueTreeIsClosed = $userSettingModel->getSettingByKey($userId, 'issue_tree_is_closed');
         if ($issueTreeIsClosed!==false) {
             $data['issue_tree_is_closed'] = $issueTreeIsClosed;
         }
+
         $data['issue_tree_is_expand'] = '1';
         $issueTreeIsExpand = $userSettingModel->getSettingByKey($userId, 'issue_tree_is_expand');
         if ($issueTreeIsExpand!==false) {
@@ -729,9 +731,16 @@ class Main extends BaseUserCtrl
         if ($ret) {
             $followRows = (new IssueFollowModel())->getItemsByUserId(UserAuth::getId());
             $followIssueIdArr = array_column($followRows,'issue_id' );
+            $idArr = array_column($data['issues'],'id' );
             unset($followRows);
+            $i = 0;
             foreach ($data['issues'] as &$issue) {
+                $i++;
                 $issue['is_followed'] = 2;
+                $issue['parent_id'] = $issue['master_id'];
+                if(!in_array($issue['parent_id'],$idArr)){
+                    $issue['parent_id'] = 0;
+                }
                 if(in_array($issue['id'], $followIssueIdArr)){
                     $issue['is_followed'] = 1;
                 }
@@ -1926,13 +1935,10 @@ class Main extends BaseUserCtrl
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
         $issueLogic->updateCustomFieldValue($issueId, $params, $issue['project_id']);
-
-        // 记录活动日志
-        $fromModule = null;
-        if (isset($params['from_module'])) {
-            $fromModule = strtolower(trim($params['from_module']));
-        } elseif (isset($_GET['from_module'])) {
-            $fromModule = strtolower(trim($_GET['from_module']));
+        // 如果状态或解决结果修改为已完成
+        $closeTimeArr = IssueLogic::getLastUpdateDoneArr($issue, $info) + IssueLogic::getLastUpdateCloseArr($issue, $info);
+        if(!empty($closeTimeArr)){
+            $issueModel->updateById($issueId, $closeTimeArr);
         }
 
         // 操作日志
@@ -2023,6 +2029,12 @@ class Main extends BaseUserCtrl
                 $errArr[] = "事项id:{$issueId} 更新失败:{$affectedRows},已忽略";
             }
             $successIssueIdArr[] = $issueId;
+
+            // 如果状态或解决结果修改为已完成
+            $closeTimeArr = IssueLogic::getLastUpdateDoneArr($issue, $info) + IssueLogic::getLastUpdateCloseArr($issue, $info);
+            if(!empty($closeTimeArr)){
+                $issueModel->updateById($issueId, $closeTimeArr);
+            }
         }
         // 操作日志
         $logData = [];

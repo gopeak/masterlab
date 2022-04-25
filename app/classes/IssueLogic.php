@@ -23,6 +23,7 @@ use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
+use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectFlagModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
@@ -1310,6 +1311,59 @@ class IssueLogic
         }
         return  $content;
     }
+
+    /**
+     * 记录完成事项的最新时间
+     * @param $issue
+     * @param $updateArr
+     * @return mixed
+     */
+    public static function getLastUpdateDoneArr($issue, $updateArr)
+    {
+        static $resolveDoneId,$statusDoneId;
+
+        $arr = [];
+        if(empty($resolveDoneId)){
+            $resolveDoneId = IssueResolveModel::getInstance()->getIdByKey('fixed');
+        }
+        if(empty($statusDoneId)){
+            $statusDoneId = IssueStatusModel::getInstance()->getIdByKey('resolved');
+        }
+        if (isset($updateArr['resolve']) && $issue['resolve'] != $updateArr['resolve'] && $updateArr['resolve']==$resolveDoneId) {
+            $arr['last_done_resolve_time'] = time();
+        }
+        if (isset($updateArr['status']) && $issue['status'] != $updateArr['status'] && $updateArr['status']==$statusDoneId) {
+            $arr['last_done_status_time'] = time();
+        }
+        return $arr;
+    }
+
+    /**
+     * 记录关闭事项的最新时间
+     * @param $issue
+     * @param $updateArr
+     * @return mixed
+     */
+    public static function getLastUpdateCloseArr($issue, $updateArr)
+    {
+        static $resolveDoneId,$statusDoneId;
+
+        $arr = [];
+        if(empty($resolveDoneId)){
+            $resolveDoneId = IssueResolveModel::getInstance()->getIdByKey('done');
+        }
+        if(empty($statusDoneId)){
+            $statusDoneId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        }
+        if (isset($updateArr['resolve']) && $issue['resolve'] != $updateArr['resolve'] && $updateArr['resolve']==$resolveDoneId) {
+            $arr['last_close_resolve_time'] = time();
+        }
+        if (isset($updateArr['status']) && $issue['status'] != $updateArr['status'] && $updateArr['status']==$statusDoneId) {
+            $arr['last_close_status_time'] = time();
+        }
+        return $arr;
+    }
+
 
 
 }

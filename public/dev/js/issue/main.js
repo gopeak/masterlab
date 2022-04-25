@@ -1465,7 +1465,7 @@ var IssueMain = (function () {
                 //在哪一列展开树形
                 treeShowField: 'summary',
                 //指定父id列
-                parentIdField: 'master_id',
+                parentIdField: 'parent_id',
                 onResetView: function(data) {
                     //console.log('load');
                     $tree_table.treegrid({
