@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <!-- COMMON TAGS -->
+  <meta charset="utf-8">
+  <title>printThis - jQuery printing plugin</title>
+
+  <!-- Search Engine -->
+  <meta name="description" content="printThis is an extensible jQuery printing plugin that allows for printing specific or multiple DOM elements">
+  <meta name="image" content="https://jasonday.github.io/printThis/assets/images/print.png">
+  <!-- Schema.org for Google -->
+  <meta itemprop="name" content="printThis - jQuery printing plugin">
+  <meta itemprop="description" content="printThis is an extensible jQuery printing plugin that allows for printing specific or multiple DOM elements">
+  <meta itemprop="image" content="https://jasonday.github.io/printThis/assets/images/print.png">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="printThis - jQuery printing plugin">
+  <meta name="twitter:description" content="printThis is an extensible jQuery printing plugin that allows for printing specific or multiple DOM elements">
+  <meta name="twitter:image:src" content="https://jasonday.github.io/printThis/assets/images/print.png">
+  <!-- Open Graph general (Facebook, Pinterest & Google+) -->
+  <meta name="og:title" content="printThis - jQuery printing plugin">
+  <meta name="og:description" content="printThis is an extensible jQuery printing plugin that allows for printing specific or multiple DOM elements">
+  <meta name="og:image" content="https://jasonday.github.io/printThis/assets/images/print.png">
+  <meta name="og:url" content="https://jasonday.github.io/printThis/">
+  <meta name="og:site_name" content="printThis - jQuery printing plugin">
+  <meta name="og:type" content="website">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="https://fonts.googleapis.com/css?family=Cabin|Roboto+Condensed:700" rel="stylesheet">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="assets/css/normalize.css">
+  <link rel="stylesheet" href="assets/css/skeleton.css">
+
+
+</head>
+
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <header class="container">
+    <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 42">
+      <title>printThis logo</title>
+      <circle cx="21" cy="21" r="21" fill="#231f20" />
+      <g fill="#fff">
+        <path d="M31.2 18.5h-2V9H18.7l-5.9 5.9v3.6h-2A1.8 1.8 0 0 0 9 20.3v7.4a1.8 1.8 0 0 0 1.8 1.8h2v2.7h16.4v-2.7h2a1.8 1.8 0 0 0 1.8-1.8v-7.4a1.8 1.8 0 0 0-1.8-1.8zM18.3 11v3.5h-3.5zM14 15.7h5.6v-5.5H28v8.3H14zM28 31H14v-4.6h14zm3.8-3.3a.6.6 0 0 1-.6.6h-2v-1.9h1.6v-1.2H11.2v1.2h1.6v1.9h-2a.6.6 0 0 1-.6-.6v-7.4a.6.6 0 0 1 .6-.6h20.4a.6.6 0 0 1 .6.6z"
+        />
+        <path d="M15.5 28.1h4.4v1.19h-4.4zM25.8 21.9h1.8v1.19h-1.8zM28.7 21.9h1.8v1.19h-1.8z" />
+      </g>
+    </svg>
+    <h1>printThis</h1>
+    <p class="subline">jQuery printing plugin. Print specific or multiple DOM elements while maintaining styling.</p>
+    <ul class="buttons">
+      <li>
+        <a class="button" href="https://github.com/jasonday/printThis">View on github</a>
+      </li>
+      <li>
+        <a class="button" href="https://github.com/jasonday/printThis/zipball/master">Download .zip</a>
+      </li>
+      <li>
+        <a class="button" href="https://github.com/jasonday/printThis/tarball/master">Download .tar.gz</a>
+      </li>
+    </ul>
+  </header>
+  <hr/>
+  <section class="container" role="main">
+    <div class="row">
+      <div class="twelve columns">
+        <h2>Features</h2>
+        <ul>
+          <li>Print specific & multiple DOM elements</li>
+          <li>Preserve page CSS/styling or add new CSS; the world is your oyster!</li>
+          <li>Preserve form entries</li>
+          <li>Canvas support</li>
+          <li>
+            <a href="#demos">See the demo</a>
+          </li>
+        </ul>
+
+        <h2>Usage</h2>
+        <h3>Basic</h3>
+        <pre>
+              <code>$('selector').printThis();</code>
+            </pre>
+        <h3>Advanced Features</h3>
+        <pre>
+          <code>
+$('#kitty-one, #kitty-two, #kitty-three').printThis({
+    importCSS: false,
+    loadCSS: "path/to/new/CSS/file",
+    header: "&lt;h1&gt;Look at all of my kitties!&lt;/h1&gt;"
+});
+        </code>
+        </pre>
+
+        <h3>Troubleshooting</h3>
+        <div>
+          <a href="https://github.com/jasonday/printThis/wiki">Check the printThis wiki for common issues and questions</a>
+        </div>
+        <em>Covers common issues related to styling and printing limitations regarding page breaks</em>
+        <br/>
+        <br/>
+        <h3>Options</h3>
+        <p>
+          <a href="https://github.com/jasonday/printThis">View on github</a> for a full description of each option</p>
+        <pre>
+            <code>
+$("#mySelector").printThis({
+    debug: false,               // show the iframe for debugging
+    importCSS: true,            // import parent page css
+    importStyle: false,         // import style tags
+    printContainer: true,       // print outer container/$.selector
+    loadCSS: "",                // path to additional css file - use an array [] for multiple
+    pageTitle: "",              // add title to print page
+    removeInline: false,        // remove inline styles from print elements
+    removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
+    printDelay: 333,            // variable print delay
+    header: null,               // prefix to html
+    footer: null,               // postfix to html
+    base: false,                // preserve the BASE tag or accept a string for the URL
+    formValues: true,           // preserve input/form values
+    canvas: false,              // copy canvas content
+    doctypeString: '...',       // enter a different doctype for older markup
+    removeScripts: false,       // remove script tags from print content
+    copyTagClasses: false,      // copy classes from the html & body tag
+    beforePrintEvent: null,     // function for printEvent in iframe
+    beforePrint: null,          // function called before iframe is filled
+    afterPrint: null            // function called before iframe is removed
+});
+          </code>
+          </pre>
+
+      </div>
+    </div>
+  </section>
+  <hr/>
+  <section class="container" aria-describedby="demos">
+    <h2 id="demos">Demo</h2>
+    <br/>
+    <div class="row">
+      <div class="one-half column">
+        <a id="basic" href="#nada" class="button button-primary">Print container</a>
+        <pre>
+              <code>
+$(".demo").printThis();
+              </code>
+            </pre>
+      </div>
+      <div class="one-half column">
+        <a id="advanced" href="#nada" class="button button-primary">Print kittens</a>
+        <pre>
+              <code>
+$('#kitty-one, #kitty-two, #kitty-three').printThis({
+  importCSS: false,
+  header: "&lt;h1&gt;Look at all of my kitties!&lt;/h1&gt;"
+});
+              </code>
+            </pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="demo twelve columns">
+        <h3>Kittens</h3>
+
+        <img id="kitty-one" alt="cute kitten" src="assets/images/cat1.jpg" />
+
+        <p>Bathe self with tongue then lick owner's face kitten is playing with dead mouse and leave dead animals as gifts.
+          Lies down . Ears back wide eyed then cats take over the world meowing non stop for food.</p>
+
+        <img class="u-pull-left" id="kitty-two" alt="cute kitten" src="assets/images/cat2.jpg"/>
+
+        <p>Always hungry lick arm hair. Kitty loves pigs chase the pig around the house. Spend all night ensuring people don't
+          sleep sleep all day play time.</p>
+
+        <p>Licks paws sit and stare, and going to catch the red dot today going to catch the red dot today. Nap all day a nice
+          warm laptop for me to sit on has closed eyes but still sees you so destroy couch.</p>
+
+        <p>Hide at bottom of staircase to trip human cat not kitten around get video posted to internet for chasing red dot.</p>
+
+        <p>Chase red laser dot flee in terror at cucumber discovered on floor play riveting piece on synthesizer keyboard meoooow!
+          Attack the dog then pretend like nothing happened. Poop in litter box, scratch the walls eat and than sleep on
+          your face wake up human for food at 4am.</p>
+
+        <img class="u-pull-right" id="kitty-three" alt="cute kitten" src="assets/images/cat3.jpg"/>
+
+        <p>Chase red laser dot swat turds around the house shake treat bag thinking longingly about tuna brine. Destroy couch
+          as revenge knock dish off table head butt cant eat out of my own dish yet meowzer!</p>
+
+        <p>Destroy couch as revenge. Claw drapes lick the plastic bag swat turds around the house eat and than sleep on your
+          face. Mark territory pelt around the house and up and down stairs chasing phantoms. Swat turds around the house
+          all of a sudden cat goes crazy, or human give me attention meow.</p>
+      </div>
+    </div>
+  </section>
+  <hr/>
+  <section class="container">
+    <div class="row">
+      <div class="demo twelve columns">
+        printThis is maintained by
+        <a href="https://github.com/jasonday">Jason Day</a> and
+        <a href="https://github.com/oculus42">Samuel Rouse</a>
+      </div>
+    </div>
+  </section>
+  <br/>
+  <br/>
+  <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- printThis -->
+
+  <script type="text/javascript" src="printThis.js"></script>
+
+  <!-- demo -->
+  <script>
+    $('#basic').on("click", function () {
+      $('.demo').printThis({
+        base: "https://jasonday.github.io/printThis/"
+      });
+    });
+
+
+    $('#advanced').on("click", function () {
+      $('#kitty-one, #kitty-two, #kitty-three').printThis({
+        importCSS: false,
+        header: "<h1>Look at all of my kitties!</h1>",
+        base: "https://jasonday.github.io/printThis/"
+      });
+    });
+  </script>
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114774247-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-114774247-1');
+  </script>
+
+</body>
+
+</html>
