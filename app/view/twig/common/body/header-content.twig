@@ -17,7 +17,7 @@
                 <ul class="nav navbar-nav">
                     <li class="hidden-sm hidden-xs">
                         <div class="has-location-badge search search-form">
-                            <form class="navbar-form" action="/search" accept-charset="UTF-8" method="get">
+                            <form  id="navbar-form" name="navbar-form" class="navbar-form" action="/search" accept-charset="UTF-8" method="get">
                                 <input name="utf8" type="hidden" value="✓">
                                 <input name="scope" type="hidden" value="">
                                 <div class="search-input-container">
@@ -48,7 +48,7 @@
                                                         <i class="fa fa-spinner fa-spin"></i>
                                                     </div>
                                                 </div>
-                                                <i class="search-icon"></i>
+                                                <i class="search-icon" onclick="$('#navbar-form').submit()"></i>
                                                 <i class="clear-icon js-clear-input"></i>
                                             </div>
                                     </div>

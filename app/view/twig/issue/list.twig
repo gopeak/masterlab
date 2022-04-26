@@ -373,6 +373,13 @@
                                                         删 除
                                                     </button>
                                                 {% endif %}
+                                                {% if (projectPermArr['EDIT_ISSUES'] is defined) %}
+
+                                                    <button id="btn-showBatchConvertChildrenTask" type="button" class="btn btn-default">
+                                                        <i class="fa fa-cogs"></i>
+                                                        转为子任务
+                                                    </button>
+                                                {% endif %}
 
                                                 <div class="btn-group dropup" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
@@ -778,6 +785,7 @@
                     });
 
                     $('#issue_tree_is_closed').bind('click', function () {
+                        //return;
                         let issue_tree_is_closed = '0';
                         if ($(this).prop("checked")) {
                             issue_tree_is_closed = '1'
@@ -830,6 +838,11 @@
                     });
 
                     $('.btn_batch_update').bind('click', function () {
+                        var issue_id_arr =  IssueMain.prototype.getSelectedIdArr();
+                        if(is_empty(issue_id_arr)){
+                            notify_warn("提示" , "您没有选中任何事项");
+                            return;
+                        }
                         var field = $(this).data('field');
                         var value = $(this).data('id');
                         var name = $(this).html();
@@ -842,6 +855,19 @@
 
                     $('#btn-move-project').bind('click', function () {
                         IssueMain.prototype.batchMoveProject();
+                    });
+
+                    $('#btn-showBatchConvertChildrenTask').bind('click', function () {
+                        var issue_id_arr =  IssueMain.prototype.getSelectedIdArr();
+                        if(is_empty(issue_id_arr)){
+                            notify_warn("提示" , "您没有选中任何事项");
+                            return;
+                        }
+                        IssueMain.prototype.displayBatchConvertChild();
+                    });
+
+                    $("#btn-batchConvertChild").bind("click", function () {
+                        IssueMain.prototype.batchConvertChild();
                     });
 
                     $('.sort_select').bind('click', function () {
@@ -1304,6 +1330,25 @@
 {% verbatim %}
                     // 转换为子任务时，要选择父事项
                     $('#parent_select_issue_id').select2({
+                      language: "zh-CN",
+                      ajax: {
+                        url: '/issue/main/autocomplete',
+                        data: function (params) {
+                          var query = {
+                            query: params.term,
+                            project_id: _cur_project_id
+                          }
+                          return query;
+                        },
+                        processResults: function (resp) {
+                              return {
+                                results: resp.data
+                              };
+                        }
+                      }
+                    });
+
+                    $('#batch_parent_select_issue_id').select2({
                       language: "zh-CN",
                       ajax: {
                         url: '/issue/main/autocomplete',

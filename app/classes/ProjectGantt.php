@@ -245,13 +245,23 @@ class ProjectGantt
     {
         $level++;
         $levelRow['children'] = [];
+        if($levelRow['id']==168){
+            //print_r($rows);
+            //print_r($sprint);
+        }
+
         foreach ($rows as $k => $row) {
-            if ($row['master_id'] == $levelRow['id']) {
+            if ($row['master_id'] == intval($levelRow['id'])) {
                 $row['level'] = $level;
                 $levelRow['children'][] = self::formatRowByIssue($row, $sprint, $sprintDuration);
                 unset($rows[$k]);
             }
         }
+        if($levelRow['id']==168){
+            // print_r($rows);
+            // print_r($levelRow);
+        }
+
         // 注意递归调用必须加个判断，否则会无限循环
         if (count($levelRow['children']) > 0) {
             $levelRow['children'] = $this->sortChildrenByWeight($levelRow['children']);
@@ -333,19 +343,25 @@ class ProjectGantt
             $sprintDuration = getWorkingDays($sprint['start_date'], $sprint['end_date'], $workDates, $holidays, $extraWorkerDays);
             $treeArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
+                $sprintIssueArrs = $sprintRows[$sprint['id']];
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
+                    $row['master_id'] = (int)$row['master_id'];
+                    $row['have_children'] = (int)$row['have_children'];
                     $row['level__'] = 1;
                     $row['level'] = 1;
-                    $row['child'] = [];
+                    $row['children'] = [];
                     $item = self::formatRowByIssue($row, $sprint, $sprintDuration);
                     unset($sprintRows[$sprint['id']][$k]);
-                    if ($row['master_id'] == '0' && intval($row['have_children']) > 0) {
+                    if ($row['master_id'] == 0 && $row['have_children'] > 0) {
+                        unset($sprintIssueArrs[$k]);
                         $level = 1;
+                        $this->recurIssue($sprintIssueArrs, $item, $level, $sprint, $sprintDuration);
                         //print_r($item);
-                        $this->recurIssue($sprintRows[$sprint['id']], $item, $level, $sprint, $sprintDuration);
                         $treeArr[] = $item;
                     }else{
-                        $treeArr[] = $item;
+                        if($row['master_id'] == 0){
+                            $treeArr[] = $item;
+                        }
                     }
                 }
             }
@@ -454,38 +470,35 @@ class ProjectGantt
             $sql = "select {$fields} from {$table} where {$condition}";
             $sprintRows[$sprint['id']] = $rows = $issueModel->db->fetchAll($sql);
             $sprintIssueArr = [];
-            $otherArr = [];
             // 计算迭代的用时
             $holidays = (new HolidayModel())->getDays($projectId);
             $extraWorkerDays = (new ExtraWorkerDayModel())->getDays($projectId);
             $sprintDuration = getWorkingDays($sprint['start_date'], $sprint['end_date'], $workDates, $holidays, $extraWorkerDays);
 
-            if (!empty($sprintRows[$sprint['id']])) {
-                foreach ($sprintRows[$sprint['id']] as $k => &$row) {
-                    if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
-                        $row['level'] = 1;
-                        $otherArr[$row['id']] = self::formatRowByIssue($row, $sprint, $sprintDuration);
-                    }
-                }
-            }
             $treeArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
+                $sprintIssueArr = $sprintRows[$sprint['id']];
+                $sprintIssueArrs = $sprintRows[$sprint['id']];
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
-                    if ($row['master_id'] == '0' && intval($row['have_children']) > 0) {
-                        $row['level__'] = 1;
-                        $row['level'] = 1;
-                        $row['child'] = [];
-                        $item = self::formatRowByIssue($row, $sprint, $sprintDuration);
-                        unset($sprintRows[$sprint['id']][$k]);
+                    $row['master_id'] = (int)$row['master_id'];
+                    $row['have_children'] = (int)$row['have_children'];
+                    $row['level__'] = 1;
+                    $row['level'] = 1;
+                    $row['children'] = [];
+                    $item = self::formatRowByIssue($row, $sprint, $sprintDuration);
+                    unset($sprintRows[$sprint['id']][$k]);
+                    if ($row['master_id'] == 0 && $row['have_children'] > 0) {
+                        unset($sprintIssueArrs[$k]);
                         $level = 1;
+                        $this->recurIssue($sprintIssueArrs, $item, $level, $sprint, $sprintDuration);
                         //print_r($item);
-                        $this->recurIssue($sprintRows[$sprint['id']], $item, $level, $sprint,  $sprintDuration);
                         $treeArr[] = $item;
+                    }else{
+                        if($row['master_id'] == 0){
+                            $treeArr[] = $item;
+                        }
                     }
                 }
-            }
-            foreach ($otherArr as $item) {
-                $treeArr[] = $item;
             }
             foreach ($treeArr as $item) {
                 if (isset($item['children']) && count($item['children']) > 0) {

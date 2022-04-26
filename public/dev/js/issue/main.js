@@ -606,357 +606,7 @@ var IssueMain = (function () {
             if (typeof (success) != 'undefined' && typeof (success) === "function") {
                 success(resp.data);
             }
-
-            $(".issue_edit_href").bind("click", function () {
-                IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
-            });
-
-            $(".issue_copy_href").bind("click", function () {
-                IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'copy');
-            });
-            $(".issue_create_child").bind("click", function () {
-                $("#btn-create-issue").click();
-                $('#master_issue_id').val($(this).data('issue_id'));
-                $('#create_master_div').show();
-                $('#create_master_title').html($(this).data('title'));
-            });
-
-            $(".issue_convert_child_href").bind("click", function () {
-                IssueMain.prototype.displayConvertChild($(this).data('issue_id'));
-            });
-            $(".issue_backlog_href").bind("click", function () {
-                IssueMain.prototype.joinBacklog($(this).data('issue_id'));
-            });
-            $(".issue_sprint_href").bind("click", function () {
-                IssueMain.prototype.displayJoinSprint($(this).data('issue_id'));
-            });
-            $(".issue_delete_href").bind("click", function () {
-                IssueMain.prototype.delete($(this).data('issue_id'));
-            });
-            $(".issue_cancel_href").bind("click", function () {
-                IssueMain.prototype.removeChild($(this).data('issue_id'));
-            });
-            // issue_follow_href
-            $(".issue_follow_href").bind("click", function () {
-                IssueMain.prototype.follow($(this).data('issue_id'), 'follow');
-            });
-            $(".issue_unfollow_href").bind("click", function () {
-                IssueMain.prototype.follow($(this).data('issue_id'), 'un_follow');
-            });
-
-            $("time").each(function (i, el) {
-                var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
-                $(el).html(t)
-            });
-
-            $(".sprint-select > a").on("click", function(e){
-                if(e.preventDefault){
-                    e.preventDefault();
-                 }else{
-                    e.returnValue = false;
-                 }
-            });
-
-            $(".module-select > a").on("click", function(e){
-                if(e.preventDefault){
-                    e.preventDefault();
-                 }else{
-                    e.returnValue = false;
-                 }
-            });
-
-            $(".assignee-select > span > a").on("click", function(e){
-                if(e.preventDefault){
-                    e.preventDefault();
-                 }else{
-                    e.returnValue = false;
-                 }
-            });
-
-            $(".priority-select > span").bind("dblclick", function () {
-                var $self = $(this);
-                var issue_id = $self.parent().data('issue_id');
-                var list_box = $self.siblings(".priority-list");
-                
-                if (list_box.is(":visible")) {
-                    return false;
-                }
-                list_box.slideDown(100);
-
-                var priority_list = _issueConfig.priority;
-                var html = "";
-                for (let priority of priority_list) {
-                    html += `<li data-color="${priority.status_color}" data-value="${priority.id}"><span style="color:${priority.status_color}" class="prepend-left-5">${priority.name}</span></li>`;
-                }
-                list_box.html(html);
-
-                $(".priority-list li").on("click", function () {
-                    var id = $(this).data("value");
-                    var color = $(this).data("color")
-                    var text = $(this).text()
-                    IssueMain.prototype.updateIssuePriority(issue_id, id, $self, text, color);
-                });
-
-                $(document).on("click", function () {
-                    list_box.slideUp(100);
-                })
-            });
-
-            $(".module-select > a").bind("dblclick", function () {
-                if(cur_project_id ===''){
-                    notify_warn('提示','需要进入项目才能修改');
-                    return false;
-                }
-                var $self = $(this);
-                var issue_id = $self.parent().data('issue_id');
-                var list_box = $self.siblings(".module-list");
-                
-                if (list_box.is(":visible")) {
-                    return false;
-                }
-                list_box.slideDown(100);
-
-                var module_list = _issueConfig.issue_module;
-                //console.log(module_list);
-                var html = "";
-                for (let value of  module_list) {
-                    html += `<li data-name="${value.name}" data-value="${value.k}"><span class="prepend-left-5">${value.name}</span></li>`;
-                }
-                list_box.html(html);
-
-                $(".module-list li").on("click", function () {
-                    var id = $(this).data("value");
-                    var name = $(this).data("name")
-                    var text = $(this).text()
-                    IssueMain.prototype.updateIssueModule(issue_id, id, $self, text, name);
-                });
-
-                $(document).on("click", function () {
-                    list_box.slideUp(100);
-                });
-
-                return false;
-            });
-            
-
-            $(".sprint-select > a").bind("dblclick", function (e) {
-                if(cur_project_id ===''){
-                    notify_warn('提示','需要进入项目才能修改');
-                    return false;
-                }
-                var $self = $(this);
-                var issue_id = $self.parent().data('issue_id');
-                var list_box = $self.siblings(".sprint-list");
-                
-                if (list_box.is(":visible")) {
-                    return false;
-                }
-                list_box.slideDown(100);
-
-                var sprint_list = _issueConfig.sprint;
-                var html = "";
-                for (var i = 0; i < sprint_list.length; i++) {
-                    html += `<li data-name="${sprint_list[i].name}" data-value="${sprint_list[i].id}"><span class="prepend-left-5">${sprint_list[i].name}</span></li>`;
-                }
-                list_box.html(html);
-
-                $(".sprint-list li").on("click", function () {
-                    var id = $(this).data("value");
-                    var name = $(this).data("name")
-                    IssueMain.prototype.updateIssueSprint(issue_id, id, $self, name);
-                });
-
-                $(document).on("click", function () {
-                    list_box.slideUp(100);
-                });
-                return false;
-            });
-
-            $(".assignee-select > span > a").bind("dblclick", function () {
-                if(cur_project_id ===''){
-                    notify_warn('提示','需要进入项目才能修改');
-                    return false;
-                }
-                var $self = $(this);
-                var issue_id = $self.parent().parent().data('issue_id');
-                var list_box = $self.parent().siblings(".assignee-list");
-                
-                if (list_box.is(":visible")) {
-                    return false;
-                }
-                list_box.slideDown(100);
-
-                var assignee_list = _issueConfig.project_users;
-                var html = "";
-                for (var i = 0; i < assignee_list.length; i++) {
-                    html += `<li data-img="${assignee_list[i].avatar}" data-name="${assignee_list[i].display_name}" data-value="${assignee_list[i].uid}"><img class="assignee-img" src="${assignee_list[i].avatar}" /><span>${assignee_list[i].display_name}</span></li>`;
-                }
-                list_box.html(html);
-
-                $(".assignee-list li").on("click", function () {
-                    var id = $(this).data("value");
-                    var img = $(this).data("img");
-                    var text = $(this).data("name");
-                    IssueMain.prototype.updateIssueAssignee(issue_id, id, $self, name, img);
-                });
-
-                $(document).on("click", function () {
-                    list_box.slideUp(100);
-                });                
-            });
-
-            $(".resolve-select2").bind("dblclick", function () {
-                var $self = $(this);
-                let issue_id = $self.data('issue_id');
-                let list_box = $('#ul_tree_select_'+issue_id);
-                if (list_box.is(":visible")) {
-                    return false;
-                }
-                list_box.slideDown(100);
-
-                var resolve_list = _issueConfig.issue_resolve;
-                console.log(resolve_list);
-                let html = "";
-                for (let i=0; i<resolve_list.length; i++) {
-                    let resolve = resolve_list[i];
-                   // html += `<li>1111</li>`;
-                    html += `<li data-color="${resolve.color}" data-value="${resolve.id}"><span style="color:${resolve.color}" class="prepend-left-5">${resolve.name}</span></li>`;
-                }
-                list_box.html(html);
-                console.log(list_box, html);
-                list_box.children('li').on("click", function () {
-                    var id = $(this).data("value");
-                    var color = $(this).data("color")
-                    var text = $(this).text()
-                    IssueDetail.prototype.updateIssueResolve(issue_id, id, $self, text, color);
-                });
-                $(document).on("click", function () {
-                    list_box.slideUp(100);
-                })
-
-            });
-
-            $(".status-select .label").bind("dblclick", function () {
-                let $self = $(this);
-                let issue_id = $self.parent().data('issue_id');
-                let list_box = $self.siblings(".status-list");
-
-                if (list_box.is(":visible")) {
-                    return false;
-                }
-                list_box.slideDown(100);
-                loading.show(`#status-list-${issue_id}`);
-
-                $.ajax({
-                    type: 'get',
-                    dataType: "json",
-                    async: true,
-                    url: root_url + "issue/main/fetch_issue_edit",
-                    data: { issue_id: issue_id },
-                    success: function (resp) {
-                        auth_check(resp);
-                        loading.hide(`#status-list-${issue_id}`);
-                        if (resp.ret != '200') {
-                            notify_error('获取状态失败:' + resp.msg);
-                            return;
-                        }
-                        let status_list = resp.data.issue.allow_update_status;
-                        let html = "";
-                        for (let i=0; i<status_list.length; i++) {
-                            let status = status_list[i];
-                            html += `<li data-value="${status.id}" data-color="${status.color}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
-                        }
-                        list_box.html(html);
-
-                        $(".status-list li").on("click", function () {
-                            let id = $(this).data("value");
-                            let text = $(this).text();
-                            let color = $(this).data("color")
-                            IssueDetail.prototype.updateIssueStatus(issue_id, id, $self, text, color)
-                        });
-
-                        $(document).on("click", function () {
-                            list_box.slideUp(100);
-                        })
-
-                    },
-                    error: function (res) {
-                        notify_error("请求数据错误" + res);
-                    }
-                });
-            });
-
-            $(".date-select-edit").bind("click", function () {
-                let $self = $(this);
-                let issue_id = $self.data('issue_id');
-                let myDate = new Date();
-                laydate.render({
-                    elem: this
-                    , trigger: 'click'
-                    , range: true
-                    , done: function (value, date, endDate) {
-                        $.ajax({
-                            type: 'post',
-                            dataType: "json",
-                            async: true,
-                            url: root_url + "issue/main/update",
-                            data: { issue_id: issue_id, params: { start_date: date.year + '-' + date.month + '-' + date.date, due_date: endDate.year + '-' + endDate.month + '-' + endDate.date } },
-                            success: function (resp) {
-                                auth_check(resp);
-                                if (resp.ret != '200') {
-                                    notify_error('操作失败:' + resp.msg);
-                                    return;
-                                }
-                                notify_success('操作成功');
-                                //window.location.reload();
-                            },
-                            error: function (res) {
-                                notify_error("请求数据错误" + res);
-                            }
-                        });
-                    }
-                    //,value: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + ' - ' + myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate()
-                });
-            });
-
-            IssueMain.prototype.treeBindEvent();
-
-            $(".have_children").bind("click", function () {
-                if (isFloatPart) {
-                    var issue_id = $(this).data('issue_id');
-                    $('#tr_subtask_' + issue_id).removeClass('hide');
-                    IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
-                }
-            });
-
-            $("#btn-join_sprint").bind("click", function () {
-                console.log("保存")
-                var sprint_id = $("input[name='join_sprint']:checked").val();
-                var issue_id = $('#join_sprint_issue_id').val();
-                if (sprint_id) {
-                    IssueMain.prototype.joinSprint(sprint_id, issue_id);
-                } else {
-                    notify_error('请选择Sprint');
-                }
-            });
-
-            $("#btn-modal_delete").bind("click", function () {
-                var issue_id = $('#children_list_issue_id').val();
-                if (issue_id) {
-                    IssueMain.prototype.delete(issue_id);
-                } else {
-                    notify_error('请选择Sprint');
-                }
-            });
-
-            $("#btn-convertChild").bind("click", function () {
-                var issue_id = $('#current_issue_id').val();
-                if (issue_id) {
-                    IssueMain.prototype.convertChild(issue_id);
-                } else {
-                    notify_error('事项id传递错误');
-                }
-            });
+            IssueMain.prototype.commonBindEvent();
 
         } else {
             loading.hide('#' + _options.list_render_id)
@@ -977,6 +627,363 @@ var IssueMain = (function () {
             })
         }
     };
+
+    IssueMain.prototype.commonBindEvent = function () {
+        $(".issue_edit_href").bind("click", function () {
+            IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
+        });
+
+        $(".issue_copy_href").bind("click", function () {
+            IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'copy');
+        });
+        $(".issue_create_child").bind("click", function () {
+            $("#btn-create-issue").click();
+            $('#master_issue_id').val($(this).data('issue_id'));
+            $('#create_master_div').show();
+            $('#create_master_title').html($(this).data('title'));
+        });
+
+        $(".issue_convert_child_href").bind("click", function () {
+            IssueMain.prototype.displayConvertChild($(this).data('issue_id'));
+        });
+
+        $(".issue_backlog_href").bind("click", function () {
+            IssueMain.prototype.joinBacklog($(this).data('issue_id'));
+        });
+        $(".issue_sprint_href").bind("click", function () {
+            IssueMain.prototype.displayJoinSprint($(this).data('issue_id'));
+        });
+        $(".issue_delete_href").bind("click", function () {
+            IssueMain.prototype.delete($(this).data('issue_id'));
+        });
+        $(".issue_cancel_href").bind("click", function () {
+            IssueMain.prototype.removeChild($(this).data('issue_id'));
+        });
+        // issue_follow_href
+        $(".issue_follow_href").bind("click", function () {
+            IssueMain.prototype.follow($(this).data('issue_id'), 'follow');
+        });
+        $(".issue_unfollow_href").bind("click", function () {
+            IssueMain.prototype.follow($(this).data('issue_id'), 'un_follow');
+        });
+
+        $("time").each(function (i, el) {
+            var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+            $(el).html(t)
+        });
+
+        $(".sprint-select > a").on("click", function(e){
+            if(e.preventDefault){
+                e.preventDefault();
+            }else{
+                e.returnValue = false;
+            }
+        });
+
+        $(".module-select > a").on("click", function(e){
+            if(e.preventDefault){
+                e.preventDefault();
+            }else{
+                e.returnValue = false;
+            }
+        });
+
+        $(".assignee-select > span > a").on("click", function(e){
+            if(e.preventDefault){
+                e.preventDefault();
+            }else{
+                e.returnValue = false;
+            }
+        });
+
+        $(".priority-select > span").bind("dblclick", function () {
+            var $self = $(this);
+            var issue_id = $self.parent().data('issue_id');
+            var list_box = $self.siblings(".priority-list");
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+
+            var priority_list = _issueConfig.priority;
+            var html = "";
+            for (let priority of priority_list) {
+                html += `<li data-color="${priority.status_color}" data-value="${priority.id}"><span style="color:${priority.status_color}" class="prepend-left-5">${priority.name}</span></li>`;
+            }
+            list_box.html(html);
+
+            $(".priority-list li").on("click", function () {
+                var id = $(this).data("value");
+                var color = $(this).data("color")
+                var text = $(this).text()
+                IssueMain.prototype.updateIssuePriority(issue_id, id, $self, text, color);
+            });
+
+            $(document).on("click", function () {
+                list_box.slideUp(100);
+            })
+        });
+
+        $(".module-select > a").bind("dblclick", function () {
+            if(cur_project_id ===''){
+                notify_warn('提示','需要进入项目才能修改');
+                return false;
+            }
+            var $self = $(this);
+            var issue_id = $self.parent().data('issue_id');
+            var list_box = $self.siblings(".module-list");
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+
+            var module_list = _issueConfig.issue_module;
+            //console.log(module_list);
+            var html = "";
+            for (let value of  module_list) {
+                html += `<li data-name="${value.name}" data-value="${value.k}"><span class="prepend-left-5">${value.name}</span></li>`;
+            }
+            list_box.html(html);
+
+            $(".module-list li").on("click", function () {
+                var id = $(this).data("value");
+                var name = $(this).data("name")
+                var text = $(this).text()
+                IssueMain.prototype.updateIssueModule(issue_id, id, $self, text, name);
+            });
+
+            $(document).on("click", function () {
+                list_box.slideUp(100);
+            });
+
+            return false;
+        });
+
+
+        $(".sprint-select > a").bind("dblclick", function (e) {
+            if(cur_project_id ===''){
+                notify_warn('提示','需要进入项目才能修改');
+                return false;
+            }
+            var $self = $(this);
+            var issue_id = $self.parent().data('issue_id');
+            var list_box = $self.siblings(".sprint-list");
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+
+            var sprint_list = _issueConfig.sprint;
+            var html = "";
+            for (var i = 0; i < sprint_list.length; i++) {
+                html += `<li data-name="${sprint_list[i].name}" data-value="${sprint_list[i].id}"><span class="prepend-left-5">${sprint_list[i].name}</span></li>`;
+            }
+            list_box.html(html);
+
+            $(".sprint-list li").on("click", function () {
+                var id = $(this).data("value");
+                var name = $(this).data("name")
+                IssueMain.prototype.updateIssueSprint(issue_id, id, $self, name);
+            });
+
+            $(document).on("click", function () {
+                list_box.slideUp(100);
+            });
+            return false;
+        });
+
+        $(".assignee-select > span > a").bind("dblclick", function () {
+            if(cur_project_id ===''){
+                notify_warn('提示','需要进入项目才能修改');
+                return false;
+            }
+            var $self = $(this);
+            var issue_id = $self.parent().parent().data('issue_id');
+            var list_box = $self.parent().siblings(".assignee-list");
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+
+            var assignee_list = _issueConfig.project_users;
+            var html = "";
+            for (var i = 0; i < assignee_list.length; i++) {
+                html += `<li data-img="${assignee_list[i].avatar}" data-name="${assignee_list[i].display_name}" data-value="${assignee_list[i].uid}"><img class="assignee-img" src="${assignee_list[i].avatar}" /><span>${assignee_list[i].display_name}</span></li>`;
+            }
+            list_box.html(html);
+
+            $(".assignee-list li").on("click", function () {
+                var id = $(this).data("value");
+                var img = $(this).data("img");
+                var text = $(this).data("name");
+                IssueMain.prototype.updateIssueAssignee(issue_id, id, $self, name, img);
+            });
+
+            $(document).on("click", function () {
+                list_box.slideUp(100);
+            });
+        });
+
+        $(".resolve-select2").bind("dblclick", function () {
+            var $self = $(this);
+            let issue_id = $self.data('issue_id');
+            let list_box = $('#ul_tree_select_'+issue_id);
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+
+            var resolve_list = _issueConfig.issue_resolve;
+            console.log(resolve_list);
+            let html = "";
+            for (let i=0; i<resolve_list.length; i++) {
+                let resolve = resolve_list[i];
+                // html += `<li>1111</li>`;
+                html += `<li data-color="${resolve.color}" data-value="${resolve.id}"><span style="color:${resolve.color}" class="prepend-left-5">${resolve.name}</span></li>`;
+            }
+            list_box.html(html);
+            //console.log(list_box, html);
+            list_box.children('li').on("click", function () {
+                var id = $(this).data("value");
+                var color = $(this).data("color")
+                var text = $(this).text()
+                var target = $self.find("span:first");
+                IssueDetail.prototype.updateIssueResolve(issue_id, id, target, text, color);
+            });
+            $(document).on("click", function () {
+                list_box.slideUp(100);
+            })
+
+        });
+
+        $(".status-select .label").bind("dblclick", function () {
+            let $self = $(this);
+            let issue_id = $self.parent().data('issue_id');
+            let list_box = $self.siblings(".status-list");
+
+            if (list_box.is(":visible")) {
+                return false;
+            }
+            list_box.slideDown(100);
+            loading.show(`#status-list-${issue_id}`);
+
+            $.ajax({
+                type: 'get',
+                dataType: "json",
+                async: true,
+                url: root_url + "issue/main/fetch_issue_edit",
+                data: { issue_id: issue_id },
+                success: function (resp) {
+                    auth_check(resp);
+                    loading.hide(`#status-list-${issue_id}`);
+                    if (resp.ret != '200') {
+                        notify_error('获取状态失败:' + resp.msg);
+                        return;
+                    }
+                    let status_list = resp.data.issue.allow_update_status;
+                    let html = "";
+                    for (let i=0; i<status_list.length; i++) {
+                        let status = status_list[i];
+                        html += `<li data-value="${status.id}" data-color="${status.color}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
+                    }
+                    list_box.html(html);
+
+                    $(".status-list li").on("click", function () {
+                        let id = $(this).data("value");
+                        let text = $(this).text();
+                        let color = $(this).data("color")
+                        IssueDetail.prototype.updateIssueStatus(issue_id, id, $self, text, color)
+                    });
+
+                    $(document).on("click", function () {
+                        list_box.slideUp(100);
+                    })
+
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+        });
+
+        $(".date-select-edit").bind("click", function () {
+            let $self = $(this);
+            let issue_id = $self.data('issue_id');
+            let myDate = new Date();
+            laydate.render({
+                elem: this
+                , trigger: 'click'
+                , range: true
+                , done: function (value, date, endDate) {
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        async: true,
+                        url: root_url + "issue/main/update",
+                        data: { issue_id: issue_id, params: { start_date: date.year + '-' + date.month + '-' + date.date, due_date: endDate.year + '-' + endDate.month + '-' + endDate.date } },
+                        success: function (resp) {
+                            auth_check(resp);
+                            if (resp.ret != '200') {
+                                notify_error('操作失败:' + resp.msg);
+                                return;
+                            }
+                            notify_success('操作成功');
+                            //window.location.reload();
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
+                }
+                //,value: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + ' - ' + myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate()
+            });
+        });
+
+        IssueMain.prototype.treeBindEvent();
+
+        $(".have_children").bind("click", function () {
+            if (isFloatPart) {
+                var issue_id = $(this).data('issue_id');
+                $('#tr_subtask_' + issue_id).removeClass('hide');
+                IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
+            }
+        });
+
+        $("#btn-join_sprint").bind("click", function () {
+            console.log("保存")
+            var sprint_id = $("input[name='join_sprint']:checked").val();
+            var issue_id = $('#join_sprint_issue_id').val();
+            if (sprint_id) {
+                IssueMain.prototype.joinSprint(sprint_id, issue_id);
+            } else {
+                notify_error('请选择Sprint');
+            }
+        });
+
+        $("#btn-modal_delete").bind("click", function () {
+            var issue_id = $('#children_list_issue_id').val();
+            if (issue_id) {
+                IssueMain.prototype.delete(issue_id);
+            } else {
+                notify_error('请选择Sprint');
+            }
+        });
+
+        $("#btn-convertChild").bind("click", function () {
+            var issue_id = $('#current_issue_id').val();
+            if (issue_id) {
+                IssueMain.prototype.convertChild(issue_id);
+            } else {
+                notify_error('事项id传递错误');
+            }
+        });
+
+    }
+
     IssueMain.prototype.treeBindEvent = function () {
 
         IssueMain.prototype.bindDragTable();
@@ -1241,7 +1248,7 @@ var IssueMain = (function () {
                 return '#'+value
             }
         }
-        columns.push( column)
+        columns.push(column)
 
         if(isInArray(resp.data.display_fields,'issue_type')){
             let column = {field: 'issue_type',  title: '类 型', sortable: true,  align: 'center', formatter:  function (value, row, index) {
@@ -1465,9 +1472,10 @@ var IssueMain = (function () {
                 //在哪一列展开树形
                 treeShowField: 'summary',
                 //指定父id列
-                parentIdField: 'master_id',
+                parentIdField: 'parent_id',
                 onResetView: function(data) {
-                    //console.log('load');
+                    console.log('onResetView');
+                    IssueMain.prototype.commonBindEvent();
                     $tree_table.treegrid({
                         initialState: 'expanded',// 所有节点都折叠  collapsed | expanded
                         // initialState: 'expanded',// 所有节点都展开，默认展开
@@ -1482,6 +1490,7 @@ var IssueMain = (function () {
                     $tree_table.treegrid('getRootNodes').treegrid('expand');
                 },
                 onCheck:function(row){
+                    console.log('onCheck');
                     var datas = $tree_table.bootstrapTable('getData');
                     // 勾选子类
                    // selectChilds(datas,row,"id","master_id",true);
@@ -1491,6 +1500,7 @@ var IssueMain = (function () {
                     $tree_table.bootstrapTable('load', datas);
                 },
                 onUncheck:function(row){
+                    console.log('onCheck');
                     var datas = $tree_table.bootstrapTable('getData');
                     selectChilds(datas,row,"id","master_id",false);
                     $tree_table.bootstrapTable('load', datas);
@@ -1705,6 +1715,53 @@ var IssueMain = (function () {
             success: function (resp) {
                 $('#parent_select_issue_id').select2({data: resp.data});
                 $('#modal-choose_parent').modal('show');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    IssueMain.prototype.displayBatchConvertChild = function () {
+        //$('#btn-parent_select_issue').data('issue-id', issue_id);
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url:  "/issue/main/autocomplete",
+            data: { project_id: window._cur_project_id, init: true },
+            success: function (resp) {
+                $('#batch_parent_select_issue_id').select2({data: resp.data});
+                $('#modal-batch_choose_parent').modal('show');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+    // btn-batchConvertChild
+    IssueMain.prototype.batchConvertChild = function () {
+
+        var master_id = $("#batch_parent_select_issue_id").val();
+        var issue_id_arr =  IssueMain.prototype.getSelectedIdArr();
+        if(is_empty(issue_id_arr)){
+            notify_warn("提示" , "您没有选中任何事项");
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/batchConvertChildren",
+            data: { issue_id_arr: issue_id_arr, master_id: master_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('删除失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+                window.location.reload();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

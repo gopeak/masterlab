@@ -1,0 +1,33 @@
+{
+  "name": "printThis",
+  "version": "1.15.1",
+  "title": "printThis",
+  "description": "Printing plug-in for jQuery. Print specific page elements, add print options, maintain or add new styling using jQuery.",
+  "author": {
+    "name": "Jason Day",
+    "email": "movemaine@gmail.com",
+    "url": "https://github.com/jasonday"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jasonday/printThis"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.6"
+  },
+  "keywords": ["print", "printing"],
+  "homepage": "https://github.com/jasonday/printThis",
+  "docs": "https://github.com/jasonday/printThis",
+  "demo": "https://github.com/jasonday/printThis",
+  "bugs": "https://github.com/jasonday/printThis/issues",
+  "download": "https://github.com/jasonday/printThis",
+  "maintainers": [
+    {
+      "name": "Jason Day",
+      "email": "movemaine@gmail.com",
+      "url": "https://github.com/jasonday"
+    }
+  ]
+}

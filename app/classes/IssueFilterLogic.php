@@ -521,7 +521,7 @@ class IssueFilterLogic
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
             $sql .= ' ' . $order . $limit;
             //print_r($params);
-            //echo $sql;die;
+            // echo $sql;die;
             $model->removeInSqlParams($sql, $params);
             $arr = $model->db->fetchAll($sql, $params);
             $idArr = [];

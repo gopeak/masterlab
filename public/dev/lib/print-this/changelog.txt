@@ -1,0 +1,93 @@
+08/04/2018    Merged beforePrintEvent fix from Uriel2015
+              Bumpt to 1.15.1
+
+05/15/2019    Added TypeScript definitions from nvirth
+              Bumped to 1.15.0
+
+11/03/2018    Added fix for canvas data attribute removal from apires03
+              Bumped to 1.14.1
+
+07/15/2018    Merge support for print event handlers from eakkew
+              Include fix for CSS Variables (via inline styles set on HTML tag)
+              Make documentation consistent
+              Bump to 1.14.0
+
+07/15/2018    Merge removeInlineSelector to filter which inline styles are removed from kory75
+              Remove "experimental" tag from Canvas support. We're pretty stable at this point
+              Bump to 1.13.0
+
+03/18/2018    Fixed importStyle
+              Bumped to 1.12.3
+
+01/10/2018    Merged fix for top-level Canvas support
+              Bumped to 1.12.2
+
+12/17/2017    Merged fix for jQuery version limit from nip3o
+              Bumped to 1.12.1
+
+10/30/2017    Merged simpler form clone from Subtletree
+              Updated README to correct 1.9.1 reference to past-tense
+              Bumped to 1.12.0
+
+08/01/2017    Added copyTagClasses, disabled by default, to copy body & html tag classes from the page
+              Updated README documentation for removeScripts
+              Updated README to remove old versions number from canvas support to prevent confusion
+              Bumped to 1.11.0
+
+04/06/2017    Added action, disabled by default, to avoid bringing unwanted scripts into the print iframe.
+              Removed undocumented helper function $.fn.outer
+              Reformatted example text with valid JS comments
+              Bumped to 1.10.0 for new feature (removeScripts)
+
+03/07/2017    Added clone action for header or footer jQuery objects to prevent originals being removed.
+              Bumped to 1.9.1
+
+01/16/2017    Added experimental canvas copy support.
+              Added detailed descriptions of advanced options to README
+              Bumped to 1.9.0 for new feature (canvas).
+
+01/16/2017    Added footer as proposed in 2015 by @RomainGehrig
+              Bumped version to 1.8.0 for new feature
+              Corrected 1.7.1 changelog date to 01/15/2017
+
+01/15/2017    Added quoting around values to correct behavior of complex values
+              Bumped to 1.7.1
+
+12/14/2016    Added support for arbitrary BASE urls.
+              Bumped to 1.7.0, following semver (new feature).
+
+12/13/2016    Incremented to 1.6.0 for new base setting.
+
+11/23/2016    added new base option. Preserves the BASE tag from the parent page.
+
+11/07/2014    Fixed bug; Recent versions of Firefox are not applying the parent document domain to
+              elements without fully qualified srcs. Added a <base>.
+
+10/25/2014    Fixed bug; <styles> being copied to print iframe were being removed from parent
+              Added ability to use loadCSS with multiple stylesheets
+
+09/21/2014    added import of style tags
+
+05/12/2014    added formValues option. Preserves entered form data for print.
+
+10/11/2013    added printDelay option. Sometimes 333 isn't enough
+              added header option -- inserts html before selected content, for images ensure to use full path
+
+03/08/2013    added option to remove inline styles from print elements
+
+03/04/2013    fixed showstopper with IE and document.domain
+              major rework of file structure/methods
+              added "pageTitle" option
+              some minor rework of other areas
+
+11/23/2012    fixed showstopper with Firefox:
+              moved variable $doc to within setTimeout function
+
+11/11/2012    reworked plugin to use a jQuery object
+              removed document.write
+              added setTimeout (waits for iframe to full render before action)
+
+11/07/2012    added support for loading css files
+              removed Opera option, left in by default
+              added timeout to remove iframe after 60 seconds
+              added unique name to iframe

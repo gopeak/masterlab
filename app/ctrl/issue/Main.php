@@ -235,10 +235,12 @@ class Main extends BaseUserCtrl
             $data['tree_range_data'] = $issueViewTreeTange;
         }
         $data['issue_tree_is_closed'] = '1';
+
         $issueTreeIsClosed = $userSettingModel->getSettingByKey($userId, 'issue_tree_is_closed');
         if ($issueTreeIsClosed!==false) {
             $data['issue_tree_is_closed'] = $issueTreeIsClosed;
         }
+
         $data['issue_tree_is_expand'] = '1';
         $issueTreeIsExpand = $userSettingModel->getSettingByKey($userId, 'issue_tree_is_expand');
         if ($issueTreeIsExpand!==false) {
@@ -649,10 +651,13 @@ class Main extends BaseUserCtrl
      */
     public function autocomplete()
     {
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
         $issueModel = new IssueModel();
         if(isset($_GET['init'])){
             $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : 0;
-            $projectId = $issueModel->getFieldById('project_id', $issueId);
+            if(empty($projectId)){
+                $projectId = $issueModel->getFieldById('project_id', $issueId);
+            }
             $issues = [];
             if($projectId){
                 $issues = $issueModel->getRows('id,summary,created', ['project_id'=>$projectId], null, 'id', 'desc', 50);
@@ -672,7 +677,7 @@ class Main extends BaseUserCtrl
         if (empty(trimStr($keyword))) {
             $this->ajaxSuccess('none', []);
         }
-        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
+
         $limitSql = "   limit 20";
 
         $table = $issueModel->getTable();
@@ -729,9 +734,16 @@ class Main extends BaseUserCtrl
         if ($ret) {
             $followRows = (new IssueFollowModel())->getItemsByUserId(UserAuth::getId());
             $followIssueIdArr = array_column($followRows,'issue_id' );
+            $idArr = array_column($data['issues'],'id' );
             unset($followRows);
+            $i = 0;
             foreach ($data['issues'] as &$issue) {
+                $i++;
                 $issue['is_followed'] = 2;
+                $issue['parent_id'] = $issue['master_id'];
+                if(!in_array($issue['parent_id'],$idArr)){
+                    $issue['parent_id'] = 0;
+                }
                 if(in_array($issue['id'], $followIssueIdArr)){
                     $issue['is_followed'] = 1;
                 }
@@ -1926,13 +1938,10 @@ class Main extends BaseUserCtrl
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
         $issueLogic->updateCustomFieldValue($issueId, $params, $issue['project_id']);
-
-        // 记录活动日志
-        $fromModule = null;
-        if (isset($params['from_module'])) {
-            $fromModule = strtolower(trim($params['from_module']));
-        } elseif (isset($_GET['from_module'])) {
-            $fromModule = strtolower(trim($_GET['from_module']));
+        // 如果状态或解决结果修改为已完成
+        $closeTimeArr = IssueLogic::getLastUpdateDoneArr($issue, $info) + IssueLogic::getLastUpdateCloseArr($issue, $info);
+        if(!empty($closeTimeArr)){
+            $issueModel->updateById($issueId, $closeTimeArr);
         }
 
         // 操作日志
@@ -1957,6 +1966,71 @@ class Main extends BaseUserCtrl
         $this->dispatcher->dispatch($event, Events::onIssueUpdateAfter);
         $this->ajaxSuccess('更新成功', $updatedIssue);
     }
+
+
+    /**
+     * 批量转换为子任务
+     * @param $params
+     * @throws \Exception
+     */
+    public function batchConvertChildren($params)
+    {
+        $issueIdArr = null;
+        if (isset($_REQUEST['issue_id_arr'])) {
+            $issueIdArr = $_REQUEST['issue_id_arr'];
+        }
+        if (empty($issueIdArr)) {
+            $this->ajaxFailed('参数错误', '事项id数据不能为空');
+        }
+
+        $masterId = null;
+        if (isset($_POST['master_id'])) {
+            $masterId = (int)$_POST['master_id'];
+        }
+        if (empty($masterId)) {
+            $this->ajaxFailed('参数错误', '父事项id不能为空');
+        }
+        $issueModel = new IssueModel();
+        $masterIssue = $issueModel->getById($masterId);
+
+        $uid = $this->getCurrentUid();
+        $projectId = $masterIssue['project_id'];
+        // 是否有编辑权限
+        $editPerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
+        if (!$editPerm) {
+            $this->ajaxFailed('当前项目中你没有权限进行此操作');
+        }
+
+        $successIssueIdArr = [];
+        $errArr = [];
+        foreach ($issueIdArr as $issueId) {
+
+            $issueLogic = new IssueLogic();
+            list($ret, $msg) = $issueLogic->convertChild($issueId, $masterId);
+            if (!$ret) {
+                //$this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+                $errArr[] = "事项id:{$issueId} 更新失败:{$msg},已忽略";
+            }
+            $successIssueIdArr[] = $issueId;
+        }
+        // 操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = null;//json_encode($successIssueIdArr);
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_EDIT;
+        $logData['remark'] = '批量转换事项id:' . implode(',', $successIssueIdArr)."为{$masterId}的子任务";
+        $logData['pre_data'] = '-';
+        $logData['cur_data'] = $masterId;
+        LogOperatingLogic::add($uid, $projectId, $logData);
+
+        $event = new CommonPlacedEvent($this, ['master_id' => $masterId, 'project_id' => $projectId, 'issue_id_arr' => $successIssueIdArr]);
+        //$this->dispatcher->dispatch($event, Events::onIssueBatchConvertChildren);
+        $this->ajaxSuccess('success', $errArr);
+    }
+
 
     /**
      * 批量修改
@@ -2023,6 +2097,12 @@ class Main extends BaseUserCtrl
                 $errArr[] = "事项id:{$issueId} 更新失败:{$affectedRows},已忽略";
             }
             $successIssueIdArr[] = $issueId;
+
+            // 如果状态或解决结果修改为已完成
+            $closeTimeArr = IssueLogic::getLastUpdateDoneArr($issue, $info) + IssueLogic::getLastUpdateCloseArr($issue, $info);
+            if(!empty($closeTimeArr)){
+                $issueModel->updateById($issueId, $closeTimeArr);
+            }
         }
         // 操作日志
         $logData = [];
