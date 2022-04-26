@@ -624,6 +624,7 @@ var IssueMain = (function () {
             $(".issue_convert_child_href").bind("click", function () {
                 IssueMain.prototype.displayConvertChild($(this).data('issue_id'));
             });
+
             $(".issue_backlog_href").bind("click", function () {
                 IssueMain.prototype.joinBacklog($(this).data('issue_id'));
             });
@@ -957,6 +958,7 @@ var IssueMain = (function () {
                     notify_error('事项id传递错误');
                 }
             });
+
 
         } else {
             loading.hide('#' + _options.list_render_id)
@@ -1705,6 +1707,53 @@ var IssueMain = (function () {
             success: function (resp) {
                 $('#parent_select_issue_id').select2({data: resp.data});
                 $('#modal-choose_parent').modal('show');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+
+    IssueMain.prototype.displayBatchConvertChild = function () {
+        //$('#btn-parent_select_issue').data('issue-id', issue_id);
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url:  "/issue/main/autocomplete",
+            data: { project_id: window._cur_project_id, init: true },
+            success: function (resp) {
+                $('#batch_parent_select_issue_id').select2({data: resp.data});
+                $('#modal-batch_choose_parent').modal('show');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    };
+    // btn-batchConvertChild
+    IssueMain.prototype.batchConvertChild = function () {
+
+        var master_id = $("#batch_parent_select_issue_id").val();
+        var issue_id_arr =  IssueMain.prototype.getSelectedIdArr();
+        if(is_empty(issue_id_arr)){
+            notify_warn("提示" , "您没有选中任何事项");
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/batchConvertChildren",
+            data: { issue_id_arr: issue_id_arr, master_id: master_id },
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('删除失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+                window.location.reload();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

@@ -1401,6 +1401,15 @@
                 }
             });
 
+            $("#btn-convertChild").bind("click", function () {
+                var issue_id = $('#current_issue_id').val();
+                if (issue_id) {
+                    IssueMain.prototype.convertChild(issue_id);
+                } else {
+                    notify_error('事项id传递错误');
+                }
+            });
+
             $("#btn-add").click(function () {
                 IssueMain.prototype.add();
             });
