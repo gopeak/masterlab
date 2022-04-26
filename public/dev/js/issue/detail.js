@@ -562,7 +562,8 @@ var IssueDetail = (function () {
                     notify_error("请求数据错误" + res);
                 }
             });
-        },
+        }
+
         IssueDetail.prototype.follow = function (issue_id, follow_action) {
 
             var method = 'get';
