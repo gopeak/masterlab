@@ -606,7 +606,7 @@ var IssueMain = (function () {
             if (typeof (success) != 'undefined' && typeof (success) === "function") {
                 success(resp.data);
             }
-            IssueMain.prototype.issueCommonBindEvent();
+            IssueMain.prototype.commonBindEvent();
 
         } else {
             loading.hide('#' + _options.list_render_id)
@@ -628,7 +628,7 @@ var IssueMain = (function () {
         }
     };
 
-    IssueMain.prototype.issueCommonBindEvent = function () {
+    IssueMain.prototype.commonBindEvent = function () {
         $(".issue_edit_href").bind("click", function () {
             IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
         });
@@ -1475,7 +1475,7 @@ var IssueMain = (function () {
                 parentIdField: 'parent_id',
                 onResetView: function(data) {
                     console.log('onResetView');
-                    IssueMain.prototype.treeBindEvent();
+                    IssueMain.prototype.commonBindEvent();
                     $tree_table.treegrid({
                         initialState: 'expanded',// 所有节点都折叠  collapsed | expanded
                         // initialState: 'expanded',// 所有节点都展开，默认展开
