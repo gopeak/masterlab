@@ -594,7 +594,11 @@ CREATE TABLE `issue_main` (
                               `gant_sprint_weight` int NOT NULL DEFAULT '0' COMMENT '迭代甘特图中该事项在同级的排序权重',
                               `gant_hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '甘特图中是否隐藏该事项',
                               `is_start_milestone` tinyint UNSIGNED NOT NULL DEFAULT '0',
-                              `is_end_milestone` tinyint UNSIGNED NOT NULL DEFAULT '0'
+                              `is_end_milestone` tinyint UNSIGNED NOT NULL DEFAULT '0',
+                              `last_close_resolve_time` int(11) unsigned DEFAULT 0 COMMENT '最近解决结果:关闭的时间',
+                              `last_close_status_time` int(11) unsigned DEFAULT 0 COMMENT '最近状态:已完成的时间',
+                              `last_done_resolve_time` int(11) unsigned DEFAULT 0 COMMENT '最近解决结果:已解决的时间',
+                              `last_done_status_time` int(11) unsigned DEFAULT 0 COMMENT '最近状态:已解决的时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
