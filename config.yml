@@ -1,13 +1,13 @@
 # Masterlab主配置文件
 app_url: ''
-version: '3.3.6'
+version: '3.3.8'
 error_reporting: 'E_ERROR'
 xdebug: false
 trace: false
 write_request_log: false
 security_map: false
 date_default_timezone: 'Asia/Shanghai'
-encrypy_key: '675IIn959a94Ng4o1875'
+encrypy_key: 'F1xukcK3KjzejfQE8064'
 
 xhprof:
   enable: false
@@ -35,7 +35,7 @@ database:
     host: 'localhost'
     port: '3306'
     user: 'root'
-    password: '123456'
+    password: ''
     db_name: 'masterlab_dev'
     charset: 'utf8'
     timeout: 10
@@ -64,19 +64,19 @@ socket:
 schedule:
   -
     name: 'ProjectStat'
-    exe_bin: 'C:/xampp7.4/php/php.exe'
+    exe_bin: 'C:/phpenv/php-7.4/php.exe'
     exp: '0 */30 * * * ?'
     file: 'C:/www/masterlab/app/server/timer/project.php'
     arg: '-f'
   -
     name: 'ProjectReport'
-    exe_bin: 'C:/xampp7.4/php/php.exe'
+    exe_bin: 'C:/phpenv/php-7.4/php.exe'
     exp: '0 58 23 * * ?'
     file: 'C:/www/masterlab/app/server/timer/projectDayReport.php'
     arg: '-f'
   -
     name: 'SprintReport'
-    exe_bin: 'C:/xampp7.4/php/php.exe'
+    exe_bin: 'C:/phpenv/php-7.4/php.exe'
     exp: '0 59 23 * * ?'
     file: 'C:/www/masterlab/app/server/timer/sprintDayReport.php'
     arg: '-f'

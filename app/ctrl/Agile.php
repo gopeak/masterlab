@@ -862,6 +862,31 @@ class Agile extends BaseUserCtrl
         }
     }
 
+    public function setSprintPause()
+    {
+        $sprintId = null;
+        if (isset($_POST['sprint_id'])) {
+            $sprintId = (int)$_POST['sprint_id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
+        }
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getItemById($sprintId);
+        if (!isset($sprint['id'])) {
+            $this->ajaxFailed('参数错误', '迭代数据不存在');
+        }
+        list($upRet, $msg) = $sprintModel->updateById($sprintId, ['active' => '0']);
+        if ($upRet) {
+            $event = new CommonPlacedEvent($this, $sprint);
+            $this->dispatcher->dispatch($event, Events::onSprintSetPause);
+            $this->ajaxSuccess('提示', '操作成功');
+        } else {
+            $this->ajaxFailed('提示', 'server_error:' . $msg);
+        }
+    }
+
+
     /**
      * 将事项移动到待办事项
      * @throws \Exception
