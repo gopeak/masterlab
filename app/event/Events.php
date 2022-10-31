@@ -108,8 +108,8 @@ final class Events
     public const onSprintCreate = 'onSprintCreate';
     public const onSprintUpdate = 'onSprintUpdate';
     public const onSprintSetActive = 'onSprintSetActive';
+    public const onSprintSetPause = 'onSprintSetPause';
     public const onSprintDelete = 'onSprintDelete';
-
     /**
      * 版本事件
      */

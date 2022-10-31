@@ -171,7 +171,7 @@
             <a class="btn btn-transparent btn-action project_module_edit_click" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
                 <i class="fa fa-pencil-square-o"></i>
             </a>
-            <a class="btn btn-transparent btn-action remove-row" title="删除模块" id="mod_remove" onclick="remove({{id}})" href="javascript:void(0)">
+            <a class="btn btn-transparent btn-action list_for_delete" title="删除模块"   data-module_id="{{id}}"   href="javascript:void(0)">
                 <i class="fa fa-trash-o"></i>
             </a>
         </div>
@@ -249,29 +249,7 @@
 
     });
 
-    function remove(module_id) {
-        swal({
-                title: "您确定删除吗?",
-                text: "你将无法恢复它",
-                html: true,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确 定",
-                cancelButtonText: "取 消！",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-            function(isConfirm){
-                if (isConfirm) {
-                    window.$modules.delete(<?=project_id?>, module_id);
-                    swal.close();
-                }else{
-                    swal.close();
-                }
-            }
-        );
-    }
+
 
 </script>
 

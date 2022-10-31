@@ -140,6 +140,17 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="edit_active">是否进行中</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio"  value="1" id="edit_active_1" name="params[active]">是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio"  value="0" id="edit_active_0" name="params[active]">否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="edit_start_date">开始日期</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control js-access-expiration-date-groups" id="edit_start_date" name="params[start_date]" value="">
@@ -201,6 +212,10 @@
             {{#if_eq active 0}}
             <a  class="btn  btn-transparent  list_for_set_active" title="设置为进行中" data-id="{{id}}" href="javascript:void(0);">
                     <i class="fa  fa-play-circle"></i>
+            </a>
+            {{else}}
+            <a  class="btn  btn-transparent  list_for_set_pause" title="设置为非进行(停止)" data-id="{{id}}" href="javascript:void(0);">
+                    <i class="fa  fa-pause-circle"></i>
             </a>
             {{/if_eq}}
             <a class="btn btn-transparent btn-action list_for_edit" title="编辑迭代"  href="javascript:void(0);"  data-id="{{id}}">

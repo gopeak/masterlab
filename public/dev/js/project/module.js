@@ -143,7 +143,7 @@ let Module = (function() {
                     }
 
                     $(".list_for_delete").click(function () {
-                        Module.prototype.delete($(this).data("id"));
+                        Module.prototype.delete(window.cur_project_id, $(this).data('module_id'));
                     });
 
                     $(".project_module_edit_click").bind("click", function () {

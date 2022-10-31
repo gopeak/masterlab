@@ -23,6 +23,17 @@ let Sprint = (function() {
             }
         });
     };
+    Sprint.prototype.pause = function(sprint_id) {
+        $.post("/agile/setSprintPause",{sprint_id:sprint_id},function(resp){
+            if(resp.ret ==="200" ){
+                notify_success(resp.msg, resp.data);
+                Sprint.prototype.fetchAll();
+            } else {
+                notify_error(resp.msg, resp.data);
+                console.log(resp);
+            }
+        });
+    };
 
     Sprint.prototype.delete = function(sprint_id) {
         swal({
@@ -76,6 +87,9 @@ let Sprint = (function() {
                     $('#edit_description').val(resp.data.description);
                     $('#l_edit_status_'+resp.data.status).addClass('active');
                     $('#edit_status_'+resp.data.status).attr('checked',true);
+                    $('#edit_status_'+resp.data.status).click();
+                    $('#edit_active_'+resp.data.active).attr('checked',true);
+                    $('#edit_active_'+resp.data.active).click();
                 } else {
                     notify_error(resp.msg, resp.data);
                 }
@@ -163,6 +177,9 @@ let Sprint = (function() {
 
                     $(".list_for_set_active").click(function(){
                         Sprint.prototype.active( $(this).data("id"));
+                    });
+                    $(".list_for_set_pause").click(function(){
+                        Sprint.prototype.pause( $(this).data("id"));
                     });
 
                     $(".list_for_delete").click(function(){
