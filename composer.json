@@ -14,7 +14,7 @@
     "php-curl-class/php-curl-class": "v7.3.0",
     "hornet/framework": "v1.0.9",
     "phpoffice/phpspreadsheet": "1.16.0",
-    "twig/twig": "2.14.11",
+    "twig/twig": "2.15.3",
     "adldap2/adldap2": "10.2",
     "doctrine/dbal": "2.13.2",
     "doctrine/event-manager":"1.1.0",
