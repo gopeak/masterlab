@@ -1,6 +1,6 @@
 # Masterlab主配置文件
 app_url: ''
-version: '3.3.9'
+version: '3.3.10'
 error_reporting: 'E_ERROR'
 xdebug: false
 trace: false
