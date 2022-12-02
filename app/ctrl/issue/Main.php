@@ -1840,6 +1840,7 @@ class Main extends BaseUserCtrl
         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_UPDATE;
 
         $info['modifier'] = $uid;
+        $info['updated'] = time();
 
         // 状态 如果是关闭状态则要检查权限
         if (isset($info['status']) && $issue['status'] != $info['status']) {
