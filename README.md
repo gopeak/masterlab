@@ -1,10 +1,5 @@
 
-<p align="center">
-  <a href="http://www.masterlab.vip ">
-    <img width="200" src="https://www.masterlab.vip/assets/img/logo.png">
-  </a>
-</p>
-
+ 
 <h1 align="center">MasterLab </h1>
 
 <div align="center">
