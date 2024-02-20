@@ -564,10 +564,10 @@ class BaseCtrl
                 'server_time' => time(),
                 'server_name' => $_SERVER['SERVER_NAME'] . ' [ ' . gethostbyname($_SERVER['SERVER_NAME']) . ' ]',
             );
-            // 取消向官方网站收集基本信息
-            // $curl = new \Curl\Curl();
-            // $curl->setTimeout(10);
-            //$curl->post('https://www.masterlab.vip/client_info.php', $postInfo);
+            // 向官方网站收集基本信息
+            $curl = new \Curl\Curl();
+            $curl->setTimeout(10);
+            $curl->post('https://www.masterlab.vip/client_info.php', $postInfo);
 
             $date = date('Y-m-d');
             $ip = getIp();
