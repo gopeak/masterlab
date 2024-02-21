@@ -11,8 +11,8 @@ namespace main\app\ctrl\framework;
 use main\app\ctrl\BaseCtrl;
 use main\app\model\unit_test\FrameworkUserModel;
 
-echo 'Only applicable in development environment';
-exit;
+echo 'Only applicable in development environment!';
+die('exit');
 
 /**
  * Class framework
