@@ -3,8 +3,8 @@
   "type": "project",
   "description": "Masterlab项目管理工具",
   "keywords": [
-		"masterlab",
-		"项目管理工具"
+	 "masterlab",
+	 "项目管理工具"
 	],
   "require": {
     "gregwar/captcha": "v1.1.5",
@@ -13,7 +13,7 @@
     "endroid/qr-code": "3.4.0",
     "php-curl-class/php-curl-class": "v7.3.0",
     "hornet/framework": "v1.0.9",
-    "phpoffice/phpspreadsheet": "1.16.0",
+    "phpoffice/phpspreadsheet": "1.29.4",
     "twig/twig": "2.15.3",
     "adldap2/adldap2": "10.2",
     "doctrine/dbal": "2.13.2",
