@@ -14,6 +14,11 @@ xhprof:
   enable: false
   rate: 1
 
+office_preview:
+  enanle: false
+  office_api: https://view.officeapps.live.com/op/view.aspx?src=
+  office_suffix_map: ["ppt","pptx","xls","xlsx","doc","docx"]
+
 cache:
   enable: {{cache_enable}}
   expire: 864000

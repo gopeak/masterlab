@@ -14,6 +14,11 @@ define('ROOT_URL', trimStr($appConfig['app_url']) == '' ? currentHttpDomain() : 
 // 附件url
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
+// office支持实时预览
+define('IS_OFFICE_PREVIEW', (boolean)$appConfig['office_preview']['enanle']);
+define('OFFICE_PREVIEW_API', $appConfig['office_preview']['office_api']);
+define('OFFICE_PREVIEW_SUFFIX_MAP', (array)$appConfig['office_preview']['office_suffix_map']);
+
 // 当前版本号
 define('MASTERLAB_VERSION', $appConfig['version']);
 
